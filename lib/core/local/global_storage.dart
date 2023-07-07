@@ -7,6 +7,7 @@ class GlobalStorage {
   );
 
   final String _tokenKey = 'accessToken';
+  // final String _listKey = 'accessList';
 
   /// Save Token
   void saveToken({required String accessToken}) {
@@ -24,4 +25,20 @@ class GlobalStorage {
   void removeToken() {
     _box.remove(_tokenKey);
   }
+
+  // void saveCheckList({required List<int> accessList}) {
+  //   if (accessList.isEmpty) {
+  //     throw ' list is empty';
+  //   }
+  //   _box.write(_listKey, accessList);
+  // }
+  //
+  // List<int>? getList() {
+  //   List<int>? list = _box.read(_listKey);
+  //   return list;
+  // }
+  //
+  // void removeList() {
+  //   _box.remove(_listKey);
+  // }
 }

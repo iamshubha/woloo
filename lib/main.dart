@@ -1,19 +1,22 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:janitor/firebase_options.dart';
 import 'package:janitor/injection_container.dart' as di;
+import 'package:janitor/messaging.dart';
 import 'package:janitor/utils/app_color.dart';
 
 import 'app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await GetStorage.init();
   await di.init();
 
-  // Messaging.initFCM();
+  Messaging.initFCM();
 
   if (kReleaseMode) {
     /// Pass all uncaught "fatal" errors from the framework to Crashlytics
