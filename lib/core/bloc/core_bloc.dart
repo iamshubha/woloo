@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -12,21 +14,21 @@ class CoreBloc extends Bloc<CoreEvent, CoreState> {
 
   CoreBloc() : super(CoreInitial()) {
     on<CoreEvent>((event, emit) {});
-    // on<GetRBAC>(_mapGetRBACTOState);
+    on<CheckUserIsLoggedInOrNot>(_mapCheckUserState);
   }
 
-  // FutureOr<void> _mapGetRBACTOState(GetRBAC event, Emitter<CoreState> emit) async {
-  //   try {
-  //     emit(CoreLoading());
-  //     await Future.delayed(const Duration(seconds: 2));
-  //     var token = globalStorage.getToken();
-  //     if (token.isNotEmpty) {
-  //       RBAC rbac = await coreService.getRBAC();
-  //       GetIt.instance.registerLazySingleton(() => rbac);
-  //       emit(CoreSuccess(isLoggedIn: true, accessHome: rbac.homeScreen == null));
-  //     } else {
-  //       emit(const CoreSuccess(isLoggedIn: false, accessHome: false));
-  //     }
-  //   } catch (e) {}
-  // }
+  FutureOr<void> _mapCheckUserState(CheckUserIsLoggedInOrNot event, Emitter<CoreState> emit) async {
+    try {
+      emit(CoreLoading());
+      await Future.delayed(const Duration(seconds: 2));
+      var token = globalStorage.getToken();
+      if (token.isNotEmpty) {
+        emit(const CoreSuccess(isLoggedIn: true));
+      } else {
+        emit(const CoreSuccess(isLoggedIn: false));
+      }
+    } catch (e) {
+      emit(const CoreSuccess(isLoggedIn: false));
+    }
+  }
 }

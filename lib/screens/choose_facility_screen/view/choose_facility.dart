@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:janitor/screens/common_widgets/custom_dialogue_widget.dart';
 import 'package:janitor/screens/common_widgets/list_widget.dart';
-import 'package:janitor/screens/task_list/view/task_list_screen.dart';
 import 'package:janitor/utils/app_color.dart';
 import 'package:janitor/utils/app_constants.dart';
 
@@ -202,11 +201,11 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
               yesButtonTap = true;
               cancelButtonTap = false;
             });
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const TaskList(),
-              ),
-            );
+            // Navigator.of(context).push(
+            //   MaterialPageRoute(
+            //     builder: (context) => const TaskList(),
+            //   ),
+            // );
           },
           onTapCancel: () {
             Navigator.pop(context);

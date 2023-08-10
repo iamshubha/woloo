@@ -4,11 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:janitor/screens/login/view/login_screen.dart';
+import 'package:janitor/screens/splash_screen/view/splash.dart';
+import 'package:janitor/utils/app_color.dart';
 import 'package:janitor/utils/app_constants.dart';
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
   const App({super.key});
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  @override
+  void initState() {
+    configLoading();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +47,22 @@ class App extends StatelessWidget {
           ),
         );
       },
-      child: const LoginScreen(),
+      child: const SplashScreen(),
     );
+  }
+
+  void configLoading() {
+    EasyLoading.instance
+      // ..indicatorWidget = CustomLoaderWidget(message: "")
+      ..indicatorType = EasyLoadingIndicatorType.fadingFour
+      ..loadingStyle = EasyLoadingStyle.light
+      ..maskColor = Colors.black26
+      ..maskType = EasyLoadingMaskType.custom
+      ..indicatorColor = AppColors.buttonColor
+      ..indicatorSize = 45.0
+      ..backgroundColor = Colors.black26
+      ..radius = 10.0
+      ..userInteractions = true
+      ..dismissOnTap = true;
   }
 }

@@ -49,7 +49,7 @@ class _CustomDialogueWidgetState extends State<CustomDialogueWidget> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                MyFacilityListConstants.POPUP_TEXT,
+                widget.text,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontWeight: FontWeight.w400,

@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:janitor/screens/common_widgets/custom_dialogue_widget.dart';
 import 'package:janitor/screens/common_widgets/issue_list_widget.dart';
 import 'package:janitor/screens/report_issue_screen/view/report_issue_form.dart';
-import 'package:janitor/screens/task_list/view/task_list_screen.dart';
 import 'package:janitor/utils/app_color.dart';
 import 'package:janitor/utils/app_constants.dart';
 
@@ -126,11 +125,11 @@ class _IssuesListState extends State<IssuesList> {
               yesButtonTap = true;
               cancelButtonTap = false;
             });
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const TaskList(),
-              ),
-            );
+            // Navigator.of(context).push(
+            //   MaterialPageRoute(
+            //     builder: (context) => const TaskList(),
+            //   ),
+            // );
           },
           onTapCancel: () {
             setState(() {

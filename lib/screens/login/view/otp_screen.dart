@@ -1,21 +1,24 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:janitor/screens/common_widgets/button_widget.dart';
-import 'package:janitor/screens/dashboard/view/dashboard_screen.dart';
+import 'package:janitor/screens/login/bloc/login_bloc.dart';
 import 'package:janitor/utils/app_color.dart';
 import 'package:janitor/utils/app_constants.dart';
 import 'package:janitor/utils/app_images.dart';
 
+import '../../common_widgets/button_widget.dart';
+import '../../dashboard/view/dashboard_screen.dart';
 import 'local_widgets/otp_widget.dart';
 
 class OTPScreen extends StatefulWidget {
   final String phoneNumber;
-  const OTPScreen({Key? key, required this.phoneNumber}) : super(key: key);
+  final LoginBloc loginBloc;
+  const OTPScreen({Key? key, required this.phoneNumber, required this.loginBloc}) : super(key: key);
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
@@ -30,11 +33,6 @@ class _OTPScreenState extends State<OTPScreen> {
   String long = "", lat = "";
   String? _currentAddress;
   late StreamSubscription<Position> positionStream;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   checkGps() async {
     servicestatus = await Geolocator.isLocationServiceEnabled();
@@ -168,25 +166,58 @@ class _OTPScreenState extends State<OTPScreen> {
                     // Row(
                     //   children: [
                     Center(
-                      child: RichText(
-                        text: TextSpan(
-                          text: MyLoginConstants.ENTER_OTP,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14.sp,
-                            color: AppColors.greyText,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: widget.phoneNumber,
+                      child: Row(
+                        // mainAxisAlignment: ,
+                        // mainAxisAlignment: MainAxisAlignment.center,
+                        // crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              text: MyLoginConstants.ENTER_OTP,
                               style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 14.sp,
-                                color: AppColors.boldTextColor,
+                                color: AppColors.greyText,
                               ),
+                              children: [
+                                TextSpan(
+                                  text: widget.phoneNumber,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14.sp,
+                                    color: AppColors.boldTextColor,
+                                  ),
+                                ),
+                                WidgetSpan(
+                                  child: SizedBox(
+                                    width: 5.w,
+                                  ),
+                                ),
+                                WidgetSpan(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Image.asset(
+                                      AppImages.edit_icon_img,
+                                      height: 12.h,
+                                      width: 11.h,
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+
+                          // GestureDetector(
+                          //   onTap: () {},
+                          //   child: Image.asset(
+                          //     AppImages.edit_icon_img,
+                          //     height: 12.h,
+                          //     width: 11.w,
+                          //   ),
+                          // )
+                        ],
                       ),
                     ),
                     //   ],
@@ -204,36 +235,77 @@ class _OTPScreenState extends State<OTPScreen> {
                       height: 7.h,
                     ),
                     Expanded(child: Container()),
-                    GestureDetector(
-                      onTap: () async {
-                        // if (_pin.isNotEmpty) {
-                        // context.read<LoginBloc>().add(VerifyOTP(otp: _pin));
-                        if (_pin.isEmpty) {
-                          EasyLoading.showToast("please enter the OTP to proceed");
+
+                    BlocListener<LoginBloc, LoginState>(
+                      bloc: widget.loginBloc,
+                      listener: (context, state) {
+                        if (state is LoginLoading) {
+                          EasyLoading.show(status: state.message);
                         }
 
-                        if (_pin.isNotEmpty) {
-                          await checkGps();
+                        if (state is LoginOTPSent) {
+                          EasyLoading.dismiss();
+
+                          // Navigator.pushReplacement(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => OTPScreen(phoneNumber: _controller.text),
+                          //   ),
+                          // );
                         }
-
-                        if (!haspermission) return;
-
-                        print("button pressed");
-
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Dashboard(
-                              isFromJanitor: true,
-                              isFromSupervisor: false,
+                        if (state is LoginOTPVerified) {
+                          EasyLoading.dismiss();
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Dashboard(
+                                isFromJanitor: true,
+                                isFromSupervisor: false,
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        }
+
+                        if (state is LoginError) {
+                          EasyLoading.dismiss();
+                          EasyLoading.showError(state.error);
+                        }
+
+                        if (state is LoginGetDataSuccess) {
+                          EasyLoading.dismiss();
+                          setState(() {
+                            // _filter = state.data;
+
+                            /// Show hint only one time
+                            /// * Works only on android platform
+                            // if (!_isHintShown && Platform.isAndroid) {
+                            //   requestHint();
+                            // }
+                          });
+                        }
                       },
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
-                        child: const ButtonWidget(
-                          text: MyLoginConstants.VERIFY_OTP_BTN,
+                      child: GestureDetector(
+                        onTap: () async {
+                          if (_pin.isNotEmpty) {
+                            widget.loginBloc.add(VerifyOTP(otp: _pin));
+                          }
+                          if (_pin.isEmpty) {
+                            EasyLoading.showToast("please enter the OTP to proceed");
+                          }
+
+                          // if (_pin.isNotEmpty) {
+                          //   await checkGps();
+                          // }
+                          //
+                          // if (!haspermission) return;
+
+                          print("button pressed");
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
+                          child: const ButtonWidget(
+                            text: MyLoginConstants.VERIFY_OTP_BTN,
+                          ),
                         ),
                       ),
                     ),

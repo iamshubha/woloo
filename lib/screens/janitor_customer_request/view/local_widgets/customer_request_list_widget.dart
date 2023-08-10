@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:janitor/screens/report_issue_screen/model/ItemModel.dart';
-import 'package:janitor/screens/task_list/view/task_list_screen.dart';
 import 'package:janitor/utils/app_color.dart';
 import 'package:janitor/utils/app_constants.dart';
 import 'package:janitor/utils/app_images.dart';
@@ -135,11 +134,11 @@ class _RequestListWidgetState extends State<RequestListWidget> {
                       setState(() {
                         selectedCard = index;
                       });
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const TaskList(),
-                        ),
-                      );
+                      // Navigator.of(context).push(
+                      //   MaterialPageRoute(
+                      //     builder: (context) => const TaskList(),
+                      //   ),
+                      // );
                     },
                     child: Container(
                       height: 160.h,

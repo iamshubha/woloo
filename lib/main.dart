@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:janitor/firebase_options.dart';
 import 'package:janitor/injection_container.dart' as di;
-import 'package:janitor/messaging.dart';
 import 'package:janitor/utils/app_color.dart';
 
 import 'app.dart';
@@ -16,7 +15,7 @@ void main() async {
   await GetStorage.init();
   await di.init();
 
-  Messaging.initFCM();
+  // Messaging.initFCM();
 
   if (kReleaseMode) {
     /// Pass all uncaught "fatal" errors from the framework to Crashlytics

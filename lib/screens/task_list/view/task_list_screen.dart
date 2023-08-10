@@ -1,16 +1,28 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:janitor/screens/common_widgets/checkbox_list_widget.dart';
-import 'package:janitor/screens/common_widgets/custom_dialogue_widget.dart';
 import 'package:janitor/screens/common_widgets/dialogue_box_simple.dart';
+import 'package:janitor/screens/common_widgets/empty_list_widget.dart';
+import 'package:janitor/screens/common_widgets/error_widget.dart';
 import 'package:janitor/screens/common_widgets/white_button_widget.dart';
+import 'package:janitor/screens/task_list/bloc/tasklist_bloc.dart';
+import 'package:janitor/screens/task_list/bloc/tasklist_event.dart';
+import 'package:janitor/screens/task_list/bloc/tasklist_state.dart';
+import 'package:janitor/screens/task_list/data/model/create_task_model.dart';
+import 'package:janitor/screens/task_list/data/model/submit_task_model.dart';
+import 'package:janitor/screens/task_list/data/model/task_list_model.dart';
 import 'package:janitor/screens/task_list/model/task_model.dart';
-import 'package:janitor/screens/washroom_image_screen/view/task_completion_screen.dart';
 import 'package:janitor/utils/app_color.dart';
 import 'package:janitor/utils/app_constants.dart';
 
 class TaskList extends StatefulWidget {
-  const TaskList({Key? key}) : super(key: key);
+  final int templateId;
+  final int allocationId;
+
+  const TaskList({Key? key, required this.templateId, required this.allocationId}) : super(key: key);
 
   @override
   State<TaskList> createState() => _TaskListState();
@@ -19,7 +31,13 @@ class TaskList extends StatefulWidget {
 class _TaskListState extends State<TaskList> {
   bool submitButtonTap = true;
   bool skipButtonTap = false;
-  List<int> _selectedProductIds = [];
+  TaskListBloc taskListBloc = TaskListBloc();
+  TaskListModel data = TaskListModel();
+  SubmitTaskModel submitData = SubmitTaskModel();
+
+  CreateTaskModel createTaskModel = CreateTaskModel();
+
+  final List<String> _selectedProductIds = [];
   final List<TaskModel> _data = [
     TaskModel(
       id: 0,
@@ -52,158 +70,248 @@ class _TaskListState extends State<TaskList> {
   ];
   @override
   void initState() {
+    createTaskModel.data = [];
+    print("allocationIddddd " + widget.templateId.toString());
+    createTaskModel.allocationId = widget.allocationId;
+    taskListBloc.add(GetAllTask(id: widget.templateId));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-            size: 30,
-          ),
-          onPressed: () {
+    return BlocConsumer(
+        bloc: taskListBloc,
+        listener: (context, state) {
+          if (state is GetTasksSuccess) {
+            EasyLoading.dismiss();
+
+            setState(() {
+              data = state.data;
+            });
+          }
+
+          if (state is SubmitTasksSuccess) {
+            EasyLoading.dismiss();
+            EasyLoading.showToast("Task Submitted Successfully..");
             Navigator.pop(context);
-          },
-        ),
-        title: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 15.w,
-            vertical: 10.h,
-          ),
-          child: Text(
-            MyTaskListConstants.APP_BAR,
-            textAlign: TextAlign.start,
-            style: TextStyle(
-              color: AppColors.appBarTitleColor,
-              fontSize: 24.sp,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ),
-        backgroundColor: AppColors.white,
-        elevation: 0,
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 15.h,
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: 15.h,
-              horizontal: 20.w,
-            ),
-            child: Text(
-              "List of tasks",
-              textAlign: TextAlign.start,
-              style: TextStyle(
-                color: AppColors.titleColor,
-                fontSize: 24.sp,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: 8.h,
-              ),
-              child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: _data.length,
-                scrollDirection: Axis.vertical,
-                // shrinkWrap: true,
-                itemBuilder: (
-                  BuildContext context,
-                  int index,
-                ) {
-                  return Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 7.h,
-                      ),
-                      child: CheckboxListWidget(
-                        name: _data[index].name,
-                        isChecked: _selectedProductIds.contains(_data[index].id),
-                        onChecked: (bool selected, String s) {
-                          if (selected) {
-                            _selectedProductIds.add(_data[index].id);
-                            print(_selectedProductIds);
-                          } else {
-                            _selectedProductIds.removeWhere((element) => element == _data[index].id);
-                            print(_selectedProductIds);
-                          }
-                          setState(() {});
-                        },
-                      ));
+            Navigator.pop(context);
+          }
+        },
+        builder: (context, state) {
+          if (state is GetTasksLoading && _data.isEmpty) {
+            EasyLoading.show(status: "Loading Please Wait ...");
+          }
+
+          if (state is GetTasksError) {
+            return CustomErrorWidget(error: state.error);
+          }
+
+          if (state is GetTasksSuccess && (state.data.tasks?.isEmpty ?? true)) {
+            EasyLoading.dismiss();
+            return const EmptyListWidget();
+          }
+          if (state is SubmitTasksLoading && _data.isEmpty) {
+            EasyLoading.show(status: "Loading Please Wait ...");
+          }
+
+          if (state is SubmitTasksError) {
+            print(state);
+
+            return CustomErrorWidget(error: state.error);
+          }
+
+          if (state is SubmitTasksSuccess && (state.data.isEmpty)) {
+            EasyLoading.dismiss();
+
+            return const EmptyListWidget();
+          }
+
+          return Scaffold(
+            backgroundColor: AppColors.white,
+            appBar: AppBar(
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.black,
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
                 },
               ),
+              title: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 15.w,
+                  vertical: 10.h,
+                ),
+                child: Text(
+                  MyTaskListConstants.APP_BAR,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: AppColors.appBarTitleColor,
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+              backgroundColor: AppColors.white,
+              elevation: 0,
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: 5.h,
-              horizontal: 30.w,
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 15.h,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 15.h,
+                    horizontal: 20.w,
+                  ),
+                  child: Text(
+                    "List of Activities",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      color: AppColors.titleColor,
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 8.h,
+                    ),
+                    child: ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: data.tasks?.length ?? 0,
+                      scrollDirection: Axis.vertical,
+                      // shrinkWrap: true,
+                      itemBuilder: (
+                        BuildContext context,
+                        int index,
+                      ) {
+                        return Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 7.h,
+                            ),
+                            child: CheckboxListWidget(
+                              name: data.tasks?[index].taskName,
+                              isChecked: createTaskModel.data!.firstWhereOrNull((element) => element.taskId == data.tasks?[index].taskId) != null,
+                              onChecked: (bool selected, String s) {
+                                if (selected) {
+                                  createTaskModel.data!.add(
+                                    InternalData(
+                                      taskId: data.tasks?[index].taskId ?? '',
+                                      taskName: data.tasks![index].taskName ?? '',
+                                      status: 1,
+                                    ),
+                                  );
+                                  print(createTaskModel.toJson());
+                                } else {
+                                  //_selectedProductIds.removeWhere((element) => element == data.tasks?[index].taskId);
+                                  createTaskModel.data!.removeWhere(
+                                    (element) => element.taskId == data.tasks?[index].taskId,
+                                  );
+                                  print(createTaskModel.toJson());
+                                }
+                                setState(() {});
+                              },
+                            ));
+                      },
+                    ),
+                  ),
+                ),
+
+                createTaskModel.data!.isNotEmpty
+                    ? Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 20.h,
+                          horizontal: 30.w,
+                        ),
+                        child: WhiteButtonWidget(
+                          text: MyTaskListConstants.SUBMIT_BTN,
+                          color: submitButtonTap ? AppColors.buttonColor : AppColors.white,
+                          onTap: () {
+                            if (createTaskModel.data!.isNotEmpty) {
+                              taskListBloc.add(SubmitTasks(createTaskModel: createTaskModel));
+                              print(state);
+                            }
+
+                            // setState(() {
+                            //   Navigator.pushReplacement(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => Dashboard(
+                            //               isFromJanitor: true,
+                            //               isFromSupervisor: false,
+                            //             )),
+                            //   );
+                            //   submitButtonTap = true;
+                            //   skipButtonTap = false;
+                            // });
+
+                            print(createTaskModel.toJson());
+
+                            // openDialog();
+                          },
+                        ),
+                      )
+                    : Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 20.h,
+                          horizontal: 30.w,
+                        ),
+                        child: WhiteButtonWidget(
+                          text: MyTaskListConstants.SUBMIT_BTN,
+                          color: AppColors.disabledYellowButtonColor,
+                          onTap: () {},
+                        ),
+                      ),
+                // Padding(
+                //   padding: EdgeInsets.symmetric(
+                //     vertical: 5.h,
+                //     horizontal: 30.w,
+                //   ),
+                //   child: WhiteButtonWidget(
+                //     text: MyTaskListConstants.SKIP_BTN,
+                //     color: skipButtonTap ? AppColors.buttonColor : AppColors.white,
+                //     onTap: () {
+                //       setState(() {
+                //         submitButtonTap = false;
+                //         skipButtonTap = true;
+                //       });
+                //       // openSkipButtonDialog();
+                //     },
+                //   ),
+                // ),
+              ],
             ),
-            child: WhiteButtonWidget(
-              text: MyTaskListConstants.SUBMIT_BTN,
-              color: submitButtonTap ? AppColors.buttonColor : AppColors.white,
-              onTap: () {
-                setState(() {
-                  submitButtonTap = true;
-                  skipButtonTap = false;
-                });
-                openDialog();
-              },
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: 5.h,
-              horizontal: 30.w,
-            ),
-            child: WhiteButtonWidget(
-              text: MyTaskListConstants.SKIP_BTN,
-              color: skipButtonTap ? AppColors.buttonColor : AppColors.white,
-              onTap: () {
-                setState(() {
-                  submitButtonTap = false;
-                  skipButtonTap = true;
-                });
-                openSkipButtonDialog();
-              },
-            ),
-          ),
-        ],
-      ),
-    );
+          );
+        });
   }
 
-  openDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CustomDialogueWidget(
-          text: MyTaskListConstants.POPUP_TITLE,
-          onTapSubmit: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const TaskCompletionScreen()),
-            );
-          },
-          onTapCancel: () {
-            Navigator.pop(context);
-          },
-        );
-      },
-    );
-  }
+  // openDialog() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return CustomDialogueWidget(
+  //         text: MyTaskListConstants.POPUP_TITLE,
+  //         onTapSubmit: () {
+  //           Navigator.pushReplacement(
+  //             context,
+  //             MaterialPageRoute(builder: (context) => const TaskCompletionScreen()),
+  //           );
+  //         },
+  //         onTapCancel: () {
+  //           Navigator.pop(context);
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
 
   openSkipButtonDialog() {
     showDialog(

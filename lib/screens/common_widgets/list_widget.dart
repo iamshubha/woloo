@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:janitor/screens/choose_facility_screen/model/facility_data.dart';
-import 'package:janitor/screens/selfie_screen/view/selfie_screen.dart';
 
 import '../../utils/app_color.dart';
 
@@ -315,14 +314,14 @@ class _ListWidgetState extends State<ListWidget> {
                                   InkWell(
                                     onTap: () {
                                       setState(() {});
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => const SelfieScreen(
-                                            isFromChooseFacility: true,
-                                            isFromTask: false,
-                                          ),
-                                        ),
-                                      );
+                                      // Navigator.of(context).push(
+                                      //   MaterialPageRoute(
+                                      //     builder: (context) => const SelfieScreen(
+                                      //       isFromChooseFacility: true,
+                                      //       isFromTask: false,
+                                      //     ),
+                                      //   ),
+                                      // );
                                     },
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
@@ -394,14 +393,14 @@ class _ListWidgetState extends State<ListWidget> {
                                 children: [
                                   InkWell(
                                     onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => const SelfieScreen(
-                                            isFromChooseFacility: true,
-                                            isFromTask: false,
-                                          ),
-                                        ),
-                                      );
+                                      // Navigator.of(context).push(
+                                      //   MaterialPageRoute(
+                                      //     builder: (context) => const SelfieScreen(
+                                      //       isFromChooseFacility: true,
+                                      //       isFromTask: false,
+                                      //     ),
+                                      //   ),
+                                      // );
                                     },
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),

@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:janitor/screens/common_widgets/custom_dialogue_widget.dart';
 import 'package:janitor/screens/common_widgets/janitor_list.dart';
 import 'package:janitor/screens/janitor_details_screen/view/janitor_details.dart';
-import 'package:janitor/screens/task_list/view/task_list_screen.dart';
 import 'package:janitor/utils/app_color.dart';
 import 'package:janitor/utils/app_constants.dart';
 
@@ -130,11 +129,11 @@ class _JanitorListState extends State<JanitorList> {
               yesButtonTap = true;
               cancelButtonTap = false;
             });
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const TaskList(),
-              ),
-            );
+            // Navigator.of(context).push(
+            //   MaterialPageRoute(
+            //     builder: (context) => const TaskList(),
+            //   ),
+            // );
           },
           onTapCancel: () {
             setState(() {

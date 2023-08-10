@@ -1,0 +1,70 @@
+import 'package:dio/dio.dart';
+import 'package:janitor/core/network/api_constant.dart';
+import 'package:janitor/core/network/dio_client.dart';
+import 'package:janitor/screens/login/data/model/send_otp.dart';
+import 'package:janitor/screens/login/data/model/verify_otp_model.dart';
+
+class LoginService {
+  final DioClient dio;
+  const LoginService({required this.dio});
+
+  Future<SendOtp> sendOTP({required String phoneNumber}) async {
+    try {
+      var response = await dio.post(
+        APIConstants.SEND_OTP,
+        data: {
+          "mobileNumber": phoneNumber,
+        },
+        options: Options(extra: {"auth": true}),
+      );
+
+      return SendOtp.fromJson(response['results']);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String> checkIn({required String type, required List<double> locations}) async {
+    try {
+      var response = await dio.post(
+        APIConstants.SEND_OTP,
+        data: {
+          "type": type,
+          "location": locations,
+        },
+        options: Options(extra: {"auth": true}),
+      );
+
+      return response['results'].toString();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<VerifyOtpModel> verifyOTP({required String otp, required String requestId}) async {
+    try {
+      var response = await dio.post(
+        APIConstants.VERIFY_OTP,
+        data: {
+          "request_id": requestId,
+          "otp": otp,
+        },
+      );
+
+      return VerifyOtpModel.fromJson(response['results']);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // Future uploadFCMToken() async {
+  //   try {
+  //     String? token = await FirebaseMessaging.instance.getToken();
+  //     await dio.post(
+  //       APIConstants.SEND_FCM_TOKEN,
+  //       options: Options(extra: {"auth": true}),
+  //       data: {'token': token},
+  //     );
+  //   } catch (e) {}
+  // }
+}

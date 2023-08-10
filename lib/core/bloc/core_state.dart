@@ -16,8 +16,10 @@ class CoreLoading extends CoreState {
 
 class CoreSuccess extends CoreState {
   final bool isLoggedIn;
-  final bool accessHome;
-  const CoreSuccess({required this.isLoggedIn, required this.accessHome});
+  // final bool accessHome;
+  const CoreSuccess({
+    required this.isLoggedIn,
+  });
 
   @override
   List<Object?> get props => [isLoggedIn];
