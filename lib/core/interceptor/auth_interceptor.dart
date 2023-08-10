@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get_it/get_it.dart';
-import 'package:janitor/screens/splash.dart';
+import 'package:janitor/screens/login/view/login_screen.dart';
 
 import '../local/global_storage.dart';
 
@@ -14,7 +14,7 @@ class AuthInterceptor extends Interceptor {
       EasyLoading.showToast("Session timed out.\nPlease login again.");
       Navigator.pushAndRemoveUntil(
         ContextHolder.currentContext,
-        MaterialPageRoute(builder: (context) => const SplashScreen()),
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
         (route) => false,
       );
       return;
@@ -27,7 +27,7 @@ class AuthInterceptor extends Interceptor {
     GlobalStorage globalStorage = GetIt.instance();
     bool isAuth = options.extra['auth'] ?? false;
     if (isAuth) {
-      options.headers.addAll({"x-coamana-token": globalStorage.getToken()});
+      options.headers.addAll({"x-woloo-token": globalStorage.getToken()});
     }
     super.onRequest(options, handler);
   }

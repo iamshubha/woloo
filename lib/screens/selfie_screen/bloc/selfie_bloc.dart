@@ -1,0 +1,36 @@
+import 'dart:async';
+
+import 'package:bloc/bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:janitor/screens/selfie_screen/bloc/selfie_event.dart';
+import 'package:janitor/screens/selfie_screen/bloc/selfie_state.dart';
+import 'package:janitor/screens/selfie_screen/data/network/selfie_service.dart';
+
+class SelfieBloc extends Bloc<SelfieEvent, SelfieState> {
+  final SelfieService selfieService = SelfieService(dio: GetIt.instance());
+  // String requestId = '';
+  // List<DashboardModelClass> data = [];
+
+  SelfieBloc() : super(UploadSelfieInitial()) {
+    on<SelfieEvent>((event, emit) {});
+    on<UploadSelfie>(_mapUploadSelfieToState);
+  }
+
+  FutureOr<void> _mapUploadSelfieToState(UploadSelfie event, Emitter<SelfieState> emit) async {
+    try {
+      emit(const UploadSelfieLoading(message: ""));
+
+      var response = await selfieService.uploadSelfie(
+        type: event.type,
+        image: event.image,
+        id: event.id,
+        remarks: event.remarks,
+      );
+
+      print("responseeee  ------  " + response);
+      emit(UploadSelfieSuccessful());
+    } catch (e) {
+      emit(UploadSelfieError(error: e.toString()));
+    }
+  }
+}

@@ -8,7 +8,6 @@ class AppColors {
   static const Color disabledButtonTextColor = Color(0xff979797);
   static const Color containerBorder = Color(0xffA4A4A6);
   static const Color dashboardContainerColor = Color(0xffFDFDFD);
-  // #00000033
   static const Color filterBorder = Color(0xffC0BCBC);
   static const Color filterContainer = Color(0xffF5F5F5);
 
@@ -42,9 +41,11 @@ class AppColors {
   static const Color disabledCheckColor = Color(0xFF63000000);
   static const Color disabledTextColor = Color(0xFF959595);
   static const Color boxShadowColor = Color(0xFF33000000);
+  static const Color timeSlotColor = Color(0xFF444242);
 
   static const Color ListTitleColor = Color(0xFF2E2E2E);
   static const Color titleColor = Color(0xFF393838);
+  static const Color iotBackgroundColor = Color(0xFFFF9D43);
 
   static const Color appBarTitleColor = Color(0xFF302E2A);
   static const Color appBarIconColor = Color(0xFF807964);
@@ -120,4 +121,22 @@ class AppColors {
   static const Color redText = Color(0xffB23535);
   static const Color greenText = Color(0xff2A9D0E);
   static const Color pendingStatusColor = Color(0xffB90404);
+  static const Color inProgressStatusColor = Color(0xffF8CE3B);
+  static const Color reOpenStatusColor = Color(0xff5F5FF8);
+  static const Color regularButtonColor = Color(0xffFBF06D);
+  static const Color issueButtonColor = Color(0xffFB6D6D);
+  static const Color disabledContainerColor = Color(0xffC9FBFBFB);
+  static const Color disabledbuttonColor = Color(0xffdff5de);
+  static const Color disabledGreyColor = Color(0xffe7e7e7);
+  static const Color imageScreenGreyColor = Color(0xff878781);
+  static const Color dottedBorderColor = Color(0xff827878);
+  static const Color dashedBorderColor = Color(0xffAFAFAF);
+  static const Color timeColor = Color(0xff646060);
+  static const Color greyLineColor = Color(0xffB3B3B3);
+  static const Color greyCircleColor = Color(0xffBFBFBF);
+  static const Color checkOutColor = Color(0xffF45757);
+  static const Color bottomNavigationColor = Color(0xffFFE22C);
+  static const Color fabColor = Color(0xff3D443D);
+  static const Color yellowTextColor = Color(0xffF4C10B);
+  static const Color disabledYellowButtonColor = Color(0xffFFF8A3);
 }

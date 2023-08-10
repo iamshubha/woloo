@@ -4,6 +4,10 @@ class AppName {
   static const String APP_NAME = "Woloo janitor";
 }
 
+class CustomTexts {
+  // static const String LOADING_MESSAGE = "Loading Please Wait ...";
+}
+
 class MyLoginConstants {
   static const String WELCOME_TEXT = "Welcome to woloo \nsmart hygeine";
   static const String MOBILE_NO = "Enter your mobile number";
@@ -38,6 +42,7 @@ class MySelfieScreenConstants {
   static const String TITLE_TEXT = "Take a selfie";
   static const String TITLE_SUBTEXT = "The image should be clear and have your face fully inside the frame";
   static const String SUBMIT_BTN = "Submit";
+  static const String IMAGE_TYPE_SELFIE = "selfie";
 }
 
 class MydashboardScreenConstants {
@@ -45,11 +50,20 @@ class MydashboardScreenConstants {
   static const String CLUSTER = "Cluster";
   static const String JANITOR = "Janitor";
   static const String FACILITY = "Facility";
+  static const String LOG_OUT = "Log Out";
+
   static const String CUSTOMER_REQUEST = "Customer request";
   static const String REPORT_ISSUE = "Report Issue";
   static const String ALERT = "Alert";
   static const String ALERT_REQUEST = "New customer request ";
   static const String BUTTON = "View";
+  static const String CHECK_IN = "Clock-In";
+  static const String CHECK_OUT = "Clock-out";
+  static const String CHECK_IN_TIME = "08:03:44  AM";
+  static const String CHECK_OUT_TIME = "05:00:44  PM";
+  static const String BLANK_LIST_TEXT = "Please Clock-In to see the list of task";
+  static const String POPUP_TITLE = "Do you want to Check-Out?";
+  static const String SUPERVISOR_TITLE_TEXT = "Hello,Shubham ";
 }
 
 class MyClusterListScreenConstants {
@@ -134,7 +148,9 @@ class MyCustomerRequestListScreenConstants {
 }
 
 class TaskCompletionScreenConstants {
-  static const String TITLE_TEXT = "Take a Image";
+  static const String TITLE_TEXT = "Add Photos of loo";
   static const String TITLE_SUBTEXT = "Please capture an image of the area you have been working on to validate it.";
-  static const String SUBMIT_BTN = "Submit";
+  static const String END_TASK_BTN = "End Task";
+  static const String REMARKS = "Remarks";
+  static const String IMAGE_TYPE_TASK = "task";
 }

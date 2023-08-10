@@ -4,7 +4,7 @@ abstract class CoreEvent extends Equatable {
   const CoreEvent();
 }
 
-class GetRBAC extends CoreEvent {
+class CheckUserIsLoggedInOrNot extends CoreEvent {
   @override
   List<Object?> get props => [];
 }

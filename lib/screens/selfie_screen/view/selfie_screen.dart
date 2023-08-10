@@ -1,11 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:janitor/screens/common_widgets/white_button_widget.dart';
-import 'package:janitor/screens/dashboard/view/dashboard_screen.dart';
+import 'package:janitor/screens/selfie_screen/bloc/selfie_bloc.dart';
+import 'package:janitor/screens/selfie_screen/bloc/selfie_event.dart';
+import 'package:janitor/screens/selfie_screen/bloc/selfie_state.dart';
 import 'package:janitor/screens/task_list/view/task_list_screen.dart';
 import 'package:janitor/utils/app_color.dart';
 import 'package:janitor/utils/app_constants.dart';
@@ -15,10 +18,15 @@ enum PickSource { CAMERA }
 class SelfieScreen extends StatefulWidget {
   final bool isFromChooseFacility;
   final bool isFromTask;
+  final int templateId;
+  final int allocationId;
+
   const SelfieScreen({
     Key? key,
     this.isFromChooseFacility = false,
     this.isFromTask = false,
+    required this.templateId,
+    required this.allocationId,
   }) : super(key: key);
 
   @override
@@ -27,6 +35,7 @@ class SelfieScreen extends StatefulWidget {
 
 class _SelfieScreenState extends State<SelfieScreen> {
   File? _file;
+  SelfieBloc selfieBloc = SelfieBloc();
 
   @override
   void initState() {
@@ -54,9 +63,14 @@ class _SelfieScreenState extends State<SelfieScreen> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.r),
                     ),
-                    child: Image.file(
-                      _file!,
-                      fit: BoxFit.cover,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        15.r,
+                      ),
+                      child: Image.file(
+                        _file!,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 )
@@ -151,37 +165,87 @@ class _SelfieScreenState extends State<SelfieScreen> {
                   ],
                 ),
           Expanded(child: Container()),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: 15.h,
-              horizontal: 30.w,
-            ),
-            child: WhiteButtonWidget(
-              text: MyTaskListConstants.SUBMIT_BTN,
-              color: AppColors.buttonColor,
-              onTap: () {
-                if (widget.isFromChooseFacility) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TaskList(),
-                    ),
-                  );
-                }
-                if (widget.isFromTask) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Dashboard(
-                        isFromJanitor: true,
-                        isFromSupervisor: false,
+          _file != null
+              ? BlocConsumer<SelfieBloc, SelfieState>(
+                  bloc: selfieBloc,
+                  listener: (context, state) async {
+                    if (state is UploadSelfieLoading) {
+                      EasyLoading.show(status: state.message);
+                    }
+
+                    if (state is UploadSelfieSuccessful) {
+                      EasyLoading.dismiss();
+                      // Navigator.pop(context);
+
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TaskList(
+                              allocationId: widget.allocationId,
+                              templateId: widget.templateId,
+                            ),
+                          ));
+                    }
+
+                    if (state is UploadSelfieError) {
+                      EasyLoading.dismiss();
+                      EasyLoading.showError(state.error);
+                    }
+                  },
+                  builder: (context, state) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 15.h,
+                        horizontal: 30.w,
                       ),
-                    ),
-                  );
-                }
-              },
-            ),
-          ),
+                      child: WhiteButtonWidget(
+                        text: MyTaskListConstants.SUBMIT_BTN,
+                        color: AppColors.buttonColor,
+                        onTap: () {
+                          print("image#######" + _file!.path);
+
+                          selfieBloc.add(UploadSelfie(
+                            type: MySelfieScreenConstants.IMAGE_TYPE_SELFIE,
+                            image: _file!,
+                            id: widget.allocationId,
+                            remarks: "remarks",
+                          ));
+                        },
+                      ),
+                    );
+                  })
+              : Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 15.h,
+                    horizontal: 30.w,
+                  ),
+                  child: WhiteButtonWidget(
+                    text: MyTaskListConstants.SUBMIT_BTN,
+                    color: AppColors.disabledYellowButtonColor,
+                    onTap: () {},
+                  ),
+                ),
+          // Padding(
+          //   padding: EdgeInsets.symmetric(
+          //     vertical: 15.h,
+          //     horizontal: 30.w,
+          //   ),
+          //   child: WhiteButtonWidget(
+          //     text: MyTaskListConstants.SKIP_BTN,
+          //     color: AppColors.buttonColor,
+          //     onTap: () {
+          //       Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //           builder: (context) => TaskList(
+          //             allocationId: widget.allocationId,
+          //             templateId: widget.templateId,
+          //           ),
+          //         ),
+          //       );
+          //     },
+          //   ),
+          // ),
         ],
       ),
     );

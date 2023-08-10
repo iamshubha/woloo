@@ -1,13 +1,22 @@
-import 'package:cool_alert/cool_alert.dart';
+import 'dart:async';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:janitor/screens/choose_facility_screen/view/choose_facility.dart';
-import 'package:janitor/screens/cluster_screen/view/cluster_screen.dart';
-import 'package:janitor/screens/dashboard/model/dashboard_model.dart';
-import 'package:janitor/screens/issue_list_screen/view/issue_list.dart';
-import 'package:janitor/screens/janitor_customer_request/view/local_widgets/customer_request_list.dart';
-import 'package:janitor/screens/janitor_screen/view/janitor_screen.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
+import 'package:janitor/core/local/global_storage.dart';
+import 'package:janitor/screens/common_widgets/custom_dialogue_widget.dart';
+import 'package:janitor/screens/dashboard/bloc/dashboard_bloc.dart';
+import 'package:janitor/screens/dashboard/bloc/dashboard_event.dart';
+import 'package:janitor/screens/dashboard/bloc/dashboard_state.dart';
+import 'package:janitor/screens/dashboard/view/local_widgets/dashboard_list.dart';
+import 'package:janitor/screens/login/view/login_screen.dart';
+import 'package:janitor/screens/supervisor_dashboard/view/local_widgets/supervisor_dashboard_list.dart';
 import 'package:janitor/utils/app_color.dart';
 import 'package:janitor/utils/app_constants.dart';
 import 'package:janitor/utils/app_images.dart';
@@ -28,63 +37,70 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   int selectedCard = -1;
+  GlobalStorage globalStorage = GetIt.instance();
 
-  final List<DashboardModel> _list = [
-    DashboardModel(
-      id: 0,
-      imgString: AppImages.cluster_img,
-      name: MydashboardScreenConstants.CLUSTER,
-    ),
-    DashboardModel(
-      id: 1,
-      imgString: AppImages.janitor_img,
-      name: MydashboardScreenConstants.JANITOR,
-    ),
-    DashboardModel(
-      id: 2,
-      imgString: AppImages.danger_img,
-      name: MydashboardScreenConstants.REPORT_ISSUE,
-    ),
-    DashboardModel(
-      id: 3,
-      imgString: AppImages.custom_request_img,
-      name: MydashboardScreenConstants.CUSTOMER_REQUEST,
-    ),
+  bool servicestatus = false;
+  bool haspermission = false;
+  bool showList = false;
+  bool onTapCheckIn = false;
+
+  String check_in_time = "";
+  String check_out_time = "";
+
+  late LocationPermission permission;
+  late Position position;
+  String long = "", lat = "";
+
+  String? _currentAddress;
+  DateTime currentTime = DateTime.now();
+  late final FirebaseMessaging _firebaseMessaging;
+
+  late StreamSubscription<Position> positionStream;
+
+  final iconList = <IconData>[
+    Icons.brightness_5,
+    Icons.brightness_4,
+    Icons.brightness_6,
+    Icons.brightness_7,
   ];
-  final List<DashboardModel> _janitorList = [
-    DashboardModel(
-      id: 0,
-      imgString: AppImages.cluster_img,
-      name: MydashboardScreenConstants.FACILITY,
-    ),
-    DashboardModel(
-      id: 1,
-      imgString: AppImages.custom_request_img,
-      name: MydashboardScreenConstants.CUSTOMER_REQUEST,
-    ),
-  ];
+  var _bottomNavIndex = 0; // efault index of first screen
+  DashboardBloc dashboardBloc = DashboardBloc();
+
   @override
   void initState() {
+    // final pushNotificationService = PushNotificationService(_firebaseMessaging);
+    // pushNotificationService.initialise();
+    // checkGps();
+
+    init();
+    setState(() {
+      onTapCheckIn = globalStorage.isCheckedIn();
+      if (onTapCheckIn) showList = true;
+    });
+
+    // dashboardBloc.add();
+
     super.initState();
   }
 
   init() async {
     String deviceToken = await getDeviceToken();
-    print("###### PRINT DEVICE TOKEN TO USE FOR PUSH NOTIFCIATION ######");
-    print(deviceToken);
+    print("###### PRINT DEVICE TOKEN TO USE FOR PUSH NOTIFICATION ######");
+    print("TOKENNNNNNNN.....-----" + deviceToken);
     print("############################################################");
 
     // listen for user to click on notification
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage remoteMessage) {
       String? title = remoteMessage.notification!.title;
-      String? description = remoteMessage.notification!.body;
 
+      String? description = remoteMessage.notification!.body;
       //im gonna have an alertdialog when clicking from push notification
       Alert(
         context: context,
         type: AlertType.error,
         title: title, // title from push notification data
-        desc: description, // description from push notifcation data
+        style: AlertStyle(titleStyle: TextStyle(color: AppColors.redText), backgroundColor: AppColors.black),
+        desc: description, // description from push notification data
         buttons: [
           DialogButton(
             child: Text(
@@ -101,252 +117,364 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        children: [
-          Container(
-            height: 80.h,
-            color: AppColors.white,
-            width: ScreenUtil().screenWidth,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    MydashboardScreenConstants.TITLE_TEXT,
-                    style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.w400, color: Colors.black),
+    return BlocListener(
+      bloc: dashboardBloc,
+      listener: (context, state) {
+        print(state);
+        if (state is ClockInLoading) {
+          EasyLoading.show(status: state.message);
+        }
+
+        if (state is ClockInError) {
+          EasyLoading.dismiss();
+          EasyLoading.showError(state.error);
+        }
+        if (state is ClockInSuccessful) {
+          EasyLoading.dismiss();
+
+          setState(() {
+            showList = true;
+            onTapCheckIn = true;
+          });
+          String formattedDate = DateFormat('hh:mm:ss  a').format(currentTime);
+          check_in_time = formattedDate;
+        }
+
+        if (state is ClockOutSuccessful) {
+          EasyLoading.dismiss();
+          print(state);
+          setState(() {
+            showList = false;
+            onTapCheckIn = false;
+          });
+          String formattedDate = DateFormat('hh:mm:ss  a').format(currentTime);
+          check_out_time = formattedDate;
+        }
+        if (state is ClockOutLoading) {
+          EasyLoading.show(status: state.message);
+        }
+
+        if (state is ClockOutError) {
+          EasyLoading.dismiss();
+          EasyLoading.showError(state.error);
+        }
+      },
+      child: Scaffold(
+          // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          // floatingActionButton: Container(
+          //   width: 58,
+          //   height: 58,
+          //   decoration: ShapeDecoration(
+          //     color: Color(0xFF3D443D),
+          //     shape: OvalBorder(
+          //       side: BorderSide(
+          //         width: 1.50,
+          //         strokeAlign: BorderSide.strokeAlignCenter,
+          //         color: Color(0xFFFFE22C),
+          //       ),
+          //     ),
+          //   ),
+          //   child: Padding(
+          //     padding: EdgeInsets.symmetric(
+          //       horizontal: 10.w,
+          //       vertical: 10.h,
+          //     ),
+          //     child: Image.asset(
+          //       AppImages.fab_img,
+          //       height: 26.h,
+          //       width: 26.w,
+          //     ),
+          //   ),
+          // ),
+          // bottomNavigationBar:
+          //     // widget.isFromSupervisor
+          //     //     ?
+          //     AnimatedBottomNavigationBar(
+          //   backgroundColor: AppColors.bottomNavigationColor,
+          //   icons: iconList,
+          //   activeIndex: _bottomNavIndex,
+          //   notchSmoothness: NotchSmoothness.softEdge,
+          //
+          //   gapLocation: GapLocation.center,
+          //   onTap: (index) => setState(() => _bottomNavIndex = index),
+          //   //other params
+          // ),
+          // : Container(),
+          backgroundColor: AppColors.white,
+          appBar: AppBar(
+            elevation: 0,
+            backgroundColor: AppColors.white,
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  widget.isFromJanitor ? MydashboardScreenConstants.TITLE_TEXT : MydashboardScreenConstants.SUPERVISOR_TITLE_TEXT,
+                  style: TextStyle(
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
                   ),
-                ],
-              ),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    EasyLoading.show(status: "Logging out...");
+                    var storage = GetIt.instance<GlobalStorage>();
+                    storage.removeToken();
+                    await Future.delayed(const Duration(seconds: 3));
+                    EasyLoading.dismiss();
+                    EasyLoading.showToast("Logout success...");
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                      (route) => false,
+                    );
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 10.h,
+                      horizontal: 5.w,
+                    ),
+                    child: Icon(
+                      Icons.logout,
+                      color: AppColors.black,
+                      size: 30.sp,
+                    ),
+                  ),
+                )
+              ],
             ),
           ),
-          if (widget.isFromJanitor) ...[
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 40.w,
-                vertical: 20.h,
-              ),
-              child: Container(
-                height: 90.h,
-                padding: EdgeInsets.symmetric(
-                  vertical: 10.h,
-                  horizontal: 10.w,
-                ),
-                decoration: BoxDecoration(
-                    color: AppColors.alertBoxColor,
-                    borderRadius: BorderRadius.circular(
-                      15.r,
+          body: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                if (widget.isFromJanitor) ...[
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                      vertical: 10.h,
                     ),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: AppColors.alertShadowColor,
-                        blurRadius: 6,
-                        spreadRadius: 0,
-                        offset: Offset(1, 1),
-                      ),
-                    ]),
-                child: Row(
-                  children: [
-                    Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w),
-                        child: Image.asset(
-                          AppImages.megaphone,
-                          height: 42.h,
-                          width: 42.w,
-                        )),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 1.h,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: AppColors.containerBorder,
+                            width: 1.w,
                           ),
-                          child: Text(
-                            MydashboardScreenConstants.ALERT,
-                            style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w500, color: AppColors.alertTitleColor),
-                          ),
+                          borderRadius: BorderRadius.circular(10.r)),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 10.h,
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 1.h,
-                          ),
-                          child: Text(
-                            MydashboardScreenConstants.ALERT_REQUEST,
-                            style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600, color: Colors.black),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 1.h,
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: AppColors.buttonColor,
-                              borderRadius: BorderRadius.circular(5.r),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                onTapCheckIn
+                                    ? GestureDetector(
+                                        onTap: () async {
+                                          // var latitude = double.tryParse(lat) ?? 0;
+                                          // var longitude = double.tryParse(long) ?? 0;
+                                          // print("lattttt   " + latitude.toString());
+                                          // print("longggg   " + longitude.toString());
+                                          //
+                                          // dashboardBloc.add(MarkAttendance(type: 'check_in', locations: [latitude, longitude]));
+                                        },
+                                        child: Container(
+                                          height: 40.h,
+                                          width: 40.w,
+                                          decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.greyCircleColor),
+                                          child: Center(
+                                            child: Text(
+                                              "In",
+                                              style: TextStyle(color: AppColors.white, fontSize: 12.sp, fontWeight: FontWeight.w700),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : GestureDetector(
+                                        onTap: () async {
+                                          await checkGps();
+                                          if (!haspermission) return;
+
+                                          var latitude = double.tryParse(lat) ?? 0;
+                                          var longitude = double.tryParse(long) ?? 0;
+                                          print("lattttt   " + latitude.toString());
+                                          print("longggg   " + longitude.toString());
+
+                                          dashboardBloc.add(MarkAttendance(type: 'check_in', locations: [latitude, longitude]));
+                                        },
+                                        child: Container(
+                                          height: 40.h,
+                                          width: 40.w,
+                                          decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.acceptButtonColor),
+                                          child: Center(
+                                            child: Text(
+                                              "In",
+                                              style: TextStyle(color: AppColors.white, fontSize: 12.sp, fontWeight: FontWeight.w700),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5.w,
+                                  ),
+                                  child: Container(height: 1.0, width: 150.w, color: AppColors.greyLineColor),
+                                ),
+                                !onTapCheckIn
+                                    ? GestureDetector(
+                                        onTap: () {},
+                                        child: Container(
+                                          height: 40.h,
+                                          width: 40.w,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: AppColors.greyCircleColor,
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              "Out",
+                                              style: TextStyle(color: AppColors.white, fontSize: 12.sp, fontWeight: FontWeight.w700),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : GestureDetector(
+                                        onTap: () {
+                                          openDialog();
+                                        },
+                                        child: Container(
+                                          height: 40.h,
+                                          width: 40.w,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: AppColors.checkOutColor,
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              "Out",
+                                              style: TextStyle(color: AppColors.white, fontSize: 12.sp, fontWeight: FontWeight.w700),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                              ],
                             ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 10.w,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Text(
+                                        MydashboardScreenConstants.CHECK_IN,
+                                        style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w400, color: Colors.black),
+                                      ),
+                                      onTapCheckIn
+                                          ? Text(
+                                              check_in_time,
+                                              style: TextStyle(fontSize: 8.sp, fontWeight: FontWeight.w400, color: AppColors.timeColor),
+                                            )
+                                          : Container(),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        MydashboardScreenConstants.CHECK_OUT,
+                                        style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w400, color: Colors.black),
+                                      ),
+                                      !onTapCheckIn
+                                          ? Text(
+                                              check_out_time,
+                                              style: TextStyle(fontSize: 8.sp, fontWeight: FontWeight.w400, color: AppColors.timeColor),
+                                            )
+                                          : Container(),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+                widget.isFromJanitor
+                    ? showList
+                        ? DashboardListWidget(
+                            // name: "OPD, A wing",
+                            // description: "Description: xyz",
+                            // time: "30 min",
+                            // location: "Location: Reliance hospital, Thane",
+                            // booths: "Booths : 2",
+                            // total_tasks: "Total task : 2",
+                            // pending_tasks: "Pending task : 2",
+                            // status: "In Progress",
+                            current_lattitude: lat,
+                            current_longitude: long,
+                            onTapItem: () {
+                              print(lat);
+                              print(long);
+                              // if (widget.isFromAuthenticationScreen) {
+                              //   openDialog();
+                              // }
+                              // if (widget.isFromClusterScreen) {
+                              //   Navigator.of(context).push(
+                              //     MaterialPageRoute(
+                              //       builder: (context) => TaskDetailsScreen(),
+                              //     ),
+                              //   );
+                              // }
+                            },
+                            // type: '',
+                            // time_slot: '',
+                          )
+                        : Center(
                             child: Padding(
                               padding: EdgeInsets.symmetric(
-                                horizontal: 12.w,
-                                vertical: 1.h,
+                                horizontal: 20.w,
+                                vertical: 10.h,
                               ),
-                              child: Text(
-                                MydashboardScreenConstants.BUTTON,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.black,
-                                  fontSize: 12.sp,
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ],
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 20.w,
-                vertical: 10.h,
-              ),
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 10,
-                  crossAxisCount: 2,
-                ),
-                itemCount: widget.isFromJanitor ? _janitorList.length : _list.length,
-                itemBuilder: (BuildContext ctx, index) {
-                  return Container(
-                    // Image b// order
-                    height: 140.h,
-                    width: 140.w,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: selectedCard == index ? AppColors.yellowSplashColor : AppColors.dashboardContainerColor,
-                      boxShadow: const [
-                        BoxShadow(
-                          color: AppColors.boxShadowColor,
-                          blurRadius: 15,
-                          spreadRadius: 0,
-                          offset: Offset(1, 1),
-                        ),
-                      ],
-                    ),
-                    // child: Material(
-                    //   borderRadius: BorderRadius.circular(20.r),
-                    //   color: selectedCard == index ? AppColors.yellowSplashColor : AppColors.white,
-                    child: GestureDetector(
-                      // splashColor: AppColors.yellowSplashColor,
-                      onTap: () {
-                        setState(() {
-                          // ontap of each card, set the defined int to the grid view index
-                          selectedCard = index;
-                        });
-                        print(selectedCard);
-                        try {
-                          Widget screenToPush = Container();
-
-                          if (widget.isFromJanitor) {
-                            switch (_janitorList[index].id) {
-                              case 0:
-                                screenToPush = const ChooseFacilityList(
-                                  isFromAuthenticationScreen: true,
-                                  isFromClusterScreen: false,
-                                );
-                                break;
-                              case 1:
-                                screenToPush = const CustomerRequestList();
-                                break;
-                            }
-                          }
-                          if (widget.isFromSupervisor) {
-                            switch (_list[index].id) {
-                              case 0:
-                                screenToPush = const ClusterList();
-                                break;
-                              case 1:
-                                screenToPush = const JanitorList();
-                                break;
-                              case 2:
-                                screenToPush = const IssuesList();
-                                break;
-                              case 3:
-                                screenToPush = const IssuesList();
-                                break;
-                            }
-                          }
-                          // switch (_list[index].id) {
-                          //   case 0:
-                          //     screenToPush = const ClusterList();
-                          //     break;
-                          //   case 1:
-                          //     screenToPush = const JanitorList();
-                          //     break;
-                          //   case 2:
-                          //     screenToPush = const IssuesList();
-                          //     break;
-                          // }
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => screenToPush,
-                            ),
-                          );
-                        } catch (e) {
-                          CoolAlert.show(
-                            context: context,
-                            type: CoolAlertType.error,
-                            text: "You are not authorised to view this page.",
-                          );
-                        }
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 2.h,
-                            ),
-                            child: Image.asset(
-                              widget.isFromJanitor ? _janitorList[index].imgString : _list[index].imgString,
-                              fit: BoxFit.cover,
-                              // height: 60.h,
-                              width: 70.w,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5.w),
-                            child: Text(
-                              widget.isFromJanitor ? _janitorList[index].name : _list[index].name,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 100.h,
+                                  ),
+                                  Image.asset(
+                                    AppImages.blank_list_img,
+                                    height: 100.h,
+                                    width: 100.w,
+                                  ),
+                                  Text(
+                                    MydashboardScreenConstants.BLANK_LIST_TEXT,
+                                    maxLines: 2,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: AppColors.black,
+                                      fontSize: 24.sp,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
                           )
-                        ],
-                      ),
-                    ),
-                    // ),
-                  );
-                },
-              ),
+                    : SupervisorDashboardListWidget(
+                        onTapItem: () {},
+                      )
+              ],
             ),
-          ),
-        ],
-      ),
+          )),
     );
   }
 
@@ -357,5 +485,114 @@ class _DashboardState extends State<Dashboard> {
     String? deviceToken = await _firebaseMessage.getToken();
     print("token" + deviceToken.toString());
     return (deviceToken == null) ? "" : deviceToken;
+  }
+
+  checkGps() async {
+    EasyLoading.show(status: "Please wait we are fetching your location...");
+    servicestatus = await Geolocator.isLocationServiceEnabled();
+    if (servicestatus) {
+      permission = await Geolocator.checkPermission();
+
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          print('Location permissions are denied');
+        } else if (permission == LocationPermission.deniedForever) {
+          print("'Location permissions are permanently denied");
+        } else {
+          haspermission = true;
+        }
+      } else {
+        haspermission = true;
+      }
+
+      if (haspermission) {
+        // setState(() {
+        //   //refresh the UI
+        // });
+
+        await getLocation();
+      }
+
+      EasyLoading.dismiss();
+    } else {
+      EasyLoading.dismiss();
+      EasyLoading.showToast("GPS Service is not enabled,Please turn on GPS location");
+    }
+
+    // setState(() {
+    //   //refresh the UI
+    // });
+  }
+
+  getLocation() async {
+    position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    print(position.longitude); //Output: 80.24599079
+    print(position.latitude); //Output: 29.6593457
+
+    long = position.longitude.toString();
+    lat = position.latitude.toString();
+
+    // setState(() {
+    //   //refresh UI
+    // });
+
+    LocationSettings locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.high, //accuracy of the location data
+      distanceFilter: 100, //minimum distance (measured in meters) a
+      //device must move horizontally before an update event is generated;
+    );
+
+    StreamSubscription<Position> positionStream = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
+      print(position.longitude); //Output: 80.24599079
+      print(position.latitude); //Output: 29.6593457
+
+      long = position.longitude.toString();
+      lat = position.latitude.toString();
+
+      _getAddressFromLatLng(position);
+
+      // setState(() {
+      //   //refresh UI on update
+      // });
+    });
+  }
+
+  Future<void> _getAddressFromLatLng(Position position) async {
+    await placemarkFromCoordinates(position.latitude, position.longitude).then((List<Placemark> placemarks) {
+      Placemark place = placemarks[0];
+      setState(() {
+        _currentAddress = '${place.name},${place.street}, ${place.subLocality},${place.subAdministrativeArea}, ${place.administrativeArea},${place.postalCode}';
+        print("address - $_currentAddress");
+        EasyLoading.showToast("Current Location Detected : $_currentAddress");
+      });
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
+  openDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomDialogueWidget(
+          text: MydashboardScreenConstants.POPUP_TITLE,
+          onTapSubmit: () async {
+            Navigator.pop(context);
+            await checkGps();
+
+            if (!haspermission) return;
+
+            double latitude = double.tryParse(lat) ?? 0;
+            double longitude = double.tryParse(long) ?? 0;
+
+            dashboardBloc.add(MarkAttendance(type: 'check_out', locations: [latitude, longitude]));
+          },
+          onTapCancel: () {
+            Navigator.pop(context);
+          },
+        );
+      },
+    );
   }
 }

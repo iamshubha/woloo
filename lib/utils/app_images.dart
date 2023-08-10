@@ -16,4 +16,9 @@ abstract class AppImages {
   static String get custom_request_img => _assetImgPath + 'custom_request.png';
   static String get alert_icon_lottie => _assetLottiePath + 'colored_announcement.json';
   static String get filter_img => _assetImgPath + 'filter.png';
+  static String get blank_list_img => _assetImgPath + 'blank_list.png';
+  static String get fab_img => _assetImgPath + 'checklist.png';
+  static String get splash_logo => _assetImgPath + 'splash_logo.png';
+  static String get loader_lottie => _assetLottiePath + 'loader2.json';
+  static String get edit_icon_img => _assetImgPath + 'edit.png';
 }
