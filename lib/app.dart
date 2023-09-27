@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:context_holder/context_holder.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +45,11 @@ class _AppState extends State<App> {
               disabledColor: Colors.grey,
               textTheme: GoogleFonts.poppinsTextTheme(),
             ),
-            home: child,
+            home: GestureDetector(
+              child: child,
+
+
+            ),
           ),
         );
       },
@@ -65,4 +71,5 @@ class _AppState extends State<App> {
       ..userInteractions = true
       ..dismissOnTap = true;
   }
+
 }

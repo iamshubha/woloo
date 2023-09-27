@@ -9,7 +9,7 @@ abstract class SelfieEvent extends Equatable {
 class UploadSelfie extends SelfieEvent {
   final String type;
   final File image;
-  final int id;
+  final String id;
   final String remarks;
   const UploadSelfie({
     required this.type,

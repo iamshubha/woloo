@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:janitor/screens/choose_facility_screen/view/choose_facility.dart';
+import 'package:janitor/screens/cluster_screen/data/model/Cluster_model.dart';
 import 'package:janitor/screens/common_widgets/cluster_list.dart';
+import 'package:janitor/screens/janitor_screen/view/janitor_screen.dart';
 import 'package:janitor/utils/app_color.dart';
 import 'package:janitor/utils/app_constants.dart';
 
@@ -13,11 +15,11 @@ class ClusterList extends StatefulWidget {
 }
 
 class _ClusterListState extends State<ClusterList> {
-  final TextEditingController _searchController = TextEditingController();
   bool cancelButtonTap = true;
   bool yesButtonTap = false;
   int selectedCard = -1;
-
+  final TextEditingController _searchController = TextEditingController();
+  ClusterModel _clusterModel = ClusterModel();
   @override
   void initState() {
     super.initState();
@@ -38,18 +40,18 @@ class _ClusterListState extends State<ClusterList> {
             color: Colors.black,
           ),
         ),
-        leading: IconButton(
-          color: AppColors.black30,
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-            size: 30,
-          ),
-          // color: AppColors.black,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        // leading: IconButton(
+        //   color: AppColors.black30,
+        //   icon: const Icon(
+        //     Icons.arrow_back,
+        //     color: Colors.black,
+        //     size: 30,
+        //   ),
+        //   // color: AppColors.black,
+        //   onPressed: () {
+        //     Navigator.pop(context);
+        //   },
+        // ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -61,72 +63,41 @@ class _ClusterListState extends State<ClusterList> {
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: 20.w,
-              vertical: 10.h,
             ),
-            child: Text(
-              "List of Cluster",
-              style: TextStyle(
-                color: AppColors.clusterTitleColor,
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w400,
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Search',
+                prefixIcon: IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () {
+                    // Perform the search here
+                  },
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                    10.r,
+                  ),
+                ),
               ),
             ),
           ),
           Expanded(
             child: ClusterListWidget(
-              title: 'Cluster 1',
-              pincode: '441256',
-              janitorName: 'Uma Jadhav',
-              total_tasks: "4",
-              pending_tasks: "4",
-              onTapItem: () {
+              controller: _searchController,
+              onTapItem: (ClusterModel list) {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const ChooseFacilityList(
-                      isFromClusterScreen: true,
-                      isFromAuthenticationScreen: false,
+                    builder: (context) => JanitorList(
+                      isFromCluster: true,
+                      isFromDashboard: false,
+                      clusterId: list.clusterId.toString(),
+                      isFromDashboardAssignment: false,
                     ),
                   ),
                 );
               },
             ),
-
-            // ListView.builder(
-            //   physics: const BouncingScrollPhysics(),
-            //   itemCount: 6,
-            //   scrollDirection: Axis.vertical,
-            //   shrinkWrap: true,
-            //   itemBuilder: (
-            //     BuildContext context,
-            //     int index,
-            //   ) {
-            //     return Padding(
-            //       padding: EdgeInsets.symmetric(
-            //         vertical: 7.h,
-            //       ),
-            //       child: ClusterListWidget(
-            //         title: 'Cluster 1',
-            //         pincode: '441256',
-            //         janitorName: 'Uma Jadhav',
-            //         total_tasks: "4",
-            //         pending_tasks: "4",
-            //         onTapItem: () {
-            //           setState(() {
-            //             selectedCard = index;
-            //           });
-            //           Navigator.of(context).push(
-            //             MaterialPageRoute(
-            //               builder: (context) => const ChooseFacilityList(
-            //                 isFromClusterScreen: true,
-            //                 isFromAuthenticationScreen: false,
-            //               ),
-            //             ),
-            //           );
-            //         },
-            //       ),
-            //     );
-            //   },
-            // ),
           ),
         ],
       ),

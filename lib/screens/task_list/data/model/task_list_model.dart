@@ -8,7 +8,7 @@ class TaskListModel {
   });
 
   TaskListModel.fromJson(dynamic json) {
-    templateId = json['template_id'];
+    templateId = json['template_id']?.toString();
     if (json['tasks'] != null) {
       tasks = [];
       json['tasks'].forEach((v) {
@@ -36,15 +36,15 @@ class Tasks {
   Tasks({this.id, this.taskId, this.taskName, this.status});
 
   Tasks.fromJson(dynamic json) {
-    id = json['id'];
-    taskId = json['task_id'];
-    taskName = json['task_name'];
-    status = json['status'];
+    id = json['id']?.toString();
+    taskId = json['task_id']?.toString();
+    taskName = json['task_name']?.toString();
+    status = json['status']?.toString();
   }
-  int? id;
+  String? id;
   String? taskId;
   String? taskName;
-  int? status;
+  String? status;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

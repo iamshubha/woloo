@@ -7,7 +7,8 @@ class DashboardService {
   final DioClient dio;
   const DashboardService({required this.dio});
 
-  Future<String> markAttendance({required String type, required List<double> locations}) async {
+  Future<String> markAttendance(
+      {required String type, required List<double> locations}) async {
     try {
       var response = await dio.post(
         APIConstants.ATTENDANCE,
@@ -24,14 +25,11 @@ class DashboardService {
     }
   }
 
-  Future<List<DashboardModelClass>> getTasksByJanitorId({required int id}) async {
+  Future<List<DashboardModelClass>> getTasksByJanitorId() async {
     try {
       var response = await dio.get(
         APIConstants.GET_ALL_TASK_TAMPLATES,
         options: Options(extra: {"auth": true}),
-        queryParameters: {
-          "janitor_id": id,
-        },
       );
 
       List<DashboardModelClass> output = [];
@@ -45,7 +43,8 @@ class DashboardService {
     }
   }
 
-  Future<String> updateStatus({required int id, required int status}) async {
+  Future<String> updateStatus(
+      {required String id, required String status}) async {
     try {
       var response = await dio.post(
         APIConstants.UPDATE_STATUS,

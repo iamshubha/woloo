@@ -1,13 +1,19 @@
+import 'dart:async';
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
 import 'package:janitor/core/local/global_storage.dart';
+import 'package:janitor/screens/common_widgets/custom_dialogue_widget.dart';
 import 'package:janitor/screens/common_widgets/empty_list_widget.dart';
 import 'package:janitor/screens/common_widgets/error_widget.dart';
+import 'package:janitor/screens/common_widgets/map_utils.dart';
 import 'package:janitor/screens/dashboard/bloc/dashboard_bloc.dart';
 import 'package:janitor/screens/dashboard/bloc/dashboard_event.dart';
 import 'package:janitor/screens/dashboard/bloc/dashboard_state.dart';
@@ -16,6 +22,7 @@ import 'package:janitor/screens/dashboard/data/model/dashboard_model_class.dart'
 import 'package:janitor/screens/selfie_screen/view/selfie_screen.dart';
 import 'package:janitor/screens/washroom_image_screen/view/task_completion_screen.dart';
 import 'package:janitor/utils/app_color.dart';
+import 'package:janitor/utils/app_constants.dart';
 import 'package:janitor/utils/date_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -38,108 +45,29 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
   int selectedCard = -1;
   late DashboardBloc _dashboardBloc;
   List<DashboardModelClass> _data = [];
-  late Double facility_lattitude;
-  late Double facility_longitude;
+  late double? facility_lattitude;
+  late double? facility_longitude;
+  bool servicestatus = false;
+  bool haspermission = false;
   late Uri _url;
-
   GlobalStorage globalStorage = GetIt.instance();
   bool isSelected = false;
-
-  final List<DashboardModel> _list = [
-    DashboardModel(
-      id: 0,
-      name: "Floor 2, Ladies Rest Room, CMF",
-      description: 'Description: Rest room',
-      location: 'Location: Wipro, Hinjewadi Phase-2',
-      booths: 'Booths : 1',
-      total_task: 'Total task : 2',
-      pending_task: 'Pending task : 2',
-      time: '30 min',
-      status: "In Progress",
-      type: 'IOT',
-      timeSlot: '9:30 AM-11:30 AM',
-      date: '08 July 2023 ',
-    ),
-    DashboardModel(
-      id: 1,
-      name: "Floor 2, Ladies Rest Room, CMF",
-      description: 'Description: Restroom',
-      location: 'Location: Wipro, Hinjewadi Phase-2',
-      booths: 'Booths : 3',
-      total_task: 'Total task : 2',
-      pending_task: 'Pending task : 2',
-      time: '30 min',
-      status: "Pending",
-      type: 'Regular',
-      timeSlot: '9:30 AM-11:30 AM',
-      date: '08 July 2023 ',
-    ),
-    DashboardModel(
-      id: 2,
-      name: "Ladies Rest Room",
-      description: 'Description: Ladies Rest Room',
-      location: 'Location: Wipro, Hinjewadi Phase-2',
-      booths: 'Booths : 1',
-      total_task: 'Total task : 2',
-      pending_task: 'Pending task : 2',
-      time: '30 min',
-      status: "Accepted",
-      type: 'Issue',
-      timeSlot: '9:30 AM-11:30 AM',
-      date: '08 July 2023 ',
-    ),
-    DashboardModel(
-      id: 3,
-      name: "Floor 2, Ladies Rest Room, CMF",
-      description: 'Description: PWD Restroom',
-      location: 'Location: Wipro, Hinjewadi Phase-2',
-      booths: 'Booths : 1',
-      total_task: 'Total task : 2',
-      pending_task: 'Pending task : 2',
-      time: '30 min',
-      status: "Re-open",
-      type: "Customer",
-      timeSlot: '9:30 AM-11:30 AM',
-      date: '08 July 2023 ',
-    ),
-    DashboardModel(
-      id: 4,
-      name: "Gents Rest Room",
-      description: 'Description: Gents Rest Room',
-      location: 'Location: Wipro, Hinjewadi Phase-2',
-      booths: 'Booths : 3',
-      total_task: 'Total task : 2',
-      pending_task: 'Pending task : 2',
-      time: '30 min',
-      status: "Completed",
-      type: 'Customer',
-      timeSlot: '9:30 AM-11:30 AM',
-      date: '08 July 2023 ',
-    ),
-    DashboardModel(
-      id: 5,
-      name: "Ladies Rest Room",
-      description: 'Description: Ladies Rest Room',
-      location: 'Location: Wipro, Hinjewadi Phase-2',
-      booths: 'Booths : 2',
-      total_task: 'Total task : 2',
-      pending_task: 'Pending task : 2',
-      time: '30 min',
-      status: "Pending",
-      type: 'Issue',
-      timeSlot: '9:30 AM-11:30 AM',
-      date: '08 July 2023 ',
-    ),
-  ];
-
   late int janitorId;
+  late LocationPermission permission;
+  late Position position;
+  String long = "", lat = "";
+  String latitude = "";
+  String longitude = "";
 
+  String? _currentAddress;
   @override
   void initState() {
     _dashboardBloc = DashboardBloc();
     janitorId = globalStorage.getId();
-    _dashboardBloc.add(GetTaskTamplates(janitorId: janitorId));
+    _dashboardBloc.add(GetTaskTamplates());
 
+    latitude = globalStorage.getLatitude();
+    longitude = globalStorage.getLongitude();
     super.initState();
   }
 
@@ -168,6 +96,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
           if (state is DashboardError) {
             return CustomErrorWidget(error: state.error);
           }
+
           if (state is UpdateStatusError) {
             return CustomErrorWidget(error: state.error);
           }
@@ -175,13 +104,13 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
             EasyLoading.show(status: "Loading Please Wait ...");
           }
 
-          if (state is GetDashboardDataSuccess && state.data.isEmpty) {
+          if (state is GetDashboardDataSuccess && _data.isEmpty) {
             EasyLoading.dismiss();
             return const EmptyListWidget();
           }
 
           return ListView.builder(
-              physics: const BouncingScrollPhysics(),
+              physics: BouncingScrollPhysics(),
               itemCount: _data.length,
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
@@ -219,16 +148,21 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                 ),
                               ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Icon(
                                               Icons.calendar_month_outlined,
@@ -243,7 +177,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               child: Text(
                                                 _data[index].date ?? '',
                                                 style: TextStyle(
-                                                  color: AppColors.containerBorder,
+                                                  color:
+                                                      AppColors.containerBorder,
                                                   fontSize: 12.sp,
                                                   fontWeight: FontWeight.w400,
                                                 ),
@@ -262,7 +197,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               child: Text(
                                                 "${_data[index].startTime}-${_data[index].endTime}",
                                                 style: TextStyle(
-                                                  color: AppColors.containerBorder,
+                                                  color:
+                                                      AppColors.containerBorder,
                                                   fontSize: 12.sp,
                                                   fontWeight: FontWeight.w400,
                                                 ),
@@ -271,7 +207,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                           ],
                                         ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Padding(
                                               padding: EdgeInsets.symmetric(
@@ -280,8 +217,10 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               ),
                                               child: Container(
                                                 decoration: BoxDecoration(
-                                                    color: AppColors.disabledbuttonColor,
-                                                    borderRadius: BorderRadius.circular(
+                                                    color: AppColors
+                                                        .disabledbuttonColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
                                                       10.r,
                                                     )),
                                                 child: Padding(
@@ -290,11 +229,18 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                     horizontal: 20.w,
                                                   ),
                                                   child: Text(
-                                                    _data[index].requestType == "Customer request" ? "Customer" : _data[index].requestType ?? '',
+                                                    _data[index].requestType ==
+                                                            "Customer request"
+                                                        ? "Customer"
+                                                        : _data[index]
+                                                                .requestType ??
+                                                            '',
                                                     style: TextStyle(
-                                                      color: AppColors.containerBorder,
+                                                      color: AppColors
+                                                          .containerBorder,
                                                       fontSize: 14.sp,
-                                                      fontWeight: FontWeight.w600,
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                       letterSpacing: 0.8,
                                                     ),
                                                   ),
@@ -307,19 +253,35 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                 vertical: 1.h,
                                               ),
                                               child: Text(
-                                                _data[index].status == "Ongoing" ? "In Progress" : _data[index].status ?? '',
+                                                _data[index].status == "Ongoing"
+                                                    ? "In Progress"
+                                                    : _data[index].status ?? '',
                                                 style: TextStyle(
-                                                  color: _data[index].status == "Ongoing"
-                                                      ? AppColors.inProgressStatusColor
-                                                      : _data[index].status == "Pending"
-                                                          ? AppColors.pendingStatusColor
-                                                          : _data[index].status == "Accepted"
-                                                              ? AppColors.greenTextColor
-                                                              : _data[index].status == "Re-open"
-                                                                  ? AppColors.reOpenStatusColor
-                                                                  : _data[index].status == "Completed"
-                                                                      ? AppColors.greenTextColor
-                                                                      : Colors.black,
+                                                  color: _data[index].status ==
+                                                          "Ongoing"
+                                                      ? AppColors
+                                                          .inProgressStatusColor
+                                                      : _data[index].status ==
+                                                              "Pending"
+                                                          ? AppColors
+                                                              .pendingStatusColor
+                                                          : _data[index]
+                                                                      .status ==
+                                                                  "Accepted"
+                                                              ? AppColors
+                                                                  .greenTextColor
+                                                              : _data[index]
+                                                                          .status ==
+                                                                      "Re-open"
+                                                                  ? AppColors
+                                                                      .reOpenStatusColor
+                                                                  : _data[index]
+                                                                              .status ==
+                                                                          "Completed"
+                                                                      ? AppColors
+                                                                          .greenTextColor
+                                                                      : Colors
+                                                                          .black,
                                                   fontSize: 12.sp,
                                                   fontWeight: FontWeight.w600,
                                                 ),
@@ -418,16 +380,21 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                 // ],
                               ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Icon(
                                               Icons.calendar_month_outlined,
@@ -440,9 +407,11 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                 vertical: 1.h,
                                               ),
                                               child: Text(
-                                                CustomDateUtils.formatDate(_data[index].date ?? ''),
+                                                CustomDateUtils.formatDate(
+                                                    _data[index].date ?? ''),
                                                 style: TextStyle(
-                                                  color: AppColors.timeSlotColor,
+                                                  color:
+                                                      AppColors.timeSlotColor,
                                                   fontSize: 12.sp,
                                                   fontWeight: FontWeight.w400,
                                                 ),
@@ -461,7 +430,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               child: Text(
                                                 "${_data[index].startTime}-${_data[index].endTime}",
                                                 style: TextStyle(
-                                                  color: AppColors.timeSlotColor,
+                                                  color:
+                                                      AppColors.timeSlotColor,
                                                   fontSize: 12.sp,
                                                   fontWeight: FontWeight.w400,
                                                 ),
@@ -470,8 +440,10 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                           ],
                                         ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Padding(
                                               padding: EdgeInsets.symmetric(
@@ -480,16 +452,30 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               ),
                                               child: Container(
                                                 decoration: BoxDecoration(
-                                                    color: _data[index].requestType == "IOT"
-                                                        ? AppColors.iotBackgroundColor
-                                                        : _data[index].requestType == "Regular"
-                                                            ? AppColors.regularButtonColor
-                                                            : _data[index].requestType == "Issues"
-                                                                ? AppColors.issueButtonColor
-                                                                : _data[index].requestType == "Customer Request"
-                                                                    ? AppColors.acceptButtonColor
-                                                                    : AppColors.white,
-                                                    borderRadius: BorderRadius.circular(
+                                                    color: _data[index]
+                                                                .requestType ==
+                                                            "IOT"
+                                                        ? AppColors
+                                                            .iotBackgroundColor
+                                                        : _data[index]
+                                                                    .requestType ==
+                                                                "Regular"
+                                                            ? AppColors
+                                                                .regularButtonColor
+                                                            : _data[index]
+                                                                        .requestType ==
+                                                                    "Issue"
+                                                                ? AppColors
+                                                                    .issueButtonColor
+                                                                : _data[index]
+                                                                            .requestType ==
+                                                                        "Customer Request"
+                                                                    ? AppColors
+                                                                        .acceptButtonColor
+                                                                    : AppColors
+                                                                        .white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
                                                       10.r,
                                                     )),
                                                 child: Padding(
@@ -498,11 +484,17 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                     horizontal: 20.w,
                                                   ),
                                                   child: Text(
-                                                    _data[index].requestType == "Customer Request" ? "Customer" : _data[index].requestType ?? '',
+                                                    _data[index].requestType ==
+                                                            "Customer Request"
+                                                        ? "Customer"
+                                                        : _data[index]
+                                                                .requestType ??
+                                                            '',
                                                     style: TextStyle(
                                                       color: AppColors.black,
                                                       fontSize: 14.sp,
-                                                      fontWeight: FontWeight.w600,
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                       letterSpacing: 0.8,
                                                     ),
                                                   ),
@@ -515,20 +507,37 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                 vertical: 1.h,
                                               ),
                                               child: Text(
-                                                _data[index].status == "Ongoing" ? "In Progress" : _data[index].status ?? '',
+                                                _data[index].status == "Ongoing"
+                                                    ? "In Progress"
+                                                    : _data[index].status ?? '',
                                                 style: TextStyle(
-                                                  color: _data[index].status == "Ongoing"
-                                                      ? AppColors.inProgressStatusColor
-                                                      : _data[index].status == "Pending"
-                                                          ? AppColors.pendingStatusColor
-                                                          : _data[index].status == "Accepted"
-                                                              ? AppColors.greenTextColor
-                                                              : _data[index].status == "Re-open"
-                                                                  ? AppColors.reOpenStatusColor
-                                                                  : _data[index].status == "Completed"
-                                                                      ? AppColors.greenTextColor
-                                                                      : _data[index].status == "Request for closure"
-                                                                          ? AppColors.issueButtonColor
+                                                  color: _data[index].status ==
+                                                          "Ongoing"
+                                                      ? AppColors
+                                                          .inProgressStatusColor
+                                                      : _data[index].status ==
+                                                              "Pending"
+                                                          ? AppColors
+                                                              .pendingStatusColor
+                                                          : _data[index]
+                                                                      .status ==
+                                                                  "Accepted"
+                                                              ? AppColors
+                                                                  .greenTextColor
+                                                              : _data[index]
+                                                                          .status ==
+                                                                      "Re-open"
+                                                                  ? AppColors
+                                                                      .reOpenStatusColor
+                                                                  : _data[index]
+                                                                              .status ==
+                                                                          "Completed"
+                                                                      ? AppColors
+                                                                          .greenTextColor
+                                                                      : _data[index].status ==
+                                                                              "Request for closure"
+                                                                          ? AppColors
+                                                                              .issueButtonColor
                                                                           : _data[index].status == "Rejected"
                                                                               ? AppColors.redText
                                                                               : AppColors.black,
@@ -540,8 +549,10 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                           ],
                                         ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Expanded(
                                               child: Padding(
@@ -550,12 +561,15 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   vertical: 5.h,
                                                 ),
                                                 child: Text(
-                                                  _data[index].facilityName ?? '',
+                                                  _data[index].facilityName ??
+                                                      '',
                                                   maxLines: 1,
                                                   softWrap: false,
-                                                  overflow: TextOverflow.ellipsis,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                   style: TextStyle(
-                                                    color: AppColors.ListTitleColor,
+                                                    color: AppColors
+                                                        .ListTitleColor,
                                                     fontSize: 13.sp,
                                                     fontWeight: FontWeight.w600,
                                                     letterSpacing: 0.8,
@@ -564,21 +578,29 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               ),
                                             ),
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
                                               children: [
                                                 Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 5.w,
+                                                      vertical: 5.h),
                                                   child: const Icon(
                                                     Icons.access_time_filled,
                                                     size: 20,
-                                                    color: AppColors.ListTitleColor,
+                                                    color: AppColors
+                                                        .ListTitleColor,
                                                   ),
                                                 ),
                                                 Text(
-                                                  _data[index].estimatedTime.toString(),
+                                                  _data[index]
+                                                      .estimatedTime
+                                                      .toString(),
                                                   style: TextStyle(
-                                                    color: AppColors.ListTitleColor,
+                                                    color: AppColors
+                                                        .ListTitleColor,
                                                     fontSize: 10.sp,
                                                     fontWeight: FontWeight.w400,
                                                   ),
@@ -622,7 +644,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             vertical: 2.h,
                                           ),
                                           child: Text(
-                                            "Booths :${_data[index].booths.toString()}",
+                                            "Booths :${_data[index].booths.toString()}" ??
+                                                '',
                                             style: TextStyle(
                                               color: AppColors.ListTitleColor,
                                               fontSize: 12.sp,
@@ -631,8 +654,10 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                           ),
                                         ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Padding(
                                               padding: EdgeInsets.symmetric(
@@ -640,9 +665,11 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                 vertical: 2.h,
                                               ),
                                               child: Text(
-                                                "Total task : ${_data[index].totalTasks.toString()}",
+                                                "Total task : ${_data[index].totalTasks.toString()}" ??
+                                                    '',
                                                 style: TextStyle(
-                                                  color: AppColors.greenTextColor,
+                                                  color:
+                                                      AppColors.greenTextColor,
                                                   fontSize: 14.sp,
                                                   fontWeight: FontWeight.w600,
                                                 ),
@@ -664,10 +691,13 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             ),
                                           ],
                                         ),
-                                        if (_data[index].status == "Ongoing") ...[
+                                        if (_data[index].status ==
+                                            "Ongoing") ...[
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
                                             children: [
                                               Expanded(
                                                 child: Container(),
@@ -681,32 +711,45 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   // );
                                                   Navigator.of(context).push(
                                                     MaterialPageRoute(
-                                                      builder: (context) => TaskCompletionScreen(
-                                                        allocationId: _data[index].taskAllocationId!,
+                                                      builder: (context) =>
+                                                          TaskCompletionScreen(
+                                                        allocationId: _data[
+                                                                    index]
+                                                                .taskAllocationId ??
+                                                            '',
                                                       ),
                                                     ),
                                                   );
                                                 },
                                                 child: Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 10.w,
+                                                      vertical: 8.h),
                                                   child: Container(
                                                     alignment: Alignment.center,
                                                     decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(8.r),
-                                                      color: AppColors.buttonColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.r),
+                                                      color:
+                                                          AppColors.buttonColor,
                                                     ),
                                                     child: Padding(
-                                                      padding: EdgeInsets.symmetric(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
                                                         horizontal: 40.w,
                                                         vertical: 6.h,
                                                       ),
                                                       child: Text(
                                                         "Close",
-                                                        textAlign: TextAlign.center,
+                                                        textAlign:
+                                                            TextAlign.center,
                                                         style: TextStyle(
                                                           fontSize: 10.sp,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: AppColors.black,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color:
+                                                              AppColors.black,
                                                         ),
                                                       ),
                                                     ),
@@ -716,16 +759,23 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             ],
                                           ),
                                         ],
-                                        if (_data[index].status == "Pending") ...[
+                                        if (_data[index].status ==
+                                            "Pending") ...[
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
                                             children: [
                                               InkWell(
                                                 onTap: () {
                                                   setState(() {});
 
-                                                  _dashboardBloc.add(UpdateStatus(id: _data[index].taskAllocationId!, status: 7));
+                                                  _dashboardBloc.add(
+                                                      UpdateStatus(
+                                                          id: _data[index]
+                                                              .taskAllocationId!,
+                                                          status: "7"));
 
                                                   // Navigator.of(context).push(
                                                   //   MaterialPageRoute(
@@ -739,25 +789,35 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   // );
                                                 },
                                                 child: Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 10.w,
+                                                      vertical: 8.h),
                                                   child: Container(
-                                                    alignment: Alignment.centerRight,
+                                                    alignment:
+                                                        Alignment.centerRight,
                                                     decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(8.r),
-                                                      color: AppColors.rejectButtonColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.r),
+                                                      color: AppColors
+                                                          .rejectButtonColor,
                                                     ),
                                                     child: Padding(
-                                                      padding: EdgeInsets.symmetric(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
                                                         horizontal: 15.w,
                                                         vertical: 6.h,
                                                       ),
                                                       child: Text(
                                                         "Reject",
-                                                        textAlign: TextAlign.center,
+                                                        textAlign:
+                                                            TextAlign.center,
                                                         style: TextStyle(
                                                           fontSize: 10.sp,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: AppColors.rejectGreyTextColor,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color: AppColors
+                                                              .rejectGreyTextColor,
                                                         ),
                                                       ),
                                                     ),
@@ -771,28 +831,41 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   //     builder: (context) => const JanitorList(),
                                                   //   ),
                                                   // );
-                                                  _dashboardBloc.add(UpdateStatus(id: _data[index].taskAllocationId!, status: 2));
+                                                  _dashboardBloc.add(UpdateStatus(
+                                                      id: _data[index]
+                                                              .taskAllocationId ??
+                                                          '',
+                                                      status: "2"));
                                                 },
                                                 child: Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 10.w,
+                                                      vertical: 8.h),
                                                   child: Container(
                                                     alignment: Alignment.center,
                                                     decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(8.r),
-                                                      color: AppColors.acceptButtonColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.r),
+                                                      color: AppColors
+                                                          .acceptButtonColor,
                                                     ),
                                                     child: Padding(
-                                                      padding: EdgeInsets.symmetric(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
                                                         horizontal: 15.w,
                                                         vertical: 6.h,
                                                       ),
                                                       child: Text(
                                                         "Accept",
-                                                        textAlign: TextAlign.center,
+                                                        textAlign:
+                                                            TextAlign.center,
                                                         style: TextStyle(
                                                           fontSize: 10.sp,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: AppColors.white,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color:
+                                                              AppColors.white,
                                                         ),
                                                       ),
                                                     ),
@@ -802,36 +875,60 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             ],
                                           ),
                                         ],
-                                        if (_data[index].status == "Accepted") ...[
+                                        if (_data[index].status ==
+                                            "Accepted") ...[
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
                                             children: [
                                               InkWell(
-                                                onTap: () {
-                                                  _url = Uri.parse('https://www.google.com/maps/dir/${widget.current_lattitude},${widget.current_longitude}/${_data[index].lat},${_data[index].lng}');
-                                                  _launchUrl();
+                                                onTap: () async {
+                                                  checkGps();
+                                                  setState(() {
+                                                    facility_lattitude =
+                                                        _data[index].lat;
+                                                    facility_longitude =
+                                                        _data[index].lng;
+                                                  });
+                                                  await MapUtils.openMap(
+                                                      _data[index].lat ?? 0.0,
+                                                      _data[index].lng ?? 0.0);
+                                                  // _url = Uri.parse(
+                                                  //     'https://www.google.com/maps/dir/${latitude},${longitude}/${_data[index].lat},${_data[index].lng}');
+                                                  // await _launchUrl();
                                                 },
                                                 child: Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 10.w,
+                                                      vertical: 8.h),
                                                   child: Container(
-                                                    alignment: Alignment.centerRight,
+                                                    alignment:
+                                                        Alignment.centerRight,
                                                     decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(8.r),
-                                                      color: AppColors.buttonColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.r),
+                                                      color:
+                                                          AppColors.buttonColor,
                                                     ),
                                                     child: Padding(
-                                                      padding: EdgeInsets.symmetric(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
                                                         horizontal: 15.w,
                                                         vertical: 6.h,
                                                       ),
                                                       child: Text(
                                                         "Direction",
-                                                        textAlign: TextAlign.center,
+                                                        textAlign:
+                                                            TextAlign.center,
                                                         style: TextStyle(
                                                           fontSize: 10.sp,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: AppColors.black,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color:
+                                                              AppColors.black,
                                                         ),
                                                       ),
                                                     ),
@@ -840,37 +937,57 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               ),
                                               InkWell(
                                                 onTap: () async {
-                                                  await Navigator.of(context).push(
+                                                  await Navigator.of(context)
+                                                      .push(
                                                     MaterialPageRoute(
-                                                      builder: (context) => SelfieScreen(
-                                                        templateId: _data[index].templateId!,
-                                                        allocationId: _data[index].taskAllocationId!,
+                                                      builder: (context) =>
+                                                          SelfieScreen(
+                                                        templateId: _data[index]
+                                                                .templateId ??
+                                                            0,
+                                                        allocationId: _data[
+                                                                    index]
+                                                                .taskAllocationId ??
+                                                            '',
                                                       ),
                                                     ),
                                                   );
-                                                  print("afasdfasfsadf" + _data[index].taskAllocationId.toString());
-                                                  _dashboardBloc.add(GetTaskTamplates(janitorId: janitorId));
+                                                  print("afasdfasfsadf" +
+                                                      _data[index]
+                                                          .taskAllocationId
+                                                          .toString());
+                                                  _dashboardBloc
+                                                      .add(GetTaskTamplates());
                                                 },
                                                 child: Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 10.w,
+                                                      vertical: 8.h),
                                                   child: Container(
                                                     alignment: Alignment.center,
                                                     decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(8.r),
-                                                      color: AppColors.acceptButtonColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.r),
+                                                      color: AppColors
+                                                          .acceptButtonColor,
                                                     ),
                                                     child: Padding(
-                                                      padding: EdgeInsets.symmetric(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
                                                         horizontal: 15.w,
                                                         vertical: 6.h,
                                                       ),
                                                       child: Text(
                                                         "Start",
-                                                        textAlign: TextAlign.center,
+                                                        textAlign:
+                                                            TextAlign.center,
                                                         style: TextStyle(
                                                           fontSize: 10.sp,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: AppColors.white,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color:
+                                                              AppColors.white,
                                                         ),
                                                       ),
                                                     ),
@@ -880,36 +997,54 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             ],
                                           ),
                                         ],
-                                        if (_data[index].status == "Re-open") ...[
+                                        if (_data[index].status ==
+                                            "Re-open") ...[
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
                                             children: [
                                               InkWell(
-                                                onTap: () {
-                                                  _url = Uri.parse('https://www.google.com/maps/dir/${widget.current_lattitude},${widget.current_longitude}/${_data[index].lat},${_data[index].lng}');
-                                                  _launchUrl();
+                                                onTap: () async {
+                                                  checkGps();
+                                                  await MapUtils.openMap(
+                                                      _data[index].lat ?? 0.0,
+                                                      _data[index].lng ?? 0.0);
+                                                  // _url = Uri.parse(
+                                                  //     'https://www.google.com/maps/dir/${latitude},${longitude}/${_data[index].lat},${_data[index].lng}');
+                                                  // await _launchUrl();
                                                 },
                                                 child: Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 10.w,
+                                                      vertical: 8.h),
                                                   child: Container(
-                                                    alignment: Alignment.centerRight,
+                                                    alignment:
+                                                        Alignment.centerRight,
                                                     decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(8.r),
-                                                      color: AppColors.buttonColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.r),
+                                                      color:
+                                                          AppColors.buttonColor,
                                                     ),
                                                     child: Padding(
-                                                      padding: EdgeInsets.symmetric(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
                                                         horizontal: 15.w,
                                                         vertical: 6.h,
                                                       ),
                                                       child: Text(
                                                         "Direction",
-                                                        textAlign: TextAlign.center,
+                                                        textAlign:
+                                                            TextAlign.center,
                                                         style: TextStyle(
                                                           fontSize: 10.sp,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: AppColors.black,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color:
+                                                              AppColors.black,
                                                         ),
                                                       ),
                                                     ),
@@ -918,37 +1053,56 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               ),
                                               InkWell(
                                                 onTap: () async {
-                                                  await Navigator.of(context).push(
+                                                  await Navigator.of(context)
+                                                      .push(
                                                     MaterialPageRoute(
-                                                      builder: (context) => SelfieScreen(
-                                                        templateId: _data[index].templateId!,
-                                                        allocationId: _data[index].taskAllocationId!,
+                                                      builder: (context) =>
+                                                          SelfieScreen(
+                                                        templateId: _data[index]
+                                                            .templateId!,
+                                                        allocationId: _data[
+                                                                    index]
+                                                                .taskAllocationId ??
+                                                            '',
                                                       ),
                                                     ),
                                                   );
-                                                  print("afasdfasfsadf" + _data[index].taskAllocationId.toString());
-                                                  _dashboardBloc.add(GetTaskTamplates(janitorId: janitorId));
+                                                  print("afasdfasfsadf" +
+                                                      _data[index]
+                                                          .taskAllocationId
+                                                          .toString());
+                                                  _dashboardBloc.add(
+                                                      const GetTaskTamplates());
                                                 },
                                                 child: Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 10.w,
+                                                      vertical: 8.h),
                                                   child: Container(
                                                     alignment: Alignment.center,
                                                     decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(8.r),
-                                                      color: AppColors.acceptButtonColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.r),
+                                                      color: AppColors
+                                                          .acceptButtonColor,
                                                     ),
                                                     child: Padding(
-                                                      padding: EdgeInsets.symmetric(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
                                                         horizontal: 15.w,
                                                         vertical: 6.h,
                                                       ),
                                                       child: Text(
                                                         "Start",
-                                                        textAlign: TextAlign.center,
+                                                        textAlign:
+                                                            TextAlign.center,
                                                         style: TextStyle(
                                                           fontSize: 10.sp,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: AppColors.white,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color:
+                                                              AppColors.white,
                                                         ),
                                                       ),
                                                     ),
@@ -973,5 +1127,90 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
     if (!await launchUrl(_url)) {
       throw Exception('Could not launch $_url');
     }
+  }
+
+  checkGps() async {
+    // EasyLoading.show(status: "Please wait we are fetching your location...");
+    servicestatus = await Geolocator.isLocationServiceEnabled();
+    if (servicestatus) {
+      permission = await Geolocator.checkPermission();
+
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          print('Location permissions are denied');
+        } else if (permission == LocationPermission.deniedForever) {
+          print("'Location permissions are permanently denied");
+        } else {
+          haspermission = true;
+        }
+      } else {
+        haspermission = true;
+      }
+
+      if (haspermission) {
+        // setState(() {
+        //   //refresh the UI
+        // });
+
+        await getLocation();
+      }
+
+      EasyLoading.dismiss();
+    } else {
+      EasyLoading.dismiss();
+      EasyLoading.showToast(
+          "GPS Service is not enabled,Please turn on GPS location");
+    }
+  }
+
+  getLocation() async {
+    position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    print(position.longitude); //Output: 80.24599079
+    print(position.latitude); //Output: 29.6593457
+
+    long = position.longitude.toString();
+    lat = position.latitude.toString();
+
+    LocationSettings locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.high, //accuracy of the location data
+      distanceFilter: 100, //minimum distance (measured in meters) a
+      //device must move horizontally before an update event is generated;
+    );
+
+    StreamSubscription<Position> positionStream =
+        Geolocator.getPositionStream(locationSettings: locationSettings)
+            .listen((Position position) {
+      print(position.longitude); //Output: 80.24599079
+      print(position.latitude); //Output: 29.6593457
+
+      long = position.longitude.toString();
+      lat = position.latitude.toString();
+
+      _getAddressFromLatLng(position);
+    });
+  }
+
+  Future<void> _getAddressFromLatLng(Position position) async {
+    await placemarkFromCoordinates(position.latitude, position.longitude)
+        .then((List<Placemark> placemarks) {
+      Placemark place = placemarks[0];
+      setState(() {
+        _currentAddress =
+            '${place.name},${place.street}, ${place.subLocality},${place.subAdministrativeArea}, ${place.administrativeArea},${place.postalCode}';
+        print("address - $_currentAddress");
+        // EasyLoading.showToast("Current Location Detected : $_currentAddress");
+      });
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
+  Future<void> _pullRefresh() async {
+    Future.delayed(Duration(seconds: 1), () {
+      print("api call");
+      _dashboardBloc.add(GetTaskTamplates());
+    });
   }
 }

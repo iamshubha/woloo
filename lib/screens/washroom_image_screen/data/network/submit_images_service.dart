@@ -10,7 +10,12 @@ class SubmitImagesService {
 
   const SubmitImagesService({required this.dio});
 
-  Future<String> uploadImages({required String type, required List<File> images, required int id, required String remarks}) async {
+  Future<String> uploadImages({
+    required String type,
+    required List<File> images,
+    required String id,
+    required String remarks,
+  }) async {
     try {
       FormData formData = FormData();
 
@@ -27,7 +32,8 @@ class SubmitImagesService {
           await MultipartFile.fromFile(
             file.path,
             filename: getFileName(file.path),
-            contentType: MediaType(getType(file.path), getFileExtension(file.path)),
+            contentType:
+                MediaType(getType(file.path), getFileExtension(file.path)),
           ),
         ));
       }
@@ -44,7 +50,10 @@ class SubmitImagesService {
     }
   }
 
-  Future<String> updateStatus({required int id, required int status}) async {
+  Future<String> updateStatus({
+    required String id,
+    required String status,
+  }) async {
     try {
       var response = await dio.post(
         APIConstants.UPDATE_STATUS,

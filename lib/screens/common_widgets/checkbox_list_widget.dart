@@ -5,7 +5,6 @@ import '../../utils/app_color.dart';
 
 class CheckboxListWidget extends StatefulWidget {
   final String? name;
-  // final Function onChecked;
   final bool showCheckbox;
   final bool isChecked;
   final bool viewOnly;
@@ -31,7 +30,6 @@ class _CheckboxListWidgetState extends State<CheckboxListWidget> {
   @override
   void initState() {
     check = widget.isChecked;
-
     super.initState();
   }
 
@@ -43,9 +41,6 @@ class _CheckboxListWidgetState extends State<CheckboxListWidget> {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          // SizedBox(
-          //   width: 5.w,
-          // ),
           if (widget.showCheckbox) ...[
             GestureDetector(
               onTap: () {
@@ -64,7 +59,10 @@ class _CheckboxListWidgetState extends State<CheckboxListWidget> {
                 decoration: BoxDecoration(
                   color: check ? AppColors.buttonColor : AppColors.white,
                   borderRadius: BorderRadius.circular(8.r),
-                  border: Border.all(color: check ? Colors.transparent : AppColors.checkboxGreyBorder),
+                  border: Border.all(
+                      color: check
+                          ? Colors.transparent
+                          : AppColors.checkboxGreyBorder),
                 ),
                 child: isDisabled || !check
                     ? null

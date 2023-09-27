@@ -18,9 +18,10 @@ import 'package:janitor/utils/app_constants.dart';
 enum PickSource { CAMERA }
 
 class TaskCompletionScreen extends StatefulWidget {
-  final int allocationId;
+  final String allocationId;
 
-  const TaskCompletionScreen({Key? key, required this.allocationId}) : super(key: key);
+  const TaskCompletionScreen({Key? key, required this.allocationId})
+      : super(key: key);
 
   @override
   State<TaskCompletionScreen> createState() => _TaskCompletionScreenState();
@@ -50,11 +51,12 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
 
           if (state is UploadImagesSuccessful) {
             EasyLoading.dismiss();
-            Navigator.pushReplacement(
+            Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) => const Dashboard(isFromJanitor: true, isFromSupervisor: false),
+                builder: (context) => const Dashboard(),
               ),
+              (route) => false,
             );
           }
 
@@ -105,7 +107,8 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                       height: 135.h,
                                       width: 150.w,
                                       child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(10.0), //add border radius
+                                        borderRadius: BorderRadius.circular(
+                                            10.0), //add border radius
                                         child: Image.file(
                                           _file1!,
                                           fit: BoxFit.cover,
@@ -114,7 +117,8 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                     )
                                   : GestureDetector(
                                       onTap: () async {
-                                        _file1 = await pickFile(null, PickSource.CAMERA);
+                                        _file1 = await pickFile(
+                                            null, PickSource.CAMERA);
                                         fileList.add(_file1!);
                                         print("fileeeee1" + _file1.toString());
                                         setState(() {});
@@ -130,20 +134,24 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                             vertical: 40.h,
                                           ),
                                           child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
                                             children: [
                                               Icon(
                                                 Icons.camera_alt_outlined,
                                                 size: 40,
-                                                color: AppColors.dottedBorderColor,
+                                                color:
+                                                    AppColors.dottedBorderColor,
                                               ),
                                               Text(
                                                 "Add Photo",
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 15.sp,
-                                                  color: AppColors.imageScreenGreyColor,
+                                                  color: AppColors
+                                                      .imageScreenGreyColor,
                                                 ),
                                               )
                                             ],
@@ -156,7 +164,8 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                       height: 135.h,
                                       width: 150.w,
                                       child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(10.0), //add border radius
+                                        borderRadius: BorderRadius.circular(
+                                            10.0), //add border radius
                                         child: Image.file(
                                           _file2!,
                                           fit: BoxFit.cover,
@@ -165,7 +174,8 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                     )
                                   : GestureDetector(
                                       onTap: () async {
-                                        _file2 = await pickFile(null, PickSource.CAMERA);
+                                        _file2 = await pickFile(
+                                            null, PickSource.CAMERA);
                                         fileList.add(_file2!);
 
                                         print("fileeeee2" + _file2.toString());
@@ -183,20 +193,24 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                             vertical: 40.h,
                                           ),
                                           child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
                                             children: [
                                               Icon(
                                                 Icons.camera_alt_outlined,
                                                 size: 40,
-                                                color: AppColors.dottedBorderColor,
+                                                color:
+                                                    AppColors.dottedBorderColor,
                                               ),
                                               Text(
                                                 "Add Photo",
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 15.sp,
-                                                  color: AppColors.imageScreenGreyColor,
+                                                  color: AppColors
+                                                      .imageScreenGreyColor,
                                                 ),
                                               )
                                             ],
@@ -213,15 +227,16 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                             vertical: 10.h,
                           ),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               _file3 != null
                                   ? Container(
                                       height: 135.h,
                                       width: 150.w,
                                       child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(10.0), //add border radius
+                                        borderRadius: BorderRadius.circular(
+                                            10.0), //add border radius
                                         child: Image.file(
                                           _file3!,
                                           fit: BoxFit.cover,
@@ -230,7 +245,8 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                     )
                                   : GestureDetector(
                                       onTap: () async {
-                                        _file3 = await pickFile(null, PickSource.CAMERA);
+                                        _file3 = await pickFile(
+                                            null, PickSource.CAMERA);
                                         fileList.add(_file3!);
 
                                         print("fileeeee3" + _file3.toString());
@@ -248,20 +264,24 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                             vertical: 40.h,
                                           ),
                                           child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
                                             children: [
                                               Icon(
                                                 Icons.camera_alt_outlined,
                                                 size: 40,
-                                                color: AppColors.dottedBorderColor,
+                                                color:
+                                                    AppColors.dottedBorderColor,
                                               ),
                                               Text(
                                                 "Add Photo",
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 15.sp,
-                                                  color: AppColors.imageScreenGreyColor,
+                                                  color: AppColors
+                                                      .imageScreenGreyColor,
                                                 ),
                                               )
                                             ],
@@ -368,15 +388,6 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
               remarks: _controller.text ?? '',
               allocationId: widget.allocationId,
             ));
-
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => Dashboard(
-                        isFromJanitor: true,
-                        isFromSupervisor: false,
-                      )),
-            );
           },
           onTapCancel: () {
             Navigator.pop(context);

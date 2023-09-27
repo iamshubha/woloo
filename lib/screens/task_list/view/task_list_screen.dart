@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:janitor/screens/common_widgets/checkbox_list_widget.dart';
+import 'package:janitor/screens/common_widgets/custom_dialogue_widget.dart';
 import 'package:janitor/screens/common_widgets/dialogue_box_simple.dart';
 import 'package:janitor/screens/common_widgets/empty_list_widget.dart';
 import 'package:janitor/screens/common_widgets/error_widget.dart';
@@ -19,10 +20,14 @@ import 'package:janitor/utils/app_color.dart';
 import 'package:janitor/utils/app_constants.dart';
 
 class TaskList extends StatefulWidget {
-  final int templateId;
-  final int allocationId;
+  final int? templateId;
+  final String allocationId;
 
-  const TaskList({Key? key, required this.templateId, required this.allocationId}) : super(key: key);
+  const TaskList({
+    Key? key,
+    required this.templateId,
+    required this.allocationId,
+  }) : super(key: key);
 
   @override
   State<TaskList> createState() => _TaskListState();
@@ -34,46 +39,14 @@ class _TaskListState extends State<TaskList> {
   TaskListBloc taskListBloc = TaskListBloc();
   TaskListModel data = TaskListModel();
   SubmitTaskModel submitData = SubmitTaskModel();
-
   CreateTaskModel createTaskModel = CreateTaskModel();
 
-  final List<String> _selectedProductIds = [];
-  final List<TaskModel> _data = [
-    TaskModel(
-      id: 0,
-      name: "Cleaning Floor",
-    ),
-    TaskModel(
-      id: 1,
-      name: "Wipe mirror",
-    ),
-    TaskModel(
-      id: 2,
-      name: "Wipe Toilets",
-    ),
-    TaskModel(
-      id: 3,
-      name: "Empty Trash",
-    ),
-    TaskModel(
-      id: 4,
-      name: "Wipe sink and fittings",
-    ),
-    TaskModel(
-      id: 5,
-      name: "Refill Hand lotion",
-    ),
-    TaskModel(
-      id: 6,
-      name: "Refill Toilet paper ",
-    ),
-  ];
   @override
   void initState() {
     createTaskModel.data = [];
     print("allocationIddddd " + widget.templateId.toString());
     createTaskModel.allocationId = widget.allocationId;
-    taskListBloc.add(GetAllTask(id: widget.templateId));
+    taskListBloc.add(GetAllTask(id: widget.templateId ?? 0));
     super.initState();
   }
 
@@ -98,7 +71,7 @@ class _TaskListState extends State<TaskList> {
           }
         },
         builder: (context, state) {
-          if (state is GetTasksLoading && _data.isEmpty) {
+          if (state is GetTasksLoading) {
             EasyLoading.show(status: "Loading Please Wait ...");
           }
 
@@ -110,7 +83,7 @@ class _TaskListState extends State<TaskList> {
             EasyLoading.dismiss();
             return const EmptyListWidget();
           }
-          if (state is SubmitTasksLoading && _data.isEmpty) {
+          if (state is SubmitTasksLoading) {
             EasyLoading.show(status: "Loading Please Wait ...");
           }
 
@@ -184,28 +157,48 @@ class _TaskListState extends State<TaskList> {
                     padding: EdgeInsets.symmetric(
                       vertical: 8.h,
                     ),
-                    child: ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: data.tasks?.length ?? 0,
-                      scrollDirection: Axis.vertical,
-                      // shrinkWrap: true,
-                      itemBuilder: (
-                        BuildContext context,
-                        int index,
-                      ) {
-                        return Padding(
+                    child: RefreshIndicator(
+                      onRefresh: () {
+                        return Future.delayed(
+                          Duration(seconds: 1),
+                          () {
+                            taskListBloc
+                                .add(GetAllTask(id: widget.templateId ?? 0));
+
+                            // setState(() {
+                            //   _demoData.addAll(["Ionic", "Xamarin"]);
+                            // });
+                          },
+                        );
+                      },
+                      color: AppColors.buttonColor,
+                      child: ListView.builder(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemCount: data.tasks?.length ?? 0,
+                        scrollDirection: Axis.vertical,
+                        // shrinkWrap: true,
+                        itemBuilder: (
+                          BuildContext context,
+                          int index,
+                        ) {
+                          return Padding(
                             padding: EdgeInsets.symmetric(
                               vertical: 7.h,
                             ),
                             child: CheckboxListWidget(
                               name: data.tasks?[index].taskName,
-                              isChecked: createTaskModel.data!.firstWhereOrNull((element) => element.taskId == data.tasks?[index].taskId) != null,
+                              isChecked: createTaskModel.data!.firstWhereOrNull(
+                                      (element) =>
+                                          element.taskId ==
+                                          data.tasks?[index].taskId) !=
+                                  null,
                               onChecked: (bool selected, String s) {
                                 if (selected) {
                                   createTaskModel.data!.add(
                                     InternalData(
                                       taskId: data.tasks?[index].taskId ?? '',
-                                      taskName: data.tasks![index].taskName ?? '',
+                                      taskName:
+                                          data.tasks![index].taskName ?? '',
                                       status: 1,
                                     ),
                                   );
@@ -213,14 +206,18 @@ class _TaskListState extends State<TaskList> {
                                 } else {
                                   //_selectedProductIds.removeWhere((element) => element == data.tasks?[index].taskId);
                                   createTaskModel.data!.removeWhere(
-                                    (element) => element.taskId == data.tasks?[index].taskId,
+                                    (element) =>
+                                        element.taskId ==
+                                        data.tasks?[index].taskId,
                                   );
                                   print(createTaskModel.toJson());
                                 }
                                 setState(() {});
                               },
-                            ));
-                      },
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -233,10 +230,13 @@ class _TaskListState extends State<TaskList> {
                         ),
                         child: WhiteButtonWidget(
                           text: MyTaskListConstants.SUBMIT_BTN,
-                          color: submitButtonTap ? AppColors.buttonColor : AppColors.white,
+                          color: submitButtonTap
+                              ? AppColors.buttonColor
+                              : AppColors.white,
                           onTap: () {
                             if (createTaskModel.data!.isNotEmpty) {
-                              taskListBloc.add(SubmitTasks(createTaskModel: createTaskModel));
+                              taskListBloc.add(SubmitTasks(
+                                  createTaskModel: createTaskModel));
                               print(state);
                             }
 
@@ -291,39 +291,5 @@ class _TaskListState extends State<TaskList> {
             ),
           );
         });
-  }
-
-  // openDialog() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return CustomDialogueWidget(
-  //         text: MyTaskListConstants.POPUP_TITLE,
-  //         onTapSubmit: () {
-  //           Navigator.pushReplacement(
-  //             context,
-  //             MaterialPageRoute(builder: (context) => const TaskCompletionScreen()),
-  //           );
-  //         },
-  //         onTapCancel: () {
-  //           Navigator.pop(context);
-  //         },
-  //       );
-  //     },
-  //   );
-  // }
-
-  openSkipButtonDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SimpleDialogueWidget(
-          text: MyTaskListConstants.SKIP_BTN_DIALOGUE,
-          onTapSubmit: () {
-            Navigator.pop(context);
-          },
-        );
-      },
-    );
   }
 }

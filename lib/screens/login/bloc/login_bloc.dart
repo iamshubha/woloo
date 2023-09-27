@@ -13,21 +13,23 @@ part 'login_state.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginService loginService = LoginService(dio: GetIt.instance());
   String requestId = '';
-  String code = '';
+  late int roleId;
   late int janitorId;
 
   LoginBloc() : super(LoginInitial()) {
     on<LoginEvent>((event, emit) {});
     on<SendOTP>(_mapSendOTPToState);
     on<VerifyOTP>(_mapVerifyOTPToState);
-    // on<GetCountryCodes>(_mapGetCountryCodeToState);
+    on<UpdateTokenOnVerifyOTP>(_mapUpdateTokenToState);
   }
 
-  FutureOr<void> _mapSendOTPToState(SendOTP event, Emitter<LoginState> emit) async {
+  FutureOr<void> _mapSendOTPToState(
+      SendOTP event, Emitter<LoginState> emit) async {
     try {
       emit(const LoginLoading(message: "Sending OTP..."));
 
-      var response = await loginService.sendOTP(phoneNumber: event.mobileNumber);
+      var response =
+          await loginService.sendOTP(phoneNumber: event.mobileNumber);
 
       requestId = response.requestId.toString();
       print("requestId $requestId");
@@ -37,29 +39,46 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  FutureOr<void> _mapVerifyOTPToState(VerifyOTP event, Emitter<LoginState> emit) async {
+  FutureOr<void> _mapVerifyOTPToState(
+      VerifyOTP event, Emitter<LoginState> emit) async {
     try {
       emit(const LoginLoading(message: "Validating OTP...."));
       print("requestId" + requestId);
 
-      var response = await loginService.verifyOTP(otp: event.otp, requestId: requestId);
+      var response =
+          await loginService.verifyOTP(otp: event.otp, requestId: requestId);
       GlobalStorage globalStorage = GetIt.instance();
+
       print("tokennnnnn" + response.token.toString());
       globalStorage.saveToken(accessToken: response.token ?? '');
       globalStorage.saveJanitorId(accessId: response.id!);
-      print("iddddd" + response.id.toString());
+      roleId = response.roleId!;
+      globalStorage.saveRoleId(accessRoleId: response.roleId!);
+      globalStorage.saveSupervisorName(
+          accessSupervisorName: response.name ?? '');
 
-      // RBAC rbac = await loginService.getRBAC();
-      // await loginService.uploadFCMToken();
-      // if (GetIt.instance.isRegistered<RBAC>()) {
-      //   GetIt.instance.unregister<RBAC>();
-      // }
-      // GetIt.instance.registerLazySingleton(() => rbac);
+      print("Namee--------- " + response.roleId.toString());
+
+      print("iddddd" + response.id.toString());
 
       emit(LoginOTPVerified());
     } catch (e) {
       print(e.toString());
       emit(LoginError(error: e.toString()));
+    }
+  }
+
+  FutureOr<void> _mapUpdateTokenToState(
+      UpdateTokenOnVerifyOTP event, Emitter<LoginState> emit) async {
+    try {
+      emit(UpdateTokenLoading());
+
+      var response = await loginService.updateFCMToken(token: event.token);
+
+      print("responseeee  ------  " + response);
+      emit(UpdateTokenSuccess());
+    } catch (e) {
+      emit(UpdateTokenError(error: e.toString()));
     }
   }
 }

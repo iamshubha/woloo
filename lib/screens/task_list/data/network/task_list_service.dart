@@ -17,6 +17,10 @@ class TaskListService {
           "id": id,
         },
       );
+      print(response['results'].toString() == '[]');
+      if (response['results'].toString() == '[]') {
+        return TaskListModel(templateId: id.toString(), tasks: []);
+      }
       return TaskListModel.fromJson(response['results']);
     } catch (e) {
       rethrow;
@@ -36,7 +40,8 @@ class TaskListService {
     }
   }
 
-  Future<String> updateStatus({required int id, required int status}) async {
+  Future<String> updateStatus(
+      {required String id, required String status}) async {
     try {
       var response = await dio.post(
         APIConstants.UPDATE_STATUS,

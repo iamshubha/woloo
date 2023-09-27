@@ -14,11 +14,23 @@ abstract class AppImages {
   static String get bed_img => _assetImgPath + 'bed.png';
   static String get megaphone => _assetImgPath + 'megaphone.png';
   static String get custom_request_img => _assetImgPath + 'custom_request.png';
-  static String get alert_icon_lottie => _assetLottiePath + 'colored_announcement.json';
+  static String get alert_icon_lottie =>
+      _assetLottiePath + 'colored_announcement.json';
   static String get filter_img => _assetImgPath + 'filter.png';
   static String get blank_list_img => _assetImgPath + 'blank_list.png';
   static String get fab_img => _assetImgPath + 'checklist.png';
-  static String get splash_logo => _assetImgPath + 'splash_logo.png';
+  static String get splash_logo => _assetImgPath + 'logo.png';
   static String get loader_lottie => _assetLottiePath + 'loader2.json';
   static String get edit_icon_img => _assetImgPath + 'edit.png';
+  static String get location_icon_img => _assetImgPath + 'location.png';
+  static String get empty_list_animation =>
+      _assetLottiePath + 'empty_list.json';
+  static String get cluster_icon => _assetImgPath + 'cluster.png';
+  static String get janitor_icon => _assetImgPath + 'janitor.png';
+  static String get report_issue_icon => _assetImgPath + 'danger.png';
+  static String get customer_request_icon =>
+      _assetImgPath + 'custom_request.png';
+  static String get janitor_present => _assetImgPath + 'present.png';
+  static String get janitor_absent => _assetImgPath + 'absent.png';
+  static String get submittedIcon => _assetImgPath + 'submitted_image.png';
 }

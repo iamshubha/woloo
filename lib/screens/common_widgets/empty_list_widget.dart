@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:janitor/utils/app_images.dart';
 import 'package:lottie/lottie.dart';
 
 class EmptyListWidget extends StatelessWidget {
@@ -11,13 +12,14 @@ class EmptyListWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Lottie.network(
-          "https://lottie.host/4b3fa0b7-a7db-43a4-a9ca-25314e51fda5/8dZUcYbLEj.json",
-          width: 130.w,
+        Lottie.asset(
+          AppImages.empty_list_animation,
+          width: 200.w,
+          repeat: false,
         ),
         Center(
           child: Text(
-            "Nothing to show...",
+            "Data Not Found ...",
             style: TextStyle(
               fontSize: 16.sp,
             ),

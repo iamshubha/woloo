@@ -1,15 +1,11 @@
 // ignore_for_file: constant_identifier_names
 
 class AppName {
-  static const String APP_NAME = "Woloo janitor";
-}
-
-class CustomTexts {
-  // static const String LOADING_MESSAGE = "Loading Please Wait ...";
+  static const String APP_NAME = "Woloo Task Management";
 }
 
 class MyLoginConstants {
-  static const String WELCOME_TEXT = "Welcome to woloo \nsmart hygeine";
+  static const String WELCOME_TEXT = "Welcome to woloo \nsmart hygiene";
   static const String MOBILE_NO = "Enter your mobile number";
   static const String MOBILE_VALIDATION = "Please enter your mobile number";
 
@@ -17,7 +13,8 @@ class MyLoginConstants {
   static const String VERIFY_OTP_BTN = "Verify & Proceed";
 
   static const String OTP_VERIFICATION = "OTP Verification";
-  static const String ENTER_OTP = "Please enter the verification code below sent \n                on your +";
+  static const String ENTER_OTP =
+      "Please enter the verification code below sent \n                on your +";
   static const String DIDNT_RECIEVED_OTP = "Didn’t receive OTP code?";
 }
 
@@ -40,7 +37,8 @@ class MyTaskListConstants {
 
 class MySelfieScreenConstants {
   static const String TITLE_TEXT = "Take a selfie";
-  static const String TITLE_SUBTEXT = "The image should be clear and have your face fully inside the frame";
+  static const String TITLE_SUBTEXT =
+      "The image should be clear and have your face fully inside the frame";
   static const String SUBMIT_BTN = "Submit";
   static const String IMAGE_TYPE_SELFIE = "selfie";
 }
@@ -61,7 +59,8 @@ class MydashboardScreenConstants {
   static const String CHECK_OUT = "Clock-out";
   static const String CHECK_IN_TIME = "08:03:44  AM";
   static const String CHECK_OUT_TIME = "05:00:44  PM";
-  static const String BLANK_LIST_TEXT = "Please Clock-In to see the list of task";
+  static const String BLANK_LIST_TEXT =
+      "Please Clock-In to see the list of task";
   static const String POPUP_TITLE = "Do you want to Check-Out?";
   static const String SUPERVISOR_TITLE_TEXT = "Hello,Shubham ";
 }
@@ -69,11 +68,11 @@ class MydashboardScreenConstants {
 class MyClusterListScreenConstants {
   static const String TITLE_TEXT = "Cluster";
 
-  static const String BTN_TEXT = "Reassign";
+  static const String BTN_TEXT = "Assign";
 }
 
 class MyFacilityScreenConstants {
-  static const String TITLE_TEXT = "Choose Facility";
+  static const String TITLE_TEXT = "Tasks";
 
   static const String BTN_TEXT = "Reassign";
 }
@@ -82,10 +81,14 @@ class MyJanitorsListScreenConstants {
   static const String TITLE_TEXT = "Janitors";
 
   static const String SUB_TITLE = "List of Janitors";
+  static const String JANITOR_PRESENT = "Present";
+
+  static const String JANITOR_ABSENT = "Absent";
 }
 
 class MyTaskDetailsScreenConstants {
   static const String APP_BAR = "Task details";
+  static const String APPROVE_BUTTON = "Approve";
 
   static const String TITLE = "List of tasks";
 }
@@ -113,21 +116,22 @@ class MyReportIssueScreenConstants {
   static const String SUB_TITLE = "List of Janitors";
 
   static const String CLUSTER_NAME = "Cluster Name";
-  static const String CLUSTER_NAME_VALIDATION = "Cluster Name";
+  static const String CLUSTER_NAME_VALIDATION = "Cluster Name is required";
 
   static const String FACILITY = "Facility";
-  static const String FACILITY_VALIDATION = "Facility";
+  static const String FACILITY_VALIDATION = "Facility is required";
 
   static const String TASK_NAME = "Task name";
-  static const String TASK_NAME_VALIDATION = "Task name";
+  static const String TASK_NAME_VALIDATION = "Task name is required";
 
   static const String DESCRIPTION = "Description";
-  static const String DESCRIPTION_VALIDATION = "Description";
+  static const String DESCRIPTION_VALIDATION = "Description is required";
 
   static const String ASSIGN_TO = "Assign to";
-  static const String ASSIGN_VALIDATION = "Assign to";
+  static const String ASSIGN_VALIDATION = "Assign to is required";
 
   static const String UPLOAD_PHOTO = "Upload Photo";
+  static const String POP_UP_TEXT = "Your Issue submitted successfully";
 }
 
 class MyCustomerRequestListScreenConstants {
@@ -137,7 +141,8 @@ class MyCustomerRequestListScreenConstants {
   static const String REQUEST_STATUS = "Pending";
   static const String CUSTOMER_NAME = "Customer Name : ";
   static const String DATE_TIME = "22 Jun 2023, 12:00 PM-01:00 PM";
-  static const String ADDRESS = "Flat no. 302, vedant apartment DP road Pimple nilakh ,";
+  static const String ADDRESS =
+      "Flat no. 302, vedant apartment DP road Pimple nilakh ,";
   static const String PINCODE = "441256";
   static const String REJECT_BUTTON = "Reject";
   static const String ACCEPT_BUTTON = "Accept";
@@ -149,8 +154,16 @@ class MyCustomerRequestListScreenConstants {
 
 class TaskCompletionScreenConstants {
   static const String TITLE_TEXT = "Add Photos of loo";
-  static const String TITLE_SUBTEXT = "Please capture an image of the area you have been working on to validate it.";
+  static const String TITLE_SUBTEXT =
+      "Please capture an image of the area you have been working on to validate it.";
   static const String END_TASK_BTN = "End Task";
   static const String REMARKS = "Remarks";
   static const String IMAGE_TYPE_TASK = "task";
+}
+
+class BottomNavigatiionBarConstants {
+  static const String CLUSTER = "Cluster";
+  static const String JANITORS = "Janitors";
+  static const String REPORT_ISSUE = "Report issue";
+  static const String ACCOUNT = "Account";
 }

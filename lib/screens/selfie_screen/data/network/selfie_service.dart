@@ -10,7 +10,11 @@ class SelfieService {
 
   const SelfieService({required this.dio});
 
-  Future<String> uploadSelfie({required String type, required File image, required int id, required String remarks}) async {
+  Future<String> uploadSelfie(
+      {required String type,
+      required File image,
+      required String id,
+      required String remarks}) async {
     try {
       FormData formData = FormData();
 
@@ -27,7 +31,8 @@ class SelfieService {
           await MultipartFile.fromFile(
             image.path,
             filename: getFileName(image.path),
-            contentType: MediaType(getType(image.path), getFileExtension(image.path)),
+            contentType:
+                MediaType(getType(image.path), getFileExtension(image.path)),
           ),
         ),
       ]);

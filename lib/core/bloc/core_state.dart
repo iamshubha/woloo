@@ -16,7 +16,6 @@ class CoreLoading extends CoreState {
 
 class CoreSuccess extends CoreState {
   final bool isLoggedIn;
-  // final bool accessHome;
   const CoreSuccess({
     required this.isLoggedIn,
   });
@@ -28,6 +27,24 @@ class CoreSuccess extends CoreState {
 class CoreError extends CoreState {
   final String error;
   const CoreError({required this.error});
+
+  @override
+  List<Object?> get props => [error];
+}
+
+class UpdateTokenLoading extends CoreState {
+  @override
+  List<Object?> get props => [];
+}
+
+class UpdateTokenSuccess extends CoreState {
+  @override
+  List<Object?> get props => [];
+}
+
+class UpdateTokenError extends CoreState {
+  final String error;
+  const UpdateTokenError({required this.error});
 
   @override
   List<Object?> get props => [error];

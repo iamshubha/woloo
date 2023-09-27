@@ -1,13 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:janitor/screens/choose_facility_screen/view/choose_facility.dart';
 import 'package:janitor/screens/common_widgets/custom_dialogue_widget.dart';
 import 'package:janitor/screens/common_widgets/janitor_list.dart';
 import 'package:janitor/screens/janitor_details_screen/view/janitor_details.dart';
+import 'package:janitor/screens/janitor_screen/data/model/Janitor_list_model.dart';
 import 'package:janitor/utils/app_color.dart';
 import 'package:janitor/utils/app_constants.dart';
 
 class JanitorList extends StatefulWidget {
-  const JanitorList({Key? key}) : super(key: key);
+  final bool isFromCluster;
+  final bool isFromDashboard;
+  final bool isFromDashboardAssignment;
+
+  final String? clusterId;
+  List<String>? allocationId;
+  JanitorList(
+      {Key? key,
+      required this.isFromCluster,
+      required this.isFromDashboard,
+      required this.isFromDashboardAssignment,
+      this.allocationId,
+      this.clusterId})
+      : super(key: key);
 
   @override
   State<JanitorList> createState() => _JanitorListState();
@@ -17,6 +32,7 @@ class _JanitorListState extends State<JanitorList> {
   final TextEditingController _searchController = TextEditingController();
   bool cancelButtonTap = true;
   bool yesButtonTap = false;
+
   @override
   void initState() {
     super.initState();
@@ -37,18 +53,20 @@ class _JanitorListState extends State<JanitorList> {
             color: Colors.black,
           ),
         ),
-        leading: IconButton(
-          color: AppColors.black30,
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-            size: 30,
-          ),
-          // color: AppColors.black,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        leading: widget.isFromCluster || widget.isFromDashboardAssignment
+            ? IconButton(
+                color: AppColors.black30,
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.black,
+                  size: 30,
+                ),
+                // color: AppColors.black,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            : Container(),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -94,55 +112,76 @@ class _JanitorListState extends State<JanitorList> {
             ),
           ),
           Expanded(
-              child: Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: 7.h,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: 7.h,
+              ),
+              child: JanitorListWidget(
+                controller: _searchController,
+                clusterId: widget.clusterId,
+                onTapItem: (JanitorListModel data) {
+                  if (widget.isFromCluster) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ChooseFacilityList(
+                          janitorId: data.id ?? '',
+                        ),
+                      ),
+                    );
+                  }
+                  if (widget.isFromDashboard) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => JanitorDetails(
+                          id: data.id ?? '',
+                          shift: data.shift.toString(),
+                          check_in_time: data.startTime.toString(),
+                          check_out_time: data.endTime.toString(),
+                          complete_task: data.completedTaskCount!,
+                          pending_task: data.pendingTaskCount.toString(),
+                          total_task: data.totalTaskCount.toString(),
+                          name: data.name.toString(),
+                          mobile: data.mobile.toString(),
+                          isPresent: data.isPresent ?? false,
+                        ),
+                      ),
+                    );
+                  }
+                },
+                isFromCluster: widget.isFromCluster,
+                isFromDashboard: widget.isFromDashboard,
+                isFromFacility: false,
+                allocationId: widget.allocationId ?? [],
+                isFromDashboardAssignment: widget.isFromDashboardAssignment,
+              ),
             ),
-            child: JanitorListWidget(
-              onTapItem: () {
-                // openDialog();
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => JanitorDetails(id: 12),
-                  ),
-                );
-              },
-              janitorName: 'Uma Jadhav',
-              pincode: '9876543210',
-              cluster: 'Cluster 1',
-              mobile: '4411526',
-            ),
-          )),
+          ),
         ],
       ),
     );
   }
 
-  openDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CustomDialogueWidget(
-          text: MyFacilityListConstants.POPUP_TEXT,
-          onTapSubmit: () {
-            setState(() {
-              yesButtonTap = true;
-              cancelButtonTap = false;
-            });
-            // Navigator.of(context).push(
-            //   MaterialPageRoute(
-            //     builder: (context) => const TaskList(),
-            //   ),
-            // );
-          },
-          onTapCancel: () {
-            setState(() {
-              cancelButtonTap = true;
-              yesButtonTap = false;
-            });
-          },
-        );
-      },
-    );
-  }
+  // openDialog() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return CustomDialogueWidget(
+  //         text: MyFacilityListConstants.POPUP_TEXT,
+  //         onTapSubmit: () {
+  //           setState(() {
+  //             yesButtonTap = true;
+  //             cancelButtonTap = false;
+  //           });
+  //
+  //         },
+  //         onTapCancel: () {
+  //           setState(() {
+  //             cancelButtonTap = true;
+  //             yesButtonTap = false;
+  //           });
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
 }
