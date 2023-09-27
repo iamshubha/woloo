@@ -124,6 +124,7 @@ class AppColors {
   static const Color inProgressStatusColor = Color(0xffF8CE3B);
   static const Color reOpenStatusColor = Color(0xff5F5FF8);
   static const Color regularButtonColor = Color(0xffFBF06D);
+  static const Color disabledRegularButtonColor = Color(0xffFBF06D);
   static const Color issueButtonColor = Color(0xffFB6D6D);
   static const Color disabledContainerColor = Color(0xffC9FBFBFB);
   static const Color disabledbuttonColor = Color(0xffdff5de);
@@ -139,4 +140,12 @@ class AppColors {
   static const Color fabColor = Color(0xff3D443D);
   static const Color yellowTextColor = Color(0xffF4C10B);
   static const Color disabledYellowButtonColor = Color(0xffFFF8A3);
+  static const Color greyButtonColor = Color(0xffDADAD7);
+  static const Color locationColor = Color(0xff5E5E5E);
+  static const Color labelColor = Color(0xff202020);
+  static const Color disabledGreenColor = Color(0xff2A9D0E);
+  static const Color disabledRedColor = Color(0xffB23535);
+  static const Color disabledYellowColor = Color(0xffFBF06D);
+  static const Color disabledOrangeColor = Color(0xfff7b981);
+  static const Color disabledPinkColor = Color(0xfff59f9f);
 }

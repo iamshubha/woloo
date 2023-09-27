@@ -9,29 +9,30 @@ class DisabledCheckboxListWidget extends StatefulWidget {
   final bool showCheckbox;
   final bool isChecked;
   final bool viewOnly;
-  final Function onChecked;
+  // final Function onChecked;
 
   const DisabledCheckboxListWidget({
     Key? key,
     required this.name,
-    required this.onChecked,
+    // required this.onChecked,
     this.showCheckbox = true,
     this.isChecked = false,
     this.viewOnly = false,
   }) : super(key: key);
 
   @override
-  State<DisabledCheckboxListWidget> createState() => _DisabledCheckboxListWidgetState();
+  State<DisabledCheckboxListWidget> createState() =>
+      _DisabledCheckboxListWidgetState();
 }
 
-class _DisabledCheckboxListWidgetState extends State<DisabledCheckboxListWidget> {
+class _DisabledCheckboxListWidgetState
+    extends State<DisabledCheckboxListWidget> {
   bool check = false;
-  bool isDisabled = false;
-
+  bool isDisabled = true;
   @override
   void initState() {
     check = widget.isChecked;
-
+    print("isChecked ---> " + widget.isChecked.toString());
     super.initState();
   }
 
@@ -43,38 +44,34 @@ class _DisabledCheckboxListWidgetState extends State<DisabledCheckboxListWidget>
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          // SizedBox(
-          //   width: 5.w,
-          // ),
           if (widget.showCheckbox) ...[
             GestureDetector(
               onTap: () {
                 if (isDisabled) {
                   return;
                 }
-
-                setState(() {
-                  check = !check;
-                  widget.onChecked(check, widget.name);
-                });
               },
               child: Container(
                 width: 30.w,
                 height: 30.h,
                 decoration: BoxDecoration(
-                  color: check ? AppColors.disabledCheckBoxColor : AppColors.white,
+                  color:
+                      check ? AppColors.disabledCheckBoxColor : AppColors.white,
                   borderRadius: BorderRadius.circular(8.r),
-                  border: Border.all(color: check ? Colors.transparent : AppColors.disabledContainerBorder),
+                  border: Border.all(
+                      color: check
+                          ? Colors.transparent
+                          : AppColors.disabledContainerBorder),
                 ),
-                child: isDisabled || !check
-                    ? null
-                    : const Center(
+                child: check
+                    ? Center(
                         child: Icon(
                           Icons.check,
                           size: 15,
                           color: AppColors.disabledCheckColor,
                         ),
-                      ),
+                      )
+                    : null,
               ),
             ),
             SizedBox(
@@ -94,7 +91,7 @@ class _DisabledCheckboxListWidgetState extends State<DisabledCheckboxListWidget>
 
                 setState(() {
                   check = !check;
-                  widget.onChecked(check, widget.name);
+                  // widget.onChecked(check, widget.name);
                 });
               },
               child: Row(

@@ -24,7 +24,8 @@ class LoginService {
     }
   }
 
-  Future<String> checkIn({required String type, required List<double> locations}) async {
+  Future<String> checkIn(
+      {required String type, required List<double> locations}) async {
     try {
       var response = await dio.post(
         APIConstants.SEND_OTP,
@@ -41,7 +42,24 @@ class LoginService {
     }
   }
 
-  Future<VerifyOtpModel> verifyOTP({required String otp, required String requestId}) async {
+  Future<String> updateFCMToken({required String token}) async {
+    try {
+      var response = await dio.put(
+        APIConstants.UPDATE_TOKEN_FCM,
+        data: {
+          "token": token,
+        },
+        options: Options(extra: {"auth": true}),
+      );
+
+      return response['results'].toString();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<VerifyOtpModel> verifyOTP(
+      {required String otp, required String requestId}) async {
     try {
       var response = await dio.post(
         APIConstants.VERIFY_OTP,

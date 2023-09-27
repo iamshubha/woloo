@@ -1,0 +1,56 @@
+import 'dart:async';
+
+import 'package:bloc/bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:janitor/screens/supervisor_dashboard/bloc/supervisor_dashboard_event.dart';
+import 'package:janitor/screens/supervisor_dashboard/bloc/supervisor_dashboard_state.dart';
+import 'package:janitor/screens/supervisor_dashboard/data/network/supervisor_dashboard_service.dart';
+import 'package:janitor/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
+import 'package:janitor/screens/task_details_screen/bloc/submitted_task_event.dart';
+import 'package:janitor/screens/task_details_screen/bloc/submitted_task_state.dart';
+import 'package:janitor/screens/task_details_screen/data/network/submitted_task_service.dart';
+import 'package:janitor/screens/task_list/bloc/tasklist_event.dart';
+import 'package:janitor/screens/task_list/bloc/tasklist_state.dart';
+import 'package:janitor/screens/task_list/data/network/task_list_service.dart';
+
+class SubmittedTaskBloc extends Bloc<SubmittedTaskEvent, SubmittedTaskState> {
+  final SubmittedTaskService submittedTaskService =
+      SubmittedTaskService(dio: GetIt.instance());
+  final SupervisorDashboardService _supervisorDashboardService =
+      SupervisorDashboardService(dio: GetIt.instance());
+  List<SupervisorModelDashboard> data = [];
+
+  SubmittedTaskBloc() : super(GetSubmittedTasksInitial()) {
+    on<SubmittedTaskEvent>((event, emit) {});
+    on<GetAllSubmittedTasks>(_mapGetSubmittedTasksToState);
+    on<UpdateStatus>(_mapUpdateStatusToState);
+  }
+
+  FutureOr<void> _mapGetSubmittedTasksToState(
+      GetAllSubmittedTasks event, Emitter<SubmittedTaskState> emit) async {
+    try {
+      emit(GetSubmittedTasksLoading());
+      var data = await submittedTaskService.getAllSubmittedTasks(
+          allocationId: event.allocationId);
+
+      emit(GetSubmittedTasksSuccess(data: data));
+    } catch (e) {
+      emit(GetSubmittedTasksError(error: e.toString()));
+    }
+  }
+
+  FutureOr<void> _mapUpdateStatusToState(
+      UpdateStatus event, Emitter<SubmittedTaskState> emit) async {
+    try {
+      emit(const UpdateStatusLoading(message: "Loading Please Wait..."));
+
+      await _supervisorDashboardService.updateStatus(
+          id: event.id, status: event.status);
+      data = await _supervisorDashboardService.getSupervisorDashboardData();
+
+      emit(UpdateStatusSuccessful());
+    } catch (e) {
+      emit(UpdateStatusError(error: e.toString()));
+    }
+  }
+}

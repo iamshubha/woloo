@@ -7,7 +7,8 @@ import 'package:janitor/screens/task_list/bloc/tasklist_state.dart';
 import 'package:janitor/screens/task_list/data/network/task_list_service.dart';
 
 class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
-  final TaskListService taskListService = TaskListService(dio: GetIt.instance());
+  final TaskListService taskListService =
+      TaskListService(dio: GetIt.instance());
 
   TaskListBloc() : super(GetTasksInitial()) {
     on<TaskListEvent>((event, emit) {});
@@ -15,22 +16,26 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
     on<SubmitTasks>(_mapSubmitTasksToState);
   }
 
-  FutureOr<void> _mapGetAllTasksToState(GetAllTask event, Emitter<TaskListState> emit) async {
+  FutureOr<void> _mapGetAllTasksToState(
+      GetAllTask event, Emitter<TaskListState> emit) async {
     try {
       emit(GetTasksLoading());
       var data = await taskListService.getAllTasks(id: event.id);
 
       emit(GetTasksSuccess(data: data));
     } catch (e) {
-      emit(GetTasksError(error: e.toString()));
+      rethrow;
     }
   }
 
-  FutureOr<void> _mapSubmitTasksToState(SubmitTasks event, Emitter<TaskListState> emit) async {
+  FutureOr<void> _mapSubmitTasksToState(
+      SubmitTasks event, Emitter<TaskListState> emit) async {
     try {
       emit(SubmitTasksLoading());
-      var data = await taskListService.submitTask(createTaskModel: event.createTaskModel);
-      await taskListService.updateStatus(id: event.createTaskModel.allocationId!, status: 3);
+      var data = await taskListService.submitTask(
+          createTaskModel: event.createTaskModel);
+      await taskListService.updateStatus(
+          id: event.createTaskModel.allocationId ?? '', status: "3");
 
       emit(SubmitTasksSuccess(data: data));
     } catch (e) {

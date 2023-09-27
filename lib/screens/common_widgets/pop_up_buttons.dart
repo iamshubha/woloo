@@ -21,7 +21,7 @@ class _PopUpButtonWidgetState extends State<PopUpButtonWidget> {
         widget.onTap();
       },
       child: Container(
-        height: 42.h,
+        height: 40.h,
         width: 100.w,
         padding: EdgeInsets.symmetric(horizontal: 15.w),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.r), color: widget.color),
@@ -32,7 +32,7 @@ class _PopUpButtonWidgetState extends State<PopUpButtonWidget> {
             style: TextStyle(
               fontWeight: FontWeight.w700,
               color: AppColors.black,
-              fontSize: 16.sp,
+              fontSize: 14.sp,
             ),
           ),
         ),

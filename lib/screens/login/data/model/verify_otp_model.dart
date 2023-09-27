@@ -1,3 +1,5 @@
+import 'package:janitor/screens/login/data/model/verify_otp_model.dart';
+
 /// name : "Adelina"
 /// mobile : "8149155402"
 /// id : 4
@@ -11,6 +13,7 @@ class VerifyOtpModel {
     this.id,
     this.roleId,
     this.token,
+    // this.fcm_token
   });
 
   VerifyOtpModel.fromJson(dynamic json) {
@@ -19,12 +22,14 @@ class VerifyOtpModel {
     id = json['id'];
     roleId = json['role_id'];
     token = json['token'];
+    // fcm_token = json['fcm_token'];
   }
   String? name;
   String? mobile;
   int? id;
   int? roleId;
   String? token;
+  // String? fcm_token;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -33,6 +38,7 @@ class VerifyOtpModel {
     map['id'] = id;
     map['role_id'] = roleId;
     map['token'] = token;
+    // map['fcm_token'] = fcm_token;
     return map;
   }
 }

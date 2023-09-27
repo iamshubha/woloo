@@ -9,11 +9,16 @@ abstract class ImagesEvent extends Equatable {
 class UploadImages extends ImagesEvent {
   final String type;
   final List<File>? image;
-  final int id;
-  final int allocationId;
+  final String id;
+  final String allocationId;
 
   final String remarks;
-  UploadImages({required this.type, required this.image, required this.id, required this.remarks, required this.allocationId});
+  UploadImages(
+      {required this.type,
+      required this.image,
+      required this.id,
+      required this.remarks,
+      required this.allocationId});
 
   @override
   List<Object?> get props => [type, image, id, remarks, allocationId];

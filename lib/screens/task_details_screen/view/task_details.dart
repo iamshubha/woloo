@@ -1,6 +1,20 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
+import 'package:janitor/core/local/global_storage.dart';
 import 'package:janitor/screens/common_widgets/disabled_checkbox_widget.dart';
+import 'package:janitor/screens/common_widgets/empty_list_widget.dart';
+import 'package:janitor/screens/common_widgets/error_widget.dart';
+import 'package:janitor/screens/supervisor_dashboard/bloc/supervisor_dashboard_bloc.dart';
+import 'package:janitor/screens/supervisor_dashboard/bloc/supervisor_dashboard_event.dart';
+import 'package:janitor/screens/supervisor_dashboard/bloc/supervisor_dashboard_state.dart';
+import 'package:janitor/screens/task_details_screen/bloc/submitted_task_bloc.dart';
+import 'package:janitor/screens/task_details_screen/bloc/submitted_task_event.dart';
+import 'package:janitor/screens/task_details_screen/bloc/submitted_task_state.dart';
+import 'package:janitor/screens/task_details_screen/data/model/Submitted_tasks_model.dart';
 import 'package:janitor/screens/task_details_screen/model/task_list_img_model.dart';
 import 'package:janitor/screens/task_list/model/task_model.dart';
 import 'package:janitor/utils/app_color.dart';
@@ -8,8 +22,17 @@ import 'package:janitor/utils/app_constants.dart';
 import 'package:janitor/utils/app_images.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
+  final bool isFromDashboard;
+  final bool isFromFacility;
+  final String allocationId;
+  final bool isApproved;
+
   const TaskDetailsScreen({
     Key? key,
+    required this.isFromDashboard,
+    required this.isFromFacility,
+    required this.allocationId,
+    this.isApproved = false,
   }) : super(key: key);
 
   @override
@@ -19,156 +42,253 @@ class TaskDetailsScreen extends StatefulWidget {
 class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   bool submitButtonTap = true;
   bool skipButtonTap = false;
-  final List<TaskImgModel> _list = [
-    TaskImgModel(id: 0, imgString: AppImages.task_img),
-    TaskImgModel(id: 1, imgString: AppImages.task_img),
-    TaskImgModel(id: 2, imgString: AppImages.task_img),
-  ];
-  final List<TaskModel> _data = [
-    TaskModel(
-      id: 0,
-      name: "Cleaning Floor",
-    ),
-    TaskModel(
-      id: 1,
-      name: "Wipe mirror",
-    ),
-    TaskModel(
-      id: 2,
-      name: "Wipe Toilets",
-    ),
-    TaskModel(
-      id: 3,
-      name: "Empty Trash",
-    ),
-    TaskModel(
-      id: 4,
-      name: "Wipe sink and fittings",
-    ),
-    TaskModel(
-      id: 5,
-      name: "Refill Hand lotion",
-    ),
-    TaskModel(
-      id: 6,
-      name: "Refill Toilet paper ",
-    ),
-  ];
-  List<int> _selectedProductIds = [];
+  bool isChecked = false;
+  final int index = 0;
+  int allocationId = 0;
+
+  SubmittedTaskModel submittedTaskModel = SubmittedTaskModel();
+  SubmittedTaskBloc submittedTaskBloc = SubmittedTaskBloc();
+  CarouselController buttonCarouselController = CarouselController();
+  GlobalStorage _globalStorage = GetIt.instance();
+  late SupervisorDashboardBloc _supervisorDashboardBloc =
+      SupervisorDashboardBloc();
 
   @override
   void initState() {
+    setState(() {
+      // allocationId = _globalStorage.getAllocationId();
+    });
+    print("isApproved --- >" + widget.isApproved.toString());
+    submittedTaskBloc
+        .add(GetAllSubmittedTasks(allocationId: widget.allocationId));
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-            size: 30,
-          ),
-          color: AppColors.appBarIconColor,
-          onPressed: () {
+    return BlocConsumer(
+        bloc: submittedTaskBloc,
+        listener: (context, state) {
+          if (state is GetSubmittedTasksSuccess) {
+            EasyLoading.dismiss();
+            setState(() {
+              submittedTaskModel = state.data;
+              print("images ---- ${submittedTaskModel.taskImages}");
+            });
+          }
+          if (state is UpdateStatusSuccessful) {
+            EasyLoading.dismiss();
+
             Navigator.pop(context);
-          },
-        ),
-        title: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 15.w,
-            vertical: 10.h,
-          ),
-          child: Text(
-            MyTaskListConstants.APP_BAR,
-            textAlign: TextAlign.start,
-            style: TextStyle(
-              color: AppColors.appBarTitleColor,
-              fontSize: 24.sp,
-              fontWeight: FontWeight.w400,
+          }
+        },
+        builder: (context, state) {
+          if (state is GetSubmittedTasksLoading) {
+            EasyLoading.show(status: "Loading Please Wait ...");
+          }
+
+          if (state is GetSubmittedTasksError) {
+            return CustomErrorWidget(error: state.error);
+          }
+
+          if (state is UpdateStatusLoading) {
+            EasyLoading.show(status: "Loading Please Wait ...");
+          }
+
+          if (state is UpdateStatusError) {
+            EasyLoading.dismiss();
+            return CustomErrorWidget(error: state.error);
+          }
+
+          return Scaffold(
+            backgroundColor: AppColors.white,
+            appBar: AppBar(
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.black,
+                  size: 30,
+                ),
+                color: AppColors.appBarIconColor,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              title: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 15.w,
+                  vertical: 10.h,
+                ),
+                child: Text(
+                  MyTaskListConstants.APP_BAR,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: AppColors.appBarTitleColor,
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+              backgroundColor: AppColors.white,
+              elevation: 0,
             ),
-          ),
-        ),
-        backgroundColor: AppColors.white,
-        elevation: 0,
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
-              child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: _list.length,
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                itemBuilder: (
-                  BuildContext context,
-                  int index,
-                ) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5.w),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10), // Image border
-                      child: Container(
-                        height: 20.h,
-                        child: Image.asset(_list[index].imgString, fit: BoxFit.cover),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (submittedTaskModel.taskImages?.isNotEmpty ?? false) ...[
+                  SizedBox(
+                    height: 180.h,
+                    width: ScreenUtil().screenWidth,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20.w,
+                        vertical: 10.h,
+                      ),
+                      child: CarouselSlider(
+                        options: CarouselOptions(
+                          enableInfiniteScroll: false,
+                          viewportFraction: 1,
+                        ),
+                        items: List.generate(
+                          submittedTaskModel.taskImages?.length ?? 0,
+                          (index) => Center(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                10.r,
+                              ),
+                              child: Image.network(
+                                submittedTaskModel.taskImages![index],
+                                fit: BoxFit.cover,
+                                width: ScreenUtil().screenWidth,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  );
-                },
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: 15.h,
-              horizontal: 20.w,
-            ),
-            child: Text(
-              MyTaskDetailsScreenConstants.TITLE,
-              textAlign: TextAlign.start,
-              style: TextStyle(
-                color: AppColors.titleColor,
-                fontSize: 24.sp,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: 8.h,
-              ),
-              child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                scrollDirection: Axis.vertical,
-                itemCount: _data.length,
-
-                // shrinkWrap: true,
-                itemBuilder: (
-                  BuildContext context,
-                  int index,
-                ) {
-                  return Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 7.h,
+                  ),
+                ],
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 5.h,
+                    horizontal: 20.w,
+                  ),
+                  child: Text(
+                    MyTaskDetailsScreenConstants.TITLE,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      color: AppColors.titleColor,
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+                submittedTaskModel.taskStatus == null
+                    ? const EmptyListWidget()
+                    : Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 5.h,
+                          ),
+                          child: ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            itemCount:
+                                submittedTaskModel.taskStatus?.length ?? 0,
+                            itemBuilder: (
+                              BuildContext context,
+                              int index,
+                            ) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 7.h,
+                                ),
+                                child: DisabledCheckboxListWidget(
+                                    key: Key(
+                                        "${submittedTaskModel.taskStatus?[index].status}$index"),
+                                    name: submittedTaskModel
+                                        .taskStatus?[index].taskName,
+                                    isChecked: submittedTaskModel
+                                            .taskStatus?[index].status ==
+                                        "1"),
+                              );
+                            },
+                          ),
+                        ),
                       ),
-                      child: DisabledCheckboxListWidget(
-                        name: _data[index].name,
-                        onChecked: () {},
-                      ));
-                },
-              ),
+                if (widget.isFromDashboard &&
+                    !widget.isApproved &&
+                    submittedTaskModel.taskStatus != null) ...[
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 30.w, vertical: 20.h),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            print(widget.allocationId);
+                            submittedTaskBloc.add(UpdateStatus(
+                                id: widget.allocationId, status: 7));
+                          },
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  color: AppColors.greyButtonColor),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 40.w,
+                                  vertical: 10.h,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    MyCustomerRequestListScreenConstants
+                                        .REJECT_BUTTON,
+                                    style: TextStyle(
+                                      color: AppColors.black,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ),
+                              )),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            submittedTaskBloc.add(UpdateStatus(
+                                id: widget.allocationId, status: 4));
+                          },
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  color: AppColors.buttonColor),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 40.w,
+                                  vertical: 10.h,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    MyTaskDetailsScreenConstants.APPROVE_BUTTON,
+                                    style: TextStyle(
+                                      color: AppColors.black,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              )),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
+        });
   }
 }

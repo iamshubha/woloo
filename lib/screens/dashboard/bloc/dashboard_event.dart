@@ -16,17 +16,15 @@ class MarkAttendance extends DashboardEvent {
 }
 
 class GetTaskTamplates extends DashboardEvent {
-  final int janitorId;
-
-  const GetTaskTamplates({required this.janitorId});
+  const GetTaskTamplates();
 
   @override
-  List<Object?> get props => [janitorId, Random().nextInt(100)];
+  List<Object?> get props => [Random().nextInt(100)];
 }
 
 class UpdateStatus extends DashboardEvent {
-  final int id;
-  final int status;
+  final String id;
+  final String status;
   const UpdateStatus({required this.id, required this.status});
 
   @override

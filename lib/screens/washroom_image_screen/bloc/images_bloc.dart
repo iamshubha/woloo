@@ -8,8 +8,10 @@ import 'package:janitor/screens/washroom_image_screen/bloc/images_state.dart';
 import 'package:janitor/screens/washroom_image_screen/data/network/submit_images_service.dart';
 
 class ImagesBloc extends Bloc<ImagesEvent, ImagesState> {
-  final SubmitImagesService submitImagesService = SubmitImagesService(dio: GetIt.instance());
-  final TaskListService taskListService = TaskListService(dio: GetIt.instance());
+  final SubmitImagesService submitImagesService =
+      SubmitImagesService(dio: GetIt.instance());
+  final TaskListService taskListService =
+      TaskListService(dio: GetIt.instance());
 
   // String requestId = '';
   // List<DashboardModelClass> data = [];
@@ -19,7 +21,8 @@ class ImagesBloc extends Bloc<ImagesEvent, ImagesState> {
     on<UploadImages>(_mapUploadImagesToState);
   }
 
-  FutureOr<void> _mapUploadImagesToState(UploadImages event, Emitter<ImagesState> emit) async {
+  FutureOr<void> _mapUploadImagesToState(
+      UploadImages event, Emitter<ImagesState> emit) async {
     try {
       emit(const UploadImagesLoading(message: ""));
 
@@ -29,7 +32,8 @@ class ImagesBloc extends Bloc<ImagesEvent, ImagesState> {
         id: event.id,
         remarks: event.remarks,
       );
-      await submitImagesService.updateStatus(id: event.allocationId, status: 6);
+      await submitImagesService.updateStatus(
+          id: event.allocationId, status: "6");
 
       print("responseeee  ------  $response");
       emit(UploadImagesSuccessful());

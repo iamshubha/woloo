@@ -18,8 +18,8 @@ enum PickSource { CAMERA }
 class SelfieScreen extends StatefulWidget {
   final bool isFromChooseFacility;
   final bool isFromTask;
-  final int templateId;
-  final int allocationId;
+  final int? templateId;
+  final String allocationId;
 
   const SelfieScreen({
     Key? key,
@@ -74,45 +74,6 @@ class _SelfieScreenState extends State<SelfieScreen> {
                     ),
                   ),
                 )
-
-              // Stack(
-              //         children: <Widget>[
-              //           Padding(
-              //             padding: EdgeInsets.symmetric(
-              //               horizontal: 20.w,
-              //             ),
-              //             child: Container(
-              //               height: 300.h,
-              //               decoration: BoxDecoration(
-              //                 border: Border.all(
-              //                   color: Colors.black,
-              //                   width: 5.w,
-              //                 ),
-              //                 borderRadius: BorderRadius.circular(10.r),
-              //               ),
-              //               child: Image.file(
-              //                 _file!,
-              //                 fit: BoxFit.cover,
-              //               ),
-              //             ),
-              //           ),
-              //           Positioned(
-              //             top: 0,
-              //             right: 0,
-              //             child: GestureDetector(
-              //               onTap: () {
-              //                 print('delete image from List');
-              //                 setState(() {
-              //                   imageCache.clear();
-              //                 });
-              //               },
-              //               child: Icon(
-              //                 Icons.delete,
-              //               ),
-              //             ),
-              //           ),
-              //         ],
-              //       )
               : Column(
                   children: [
                     Container(
@@ -149,7 +110,8 @@ class _SelfieScreenState extends State<SelfieScreen> {
                     ),
                     Center(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 20.w),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 15.h, horizontal: 20.w),
                         child: Text(
                           MySelfieScreenConstants.TITLE_SUBTEXT,
                           maxLines: 2,
@@ -225,27 +187,6 @@ class _SelfieScreenState extends State<SelfieScreen> {
                     onTap: () {},
                   ),
                 ),
-          // Padding(
-          //   padding: EdgeInsets.symmetric(
-          //     vertical: 15.h,
-          //     horizontal: 30.w,
-          //   ),
-          //   child: WhiteButtonWidget(
-          //     text: MyTaskListConstants.SKIP_BTN,
-          //     color: AppColors.buttonColor,
-          //     onTap: () {
-          //       Navigator.push(
-          //         context,
-          //         MaterialPageRoute(
-          //           builder: (context) => TaskList(
-          //             allocationId: widget.allocationId,
-          //             templateId: widget.templateId,
-          //           ),
-          //         ),
-          //       );
-          //     },
-          //   ),
-          // ),
         ],
       ),
     );

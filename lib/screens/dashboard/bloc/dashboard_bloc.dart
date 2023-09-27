@@ -9,7 +9,8 @@ import 'package:janitor/screens/dashboard/data/model/dashboard_model_class.dart'
 import 'package:janitor/screens/dashboard/data/network/dashboard_service.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
-  final DashboardService dashboardService = DashboardService(dio: GetIt.instance());
+  final DashboardService dashboardService =
+      DashboardService(dio: GetIt.instance());
   final GlobalStorage globalStorage = GetIt.instance<GlobalStorage>();
   List<DashboardModelClass> data = [];
   late int janitorId;
@@ -21,11 +22,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<UpdateStatus>(_mapUpdateStatusToState);
   }
 
-  FutureOr<void> _mapMarkAttendanceToState(MarkAttendance event, Emitter<DashboardState> emit) async {
+  FutureOr<void> _mapMarkAttendanceToState(
+      MarkAttendance event, Emitter<DashboardState> emit) async {
     try {
       emit(const ClockInLoading(message: "Loading Please Wait..."));
 
-      var response = await dashboardService.markAttendance(type: event.type, locations: event.locations);
+      var response = await dashboardService.markAttendance(
+          type: event.type, locations: event.locations);
 
       if (event.type == "check_in") {
         globalStorage.saveCheckIn(isCheckedIn: true);
@@ -44,11 +47,11 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     }
   }
 
-  FutureOr<void> _mapGetDashboardToState(GetTaskTamplates event, Emitter<DashboardState> emit) async {
+  FutureOr<void> _mapGetDashboardToState(
+      GetTaskTamplates event, Emitter<DashboardState> emit) async {
     try {
       emit(DashboardLoading());
-      janitorId = event.janitorId;
-      data = await dashboardService.getTasksByJanitorId(id: event.janitorId);
+      data = await dashboardService.getTasksByJanitorId();
 
       emit(GetDashboardDataSuccess(data: data));
     } catch (e) {
@@ -56,12 +59,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     }
   }
 
-  FutureOr<void> _mapUpdateStatusToState(UpdateStatus event, Emitter<DashboardState> emit) async {
+  FutureOr<void> _mapUpdateStatusToState(
+      UpdateStatus event, Emitter<DashboardState> emit) async {
     try {
       emit(const UpdateStatusLoading(message: "Loading Please Wait..."));
 
       await dashboardService.updateStatus(id: event.id, status: event.status);
-      data = await dashboardService.getTasksByJanitorId(id: janitorId);
+      data = await dashboardService.getTasksByJanitorId();
 
       emit(GetDashboardDataSuccess(data: data));
     } catch (e) {

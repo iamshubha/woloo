@@ -20,7 +20,10 @@ class VerifyOTP extends LoginEvent {
   List<Object?> get props => [otp];
 }
 
-// class GetCountryCodes extends LoginEvent {
-//   @override
-//   List<Object?> get props => [];
-// }
+class UpdateTokenOnVerifyOTP extends LoginEvent {
+  final String token;
+  const UpdateTokenOnVerifyOTP({required this.token});
+
+  @override
+  List<Object?> get props => [token];
+}

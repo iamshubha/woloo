@@ -53,7 +53,7 @@ class _CustomDialogueWidgetState extends State<CustomDialogueWidget> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontWeight: FontWeight.w400,
-                  fontSize: 20.sp,
+                  fontSize: 16.sp,
                   color: AppColors.black,
                 ),
               ),

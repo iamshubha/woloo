@@ -59,7 +59,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDyJDAP9AhZDNDvFxB82N816xjWG9Lmji0',
-    appId: '1:620752914415:android:4679f9390af10d7ce4581a',
+    appId: '1:620752914415:android:35abfc245772eea8e4581a',
     messagingSenderId: '620752914415',
     projectId: 'woloo-44ef1',
     databaseURL: 'https://woloo-44ef1.firebaseio.com',
@@ -68,13 +68,13 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAnqhrBVa89ey6O8b6xGvlx2UOmD6Np6Go',
-    appId: '1:620752914415:ios:feb638491e30fb97e4581a',
+    appId: '1:620752914415:ios:4e99d3a71ec83891e4581a',
     messagingSenderId: '620752914415',
     projectId: 'woloo-44ef1',
     databaseURL: 'https://woloo-44ef1.firebaseio.com',
     storageBucket: 'woloo-44ef1.appspot.com',
     androidClientId: '620752914415-4b90lfeprnceaoflhtiustd22l1j65vo.apps.googleusercontent.com',
-    iosClientId: '620752914415-ht6aonfdrq6688h459s7rsqmu7ffduh4.apps.googleusercontent.com',
-    iosBundleId: 'com.example.janitor',
+    iosClientId: '620752914415-2o0c53snsk32s05812u5ebv09mc4fob1.apps.googleusercontent.com',
+    iosBundleId: 'com.woloo.janitor',
   );
 }

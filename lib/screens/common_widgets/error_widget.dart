@@ -22,6 +22,7 @@ class CustomErrorWidget extends StatelessWidget {
             child: LottieBuilder.network(
               "https://lottie.host/446f25e2-23c0-4d1c-af48-b16f3e362f06/Z9RcyzQf5S.json",
               width: 200.w,
+              repeat: false,
             ),
           ),
           Center(

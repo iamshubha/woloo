@@ -2,10 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:janitor/utils/app_color.dart';
 import 'package:janitor/utils/app_constants.dart';
+import 'package:janitor/utils/app_images.dart';
 
 class JanitorDetails extends StatefulWidget {
-  final int? id;
-  const JanitorDetails({Key? key, required this.id}) : super(key: key);
+  final String id;
+  final String shift;
+  final String name;
+  final String mobile;
+  final String check_in_time;
+  final String check_out_time;
+  final String complete_task;
+  final String pending_task;
+  final String total_task;
+  final bool isPresent;
+
+  const JanitorDetails(
+      {Key? key,
+      required this.id,
+      required this.shift,
+      required this.name,
+      required this.mobile,
+      required this.check_in_time,
+      required this.check_out_time,
+      required this.complete_task,
+      required this.pending_task,
+      required this.total_task,
+      required this.isPresent})
+      : super(key: key);
 
   @override
   State<JanitorDetails> createState() => _JanitorDetailsState();
@@ -56,15 +79,17 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               vertical: 20.h,
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 5.w),
+                  padding:
+                      EdgeInsets.symmetric(vertical: 10.h, horizontal: 5.w),
                   child: Container(
                     height: 46.h,
                     width: 46.w,
-                    decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.darkGreyColor),
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle, color: AppColors.darkGreyColor),
                     child: const Icon(
                       Icons.person_2_outlined,
                       color: AppColors.buttonColor,
@@ -77,11 +102,11 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                   children: [
                     Padding(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 10.w,
+                        horizontal: 5.w,
                         vertical: 5.h,
                       ),
                       child: Text(
-                        "Uma Jadhav",
+                        widget.name ?? '',
                         style: TextStyle(
                           color: AppColors.black,
                           fontSize: 18.sp,
@@ -91,11 +116,11 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 10.w,
+                        horizontal: 5.w,
                         vertical: 2.h,
                       ),
                       child: Text(
-                        "Mob.no. 9876543210 ",
+                        "Mob.no.${widget.mobile}" ?? '',
                         style: TextStyle(
                           color: AppColors.black,
                           fontSize: 14.sp,
@@ -105,6 +130,48 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                     ),
                   ],
                 ),
+                widget.isPresent == true
+                    ? Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20.w,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              AppImages.janitor_present,
+                              height: 20.h,
+                              width: 20.w,
+                            ),
+                            Text(
+                              MyJanitorsListScreenConstants.JANITOR_PRESENT,
+                              style: TextStyle(
+                                  color: AppColors.greenText,
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w400),
+                            )
+                          ],
+                        ),
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            AppImages.janitor_absent,
+                            height: 20.h,
+                            width: 20.w,
+                          ),
+                          Text(
+                            MyJanitorsListScreenConstants.JANITOR_ABSENT,
+                            style: TextStyle(
+                                color: AppColors.redText,
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w400),
+                          )
+                        ],
+                      )
               ],
             ),
           ),
@@ -134,7 +201,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               horizontal: 20.h,
             ),
             child: Text(
-              "Morning",
+              widget.shift ?? '',
               style: TextStyle(
                 color: AppColors.black,
                 fontSize: 20.sp,
@@ -161,7 +228,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               horizontal: 20.h,
             ),
             child: Text(
-              "12th Mar, 08:12 AM",
+              widget.check_in_time ?? '',
               style: TextStyle(
                 color: AppColors.black,
                 fontSize: 20.sp,
@@ -188,7 +255,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               horizontal: 20.h,
             ),
             child: Text(
-              "12th Mar, 04:12 PM",
+              widget.check_out_time ?? '',
               style: TextStyle(
                 color: AppColors.black,
                 fontSize: 20.sp,
@@ -215,7 +282,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               horizontal: 20.h,
             ),
             child: Text(
-              "4",
+              widget.complete_task.toString() ?? '',
               style: TextStyle(
                 color: AppColors.black,
                 fontSize: 20.sp,
@@ -242,7 +309,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               horizontal: 20.h,
             ),
             child: Text(
-              "2",
+              widget.pending_task ?? '',
               style: TextStyle(
                 color: AppColors.black,
                 fontSize: 20.sp,
@@ -269,7 +336,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               horizontal: 20.h,
             ),
             child: Text(
-              "6",
+              widget.total_task ?? '',
               style: TextStyle(
                 color: AppColors.black,
                 fontSize: 20.sp,

@@ -29,19 +29,23 @@ class LoginPageState extends State<LoginScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    showDebugBtn(context);
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          SliverFillRemaining(
+    return GestureDetector(
+      onTap: () {
+        if (Platform.isAndroid) hideKeyboard(context);
+        if (Platform.isIOS) hideKeyboard(context);
+      },
+      child: Scaffold(
+          backgroundColor: AppColors.white,
+          body: SingleChildScrollView(
+            // physics: const BouncingScrollPhysics(),
+            // // slivers: [
+            //   SliverFillRemaining(
             child: Column(
               children: [
                 SizedBox(
@@ -69,22 +73,31 @@ class LoginPageState extends State<LoginScreen> {
                   height: 20.h,
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
                   child: Form(
                     key: _loginFormKey,
                     child: TextFormField(
                       keyboardType: TextInputType.number,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
+                      // onTap:(){
+                      // FocusScope.of(context).unfocus();
+                      // },
+
                       textAlign: TextAlign.center,
                       controller: _controller,
-                      validator: (value) => value == null ? MyLoginConstants.MOBILE_VALIDATION : null,
+                      validator: (value) => value == null
+                          ? MyLoginConstants.MOBILE_VALIDATION
+                          : null,
                       maxLength: 10,
+
                       decoration: InputDecoration(
                         isDense: true,
                         counterText: "",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.r),
-                          borderSide: const BorderSide(color: AppColors.greyBoxBorder),
+                          borderSide:
+                              const BorderSide(color: AppColors.greyBoxBorder),
                         ),
                         hintText: MyLoginConstants.MOBILE_NO,
                         hintStyle: TextStyle(
@@ -96,7 +109,10 @@ class LoginPageState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                Expanded(child: Container()),
+                SizedBox(
+                  height: 30.h,
+                ),
+                // Expanded(child: Container()),
                 BlocConsumer<LoginBloc, LoginState>(
                   bloc: loginBloc,
                   listener: (context, state) {
@@ -109,7 +125,9 @@ class LoginPageState extends State<LoginScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => OTPScreen(phoneNumber: _controller.text, loginBloc: loginBloc),
+                          builder: (context) => OTPScreen(
+                              phoneNumber: _controller.text,
+                              loginBloc: loginBloc),
                         ),
                       );
                     }
@@ -122,8 +140,6 @@ class LoginPageState extends State<LoginScreen> {
                     if (state is LoginGetDataSuccess) {
                       EasyLoading.dismiss();
                       setState(() {
-                        // _filter = state.data;
-
                         /// Show hint only one time
                         /// * Works only on android platform
                         if (!_isHintShown && Platform.isAndroid) {
@@ -159,9 +175,17 @@ class LoginPageState extends State<LoginScreen> {
               ],
             ),
           )
-        ],
-      ),
+          //     ],
+          //   ),
+          ),
     );
+  }
+
+  void hideKeyboard(BuildContext context) {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+      FocusManager.instance.primaryFocus?.unfocus();
+    }
   }
 
   void requestHint() async {

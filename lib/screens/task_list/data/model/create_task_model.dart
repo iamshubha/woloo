@@ -8,7 +8,7 @@ class CreateTaskModel {
   });
 
   CreateTaskModel.fromJson(dynamic json) {
-    allocationId = json['allocation_id'];
+    allocationId = json['allocation_id']?.toString();
     if (json['data'] != null) {
       data = [];
       json['data'].forEach((v) {
@@ -16,7 +16,7 @@ class CreateTaskModel {
       });
     }
   }
-  int? allocationId;
+  String? allocationId;
   List<InternalData>? data;
 
   Map<String, dynamic> toJson() {

@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
+import 'package:janitor/core/local/global_storage.dart';
 import 'package:janitor/screens/common_widgets/custom_dialogue_widget.dart';
+import 'package:janitor/screens/common_widgets/empty_list_widget.dart';
+import 'package:janitor/screens/common_widgets/error_widget.dart';
 import 'package:janitor/screens/common_widgets/issue_list_widget.dart';
+import 'package:janitor/screens/issue_list_screen/bloc/issue_list_bloc.dart';
+import 'package:janitor/screens/issue_list_screen/bloc/issue_list_event.dart';
+import 'package:janitor/screens/issue_list_screen/bloc/issue_list_state.dart';
+import 'package:janitor/screens/issue_list_screen/data/model/Issue_list_model.dart';
+import 'package:janitor/screens/janitor_details_screen/view/janitor_details.dart';
 import 'package:janitor/screens/report_issue_screen/view/report_issue_form.dart';
 import 'package:janitor/utils/app_color.dart';
 import 'package:janitor/utils/app_constants.dart';
@@ -14,11 +25,20 @@ class IssuesList extends StatefulWidget {
 }
 
 class _IssuesListState extends State<IssuesList> {
-  final TextEditingController _searchController = TextEditingController();
   bool cancelButtonTap = true;
   bool yesButtonTap = false;
+  late int supervisorId;
+  List<IssueListModel> _data = [];
+
+  GlobalStorage globalStorage = GetIt.instance();
+
+  IssueListBloc _issueListBloc = IssueListBloc();
+
   @override
   void initState() {
+    // supervisorId = globalStorage.getId();
+    // _issueListBloc.add(GetAllIssues(supervisorId:supervisorId));
+
     super.initState();
   }
 
@@ -30,7 +50,10 @@ class _IssuesListState extends State<IssuesList> {
         elevation: 0,
         backgroundColor: AppColors.white,
         title: Padding(
-          padding: EdgeInsets.symmetric(vertical: 10.h),
+          padding: EdgeInsets.symmetric(
+            vertical: 10.h,
+            horizontal: 15.w,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -46,7 +69,7 @@ class _IssuesListState extends State<IssuesList> {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => ReportIssueScreen(),
+                      builder: (context) => const ReportIssueScreen(),
                     ),
                   );
                 },
@@ -73,18 +96,18 @@ class _IssuesListState extends State<IssuesList> {
             ],
           ),
         ),
-        leading: IconButton(
-          color: AppColors.black30,
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-            size: 30,
-          ),
-          // color: AppColors.black,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        // leading: IconButton(
+        //   color: AppColors.black30,
+        //   icon: const Icon(
+        //     Icons.arrow_back,
+        //     color: Colors.black,
+        //     size: 30,
+        //   ),
+        //   // color: AppColors.black,
+        //   onPressed: () {
+        //     Navigator.pop(context);
+        //   },
+        // ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -103,10 +126,6 @@ class _IssuesListState extends State<IssuesList> {
                 //   ),
                 // );
               },
-              name: 'Cluster 1',
-              facilityName: "Facility Name - OPD",
-              janitorName: 'Janitor name- Uma Jadhav',
-              status: "Pending",
             ),
           ),
         ],

@@ -6,8 +6,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:janitor/firebase_options.dart';
 import 'package:janitor/injection_container.dart' as di;
 import 'package:janitor/utils/app_color.dart';
-
 import 'app.dart';
+// import 'messaging.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
