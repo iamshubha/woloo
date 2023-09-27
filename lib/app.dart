@@ -47,8 +47,6 @@ class _AppState extends State<App> {
             ),
             home: GestureDetector(
               child: child,
-
-
             ),
           ),
         );
@@ -71,5 +69,4 @@ class _AppState extends State<App> {
       ..userInteractions = true
       ..dismissOnTap = true;
   }
-
 }
