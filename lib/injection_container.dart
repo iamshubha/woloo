@@ -16,9 +16,9 @@ Future<void> init() async {
   /// Dio
   var dio = Dio();
   DioLogInterceptor.enablePrintLog = false;
-  dio.interceptors.add(ErrorInterceptor());
   dio.interceptors.add(DioLogInterceptor());
   dio.interceptors.add(AuthInterceptor());
+  dio.interceptors.add(ErrorInterceptor());
 
   sl.registerLazySingleton(() => DioClient(dio));
   sl.registerLazySingleton(() => GlobalStorage(GetStorage()));

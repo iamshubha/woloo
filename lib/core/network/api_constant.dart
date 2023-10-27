@@ -1,71 +1,76 @@
 // ignore_for_file: non_constant_identifier_names
 
 class APIConstants {
-  // static var BASE_URL = 'http://13.232.85.166'; // DEV
-  static var BASE_URL = 'http://3.109.4.218'; // QA
+  static var BASE_URL = 'https://staging-api.woloo.in'; // QA
+  // static var BASE_URL = 'https://api.woloo.in'; // Production
 
-  static var SEND_OTP = '$BASE_URL/api/user/send-otp';
-  static var COUNTRIES = '$BASE_URL/api/address/country';
-  static var MARKET_TYPES = '$BASE_URL/api/market/dropdownList?type=market_Type';
-  static var CURRENCY = '$BASE_URL/api/address/currency';
-  static var LANGUAGE = '$BASE_URL/api/address/language';
-  static var DROPDOWN_LIST = '$BASE_URL/api/market/dropdownList';
-  static var VERIFY_OTP = '$BASE_URL/api/user/verify-otp';
-  static var CATEGORY = '$BASE_URL/api/product/category';
+  static var SEND_OTP = '$BASE_URL/api/whms/users/sendOTP';
+  static var VERIFY_OTP = '$BASE_URL/api/whms/users/verifyOTP';
 
-  /// Dashboard
-  static var DASHBOARD_API = '$BASE_URL/';
+  /// clock-In - clock-Out
+  static var ATTENDANCE = '$BASE_URL/api/whms/users/attendance';
 
-  /// MarketList
-  static var MARKETS_LIST = '$BASE_URL/api/market/all';
-  static var CREATE_MARKET = '$BASE_URL/api/market';
-  static var EDIT_MARKET = '$BASE_URL/api/market';
+  /// Template List - janitor Dashboard
+  static var GET_ALL_TASK_TAMPLATES =
+      '$BASE_URL/api/whms/taskAllocation/getAllTaskByJanitorId';
 
-  /// marketById
-  static var MARKETS_BY_ID = '$BASE_URL/api/market/byId';
+  /// upload selfie
+  static var UPLOAD_SELFIE = '$BASE_URL/api/whms/users/upload_image';
 
-  /// ProductsList
-  static var PRODUCTS_API = '$BASE_URL/api/product/all';
-  static var MAPPED_PRODUCTS = '$BASE_URL/api/product/mappedProductMarket';
-  static var CREATE_PRODUCT = '$BASE_URL/api/product';
-  static var PRODUCT_BY_ID = '$BASE_URL/api/product/byId';
-  static var MAPPING = '$BASE_URL/api/product/mapping';
-  static var GET_MAPPED_MARKETS_TO_PRODUCT = '$BASE_URL/api/product/mappedMarketsToProduct';
-  static var GET_MAPPED_MARKETS_TO_MEMBERS = '$BASE_URL/api/user/mappedMarketsToUser';
-  static var GET_MAPPED_MARKETS_TO_MANAGERS = '$BASE_URL/api/user/mappedMarketsToUser';
-  static var GET_MAPPED_MARKETS_TO_USER = '$BASE_URL/api/user/mappedMarketsToUser';
-  static var SUBSCRIBE_TO_MARKET = '$BASE_URL/api/market/subscriptions';
+  /// task-list
+  static var GET_ALL_TASKS = '$BASE_URL/api/whms/task/getAllTasksByTempleteId';
+  static var SUBMIT_TASKS = '$BASE_URL/api/whms/users/submitTask';
 
-  /// Managers
-  static var MANAGERS_API = '$BASE_URL/api/user/list';
-  static var MAPPED_MANAGERS = '$BASE_URL/api/user/mappedUserMarket';
-  static var CREATE_MANAGER = '$BASE_URL/api/user';
-  static var MANAGER_BY_ID = '$BASE_URL/api/user/ById';
-  static var UPDATE_MANAGER = '$BASE_URL/api/user';
-  static var USER_ROLES = '$BASE_URL/api/user/usersRole';
-  static var COUNTRY_CODE = '$BASE_URL/api/address/countryCode';
+  /// Status_update
+  static var UPDATE_STATUS = '$BASE_URL/api/whms/users/updateStatus';
 
-  static var MEMBERS_API = '$BASE_URL/api/user/list';
-  static var MAPPED_MEMBERS = '$BASE_URL/api/user/mappedUserMarket';
+  /// Supervisor_dashboard
+  static var GET_SUPERVISOR_DASHBOARD_DATA =
+      '$BASE_URL/api/whms/users/supervisor_dashboard';
 
-  static var DELETE_MARKET = '$BASE_URL/api/market';
-  static var DELETE_PRODUCT = '$BASE_URL/api/product';
-  static var DELETE_MAPPED_PRODUCT = '$BASE_URL/api/product/deleteMappedProduct';
-  static var DELETE_MANAGER = '$BASE_URL/api/user/';
+  /// issues-list
+  static var GET_ALL_ISSUES = '$BASE_URL/api/whms/users/IssuesList';
 
-  static var DELETE_MAPPED_MANAGER = '$BASE_URL/api/user/deleteMappedUser';
-  static var APPROVE_MANAGER = '$BASE_URL/api/user/updateUserStatus';
-  static var APPROVE_MEMBER = '$BASE_URL/api/user/updateUserStatus';
-  static var CREATE_MEMBER = '$BASE_URL/api/user';
-  static var DELETE_MEMBER = '$BASE_URL/api/user/';
-  static var DELETE_MAPPED_MEMBER = '$BASE_URL/api/user/deleteMappedUser';
-  static var MEMBER_BY_ID = '$BASE_URL/api/user/ById';
-  static var UPDATE_MEMBER = '$BASE_URL/api/user';
-  static var USER_MAPPING = '$BASE_URL/api/user/mapping';
+  /// cluster-dropdown-list
+  static var GET_CLUSTER_DROPDOWN_DATA = '$BASE_URL/api/whms/users/clusterList';
 
-  /// RBAC
-  static var GET_RBAC = '$BASE_URL/api/rbac/roles/pages/cta/app';
+  /// facility-dropdown-list
+  static var GET_FACILITIES_DROPDOWN_DATA =
+      '$BASE_URL/api/whms/users/facilityListByClusterId';
 
-  static var SEND_FCM_TOKEN = '$BASE_URL/api/user/editToken';
-  static var GET_NOTIFICATIONS = '$BASE_URL/api/user/getNotifications';
+  /// task-dropdown-list
+  static var GET_TASKS_DROPDOWN_DATA =
+      '$BASE_URL/api/whms/template/getAllTemplate';
+
+  /// cluster-dropdown-list
+  static var GET_ALL_SUBMITTED_TASK =
+      '$BASE_URL/api/whms/users/listOfSubmitedTask';
+
+  /// janitor-dropdown-list
+  static var GET_JANITOR_DROPDOWN_DATA =
+      '$BASE_URL/api/whms/users/getAllJanitorByClusterId';
+
+  /// report issue
+  static var REPORT_ISSUE = '$BASE_URL/api/whms/users/reportIssue';
+
+  /// FCM token - PN
+  static var UPDATE_TOKEN_FCM = '$BASE_URL/api/whms/users/updateToken';
+
+  /// Cluster-list
+  static var CLUSTER_LIST =
+      '$BASE_URL/api/whms/users/clusterListBySupervisorId';
+
+  /// Janitor-list
+  static var JANITOR_LIST = '$BASE_URL/api/whms/users/janitorsList';
+
+  /// Facility-list
+  static var FACILITY_LIST =
+      '$BASE_URL/api/whms/taskAllocation/getJanitorTaskInfo';
+
+  /// Re-assign Task
+  static var RE_ASSIGN_TASK =
+      '$BASE_URL/api/whms/taskAllocation/updateTaskAllocation';
+
+  /// App_Launch
+  static var APP_LAUNCH = '$BASE_URL/api/whms/users/onAppLoad';
 }

@@ -1,13 +1,28 @@
+import 'dart:io';
+
+import 'package:Woloo_Smart_hygiene/screens/splash_screen/view/splash.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:context_holder/context_holder.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:janitor/screens/splash.dart';
-import 'package:janitor/utils/app_constants.dart';
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
   const App({super.key});
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  @override
+  void initState() {
+    configLoading();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,21 +36,37 @@ class App extends StatelessWidget {
             navigatorKey: ContextHolder.key,
             debugShowCheckedModeBanner: false,
             title: AppName.APP_NAME,
-            builder: (context, child) {
-              return ConnectivityScreenWrapper(
-                disableInteraction: true,
-                child: child!,
-              );
-            },
+            builder: EasyLoading.init(
+              builder: (context, child) {
+                return child!;
+              },
+            ),
             theme: ThemeData(
               disabledColor: Colors.grey,
-              textTheme: GoogleFonts.interTextTheme(),
+              textTheme: GoogleFonts.poppinsTextTheme(),
             ),
-            home: child,
+            home: GestureDetector(
+              child: child,
+            ),
           ),
         );
       },
       child: const SplashScreen(),
     );
+  }
+
+  void configLoading() {
+    EasyLoading.instance
+      // ..indicatorWidget = CustomLoaderWidget(message: "")
+      ..indicatorType = EasyLoadingIndicatorType.fadingFour
+      ..loadingStyle = EasyLoadingStyle.light
+      ..maskColor = Colors.black26
+      ..maskType = EasyLoadingMaskType.custom
+      ..indicatorColor = AppColors.buttonColor
+      ..indicatorSize = 45.0
+      ..backgroundColor = Colors.black26
+      ..radius = 10.0
+      ..userInteractions = true
+      ..dismissOnTap = true;
   }
 }

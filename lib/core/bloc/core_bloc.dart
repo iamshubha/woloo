@@ -1,32 +1,52 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:janitor/core/local/global_storage.dart';
+import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
+import 'package:Woloo_Smart_hygiene/core/service/core_service.dart';
 
 part 'core_event.dart';
 part 'core_state.dart';
 
 class CoreBloc extends Bloc<CoreEvent, CoreState> {
-  // final CoreService coreService = CoreService();
+  final CoreService coreService = CoreService();
   final globalStorage = GetIt.instance<GlobalStorage>();
 
   CoreBloc() : super(CoreInitial()) {
     on<CoreEvent>((event, emit) {});
-    // on<GetRBAC>(_mapGetRBACTOState);
+    on<CheckUserIsLoggedInOrNot>(_mapCheckUserState);
+    on<UpdateToken>(_mapUpdateTokenToState);
   }
 
-  // FutureOr<void> _mapGetRBACTOState(GetRBAC event, Emitter<CoreState> emit) async {
-  //   try {
-  //     emit(CoreLoading());
-  //     await Future.delayed(const Duration(seconds: 2));
-  //     var token = globalStorage.getToken();
-  //     if (token.isNotEmpty) {
-  //       RBAC rbac = await coreService.getRBAC();
-  //       GetIt.instance.registerLazySingleton(() => rbac);
-  //       emit(CoreSuccess(isLoggedIn: true, accessHome: rbac.homeScreen == null));
-  //     } else {
-  //       emit(const CoreSuccess(isLoggedIn: false, accessHome: false));
-  //     }
-  //   } catch (e) {}
-  // }
+  FutureOr<void> _mapCheckUserState(
+      CheckUserIsLoggedInOrNot event, Emitter<CoreState> emit) async {
+    try {
+      emit(CoreLoading());
+      await Future.delayed(const Duration(seconds: 2));
+      var token = globalStorage.getToken();
+      if (token.isNotEmpty) {
+        emit(const CoreSuccess(isLoggedIn: true));
+      } else {
+        emit(const CoreSuccess(isLoggedIn: false));
+      }
+    } catch (e) {
+      emit(const CoreSuccess(isLoggedIn: false));
+    }
+  }
+
+  FutureOr<void> _mapUpdateTokenToState(
+      UpdateToken event, Emitter<CoreState> emit) async {
+    try {
+      emit(UpdateTokenLoading());
+
+      var response =
+          await coreService.updateFCMToken(token: event.token.toString());
+
+      emit(UpdateTokenSuccess());
+    } catch (e) {
+      emit(UpdateTokenError(error: e.toString()));
+    }
+  }
 }
