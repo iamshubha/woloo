@@ -1,5 +1,14 @@
 import 'dart:async';
 
+import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_bloc.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_state.dart';
+import 'package:Woloo_Smart_hygiene/screens/login/view/login_screen.dart';
+import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
+import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/view/local_widgets/supervisor_dashboard_list.dart';
+import 'package:Woloo_Smart_hygiene/screens/task_details_screen/view/task_details.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -10,20 +19,6 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
-import 'package:janitor/core/local/global_storage.dart';
-import 'package:janitor/screens/common_widgets/custom_dialogue_widget.dart';
-import 'package:janitor/screens/dashboard/bloc/dashboard_bloc.dart';
-import 'package:janitor/screens/dashboard/bloc/dashboard_event.dart';
-import 'package:janitor/screens/dashboard/bloc/dashboard_state.dart';
-import 'package:janitor/screens/dashboard/view/local_widgets/dashboard_list.dart';
-import 'package:janitor/screens/login/view/login_screen.dart';
-import 'package:janitor/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
-import 'package:janitor/screens/supervisor_dashboard/view/local_widgets/supervisor_dashboard_list.dart';
-import 'package:janitor/screens/task_details_screen/view/task_details.dart';
-import 'package:janitor/utils/app_color.dart';
-import 'package:janitor/utils/app_constants.dart';
-import 'package:janitor/utils/app_images.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 
 class TemplateScreen extends StatefulWidget {
   final String supervisorName;
@@ -124,62 +119,16 @@ class _TemplateScreenState extends State<TemplateScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 0.w),
                     child: Text(
                       "Hello ${widget.supervisorName}" ?? '',
+                      maxLines: 1,
+                      softWrap: false,
                       style: TextStyle(
                         fontSize: 24.sp,
+                        overflow: TextOverflow.ellipsis,
                         fontWeight: FontWeight.w400,
                         color: Colors.black,
                       ),
                     ),
                   ),
-                  Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          EasyLoading.show(status: "Logging out...");
-                          var storage = GetIt.instance<GlobalStorage>();
-                          storage.removeToken();
-                          await Future.delayed(const Duration(seconds: 3));
-                          EasyLoading.dismiss();
-                          EasyLoading.showToast("Logout success...");
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginScreen()),
-                            (route) => false,
-                          );
-                        },
-                        child: Icon(
-                          Icons.logout,
-                          color: AppColors.black,
-                          size: 25.sp,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          EasyLoading.show(status: "Logging out...");
-                          var storage = GetIt.instance<GlobalStorage>();
-                          storage.removeToken();
-                          await Future.delayed(const Duration(seconds: 3));
-                          EasyLoading.dismiss();
-                          EasyLoading.showToast("Logout success...");
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginScreen()),
-                            (route) => false,
-                          );
-                        },
-                        child: Text(
-                          MydashboardScreenConstants.LOG_OUT,
-                          style: TextStyle(
-                            fontSize: 8.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
                 ],
               ),
             ),

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:janitor/screens/common_widgets/button_widget.dart';
-import 'package:janitor/screens/common_widgets/pop_up_buttons.dart';
-import 'package:janitor/screens/common_widgets/white_button_widget.dart';
-import 'package:janitor/screens/issue_list_screen/view/issue_list.dart';
-import 'package:janitor/utils/app_color.dart';
-import 'package:janitor/utils/app_constants.dart';
-import 'package:janitor/utils/app_images.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/button_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/pop_up_buttons.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/white_button_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/view/issue_list.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
 
 class DialogueWidget extends StatefulWidget {
   const DialogueWidget({

@@ -1,20 +1,27 @@
 import 'dart:io';
 
+import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:dio_log/overlay_draggable_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:janitor/screens/common_widgets/button_widget.dart';
-import 'package:janitor/screens/login/bloc/login_bloc.dart';
-import 'package:janitor/screens/login/view/otp_screen.dart';
-import 'package:janitor/utils/app_color.dart';
-import 'package:janitor/utils/app_constants.dart';
-import 'package:janitor/utils/app_images.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/button_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/login/bloc/login_bloc.dart';
+import 'package:Woloo_Smart_hygiene/screens/login/view/otp_screen.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
+import 'package:get_it/get_it.dart';
 import 'package:pinput/pinput.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  final String? type;
+
+  const LoginScreen({
+    Key? key,
+    this.type,
+  }) : super(key: key);
 
   @override
   State<LoginScreen> createState() => LoginPageState();
@@ -25,11 +32,11 @@ class LoginPageState extends State<LoginScreen> {
   final TextEditingController _controller = TextEditingController();
   bool _isHintShown = false;
   LoginBloc loginBloc = LoginBloc();
+  GlobalStorage globalStorage = GetIt.instance();
 
   @override
   void initState() {
     // TODO: implement initState
-
     super.initState();
   }
 
@@ -43,9 +50,6 @@ class LoginPageState extends State<LoginScreen> {
       child: Scaffold(
           backgroundColor: AppColors.white,
           body: SingleChildScrollView(
-            // physics: const BouncingScrollPhysics(),
-            // // slivers: [
-            //   SliverFillRemaining(
             child: Column(
               children: [
                 SizedBox(
@@ -80,17 +84,12 @@ class LoginPageState extends State<LoginScreen> {
                     child: TextFormField(
                       keyboardType: TextInputType.number,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-                      // onTap:(){
-                      // FocusScope.of(context).unfocus();
-                      // },
-
                       textAlign: TextAlign.center,
                       controller: _controller,
                       validator: (value) => value == null
                           ? MyLoginConstants.MOBILE_VALIDATION
                           : null,
                       maxLength: 10,
-
                       decoration: InputDecoration(
                         isDense: true,
                         counterText: "",
@@ -112,7 +111,6 @@ class LoginPageState extends State<LoginScreen> {
                 SizedBox(
                   height: 30.h,
                 ),
-                // Expanded(child: Container()),
                 BlocConsumer<LoginBloc, LoginState>(
                   bloc: loginBloc,
                   listener: (context, state) {
@@ -126,8 +124,10 @@ class LoginPageState extends State<LoginScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => OTPScreen(
-                              phoneNumber: _controller.text,
-                              loginBloc: loginBloc),
+                            phoneNumber: _controller.text,
+                            loginBloc: loginBloc,
+                            type: widget.type,
+                          ),
                         ),
                       );
                     }
@@ -151,6 +151,8 @@ class LoginPageState extends State<LoginScreen> {
                   builder: (context, state) {
                     return GestureDetector(
                       onTap: () async {
+                        globalStorage.saveMobileNumber(
+                            accessMobileNumber: _controller.text ?? '');
                         if (_loginFormKey.currentState?.validate() ?? false) {
                           loginBloc.add(SendOTP(
                             mobileNumber: _controller.text,
@@ -174,10 +176,7 @@ class LoginPageState extends State<LoginScreen> {
                 ),
               ],
             ),
-          )
-          //     ],
-          //   ),
-          ),
+          )),
     );
   }
 

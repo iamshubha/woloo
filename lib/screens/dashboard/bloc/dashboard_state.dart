@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'package:Woloo_Smart_hygiene/core/model/App_launch_model.dart';
 import 'package:equatable/equatable.dart';
-import 'package:janitor/screens/dashboard/data/model/dashboard_model_class.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/Attendance_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
 
 abstract class DashboardState extends Equatable {
   const DashboardState();
@@ -29,13 +31,22 @@ class ClockOutLoading extends DashboardState {
 }
 
 class ClockInSuccessful extends DashboardState {
+  final AttendanceModel attendanceModel;
+  const ClockInSuccessful({
+    required this.attendanceModel,
+  });
   @override
-  List<Object> get props => [];
+  List<Object> get props => [attendanceModel];
 }
 
 class ClockOutSuccessful extends DashboardState {
+  final AttendanceModel attendanceModel;
+  const ClockOutSuccessful({
+    required this.attendanceModel,
+  });
+
   @override
-  List<Object> get props => [Random().nextInt(100)];
+  List<Object> get props => [attendanceModel];
 }
 
 class ClockInError extends DashboardState {
@@ -105,4 +116,26 @@ class UpdateStatusError extends DashboardState {
 
   @override
   List<Object> get props => [error];
+}
+
+class AppLaunchLoading extends DashboardState {
+  final String message;
+  const AppLaunchLoading({required this.message});
+  @override
+  List<Object?> get props => [message];
+}
+
+class AppLaunchSuccess extends DashboardState {
+  final AppLaunchModel data;
+  const AppLaunchSuccess({required this.data});
+  @override
+  List<Object?> get props => [data];
+}
+
+class AppLaunchError extends DashboardState {
+  final String error;
+  const AppLaunchError({required this.error});
+
+  @override
+  List<Object?> get props => [error];
 }

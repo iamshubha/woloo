@@ -1,25 +1,20 @@
+import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/disabled_checkbox_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/empty_list_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/error_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_bloc.dart';
+import 'package:Woloo_Smart_hygiene/screens/task_details_screen/bloc/submitted_task_bloc.dart';
+import 'package:Woloo_Smart_hygiene/screens/task_details_screen/bloc/submitted_task_event.dart';
+import 'package:Woloo_Smart_hygiene/screens/task_details_screen/bloc/submitted_task_state.dart';
+import 'package:Woloo_Smart_hygiene/screens/task_details_screen/data/model/Submitted_tasks_model.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
-import 'package:janitor/core/local/global_storage.dart';
-import 'package:janitor/screens/common_widgets/disabled_checkbox_widget.dart';
-import 'package:janitor/screens/common_widgets/empty_list_widget.dart';
-import 'package:janitor/screens/common_widgets/error_widget.dart';
-import 'package:janitor/screens/supervisor_dashboard/bloc/supervisor_dashboard_bloc.dart';
-import 'package:janitor/screens/supervisor_dashboard/bloc/supervisor_dashboard_event.dart';
-import 'package:janitor/screens/supervisor_dashboard/bloc/supervisor_dashboard_state.dart';
-import 'package:janitor/screens/task_details_screen/bloc/submitted_task_bloc.dart';
-import 'package:janitor/screens/task_details_screen/bloc/submitted_task_event.dart';
-import 'package:janitor/screens/task_details_screen/bloc/submitted_task_state.dart';
-import 'package:janitor/screens/task_details_screen/data/model/Submitted_tasks_model.dart';
-import 'package:janitor/screens/task_details_screen/model/task_list_img_model.dart';
-import 'package:janitor/screens/task_list/model/task_model.dart';
-import 'package:janitor/utils/app_color.dart';
-import 'package:janitor/utils/app_constants.dart';
-import 'package:janitor/utils/app_images.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
   final bool isFromDashboard;

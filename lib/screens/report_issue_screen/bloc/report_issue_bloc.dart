@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:janitor/screens/report_issue_screen/bloc/report_issue_event.dart';
-import 'package:janitor/screens/report_issue_screen/bloc/report_issue_state.dart';
-import 'package:janitor/screens/report_issue_screen/data/network/report_issue_service.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issue_event.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issue_state.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/network/report_issue_service.dart';
 
 class ReportIssueBloc extends Bloc<ReportIssueEvent, ReportIssueState> {
   final ReportIssueService reportIssueService =
@@ -15,6 +15,8 @@ class ReportIssueBloc extends Bloc<ReportIssueEvent, ReportIssueState> {
     on<GetAllFacilityDropdown>(_mapGetAllFacilityDropdownToState);
     on<GetAllTasksDropdown>(_mapGetAllTaskDropdownToState);
     on<GetAllJanitorsDropdown>(_mapGetAllJanitorsDropdownToState);
+    on<GetAllTaskList>(_mapGetAllTasksToState);
+
     on<ReportIssue>(_mapGetReportIssueToState);
   }
 
@@ -68,6 +70,18 @@ class ReportIssueBloc extends Bloc<ReportIssueEvent, ReportIssueState> {
     }
   }
 
+  FutureOr<void> _mapGetAllTasksToState(
+      GetAllTaskList event, Emitter<ReportIssueState> emit) async {
+    try {
+      emit(GetTasksListLoading());
+      var data = await reportIssueService.getAllTasksList(id: event.id);
+
+      emit(GetTasksListSuccess(data: data));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   FutureOr<void> _mapGetReportIssueToState(
       ReportIssue event, Emitter<ReportIssueState> emit) async {
     try {
@@ -77,7 +91,8 @@ class ReportIssueBloc extends Bloc<ReportIssueEvent, ReportIssueState> {
           facility_id: event.facility_id,
           description: event.description,
           task_images: event.task_images,
-          janitor_id: event.janitor_id);
+          janitor_id: event.janitor_id,
+          task_list: event.taskList);
 
       emit(ReportIssueSuccess(data: data));
     } catch (e) {

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
-import 'package:janitor/screens/task_list/data/model/create_task_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/create_task_model.dart';
 
 abstract class ReportIssueEvent extends Equatable {
   const ReportIssueEvent();
@@ -39,21 +39,38 @@ class GetAllJanitorsDropdown extends ReportIssueEvent {
   List<Object?> get props => [];
 }
 
+class GetAllTaskList extends ReportIssueEvent {
+  final String id;
+
+  const GetAllTaskList({required this.id});
+
+  @override
+  List<Object?> get props => [id];
+}
+
 class ReportIssue extends ReportIssueEvent {
   final String template_id;
   final File task_images;
   final int facility_id;
   final int janitor_id;
   final String description;
+  final List<String> taskList;
 
   const ReportIssue(
       {required this.template_id,
       required this.facility_id,
       required this.janitor_id,
       required this.description,
-      required this.task_images});
+      required this.task_images,
+      required this.taskList});
 
   @override
-  List<Object?> get props =>
-      [template_id, facility_id, janitor_id, description, task_images];
+  List<Object?> get props => [
+        template_id,
+        facility_id,
+        janitor_id,
+        description,
+        task_images,
+        taskList
+      ];
 }

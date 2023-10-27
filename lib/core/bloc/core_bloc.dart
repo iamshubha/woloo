@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:equatable/equatable.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:janitor/core/local/global_storage.dart';
-import 'package:janitor/core/service/core_service.dart';
+import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
+import 'package:Woloo_Smart_hygiene/core/service/core_service.dart';
 
 part 'core_event.dart';
 part 'core_state.dart';
@@ -40,9 +41,9 @@ class CoreBloc extends Bloc<CoreEvent, CoreState> {
     try {
       emit(UpdateTokenLoading());
 
-      var response = await coreService.updateFCMToken(token: event.token);
+      var response =
+          await coreService.updateFCMToken(token: event.token.toString());
 
-      print("responseeee  ------  " + response);
       emit(UpdateTokenSuccess());
     } catch (e) {
       emit(UpdateTokenError(error: e.toString()));

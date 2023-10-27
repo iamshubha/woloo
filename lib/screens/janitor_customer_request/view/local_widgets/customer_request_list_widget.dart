@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:janitor/screens/report_issue_screen/model/ItemModel.dart';
-import 'package:janitor/utils/app_color.dart';
-import 'package:janitor/utils/app_constants.dart';
-import 'package:janitor/utils/app_images.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/model/ItemModel.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
 
 // ignore: constant_identifier_names
 // enum Status {ACTIVE, ENGAGED}
@@ -88,7 +88,10 @@ class _RequestListWidgetState extends State<RequestListWidget> {
             },
             child: Container(
               width: 150.w,
-              decoration: BoxDecoration(color: AppColors.filterContainer, borderRadius: BorderRadius.circular(10.r), border: Border.all(color: AppColors.filterBorder)),
+              decoration: BoxDecoration(
+                  color: AppColors.filterContainer,
+                  borderRadius: BorderRadius.circular(10.r),
+                  border: Border.all(color: AppColors.filterBorder)),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
                 child: Row(
@@ -150,7 +153,9 @@ class _RequestListWidgetState extends State<RequestListWidget> {
                         horizontal: 20.w,
                       ),
                       decoration: BoxDecoration(
-                        color: selectedCard == index ? AppColors.containerColor : AppColors.white,
+                        color: selectedCard == index
+                            ? AppColors.containerColor
+                            : AppColors.white,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
                           color: AppColors.containerBorder,
@@ -166,7 +171,8 @@ class _RequestListWidgetState extends State<RequestListWidget> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Padding(
                                       padding: EdgeInsets.symmetric(
@@ -205,7 +211,9 @@ class _RequestListWidgetState extends State<RequestListWidget> {
                                     vertical: 2.h,
                                   ),
                                   child: Text(
-                                    MyCustomerRequestListScreenConstants.CUSTOMER_NAME + widget.customerName!,
+                                    MyCustomerRequestListScreenConstants
+                                            .CUSTOMER_NAME +
+                                        widget.customerName!,
                                     style: TextStyle(
                                       color: AppColors.clusterTitleColor,
                                       fontSize: 12.sp,
@@ -255,12 +263,15 @@ class _RequestListWidgetState extends State<RequestListWidget> {
                                           // );
                                         },
                                         child: Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10.w, vertical: 5.h),
                                           child: Container(
                                             alignment: Alignment.centerRight,
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(8.r),
-                                              color: AppColors.rejectButtonColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(8.r),
+                                              color:
+                                                  AppColors.rejectButtonColor,
                                             ),
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(
@@ -268,12 +279,14 @@ class _RequestListWidgetState extends State<RequestListWidget> {
                                                 vertical: 3.h,
                                               ),
                                               child: Text(
-                                                MyCustomerRequestListScreenConstants.REJECT_BUTTON,
+                                                MyCustomerRequestListScreenConstants
+                                                    .REJECT_BUTTON,
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                   fontSize: 12.sp,
                                                   fontWeight: FontWeight.w400,
-                                                  color: AppColors.rejectGreyTextColor,
+                                                  color: AppColors
+                                                      .rejectGreyTextColor,
                                                 ),
                                               ),
                                             ),
@@ -289,12 +302,15 @@ class _RequestListWidgetState extends State<RequestListWidget> {
                                           // );
                                         },
                                         child: Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10.w, vertical: 5.h),
                                           child: Container(
                                             alignment: Alignment.centerRight,
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(8.r),
-                                              color: AppColors.acceptButtonColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(8.r),
+                                              color:
+                                                  AppColors.acceptButtonColor,
                                             ),
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(
@@ -302,7 +318,8 @@ class _RequestListWidgetState extends State<RequestListWidget> {
                                                 vertical: 3.h,
                                               ),
                                               child: Text(
-                                                MyCustomerRequestListScreenConstants.ACCEPT_BUTTON,
+                                                MyCustomerRequestListScreenConstants
+                                                    .ACCEPT_BUTTON,
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                   fontSize: 12.sp,
@@ -319,8 +336,10 @@ class _RequestListWidgetState extends State<RequestListWidget> {
                                 ],
                                 if (widget.status == "Accepted") ...[
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       InkWell(
                                         onTap: () {
@@ -333,7 +352,8 @@ class _RequestListWidgetState extends State<RequestListWidget> {
                                         child: Container(
                                           alignment: Alignment.centerRight,
                                           decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(8.r),
+                                            borderRadius:
+                                                BorderRadius.circular(8.r),
                                             color: AppColors.buttonColor,
                                           ),
                                           child: Padding(
@@ -342,7 +362,8 @@ class _RequestListWidgetState extends State<RequestListWidget> {
                                               vertical: 3.h,
                                             ),
                                             child: Text(
-                                              MyCustomerRequestListScreenConstants.DIRECTION_BUTTON,
+                                              MyCustomerRequestListScreenConstants
+                                                  .DIRECTION_BUTTON,
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 fontSize: 12.sp,
@@ -364,7 +385,8 @@ class _RequestListWidgetState extends State<RequestListWidget> {
                                         child: Container(
                                           alignment: Alignment.centerRight,
                                           decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(8.r),
+                                            borderRadius:
+                                                BorderRadius.circular(8.r),
                                             color: AppColors.buttonColor,
                                           ),
                                           child: Padding(
@@ -373,7 +395,8 @@ class _RequestListWidgetState extends State<RequestListWidget> {
                                               vertical: 3.h,
                                             ),
                                             child: Text(
-                                              MyCustomerRequestListScreenConstants.START_BUTTON,
+                                              MyCustomerRequestListScreenConstants
+                                                  .START_BUTTON,
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 fontSize: 12.sp,
@@ -399,7 +422,8 @@ class _RequestListWidgetState extends State<RequestListWidget> {
                                     child: Container(
                                       alignment: Alignment.centerRight,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8.r),
+                                        borderRadius:
+                                            BorderRadius.circular(8.r),
                                         color: AppColors.buttonColor,
                                       ),
                                       child: Padding(
@@ -408,7 +432,8 @@ class _RequestListWidgetState extends State<RequestListWidget> {
                                           vertical: 3.h,
                                         ),
                                         child: Text(
-                                          MyCustomerRequestListScreenConstants.CLOSURE_BUTTON,
+                                          MyCustomerRequestListScreenConstants
+                                              .CLOSURE_BUTTON,
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             fontSize: 12.sp,

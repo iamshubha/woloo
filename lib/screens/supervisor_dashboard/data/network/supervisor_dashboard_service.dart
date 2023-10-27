@@ -1,9 +1,8 @@
+import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
+import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
+import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Reassign_janitor_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
 import 'package:dio/dio.dart';
-import 'package:janitor/core/network/api_constant.dart';
-import 'package:janitor/core/network/dio_client.dart';
-import 'package:janitor/screens/dashboard/data/model/dashboard_model_class.dart';
-import 'package:janitor/screens/janitor_screen/data/model/Reassign_janitor_model.dart';
-import 'package:janitor/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
 
 class SupervisorDashboardService {
   final DioClient dio;

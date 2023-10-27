@@ -30,3 +30,8 @@ class UpdateStatus extends DashboardEvent {
   @override
   List<Object?> get props => [id, status, Random().nextInt(100)];
 }
+
+class CheckAttendance extends DashboardEvent {
+  @override
+  List<Object?> get props => [];
+}

@@ -49,8 +49,12 @@ class UpdateTokenLoading extends LoginState {
 }
 
 class UpdateTokenSuccess extends LoginState {
+  final List<UpdateTokenModel> data;
+  const UpdateTokenSuccess({
+    required this.data,
+  });
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [data];
 }
 
 class UpdateTokenError extends LoginState {

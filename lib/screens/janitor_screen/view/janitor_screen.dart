@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:janitor/screens/choose_facility_screen/view/choose_facility.dart';
-import 'package:janitor/screens/common_widgets/custom_dialogue_widget.dart';
-import 'package:janitor/screens/common_widgets/janitor_list.dart';
-import 'package:janitor/screens/janitor_details_screen/view/janitor_details.dart';
-import 'package:janitor/screens/janitor_screen/data/model/Janitor_list_model.dart';
-import 'package:janitor/utils/app_color.dart';
-import 'package:janitor/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/view/choose_facility.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/custom_dialogue_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/janitor_list.dart';
+import 'package:Woloo_Smart_hygiene/screens/janitor_details_screen/view/janitor_details.dart';
+import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_list_model.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 
 class JanitorList extends StatefulWidget {
   final bool isFromCluster;
@@ -120,11 +120,12 @@ class _JanitorListState extends State<JanitorList> {
                 controller: _searchController,
                 clusterId: widget.clusterId,
                 onTapItem: (JanitorListModel data) {
-                  if (widget.isFromCluster) {
+                  if (widget.isFromCluster && data.isPresent == true) {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => ChooseFacilityList(
                           janitorId: data.id ?? '',
+                          clusterId: widget.clusterId ?? '',
                         ),
                       ),
                     );
@@ -160,28 +161,4 @@ class _JanitorListState extends State<JanitorList> {
       ),
     );
   }
-
-  // openDialog() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return CustomDialogueWidget(
-  //         text: MyFacilityListConstants.POPUP_TEXT,
-  //         onTapSubmit: () {
-  //           setState(() {
-  //             yesButtonTap = true;
-  //             cancelButtonTap = false;
-  //           });
-  //
-  //         },
-  //         onTapCancel: () {
-  //           setState(() {
-  //             cancelButtonTap = true;
-  //             yesButtonTap = false;
-  //           });
-  //         },
-  //       );
-  //     },
-  //   );
-  // }
 }

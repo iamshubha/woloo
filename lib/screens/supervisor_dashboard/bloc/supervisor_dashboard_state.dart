@@ -1,9 +1,8 @@
 import 'dart:math';
 
+import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_list_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
 import 'package:equatable/equatable.dart';
-import 'package:janitor/screens/dashboard/data/model/dashboard_model_class.dart';
-import 'package:janitor/screens/janitor_screen/data/model/Janitor_list_model.dart';
-import 'package:janitor/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
 
 abstract class SupervisorDashboardState extends Equatable {
   const SupervisorDashboardState();

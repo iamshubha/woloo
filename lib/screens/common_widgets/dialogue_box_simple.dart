@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:janitor/screens/common_widgets/white_button_widget.dart';
-import 'package:janitor/utils/app_color.dart';
-import 'package:janitor/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/white_button_widget.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 
 class SimpleDialogueWidget extends StatefulWidget {
   final String text;
@@ -80,7 +80,8 @@ class _SimpleDialogueWidgetState extends State<SimpleDialogueWidget> {
                   height: 115.h,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColors.commentBoxBorder, width: 1.w),
+                    border: Border.all(
+                        color: AppColors.commentBoxBorder, width: 1.w),
                   ),
                   child: TextFormField(
                     expands: true,
@@ -97,8 +98,8 @@ class _SimpleDialogueWidgetState extends State<SimpleDialogueWidget> {
                     ),
                     decoration: InputDecoration(
                       hintText: MyTaskListConstants.HINT_TEXT,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-                      // border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: 10.w, vertical: 10.h),
                       hintStyle: TextStyle(
                         color: AppColors.containerBorder,
                         fontSize: 12.sp,

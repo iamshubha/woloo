@@ -2,17 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:janitor/utils/app_color.dart';
-import 'package:janitor/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:pinput/pinput.dart';
 
 class OTPWidget extends StatefulWidget {
-  final Function onTapResend;
   final Function onComplete;
 
   const OTPWidget({
     Key? key,
-    required this.onTapResend,
     required this.onComplete,
   }) : super(key: key);
 
@@ -82,7 +80,6 @@ class _OTPWidgetState extends State<OTPWidget> {
               GestureDetector(
                 onTap: () {
                   if (_isTapResendEnabled) {
-                    widget.onTapResend();
                     resetTimer();
                   }
                 },

@@ -2,15 +2,16 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:janitor/core/network/api_constant.dart';
-import 'package:janitor/core/network/dio_client.dart';
-import 'package:janitor/screens/dashboard/data/model/dashboard_model_class.dart';
-import 'package:janitor/screens/report_issue_screen/data/model/Cluster_dropdown_model.dart';
-import 'package:janitor/screens/report_issue_screen/data/model/Janitor_dropdown_model.dart';
-import 'package:janitor/screens/report_issue_screen/data/model/report_issue_model.dart';
-import 'package:janitor/screens/report_issue_screen/data/model/task_names_model.dart';
-import 'package:janitor/screens/report_issue_screen/data/model/facility_dropdown_model.dart';
-import 'package:janitor/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
+import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
+import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/Cluster_dropdown_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/Janitor_dropdown_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/report_issue_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/task_names_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/facility_dropdown_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
+import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model.dart';
 
 class ReportIssueService {
   final DioClient dio;
@@ -96,12 +97,32 @@ class ReportIssueService {
     }
   }
 
+  Future<TaskListModel> getAllTasksList({required String id}) async {
+    try {
+      var response = await dio.get(
+        APIConstants.GET_ALL_TASKS,
+        options: Options(extra: {"auth": true}),
+        queryParameters: {
+          "id": id,
+        },
+      );
+      print(response['results'].toString() == '[]');
+      if (response['results'].toString() == '[]') {
+        return TaskListModel(templateId: id.toString(), tasks: []);
+      }
+      return TaskListModel.fromJson(response['results']);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<ReportIssueModel> reportIssue({
     required String template_id,
     required int facility_id,
     required String description,
     required File task_images,
     required int janitor_id,
+    required List<String> task_list,
   }) async {
     try {
       FormData formData = FormData();
@@ -112,6 +133,7 @@ class ReportIssueService {
         "facility_id": facility_id,
         "description": description,
         "janitor_id": janitor_id,
+        "task_list": task_list.toString(),
       });
 
       formData.files.addAll([

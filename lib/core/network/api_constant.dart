@@ -2,7 +2,7 @@
 
 class APIConstants {
   static var BASE_URL = 'https://staging-api.woloo.in'; // QA
-  // static var BASE_URL = 'http://13.127.252.94'; // QA
+  // static var BASE_URL = 'https://api.woloo.in'; // Production
 
   static var SEND_OTP = '$BASE_URL/api/whms/users/sendOTP';
   static var VERIFY_OTP = '$BASE_URL/api/whms/users/verifyOTP';
@@ -70,4 +70,7 @@ class APIConstants {
   /// Re-assign Task
   static var RE_ASSIGN_TASK =
       '$BASE_URL/api/whms/taskAllocation/updateTaskAllocation';
+
+  /// App_Launch
+  static var APP_LAUNCH = '$BASE_URL/api/whms/users/onAppLoad';
 }

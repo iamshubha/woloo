@@ -1,5 +1,5 @@
+import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model.dart';
 import 'package:equatable/equatable.dart';
-import 'package:janitor/screens/task_list/data/model/task_list_model.dart';
 
 abstract class TaskListState extends Equatable {
   const TaskListState();

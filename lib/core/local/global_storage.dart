@@ -12,7 +12,7 @@ class GlobalStorage {
   final String _roleIdKey = 'accessRoleId';
   final String _fcmTokenKey = 'accessFCMToken';
   final String _supervisorNameKey = 'accessSupervisorName';
-  final String _allocationIdKey = 'accessAllocationId';
+  final String _mobileNumberKey = 'accessMobileNumber';
   final String _locationKey = 'accessLocation';
   final String _latitudeKey = 'accessLatitude';
   final String _longitudeKey = 'accessLongitude';
@@ -32,6 +32,8 @@ class GlobalStorage {
   }
 
   void removeToken() {
+    print("removedtoken");
+
     _box.remove(_tokenKey);
   }
 
@@ -56,6 +58,22 @@ class GlobalStorage {
     return _box.read("isCheckedIn") ?? false;
   }
 
+  void removeCheckValue() {
+    _box.remove("isCheckedIn");
+  }
+  //
+  // void saveShowList({required bool showList}) {
+  //   _box.write("showList", showList);
+  // }
+  //
+  // bool getShowList() {
+  //   return _box.read("showList") ?? false;
+  // }
+  //
+  // void removeShowList() {
+  //   _box.remove("showList");
+  // }
+
   void saveRoleId({required int accessRoleId}) {
     _box.write(_roleIdKey, accessRoleId);
   }
@@ -79,6 +97,7 @@ class GlobalStorage {
   }
 
   void removeFCMToken() {
+    print("removedfcm");
     _box.remove(_fcmTokenKey);
   }
 
@@ -98,14 +117,21 @@ class GlobalStorage {
     _box.remove(_supervisorNameKey);
   }
 
-  // void saveAllocationId({required int accessAllocationId}) {
-  //   _box.write(_allocationIdKey, accessAllocationId);
-  // }
-  //
-  // int getAllocationId() {
-  //   int allocationId = _box.read(_allocationIdKey);
-  //   return allocationId;
-  // }
+  void saveMobileNumber({required String accessMobileNumber}) {
+    if (accessMobileNumber.isEmpty) {
+      throw 'Mobile Number is empty';
+    }
+    _box.write(_mobileNumberKey, accessMobileNumber);
+  }
+
+  String getMobileNumber() {
+    String? mobileNumber = _box.read(_mobileNumberKey);
+    return mobileNumber ?? '';
+  }
+
+  void removeMobileNumber() {
+    _box.remove(_mobileNumberKey);
+  }
 
   void saveLocation({required String accessLocation}) {
     if (accessLocation.isEmpty) {

@@ -2,6 +2,24 @@ import 'dart:core';
 import 'dart:core';
 import 'dart:io';
 
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/button_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/custom_input_field.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/dialogue_box_issue_report.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/dropdown_dialogue.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/error_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/multiselect_dropdown.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issue_bloc.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issue_event.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issue_state.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/Cluster_dropdown_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/facility_dropdown_model.dart';
+
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/Janitor_dropdown_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/report_issue_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/task_names_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -9,23 +27,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:janitor/screens/common_widgets/button_widget.dart';
-import 'package:janitor/screens/common_widgets/custom_input_field.dart';
-import 'package:janitor/screens/common_widgets/dialogue_box_issue_report.dart';
-import 'package:janitor/screens/common_widgets/dropdown_dialogue.dart';
-import 'package:janitor/screens/common_widgets/empty_list_widget.dart';
-import 'package:janitor/screens/common_widgets/error_widget.dart';
-import 'package:janitor/screens/report_issue_screen/bloc/report_issue_bloc.dart';
-import 'package:janitor/screens/report_issue_screen/bloc/report_issue_event.dart';
-import 'package:janitor/screens/report_issue_screen/bloc/report_issue_state.dart';
-import 'package:janitor/screens/report_issue_screen/data/model/Cluster_dropdown_model.dart';
-import 'package:janitor/screens/report_issue_screen/data/model/Janitor_dropdown_model.dart';
-import 'package:janitor/screens/report_issue_screen/data/model/report_issue_model.dart';
-import 'package:janitor/screens/report_issue_screen/data/model/task_names_model.dart';
-import 'package:janitor/screens/report_issue_screen/data/model/facility_dropdown_model.dart';
-import 'package:janitor/screens/report_issue_screen/model/ItemModel.dart';
-import 'package:janitor/utils/app_color.dart';
-import 'package:janitor/utils/app_constants.dart';
+
 import 'package:queen_validators/queen_validators.dart';
 
 enum PickSource {
@@ -50,9 +52,14 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
 
   List<ClusterDropdownModel> clusterNames = [];
   List<FacilityDropdownModel> facilityNames = [];
-  List<TaskNamesModels> taskNames = [];
+  List<TaskNamesModels> templateNames = [];
+  TaskListModel taskNames = TaskListModel();
+  List<Tasks> tasks = [];
+  List<String> taskIds = [];
   List<JanitorDropdownModel> janitorList = [];
   ReportIssueModel _reportIssueModel = ReportIssueModel();
+  List<String> selectedIds = [];
+
   String templateId = "";
   late int janitorId;
   late int facilityId;
@@ -89,7 +96,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
             EasyLoading.dismiss();
 
             setState(() {
-              taskNames = state.data;
+              templateNames = state.data;
             });
           }
           if (state is GetJanitorsDropdownSuccess) {
@@ -97,6 +104,15 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
 
             setState(() {
               janitorList = state.data;
+            });
+          }
+          if (state is GetTasksListSuccess) {
+            EasyLoading.dismiss();
+
+            setState(() {
+              taskNames = state.data;
+
+              tasks = taskNames.tasks!;
             });
           }
 
@@ -148,6 +164,14 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
           }
 
           if (state is GetJanitorsDropdownError) {
+            return CustomErrorWidget(error: state.error);
+          }
+
+          if (state is GetTasksListLoading) {
+            EasyLoading.show(status: "Loading Please Wait ...");
+          }
+
+          if (state is GetTasksListError) {
             return CustomErrorWidget(error: state.error);
           }
           if (state is ReportIssueLoading) {
@@ -286,9 +310,10 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 20.h,
+                          // vertical: 10.h,
                         ),
                         child: Text(
-                          MyReportIssueScreenConstants.TASK_NAME,
+                          MyReportIssueScreenConstants.TEMPLATE_NAME,
                           style: TextStyle(
                             color: AppColors.clusterTitleColor,
                             fontSize: 16.sp,
@@ -305,19 +330,61 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           // key: Key('${_editMarketModel.city?.label}T4'),
                           // selected: cities.firstWhereOrNull((element) => element.value == _editMarketModel.city?.value),
                           // widgetKey: _keys[2],
-                          items: taskNames,
+                          items: templateNames,
                           itemAsString: (TaskNamesModels item) =>
                               item.templateName,
                           validator: (value) => value == null
-                              ? MyReportIssueScreenConstants
-                                  .TASK_NAME_VALIDATION
+                              ? "Template Name is required."
                               : null,
                           onChanged: (TaskNamesModels item) {
+                            reportIssueBloc
+                                .add(GetAllTaskList(id: item.id ?? '0'));
                             setState(() {
                               templateId = item.id!;
                               print("templateId --->" + templateId.toString());
                             });
                           },
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20.h,
+                        ),
+                        child: Text(
+                          MyReportIssueScreenConstants.TASK_NAME,
+                          style: TextStyle(
+                            color: AppColors.clusterTitleColor,
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20.w,
+                          vertical: 10.h,
+                        ),
+                        child: MultiselectDropDownDialog(
+                          // key: Key(
+                          //     '${_editProductModel.paymentMethodId?.firstOrNull?.label}T5'),
+                          // selected: _editProductModel.paymentMethodId,
+                          items: tasks,
+                          itemAsString: (Tasks item) => item.taskName,
+                          validator: (value) => value == null
+                              ? MyReportIssueScreenConstants
+                                  .TASK_NAME_VALIDATION
+                              : null,
+                          onSaved: (List<Tasks> i) {
+                            // selectedIds.add(i[1].taskId!);
+                            selectedIds =
+                                i.map((e) => e.taskId.toString()).toList();
+                          },
+                          onChanged: (List<Tasks> i) {
+                            selectedIds =
+                                i.map((e) => e.taskId.toString()).toList();
+                            print(selectedIds);
+                          },
+                          // label: 'Template Name',
                         ),
                       ),
                       Padding(
@@ -382,6 +449,8 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           onChanged: (JanitorDropdownModel item) {
                             setState(() {
                               janitorId = item.id!;
+                              print("selectedTasks---->${selectedIds}");
+
                               print("janitorId --->" + janitorId.toString());
                             });
                           },
@@ -498,13 +567,17 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           if (!isValid) {
                             return;
                           }
+
+                          print("ids---->${selectedIds}");
+
                           if (_file != null) {
                             reportIssueBloc.add(ReportIssue(
                                 template_id: templateId,
                                 facility_id: facilityId,
                                 janitor_id: janitorId,
                                 description: _controller.text,
-                                task_images: _file!));
+                                task_images: _file!,
+                                taskList: selectedIds));
                           } else {
                             EasyLoading.showToast(
                                 "Please upload an image to proceed");

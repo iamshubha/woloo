@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:Woloo_Smart_hygiene/screens/selfie_screen/bloc/selfie_event.dart';
+import 'package:Woloo_Smart_hygiene/screens/selfie_screen/bloc/selfie_state.dart';
+import 'package:Woloo_Smart_hygiene/screens/selfie_screen/data/network/selfie_service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:janitor/screens/selfie_screen/bloc/selfie_event.dart';
-import 'package:janitor/screens/selfie_screen/bloc/selfie_state.dart';
-import 'package:janitor/screens/selfie_screen/data/network/selfie_service.dart';
 
 class SelfieBloc extends Bloc<SelfieEvent, SelfieState> {
   final SelfieService selfieService = SelfieService(dio: GetIt.instance());
@@ -16,7 +16,8 @@ class SelfieBloc extends Bloc<SelfieEvent, SelfieState> {
     on<UploadSelfie>(_mapUploadSelfieToState);
   }
 
-  FutureOr<void> _mapUploadSelfieToState(UploadSelfie event, Emitter<SelfieState> emit) async {
+  FutureOr<void> _mapUploadSelfieToState(
+      UploadSelfie event, Emitter<SelfieState> emit) async {
     try {
       emit(const UploadSelfieLoading(message: ""));
 

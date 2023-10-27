@@ -1,16 +1,16 @@
+import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
+import 'package:Woloo_Smart_hygiene/screens/cluster_screen/view/cluster_screen.dart';
+import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/view/issue_list.dart';
+import 'package:Woloo_Smart_hygiene/screens/janitor_screen/view/janitor_screen.dart';
+import 'package:Woloo_Smart_hygiene/screens/my_account/view/my_account_screen.dart';
+import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/pages/templates_screen.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:dio_log/overlay_draggable_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
-import 'package:janitor/core/local/global_storage.dart';
-import 'package:janitor/screens/cluster_screen/view/cluster_screen.dart';
-import 'package:janitor/screens/issue_list_screen/view/issue_list.dart';
-import 'package:janitor/screens/janitor_screen/view/janitor_screen.dart';
-import 'package:janitor/screens/supervisor_dashboard/pages/templates_screen.dart';
-import 'package:janitor/utils/app_color.dart';
-import 'package:janitor/utils/app_constants.dart';
-import 'package:janitor/utils/app_images.dart';
 
 class SupervisorDashboard extends StatefulWidget {
   const SupervisorDashboard({
@@ -24,6 +24,7 @@ class SupervisorDashboard extends StatefulWidget {
 class _SupervisorDashboardState extends State<SupervisorDashboard> {
   int _currentIndex = 0;
   String? supervisorName;
+  String? mobile;
 
   final _controller = PageController(
     initialPage: 4,
@@ -47,6 +48,8 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
   @override
   void initState() {
     supervisorName = globalStorage.getSupervisorName();
+    mobile = globalStorage.getMobileNumber();
+    print("mobile ----> $mobile");
     print(supervisorName);
 
     super.initState();
@@ -166,11 +169,15 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
             isFromDashboardAssignment: false,
           ),
           IssuesList(),
-          Container(
-            child: Center(
-              child: Text("This screen is in progress"),
-            ),
+          SupervisorAccountScreen(
+            supervisorName: supervisorName ?? '',
+            mobile_number: mobile ?? '',
           ),
+          // Container(
+          //   child: Center(
+          //     child: Text("This screen is in progress"),
+          //   ),
+          // ),
           TemplateScreen(
             supervisorName: supervisorName ?? '',
           ),

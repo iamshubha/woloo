@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:Woloo_Smart_hygiene/screens/login/data/model/Update_token_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
-import 'package:janitor/core/local/global_storage.dart';
-import 'package:janitor/screens/login/data/network/login_services.dart';
+import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
+import 'package:Woloo_Smart_hygiene/screens/login/data/network/login_services.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -32,6 +33,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           await loginService.sendOTP(phoneNumber: event.mobileNumber);
 
       requestId = response.requestId.toString();
+
       print("requestId $requestId");
       emit(LoginOTPSent());
     } catch (e) {
@@ -75,8 +77,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       var response = await loginService.updateFCMToken(token: event.token);
 
-      print("responseeee  ------  " + response);
-      emit(UpdateTokenSuccess());
+      print("updateTokenResponse  -------->$response");
+
+      emit(UpdateTokenSuccess(data: response));
     } catch (e) {
       emit(UpdateTokenError(error: e.toString()));
     }

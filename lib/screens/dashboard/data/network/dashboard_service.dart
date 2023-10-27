@@ -1,13 +1,15 @@
+import 'package:Woloo_Smart_hygiene/core/model/App_launch_model.dart';
 import 'package:dio/dio.dart';
-import 'package:janitor/core/network/api_constant.dart';
-import 'package:janitor/core/network/dio_client.dart';
-import 'package:janitor/screens/dashboard/data/model/dashboard_model_class.dart';
+import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
+import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/Attendance_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
 
 class DashboardService {
   final DioClient dio;
   const DashboardService({required this.dio});
 
-  Future<String> markAttendance(
+  Future<AttendanceModel> markAttendance(
       {required String type, required List<double> locations}) async {
     try {
       var response = await dio.post(
@@ -19,7 +21,7 @@ class DashboardService {
         options: Options(extra: {"auth": true}),
       );
 
-      return response['results'].toString();
+      return AttendanceModel.fromJson(response['results']);
     } catch (e) {
       rethrow;
     }
@@ -56,6 +58,18 @@ class DashboardService {
       );
 
       return response['results'].toString();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<AppLaunchModel> appLaunch() async {
+    try {
+      var response = await dio.post(
+        APIConstants.APP_LAUNCH,
+        options: Options(extra: {"auth": true}),
+      );
+      return AppLaunchModel.fromJson(response['results']);
     } catch (e) {
       rethrow;
     }

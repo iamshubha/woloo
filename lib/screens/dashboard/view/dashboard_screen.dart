@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:Woloo_Smart_hygiene/core/model/App_launch_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/janitor_profile_screen/view/janitor_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -8,29 +9,19 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
-import 'package:janitor/core/local/global_storage.dart';
-import 'package:janitor/screens/common_widgets/custom_dialogue_widget.dart';
-import 'package:janitor/screens/common_widgets/empty_list_widget.dart';
-import 'package:janitor/screens/common_widgets/error_widget.dart';
-import 'package:janitor/screens/dashboard/bloc/dashboard_bloc.dart';
-import 'package:janitor/screens/dashboard/bloc/dashboard_event.dart';
-import 'package:janitor/screens/dashboard/bloc/dashboard_state.dart';
-import 'package:janitor/screens/dashboard/data/model/dashboard_model_class.dart';
-import 'package:janitor/screens/dashboard/view/local_widgets/dashboard_list.dart';
-import 'package:janitor/screens/login/view/login_screen.dart';
-import 'package:janitor/screens/supervisor_dashboard/view/local_widgets/supervisor_dashboard_list.dart';
-import 'package:janitor/utils/app_color.dart';
-import 'package:janitor/utils/app_constants.dart';
-import 'package:janitor/utils/app_images.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/custom_dialogue_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_bloc.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_event.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_state.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/view/local_widgets/dashboard_list.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
 
 class Dashboard extends StatefulWidget {
-  // final bool isFromJanitor;
-  // final bool isFromSupervisor;
   const Dashboard({
     Key? key,
-    // required this.isFromJanitor,
-    // required this.isFromSupervisor,
   }) : super(key: key);
 
   @override
@@ -38,16 +29,12 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  late final FirebaseMessaging _messaging;
-
   int selectedCard = -1;
   GlobalStorage globalStorage = GetIt.instance();
-
   bool servicestatus = false;
   bool haspermission = false;
   bool showList = false;
   bool onTapCheckIn = false;
-
   String check_in_time = "";
   String check_out_time = "";
   String inTime = "";
@@ -55,36 +42,20 @@ class _DashboardState extends State<Dashboard> {
   late LocationPermission permission;
   late Position position;
   String long = "", lat = "";
-
   String? _currentAddress;
   DateTime currentTime = DateTime.now();
-  late final FirebaseMessaging _firebaseMessaging;
-  late DashboardBloc _dashboardBloc;
-
   late StreamSubscription<Position> positionStream;
   String? location;
-  final iconList = <IconData>[
-    Icons.brightness_5,
-    Icons.brightness_4,
-    Icons.brightness_6,
-    Icons.brightness_7,
-  ];
   DashboardBloc dashboardBloc = DashboardBloc();
-  List<DashboardModelClass> _data = [];
+  AppLaunchModel _appLaunchModel = AppLaunchModel();
+  String? type;
 
   @override
   void initState() {
+    dashboardBloc.add(CheckAttendance());
     setState(() {
-      onTapCheckIn = globalStorage.isCheckedIn();
-      location = globalStorage.getLocation();
-
-      if (onTapCheckIn) showList = true;
-
       inTime = globalStorage.getTime();
-      outTime = globalStorage.getTime();
-      _dashboardBloc = DashboardBloc();
     });
-
     super.initState();
   }
 
@@ -93,15 +64,54 @@ class _DashboardState extends State<Dashboard> {
     return BlocListener(
         bloc: dashboardBloc,
         listener: (context, state) {
+          if (state is AppLaunchLoading) {
+            EasyLoading.show(status: state.message);
+          }
+
+          if (state is AppLaunchError) {
+            EasyLoading.dismiss();
+          }
+
+          if (state is AppLaunchSuccess) {
+            EasyLoading.dismiss();
+            setState(() {
+              _appLaunchModel = state.data;
+              type = _appLaunchModel.lastAttendance;
+            });
+            print("appLaunchResponse---->${_appLaunchModel.toJson()}");
+
+            if (_appLaunchModel.lastAttendance == "check_in") {
+              print("lastAttendance--->${_appLaunchModel.lastAttendance}");
+              setState(() {
+                onTapCheckIn = true;
+                globalStorage.saveCheckIn(isCheckedIn: true);
+                showList = true;
+              });
+            }
+
+            if (_appLaunchModel.lastAttendance == "check_out") {
+              setState(() {
+                onTapCheckIn = false;
+                showList = false;
+                globalStorage.saveCheckIn(isCheckedIn: false);
+              });
+            }
+            setState(() {
+              onTapCheckIn = globalStorage.isCheckedIn();
+              location = globalStorage.getLocation();
+              inTime = globalStorage.getTime();
+              outTime = globalStorage.getTime();
+            });
+          }
+
           print(state);
 
           if (state is ClockInSuccessful) {
             EasyLoading.dismiss();
 
             setState(() {
-              showList = true;
               onTapCheckIn = true;
-              print("clockIn ---- >" + location.toString());
+              showList = true;
             });
             String formattedDate =
                 DateFormat('hh:mm:ss  a').format(currentTime);
@@ -109,9 +119,6 @@ class _DashboardState extends State<Dashboard> {
 
             globalStorage.saveTime(accessTime: check_in_time);
             inTime = globalStorage.getTime();
-
-            // String date = DateFormat('dd-MM-yyyy').format(currentTime);
-            // print("Date : $date");
           }
           if (state is ClockInLoading) {
             EasyLoading.show(status: state.message);
@@ -126,20 +133,14 @@ class _DashboardState extends State<Dashboard> {
             EasyLoading.dismiss();
             print(state);
             setState(() {
-              showList = false;
               onTapCheckIn = false;
-              print("clockOut ---- >" + location.toString());
+              showList = false;
             });
             String formattedDate =
                 DateFormat('hh:mm:ss  a').format(currentTime);
             check_out_time = formattedDate;
             globalStorage.saveTime(accessTime: check_out_time);
-
             outTime = globalStorage.getTime();
-
-            //
-            // String date = DateFormat('dd-MM-yyyy').format(currentTime);
-            // print("Date : $date");
           }
           if (state is ClockOutLoading) {
             EasyLoading.show(status: state.message);
@@ -168,55 +169,21 @@ class _DashboardState extends State<Dashboard> {
                         color: Colors.black,
                       ),
                     ),
-                    Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () async {
-                            EasyLoading.show(status: "Logging out...");
-                            var storage = GetIt.instance<GlobalStorage>();
-                            storage.removeToken();
-                            await Future.delayed(const Duration(seconds: 3));
-                            EasyLoading.dismiss();
-                            EasyLoading.showToast("Logout success...");
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginScreen()),
-                              (route) => false,
-                            );
-                          },
-                          child: Icon(
-                            Icons.logout,
-                            color: AppColors.black,
-                            size: 25.sp,
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            EasyLoading.show(status: "Logging out...");
-                            var storage = GetIt.instance<GlobalStorage>();
-                            storage.removeToken();
-                            await Future.delayed(const Duration(seconds: 3));
-                            EasyLoading.dismiss();
-                            EasyLoading.showToast("Logout success...");
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginScreen()),
-                              (route) => false,
-                            );
-                          },
-                          child: Text(
-                            MydashboardScreenConstants.LOG_OUT,
-                            style: TextStyle(
-                              fontSize: 8.sp,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
+                    GestureDetector(
+                      onTap: () async {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => JanitorProfileScreen()),
+                          (route) => false,
+                        );
+                      },
+                      child: Icon(
+                        Icons.account_circle_outlined,
+                        color: AppColors.black,
+                        size: 25.sp,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -307,9 +274,9 @@ class _DashboardState extends State<Dashboard> {
                                           if (!haspermission) return;
 
                                           var latitude =
-                                              double.tryParse(lat!) ?? 0;
+                                              double.tryParse(lat) ?? 0;
                                           var longitude =
-                                              double.tryParse(long!) ?? 0;
+                                              double.tryParse(long) ?? 0;
                                           print("lattttt   " +
                                               latitude.toString());
                                           print("longggg   " +
@@ -514,10 +481,6 @@ class _DashboardState extends State<Dashboard> {
       }
 
       if (haspermission) {
-        // setState(() {
-        //   //refresh the UI
-        // });
-
         await getLocation();
       }
 
@@ -574,7 +537,6 @@ class _DashboardState extends State<Dashboard> {
         location = globalStorage.getLocation();
 
         print("locccccc --- > ${globalStorage.getLocation()}");
-        // EasyLoading.showToast("Current Location Detected : $_currentAddress");
       });
     }).catchError((e) {
       debugPrint(e);
@@ -593,8 +555,8 @@ class _DashboardState extends State<Dashboard> {
 
             if (!haspermission) return;
 
-            double latitude = double.tryParse(lat!) ?? 0;
-            double longitude = double.tryParse(long!) ?? 0;
+            double latitude = double.tryParse(lat) ?? 0;
+            double longitude = double.tryParse(long) ?? 0;
 
             dashboardBloc.add(MarkAttendance(
                 type: 'check_out', locations: [latitude, longitude]));

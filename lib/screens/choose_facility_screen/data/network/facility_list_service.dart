@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:janitor/core/network/api_constant.dart';
-import 'package:janitor/core/network/dio_client.dart';
-import 'package:janitor/screens/choose_facility_screen/data/model/Facility_list_model.dart';
+import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
+import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
+import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/data/model/Facility_list_model.dart';
 
 class FacilityListService {
   final DioClient dio;

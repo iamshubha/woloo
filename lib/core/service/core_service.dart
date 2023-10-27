@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:Woloo_Smart_hygiene/core/model/App_launch_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/Attendance_model.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:janitor/core/network/api_constant.dart';
-import 'package:janitor/core/network/dio_client.dart';
+import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
+import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
 
 class CoreService {
   final DioClient dio = GetIt.instance<DioClient>();

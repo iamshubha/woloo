@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:janitor/screens/common_widgets/janitor_list.dart';
-import 'package:janitor/screens/janitor_screen/data/model/Janitor_list_model.dart';
-import 'package:janitor/screens/task_details_screen/view/task_details.dart';
-import 'package:janitor/utils/app_color.dart';
-import 'package:janitor/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/janitor_list.dart';
+import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_list_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/task_details_screen/view/task_details.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 
 class ReassignJanitorScreen extends StatefulWidget {
   final bool isFromCluster;
   final String janitorId;
   final String? allocationId;
   List<String> selectedIds;
+  final String? clusterId;
 
   ReassignJanitorScreen(
       {Key? key,
       required this.isFromCluster,
       required this.janitorId,
       this.allocationId,
+      this.clusterId,
       required this.selectedIds})
       : super(key: key);
 
@@ -32,7 +34,7 @@ class _ReassignJanitorScreenState extends State<ReassignJanitorScreen> {
   @override
   void initState() {
     super.initState();
-    // print(widget.isFromDashboard);
+    print("clusterId---->>>>${widget.clusterId}");
     // print(widget.isFromDashboardAssignment);
     print(widget.isFromCluster);
     // print(widget.isFromFacility);
@@ -118,6 +120,7 @@ class _ReassignJanitorScreenState extends State<ReassignJanitorScreen> {
                 controller: _searchController,
                 janitorId: widget.janitorId,
                 allocationId: widget.selectedIds,
+                clusterId: widget.clusterId,
                 onTapItem: (JanitorListModel data) {
                   // print("allocation Id ----> ${widget.selectedIds}");
                   // Navigator.of(context).push(
