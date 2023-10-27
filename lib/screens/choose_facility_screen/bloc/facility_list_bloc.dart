@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:janitor/screens/choose_facility_screen/bloc/facility_list_event.dart';
-import 'package:janitor/screens/choose_facility_screen/bloc/facility_list_state.dart';
-import 'package:janitor/screens/choose_facility_screen/data/network/facility_list_service.dart';
+import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/bloc/facility_list_event.dart';
+import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/bloc/facility_list_state.dart';
+import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/data/network/facility_list_service.dart';
 
 class FacilityListBloc extends Bloc<FacilityListEvent, FacilityListState> {
   final FacilityListService facilityListService =
@@ -27,6 +27,4 @@ class FacilityListBloc extends Bloc<FacilityListEvent, FacilityListState> {
       emit(FacilityListError(error: e.toString()));
     }
   }
-
-
 }

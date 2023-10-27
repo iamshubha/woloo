@@ -1,11 +1,11 @@
 import 'dart:async';
 
+import 'package:Woloo_Smart_hygiene/screens/task_list/data/network/task_list_service.dart';
+import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/bloc/images_event.dart';
+import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/bloc/images_state.dart';
+import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/data/network/submit_images_service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:janitor/screens/task_list/data/network/task_list_service.dart';
-import 'package:janitor/screens/washroom_image_screen/bloc/images_event.dart';
-import 'package:janitor/screens/washroom_image_screen/bloc/images_state.dart';
-import 'package:janitor/screens/washroom_image_screen/data/network/submit_images_service.dart';
 
 class ImagesBloc extends Bloc<ImagesEvent, ImagesState> {
   final SubmitImagesService submitImagesService =

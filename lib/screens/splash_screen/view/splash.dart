@@ -1,21 +1,22 @@
+import 'dart:io';
+
+import 'package:Woloo_Smart_hygiene/core/bloc/core_bloc.dart';
+import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
+import 'package:Woloo_Smart_hygiene/screens/login/view/login_screen.dart';
+import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/view/supervisor_dashboard_screen.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:dio_log/overlay_draggable_button.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
-import 'package:janitor/core/bloc/core_bloc.dart';
-import 'package:janitor/core/local/global_storage.dart';
-import 'package:janitor/screens/login/view/login_screen.dart';
-import 'package:janitor/screens/supervisor_dashboard/view/supervisor_dashboard_screen.dart';
-import 'package:janitor/utils/app_color.dart';
-import 'package:janitor/utils/app_images.dart';
-
 import '../../dashboard/view/dashboard_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
-
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
@@ -26,14 +27,21 @@ class _SplashScreenState extends State<SplashScreen> {
   late int? roleId;
   String? fcmToken;
   var _notification;
+
   @override
   void initState() {
     super.initState();
-    coreBloc.add(CheckUserIsLoggedInOrNot());
     setState(() {
       fcmToken = globalStorage.getFCMToken();
-      print("fcccccccmmmmmm---$fcmToken");
     });
+    if (Platform.isAndroid) {
+      coreBloc.add(CheckUserIsLoggedInOrNot());
+    }
+
+    if (Platform.isIOS) {
+      requestTracking();
+    }
+
     init();
     showDebugBtn(context);
   }
@@ -43,14 +51,14 @@ class _SplashScreenState extends State<SplashScreen> {
     FirebaseMessaging.instance.requestPermission();
     FirebaseMessaging _firebaseMessage = FirebaseMessaging.instance;
     String? deviceToken = await _firebaseMessage.getToken();
-    print("FCM_token --" + deviceToken.toString());
-    globalStorage.saveFCMToken(accessFCMToken: deviceToken.toString());
+    globalStorage.saveFCMToken(accessFCMToken: deviceToken ?? '');
+    fcmToken = deviceToken;
+    print("Device Token----->${deviceToken}");
     return (deviceToken == null) ? "" : deviceToken;
   }
 
   init() async {
     _notification = FlutterLocalNotificationsPlugin();
-
     _notification.initialize(
       const InitializationSettings(
         android: AndroidInitializationSettings('@mipmap/ic_launcher'),
@@ -58,18 +66,17 @@ class _SplashScreenState extends State<SplashScreen> {
       ),
     );
 
-    var iOSPlatformChannelSpecifics = DarwinNotificationDetails(
-        sound: 'notification.caf'); //put your own sound text here
+    var iOSPlatformChannelSpecifics = const DarwinNotificationDetails(
+      sound: 'notification.caf',
+    ); //put your own sound text here
 
     var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
-      '10000012', 'smart_hygiene_channel',
+      '10000012',
+      'smart_hygiene_channel',
       sound: RawResourceAndroidNotificationSound('notification'),
-      // largeIcon: 'sample_large_icon',
-      // largeIconBitmapSource: BitmapSource.Drawable,
       enableLights: true,
       color: AppColors.buttonColor,
       ledColor: Color.fromARGB(255, 255, 0, 0),
-
       ledOnMs: 1000,
       ledOffMs: 500,
       importance: Importance.max,
@@ -88,6 +95,7 @@ class _SplashScreenState extends State<SplashScreen> {
     print("############################################################");
     setState(() {
       fcmToken = globalStorage.getFCMToken();
+      print("FCM Token----->${fcmToken}");
     });
 
     FirebaseMessaging.onMessage.listen((message) async {
@@ -104,31 +112,45 @@ class _SplashScreenState extends State<SplashScreen> {
       String? title = remoteMessage.notification!.title;
 
       String? description = remoteMessage.notification!.body;
-
-      //im gonna have an alertdialog when clicking from push notification
-      // Alert(
-      //   context: context,
-      //   type: AlertType.error,
-      //   title: title,
-      //   // title from push notification data
-      //   style: AlertStyle(
-      //       titleStyle: TextStyle(color: AppColors.redText),
-      //       backgroundColor: AppColors.black),
-      //   desc: description,
-      //   // description from push notification data
-      //   buttons: [
-      //     DialogButton(
-      //       child: Text(
-      //         "COOL",
-      //         style: TextStyle(color: Colors.white, fontSize: 20),
-      //       ),
-      //       onPressed: () => Navigator.pop(context),
-      //       width: 120,
-      //     )
-      //   ],
-      // ).show();
     });
   }
+
+  Future<void> requestTracking() async {
+    try {
+      final TrackingStatus status =
+          await AppTrackingTransparency.trackingAuthorizationStatus;
+      if (status == TrackingStatus.notDetermined) {
+        await showCustomTrackingDialog(context);
+        await Future.delayed(const Duration(milliseconds: 200));
+        final TrackingStatus status =
+            await AppTrackingTransparency.requestTrackingAuthorization();
+      }
+      final uuid = await AppTrackingTransparency.getAdvertisingIdentifier();
+      print("UUID: $uuid");
+      coreBloc.add(CheckUserIsLoggedInOrNot());
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> showCustomTrackingDialog(BuildContext context) async =>
+      await showDialog<void>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Dear User'),
+          content: const Text(
+            'We care about your privacy and data security. We keep this app free by showing ads. '
+            'Can we continue to use your data to tailor ads for you?\n\nYou can change your choice anytime in the app settings. '
+            'Our partners will collect data and use a unique identifier on your device to show you ads.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Continue'),
+            ),
+          ],
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -139,16 +161,6 @@ class _SplashScreenState extends State<SplashScreen> {
           try {
             setState(() {
               roleId = globalStorage.getRoleId();
-              print("screen role id ----- " + roleId.toString());
-              if (roleId == "") {
-                print("role id is null");
-                // Navigator.pushReplacement(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) =>const LoginScreen(),
-                //   ),
-                // );
-              }
             });
           } catch (e) {
             Navigator.pushAndRemoveUntil(
@@ -161,7 +173,8 @@ class _SplashScreenState extends State<SplashScreen> {
           }
 
           if (state.isLoggedIn) {
-            coreBloc.add(UpdateToken(token: fcmToken!));
+            coreBloc.add(UpdateToken(token: fcmToken ?? ''));
+
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
@@ -208,25 +221,4 @@ class _SplashScreenState extends State<SplashScreen> {
       ),
     );
   }
-
-  // Future<void> _showNotification() async {
-  //   const AndroidNotificationDetails androidPlatformChannelSpecifics =
-  //       AndroidNotificationDetails(
-  //     'your_channel_id',
-  //     'your_channel_name',
-  //     importance: Importance.max,
-  //     priority: Priority.high,
-  //     styleInformation: BigTextStyleInformation(''),
-  //     color: Colors.blue, // Change this color to your desired background color
-  //   );
-  //   const NotificationDetails platformChannelSpecifics =
-  //       NotificationDetails(android: androidPlatformChannelSpecifics);
-  //   await _notification.show(
-  //     0,
-  //     'Notification Title',
-  //     'Notification Body',
-  //     platformChannelSpecifics,
-  //     payload: 'item x',
-  //   );
-  // }
 }

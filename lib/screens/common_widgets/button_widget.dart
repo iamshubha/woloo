@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:janitor/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 
 class ButtonWidget extends StatelessWidget {
   final String text;

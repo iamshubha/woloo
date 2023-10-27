@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:janitor/screens/common_widgets/pop_up_buttons.dart';
-import 'package:janitor/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/pop_up_buttons.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 
 import '../../utils/app_constants.dart';
 
@@ -69,7 +69,9 @@ class _CustomDialogueWidgetState extends State<CustomDialogueWidget> {
                   children: [
                     PopUpButtonWidget(
                       text: MyFacilityListConstants.POPUP_CANCEL_BUTTON,
-                      color: cancelButtonTap ? AppColors.buttonColor : AppColors.white,
+                      color: cancelButtonTap
+                          ? AppColors.buttonColor
+                          : AppColors.white,
                       onTap: () {
                         widget.onTapCancel();
                         setState(
@@ -82,7 +84,9 @@ class _CustomDialogueWidgetState extends State<CustomDialogueWidget> {
                     ),
                     PopUpButtonWidget(
                       text: MyFacilityListConstants.POPUP_YES_BUTTON,
-                      color: yesButtonTap ? AppColors.buttonColor : AppColors.white,
+                      color: yesButtonTap
+                          ? AppColors.buttonColor
+                          : AppColors.white,
                       onTap: () {
                         widget.onTapSubmit();
                         setState(() {

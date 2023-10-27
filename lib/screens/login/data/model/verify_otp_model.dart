@@ -1,4 +1,4 @@
-import 'package:janitor/screens/login/data/model/verify_otp_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/login/data/model/verify_otp_model.dart';
 
 /// name : "Adelina"
 /// mobile : "8149155402"

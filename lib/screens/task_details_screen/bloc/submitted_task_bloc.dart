@@ -1,17 +1,12 @@
 import 'dart:async';
 
+import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/data/network/supervisor_dashboard_service.dart';
+import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
+import 'package:Woloo_Smart_hygiene/screens/task_details_screen/bloc/submitted_task_event.dart';
+import 'package:Woloo_Smart_hygiene/screens/task_details_screen/bloc/submitted_task_state.dart';
+import 'package:Woloo_Smart_hygiene/screens/task_details_screen/data/network/submitted_task_service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:janitor/screens/supervisor_dashboard/bloc/supervisor_dashboard_event.dart';
-import 'package:janitor/screens/supervisor_dashboard/bloc/supervisor_dashboard_state.dart';
-import 'package:janitor/screens/supervisor_dashboard/data/network/supervisor_dashboard_service.dart';
-import 'package:janitor/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
-import 'package:janitor/screens/task_details_screen/bloc/submitted_task_event.dart';
-import 'package:janitor/screens/task_details_screen/bloc/submitted_task_state.dart';
-import 'package:janitor/screens/task_details_screen/data/network/submitted_task_service.dart';
-import 'package:janitor/screens/task_list/bloc/tasklist_event.dart';
-import 'package:janitor/screens/task_list/bloc/tasklist_state.dart';
-import 'package:janitor/screens/task_list/data/network/task_list_service.dart';
 
 class SubmittedTaskBloc extends Bloc<SubmittedTaskEvent, SubmittedTaskState> {
   final SubmittedTaskService submittedTaskService =

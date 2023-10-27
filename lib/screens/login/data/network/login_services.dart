@@ -1,8 +1,9 @@
+import 'package:Woloo_Smart_hygiene/screens/login/data/model/Update_token_model.dart';
 import 'package:dio/dio.dart';
-import 'package:janitor/core/network/api_constant.dart';
-import 'package:janitor/core/network/dio_client.dart';
-import 'package:janitor/screens/login/data/model/send_otp.dart';
-import 'package:janitor/screens/login/data/model/verify_otp_model.dart';
+import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
+import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
+import 'package:Woloo_Smart_hygiene/screens/login/data/model/send_otp.dart';
+import 'package:Woloo_Smart_hygiene/screens/login/data/model/verify_otp_model.dart';
 
 class LoginService {
   final DioClient dio;
@@ -15,7 +16,7 @@ class LoginService {
         data: {
           "mobileNumber": phoneNumber,
         },
-        options: Options(extra: {"auth": true}),
+        // options: Options(extra: {"auth": true}),
       );
 
       return SendOtp.fromJson(response['results']);
@@ -42,7 +43,7 @@ class LoginService {
     }
   }
 
-  Future<String> updateFCMToken({required String token}) async {
+  Future<List<UpdateTokenModel>> updateFCMToken({required String token}) async {
     try {
       var response = await dio.put(
         APIConstants.UPDATE_TOKEN_FCM,
@@ -51,8 +52,11 @@ class LoginService {
         },
         options: Options(extra: {"auth": true}),
       );
-
-      return response['results'].toString();
+      List<UpdateTokenModel> output = [];
+      for (var item in response['results']) {
+        output.add(UpdateTokenModel.fromJson(item));
+      }
+      return output;
     } catch (e) {
       rethrow;
     }

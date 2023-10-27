@@ -2,18 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:janitor/screens/cluster_screen/bloc/cluster_list_bloc.dart';
-import 'package:janitor/screens/cluster_screen/bloc/cluster_list_event.dart';
-import 'package:janitor/screens/cluster_screen/data/model/Cluster_model.dart';
-import 'package:janitor/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/screens/cluster_screen/bloc/cluster_list_bloc.dart';
+import 'package:Woloo_Smart_hygiene/screens/cluster_screen/bloc/cluster_list_event.dart';
+import 'package:Woloo_Smart_hygiene/screens/cluster_screen/data/model/Cluster_model.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 
 import '../../utils/app_color.dart';
 import '../cluster_screen/bloc/cluster_list_state.dart';
 import 'empty_list_widget.dart';
 import 'error_widget.dart';
-
-// ignore: constant_identifier_names
-// enum Status {ACTIVE, ENGAGED}
 
 class ClusterListWidget extends StatefulWidget {
   final TextEditingController controller;
@@ -92,10 +89,6 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
                 Duration(seconds: 1),
                 () {
                   _clusterListBloc.add(GetAllClusters());
-
-                  // setState(() {
-                  //   _demoData.addAll(["Ionic", "Xamarin"]);
-                  // });
                 },
               );
             },
@@ -121,7 +114,6 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
                         });
                       },
                       child: Container(
-                        // height: 150.h,
                         padding: EdgeInsets.symmetric(
                           vertical: 5.h,
                           horizontal: 10.w,
@@ -138,13 +130,6 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
                             color: AppColors.containerBorder,
                             width: 1.w,
                           ),
-                          // boxShadow: const [
-                          //   BoxShadow(
-                          //     blurRadius: 5,
-                          //     spreadRadius: 1,
-                          //     offset: Offset(0, 1),
-                          //   ),
-                          // ],
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -148,4 +148,8 @@ class AppColors {
   static const Color disabledYellowColor = Color(0xffFBF06D);
   static const Color disabledOrangeColor = Color(0xfff7b981);
   static const Color disabledPinkColor = Color(0xfff59f9f);
+  static const Color greyBgColor = Color(0xFFFAFAFA);
+  static const Color greyIconColor = Color(0xFF676767);
+  static const Color darkGreyText = Color(0xFF404040);
+  static const Color greyBorderColor = Color(0xFFDDDDDD);
 }

@@ -1,14 +1,14 @@
 import 'dart:io';
 
+import 'package:Woloo_Smart_hygiene/screens/splash_screen/view/splash.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:context_holder/context_holder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:janitor/screens/splash_screen/view/splash.dart';
-import 'package:janitor/utils/app_color.dart';
-import 'package:janitor/utils/app_constants.dart';
 
 class App extends StatefulWidget {
   const App({super.key});

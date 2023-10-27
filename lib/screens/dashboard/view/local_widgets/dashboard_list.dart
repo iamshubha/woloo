@@ -9,21 +9,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
-import 'package:janitor/core/local/global_storage.dart';
-import 'package:janitor/screens/common_widgets/custom_dialogue_widget.dart';
-import 'package:janitor/screens/common_widgets/empty_list_widget.dart';
-import 'package:janitor/screens/common_widgets/error_widget.dart';
-import 'package:janitor/screens/common_widgets/map_utils.dart';
-import 'package:janitor/screens/dashboard/bloc/dashboard_bloc.dart';
-import 'package:janitor/screens/dashboard/bloc/dashboard_event.dart';
-import 'package:janitor/screens/dashboard/bloc/dashboard_state.dart';
-import 'package:janitor/screens/dashboard/data/model/dashboard_model.dart';
-import 'package:janitor/screens/dashboard/data/model/dashboard_model_class.dart';
-import 'package:janitor/screens/selfie_screen/view/selfie_screen.dart';
-import 'package:janitor/screens/washroom_image_screen/view/task_completion_screen.dart';
-import 'package:janitor/utils/app_color.dart';
-import 'package:janitor/utils/app_constants.dart';
-import 'package:janitor/utils/date_utils.dart';
+import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/custom_dialogue_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/empty_list_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/error_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/map_utils.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_bloc.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_event.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_state.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/dashboard_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
+import 'package:Woloo_Smart_hygiene/screens/selfie_screen/view/selfie_screen.dart';
+import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/view/task_completion_screen.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/utils/date_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DashboardListWidget extends StatefulWidget {
@@ -217,8 +217,28 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               ),
                                               child: Container(
                                                 decoration: BoxDecoration(
-                                                    color: AppColors
-                                                        .disabledbuttonColor,
+                                                    color: _data[index]
+                                                                .requestType ==
+                                                            "IOT"
+                                                        ? AppColors
+                                                            .disabledOrangeColor
+                                                        : _data[index]
+                                                                    .requestType ==
+                                                                "Regular"
+                                                            ? AppColors
+                                                                .disabledYellowColor
+                                                            : _data[index]
+                                                                        .requestType ==
+                                                                    "Issue"
+                                                                ? AppColors
+                                                                    .disabledPinkColor
+                                                                : _data[index]
+                                                                            .requestType ==
+                                                                        "Customer Request"
+                                                                    ? AppColors
+                                                                        .disabledGreenColor
+                                                                    : AppColors
+                                                                        .white,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                       10.r,
@@ -289,21 +309,67 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             ),
                                           ],
                                         ),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 5.w,
-                                            vertical: 5.h,
-                                          ),
-                                          child: Text(
-                                            "Classic cleaning",
-                                            maxLines: 2,
-                                            style: TextStyle(
-                                              color: AppColors.containerBorder,
-                                              fontSize: 16.sp,
-                                              fontWeight: FontWeight.w500,
-                                              letterSpacing: 0.8,
+
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 5.w,
+                                                  vertical: 5.h,
+                                                ),
+                                                child: Text(
+                                                  _data[index].facilityName ??
+                                                      '',
+                                                  maxLines: 1,
+                                                  softWrap: false,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: AppColors
+                                                        .containerBorder,
+                                                    fontSize: 13.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                    letterSpacing: 0.8,
+                                                  ),
+                                                ),
+                                              ),
                                             ),
-                                          ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 5.w,
+                                                      vertical: 5.h),
+                                                  child: const Icon(
+                                                    Icons.access_time_filled,
+                                                    size: 20,
+                                                    color: AppColors
+                                                        .containerBorder,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  _data[index]
+                                                      .estimatedTime
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                    color: AppColors
+                                                        .containerBorder,
+                                                    fontSize: 10.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
                                         Padding(
                                           padding: EdgeInsets.symmetric(
@@ -311,7 +377,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             vertical: 1.h,
                                           ),
                                           child: Text(
-                                            "Customer Name : Amol Jagtap",
+                                            "Description: ${_data[index].description}",
                                             maxLines: 2,
                                             style: TextStyle(
                                               color: AppColors.containerBorder,
@@ -326,8 +392,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             vertical: 2.h,
                                           ),
                                           child: Text(
-                                            "Pimple Nilakh",
-                                            maxLines: 2,
+                                            "Location: ${_data[index].location}",
                                             style: TextStyle(
                                               color: AppColors.containerBorder,
                                               fontSize: 12.sp,
@@ -341,7 +406,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             vertical: 2.h,
                                           ),
                                           child: Text(
-                                            "Pin Code : 441256",
+                                            "Booths :${_data[index].booths.toString()}" ??
+                                                '',
                                             style: TextStyle(
                                               color: AppColors.containerBorder,
                                               fontSize: 12.sp,
@@ -349,6 +415,105 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             ),
                                           ),
                                         ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 5.w,
+                                                vertical: 2.h,
+                                              ),
+                                              child: Text(
+                                                "Total task : ${_data[index].totalTasks.toString()}" ??
+                                                    '',
+                                                style: TextStyle(
+                                                  color: AppColors
+                                                      .disabledGreenColor,
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 5.w,
+                                                vertical: 2.h,
+                                              ),
+                                              child: Text(
+                                                "Pending task : ${_data[index].pendingTasks.toString()}",
+                                                style: TextStyle(
+                                                  color: AppColors
+                                                      .disabledRedColor,
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        // Padding(
+                                        //   padding: EdgeInsets.symmetric(
+                                        //     horizontal: 5.w,
+                                        //     vertical: 5.h,
+                                        //   ),
+                                        //   child: Text(
+                                        //     "Classic cleaning",
+                                        //     maxLines: 2,
+                                        //     style: TextStyle(
+                                        //       color: AppColors.containerBorder,
+                                        //       fontSize: 16.sp,
+                                        //       fontWeight: FontWeight.w500,
+                                        //       letterSpacing: 0.8,
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                        // Padding(
+                                        //   padding: EdgeInsets.symmetric(
+                                        //     horizontal: 5.w,
+                                        //     vertical: 1.h,
+                                        //   ),
+                                        //   child: Text(
+                                        //     "Customer Name : Amol Jagtap",
+                                        //     maxLines: 2,
+                                        //     style: TextStyle(
+                                        //       color: AppColors.containerBorder,
+                                        //       fontSize: 12.sp,
+                                        //       fontWeight: FontWeight.w500,
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                        // Padding(
+                                        //   padding: EdgeInsets.symmetric(
+                                        //     horizontal: 5.w,
+                                        //     vertical: 2.h,
+                                        //   ),
+                                        //   child: Text(
+                                        //     "Pimple Nilakh",
+                                        //     maxLines: 2,
+                                        //     style: TextStyle(
+                                        //       color: AppColors.containerBorder,
+                                        //       fontSize: 12.sp,
+                                        //       fontWeight: FontWeight.w400,
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                        // Padding(
+                                        //   padding: EdgeInsets.symmetric(
+                                        //     horizontal: 5.w,
+                                        //     vertical: 2.h,
+                                        //   ),
+                                        //   child: Text(
+                                        //     "Pin Code : 441256",
+                                        //     style: TextStyle(
+                                        //       color: AppColors.containerBorder,
+                                        //       fontSize: 12.sp,
+                                        //       fontWeight: FontWeight.w400,
+                                        //     ),
+                                        //   ),
+                                        // ),
                                       ],
                                     ),
                                   ),
@@ -407,8 +572,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                 vertical: 1.h,
                                               ),
                                               child: Text(
-                                                CustomDateUtils.formatDate(
-                                                    _data[index].date ?? ''),
+                                                _data[index].date ?? '',
                                                 style: TextStyle(
                                                   color:
                                                       AppColors.timeSlotColor,

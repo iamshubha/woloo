@@ -1,7 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 class AppName {
-  static const String APP_NAME = "Woloo Task Management";
+  static const String APP_NAME = "Woloo Smart Hygiene";
 }
 
 class MyLoginConstants {
@@ -120,6 +120,7 @@ class MyReportIssueScreenConstants {
 
   static const String FACILITY = "Facility";
   static const String FACILITY_VALIDATION = "Facility is required";
+  static const String TEMPLATE_NAME = "Template name";
 
   static const String TASK_NAME = "Task name";
   static const String TASK_NAME_VALIDATION = "Task name is required";
@@ -166,4 +167,14 @@ class BottomNavigatiionBarConstants {
   static const String JANITORS = "Janitors";
   static const String REPORT_ISSUE = "Report issue";
   static const String ACCOUNT = "Account";
+}
+
+class MyAccountScreenConstants {
+  static const String MY_ACCOUNT = "My Account";
+}
+
+class MyJanitorProfileScreenConstants {
+  static const String MY_PROFILE = "My Profile";
+  static const String ATTENDANCE_HISTORY = "Attendance history";
+  static const String LOG_OUT = "Log Out";
 }

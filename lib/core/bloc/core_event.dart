@@ -14,5 +14,5 @@ class UpdateToken extends CoreEvent {
   const UpdateToken({required this.token});
 
   @override
-  List<Object?> get props => [token];
+  List<Object?> get props => [];
 }

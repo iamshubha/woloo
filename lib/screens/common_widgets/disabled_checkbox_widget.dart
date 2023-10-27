@@ -5,16 +5,13 @@ import '../../utils/app_color.dart';
 
 class DisabledCheckboxListWidget extends StatefulWidget {
   final String? name;
-  // final Function onChecked;
   final bool showCheckbox;
   final bool isChecked;
   final bool viewOnly;
-  // final Function onChecked;
 
   const DisabledCheckboxListWidget({
     Key? key,
     required this.name,
-    // required this.onChecked,
     this.showCheckbox = true,
     this.isChecked = false,
     this.viewOnly = false,
@@ -91,7 +88,6 @@ class _DisabledCheckboxListWidgetState
 
                 setState(() {
                   check = !check;
-                  // widget.onChecked(check, widget.name);
                 });
               },
               child: Row(

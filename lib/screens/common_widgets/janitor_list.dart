@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:janitor/screens/common_widgets/empty_list_widget.dart';
-import 'package:janitor/screens/janitor_screen/bloc/janitor_list_bloc.dart';
-import 'package:janitor/screens/janitor_screen/bloc/janitor_list_event.dart';
-import 'package:janitor/screens/janitor_screen/bloc/janitor_list_state.dart';
-import 'package:janitor/screens/janitor_screen/data/model/Janitor_list_model.dart';
-import 'package:janitor/screens/janitor_screen/data/model/Reassign_janitor_model.dart';
-import 'package:janitor/screens/janitor_screen/view/janitor_screen.dart';
-import 'package:janitor/screens/supervisor_dashboard/bloc/supervisor_dashboard_event.dart';
-import 'package:janitor/screens/supervisor_dashboard/bloc/supervisor_dashboard_state.dart';
-import 'package:janitor/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
-import 'package:janitor/utils/app_constants.dart';
-import 'package:janitor/utils/app_images.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/empty_list_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/janitor_screen/bloc/janitor_list_bloc.dart';
+import 'package:Woloo_Smart_hygiene/screens/janitor_screen/bloc/janitor_list_event.dart';
+import 'package:Woloo_Smart_hygiene/screens/janitor_screen/bloc/janitor_list_state.dart';
+import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_list_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Reassign_janitor_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/janitor_screen/view/janitor_screen.dart';
+import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_event.dart';
+import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_state.dart';
+import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
 
 import '../../utils/app_color.dart';
 import '../supervisor_dashboard/bloc/supervisor_dashboard_bloc.dart';
@@ -61,13 +61,14 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
   ReassignJanitorModel _reassignJanitorModel = ReassignJanitorModel();
   bool janitorListReloading = false;
   bool dashboardListReloading = false;
+  bool isAssigned = false;
 
   @override
   void initState() {
     _supervisorDashboardBloc = SupervisorDashboardBloc();
 
     _janitorListBloc.add(GetAllJanitors(cluster_id: widget.clusterId ?? "0"));
-    print("allocation ====> ${widget.allocationId}");
+    print("janitor_list_clusterId ====> ${widget.clusterId}");
     widget.controller.addListener(() {
       setState(() {
         if (widget.controller.text.isEmpty) {
@@ -155,7 +156,6 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
             if (dashboardListReloading) {
               setState(() {
                 _supervisorDashboardData = state.data;
-                // _search = _supervisorDashboardData;
               });
             }
           }
@@ -184,8 +184,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
 
           if (state is SupervisorDashboardError) {
             EasyLoading.dismiss();
-            print("SupervisorDashboardError--->" +
-                _supervisorDashboardData.toString());
+            print("SupervisorDashboardError--->$_supervisorDashboardData");
 
             return CustomErrorWidget(error: state.error);
           }
@@ -193,9 +192,13 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
           if (state is GetSupervisorDashboardDataSuccess &&
               _supervisorDashboardData.isEmpty) {
             EasyLoading.dismiss();
-            print("GetSupervisorDashboardDataSuccess--->" +
-                _supervisorDashboardData.toString());
+            print(
+                "GetSupervisorDashboardDataSuccess--->$_supervisorDashboardData");
 
+            return const EmptyListWidget();
+          }
+          if (state is JanitorListSuccess && _data.isEmpty) {
+            EasyLoading.dismiss();
             return const EmptyListWidget();
           }
           return RefreshIndicator(

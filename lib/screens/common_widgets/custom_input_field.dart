@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:janitor/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 
 class CustomInputField extends StatefulWidget {
   final bool? enabled;
@@ -87,8 +87,10 @@ class _CustomInputFieldState extends State<CustomInputField> {
         ),
         suffixIcon: widget.suffixIcon,
       ),
-      validator: (value) => widget.validator != null ? widget.validator!(value) : null,
-      onSaved: (value) => widget.onSaved != null ? widget.onSaved!(value) : null,
+      validator: (value) =>
+          widget.validator != null ? widget.validator!(value) : null,
+      onSaved: (value) =>
+          widget.onSaved != null ? widget.onSaved!(value) : null,
     );
   }
 }

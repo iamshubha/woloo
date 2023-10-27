@@ -1,10 +1,11 @@
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/Cluster_dropdown_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/Janitor_dropdown_model.dart';
 import 'package:equatable/equatable.dart';
-import 'package:janitor/screens/report_issue_screen/data/model/Cluster_dropdown_model.dart';
-import 'package:janitor/screens/report_issue_screen/data/model/Janitor_dropdown_model.dart';
-import 'package:janitor/screens/report_issue_screen/data/model/report_issue_model.dart';
-import 'package:janitor/screens/report_issue_screen/data/model/task_names_model.dart';
-import 'package:janitor/screens/report_issue_screen/data/model/facility_dropdown_model.dart';
-import 'package:janitor/screens/task_list/data/model/task_list_model.dart';
+
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/report_issue_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/task_names_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/facility_dropdown_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model.dart';
 
 abstract class ReportIssueState extends Equatable {
   const ReportIssueState();
@@ -98,6 +99,33 @@ class GetJanitorsDropdownSuccess extends ReportIssueState {
 class GetJanitorsDropdownError extends ReportIssueState {
   final String error;
   const GetJanitorsDropdownError({required this.error});
+
+  @override
+  List<Object> get props => [error];
+}
+
+class GetTasksListInitial extends ReportIssueState {
+  @override
+  List<Object> get props => [];
+}
+
+class GetTasksListLoading extends ReportIssueState {
+  @override
+  List<Object> get props => [];
+}
+
+class GetTasksListSuccess extends ReportIssueState {
+  final TaskListModel data;
+
+  const GetTasksListSuccess({required this.data});
+
+  @override
+  List<Object?> get props => [data];
+}
+
+class GetTasksListError extends ReportIssueState {
+  final String error;
+  const GetTasksListError({required this.error});
 
   @override
   List<Object> get props => [error];

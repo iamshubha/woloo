@@ -1,7 +1,7 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:janitor/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 
 class DropDownDialog<T> extends StatefulWidget {
   final List<T> items;
@@ -38,7 +38,9 @@ class _DropDownDialogState<T> extends State<DropDownDialog<T>> {
       selectedItem: widget.selected,
       key: widget.widgetKey,
       enabled: widget.enabled ?? true,
-      autoValidateMode: _startValidation ? AutovalidateMode.always : AutovalidateMode.disabled,
+      autoValidateMode: _startValidation
+          ? AutovalidateMode.always
+          : AutovalidateMode.disabled,
       items: widget.items,
       popupProps: PopupProps.dialog(
           showSearchBox: true,
@@ -57,7 +59,6 @@ class _DropDownDialogState<T> extends State<DropDownDialog<T>> {
           }),
       dropdownDecoratorProps: DropDownDecoratorProps(
         dropdownSearchDecoration: InputDecoration(
-          // floatingLabelBehavior: FloatingLabelBehavior.always,
           labelStyle: const TextStyle(
             color: AppColors.black,
           ),
@@ -87,8 +88,10 @@ class _DropDownDialogState<T> extends State<DropDownDialog<T>> {
           color: widget.enabled ?? true ? Colors.black : Colors.grey,
         ),
       ),
-      itemAsString: (item) => widget.itemAsString != null ? widget.itemAsString!(item) : "",
-      validator: (value) => widget.validator != null ? widget.validator!(value) : null,
+      itemAsString: (item) =>
+          widget.itemAsString != null ? widget.itemAsString!(item) : "",
+      validator: (value) =>
+          widget.validator != null ? widget.validator!(value) : null,
       onSaved: (item) {
         if (item != null && widget.onSaved != null && widget.items.isNotEmpty) {
           widget.onSaved!(item);

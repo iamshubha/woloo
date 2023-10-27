@@ -33,4 +33,7 @@ abstract class AppImages {
   static String get janitor_present => _assetImgPath + 'present.png';
   static String get janitor_absent => _assetImgPath + 'absent.png';
   static String get submittedIcon => _assetImgPath + 'submitted_image.png';
+  static String get profile_img => _assetImgPath + 'profile.png';
+  static String get history_img => _assetImgPath + 'listcheck.png';
+  static String get logout_img => _assetImgPath + 'logout.png';
 }

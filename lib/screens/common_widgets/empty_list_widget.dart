@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:janitor/utils/app_images.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
 import 'package:lottie/lottie.dart';
 
 class EmptyListWidget extends StatelessWidget {

@@ -8,12 +8,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
-import 'package:janitor/core/local/global_storage.dart';
-import 'package:janitor/screens/login/bloc/login_bloc.dart';
-import 'package:janitor/screens/supervisor_dashboard/view/supervisor_dashboard_screen.dart';
-import 'package:janitor/utils/app_color.dart';
-import 'package:janitor/utils/app_constants.dart';
-import 'package:janitor/utils/app_images.dart';
+import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
+import 'package:Woloo_Smart_hygiene/screens/login/bloc/login_bloc.dart';
+import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/view/supervisor_dashboard_screen.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../../common_widgets/button_widget.dart';
 import '../../dashboard/view/dashboard_screen.dart';
@@ -21,9 +21,11 @@ import 'local_widgets/otp_widget.dart';
 
 class OTPScreen extends StatefulWidget {
   final String phoneNumber;
+  final String? type;
+
   final LoginBloc loginBloc;
   const OTPScreen(
-      {Key? key, required this.phoneNumber, required this.loginBloc})
+      {Key? key, required this.phoneNumber, required this.loginBloc, this.type})
       : super(key: key);
 
   @override
@@ -62,19 +64,11 @@ class _OTPScreenState extends State<OTPScreen> {
       }
 
       if (haspermission) {
-        // setState(() {
-        //   //refresh the UI
-        // });
-
         getLocation();
       }
     } else {
       print("GPS Service is not enabled, turn on GPS location");
     }
-
-    // setState(() {
-    //   //refresh the UI
-    // });
   }
 
   getLocation() async {
@@ -85,10 +79,6 @@ class _OTPScreenState extends State<OTPScreen> {
 
     long = position.longitude.toString();
     lat = position.latitude.toString();
-
-    // setState(() {
-    //   //refresh UI
-    // });
 
     LocationSettings locationSettings = LocationSettings(
       accuracy: LocationAccuracy.high, //accuracy of the location data
@@ -106,10 +96,6 @@ class _OTPScreenState extends State<OTPScreen> {
       lat = position.latitude.toString();
 
       _getAddressFromLatLng(position);
-
-      // setState(() {
-      //   //refresh UI on update
-      // });
     });
   }
 
@@ -130,57 +116,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
   @override
   void initState() {
-    init();
     super.initState();
-  }
-
-  Future getDeviceToken() async {
-    //request user permission for push notification
-    FirebaseMessaging.instance.requestPermission();
-    FirebaseMessaging _firebaseMessage = FirebaseMessaging.instance;
-    String? deviceToken = await _firebaseMessage.getToken();
-    print("FCM_token --" + deviceToken.toString());
-    globalStorage.saveFCMToken(accessFCMToken: deviceToken.toString());
-
-    return (deviceToken == null) ? "" : deviceToken;
-  }
-
-  init() async {
-    String deviceToken = await getDeviceToken();
-    print("###### PRINT DEVICE TOKEN TO USE FOR PUSH NOTIFICATION ######");
-    print("TOKENNNNNNNN.....-----" + deviceToken);
-    print("############################################################");
-    setState(() {
-      fcmToken = globalStorage.getFCMToken();
-    });
-    // listen for user to click on notification
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage remoteMessage) {
-      String? title = remoteMessage.notification!.title;
-
-      String? description = remoteMessage.notification!.body;
-      //im gonna have an alertdialog when clicking from push notification
-      Alert(
-        context: context,
-        type: AlertType.error,
-        title: title,
-        // title from push notification data
-        style: AlertStyle(
-            titleStyle: TextStyle(color: AppColors.redText),
-            backgroundColor: AppColors.black),
-        desc: description,
-        // description from push notification data
-        buttons: [
-          DialogButton(
-            child: Text(
-              "COOL",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-            onPressed: () => Navigator.pop(context),
-            width: 120,
-          )
-        ],
-      ).show();
-    });
   }
 
   @override
@@ -231,13 +167,8 @@ class _OTPScreenState extends State<OTPScreen> {
                 SizedBox(
                   height: 10.h,
                 ),
-                // Row(
-                //   children: [
                 Center(
                   child: Row(
-                    // mainAxisAlignment: ,
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    // crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       RichText(
                         text: TextSpan(
@@ -276,34 +207,18 @@ class _OTPScreenState extends State<OTPScreen> {
                           ],
                         ),
                       ),
-
-                      // GestureDetector(
-                      //   onTap: () {},
-                      //   child: Image.asset(
-                      //     AppImages.edit_icon_img,
-                      //     height: 12.h,
-                      //     width: 11.w,
-                      //   ),
-                      // )
                     ],
                   ),
                 ),
-                //   ],
-                // ),
                 SizedBox(
                   height: 20.h,
                 ),
                 OTPWidget(
-                  onTapResend: () {
-                    // context.read<LoginBloc>().add(SendOTP(phoneNumber: widget.phoneNumber));
-                  },
                   onComplete: (pin) => _pin = pin,
                 ),
                 SizedBox(
                   height: 30.h,
                 ),
-                // Expanded(child: Container()),
-
                 BlocListener<LoginBloc, LoginState>(
                   bloc: widget.loginBloc,
                   listener: (context, state) {
@@ -313,13 +228,6 @@ class _OTPScreenState extends State<OTPScreen> {
 
                     if (state is LoginOTPSent) {
                       EasyLoading.dismiss();
-
-                      // Navigator.pushReplacement(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => OTPScreen(phoneNumber: _controller.text),
-                      //   ),
-                      // );
                     }
                     if (state is LoginOTPVerified) {
                       setState(() {
@@ -373,12 +281,6 @@ class _OTPScreenState extends State<OTPScreen> {
                             "please enter the OTP to proceed");
                       }
 
-                      // if (_pin.isNotEmpty) {
-                      //   await checkGps();
-                      // }
-                      //
-                      // if (!haspermission) return;
-
                       print("button pressed");
                     },
                     child: Padding(
@@ -397,7 +299,6 @@ class _OTPScreenState extends State<OTPScreen> {
             ),
           ),
         ),
-        // ],
       ),
     );
   }

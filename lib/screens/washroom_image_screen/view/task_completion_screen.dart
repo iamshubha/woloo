@@ -1,19 +1,19 @@
 import 'dart:io';
 
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/custom_dialogue_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/white_button_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/view/dashboard_screen.dart';
+import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/bloc/images_bloc.dart';
+import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/bloc/images_event.dart';
+import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/bloc/images_state.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:janitor/screens/common_widgets/custom_dialogue_widget.dart';
-import 'package:janitor/screens/common_widgets/white_button_widget.dart';
-import 'package:janitor/screens/dashboard/view/dashboard_screen.dart';
-import 'package:janitor/screens/washroom_image_screen/bloc/images_bloc.dart';
-import 'package:janitor/screens/washroom_image_screen/bloc/images_event.dart';
-import 'package:janitor/screens/washroom_image_screen/bloc/images_state.dart';
-import 'package:janitor/utils/app_color.dart';
-import 'package:janitor/utils/app_constants.dart';
 
 enum PickSource { CAMERA }
 

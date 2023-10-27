@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get_it/get_it.dart';
-import 'package:janitor/screens/login/view/login_screen.dart';
+import 'package:Woloo_Smart_hygiene/screens/login/view/login_screen.dart';
 
 import '../local/global_storage.dart';
 

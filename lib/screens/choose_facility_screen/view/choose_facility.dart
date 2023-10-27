@@ -3,22 +3,25 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:janitor/core/network/api_constant.dart';
-import 'package:janitor/screens/choose_facility_screen/data/model/Facility_list_model.dart';
-import 'package:janitor/screens/choose_facility_screen/data/model/selected_tasks.dart';
-import 'package:janitor/screens/common_widgets/button_widget.dart';
-import 'package:janitor/screens/common_widgets/custom_dialogue_widget.dart';
-import 'package:janitor/screens/common_widgets/list_widget.dart';
-import 'package:janitor/screens/reassign_janitor_screen/view/reassign_janitor_screen.dart';
-import 'package:janitor/screens/task_details_screen/view/task_details.dart';
-import 'package:janitor/utils/app_color.dart';
-import 'package:janitor/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
+import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/data/model/Facility_list_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/data/model/selected_tasks.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/button_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/custom_dialogue_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/list_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/reassign_janitor_screen/view/reassign_janitor_screen.dart';
+import 'package:Woloo_Smart_hygiene/screens/task_details_screen/view/task_details.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 
 class ChooseFacilityList extends StatefulWidget {
   final String? janitorId;
+  final String? clusterId;
+
   const ChooseFacilityList({
     Key? key,
     required this.janitorId,
+    this.clusterId,
   }) : super(key: key);
 
   @override
@@ -41,6 +44,8 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
   @override
   void initState() {
     super.initState();
+
+    print("facility_clusterId---->>>>${widget.clusterId}");
   }
 
   @override
@@ -184,6 +189,7 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
             child: ListWidget(
                 controller: _searchController,
                 janitorId: widget.janitorId ?? '',
+                clusterId: widget.clusterId ?? '',
                 onTapItem: () {},
                 onChecked: (bool selected, FacilityListModel listObject,
                     List<FacilityListModel> list) {
@@ -233,16 +239,19 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
             ),
             child: GestureDetector(
               onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => ReassignJanitorScreen(
-                      isFromCluster: true,
-                      janitorId: widget.janitorId ?? '',
-                      allocationId: allocationId,
-                      selectedIds: selectedIds,
+                if (selectedIds.isNotEmpty) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ReassignJanitorScreen(
+                        isFromCluster: true,
+                        clusterId: widget.clusterId,
+                        janitorId: widget.janitorId ?? '',
+                        allocationId: allocationId,
+                        selectedIds: selectedIds,
+                      ),
                     ),
-                  ),
-                );
+                  );
+                }
               },
               child: ButtonWidget(
                 enabled: selectedIds.isNotEmpty ? true : false,

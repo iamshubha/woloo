@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:janitor/screens/issue_list_screen/data/model/Issue_list_model.dart';
-import 'package:janitor/screens/task_list/data/model/task_list_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/data/model/Issue_list_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model.dart';
 
 abstract class IssueListState extends Equatable {
   const IssueListState();
@@ -32,5 +32,3 @@ class IssueListError extends IssueListState {
   @override
   List<Object> get props => [error];
 }
-
-

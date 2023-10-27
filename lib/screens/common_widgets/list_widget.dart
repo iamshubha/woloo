@@ -3,11 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
-import 'package:janitor/core/local/global_storage.dart';
-import 'package:janitor/screens/choose_facility_screen/bloc/facility_list_bloc.dart';
-import 'package:janitor/screens/choose_facility_screen/bloc/facility_list_event.dart';
-import 'package:janitor/screens/choose_facility_screen/bloc/facility_list_state.dart';
-import 'package:janitor/screens/choose_facility_screen/data/model/Facility_list_model.dart';
+import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
+import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/bloc/facility_list_bloc.dart';
+import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/bloc/facility_list_event.dart';
+import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/bloc/facility_list_state.dart';
+import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/data/model/Facility_list_model.dart';
+import 'package:Woloo_Smart_hygiene/utils/date_utils.dart';
 
 import '../../utils/app_color.dart';
 import 'empty_list_widget.dart';
@@ -20,18 +21,21 @@ class ListWidget extends StatefulWidget {
   final bool isCheckedSelectAll;
   final Function onChecked;
   final Function onSetData;
+  final String? clusterId;
+
   List<bool> checkList;
 
-  ListWidget({
-    Key? key,
-    required this.controller,
-    required this.onTapItem,
-    required this.janitorId,
-    this.isCheckedSelectAll = false,
-    required this.onChecked,
-    required this.onSetData,
-    required this.checkList,
-  }) : super(key: key);
+  ListWidget(
+      {Key? key,
+      required this.controller,
+      required this.onTapItem,
+      required this.janitorId,
+      this.isCheckedSelectAll = false,
+      required this.onChecked,
+      required this.onSetData,
+      required this.checkList,
+      this.clusterId})
+      : super(key: key);
 
   @override
   State<ListWidget> createState() => _ListWidgetState();
@@ -127,11 +131,6 @@ class _ListWidgetState extends State<ListWidget> {
                       child: GestureDetector(
                           onTap: () {
                             try {
-                              // widget.onTapItem(_search[index], check);
-                              // setState(() {
-                              //   selectedCard = index;
-                              //   check = !check;
-                              // });
                               setState(() {
                                 widget.checkList[index] =
                                     !widget.checkList[index];
@@ -143,7 +142,6 @@ class _ListWidgetState extends State<ListWidget> {
                             }
                           },
                           child: Container(
-                            // height: 240.h,
                             padding: EdgeInsets.symmetric(
                               vertical: 5.h,
                               horizontal: 10.w,
@@ -235,18 +233,13 @@ class _ListWidgetState extends State<ListWidget> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
-                                              Icon(
-                                                Icons.calendar_month_outlined,
-                                                size: 15.sp,
-                                                color: AppColors.timeSlotColor,
-                                              ),
                                               Padding(
                                                 padding: EdgeInsets.symmetric(
                                                   horizontal: 5.w,
                                                   vertical: 1.h,
                                                 ),
                                                 child: Text(
-                                                  "${_search[index].startTime} - ${_search[index].endTime}" ??
+                                                  "${CustomDateUtils.formatDate(_search[index].startTime ?? '')} - ${CustomDateUtils.formatDate(_search[index].endTime ?? '')}" ??
                                                       '',
                                                   style: TextStyle(
                                                     color:
@@ -275,7 +268,6 @@ class _ListWidgetState extends State<ListWidget> {
                                               child: Text(
                                                 looping(_search[index]),
                                                 maxLines: 1,
-                                                // softWrap: false,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                   color:

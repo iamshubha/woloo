@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:janitor/screens/janitor_customer_request/view/local_widgets/customer_request_list_widget.dart';
-import 'package:janitor/utils/app_color.dart';
-import 'package:janitor/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/screens/janitor_customer_request/view/local_widgets/customer_request_list_widget.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 
 class CustomerRequestList extends StatefulWidget {
   const CustomerRequestList({Key? key}) : super(key: key);
@@ -61,7 +61,8 @@ class _CustomerRequestListState extends State<CustomerRequestList> {
               requestType: 'Classic cleaning',
               customerName: 'Amol jagptap',
               dateAndTime: '22 Jun 2023, 12:00 PM-01:00 PM',
-              location: 'Flat no. 302, vedant apartment DP road Pimple nilakh ,',
+              location:
+                  'Flat no. 302, vedant apartment DP road Pimple nilakh ,',
               onTapItem: () {},
               status: 'Pending',
             ),
