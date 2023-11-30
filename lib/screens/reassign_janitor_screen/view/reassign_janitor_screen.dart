@@ -1,8 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/janitor_list.dart';
 import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_list_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_details_screen/view/task_details.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 
@@ -35,7 +35,6 @@ class _ReassignJanitorScreenState extends State<ReassignJanitorScreen> {
   void initState() {
     super.initState();
     print("clusterId---->>>>${widget.clusterId}");
-    // print(widget.isFromDashboardAssignment);
     print(widget.isFromCluster);
     // print(widget.isFromFacility);
   }
@@ -48,7 +47,7 @@ class _ReassignJanitorScreenState extends State<ReassignJanitorScreen> {
         elevation: 0,
         backgroundColor: AppColors.white,
         title: Text(
-          MyJanitorsListScreenConstants.TITLE_TEXT,
+          MyJanitorsListScreenConstants.TITLE_TEXT.tr(),
           style: TextStyle(
             fontSize: 24.sp,
             fontWeight: FontWeight.w400,
@@ -82,7 +81,7 @@ class _ReassignJanitorScreenState extends State<ReassignJanitorScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search',
+                hintText: MyFacilityListConstants.SEARCH.tr(),
                 prefixIcon: IconButton(
                   icon: Icon(Icons.search),
                   onPressed: () {
@@ -103,7 +102,7 @@ class _ReassignJanitorScreenState extends State<ReassignJanitorScreen> {
               vertical: 10.h,
             ),
             child: Text(
-              MyJanitorsListScreenConstants.SUB_TITLE,
+              MyJanitorsListScreenConstants.SUB_TITLE.tr(),
               style: TextStyle(
                 color: AppColors.titleColor,
                 fontSize: 16.sp,
@@ -122,7 +121,6 @@ class _ReassignJanitorScreenState extends State<ReassignJanitorScreen> {
                 allocationId: widget.selectedIds,
                 clusterId: widget.clusterId,
                 onTapItem: (JanitorListModel data) {
-                  // print("allocation Id ----> ${widget.selectedIds}");
                   // Navigator.of(context).push(
                   //   MaterialPageRoute(
                   //     builder: (context) => TaskDetailsScreen(

@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:Woloo_Smart_hygiene/screens/login/data/model/Update_token_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_it/get_it.dart';
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/login/data/network/login_services.dart';
@@ -75,7 +76,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       emit(UpdateTokenLoading());
 
-      var response = await loginService.updateFCMToken(token: event.token);
+      var firebase = FirebaseMessaging.instance;
+      var token = await firebase.getToken();
+      var response = await loginService.updateFCMToken(token: token ?? '');
 
       print("updateTokenResponse  -------->$response");
 

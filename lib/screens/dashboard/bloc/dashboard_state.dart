@@ -51,7 +51,9 @@ class ClockOutSuccessful extends DashboardState {
 
 class ClockInError extends DashboardState {
   final String error;
-  const ClockInError({required this.error});
+  final String? message;
+
+  const ClockInError({required this.error, this.message});
 
   @override
   List<Object> get props => [error];
@@ -59,7 +61,9 @@ class ClockInError extends DashboardState {
 
 class ClockOutError extends DashboardState {
   final String error;
-  const ClockOutError({required this.error});
+  final String? message;
+
+  const ClockOutError({required this.error, this.message});
 
   @override
   List<Object> get props => [error];

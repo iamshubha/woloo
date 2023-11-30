@@ -7,6 +7,8 @@ import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor
 import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_state.dart';
 import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -73,7 +75,8 @@ class _SupervisorDashboardListWidgetState
         },
         builder: (context, state) {
           if (state is SupervisorDashboardLoading && _data.isEmpty) {
-            EasyLoading.show(status: "Loading Please Wait ...");
+            EasyLoading.show(
+                status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
 
           if (state is SupervisorDashboardError) {
@@ -90,7 +93,8 @@ class _SupervisorDashboardListWidgetState
             return const EmptyListWidget();
           }
           if (state is SupervisorUpdateStatusLoading) {
-            EasyLoading.show(status: "Loading Please Wait ...");
+            EasyLoading.show(
+                status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
 
           if (state is SupervisorUpdateStatusError) {
@@ -99,7 +103,7 @@ class _SupervisorDashboardListWidgetState
             return CustomErrorWidget(error: state.error);
           }
           // if (state is AssignTaskLoading) {
-          //   EasyLoading.show(status: "Loading Please Wait ...");
+          //   EasyLoading.show(status: __MydashboardScreenConstants.LOADING_TOAST.tr());
           // }
           //
           // if (state is AssignTaskError) {
@@ -365,10 +369,7 @@ class _SupervisorDashboardListWidgetState
                                                     ),
                                                   ),
                                                   Text(
-                                                    _data[index]
-                                                            .estimatedTime
-                                                            .toString() ??
-                                                        '',
+                                                    " ${_data[index].estimatedTime ?? ''}",
                                                     style: TextStyle(
                                                       color: AppColors
                                                           .containerBorder,
@@ -387,8 +388,7 @@ class _SupervisorDashboardListWidgetState
                                               vertical: 1.h,
                                             ),
                                             child: Text(
-                                              "Description: ${_data[index].description}" ??
-                                                  '',
+                                              "${MydashboardScreenConstants.DESCRIPTION.tr()} : ${_data[index].description ?? ''}",
                                               maxLines: 2,
                                               style: TextStyle(
                                                 color:
@@ -404,8 +404,7 @@ class _SupervisorDashboardListWidgetState
                                               vertical: 2.h,
                                             ),
                                             child: Text(
-                                              "Location: ${_data[index].location}" ??
-                                                  '',
+                                              "${MydashboardScreenConstants.DESCRIPTION.tr()} : ${_data[index].location ?? ''}",
                                               style: TextStyle(
                                                 color:
                                                     AppColors.containerBorder,
@@ -420,8 +419,7 @@ class _SupervisorDashboardListWidgetState
                                               vertical: 2.h,
                                             ),
                                             child: Text(
-                                              "Booths :${_data[index].booths.toString()}" ??
-                                                  '',
+                                              "${MydashboardScreenConstants.BOOTHS.tr()}  :${_data[index].booths ?? ''}",
                                               style: TextStyle(
                                                 color:
                                                     AppColors.containerBorder,
@@ -442,8 +440,7 @@ class _SupervisorDashboardListWidgetState
                                                   vertical: 2.h,
                                                 ),
                                                 child: Text(
-                                                  "Total task : ${_data[index].totalTasks.toString()}" ??
-                                                      '',
+                                                  "${MydashboardScreenConstants.TOTAL_TASK.tr()} : ${_data[index].totalTasks ?? ''}",
                                                   style: TextStyle(
                                                     color: AppColors
                                                         .disabledGreenColor,
@@ -458,8 +455,7 @@ class _SupervisorDashboardListWidgetState
                                                   vertical: 2.h,
                                                 ),
                                                 child: Text(
-                                                  "Pending task : ${_data[index].pendingTasks.toString()}" ??
-                                                      '',
+                                                  "${MydashboardScreenConstants.PENDING_TASK.tr()}  : ${_data[index].pendingTasks ?? ''}",
                                                   style: TextStyle(
                                                     color: AppColors
                                                         .disabledRedColor,
@@ -753,8 +749,7 @@ class _SupervisorDashboardListWidgetState
                                               vertical: 1.h,
                                             ),
                                             child: Text(
-                                              "Description: ${_data[index].description}" ??
-                                                  '',
+                                              "${MydashboardScreenConstants.DESCRIPTION.tr()} : ${_data[index].description ?? ''}",
                                               maxLines: 2,
                                               style: TextStyle(
                                                 color: AppColors.ListTitleColor,
@@ -769,8 +764,7 @@ class _SupervisorDashboardListWidgetState
                                               vertical: 2.h,
                                             ),
                                             child: Text(
-                                              "Location: ${_data[index].location}" ??
-                                                  '',
+                                              "${MydashboardScreenConstants.LOCATION.tr()} : ${_data[index].location ?? ''}",
                                               style: TextStyle(
                                                 color: AppColors.ListTitleColor,
                                                 fontSize: 12.sp,
@@ -784,8 +778,7 @@ class _SupervisorDashboardListWidgetState
                                               vertical: 2.h,
                                             ),
                                             child: Text(
-                                              "Booths :${_data[index].booths.toString()}" ??
-                                                  '',
+                                              "${MydashboardScreenConstants.BOOTHS.tr()}  :${_data[index].booths ?? ''}",
                                               style: TextStyle(
                                                 color: AppColors.ListTitleColor,
                                                 fontSize: 12.sp,
@@ -805,8 +798,7 @@ class _SupervisorDashboardListWidgetState
                                                   vertical: 2.h,
                                                 ),
                                                 child: Text(
-                                                  "Total task : ${_data[index].totalTasks.toString()}" ??
-                                                      '',
+                                                  "${MydashboardScreenConstants.TOTAL_TASK.tr()}  : ${_data[index].totalTasks ?? ''}",
                                                   style: TextStyle(
                                                     color: AppColors
                                                         .greenTextColor,
@@ -821,8 +813,7 @@ class _SupervisorDashboardListWidgetState
                                                   vertical: 2.h,
                                                 ),
                                                 child: Text(
-                                                  "Pending task : ${_data[index].pendingTasks.toString()}" ??
-                                                      '',
+                                                  "${MydashboardScreenConstants.PENDING_TASK.tr()}  : ${_data[index].pendingTasks ?? ''}",
                                                   style: TextStyle(
                                                     color:
                                                         AppColors.redTextColor,
@@ -904,7 +895,9 @@ class _SupervisorDashboardListWidgetState
                                                           vertical: 6.h,
                                                         ),
                                                         child: Text(
-                                                          "Approve",
+                                                          MyTaskDetailsScreenConstants
+                                                              .APPROVE_BUTTON
+                                                              .tr(),
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: TextStyle(
@@ -975,7 +968,9 @@ class _SupervisorDashboardListWidgetState
                                                           vertical: 6.h,
                                                         ),
                                                         child: Text(
-                                                          "Assign",
+                                                          MyFacilityListConstants
+                                                              .ASSIGN
+                                                              .tr(),
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: TextStyle(

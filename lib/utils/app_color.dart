@@ -152,4 +152,11 @@ class AppColors {
   static const Color greyIconColor = Color(0xFF676767);
   static const Color darkGreyText = Color(0xFF404040);
   static const Color greyBorderColor = Color(0xFFDDDDDD);
+  static const Color greyShadow = Color(0xff33555555);
+  static const Color historyText = Color(0xFF3A3A3A);
+  static const Color lightGreyText = Color(0xFF988B8B);
+  static const Color greenBold = Color(0xFF78DB5F);
+  static const Color redBold = Color(0xFFDB755F);
+  static const Color containerShadow = Color(0xFFFCFCFC);
+  static const Color boxShadow = Color(0xFFE9E3E3);
 }

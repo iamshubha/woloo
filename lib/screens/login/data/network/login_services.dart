@@ -16,7 +16,6 @@ class LoginService {
         data: {
           "mobileNumber": phoneNumber,
         },
-        // options: Options(extra: {"auth": true}),
       );
 
       return SendOtp.fromJson(response['results']);
@@ -78,15 +77,4 @@ class LoginService {
       rethrow;
     }
   }
-
-  // Future uploadFCMToken() async {
-  //   try {
-  //     String? token = await FirebaseMessaging.instance.getToken();
-  //     await dio.post(
-  //       APIConstants.SEND_FCM_TOKEN,
-  //       options: Options(extra: {"auth": true}),
-  //       data: {'token': token},
-  //     );
-  //   } catch (e) {}
-  // }
 }

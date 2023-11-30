@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -71,7 +72,8 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
         },
         builder: (context, state) {
           if (state is ClusterListLoading && _search.isEmpty) {
-            EasyLoading.show(status: "Loading Please Wait ...");
+            EasyLoading.show(
+                status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
 
           if (state is ClusterListError) {

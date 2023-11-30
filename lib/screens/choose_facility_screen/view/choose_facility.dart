@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
@@ -56,7 +57,7 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
         elevation: 0,
         backgroundColor: AppColors.white,
         title: Text(
-          MyFacilityScreenConstants.TITLE_TEXT,
+          MyFacilityScreenConstants.TITLE_TEXT.tr(),
           style: TextStyle(
             fontSize: 24.sp,
             fontWeight: FontWeight.w400,
@@ -90,7 +91,7 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search',
+                hintText: MyFacilityListConstants.SEARCH.tr(),
                 prefixIcon: IconButton(
                   icon: Icon(Icons.search),
                   onPressed: () {
@@ -115,7 +116,7 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
                   vertical: 10.h,
                 ),
                 child: Text(
-                  "Facility",
+                  MydashboardScreenConstants.FACILITY.tr(),
                   style: TextStyle(
                     color: AppColors.titleColor,
                     fontSize: 16.sp,
@@ -155,7 +156,7 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
                   },
                   child: Row(
                     children: [
-                      Text('Select All '),
+                      Text(MyFacilityListConstants.SELECT_ALL.tr()),
                       Container(
                         width: 15.w,
                         height: 15.h,
@@ -255,7 +256,7 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
               },
               child: ButtonWidget(
                 enabled: selectedIds.isNotEmpty ? true : false,
-                text: "Assign",
+                text: MyFacilityListConstants.ASSIGN.tr(),
               ),
             ),
           ),

@@ -1,3 +1,5 @@
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MapUtils {
@@ -9,7 +11,7 @@ class MapUtils {
     if (await canLaunch(googleUrl)) {
       await launch(googleUrl);
     } else {
-      throw 'Could not open the map.';
+      throw MapUtilsConstants.COULD_NOT_OPEN_MAP.tr();
     }
   }
 }

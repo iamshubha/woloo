@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ffi';
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -90,7 +91,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
         },
         builder: (context, state) {
           if (state is DashboardLoading && _data.isEmpty) {
-            EasyLoading.show(status: "Loading Please Wait ...");
+            EasyLoading.show(
+                status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
 
           if (state is DashboardError) {
@@ -101,7 +103,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
             return CustomErrorWidget(error: state.error);
           }
           if (state is UpdateStatusLoading) {
-            EasyLoading.show(status: "Loading Please Wait ...");
+            EasyLoading.show(
+                status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
 
           if (state is GetDashboardDataSuccess && _data.isEmpty) {
@@ -377,7 +380,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             vertical: 1.h,
                                           ),
                                           child: Text(
-                                            "Description: ${_data[index].description}",
+                                            "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${_data[index].description}",
                                             maxLines: 2,
                                             style: TextStyle(
                                               color: AppColors.containerBorder,
@@ -392,7 +395,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             vertical: 2.h,
                                           ),
                                           child: Text(
-                                            "Location: ${_data[index].location}",
+                                            "${MydashboardScreenConstants.LOCATION.tr()} : ${_data[index].location}",
                                             style: TextStyle(
                                               color: AppColors.containerBorder,
                                               fontSize: 12.sp,
@@ -406,8 +409,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             vertical: 2.h,
                                           ),
                                           child: Text(
-                                            "Booths :${_data[index].booths.toString()}" ??
-                                                '',
+                                            "${MydashboardScreenConstants.BOOTHS.tr()} :${_data[index].booths.toString() ?? ''}",
                                             style: TextStyle(
                                               color: AppColors.containerBorder,
                                               fontSize: 12.sp,
@@ -427,8 +429,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                 vertical: 2.h,
                                               ),
                                               child: Text(
-                                                "Total task : ${_data[index].totalTasks.toString()}" ??
-                                                    '',
+                                                "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${_data[index].totalTasks.toString() ?? ''}",
                                                 style: TextStyle(
                                                   color: AppColors
                                                       .disabledGreenColor,
@@ -443,7 +444,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                 vertical: 2.h,
                                               ),
                                               child: Text(
-                                                "Pending task : ${_data[index].pendingTasks.toString()}",
+                                                "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${_data[index].pendingTasks.toString()}",
                                                 style: TextStyle(
                                                   color: AppColors
                                                       .disabledRedColor,
@@ -536,13 +537,6 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                   color: AppColors.containerBorder,
                                   width: 1.w,
                                 ),
-                                // boxShadow: const [
-                                //   BoxShadow(
-                                //     blurRadius: 5,
-                                //     spreadRadius: 1,
-                                //     offset: Offset(0, 1),
-                                //   ),
-                                // ],
                               ),
                               child: Row(
                                 mainAxisAlignment:
@@ -779,7 +773,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             vertical: 1.h,
                                           ),
                                           child: Text(
-                                            "Description: ${_data[index].description}",
+                                            "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${_data[index].description}",
                                             maxLines: 2,
                                             style: TextStyle(
                                               color: AppColors.ListTitleColor,
@@ -794,7 +788,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             vertical: 2.h,
                                           ),
                                           child: Text(
-                                            "Location: ${_data[index].location}",
+                                            "${MydashboardScreenConstants.LOCATION.tr()}: ${_data[index].location}",
                                             style: TextStyle(
                                               color: AppColors.ListTitleColor,
                                               fontSize: 12.sp,
@@ -808,7 +802,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             vertical: 2.h,
                                           ),
                                           child: Text(
-                                            "Booths :${_data[index].booths.toString()}" ??
+                                            "${MydashboardScreenConstants.BOOTHS.tr()} :${_data[index].booths.toString()}" ??
                                                 '',
                                             style: TextStyle(
                                               color: AppColors.ListTitleColor,
@@ -829,7 +823,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                 vertical: 2.h,
                                               ),
                                               child: Text(
-                                                "Total task : ${_data[index].totalTasks.toString()}" ??
+                                                "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${_data[index].totalTasks.toString()}" ??
                                                     '',
                                                 style: TextStyle(
                                                   color:
@@ -845,7 +839,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                 vertical: 2.h,
                                               ),
                                               child: Text(
-                                                "Pending task : ${_data[index].pendingTasks.toString()}",
+                                                "${MydashboardScreenConstants.PENDING_TASK.tr()}: ${_data[index].pendingTasks.toString()}",
                                                 style: TextStyle(
                                                   color: AppColors.redTextColor,
                                                   fontSize: 14.sp,
@@ -905,7 +899,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                         vertical: 6.h,
                                                       ),
                                                       child: Text(
-                                                        "Close",
+                                                        MydashboardScreenConstants
+                                                            .CLOSE
+                                                            .tr(),
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: TextStyle(
@@ -973,7 +969,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                         vertical: 6.h,
                                                       ),
                                                       child: Text(
-                                                        "Reject",
+                                                        MydashboardScreenConstants
+                                                            .REJECT
+                                                            .tr(),
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: TextStyle(
@@ -1021,7 +1019,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                         vertical: 6.h,
                                                       ),
                                                       child: Text(
-                                                        "Accept",
+                                                        MydashboardScreenConstants
+                                                            .ACCEPT
+                                                            .tr(),
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: TextStyle(
@@ -1084,7 +1084,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                         vertical: 6.h,
                                                       ),
                                                       child: Text(
-                                                        "Direction",
+                                                        MydashboardScreenConstants
+                                                            .DIRECTION
+                                                            .tr(),
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: TextStyle(
@@ -1143,7 +1145,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                         vertical: 6.h,
                                                       ),
                                                       child: Text(
-                                                        "Start",
+                                                        MydashboardScreenConstants
+                                                            .START
+                                                            .tr(),
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: TextStyle(
@@ -1200,7 +1204,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                         vertical: 6.h,
                                                       ),
                                                       child: Text(
-                                                        "Direction",
+                                                        MydashboardScreenConstants
+                                                            .DIRECTION
+                                                            .tr(),
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: TextStyle(
@@ -1258,7 +1264,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                         vertical: 6.h,
                                                       ),
                                                       child: Text(
-                                                        "Start",
+                                                        MydashboardScreenConstants
+                                                            .START
+                                                            .tr(),
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: TextStyle(
@@ -1289,12 +1297,11 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
 
   Future<void> _launchUrl() async {
     if (!await launchUrl(_url)) {
-      throw Exception('Could not launch $_url');
+      throw Exception("${MydashboardScreenConstants.URL_ERR_TOAST.tr()} $_url");
     }
   }
 
   checkGps() async {
-    // EasyLoading.show(status: "Please wait we are fetching your location...");
     servicestatus = await Geolocator.isLocationServiceEnabled();
     if (servicestatus) {
       permission = await Geolocator.checkPermission();
@@ -1304,7 +1311,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
         if (permission == LocationPermission.denied) {
           print('Location permissions are denied');
         } else if (permission == LocationPermission.deniedForever) {
-          print("'Location permissions are permanently denied");
+          print("Location permissions are permanently denied");
         } else {
           haspermission = true;
         }
@@ -1313,18 +1320,13 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
       }
 
       if (haspermission) {
-        // setState(() {
-        //   //refresh the UI
-        // });
-
         await getLocation();
       }
 
       EasyLoading.dismiss();
     } else {
       EasyLoading.dismiss();
-      EasyLoading.showToast(
-          "GPS Service is not enabled,Please turn on GPS location");
+      EasyLoading.showToast(MydashboardScreenConstants.GPS_DISABLED_TOAST.tr());
     }
   }
 

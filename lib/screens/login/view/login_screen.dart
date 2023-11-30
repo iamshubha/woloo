@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
-import 'package:dio_log/overlay_draggable_button.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/language_list_item.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -31,13 +32,27 @@ class LoginPageState extends State<LoginScreen> {
   final _loginFormKey = GlobalKey<FormState>();
   final TextEditingController _controller = TextEditingController();
   bool _isHintShown = false;
+  bool _isLanguangeSelected = false;
+  bool _isSheetOpen = false;
+
   LoginBloc loginBloc = LoginBloc();
   GlobalStorage globalStorage = GetIt.instance();
+  int? _selectedLanguage;
+  final List<String> _languages = [
+    MyLoginConstants.LANGUAGE_ENGLISH.tr(),
+    MyLoginConstants.LANGUAGE_HINDI.tr(),
+    MyLoginConstants.LANGUAGE_MARATHI.tr()
+  ];
+  final List<Locale> _locales = const [
+    Locale('en', 'US'),
+    Locale('hi', 'IN'),
+    Locale('mr', 'IN'),
+  ];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    _settingModalBottomSheet(context);
   }
 
   @override
@@ -65,7 +80,7 @@ class LoginPageState extends State<LoginScreen> {
                 Center(
                   child: Text(
                     textAlign: TextAlign.center,
-                    MyLoginConstants.WELCOME_TEXT,
+                    MyLoginConstants.WELCOME_TEXT.tr(),
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 24.sp,
@@ -87,7 +102,7 @@ class LoginPageState extends State<LoginScreen> {
                       textAlign: TextAlign.center,
                       controller: _controller,
                       validator: (value) => value == null
-                          ? MyLoginConstants.MOBILE_VALIDATION
+                          ? MyLoginConstants.MOBILE_VALIDATION.tr()
                           : null,
                       maxLength: 10,
                       decoration: InputDecoration(
@@ -98,7 +113,7 @@ class LoginPageState extends State<LoginScreen> {
                           borderSide:
                               const BorderSide(color: AppColors.greyBoxBorder),
                         ),
-                        hintText: MyLoginConstants.MOBILE_NO,
+                        hintText: MyLoginConstants.MOBILE_NO.tr(),
                         hintStyle: TextStyle(
                           color: AppColors.greyColorFields,
                           fontSize: 16.sp,
@@ -164,8 +179,8 @@ class LoginPageState extends State<LoginScreen> {
                           vertical: 10.h,
                           horizontal: 30.w,
                         ),
-                        child: const ButtonWidget(
-                          text: MyLoginConstants.SEND_OTP_BTN,
+                        child: ButtonWidget(
+                          text: MyLoginConstants.SEND_OTP_BTN.tr(),
                         ),
                       ),
                     );
@@ -178,6 +193,45 @@ class LoginPageState extends State<LoginScreen> {
             ),
           )),
     );
+  }
+
+  void openBottomSheet() {
+    _settingModalBottomSheet(context);
+  }
+
+  void _settingModalBottomSheet(context) async {
+    await Future.delayed(Duration.zero);
+
+    showModalBottomSheet(
+        context: context,
+        isDismissible: false,
+        builder: (BuildContext cont) {
+          return Container(
+            height: 150.h,
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              border: Border.all(
+                color: AppColors.yellowIcon,
+                width: 2,
+              ),
+              borderRadius: new BorderRadius.only(
+                  topLeft: const Radius.circular(20.0),
+                  topRight: const Radius.circular(20.0)),
+            ),
+            child: ListView.builder(
+              itemCount: _languages.length,
+              itemBuilder: (context, index) {
+                return LanguageGridItem(
+                    isSelected: index == _selectedLanguage,
+                    text: _languages[index].tr(),
+                    onTap: () {
+                      context.setLocale(_locales[index]);
+                      Navigator.pop(context);
+                    });
+              },
+            ),
+          );
+        });
   }
 
   void hideKeyboard(BuildContext context) {

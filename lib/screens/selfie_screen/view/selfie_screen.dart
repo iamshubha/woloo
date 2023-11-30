@@ -7,6 +7,7 @@ import 'package:Woloo_Smart_hygiene/screens/selfie_screen/bloc/selfie_state.dart
 import 'package:Woloo_Smart_hygiene/screens/task_list/view/task_list_screen.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -100,7 +101,7 @@ class _SelfieScreenState extends State<SelfieScreen> {
                         vertical: 15.h,
                       ),
                       child: Text(
-                        MySelfieScreenConstants.TITLE_TEXT,
+                        MySelfieScreenConstants.TITLE_TEXT.tr(),
                         style: TextStyle(
                           color: AppColors.black,
                           fontSize: 24.sp,
@@ -113,7 +114,7 @@ class _SelfieScreenState extends State<SelfieScreen> {
                         padding: EdgeInsets.symmetric(
                             vertical: 15.h, horizontal: 20.w),
                         child: Text(
-                          MySelfieScreenConstants.TITLE_SUBTEXT,
+                          MySelfieScreenConstants.TITLE_SUBTEXT.tr(),
                           maxLines: 2,
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -161,7 +162,7 @@ class _SelfieScreenState extends State<SelfieScreen> {
                         horizontal: 30.w,
                       ),
                       child: WhiteButtonWidget(
-                        text: MyTaskListConstants.SUBMIT_BTN,
+                        text: MyTaskListConstants.SUBMIT_BTN.tr(),
                         color: AppColors.buttonColor,
                         onTap: () {
                           print("image#######" + _file!.path);
@@ -170,7 +171,7 @@ class _SelfieScreenState extends State<SelfieScreen> {
                             type: MySelfieScreenConstants.IMAGE_TYPE_SELFIE,
                             image: _file!,
                             id: widget.allocationId,
-                            remarks: "remarks",
+                            remarks: MySelfieScreenConstants.REMARKS,
                           ));
                         },
                       ),
@@ -182,7 +183,7 @@ class _SelfieScreenState extends State<SelfieScreen> {
                     horizontal: 30.w,
                   ),
                   child: WhiteButtonWidget(
-                    text: MyTaskListConstants.SUBMIT_BTN,
+                    text: MyTaskListConstants.SUBMIT_BTN.tr(),
                     color: AppColors.disabledYellowButtonColor,
                     onTap: () {},
                   ),
@@ -216,7 +217,7 @@ class _SelfieScreenState extends State<SelfieScreen> {
       }
 
       if (old == null) {
-        throw 'File not selected.';
+        throw MyReportIssueScreenConstants.FILE_NOT_SELECTED.tr();
       }
     } catch (e) {
       EasyLoading.showToast(e.toString());

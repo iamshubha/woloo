@@ -23,28 +23,29 @@
 
 class SupervisorModelDashboard {
   SupervisorModelDashboard({
-      this.taskAllocationId, 
-      this.date, 
-      this.janitorId, 
-      this.requestType, 
-      this.startTime, 
-      this.endTime, 
-      this.facilityId, 
-      this.templateId, 
-      this.templateName, 
-      this.description, 
-      this.facilityName, 
-      this.estimatedTime, 
-      this.totalTasks, 
-      this.booths, 
-      this.floorNumber, 
-      this.location, 
-      this.lat, 
-      this.lng, 
-      this.janitorName, 
-      this.blockName, 
-      this.pendingTasks, 
-      this.status,});
+    this.taskAllocationId,
+    this.date,
+    this.janitorId,
+    this.requestType,
+    this.startTime,
+    this.endTime,
+    this.facilityId,
+    this.templateId,
+    this.templateName,
+    this.description,
+    this.facilityName,
+    this.estimatedTime,
+    this.totalTasks,
+    this.booths,
+    this.floorNumber,
+    this.location,
+    this.lat,
+    this.lng,
+    this.janitorName,
+    this.blockName,
+    this.pendingTasks,
+    this.status,
+  });
 
   SupervisorModelDashboard.fromJson(dynamic json) {
     taskAllocationId = json['task_allocation_id'];
@@ -119,5 +120,4 @@ class SupervisorModelDashboard {
     map['status'] = status;
     return map;
   }
-
 }

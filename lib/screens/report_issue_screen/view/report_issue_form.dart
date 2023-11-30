@@ -21,6 +21,7 @@ import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -125,7 +126,8 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
         },
         builder: (context, state) {
           if (state is GetClustersDropdownLoading) {
-            EasyLoading.show(status: "Loading Please Wait ...");
+            EasyLoading.show(
+                status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
           if (state is GetClustersDropdownError) {
             return CustomErrorWidget(error: state.error);
@@ -136,7 +138,8 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
           //   return const EmptyListWidget();
           // }
           if (state is GetFacilityDropdownLoading) {
-            EasyLoading.show(status: "Loading Please Wait ...");
+            EasyLoading.show(
+                status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
 
           if (state is GetFacilityDropdownError) {
@@ -148,19 +151,17 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
           //   return const EmptyListWidget();
           // }
           if (state is GetTasksDropdownLoading) {
-            EasyLoading.show(status: "Loading Please Wait ...");
+            EasyLoading.show(
+                status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
 
           if (state is GetTasksDropdownError) {
             return CustomErrorWidget(error: state.error);
           }
 
-          // if (state is GetTasksDropdownSuccess && (state.data.isEmpty)) {
-          //   EasyLoading.dismiss();
-          //   return const EmptyListWidget();
-          // }
           if (state is GetJanitorsDropdownLoading) {
-            EasyLoading.show(status: "Loading Please Wait ...");
+            EasyLoading.show(
+                status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
 
           if (state is GetJanitorsDropdownError) {
@@ -168,24 +169,21 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
           }
 
           if (state is GetTasksListLoading) {
-            EasyLoading.show(status: "Loading Please Wait ...");
+            EasyLoading.show(
+                status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
 
           if (state is GetTasksListError) {
             return CustomErrorWidget(error: state.error);
           }
           if (state is ReportIssueLoading) {
-            EasyLoading.show(status: "Loading Please Wait ...");
+            EasyLoading.show(
+                status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
 
           if (state is ReportIssueError) {
             return CustomErrorWidget(error: state.error);
           }
-
-          // if (state is GetJanitorsDropdownSuccess && (state.data.isEmpty)) {
-          //   EasyLoading.dismiss();
-          //   return const EmptyListWidget();
-          // }
 
           return GestureDetector(
             onTap: () {
@@ -212,7 +210,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                     vertical: 10.h,
                   ),
                   child: Text(
-                    MydashboardScreenConstants.REPORT_ISSUE,
+                    MydashboardScreenConstants.REPORT_ISSUE.tr(),
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       color: AppColors.appBarTitleColor,
@@ -235,7 +233,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                         padding: EdgeInsets.symmetric(
                             horizontal: 20.h, vertical: 10.h),
                         child: Text(
-                          MyReportIssueScreenConstants.CLUSTER_NAME,
+                          MyReportIssueScreenConstants.CLUSTER_NAME.tr(),
                           style: TextStyle(
                             color: AppColors.clusterTitleColor,
                             fontSize: 16.sp,
@@ -247,9 +245,6 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                         padding: EdgeInsets.symmetric(
                             horizontal: 20.w, vertical: 10.h),
                         child: DropDownDialog(
-                          // key: Key('${_editMarketModel.city?.label}T4'),
-                          // selected: cities.firstWhereOrNull((element) => element.value == _editMarketModel.city?.value),
-                          // widgetKey: _keys[2],
                           items: clusterNames,
                           itemAsString: (ClusterDropdownModel item) =>
                               item.clusterName,
@@ -263,10 +258,10 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                               print("dropppppp" + e.toString());
                             }
                           },
-
                           validator: (value) => value == null
                               ? MyReportIssueScreenConstants
                                   .CLUSTER_NAME_VALIDATION
+                                  .tr()
                               : null,
                         ),
                       ),
@@ -275,7 +270,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           horizontal: 20.h,
                         ),
                         child: Text(
-                          MyReportIssueScreenConstants.FACILITY,
+                          MyReportIssueScreenConstants.FACILITY.tr(),
                           style: TextStyle(
                             color: AppColors.clusterTitleColor,
                             fontSize: 16.sp,
@@ -304,6 +299,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           },
                           validator: (value) => value == null
                               ? MyReportIssueScreenConstants.FACILITY_VALIDATION
+                                  .tr()
                               : null,
                         ),
                       ),
@@ -313,7 +309,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           // vertical: 10.h,
                         ),
                         child: Text(
-                          MyReportIssueScreenConstants.TEMPLATE_NAME,
+                          MyReportIssueScreenConstants.TEMPLATE_NAME.tr(),
                           style: TextStyle(
                             color: AppColors.clusterTitleColor,
                             fontSize: 16.sp,
@@ -334,7 +330,9 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           itemAsString: (TaskNamesModels item) =>
                               item.templateName,
                           validator: (value) => value == null
-                              ? "Template Name is required."
+                              ? MyReportIssueScreenConstants
+                                  .TEMPLATE_NAME_VALIDATION
+                                  .tr()
                               : null,
                           onChanged: (TaskNamesModels item) {
                             reportIssueBloc
@@ -351,7 +349,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           horizontal: 20.h,
                         ),
                         child: Text(
-                          MyReportIssueScreenConstants.TASK_NAME,
+                          MyReportIssueScreenConstants.TASK_NAME.tr(),
                           style: TextStyle(
                             color: AppColors.clusterTitleColor,
                             fontSize: 16.sp,
@@ -373,6 +371,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           validator: (value) => value == null
                               ? MyReportIssueScreenConstants
                                   .TASK_NAME_VALIDATION
+                                  .tr()
                               : null,
                           onSaved: (List<Tasks> i) {
                             // selectedIds.add(i[1].taskId!);
@@ -392,7 +391,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           horizontal: 20.h,
                         ),
                         child: Text(
-                          MyReportIssueScreenConstants.DESCRIPTION,
+                          MyReportIssueScreenConstants.DESCRIPTION.tr(),
                           style: TextStyle(
                             color: AppColors.clusterTitleColor,
                             fontSize: 16.sp,
@@ -407,14 +406,13 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                         ),
                         child: CustomInputField(
                           controller: _controller,
-
                           validator: qValidator([
                             IsRequired(
                               MyReportIssueScreenConstants
-                                  .DESCRIPTION_VALIDATION,
+                                  .DESCRIPTION_VALIDATION
+                                  .tr(),
                             ),
                           ]),
-                          // onSaved: (value) => _createMarketModel.marketName = value,
                         ),
                       ),
                       Padding(
@@ -422,7 +420,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           horizontal: 20.h,
                         ),
                         child: Text(
-                          MyReportIssueScreenConstants.ASSIGN_TO,
+                          MyReportIssueScreenConstants.ASSIGN_TO.tr(),
                           style: TextStyle(
                             color: AppColors.clusterTitleColor,
                             fontSize: 16.sp,
@@ -436,15 +434,12 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           vertical: 10.h,
                         ),
                         child: DropDownDialog(
-                          // key: Key('${_editMarketModel.city?.label}T4'),
-                          // selected: cities.firstWhereOrNull((element) => element.value == _editMarketModel.city?.value),
-                          // widgetKey: _keys[2],
                           items: janitorList,
                           itemAsString: (JanitorDropdownModel item) =>
                               item.name,
-
                           validator: (value) => value == null
                               ? MyReportIssueScreenConstants.ASSIGN_VALIDATION
+                                  .tr()
                               : null,
                           onChanged: (JanitorDropdownModel item) {
                             setState(() {
@@ -462,7 +457,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           vertical: 10.h,
                         ),
                         child: Text(
-                          MyReportIssueScreenConstants.UPLOAD_PHOTO,
+                          MyReportIssueScreenConstants.UPLOAD_PHOTO.tr(),
                           style: TextStyle(
                             color: AppColors.clusterTitleColor,
                             fontSize: 16.sp,
@@ -540,7 +535,9 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                                                 horizontal: 5.w,
                                               ),
                                               child: Text(
-                                                "Choose file",
+                                                MyReportIssueScreenConstants
+                                                    .CHOOSE_PHOTO
+                                                    .tr(),
                                                 style: TextStyle(
                                                   fontSize: 14.sp,
                                                   fontWeight: FontWeight.w400,
@@ -579,14 +576,16 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                                 task_images: _file!,
                                 taskList: selectedIds));
                           } else {
-                            EasyLoading.showToast(
-                                "Please upload an image to proceed");
+                            EasyLoading.showToast(MyReportIssueScreenConstants
+                                .UPLOAD_IMG_TOAST
+                                .tr());
                           }
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: 30.w, vertical: 20.h),
-                          child: ButtonWidget(text: "Submit"),
+                          child: ButtonWidget(
+                              text: MySelfieScreenConstants.SUBMIT_BTN.tr()),
                         ),
                       ),
                     ],
@@ -630,7 +629,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
         /// Check extension
         String extension = path.split('/').last.split(".").last;
         if (!allowedFileTypes.contains(extension)) {
-          throw '.$extension file is not allowed.';
+          throw '.$extension ${MyReportIssueScreenConstants.FILE_NOT_ALLOWED.tr()}';
         }
 
         return file;
@@ -641,7 +640,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
       }
 
       if (old == null) {
-        throw 'File not selected.';
+        throw MyReportIssueScreenConstants.FILE_NOT_SELECTED.tr();
       }
     } catch (e) {
       EasyLoading.showToast(e.toString());

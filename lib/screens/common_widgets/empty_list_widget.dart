@@ -1,3 +1,5 @@
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
@@ -19,7 +21,7 @@ class EmptyListWidget extends StatelessWidget {
         ),
         Center(
           child: Text(
-            "Data Not Found ...",
+            EmptyWidgetConstants.DATA_NOT_FOUND.tr(),
             style: TextStyle(
               fontSize: 16.sp,
             ),

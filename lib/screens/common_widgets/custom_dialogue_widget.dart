@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/pop_up_buttons.dart';
@@ -68,7 +69,7 @@ class _CustomDialogueWidgetState extends State<CustomDialogueWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     PopUpButtonWidget(
-                      text: MyFacilityListConstants.POPUP_CANCEL_BUTTON,
+                      text: MyFacilityListConstants.POPUP_CANCEL_BUTTON.tr(),
                       color: cancelButtonTap
                           ? AppColors.buttonColor
                           : AppColors.white,
@@ -83,7 +84,7 @@ class _CustomDialogueWidgetState extends State<CustomDialogueWidget> {
                       },
                     ),
                     PopUpButtonWidget(
-                      text: MyFacilityListConstants.POPUP_YES_BUTTON,
+                      text: MyFacilityListConstants.POPUP_YES_BUTTON.tr(),
                       color: yesButtonTap
                           ? AppColors.buttonColor
                           : AppColors.white,

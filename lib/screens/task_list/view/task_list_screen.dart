@@ -11,6 +11,7 @@ import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:collection/collection.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -62,14 +63,16 @@ class _TaskListState extends State<TaskList> {
 
           if (state is SubmitTasksSuccess) {
             EasyLoading.dismiss();
-            EasyLoading.showToast("Task Submitted Successfully..");
+            EasyLoading.showToast(
+                MyTaskListConstants.TASK_SUBMISSION_TOAST.tr());
             Navigator.pop(context);
             Navigator.pop(context);
           }
         },
         builder: (context, state) {
           if (state is GetTasksLoading) {
-            EasyLoading.show(status: "Loading Please Wait ...");
+            EasyLoading.show(
+                status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
 
           if (state is GetTasksError) {
@@ -81,7 +84,8 @@ class _TaskListState extends State<TaskList> {
             return const EmptyListWidget();
           }
           if (state is SubmitTasksLoading) {
-            EasyLoading.show(status: "Loading Please Wait ...");
+            EasyLoading.show(
+                status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
 
           if (state is SubmitTasksError) {
@@ -115,7 +119,7 @@ class _TaskListState extends State<TaskList> {
                   vertical: 10.h,
                 ),
                 child: Text(
-                  MyTaskListConstants.APP_BAR,
+                  MyTaskListConstants.APP_BAR.tr(),
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     color: AppColors.appBarTitleColor,
@@ -140,7 +144,7 @@ class _TaskListState extends State<TaskList> {
                     horizontal: 20.w,
                   ),
                   child: Text(
-                    "List of Activities",
+                    MyTaskListConstants.LIST_OF_ACTIVITIES.tr(),
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       color: AppColors.titleColor,
@@ -161,10 +165,6 @@ class _TaskListState extends State<TaskList> {
                           () {
                             taskListBloc
                                 .add(GetAllTask(id: widget.templateId ?? 0));
-
-                            // setState(() {
-                            //   _demoData.addAll(["Ionic", "Xamarin"]);
-                            // });
                           },
                         );
                       },
@@ -218,7 +218,6 @@ class _TaskListState extends State<TaskList> {
                     ),
                   ),
                 ),
-
                 createTaskModel.data!.isNotEmpty
                     ? Padding(
                         padding: EdgeInsets.symmetric(
@@ -226,7 +225,7 @@ class _TaskListState extends State<TaskList> {
                           horizontal: 30.w,
                         ),
                         child: WhiteButtonWidget(
-                          text: MyTaskListConstants.SUBMIT_BTN,
+                          text: MyTaskListConstants.SUBMIT_BTN.tr(),
                           color: submitButtonTap
                               ? AppColors.buttonColor
                               : AppColors.white,
@@ -237,22 +236,7 @@ class _TaskListState extends State<TaskList> {
                               print(state);
                             }
 
-                            // setState(() {
-                            //   Navigator.pushReplacement(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => Dashboard(
-                            //               isFromJanitor: true,
-                            //               isFromSupervisor: false,
-                            //             )),
-                            //   );
-                            //   submitButtonTap = true;
-                            //   skipButtonTap = false;
-                            // });
-
                             print(createTaskModel.toJson());
-
-                            // openDialog();
                           },
                         ),
                       )
@@ -262,28 +246,11 @@ class _TaskListState extends State<TaskList> {
                           horizontal: 30.w,
                         ),
                         child: WhiteButtonWidget(
-                          text: MyTaskListConstants.SUBMIT_BTN,
+                          text: MyTaskListConstants.SUBMIT_BTN.tr(),
                           color: AppColors.disabledYellowButtonColor,
                           onTap: () {},
                         ),
                       ),
-                // Padding(
-                //   padding: EdgeInsets.symmetric(
-                //     vertical: 5.h,
-                //     horizontal: 30.w,
-                //   ),
-                //   child: WhiteButtonWidget(
-                //     text: MyTaskListConstants.SKIP_BTN,
-                //     color: skipButtonTap ? AppColors.buttonColor : AppColors.white,
-                //     onTap: () {
-                //       setState(() {
-                //         submitButtonTap = false;
-                //         skipButtonTap = true;
-                //       });
-                //       // openSkipButtonDialog();
-                //     },
-                //   ),
-                // ),
               ],
             ),
           );
