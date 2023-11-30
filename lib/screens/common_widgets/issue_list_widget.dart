@@ -1,3 +1,5 @@
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -58,7 +60,8 @@ class _IssueListWidgetState extends State<IssueListWidget> {
         },
         builder: (context, state) {
           if (state is IssueListLoading && _data.isEmpty) {
-            EasyLoading.show(status: "Loading Please Wait ...");
+            EasyLoading.show(
+                status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
 
           if (state is IssueListError) {
@@ -166,7 +169,7 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                                           vertical: 2.h,
                                         ),
                                         child: Text(
-                                          "Facility Name - ${_data[index].facilityName}",
+                                          "${MyIssuesListScreenConstants.FACILITY_NAME.tr()} - ${_data[index].facilityName}",
                                           style: TextStyle(
                                             color: AppColors.clusterTitleColor,
                                             fontSize: 12.sp,
@@ -180,7 +183,7 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                                           vertical: 2.h,
                                         ),
                                         child: Text(
-                                          "Janitor name - ${_data[index].janitorName}",
+                                          "${MyIssuesListScreenConstants.JANITOR_NAME.tr()}- ${_data[index].janitorName}",
                                           style: TextStyle(
                                             color: AppColors.clusterTitleColor,
                                             fontSize: 12.sp,

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -32,13 +33,8 @@ class _IssuesListState extends State<IssuesList> {
 
   GlobalStorage globalStorage = GetIt.instance();
 
-  IssueListBloc _issueListBloc = IssueListBloc();
-
   @override
   void initState() {
-    // supervisorId = globalStorage.getId();
-    // _issueListBloc.add(GetAllIssues(supervisorId:supervisorId));
-
     super.initState();
   }
 
@@ -58,7 +54,7 @@ class _IssuesListState extends State<IssuesList> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                MyIssuesListScreenConstants.TITLE_TEXT,
+                MyIssuesListScreenConstants.TITLE_TEXT.tr(),
                 style: TextStyle(
                   fontSize: 24.sp,
                   fontWeight: FontWeight.w400,
@@ -82,7 +78,7 @@ class _IssuesListState extends State<IssuesList> {
                   ),
                   child: Center(
                     child: Text(
-                      "Report Issue",
+                      MyIssuesListScreenConstants.REPORT_ISSUE_BUTTON.tr(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
@@ -96,18 +92,6 @@ class _IssuesListState extends State<IssuesList> {
             ],
           ),
         ),
-        // leading: IconButton(
-        //   color: AppColors.black30,
-        //   icon: const Icon(
-        //     Icons.arrow_back,
-        //     color: Colors.black,
-        //     size: 30,
-        //   ),
-        //   // color: AppColors.black,
-        //   onPressed: () {
-        //     Navigator.pop(context);
-        //   },
-        // ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -118,14 +102,7 @@ class _IssuesListState extends State<IssuesList> {
           ),
           Expanded(
             child: IssueListWidget(
-              onTapItem: () {
-                // openDialog();
-                // Navigator.of(context).push(
-                //   MaterialPageRoute(
-                //     builder: (context) => JanitorDetails(id: 12),
-                //   ),
-                // );
-              },
+              onTapItem: () {},
             ),
           ),
         ],
@@ -138,17 +115,12 @@ class _IssuesListState extends State<IssuesList> {
       context: context,
       builder: (BuildContext context) {
         return CustomDialogueWidget(
-          text: MyFacilityListConstants.POPUP_TEXT,
+          text: MyFacilityListConstants.POPUP_TEXT.tr(),
           onTapSubmit: () {
             setState(() {
               yesButtonTap = true;
               cancelButtonTap = false;
             });
-            // Navigator.of(context).push(
-            //   MaterialPageRoute(
-            //     builder: (context) => const TaskList(),
-            //   ),
-            // );
           },
           onTapCancel: () {
             setState(() {

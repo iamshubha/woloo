@@ -14,6 +14,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final GlobalStorage globalStorage = GetIt.instance<GlobalStorage>();
   List<DashboardModelClass> data = [];
   late int janitorId;
+  var message;
 
   DashboardBloc() : super(ClockInInitial()) {
     on<DashboardEvent>((event, emit) {});
@@ -42,10 +43,15 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         emit(ClockOutSuccessful(attendanceModel: response));
         return;
       }
-
+      message = response.message;
       print("responseeee  ------>>>>>>  " + response.toString());
     } catch (e) {
-      emit(ClockInError(error: e.toString()));
+      if (event.type == "check_in") {
+        emit(ClockInError(error: e.toString(), message: message));
+      }
+      if (event.type == "check_out") {
+        emit(ClockOutError(error: e.toString(), message: message));
+      }
     }
   }
 

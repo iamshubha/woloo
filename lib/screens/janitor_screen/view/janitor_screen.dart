@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/view/choose_facility.dart';
@@ -46,7 +47,7 @@ class _JanitorListState extends State<JanitorList> {
         elevation: 0,
         backgroundColor: AppColors.white,
         title: Text(
-          MyJanitorsListScreenConstants.TITLE_TEXT,
+          MyJanitorsListScreenConstants.TITLE_TEXT.tr(),
           style: TextStyle(
             fontSize: 24.sp,
             fontWeight: FontWeight.w400,
@@ -82,7 +83,7 @@ class _JanitorListState extends State<JanitorList> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search',
+                hintText: MyFacilityListConstants.SEARCH.tr(),
                 prefixIcon: IconButton(
                   icon: Icon(Icons.search),
                   onPressed: () {
@@ -103,7 +104,7 @@ class _JanitorListState extends State<JanitorList> {
               vertical: 10.h,
             ),
             child: Text(
-              MyJanitorsListScreenConstants.SUB_TITLE,
+              MyJanitorsListScreenConstants.SUB_TITLE.tr(),
               style: TextStyle(
                 color: AppColors.titleColor,
                 fontSize: 16.sp,

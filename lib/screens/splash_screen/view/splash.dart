@@ -5,9 +5,11 @@ import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/login/view/login_screen.dart';
 import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/view/supervisor_dashboard_screen.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:dio_log/overlay_draggable_button.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,8 +53,11 @@ class _SplashScreenState extends State<SplashScreen> {
     FirebaseMessaging.instance.requestPermission();
     FirebaseMessaging _firebaseMessage = FirebaseMessaging.instance;
     String? deviceToken = await _firebaseMessage.getToken();
+
     globalStorage.saveFCMToken(accessFCMToken: deviceToken ?? '');
     fcmToken = deviceToken;
+    coreBloc.add(UpdateToken(token: fcmToken ?? ''));
+
     print("Device Token----->${deviceToken}");
     return (deviceToken == null) ? "" : deviceToken;
   }
@@ -99,6 +104,7 @@ class _SplashScreenState extends State<SplashScreen> {
     });
 
     FirebaseMessaging.onMessage.listen((message) async {
+      print("token generating---->$message");
       await _notification.show(
         10000012,
         message.notification!.title,
@@ -137,16 +143,14 @@ class _SplashScreenState extends State<SplashScreen> {
       await showDialog<void>(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Dear User'),
-          content: const Text(
-            'We care about your privacy and data security. We keep this app free by showing ads. '
-            'Can we continue to use your data to tailor ads for you?\n\nYou can change your choice anytime in the app settings. '
-            'Our partners will collect data and use a unique identifier on your device to show you ads.',
-          ),
+          title: Text(MySplashScreenConstants.DEAR_USER.tr()),
+          content: Text("${MySplashScreenConstants.PRIVACY.tr()}"
+              "${MySplashScreenConstants.PERMISSION.tr()}"
+              "${MySplashScreenConstants.ADS.tr()}"),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Continue'),
+              child: Text(MySplashScreenConstants.CONTINUE.tr()),
             ),
           ],
         ),
@@ -173,8 +177,6 @@ class _SplashScreenState extends State<SplashScreen> {
           }
 
           if (state.isLoggedIn) {
-            coreBloc.add(UpdateToken(token: fcmToken ?? ''));
-
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
@@ -214,7 +216,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   ],
                 ),
               ),
-              const Text("Loading..."),
+              Text(MySplashScreenConstants.LOADING.tr()),
             ],
           ),
         ),

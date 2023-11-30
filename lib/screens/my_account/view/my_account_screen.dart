@@ -1,5 +1,6 @@
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/login/view/login_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -46,7 +47,7 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: Text(
-                  MyAccountScreenConstants.MY_ACCOUNT,
+                  MyAccountScreenConstants.MY_ACCOUNT.tr(),
                   style: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 24.sp,
@@ -65,17 +66,6 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
                   alignment: Alignment.center,
                 ),
               ),
-              // Center(
-              //   child: Text(
-              //     textAlign: TextAlign.center,
-              //     MyLoginConstants.WELCOME_TEXT,
-              //     style: TextStyle(
-              //       fontWeight: FontWeight.w400,
-              //       fontSize: 24.sp,
-              //       color: AppColors.black,
-              //     ),
-              //   ),
-              // ),
               SizedBox(
                 height: 20.h,
               ),
@@ -163,7 +153,9 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
               ),
               GestureDetector(
                 onTap: () async {
-                  EasyLoading.show(status: "Logging out...");
+                  EasyLoading.show(
+                      status: MyJanitorProfileScreenConstants.LOGGING_OUT_TOAST
+                          .tr());
                   var storage = GetIt.instance<GlobalStorage>();
                   storage.removeToken();
                   storage.removeFCMToken();
@@ -171,7 +163,9 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
                   storage.removeTime();
                   await Future.delayed(const Duration(seconds: 3));
                   EasyLoading.dismiss();
-                  EasyLoading.showToast("Logout success...");
+                  EasyLoading.showToast(MyJanitorProfileScreenConstants
+                      .LOG_OUT_SUCCESS_TOAST
+                      .tr());
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => LoginScreen()),
@@ -183,8 +177,8 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
                     vertical: 10.h,
                     horizontal: 30.w,
                   ),
-                  child: const ButtonWidget(
-                    text: MydashboardScreenConstants.LOG_OUT,
+                  child: ButtonWidget(
+                    text: MydashboardScreenConstants.LOG_OUT.tr(),
                   ),
                 ),
               ),

@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:Woloo_Smart_hygiene/core/model/App_launch_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/janitor_profile_screen/view/janitor_profile_screen.dart';
+import 'package:Woloo_Smart_hygiene/screens/login/view/login_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -31,7 +33,7 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   int selectedCard = -1;
   GlobalStorage globalStorage = GetIt.instance();
-  bool servicestatus = false;
+  bool serviceStatus = false;
   bool haspermission = false;
   bool showList = false;
   bool onTapCheckIn = false;
@@ -127,6 +129,10 @@ class _DashboardState extends State<Dashboard> {
           if (state is ClockInError) {
             EasyLoading.dismiss();
             EasyLoading.showError(state.error);
+            setState(() {
+              onTapCheckIn = true;
+              showList = true;
+            });
           }
 
           if (state is ClockOutSuccessful) {
@@ -147,7 +153,12 @@ class _DashboardState extends State<Dashboard> {
           }
           if (state is ClockOutError) {
             EasyLoading.dismiss();
+            print("onTapCheckIn----->$onTapCheckIn");
             EasyLoading.showError(state.error);
+            setState(() {
+              onTapCheckIn = false;
+              showList = false;
+            });
           }
         },
         child: Scaffold(
@@ -162,7 +173,7 @@ class _DashboardState extends State<Dashboard> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      MydashboardScreenConstants.TITLE_TEXT,
+                      MydashboardScreenConstants.TITLE_TEXT.tr(),
                       style: TextStyle(
                         fontSize: 24.sp,
                         fontWeight: FontWeight.w400,
@@ -171,17 +182,55 @@ class _DashboardState extends State<Dashboard> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        Navigator.pushAndRemoveUntil(
+                        // EasyLoading.show(status: "Logging out...");
+                        // var storage = GetIt.instance<GlobalStorage>();
+                        // storage.removeToken();
+                        // storage.removeFCMToken();
+                        // storage.removeLocation();
+                        // storage.removeTime();
+                        // await Future.delayed(const Duration(seconds: 3));
+                        // EasyLoading.dismiss();
+                        // EasyLoading.showToast("Logout success...");
+                        // Navigator.pushAndRemoveUntil(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) => LoginScreen()),
+                        //   (route) => false,
+                        // );
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => JanitorProfileScreen()),
-                          (route) => false,
                         );
                       },
-                      child: Icon(
-                        Icons.account_circle_outlined,
-                        color: AppColors.black,
-                        size: 25.sp,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 2.w, vertical: 2.h),
+                            // child: Icon(
+                            //   Icons.logout,
+                            //   color: AppColors.black,
+                            //   size: 20.sp,
+                            // ),
+                            child: Icon(
+                              Icons.account_circle_outlined,
+                              color: AppColors.black,
+                              size: 25.sp,
+                            ),
+                          ),
+                          // Padding(
+                          //   padding: EdgeInsets.symmetric(
+                          //       horizontal: 2.w, vertical: 2.h),
+                          //   child: Text(
+                          //     MydashboardScreenConstants.LOG_OUT,
+                          //     style: TextStyle(
+                          //         fontSize: 8.sp,
+                          //         fontWeight: FontWeight.w600,
+                          //         color: Colors.black),
+                          //   ),
+                          // )
+                        ],
                       ),
                     ),
                   ],
@@ -259,7 +308,8 @@ class _DashboardState extends State<Dashboard> {
                                               color: AppColors.greyCircleColor),
                                           child: Center(
                                             child: Text(
-                                              "In",
+                                              MydashboardScreenConstants.IN
+                                                  .tr(),
                                               style: TextStyle(
                                                   color: AppColors.white,
                                                   fontSize: 12.sp,
@@ -297,7 +347,7 @@ class _DashboardState extends State<Dashboard> {
                                                   AppColors.acceptButtonColor),
                                           child: Center(
                                             child: Text(
-                                              "In",
+                                              MydashboardScreenConstants.IN,
                                               style: TextStyle(
                                                   color: AppColors.white,
                                                   fontSize: 12.sp,
@@ -327,7 +377,7 @@ class _DashboardState extends State<Dashboard> {
                                           ),
                                           child: Center(
                                             child: Text(
-                                              "Out",
+                                              MydashboardScreenConstants.OUT,
                                               style: TextStyle(
                                                   color: AppColors.white,
                                                   fontSize: 12.sp,
@@ -349,7 +399,8 @@ class _DashboardState extends State<Dashboard> {
                                           ),
                                           child: Center(
                                             child: Text(
-                                              "Out",
+                                              MydashboardScreenConstants.OUT
+                                                  .tr(),
                                               style: TextStyle(
                                                   color: AppColors.white,
                                                   fontSize: 12.sp,
@@ -372,7 +423,8 @@ class _DashboardState extends State<Dashboard> {
                                   Column(
                                     children: [
                                       Text(
-                                        MydashboardScreenConstants.CHECK_IN,
+                                        MydashboardScreenConstants.CHECK_IN
+                                            .tr(),
                                         style: TextStyle(
                                             fontSize: 12.sp,
                                             fontWeight: FontWeight.w400,
@@ -392,7 +444,8 @@ class _DashboardState extends State<Dashboard> {
                                   Column(
                                     children: [
                                       Text(
-                                        MydashboardScreenConstants.CHECK_OUT,
+                                        MydashboardScreenConstants.CHECK_OUT
+                                            .tr(),
                                         style: TextStyle(
                                             fontSize: 12.sp,
                                             fontWeight: FontWeight.w400,
@@ -443,7 +496,8 @@ class _DashboardState extends State<Dashboard> {
                                   width: 100.w,
                                 ),
                                 Text(
-                                  MydashboardScreenConstants.BLANK_LIST_TEXT,
+                                  MydashboardScreenConstants.BLANK_LIST_TEXT
+                                      .tr(),
                                   maxLines: 2,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
@@ -462,9 +516,10 @@ class _DashboardState extends State<Dashboard> {
   }
 
   checkGps() async {
-    EasyLoading.show(status: "Please wait we are fetching your location...");
-    servicestatus = await Geolocator.isLocationServiceEnabled();
-    if (servicestatus) {
+    EasyLoading.show(
+        status: MydashboardScreenConstants.LOCATION_FETCHING_TOAST.tr());
+    serviceStatus = await Geolocator.isLocationServiceEnabled();
+    if (serviceStatus) {
       permission = await Geolocator.checkPermission();
 
       if (permission == LocationPermission.denied) {
@@ -487,8 +542,7 @@ class _DashboardState extends State<Dashboard> {
       EasyLoading.dismiss();
     } else {
       EasyLoading.dismiss();
-      EasyLoading.showToast(
-          "GPS Service is not enabled,Please turn on GPS location");
+      EasyLoading.showToast(MydashboardScreenConstants.GPS_DISABLED_TOAST.tr());
     }
   }
 
@@ -548,7 +602,7 @@ class _DashboardState extends State<Dashboard> {
       context: context,
       builder: (BuildContext context) {
         return CustomDialogueWidget(
-          text: MydashboardScreenConstants.POPUP_TITLE,
+          text: MydashboardScreenConstants.POPUP_TITLE.tr(),
           onTapSubmit: () async {
             Navigator.pop(context);
             await checkGps();

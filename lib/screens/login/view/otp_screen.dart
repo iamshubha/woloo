@@ -1,6 +1,5 @@
 import 'dart:async';
-
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -14,7 +13,6 @@ import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/view/supervisor
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import '../../common_widgets/button_widget.dart';
 import '../../dashboard/view/dashboard_screen.dart';
 import 'local_widgets/otp_widget.dart';
@@ -107,7 +105,8 @@ class _OTPScreenState extends State<OTPScreen> {
         _currentAddress =
             '${place.name},${place.street}, ${place.subLocality},${place.subAdministrativeArea}, ${place.administrativeArea},${place.postalCode}';
         print("address - $_currentAddress");
-        EasyLoading.showToast("Current Location Detected : $_currentAddress");
+        EasyLoading.showToast(
+            "${MyLoginConstants.LOCATION_DETECTED_TOAST.tr()} : $_currentAddress");
       });
     }).catchError((e) {
       debugPrint(e);
@@ -156,7 +155,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 ),
                 Center(
                   child: Text(
-                    MyLoginConstants.OTP_VERIFICATION,
+                    MyLoginConstants.OTP_VERIFICATION.tr(),
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 24.sp,
@@ -169,10 +168,12 @@ class _OTPScreenState extends State<OTPScreen> {
                 ),
                 Center(
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       RichText(
                         text: TextSpan(
-                          text: MyLoginConstants.ENTER_OTP,
+                          text: MyLoginConstants.ENTER_OTP.tr(),
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.sp,
@@ -278,7 +279,7 @@ class _OTPScreenState extends State<OTPScreen> {
                       }
                       if (_pin.isEmpty) {
                         EasyLoading.showToast(
-                            "please enter the OTP to proceed");
+                            MyLoginConstants.ENTER_OTP_TOAST.tr());
                       }
 
                       print("button pressed");
@@ -286,8 +287,8 @@ class _OTPScreenState extends State<OTPScreen> {
                     child: Padding(
                       padding: EdgeInsets.symmetric(
                           vertical: 10.h, horizontal: 10.w),
-                      child: const ButtonWidget(
-                        text: MyLoginConstants.VERIFY_OTP_BTN,
+                      child: ButtonWidget(
+                        text: MyLoginConstants.VERIFY_OTP_BTN.tr(),
                       ),
                     ),
                   ),

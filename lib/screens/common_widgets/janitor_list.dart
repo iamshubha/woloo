@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -162,7 +163,8 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
         },
         builder: (context, state) {
           if (state is JanitorListLoading && _data.isEmpty) {
-            EasyLoading.show(status: "Loading Please Wait ...");
+            EasyLoading.show(
+                status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
 
           if (state is JanitorListError) {
@@ -170,7 +172,8 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
           }
 
           if (state is ReassignTaskLoading) {
-            EasyLoading.show(status: "Loading Please Wait ...");
+            EasyLoading.show(
+                status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
 
           if (state is ReassignTaskError) {
@@ -179,7 +182,8 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
           }
           if (state is SupervisorDashboardLoading &&
               _supervisorDashboardData.isEmpty) {
-            EasyLoading.show(status: "Loading Please Wait ...");
+            EasyLoading.show(
+                status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
 
           if (state is SupervisorDashboardError) {
@@ -322,7 +326,8 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                                       ),
                                                       Text(
                                                         MyJanitorsListScreenConstants
-                                                            .JANITOR_PRESENT,
+                                                            .JANITOR_PRESENT
+                                                            .tr(),
                                                         style: TextStyle(
                                                             color: AppColors
                                                                 .greenText,
@@ -347,7 +352,8 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                                     ),
                                                     Text(
                                                       MyJanitorsListScreenConstants
-                                                          .JANITOR_ABSENT,
+                                                          .JANITOR_ABSENT
+                                                          .tr(),
                                                       style: TextStyle(
                                                           color:
                                                               AppColors.redText,
@@ -387,7 +393,8 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                                   ),
                                                   child: Text(
                                                     MyClusterListScreenConstants
-                                                        .BTN_TEXT,
+                                                        .BTN_TEXT
+                                                        .tr(),
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                       fontSize: 12.sp,
@@ -410,7 +417,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                       vertical: 2.h,
                                     ),
                                     child: Text(
-                                      "Mob.no. ${_search[index].mobile}" ?? '',
+                                      "Mob.no. ${_search[index].mobile ?? ''}",
                                       style: TextStyle(
                                         color: AppColors.clusterTitleColor,
                                         fontSize: 12.sp,
@@ -438,8 +445,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                       vertical: 2.h,
                                     ),
                                     child: Text(
-                                      "Pin code : ${_search[index].pincode}" ??
-                                          '',
+                                      "Pin code : ${_search[index].pincode ?? ''}",
                                       style: TextStyle(
                                         color: AppColors.clusterTitleColor,
                                         fontSize: 12.sp,
@@ -458,8 +464,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                           vertical: 2.h,
                                         ),
                                         child: Text(
-                                          "Total task :${_search[index].totalTaskCount}" ??
-                                              '',
+                                          "Total task :${_search[index].totalTaskCount ?? ''}",
                                           style: TextStyle(
                                             color: AppColors.greenTextColor,
                                             fontSize: 12.sp,
@@ -473,8 +478,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                           vertical: 2.h,
                                         ),
                                         child: Text(
-                                          "Pending task : ${_search[index].pendingTaskCount}" ??
-                                              '',
+                                          "Pending task : ${_search[index].pendingTaskCount ?? ''}",
                                           style: TextStyle(
                                             color: AppColors.redTextColor,
                                             fontSize: 12.sp,
@@ -512,7 +516,8 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                             ),
                                             child: Text(
                                               MyClusterListScreenConstants
-                                                  .BTN_TEXT,
+                                                  .BTN_TEXT
+                                                  .tr(),
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 fontSize: 12.sp,

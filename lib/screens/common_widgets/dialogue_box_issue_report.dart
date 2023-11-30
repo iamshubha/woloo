@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/button_widget.dart';
@@ -57,7 +58,7 @@ class _DialogueWidgetState extends State<DialogueWidget> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.w),
                   child: Text(
-                    MyReportIssueScreenConstants.POP_UP_TEXT,
+                    MyReportIssueScreenConstants.POP_UP_TEXT.tr(),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
@@ -76,7 +77,7 @@ class _DialogueWidgetState extends State<DialogueWidget> {
                     horizontal: 10.w,
                   ),
                   child: PopUpButtonWidget(
-                    text: "Done",
+                    text: DialogueReportIssueConstants.DONE.tr(),
                     color: AppColors.buttonColor,
                     onTap: () {
                       Navigator.pop(context);

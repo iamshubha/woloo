@@ -5,6 +5,7 @@ import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:context_holder/context_holder.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -36,9 +37,15 @@ class _AppState extends State<App> {
             navigatorKey: ContextHolder.key,
             debugShowCheckedModeBanner: false,
             title: AppName.APP_NAME,
+            locale: context.locale,
+            supportedLocales: context.supportedLocales,
+            localizationsDelegates: context.localizationDelegates,
             builder: EasyLoading.init(
               builder: (context, child) {
-                return child!;
+                return ConnectivityWidgetWrapper(
+                  disableInteraction: true,
+                  child: child!,
+                );
               },
             ),
             theme: ThemeData(

@@ -10,6 +10,7 @@ import 'package:Woloo_Smart_hygiene/screens/task_details_screen/data/model/Submi
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -80,7 +81,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
         },
         builder: (context, state) {
           if (state is GetSubmittedTasksLoading) {
-            EasyLoading.show(status: "Loading Please Wait ...");
+            EasyLoading.show(
+                status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
 
           if (state is GetSubmittedTasksError) {
@@ -88,7 +90,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
           }
 
           if (state is UpdateStatusLoading) {
-            EasyLoading.show(status: "Loading Please Wait ...");
+            EasyLoading.show(
+                status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
 
           if (state is UpdateStatusError) {
@@ -116,7 +119,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                   vertical: 10.h,
                 ),
                 child: Text(
-                  MyTaskListConstants.APP_BAR,
+                  MyTaskListConstants.APP_BAR.tr(),
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     color: AppColors.appBarTitleColor,
@@ -171,7 +174,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                     horizontal: 20.w,
                   ),
                   child: Text(
-                    MyTaskDetailsScreenConstants.TITLE,
+                    MyTaskDetailsScreenConstants.TITLE.tr(),
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       color: AppColors.titleColor,
@@ -240,8 +243,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    MyCustomerRequestListScreenConstants
-                                        .REJECT_BUTTON,
+                                    MydashboardScreenConstants.REJECT.tr(),
                                     style: TextStyle(
                                       color: AppColors.black,
                                       fontSize: 16.sp,
@@ -267,7 +269,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    MyTaskDetailsScreenConstants.APPROVE_BUTTON,
+                                    MyTaskDetailsScreenConstants.APPROVE_BUTTON
+                                        .tr(),
                                     style: TextStyle(
                                       color: AppColors.black,
                                       fontSize: 16.sp,

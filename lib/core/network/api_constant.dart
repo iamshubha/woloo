@@ -73,4 +73,11 @@ class APIConstants {
 
   /// App_Launch
   static var APP_LAUNCH = '$BASE_URL/api/whms/users/onAppLoad';
+
+  /// Cluster-list
+  static var ATTENDANCE_HISTORY_LIST =
+      '$BASE_URL/api/whms/users/attendanceHistory';
+
+  /// Cluster-list
+  static var MONTH_LIST = '$BASE_URL/api/whms/users/getMonthlyHistory';
 }

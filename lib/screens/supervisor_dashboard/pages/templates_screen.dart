@@ -10,6 +10,7 @@ import 'package:Woloo_Smart_hygiene/screens/task_details_screen/view/task_detail
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -118,7 +119,8 @@ class _TemplateScreenState extends State<TemplateScreen> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 0.w),
                     child: Text(
-                      "Hello ${widget.supervisorName}" ?? '',
+                      "${MyTemplateScreenConstants.HELLO.tr()} ${widget.supervisorName}" ??
+                          '',
                       maxLines: 1,
                       softWrap: false,
                       style: TextStyle(
@@ -142,7 +144,7 @@ class _TemplateScreenState extends State<TemplateScreen> {
                     builder: (context) => TaskDetailsScreen(
                           isFromDashboard: true,
                           isFromFacility: false,
-                          allocationId: data.taskAllocationId.toString() ?? '',
+                          allocationId: "${data.taskAllocationId ?? ''}",
                           isApproved: isApproved,
                         )),
               );

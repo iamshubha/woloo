@@ -1,3 +1,5 @@
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -91,7 +93,8 @@ class _ListWidgetState extends State<ListWidget> {
         },
         builder: (context, state) {
           if (state is FacilityListLoading && _search.isEmpty) {
-            EasyLoading.show(status: "Loading Please Wait ...");
+            EasyLoading.show(
+                status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
 
           if (state is FacilityListError) {
@@ -239,8 +242,7 @@ class _ListWidgetState extends State<ListWidget> {
                                                   vertical: 1.h,
                                                 ),
                                                 child: Text(
-                                                  "${CustomDateUtils.formatDate(_search[index].startTime ?? '')} - ${CustomDateUtils.formatDate(_search[index].endTime ?? '')}" ??
-                                                      '',
+                                                  "${CustomDateUtils.formatDate(_search[index].startTime ?? '')} - ${CustomDateUtils.formatDate(_search[index].endTime ?? '')}",
                                                   style: TextStyle(
                                                     color:
                                                         AppColors.timeSlotColor,
@@ -297,7 +299,7 @@ class _ListWidgetState extends State<ListWidget> {
                                                 ),
                                               ),
                                               Text(
-                                                "${_search[index].estimatedTime.toString()} min" ??
+                                                "${_search[index].estimatedTime.toString()} ${MyFacilityListConstants.MIN.tr()}" ??
                                                     '',
                                                 style: TextStyle(
                                                   color:
@@ -316,8 +318,7 @@ class _ListWidgetState extends State<ListWidget> {
                                           vertical: 1.h,
                                         ),
                                         child: Text(
-                                          "${_search[index].facilityName}" ??
-                                              '',
+                                          _search[index].facilityName ?? '',
                                           maxLines: 2,
                                           style: TextStyle(
                                             color: AppColors.ListTitleColor,
@@ -332,8 +333,7 @@ class _ListWidgetState extends State<ListWidget> {
                                           vertical: 2.h,
                                         ),
                                         child: Text(
-                                          "Description: ${_search[index].description}" ??
-                                              '',
+                                          "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${_search[index].description ?? ''}",
                                           style: TextStyle(
                                             color: AppColors.ListTitleColor,
                                             fontSize: 12.sp,
@@ -347,8 +347,7 @@ class _ListWidgetState extends State<ListWidget> {
                                           vertical: 2.h,
                                         ),
                                         child: Text(
-                                          "Location: ${_search[index].locationName}" ??
-                                              '',
+                                          "${MydashboardScreenConstants.LOCATION.tr()}: ${_search[index].locationName ?? ''}",
                                           style: TextStyle(
                                             color: AppColors.ListTitleColor,
                                             fontSize: 12.sp,

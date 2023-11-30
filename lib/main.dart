@@ -1,5 +1,6 @@
 import 'package:Woloo_Smart_hygiene/firebase_options.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,8 @@ import 'app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await GetStorage.init();
   await di.init();
@@ -39,7 +42,28 @@ void main() async {
     ),
   );
 
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
-    (value) => runApp(const App()),
-  );
+  // runApp(
+  //   EasyLocalization(
+  //     supportedLocales: const [Locale('en', 'US'), Locale('hi', 'IN')],
+  //     path: 'assets/translations',
+  //     fallbackLocale: const Locale('en', 'US'),
+  //     child: const Main(),
+  //   ),
+  // );
+
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((value) => runApp(
+                EasyLocalization(
+                  supportedLocales: const [
+                    Locale('en', 'US'),
+                    Locale('hi', 'IN'),
+                  ],
+                  path: 'assets/translations',
+                  fallbackLocale: const Locale('en', 'US'),
+                  child: const App(),
+                ),
+              )
+
+          // runApp(const App()),
+          );
 }

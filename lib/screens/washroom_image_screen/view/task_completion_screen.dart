@@ -9,6 +9,7 @@ import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/bloc/images_st
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -82,7 +83,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                         horizontal: 20.w,
                       ),
                       child: Text(
-                        TaskCompletionScreenConstants.TITLE_TEXT,
+                        TaskCompletionScreenConstants.TITLE_TEXT.tr(),
                         style: TextStyle(
                           fontSize: 24.sp,
                           fontWeight: FontWeight.w400,
@@ -146,7 +147,9 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                                     AppColors.dottedBorderColor,
                                               ),
                                               Text(
-                                                "Add Photo",
+                                                TaskCompletionScreenConstants
+                                                    .ADD_PHOTO
+                                                    .tr(),
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 15.sp,
@@ -205,7 +208,9 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                                     AppColors.dottedBorderColor,
                                               ),
                                               Text(
-                                                "Add Photo",
+                                                TaskCompletionScreenConstants
+                                                    .ADD_PHOTO
+                                                    .tr(),
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 15.sp,
@@ -276,7 +281,9 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                                     AppColors.dottedBorderColor,
                                               ),
                                               Text(
-                                                "Add Photo",
+                                                TaskCompletionScreenConstants
+                                                    .ADD_PHOTO
+                                                    .tr(),
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 15.sp,
@@ -300,7 +307,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                         vertical: 10.h,
                       ),
                       child: Text(
-                        TaskCompletionScreenConstants.REMARKS,
+                        TaskCompletionScreenConstants.REMARKS.tr(),
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w400,
@@ -340,7 +347,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                         horizontal: 30.w,
                       ),
                       child: WhiteButtonWidget(
-                        text: MyTaskListConstants.SUBMIT_BTN,
+                        text: MyTaskListConstants.SUBMIT_BTN.tr(),
                         color: AppColors.buttonColor,
                         onTap: () {
                           openDialog();
@@ -379,7 +386,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
       context: context,
       builder: (BuildContext context) {
         return CustomDialogueWidget(
-          text: MyTaskListConstants.POPUP_TITLE,
+          text: MyTaskListConstants.POPUP_TITLE.tr(),
           onTapSubmit: () {
             _imagesBloc.add(UploadImages(
               type: TaskCompletionScreenConstants.IMAGE_TYPE_TASK,
@@ -421,7 +428,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
       }
 
       if (old == null) {
-        throw 'File not selected.';
+        throw MyReportIssueScreenConstants.FILE_NOT_SELECTED.tr();
       }
     } catch (e) {
       EasyLoading.showToast(e.toString());

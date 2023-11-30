@@ -8,6 +8,7 @@ import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
@@ -37,10 +38,10 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
     AppImages.customer_request_icon,
   ];
   final labelList = <String>[
-    BottomNavigatiionBarConstants.CLUSTER,
-    BottomNavigatiionBarConstants.JANITORS,
-    BottomNavigatiionBarConstants.REPORT_ISSUE,
-    BottomNavigatiionBarConstants.ACCOUNT,
+    BottomNavigatiionBarConstants.CLUSTER.tr(),
+    BottomNavigatiionBarConstants.JANITORS.tr(),
+    BottomNavigatiionBarConstants.REPORT_ISSUE.tr(),
+    BottomNavigatiionBarConstants.ACCOUNT.tr(),
   ];
   var _bottomNavIndex = 0; // efault index of first screen
   GlobalStorage globalStorage = GetIt.instance();

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
@@ -57,7 +58,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
             vertical: 10.h,
           ),
           child: Text(
-            MyJanitorsDetailsScreenConstants.APP_BAR,
+            MyJanitorsDetailsScreenConstants.APP_BAR.tr(),
             textAlign: TextAlign.start,
             style: TextStyle(
               color: AppColors.appBarTitleColor,
@@ -120,7 +121,8 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                         vertical: 2.h,
                       ),
                       child: Text(
-                        "Mob.no.${widget.mobile}" ?? '',
+                        "${MyJanitorsDetailsScreenConstants.MOB.tr()}${widget.mobile}" ??
+                            '',
                         style: TextStyle(
                           color: AppColors.black,
                           fontSize: 14.sp,
@@ -164,7 +166,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                             width: 20.w,
                           ),
                           Text(
-                            MyJanitorsListScreenConstants.JANITOR_ABSENT,
+                            MyJanitorsListScreenConstants.JANITOR_ABSENT.tr(),
                             style: TextStyle(
                                 color: AppColors.redText,
                                 fontSize: 12.sp,
@@ -188,7 +190,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               vertical: 6.h,
             ),
             child: Text(
-              MyJanitorsDetailsScreenConstants.SHIFT,
+              MyJanitorsDetailsScreenConstants.SHIFT.tr(),
               style: TextStyle(
                 color: AppColors.greyTextColor,
                 fontSize: 18.sp,
@@ -215,7 +217,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               vertical: 6.h,
             ),
             child: Text(
-              MyJanitorsDetailsScreenConstants.CHECK_IN,
+              "${MyJanitorsDetailsScreenConstants.CHECK_IN.tr()} :",
               style: TextStyle(
                 color: AppColors.greyTextColor,
                 fontSize: 18.sp,
@@ -242,7 +244,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               vertical: 6.h,
             ),
             child: Text(
-              MyJanitorsDetailsScreenConstants.CHECK_OUT,
+              "${MyJanitorsDetailsScreenConstants.CHECK_OUT.tr()} :",
               style: TextStyle(
                 color: AppColors.greyTextColor,
                 fontSize: 18.sp,
@@ -269,7 +271,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               vertical: 6.h,
             ),
             child: Text(
-              MyJanitorsDetailsScreenConstants.COMPLETE_TASK,
+              "${MyJanitorsDetailsScreenConstants.COMPLETE_TASK.tr()} :",
               style: TextStyle(
                 color: AppColors.greyTextColor,
                 fontSize: 18.sp,
@@ -282,7 +284,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               horizontal: 20.h,
             ),
             child: Text(
-              widget.complete_task.toString() ?? '',
+              widget.complete_task ?? '',
               style: TextStyle(
                 color: AppColors.black,
                 fontSize: 20.sp,
@@ -296,7 +298,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               vertical: 6.h,
             ),
             child: Text(
-              MyJanitorsDetailsScreenConstants.PENDING_TASK,
+              "${MyJanitorsDetailsScreenConstants.PENDING_TASK.tr()} :",
               style: TextStyle(
                 color: AppColors.greyTextColor,
                 fontSize: 18.sp,
@@ -323,7 +325,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               vertical: 6.h,
             ),
             child: Text(
-              MyJanitorsDetailsScreenConstants.TOTAL_TASK,
+              "${MyJanitorsDetailsScreenConstants.TOTAL_TASK.tr()} :",
               style: TextStyle(
                 color: AppColors.greyTextColor,
                 fontSize: 18.sp,

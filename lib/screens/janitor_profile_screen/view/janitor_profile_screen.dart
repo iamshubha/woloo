@@ -1,6 +1,7 @@
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/view/attendance_history_screen.dart';
 import 'package:Woloo_Smart_hygiene/screens/login/view/login_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -47,7 +48,7 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
               vertical: 10.h,
             ),
             child: Text(
-              MyJanitorProfileScreenConstants.MY_PROFILE,
+              MyJanitorProfileScreenConstants.MY_PROFILE.tr(),
               textAlign: TextAlign.start,
               style: TextStyle(
                 color: AppColors.appBarTitleColor,
@@ -64,20 +65,6 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // SizedBox(
-              //   height: 70.h,
-              // ),
-              // Padding(
-              //   padding: EdgeInsets.symmetric(horizontal: 20.w),
-              //   child: Text(
-              //     MyJanitorProfileScreenConstants.MY_PROFILE,
-              //     style: TextStyle(
-              //       fontWeight: FontWeight.w400,
-              //       fontSize: 20.sp,
-              //       color: AppColors.darkGreyText,
-              //     ),
-              //   ),
-              // ),
               SizedBox(
                 height: 50.h,
               ),
@@ -93,10 +80,7 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                 child: Container(
                   height: 60.h,
                   decoration: BoxDecoration(
-                    // color: AppColors.greyBgColor,
                     border: Border(
-                      // bottom: BorderSide(
-                      //     width: 1.0.w, color: AppColors.greyBorderColor),
                       top: BorderSide(
                           width: 1.0.w, color: AppColors.greyBorderColor),
                     ),
@@ -116,8 +100,8 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                             padding: EdgeInsets.symmetric(horizontal: 20.w),
                             child: Text(
                               textAlign: TextAlign.start,
-                              MyJanitorProfileScreenConstants
-                                  .ATTENDANCE_HISTORY,
+                              MyJanitorProfileScreenConstants.ATTENDANCE_HISTORY
+                                  .tr(),
                               style: TextStyle(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 16.sp,
@@ -141,7 +125,9 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
               ),
               GestureDetector(
                 onTap: () async {
-                  EasyLoading.show(status: "Logging out...");
+                  EasyLoading.show(
+                      status: MyJanitorProfileScreenConstants.LOGGING_OUT_TOAST
+                          .tr());
                   var storage = GetIt.instance<GlobalStorage>();
                   storage.removeToken();
                   storage.removeFCMToken();
@@ -149,7 +135,9 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                   storage.removeTime();
                   await Future.delayed(const Duration(seconds: 3));
                   EasyLoading.dismiss();
-                  EasyLoading.showToast("Logout success...");
+                  EasyLoading.showToast(MyJanitorProfileScreenConstants
+                      .LOG_OUT_SUCCESS_TOAST
+                      .tr());
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => LoginScreen()),
@@ -181,7 +169,7 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                             padding: EdgeInsets.symmetric(horizontal: 20.w),
                             child: Text(
                               textAlign: TextAlign.start,
-                              MyJanitorProfileScreenConstants.LOG_OUT,
+                              MyJanitorProfileScreenConstants.LOG_OUT.tr(),
                               style: TextStyle(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 16.sp,
