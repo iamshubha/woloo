@@ -1,4 +1,5 @@
 import 'package:Woloo_Smart_hygiene/firebase_options.dart';
+import 'package:Woloo_Smart_hygiene/injection_container.dart' as di;
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -6,7 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:Woloo_Smart_hygiene/injection_container.dart' as di;
+
 import 'app.dart';
 // import 'messaging.dart';
 
@@ -42,28 +43,18 @@ void main() async {
     ),
   );
 
-  // runApp(
-  //   EasyLocalization(
-  //     supportedLocales: const [Locale('en', 'US'), Locale('hi', 'IN')],
-  //     path: 'assets/translations',
-  //     fallbackLocale: const Locale('en', 'US'),
-  //     child: const Main(),
-  //   ),
-  // );
-
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-      .then((value) => runApp(
-                EasyLocalization(
-                  supportedLocales: const [
-                    Locale('en', 'US'),
-                    Locale('hi', 'IN'),
-                  ],
-                  path: 'assets/translations',
-                  fallbackLocale: const Locale('en', 'US'),
-                  child: const App(),
-                ),
-              )
-
-          // runApp(const App()),
-          );
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
+    (value) => runApp(
+      EasyLocalization(
+        supportedLocales: const [
+          Locale('en', 'US'),
+          Locale('hi', 'IN'),
+          Locale('mr', 'IN'),
+        ],
+        path: 'assets/translations',
+        fallbackLocale: const Locale('en', 'US'),
+        child: const App(),
+      ),
+    ),
+  );
 }

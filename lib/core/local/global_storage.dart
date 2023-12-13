@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
 class GlobalStorage {
@@ -80,7 +79,6 @@ class GlobalStorage {
 
   int getRoleId() {
     int roleId = _box.read(_roleIdKey);
-    print("storage -- role id --" + roleId.toString());
     return roleId;
   }
 

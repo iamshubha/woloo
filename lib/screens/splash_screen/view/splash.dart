@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
+
 import '../../dashboard/view/dashboard_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -26,7 +27,6 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   CoreBloc coreBloc = CoreBloc();
   GlobalStorage globalStorage = GetIt.instance();
-  late int? roleId;
   String? fcmToken;
   var _notification;
 
@@ -123,13 +123,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> requestTracking() async {
     try {
-      final TrackingStatus status =
-          await AppTrackingTransparency.trackingAuthorizationStatus;
+      final TrackingStatus status = await AppTrackingTransparency.trackingAuthorizationStatus;
       if (status == TrackingStatus.notDetermined) {
         await showCustomTrackingDialog(context);
         await Future.delayed(const Duration(milliseconds: 200));
-        final TrackingStatus status =
-            await AppTrackingTransparency.requestTrackingAuthorization();
+        final TrackingStatus status = await AppTrackingTransparency.requestTrackingAuthorization();
       }
       final uuid = await AppTrackingTransparency.getAdvertisingIdentifier();
       print("UUID: $uuid");
@@ -139,8 +137,7 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
-  Future<void> showCustomTrackingDialog(BuildContext context) async =>
-      await showDialog<void>(
+  Future<void> showCustomTrackingDialog(BuildContext context) async => await showDialog<void>(
         context: context,
         builder: (context) => AlertDialog(
           title: Text(MySplashScreenConstants.DEAR_USER.tr()),
@@ -163,29 +160,18 @@ class _SplashScreenState extends State<SplashScreen> {
       listener: (context, state) {
         if (state is CoreSuccess) {
           try {
-            setState(() {
-              roleId = globalStorage.getRoleId();
-            });
-          } catch (e) {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const LoginScreen(),
-              ),
-              (route) => false,
-            );
-          }
+            if (!state.isLoggedIn) throw "Not logged in";
 
-          if (state.isLoggedIn) {
+            int roleId = globalStorage.getRoleId();
+
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    roleId == 1 ? Dashboard() : SupervisorDashboard(),
+                builder: (context) => roleId == 1 ? const Dashboard() : const SupervisorDashboard(),
               ),
               (route) => false,
             );
-          } else {
+          } catch (e) {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
