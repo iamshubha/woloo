@@ -19,7 +19,8 @@ import 'package:get_it/get_it.dart';
 import '../../dashboard/view/dashboard_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
+
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
@@ -27,15 +28,11 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   CoreBloc coreBloc = CoreBloc();
   GlobalStorage globalStorage = GetIt.instance();
-  String? fcmToken;
-  var _notification;
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      fcmToken = globalStorage.getFCMToken();
-    });
+
     if (Platform.isAndroid) {
       coreBloc.add(CheckUserIsLoggedInOrNot());
     }
@@ -44,38 +41,25 @@ class _SplashScreenState extends State<SplashScreen> {
       requestTracking();
     }
 
-    init();
+    createNotificationChannel();
+    initFCM();
+    updateDeviceToken();
     showDebugBtn(context);
   }
 
-  Future getDeviceToken() async {
-    //request user permission for push notification
+  Future updateDeviceToken() async {
     FirebaseMessaging.instance.requestPermission();
-    FirebaseMessaging _firebaseMessage = FirebaseMessaging.instance;
-    String? deviceToken = await _firebaseMessage.getToken();
-
-    globalStorage.saveFCMToken(accessFCMToken: deviceToken ?? '');
-    fcmToken = deviceToken;
-    coreBloc.add(UpdateToken(token: fcmToken ?? ''));
-
-    print("Device Token----->${deviceToken}");
-    return (deviceToken == null) ? "" : deviceToken;
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    String? deviceToken = await messaging.getToken();
+    if (deviceToken != null) coreBloc.add(UpdateToken(token: deviceToken));
   }
 
-  init() async {
-    _notification = FlutterLocalNotificationsPlugin();
-    _notification.initialize(
-      const InitializationSettings(
-        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-        iOS: DarwinInitializationSettings(),
-      ),
-    );
+  DarwinNotificationDetails iOSFCMConfig() {
+    return const DarwinNotificationDetails(sound: 'notification.caf');
+  }
 
-    var iOSPlatformChannelSpecifics = const DarwinNotificationDetails(
-      sound: 'notification.caf',
-    ); //put your own sound text here
-
-    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
+  AndroidNotificationDetails androidFCMConfig() {
+    return const AndroidNotificationDetails(
       '10000012',
       'smart_hygiene_channel',
       sound: RawResourceAndroidNotificationSound('notification'),
@@ -88,24 +72,25 @@ class _SplashScreenState extends State<SplashScreen> {
       playSound: true,
       priority: Priority.high,
     );
+  }
 
-    var platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformChannelSpecifics,
-      iOS: iOSPlatformChannelSpecifics,
+  initFCM() async {
+    var notification = FlutterLocalNotificationsPlugin();
+
+    notification.initialize(
+      const InitializationSettings(
+        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+        iOS: DarwinInitializationSettings(),
+      ),
     );
 
-    String deviceToken = await getDeviceToken();
-    print("###### PRINT DEVICE TOKEN TO USE FOR PUSH NOTIFICATION ######");
-    print("TOKENNNNNNNN.....-----" + deviceToken);
-    print("############################################################");
-    setState(() {
-      fcmToken = globalStorage.getFCMToken();
-      print("FCM Token----->${fcmToken}");
-    });
+    var platformChannelSpecifics = NotificationDetails(
+      android: androidFCMConfig(),
+      iOS: iOSFCMConfig(),
+    );
 
     FirebaseMessaging.onMessage.listen((message) async {
-      print("token generating---->$message");
-      await _notification.show(
+      await notification.show(
         10000012,
         message.notification!.title,
         message.notification!.body,
@@ -116,9 +101,22 @@ class _SplashScreenState extends State<SplashScreen> {
     // listen for user to click on notification
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage remoteMessage) {
       String? title = remoteMessage.notification!.title;
-
       String? description = remoteMessage.notification!.body;
     });
+  }
+
+  void createNotificationChannel() async {
+    var flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    var androidNotificationChannel = const AndroidNotificationChannel(
+      "10000012",
+      "smart_hygiene_channel",
+      sound: RawResourceAndroidNotificationSound('notification'),
+      enableLights: true,
+      ledColor: Color.fromARGB(255, 255, 0, 0),
+      importance: Importance.max,
+      playSound: true,
+    );
+    await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(androidNotificationChannel);
   }
 
   Future<void> requestTracking() async {

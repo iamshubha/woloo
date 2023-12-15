@@ -82,23 +82,6 @@ class GlobalStorage {
     return roleId;
   }
 
-  void saveFCMToken({required String accessFCMToken}) {
-    if (accessFCMToken.isEmpty) {
-      throw 'Access Token is empty';
-    }
-    _box.write(_fcmTokenKey, accessFCMToken);
-  }
-
-  String getFCMToken() {
-    String? fcmToken = _box.read(_fcmTokenKey);
-    return fcmToken ?? '';
-  }
-
-  void removeFCMToken() {
-    print("removedfcm");
-    _box.remove(_fcmTokenKey);
-  }
-
   void saveSupervisorName({required String accessSupervisorName}) {
     if (accessSupervisorName.isEmpty) {
       throw 'Supervisor Name is empty';
