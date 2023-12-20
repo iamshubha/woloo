@@ -117,5 +117,18 @@
   "done": " पूर्ण ",
   "check-in": " चेक इन करा ",
   "check-out": " चेक आउट करा ",
-  "loading": " लोड करत आहे..."
+  "loading": " लोड करत आहे...",
+  "IOT": "आयओटी",
+  "Regular": "नियमित",
+  "Issue": "मुद्दा",
+  "Customer Request": "ग्राहक विनंती",
+  "Request for closure": "बंद करण्यासाठी विनंती",
+  "Completed": "पूर्ण",
+  "Pending": "प्रलंबित",
+  "in": "आहे",
+  "accept": "स्वीकार करा",
+  "Ongoing": "चालू",
+  "Accepted": "स्वीकृत",
+  "Re-open": "पुनरावलोकन",
+  "Rejected": "अस्वीकृत"
 }

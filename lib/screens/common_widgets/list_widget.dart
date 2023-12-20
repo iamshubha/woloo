@@ -1,16 +1,16 @@
+import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
+import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/bloc/facility_list_bloc.dart';
+import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/bloc/facility_list_event.dart';
+import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/bloc/facility_list_state.dart';
+import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/data/model/Facility_list_model.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/utils/date_utils.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
-import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
-import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/bloc/facility_list_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/bloc/facility_list_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/bloc/facility_list_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/data/model/Facility_list_model.dart';
-import 'package:Woloo_Smart_hygiene/utils/date_utils.dart';
 
 import '../../utils/app_color.dart';
 import 'empty_list_widget.dart';
@@ -27,17 +27,7 @@ class ListWidget extends StatefulWidget {
 
   List<bool> checkList;
 
-  ListWidget(
-      {Key? key,
-      required this.controller,
-      required this.onTapItem,
-      required this.janitorId,
-      this.isCheckedSelectAll = false,
-      required this.onChecked,
-      required this.onSetData,
-      required this.checkList,
-      this.clusterId})
-      : super(key: key);
+  ListWidget({super.key, required this.controller, required this.onTapItem, required this.janitorId, this.isCheckedSelectAll = false, required this.onChecked, required this.onSetData, required this.checkList, this.clusterId});
 
   @override
   State<ListWidget> createState() => _ListWidgetState();
@@ -62,13 +52,7 @@ class _ListWidgetState extends State<ListWidget> {
           return;
         }
 
-        _search = _data
-            .where((element) =>
-                element.facilityName
-                    ?.toLowerCase()
-                    .contains(widget.controller.text.toLowerCase()) ??
-                false)
-            .toList();
+        _search = _data.where((element) => element.facilityName?.toLowerCase().contains(widget.controller.text.toLowerCase()) ?? false).toList();
       });
     });
 
@@ -78,335 +62,276 @@ class _ListWidgetState extends State<ListWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer(
-        bloc: _facilityListBloc,
-        listener: (context, state) {
-          if (state is FacilityListSuccess) {
-            EasyLoading.dismiss();
+      bloc: _facilityListBloc,
+      listener: (context, state) {
+        if (state is FacilityListSuccess) {
+          EasyLoading.dismiss();
 
-            setState(() {
-              _data = state.data;
-              _search = _data;
-              widget.onSetData(_data);
-              widget.onSetData(_search);
-            });
-          }
-        },
-        builder: (context, state) {
-          if (state is FacilityListLoading && _search.isEmpty) {
-            EasyLoading.show(
-                status: MydashboardScreenConstants.LOADING_TOAST.tr());
-          }
+          setState(() {
+            _data = state.data;
+            _search = _data;
+            widget.onSetData(_data);
+            widget.onSetData(_search);
+          });
+        }
+      },
+      builder: (context, state) {
+        if (state is FacilityListLoading && _search.isEmpty) {
+          EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
+        }
 
-          if (state is FacilityListError) {
-            EasyLoading.dismiss();
-            return CustomErrorWidget(error: state.error);
-          }
+        if (state is FacilityListError) {
+          EasyLoading.dismiss();
+          return CustomErrorWidget(error: state.error);
+        }
 
-          if (state is FacilityListSuccess && (state.data.isEmpty)) {
-            EasyLoading.dismiss();
-            return const EmptyListWidget();
-          }
+        if (state is FacilityListSuccess && (state.data.isEmpty)) {
+          EasyLoading.dismiss();
+          return const EmptyListWidget();
+        }
 
-          return RefreshIndicator(
-            onRefresh: () {
-              return Future.delayed(
-                Duration(seconds: 1),
-                () {
-                  _facilityListBloc
-                      .add(GetAllFacility(janitorId: widget.janitorId ?? ''));
-                },
-              );
-            },
-            color: AppColors.buttonColor,
-            child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: _search.length,
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemBuilder: (
-                  BuildContext context,
-                  int index,
-                ) {
-                  return Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 7.h,
+        return RefreshIndicator(
+          onRefresh: () {
+            return Future.delayed(
+              Duration(seconds: 1),
+              () {
+                _facilityListBloc.add(GetAllFacility(janitorId: widget.janitorId ?? ''));
+              },
+            );
+          },
+          color: AppColors.buttonColor,
+          child: ListView.builder(
+            physics: const BouncingScrollPhysics(),
+            itemCount: _search.length,
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemBuilder: (
+              BuildContext context,
+              int index,
+            ) {
+              return Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: 7.h,
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    try {
+                      setState(() {
+                        widget.checkList[index] = !widget.checkList[index];
+                        widget.onChecked(widget.checkList[index], _search[index], _data);
+                      });
+                    } catch (e) {
+                      print("onTapppppp" + e.toString());
+                    }
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 5.h,
+                      horizontal: 10.w,
+                    ),
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: widget.checkList[index] ? AppColors.buttonColor : AppColors.containerBorder,
+                        width: widget.checkList[index] ? 2.w : 1.w,
                       ),
-                      child: GestureDetector(
-                          onTap: () {
-                            try {
-                              setState(() {
-                                widget.checkList[index] =
-                                    !widget.checkList[index];
-                                widget.onChecked(widget.checkList[index],
-                                    _search[index], _data);
-                              });
-                            } catch (e) {
-                              print("onTapppppp" + e.toString());
-                            }
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 5.h,
-                              horizontal: 10.w,
-                            ),
-                            margin: EdgeInsets.symmetric(
-                              horizontal: 20.w,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: widget.checkList[index]
-                                    ? AppColors.buttonColor
-                                    : AppColors.containerBorder,
-                                width: widget.checkList[index] ? 2.w : 1.w,
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                      vertical: 5.h,
+                                    ),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: getColorByRequestType(_search[index].requestType ?? ''),
+                                        borderRadius: BorderRadius.circular(10.r),
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 5.h,
+                                          horizontal: 20.w,
+                                        ),
+                                        child: Text(
+                                          (_search[index].requestType ?? '').tr(),
+                                          style: TextStyle(
+                                            color: AppColors.black,
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w600,
+                                            letterSpacing: 0.8,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 5.w,
-                                              vertical: 5.h,
-                                            ),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: _search[index]
-                                                            .requestType ==
-                                                        "IOT"
-                                                    ? AppColors
-                                                        .iotBackgroundColor
-                                                    : _search[index]
-                                                                .requestType ==
-                                                            "Regular"
-                                                        ? AppColors
-                                                            .regularButtonColor
-                                                        : _search[index]
-                                                                    .requestType ==
-                                                                "Issue"
-                                                            ? AppColors
-                                                                .issueButtonColor
-                                                            : _search[index]
-                                                                        .requestType ==
-                                                                    "Customer Request"
-                                                                ? AppColors
-                                                                    .acceptButtonColor
-                                                                : AppColors
-                                                                    .white,
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                  10.r,
-                                                ),
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                  vertical: 5.h,
-                                                  horizontal: 20.w,
-                                                ),
-                                                child: Text(
-                                                  _search[index].requestType ??
-                                                      '',
-                                                  style: TextStyle(
-                                                    color: AppColors.black,
-                                                    fontSize: 14.sp,
-                                                    fontWeight: FontWeight.w600,
-                                                    letterSpacing: 0.8,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: 5.w,
-                                                  vertical: 1.h,
-                                                ),
-                                                child: Text(
-                                                  "${CustomDateUtils.formatDate(_search[index].startTime ?? '')} - ${CustomDateUtils.formatDate(_search[index].endTime ?? '')}",
-                                                  style: TextStyle(
-                                                    color:
-                                                        AppColors.timeSlotColor,
-                                                    fontSize: 12.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w,
-                                                vertical: 5.h,
-                                              ),
-                                              child: Text(
-                                                looping(_search[index]),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  color:
-                                                      AppColors.ListTitleColor,
-                                                  fontSize: 13.sp,
-                                                  fontWeight: FontWeight.w600,
-                                                  letterSpacing: 0.8,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 5.w,
-                                                    vertical: 5.h),
-                                                child: const Icon(
-                                                  Icons.access_time_filled,
-                                                  size: 20,
-                                                  color:
-                                                      AppColors.ListTitleColor,
-                                                ),
-                                              ),
-                                              Text(
-                                                "${_search[index].estimatedTime.toString()} ${MyFacilityListConstants.MIN.tr()}" ??
-                                                    '',
-                                                style: TextStyle(
-                                                  color:
-                                                      AppColors.ListTitleColor,
-                                                  fontSize: 10.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
                                       Padding(
                                         padding: EdgeInsets.symmetric(
                                           horizontal: 5.w,
                                           vertical: 1.h,
                                         ),
                                         child: Text(
-                                          _search[index].facilityName ?? '',
-                                          maxLines: 2,
+                                          "${CustomDateUtils.formatDate(_search[index].startTime ?? '')} - ${CustomDateUtils.formatDate(_search[index].endTime ?? '')}",
                                           style: TextStyle(
-                                            color: AppColors.ListTitleColor,
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 5.w,
-                                          vertical: 2.h,
-                                        ),
-                                        child: Text(
-                                          "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${_search[index].description ?? ''}",
-                                          style: TextStyle(
-                                            color: AppColors.ListTitleColor,
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 5.w,
-                                          vertical: 2.h,
-                                        ),
-                                        child: Text(
-                                          "${MydashboardScreenConstants.LOCATION.tr()}: ${_search[index].locationName ?? ''}",
-                                          style: TextStyle(
-                                            color: AppColors.ListTitleColor,
+                                            color: AppColors.timeSlotColor,
                                             fontSize: 12.sp,
                                             fontWeight: FontWeight.w400,
                                           ),
                                         ),
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Icon(Icons.person,
-                                                  color: AppColors.black,
-                                                  size: 15.sp,
-                                                  weight: 0.5),
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: 5.w,
-                                                  vertical: 2.h,
-                                                ),
-                                                child: Text(
-                                                  _search[index].janitorName ??
-                                                      '',
-                                                  style: TextStyle(
-                                                    color: AppColors
-                                                        .janitorNameColor,
-                                                    fontSize: 12.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          widget.checkList[index]
-                                              ? Icon(Icons.check_circle,
-                                                  color: AppColors
-                                                      .acceptButtonColor,
-                                                  size: 20.sp,
-                                                  weight: 0.5)
-                                              : Container(),
-                                        ],
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 5.w,
+                                        vertical: 5.h,
+                                      ),
+                                      child: Text(
+                                        looping(_search[index]),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: AppColors.ListTitleColor,
+                                          fontSize: 13.sp,
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: 0.8,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+                                        child: const Icon(
+                                          Icons.access_time_filled,
+                                          size: 20,
+                                          color: AppColors.ListTitleColor,
+                                        ),
+                                      ),
+                                      Text(
+                                        "${_search[index].estimatedTime.toString()} ${MyFacilityListConstants.MIN.tr()}" ?? '',
+                                        style: TextStyle(
+                                          color: AppColors.ListTitleColor,
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                       ),
                                     ],
                                   ),
+                                ],
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 5.w,
+                                  vertical: 1.h,
                                 ),
-                              ],
-                            ),
-                          )));
-                }),
-          );
-        });
+                                child: Text(
+                                  _search[index].facilityName ?? '',
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                    color: AppColors.ListTitleColor,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 5.w,
+                                  vertical: 2.h,
+                                ),
+                                child: Text(
+                                  "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${_search[index].description ?? ''}",
+                                  style: TextStyle(
+                                    color: AppColors.ListTitleColor,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 5.w,
+                                  vertical: 2.h,
+                                ),
+                                child: Text(
+                                  "${MydashboardScreenConstants.LOCATION.tr()}: ${_search[index].locationName ?? ''}",
+                                  style: TextStyle(
+                                    color: AppColors.ListTitleColor,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.person, color: AppColors.black, size: 15.sp, weight: 0.5),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 5.w,
+                                          vertical: 2.h,
+                                        ),
+                                        child: Text(
+                                          _search[index].janitorName ?? '',
+                                          style: TextStyle(
+                                            color: AppColors.janitorNameColor,
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  widget.checkList[index] ? Icon(Icons.check_circle, color: AppColors.acceptButtonColor, size: 20.sp, weight: 0.5) : Container(),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 
   String looping(FacilityListModel taskObject) {
@@ -419,5 +344,20 @@ class _ListWidgetState extends State<ListWidget> {
     }
 
     return tastName;
+  }
+
+  Color getColorByRequestType(String requestType) {
+    switch (requestType) {
+      case "IOT":
+        return AppColors.iotBackgroundColor;
+      case "Regular":
+        return AppColors.regularButtonColor;
+      case "Issue":
+        return AppColors.issueButtonColor;
+      case "Customer Request":
+        return AppColors.acceptButtonColor;
+      default:
+        return AppColors.white;
+    }
   }
 }

@@ -1,7 +1,17 @@
 import 'dart:async';
-import 'dart:ffi';
-import 'dart:io';
 
+import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/empty_list_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/error_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/map_utils.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_bloc.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_event.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_state.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
+import 'package:Woloo_Smart_hygiene/screens/selfie_screen/view/selfie_screen.dart';
+import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/view/task_completion_screen.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,21 +20,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
-import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/custom_dialogue_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/empty_list_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/error_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/map_utils.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/dashboard_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
-import 'package:Woloo_Smart_hygiene/screens/selfie_screen/view/selfie_screen.dart';
-import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/view/task_completion_screen.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/date_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DashboardListWidget extends StatefulWidget {
@@ -91,8 +86,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
         },
         builder: (context, state) {
           if (state is DashboardLoading && _data.isEmpty) {
-            EasyLoading.show(
-                status: MydashboardScreenConstants.LOADING_TOAST.tr());
+            EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
 
           if (state is DashboardError) {
@@ -103,8 +97,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
             return CustomErrorWidget(error: state.error);
           }
           if (state is UpdateStatusLoading) {
-            EasyLoading.show(
-                status: MydashboardScreenConstants.LOADING_TOAST.tr());
+            EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
 
           if (state is GetDashboardDataSuccess && _data.isEmpty) {
@@ -151,21 +144,16 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                 ),
                               ),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             Icon(
                                               Icons.calendar_month_outlined,
@@ -180,8 +168,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               child: Text(
                                                 _data[index].date ?? '',
                                                 style: TextStyle(
-                                                  color:
-                                                      AppColors.containerBorder,
+                                                  color: AppColors.containerBorder,
                                                   fontSize: 12.sp,
                                                   fontWeight: FontWeight.w400,
                                                 ),
@@ -200,8 +187,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               child: Text(
                                                 "${_data[index].startTime}-${_data[index].endTime}",
                                                 style: TextStyle(
-                                                  color:
-                                                      AppColors.containerBorder,
+                                                  color: AppColors.containerBorder,
                                                   fontSize: 12.sp,
                                                   fontWeight: FontWeight.w400,
                                                 ),
@@ -210,8 +196,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                           ],
                                         ),
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             Padding(
                                               padding: EdgeInsets.symmetric(
@@ -220,50 +205,20 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               ),
                                               child: Container(
                                                 decoration: BoxDecoration(
-                                                    color: _data[index]
-                                                                .requestType ==
-                                                            "IOT"
-                                                        ? AppColors
-                                                            .disabledOrangeColor
-                                                        : _data[index]
-                                                                    .requestType ==
-                                                                "Regular"
-                                                            ? AppColors
-                                                                .disabledYellowColor
-                                                            : _data[index]
-                                                                        .requestType ==
-                                                                    "Issue"
-                                                                ? AppColors
-                                                                    .disabledPinkColor
-                                                                : _data[index]
-                                                                            .requestType ==
-                                                                        "Customer Request"
-                                                                    ? AppColors
-                                                                        .disabledGreenColor
-                                                                    : AppColors
-                                                                        .white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                      10.r,
-                                                    )),
+                                                  color: getColorByRequestType(_data[index].requestType ?? ''),
+                                                  borderRadius: BorderRadius.circular(10.r),
+                                                ),
                                                 child: Padding(
                                                   padding: EdgeInsets.symmetric(
                                                     vertical: 5.h,
                                                     horizontal: 20.w,
                                                   ),
                                                   child: Text(
-                                                    _data[index].requestType ==
-                                                            "Customer request"
-                                                        ? "Customer"
-                                                        : _data[index]
-                                                                .requestType ??
-                                                            '',
+                                                    (_data[index].requestType ?? '').tr(),
                                                     style: TextStyle(
-                                                      color: AppColors
-                                                          .containerBorder,
+                                                      color: AppColors.containerBorder,
                                                       fontSize: 14.sp,
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                      fontWeight: FontWeight.w600,
                                                       letterSpacing: 0.8,
                                                     ),
                                                   ),
@@ -276,35 +231,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                 vertical: 1.h,
                                               ),
                                               child: Text(
-                                                _data[index].status == "Ongoing"
-                                                    ? "In Progress"
-                                                    : _data[index].status ?? '',
+                                                (_data[index].status ?? '').tr(),
                                                 style: TextStyle(
-                                                  color: _data[index].status ==
-                                                          "Ongoing"
-                                                      ? AppColors
-                                                          .inProgressStatusColor
-                                                      : _data[index].status ==
-                                                              "Pending"
-                                                          ? AppColors
-                                                              .pendingStatusColor
-                                                          : _data[index]
-                                                                      .status ==
-                                                                  "Accepted"
-                                                              ? AppColors
-                                                                  .greenTextColor
-                                                              : _data[index]
-                                                                          .status ==
-                                                                      "Re-open"
-                                                                  ? AppColors
-                                                                      .reOpenStatusColor
-                                                                  : _data[index]
-                                                                              .status ==
-                                                                          "Completed"
-                                                                      ? AppColors
-                                                                          .greenTextColor
-                                                                      : Colors
-                                                                          .black,
+                                                  color: getColorByStatus(_data[index].status ?? ''),
                                                   fontSize: 12.sp,
                                                   fontWeight: FontWeight.w600,
                                                 ),
@@ -314,10 +243,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                         ),
 
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Expanded(
                                               child: Padding(
@@ -326,15 +253,12 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   vertical: 5.h,
                                                 ),
                                                 child: Text(
-                                                  _data[index].facilityName ??
-                                                      '',
+                                                  _data[index].facilityName ?? '',
                                                   maxLines: 1,
                                                   softWrap: false,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                                  overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
-                                                    color: AppColors
-                                                        .containerBorder,
+                                                    color: AppColors.containerBorder,
                                                     fontSize: 13.sp,
                                                     fontWeight: FontWeight.w600,
                                                     letterSpacing: 0.8,
@@ -343,29 +267,21 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               ),
                                             ),
                                             Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
                                               children: [
                                                 Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 5.w,
-                                                      vertical: 5.h),
+                                                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
                                                   child: const Icon(
                                                     Icons.access_time_filled,
                                                     size: 20,
-                                                    color: AppColors
-                                                        .containerBorder,
+                                                    color: AppColors.containerBorder,
                                                   ),
                                                 ),
                                                 Text(
-                                                  _data[index]
-                                                      .estimatedTime
-                                                      .toString(),
+                                                  _data[index].estimatedTime.toString(),
                                                   style: TextStyle(
-                                                    color: AppColors
-                                                        .containerBorder,
+                                                    color: AppColors.containerBorder,
                                                     fontSize: 10.sp,
                                                     fontWeight: FontWeight.w400,
                                                   ),
@@ -418,10 +334,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                           ),
                                         ),
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             Padding(
                                               padding: EdgeInsets.symmetric(
@@ -431,8 +345,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               child: Text(
                                                 "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${_data[index].totalTasks.toString() ?? ''}",
                                                 style: TextStyle(
-                                                  color: AppColors
-                                                      .disabledGreenColor,
+                                                  color: AppColors.disabledGreenColor,
                                                   fontSize: 14.sp,
                                                   fontWeight: FontWeight.w600,
                                                 ),
@@ -446,8 +359,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               child: Text(
                                                 "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${_data[index].pendingTasks.toString()}",
                                                 style: TextStyle(
-                                                  color: AppColors
-                                                      .disabledRedColor,
+                                                  color: AppColors.disabledRedColor,
                                                   fontSize: 14.sp,
                                                   fontWeight: FontWeight.w600,
                                                 ),
@@ -539,21 +451,16 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                 ),
                               ),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             Icon(
                                               Icons.calendar_month_outlined,
@@ -568,8 +475,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               child: Text(
                                                 _data[index].date ?? '',
                                                 style: TextStyle(
-                                                  color:
-                                                      AppColors.timeSlotColor,
+                                                  color: AppColors.timeSlotColor,
                                                   fontSize: 12.sp,
                                                   fontWeight: FontWeight.w400,
                                                 ),
@@ -588,8 +494,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               child: Text(
                                                 "${_data[index].startTime}-${_data[index].endTime}",
                                                 style: TextStyle(
-                                                  color:
-                                                      AppColors.timeSlotColor,
+                                                  color: AppColors.timeSlotColor,
                                                   fontSize: 12.sp,
                                                   fontWeight: FontWeight.w400,
                                                 ),
@@ -598,10 +503,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                           ],
                                         ),
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             Padding(
                                               padding: EdgeInsets.symmetric(
@@ -610,49 +513,20 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               ),
                                               child: Container(
                                                 decoration: BoxDecoration(
-                                                    color: _data[index]
-                                                                .requestType ==
-                                                            "IOT"
-                                                        ? AppColors
-                                                            .iotBackgroundColor
-                                                        : _data[index]
-                                                                    .requestType ==
-                                                                "Regular"
-                                                            ? AppColors
-                                                                .regularButtonColor
-                                                            : _data[index]
-                                                                        .requestType ==
-                                                                    "Issue"
-                                                                ? AppColors
-                                                                    .issueButtonColor
-                                                                : _data[index]
-                                                                            .requestType ==
-                                                                        "Customer Request"
-                                                                    ? AppColors
-                                                                        .acceptButtonColor
-                                                                    : AppColors
-                                                                        .white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                      10.r,
-                                                    )),
+                                                  color: getColorByRequestType(_data[index].requestType ?? ''),
+                                                  borderRadius: BorderRadius.circular(10.r),
+                                                ),
                                                 child: Padding(
                                                   padding: EdgeInsets.symmetric(
                                                     vertical: 5.h,
                                                     horizontal: 20.w,
                                                   ),
                                                   child: Text(
-                                                    _data[index].requestType ==
-                                                            "Customer Request"
-                                                        ? "Customer"
-                                                        : _data[index]
-                                                                .requestType ??
-                                                            '',
+                                                    (_data[index].requestType ?? '').tr(),
                                                     style: TextStyle(
                                                       color: AppColors.black,
                                                       fontSize: 14.sp,
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                      fontWeight: FontWeight.w600,
                                                       letterSpacing: 0.8,
                                                     ),
                                                   ),
@@ -665,40 +539,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                 vertical: 1.h,
                                               ),
                                               child: Text(
-                                                _data[index].status == "Ongoing"
-                                                    ? "In Progress"
-                                                    : _data[index].status ?? '',
+                                                (_data[index].status ?? '').tr(),
                                                 style: TextStyle(
-                                                  color: _data[index].status ==
-                                                          "Ongoing"
-                                                      ? AppColors
-                                                          .inProgressStatusColor
-                                                      : _data[index].status ==
-                                                              "Pending"
-                                                          ? AppColors
-                                                              .pendingStatusColor
-                                                          : _data[index]
-                                                                      .status ==
-                                                                  "Accepted"
-                                                              ? AppColors
-                                                                  .greenTextColor
-                                                              : _data[index]
-                                                                          .status ==
-                                                                      "Re-open"
-                                                                  ? AppColors
-                                                                      .reOpenStatusColor
-                                                                  : _data[index]
-                                                                              .status ==
-                                                                          "Completed"
-                                                                      ? AppColors
-                                                                          .greenTextColor
-                                                                      : _data[index].status ==
-                                                                              "Request for closure"
-                                                                          ? AppColors
-                                                                              .issueButtonColor
-                                                                          : _data[index].status == "Rejected"
-                                                                              ? AppColors.redText
-                                                                              : AppColors.black,
+                                                  color: getColorByStatus(_data[index].status ?? ''),
                                                   fontSize: 12.sp,
                                                   fontWeight: FontWeight.w600,
                                                 ),
@@ -707,10 +550,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                           ],
                                         ),
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Expanded(
                                               child: Padding(
@@ -719,15 +560,12 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   vertical: 5.h,
                                                 ),
                                                 child: Text(
-                                                  _data[index].facilityName ??
-                                                      '',
+                                                  _data[index].facilityName ?? '',
                                                   maxLines: 1,
                                                   softWrap: false,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                                  overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
-                                                    color: AppColors
-                                                        .ListTitleColor,
+                                                    color: AppColors.ListTitleColor,
                                                     fontSize: 13.sp,
                                                     fontWeight: FontWeight.w600,
                                                     letterSpacing: 0.8,
@@ -736,29 +574,21 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               ),
                                             ),
                                             Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
                                               children: [
                                                 Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 5.w,
-                                                      vertical: 5.h),
+                                                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
                                                   child: const Icon(
                                                     Icons.access_time_filled,
                                                     size: 20,
-                                                    color: AppColors
-                                                        .ListTitleColor,
+                                                    color: AppColors.ListTitleColor,
                                                   ),
                                                 ),
                                                 Text(
-                                                  _data[index]
-                                                      .estimatedTime
-                                                      .toString(),
+                                                  _data[index].estimatedTime.toString(),
                                                   style: TextStyle(
-                                                    color: AppColors
-                                                        .ListTitleColor,
+                                                    color: AppColors.ListTitleColor,
                                                     fontSize: 10.sp,
                                                     fontWeight: FontWeight.w400,
                                                   ),
@@ -802,8 +632,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             vertical: 2.h,
                                           ),
                                           child: Text(
-                                            "${MydashboardScreenConstants.BOOTHS.tr()} :${_data[index].booths.toString()}" ??
-                                                '',
+                                            "${MydashboardScreenConstants.BOOTHS.tr()} :${_data[index].booths.toString()}" ?? '',
                                             style: TextStyle(
                                               color: AppColors.ListTitleColor,
                                               fontSize: 12.sp,
@@ -812,10 +641,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                           ),
                                         ),
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             Padding(
                                               padding: EdgeInsets.symmetric(
@@ -823,11 +650,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                 vertical: 2.h,
                                               ),
                                               child: Text(
-                                                "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${_data[index].totalTasks.toString()}" ??
-                                                    '',
+                                                "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${_data[index].totalTasks.toString()}" ?? '',
                                                 style: TextStyle(
-                                                  color:
-                                                      AppColors.greenTextColor,
+                                                  color: AppColors.greenTextColor,
                                                   fontSize: 14.sp,
                                                   fontWeight: FontWeight.w600,
                                                 ),
@@ -849,13 +674,10 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             ),
                                           ],
                                         ),
-                                        if (_data[index].status ==
-                                            "Ongoing") ...[
+                                        if (_data[index].status == "Ongoing") ...[
                                           Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            crossAxisAlignment: CrossAxisAlignment.end,
                                             children: [
                                               Expanded(
                                                 child: Container(),
@@ -869,47 +691,32 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   // );
                                                   Navigator.of(context).push(
                                                     MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          TaskCompletionScreen(
-                                                        allocationId: _data[
-                                                                    index]
-                                                                .taskAllocationId ??
-                                                            '',
+                                                      builder: (context) => TaskCompletionScreen(
+                                                        allocationId: _data[index].taskAllocationId ?? '',
                                                       ),
                                                     ),
                                                   );
                                                 },
                                                 child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 10.w,
-                                                      vertical: 8.h),
+                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                                                   child: Container(
                                                     alignment: Alignment.center,
                                                     decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.r),
-                                                      color:
-                                                          AppColors.buttonColor,
+                                                      borderRadius: BorderRadius.circular(8.r),
+                                                      color: AppColors.buttonColor,
                                                     ),
                                                     child: Padding(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
+                                                      padding: EdgeInsets.symmetric(
                                                         horizontal: 40.w,
                                                         vertical: 6.h,
                                                       ),
                                                       child: Text(
-                                                        MydashboardScreenConstants
-                                                            .CLOSE
-                                                            .tr(),
-                                                        textAlign:
-                                                            TextAlign.center,
+                                                        MydashboardScreenConstants.CLOSE.tr(),
+                                                        textAlign: TextAlign.center,
                                                         style: TextStyle(
                                                           fontSize: 10.sp,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          color:
-                                                              AppColors.black,
+                                                          fontWeight: FontWeight.w600,
+                                                          color: AppColors.black,
                                                         ),
                                                       ),
                                                     ),
@@ -919,23 +726,16 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             ],
                                           ),
                                         ],
-                                        if (_data[index].status ==
-                                            "Pending") ...[
+                                        if (_data[index].status == "Pending") ...[
                                           Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            crossAxisAlignment: CrossAxisAlignment.end,
                                             children: [
                                               InkWell(
                                                 onTap: () {
                                                   setState(() {});
 
-                                                  _dashboardBloc.add(
-                                                      UpdateStatus(
-                                                          id: _data[index]
-                                                              .taskAllocationId!,
-                                                          status: "7"));
+                                                  _dashboardBloc.add(UpdateStatus(id: _data[index].taskAllocationId!, status: "7"));
 
                                                   // Navigator.of(context).push(
                                                   //   MaterialPageRoute(
@@ -949,37 +749,25 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   // );
                                                 },
                                                 child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 10.w,
-                                                      vertical: 8.h),
+                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                                                   child: Container(
-                                                    alignment:
-                                                        Alignment.centerRight,
+                                                    alignment: Alignment.centerRight,
                                                     decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.r),
-                                                      color: AppColors
-                                                          .rejectButtonColor,
+                                                      borderRadius: BorderRadius.circular(8.r),
+                                                      color: AppColors.rejectButtonColor,
                                                     ),
                                                     child: Padding(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
+                                                      padding: EdgeInsets.symmetric(
                                                         horizontal: 15.w,
                                                         vertical: 6.h,
                                                       ),
                                                       child: Text(
-                                                        MydashboardScreenConstants
-                                                            .REJECT
-                                                            .tr(),
-                                                        textAlign:
-                                                            TextAlign.center,
+                                                        MydashboardScreenConstants.REJECT.tr(),
+                                                        textAlign: TextAlign.center,
                                                         style: TextStyle(
                                                           fontSize: 10.sp,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          color: AppColors
-                                                              .rejectGreyTextColor,
+                                                          fontWeight: FontWeight.w600,
+                                                          color: AppColors.rejectGreyTextColor,
                                                         ),
                                                       ),
                                                     ),
@@ -993,43 +781,28 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   //     builder: (context) => const JanitorList(),
                                                   //   ),
                                                   // );
-                                                  _dashboardBloc.add(UpdateStatus(
-                                                      id: _data[index]
-                                                              .taskAllocationId ??
-                                                          '',
-                                                      status: "2"));
+                                                  _dashboardBloc.add(UpdateStatus(id: _data[index].taskAllocationId ?? '', status: "2"));
                                                 },
                                                 child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 10.w,
-                                                      vertical: 8.h),
+                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                                                   child: Container(
                                                     alignment: Alignment.center,
                                                     decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.r),
-                                                      color: AppColors
-                                                          .acceptButtonColor,
+                                                      borderRadius: BorderRadius.circular(8.r),
+                                                      color: AppColors.acceptButtonColor,
                                                     ),
                                                     child: Padding(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
+                                                      padding: EdgeInsets.symmetric(
                                                         horizontal: 15.w,
                                                         vertical: 6.h,
                                                       ),
                                                       child: Text(
-                                                        MydashboardScreenConstants
-                                                            .ACCEPT
-                                                            .tr(),
-                                                        textAlign:
-                                                            TextAlign.center,
+                                                        MydashboardScreenConstants.ACCEPT.tr(),
+                                                        textAlign: TextAlign.center,
                                                         style: TextStyle(
                                                           fontSize: 10.sp,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          color:
-                                                              AppColors.white,
+                                                          fontWeight: FontWeight.w600,
+                                                          color: AppColors.white,
                                                         ),
                                                       ),
                                                     ),
@@ -1039,62 +812,43 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             ],
                                           ),
                                         ],
-                                        if (_data[index].status ==
-                                            "Accepted") ...[
+                                        if (_data[index].status == "Accepted") ...[
                                           Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            crossAxisAlignment: CrossAxisAlignment.end,
                                             children: [
                                               InkWell(
                                                 onTap: () async {
                                                   checkGps();
                                                   setState(() {
-                                                    facility_lattitude =
-                                                        _data[index].lat;
-                                                    facility_longitude =
-                                                        _data[index].lng;
+                                                    facility_lattitude = _data[index].lat;
+                                                    facility_longitude = _data[index].lng;
                                                   });
-                                                  await MapUtils.openMap(
-                                                      _data[index].lat ?? 0.0,
-                                                      _data[index].lng ?? 0.0);
+                                                  await MapUtils.openMap(_data[index].lat ?? 0.0, _data[index].lng ?? 0.0);
                                                   // _url = Uri.parse(
                                                   //     'https://www.google.com/maps/dir/${latitude},${longitude}/${_data[index].lat},${_data[index].lng}');
                                                   // await _launchUrl();
                                                 },
                                                 child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 10.w,
-                                                      vertical: 8.h),
+                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                                                   child: Container(
-                                                    alignment:
-                                                        Alignment.centerRight,
+                                                    alignment: Alignment.centerRight,
                                                     decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.r),
-                                                      color:
-                                                          AppColors.buttonColor,
+                                                      borderRadius: BorderRadius.circular(8.r),
+                                                      color: AppColors.buttonColor,
                                                     ),
                                                     child: Padding(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
+                                                      padding: EdgeInsets.symmetric(
                                                         horizontal: 15.w,
                                                         vertical: 6.h,
                                                       ),
                                                       child: Text(
-                                                        MydashboardScreenConstants
-                                                            .DIRECTION
-                                                            .tr(),
-                                                        textAlign:
-                                                            TextAlign.center,
+                                                        MydashboardScreenConstants.DIRECTION.tr(),
+                                                        textAlign: TextAlign.center,
                                                         style: TextStyle(
                                                           fontSize: 10.sp,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          color:
-                                                              AppColors.black,
+                                                          fontWeight: FontWeight.w600,
+                                                          color: AppColors.black,
                                                         ),
                                                       ),
                                                     ),
@@ -1103,59 +857,37 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               ),
                                               InkWell(
                                                 onTap: () async {
-                                                  await Navigator.of(context)
-                                                      .push(
+                                                  await Navigator.of(context).push(
                                                     MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          SelfieScreen(
-                                                        templateId: _data[index]
-                                                                .templateId ??
-                                                            0,
-                                                        allocationId: _data[
-                                                                    index]
-                                                                .taskAllocationId ??
-                                                            '',
+                                                      builder: (context) => SelfieScreen(
+                                                        templateId: _data[index].templateId ?? 0,
+                                                        allocationId: _data[index].taskAllocationId ?? '',
                                                       ),
                                                     ),
                                                   );
-                                                  print("afasdfasfsadf" +
-                                                      _data[index]
-                                                          .taskAllocationId
-                                                          .toString());
-                                                  _dashboardBloc
-                                                      .add(GetTaskTamplates());
+                                                  print("afasdfasfsadf" + _data[index].taskAllocationId.toString());
+                                                  _dashboardBloc.add(GetTaskTamplates());
                                                 },
                                                 child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 10.w,
-                                                      vertical: 8.h),
+                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                                                   child: Container(
                                                     alignment: Alignment.center,
                                                     decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.r),
-                                                      color: AppColors
-                                                          .acceptButtonColor,
+                                                      borderRadius: BorderRadius.circular(8.r),
+                                                      color: AppColors.acceptButtonColor,
                                                     ),
                                                     child: Padding(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
+                                                      padding: EdgeInsets.symmetric(
                                                         horizontal: 15.w,
                                                         vertical: 6.h,
                                                       ),
                                                       child: Text(
-                                                        MydashboardScreenConstants
-                                                            .START
-                                                            .tr(),
-                                                        textAlign:
-                                                            TextAlign.center,
+                                                        MydashboardScreenConstants.START.tr(),
+                                                        textAlign: TextAlign.center,
                                                         style: TextStyle(
                                                           fontSize: 10.sp,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          color:
-                                                              AppColors.white,
+                                                          fontWeight: FontWeight.w600,
+                                                          color: AppColors.white,
                                                         ),
                                                       ),
                                                     ),
@@ -1165,56 +897,39 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             ],
                                           ),
                                         ],
-                                        if (_data[index].status ==
-                                            "Re-open") ...[
+                                        if (_data[index].status == "Re-open") ...[
                                           Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            crossAxisAlignment: CrossAxisAlignment.end,
                                             children: [
                                               InkWell(
                                                 onTap: () async {
                                                   checkGps();
-                                                  await MapUtils.openMap(
-                                                      _data[index].lat ?? 0.0,
-                                                      _data[index].lng ?? 0.0);
+                                                  await MapUtils.openMap(_data[index].lat ?? 0.0, _data[index].lng ?? 0.0);
                                                   // _url = Uri.parse(
                                                   //     'https://www.google.com/maps/dir/${latitude},${longitude}/${_data[index].lat},${_data[index].lng}');
                                                   // await _launchUrl();
                                                 },
                                                 child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 10.w,
-                                                      vertical: 8.h),
+                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                                                   child: Container(
-                                                    alignment:
-                                                        Alignment.centerRight,
+                                                    alignment: Alignment.centerRight,
                                                     decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.r),
-                                                      color:
-                                                          AppColors.buttonColor,
+                                                      borderRadius: BorderRadius.circular(8.r),
+                                                      color: AppColors.buttonColor,
                                                     ),
                                                     child: Padding(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
+                                                      padding: EdgeInsets.symmetric(
                                                         horizontal: 15.w,
                                                         vertical: 6.h,
                                                       ),
                                                       child: Text(
-                                                        MydashboardScreenConstants
-                                                            .DIRECTION
-                                                            .tr(),
-                                                        textAlign:
-                                                            TextAlign.center,
+                                                        MydashboardScreenConstants.DIRECTION.tr(),
+                                                        textAlign: TextAlign.center,
                                                         style: TextStyle(
                                                           fontSize: 10.sp,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          color:
-                                                              AppColors.black,
+                                                          fontWeight: FontWeight.w600,
+                                                          color: AppColors.black,
                                                         ),
                                                       ),
                                                     ),
@@ -1223,58 +938,37 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               ),
                                               InkWell(
                                                 onTap: () async {
-                                                  await Navigator.of(context)
-                                                      .push(
+                                                  await Navigator.of(context).push(
                                                     MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          SelfieScreen(
-                                                        templateId: _data[index]
-                                                            .templateId!,
-                                                        allocationId: _data[
-                                                                    index]
-                                                                .taskAllocationId ??
-                                                            '',
+                                                      builder: (context) => SelfieScreen(
+                                                        templateId: _data[index].templateId!,
+                                                        allocationId: _data[index].taskAllocationId ?? '',
                                                       ),
                                                     ),
                                                   );
-                                                  print("afasdfasfsadf" +
-                                                      _data[index]
-                                                          .taskAllocationId
-                                                          .toString());
-                                                  _dashboardBloc.add(
-                                                      const GetTaskTamplates());
+                                                  print("afasdfasfsadf" + _data[index].taskAllocationId.toString());
+                                                  _dashboardBloc.add(const GetTaskTamplates());
                                                 },
                                                 child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 10.w,
-                                                      vertical: 8.h),
+                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                                                   child: Container(
                                                     alignment: Alignment.center,
                                                     decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.r),
-                                                      color: AppColors
-                                                          .acceptButtonColor,
+                                                      borderRadius: BorderRadius.circular(8.r),
+                                                      color: AppColors.acceptButtonColor,
                                                     ),
                                                     child: Padding(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
+                                                      padding: EdgeInsets.symmetric(
                                                         horizontal: 15.w,
                                                         vertical: 6.h,
                                                       ),
                                                       child: Text(
-                                                        MydashboardScreenConstants
-                                                            .START
-                                                            .tr(),
-                                                        textAlign:
-                                                            TextAlign.center,
+                                                        MydashboardScreenConstants.START.tr(),
+                                                        textAlign: TextAlign.center,
                                                         style: TextStyle(
                                                           fontSize: 10.sp,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          color:
-                                                              AppColors.white,
+                                                          fontWeight: FontWeight.w600,
+                                                          color: AppColors.white,
                                                         ),
                                                       ),
                                                     ),
@@ -1331,8 +1025,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
   }
 
   getLocation() async {
-    position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     print(position.longitude); //Output: 80.24599079
     print(position.latitude); //Output: 29.6593457
 
@@ -1345,9 +1038,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
       //device must move horizontally before an update event is generated;
     );
 
-    StreamSubscription<Position> positionStream =
-        Geolocator.getPositionStream(locationSettings: locationSettings)
-            .listen((Position position) {
+    StreamSubscription<Position> positionStream = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
       print(position.longitude); //Output: 80.24599079
       print(position.latitude); //Output: 29.6593457
 
@@ -1359,12 +1050,10 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
   }
 
   Future<void> _getAddressFromLatLng(Position position) async {
-    await placemarkFromCoordinates(position.latitude, position.longitude)
-        .then((List<Placemark> placemarks) {
+    await placemarkFromCoordinates(position.latitude, position.longitude).then((List<Placemark> placemarks) {
       Placemark place = placemarks[0];
       setState(() {
-        _currentAddress =
-            '${place.name},${place.street}, ${place.subLocality},${place.subAdministrativeArea}, ${place.administrativeArea},${place.postalCode}';
+        _currentAddress = '${place.name},${place.street}, ${place.subLocality},${place.subAdministrativeArea}, ${place.administrativeArea},${place.postalCode}';
         print("address - $_currentAddress");
         // EasyLoading.showToast("Current Location Detected : $_currentAddress");
       });
@@ -1373,10 +1062,39 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
     });
   }
 
-  Future<void> _pullRefresh() async {
-    Future.delayed(Duration(seconds: 1), () {
-      print("api call");
-      _dashboardBloc.add(GetTaskTamplates());
-    });
+  Color getColorByRequestType(String requestType) {
+    switch (requestType) {
+      case "IOT":
+        return AppColors.iotBackgroundColor;
+      case "Regular":
+        return AppColors.regularButtonColor;
+      case "Issue":
+        return AppColors.issueButtonColor;
+      case "Customer Request":
+        return AppColors.acceptButtonColor;
+      default:
+        return AppColors.white;
+    }
+  }
+
+  Color getColorByStatus(String status) {
+    switch (status) {
+      case "Ongoing":
+        return AppColors.inProgressStatusColor;
+      case "Pending":
+        return AppColors.pendingStatusColor;
+      case "Accepted":
+        return AppColors.greenTextColor;
+      case "Re-open":
+        return AppColors.reOpenStatusColor;
+      case "Completed":
+        return AppColors.greenTextColor;
+      case "Request for closure":
+        return AppColors.issueButtonColor;
+      case "Rejected":
+        return AppColors.redText;
+      default:
+        return AppColors.black;
+    }
   }
 }

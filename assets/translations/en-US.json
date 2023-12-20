@@ -119,5 +119,18 @@
   "done": "Done",
   "check-in": "Check In",
   "check-out": "Check Out",
-  "loading": "Loading ..."
+  "loading": "Loading ...",
+  "IOT": "IOT",
+  "Regular": "Regular",
+  "Issue": "Issue",
+  "Customer Request": "Customer Request",
+  "Request for closure": "Request for closure",
+  "Completed": "Completed",
+  "Pending": "Pending",
+  "in": "In",
+  "accept": "Accept",
+  "Ongoing": "Ongoing",
+  "Accepted": "Accepted",
+  "Re-open": "Re Open",
+  "Rejected": "Rejected"
 }
