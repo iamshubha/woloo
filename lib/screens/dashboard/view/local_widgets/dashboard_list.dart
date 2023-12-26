@@ -70,923 +70,952 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer(
-        bloc: _dashboardBloc,
-        listener: (context, state) {
-          if (state is GetDashboardDataSuccess) {
-            EasyLoading.dismiss();
-            setState(() {
-              _data = state.data;
-            });
-          }
+      bloc: _dashboardBloc,
+      listener: (context, state) {
+        if (state is GetDashboardDataSuccess) {
+          EasyLoading.dismiss();
+          setState(() {
+            _data = state.data;
+          });
+        }
 
-          if (state is UpdateStatusSuccessful) {
-            EasyLoading.dismiss();
-            print("status updated");
-          }
-        },
-        builder: (context, state) {
-          if (state is DashboardLoading && _data.isEmpty) {
-            EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
-          }
+        if (state is UpdateStatusSuccessful) {
+          EasyLoading.dismiss();
+          print("status updated");
+        }
+      },
+      builder: (context, state) {
+        if (state is DashboardLoading && _data.isEmpty) {
+          EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
+        }
 
-          if (state is DashboardError) {
-            return CustomErrorWidget(error: state.error);
-          }
+        if (state is DashboardError) {
+          return CustomErrorWidget(error: state.error);
+        }
 
-          if (state is UpdateStatusError) {
-            return CustomErrorWidget(error: state.error);
-          }
-          if (state is UpdateStatusLoading) {
-            EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
-          }
+        if (state is UpdateStatusError) {
+          return CustomErrorWidget(error: state.error);
+        }
+        if (state is UpdateStatusLoading) {
+          EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
+        }
 
-          if (state is GetDashboardDataSuccess && _data.isEmpty) {
-            EasyLoading.dismiss();
-            return const EmptyListWidget();
-          }
+        if (state is GetDashboardDataSuccess && _data.isEmpty) {
+          EasyLoading.dismiss();
+          return const EmptyListWidget();
+        }
 
-          return ListView.builder(
-              physics: BouncingScrollPhysics(),
-              itemCount: _data.length,
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemBuilder: (
-                BuildContext context,
-                int index,
-              ) {
-                return Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 7.h,
-                    ),
-                    child: GestureDetector(
-                      onTap: () {
-                        widget.onTapItem();
-                        setState(() {
-                          selectedCard = index;
-                        });
-                      },
-                      child: _data[index].status == "Completed"
-                          ? Container(
-                              // height: 240.h,
-                              padding: EdgeInsets.symmetric(
-                                vertical: 5.h,
-                                horizontal: 10.w,
-                              ),
-                              margin: EdgeInsets.symmetric(
-                                horizontal: 20.w,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.disabledContainerColor,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: AppColors.containerBorder,
-                                  width: 1.w,
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        return ListView.builder(
+          physics: BouncingScrollPhysics(),
+          itemCount: _data.length,
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemBuilder: (
+            BuildContext context,
+            int index,
+          ) {
+            return Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: 7.h,
+              ),
+              child: GestureDetector(
+                onTap: () {
+                  widget.onTapItem();
+                  setState(() {
+                    selectedCard = index;
+                  });
+                },
+                child: _data[index].status == "Completed"
+                    ? Container(
+                        // height: 240.h,
+                        padding: EdgeInsets.symmetric(
+                          vertical: 5.h,
+                          horizontal: 10.w,
+                        ),
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 20.w,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.disabledContainerColor,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: AppColors.containerBorder,
+                            width: 1.w,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.calendar_month_outlined,
-                                              size: 15.sp,
-                                              color: AppColors.containerBorder,
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w,
-                                                vertical: 1.h,
-                                              ),
-                                              child: Text(
-                                                _data[index].date ?? '',
-                                                style: TextStyle(
-                                                  color: AppColors.containerBorder,
-                                                  fontSize: 12.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                            ),
-                                            Icon(
-                                              Icons.access_time,
-                                              size: 15.sp,
-                                              color: AppColors.containerBorder,
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w,
-                                                vertical: 1.h,
-                                              ),
-                                              child: Text(
-                                                "${_data[index].startTime}-${_data[index].endTime}",
-                                                style: TextStyle(
-                                                  color: AppColors.containerBorder,
-                                                  fontSize: 12.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.calendar_month_outlined,
+                                        size: 15.sp,
+                                        color: AppColors.containerBorder,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 5.w,
+                                          vertical: 1.h,
                                         ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w,
-                                                vertical: 5.h,
-                                              ),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: getColorByRequestType(_data[index].requestType ?? ''),
-                                                  borderRadius: BorderRadius.circular(10.r),
-                                                ),
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                    vertical: 5.h,
-                                                    horizontal: 20.w,
-                                                  ),
-                                                  child: Text(
-                                                    (_data[index].requestType ?? '').tr(),
-                                                    style: TextStyle(
-                                                      color: AppColors.containerBorder,
-                                                      fontSize: 14.sp,
-                                                      fontWeight: FontWeight.w600,
-                                                      letterSpacing: 0.8,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w,
-                                                vertical: 1.h,
-                                              ),
-                                              child: Text(
-                                                (_data[index].status ?? '').tr(),
-                                                style: TextStyle(
-                                                  color: getColorByStatus(_data[index].status ?? ''),
-                                                  fontSize: 12.sp,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                        child: Text(
+                                          _data[index].date ?? '',
+                                          style: TextStyle(
+                                            color: AppColors.containerBorder,
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w400,
+                                          ),
                                         ),
+                                      ),
+                                      Icon(
+                                        Icons.access_time,
+                                        size: 15.sp,
+                                        color: AppColors.containerBorder,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 5.w,
+                                          vertical: 1.h,
+                                        ),
+                                        child: Text(
+                                          "${_data[index].startTime}-${_data[index].endTime}",
+                                          style: TextStyle(
+                                            color: AppColors.containerBorder,
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 5.w,
+                                          vertical: 5.h,
+                                        ),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: getColorByRequestType(_data[index].requestType ?? ''),
+                                            borderRadius: BorderRadius.circular(10.r),
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: 5.h,
+                                              horizontal: 20.w,
+                                            ),
+                                            child: Text(
+                                              (_data[index].requestType ?? '').tr(),
+                                              style: TextStyle(
+                                                color: AppColors.containerBorder,
+                                                fontSize: 14.sp,
+                                                fontWeight: FontWeight.w600,
+                                                letterSpacing: 0.8,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 5.w,
+                                          vertical: 1.h,
+                                        ),
+                                        child: Text(
+                                          (_data[index].status ?? '').tr(),
+                                          style: TextStyle(
+                                            color: getColorByStatus(_data[index].status ?? ''),
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
 
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Expanded(
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: 5.w,
-                                                  vertical: 5.h,
-                                                ),
-                                                child: Text(
-                                                  _data[index].facilityName ?? '',
-                                                  maxLines: 1,
-                                                  softWrap: false,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    color: AppColors.containerBorder,
-                                                    fontSize: 13.sp,
-                                                    fontWeight: FontWeight.w600,
-                                                    letterSpacing: 0.8,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
-                                                  child: const Icon(
-                                                    Icons.access_time_filled,
-                                                    size: 20,
-                                                    color: AppColors.containerBorder,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  _data[index].estimatedTime.toString(),
-                                                  style: TextStyle(
-                                                    color: AppColors.containerBorder,
-                                                    fontSize: 10.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        Padding(
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Padding(
                                           padding: EdgeInsets.symmetric(
                                             horizontal: 5.w,
-                                            vertical: 1.h,
+                                            vertical: 5.h,
                                           ),
                                           child: Text(
-                                            "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${_data[index].description}",
-                                            maxLines: 2,
+                                            _data[index].facilityName ?? '',
+                                            maxLines: 1,
+                                            softWrap: false,
+                                            overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                               color: AppColors.containerBorder,
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w500,
+                                              fontSize: 13.sp,
+                                              fontWeight: FontWeight.w600,
+                                              letterSpacing: 0.8,
                                             ),
                                           ),
                                         ),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 5.w,
-                                            vertical: 2.h,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+                                            child: const Icon(
+                                              Icons.access_time_filled,
+                                              size: 20,
+                                              color: AppColors.containerBorder,
+                                            ),
                                           ),
-                                          child: Text(
-                                            "${MydashboardScreenConstants.LOCATION.tr()} : ${_data[index].location}",
+                                          Text(
+                                            _data[index].estimatedTime.toString(),
                                             style: TextStyle(
                                               color: AppColors.containerBorder,
-                                              fontSize: 12.sp,
+                                              fontSize: 10.sp,
                                               fontWeight: FontWeight.w400,
                                             ),
                                           ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 5.w,
-                                            vertical: 2.h,
-                                          ),
-                                          child: Text(
-                                            "${MydashboardScreenConstants.BOOTHS.tr()} :${_data[index].booths.toString() ?? ''}",
-                                            style: TextStyle(
-                                              color: AppColors.containerBorder,
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w,
-                                                vertical: 2.h,
-                                              ),
-                                              child: Text(
-                                                "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${_data[index].totalTasks.toString() ?? ''}",
-                                                style: TextStyle(
-                                                  color: AppColors.disabledGreenColor,
-                                                  fontSize: 14.sp,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w,
-                                                vertical: 2.h,
-                                              ),
-                                              child: Text(
-                                                "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${_data[index].pendingTasks.toString()}",
-                                                style: TextStyle(
-                                                  color: AppColors.disabledRedColor,
-                                                  fontSize: 14.sp,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        // Padding(
-                                        //   padding: EdgeInsets.symmetric(
-                                        //     horizontal: 5.w,
-                                        //     vertical: 5.h,
-                                        //   ),
-                                        //   child: Text(
-                                        //     "Classic cleaning",
-                                        //     maxLines: 2,
-                                        //     style: TextStyle(
-                                        //       color: AppColors.containerBorder,
-                                        //       fontSize: 16.sp,
-                                        //       fontWeight: FontWeight.w500,
-                                        //       letterSpacing: 0.8,
-                                        //     ),
-                                        //   ),
-                                        // ),
-                                        // Padding(
-                                        //   padding: EdgeInsets.symmetric(
-                                        //     horizontal: 5.w,
-                                        //     vertical: 1.h,
-                                        //   ),
-                                        //   child: Text(
-                                        //     "Customer Name : Amol Jagtap",
-                                        //     maxLines: 2,
-                                        //     style: TextStyle(
-                                        //       color: AppColors.containerBorder,
-                                        //       fontSize: 12.sp,
-                                        //       fontWeight: FontWeight.w500,
-                                        //     ),
-                                        //   ),
-                                        // ),
-                                        // Padding(
-                                        //   padding: EdgeInsets.symmetric(
-                                        //     horizontal: 5.w,
-                                        //     vertical: 2.h,
-                                        //   ),
-                                        //   child: Text(
-                                        //     "Pimple Nilakh",
-                                        //     maxLines: 2,
-                                        //     style: TextStyle(
-                                        //       color: AppColors.containerBorder,
-                                        //       fontSize: 12.sp,
-                                        //       fontWeight: FontWeight.w400,
-                                        //     ),
-                                        //   ),
-                                        // ),
-                                        // Padding(
-                                        //   padding: EdgeInsets.symmetric(
-                                        //     horizontal: 5.w,
-                                        //     vertical: 2.h,
-                                        //   ),
-                                        //   child: Text(
-                                        //     "Pin Code : 441256",
-                                        //     style: TextStyle(
-                                        //       color: AppColors.containerBorder,
-                                        //       fontSize: 12.sp,
-                                        //       fontWeight: FontWeight.w400,
-                                        //     ),
-                                        //   ),
-                                        // ),
-                                      ],
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                      vertical: 1.h,
+                                    ),
+                                    child: Text(
+                                      "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${_data[index].description}",
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        color: AppColors.containerBorder,
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
-                                ],
-                              ),
-                            )
-                          : Container(
-                              // height: 240.h,
-                              padding: EdgeInsets.symmetric(
-                                vertical: 5.h,
-                                horizontal: 10.w,
-                              ),
-                              margin: EdgeInsets.symmetric(
-                                horizontal: 20.w,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: AppColors.containerBorder,
-                                  width: 1.w,
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.calendar_month_outlined,
-                                              size: 15.sp,
-                                              color: AppColors.timeSlotColor,
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w,
-                                                vertical: 1.h,
-                                              ),
-                                              child: Text(
-                                                _data[index].date ?? '',
-                                                style: TextStyle(
-                                                  color: AppColors.timeSlotColor,
-                                                  fontSize: 12.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                            ),
-                                            Icon(
-                                              Icons.access_time,
-                                              size: 15.sp,
-                                              color: AppColors.timeSlotColor,
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w,
-                                                vertical: 1.h,
-                                              ),
-                                              child: Text(
-                                                "${_data[index].startTime}-${_data[index].endTime}",
-                                                style: TextStyle(
-                                                  color: AppColors.timeSlotColor,
-                                                  fontSize: 12.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w,
-                                                vertical: 5.h,
-                                              ),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: getColorByRequestType(_data[index].requestType ?? ''),
-                                                  borderRadius: BorderRadius.circular(10.r),
-                                                ),
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                    vertical: 5.h,
-                                                    horizontal: 20.w,
-                                                  ),
-                                                  child: Text(
-                                                    (_data[index].requestType ?? '').tr(),
-                                                    style: TextStyle(
-                                                      color: AppColors.black,
-                                                      fontSize: 14.sp,
-                                                      fontWeight: FontWeight.w600,
-                                                      letterSpacing: 0.8,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w,
-                                                vertical: 1.h,
-                                              ),
-                                              child: Text(
-                                                (_data[index].status ?? '').tr(),
-                                                style: TextStyle(
-                                                  color: getColorByStatus(_data[index].status ?? ''),
-                                                  fontSize: 12.sp,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Expanded(
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: 5.w,
-                                                  vertical: 5.h,
-                                                ),
-                                                child: Text(
-                                                  _data[index].facilityName ?? '',
-                                                  maxLines: 1,
-                                                  softWrap: false,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    color: AppColors.ListTitleColor,
-                                                    fontSize: 13.sp,
-                                                    fontWeight: FontWeight.w600,
-                                                    letterSpacing: 0.8,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
-                                                  child: const Icon(
-                                                    Icons.access_time_filled,
-                                                    size: 20,
-                                                    color: AppColors.ListTitleColor,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  _data[index].estimatedTime.toString(),
-                                                  style: TextStyle(
-                                                    color: AppColors.ListTitleColor,
-                                                    fontSize: 10.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 5.w,
-                                            vertical: 1.h,
-                                          ),
-                                          child: Text(
-                                            "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${_data[index].description}",
-                                            maxLines: 2,
-                                            style: TextStyle(
-                                              color: AppColors.ListTitleColor,
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 5.w,
-                                            vertical: 2.h,
-                                          ),
-                                          child: Text(
-                                            "${MydashboardScreenConstants.LOCATION.tr()}: ${_data[index].location}",
-                                            style: TextStyle(
-                                              color: AppColors.ListTitleColor,
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 5.w,
-                                            vertical: 2.h,
-                                          ),
-                                          child: Text(
-                                            "${MydashboardScreenConstants.BOOTHS.tr()} :${_data[index].booths.toString()}" ?? '',
-                                            style: TextStyle(
-                                              color: AppColors.ListTitleColor,
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w,
-                                                vertical: 2.h,
-                                              ),
-                                              child: Text(
-                                                "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${_data[index].totalTasks.toString()}" ?? '',
-                                                style: TextStyle(
-                                                  color: AppColors.greenTextColor,
-                                                  fontSize: 14.sp,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w,
-                                                vertical: 2.h,
-                                              ),
-                                              child: Text(
-                                                "${MydashboardScreenConstants.PENDING_TASK.tr()}: ${_data[index].pendingTasks.toString()}",
-                                                style: TextStyle(
-                                                  color: AppColors.redTextColor,
-                                                  fontSize: 14.sp,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        if (_data[index].status == "Ongoing") ...[
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            crossAxisAlignment: CrossAxisAlignment.end,
-                                            children: [
-                                              Expanded(
-                                                child: Container(),
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  // Navigator.of(context).push(
-                                                  //   MaterialPageRoute(
-                                                  //     builder: (context) => const TaskCompletionScreen(),
-                                                  //   ),
-                                                  // );
-                                                  Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                      builder: (context) => TaskCompletionScreen(
-                                                        allocationId: _data[index].taskAllocationId ?? '',
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-                                                  child: Container(
-                                                    alignment: Alignment.center,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(8.r),
-                                                      color: AppColors.buttonColor,
-                                                    ),
-                                                    child: Padding(
-                                                      padding: EdgeInsets.symmetric(
-                                                        horizontal: 40.w,
-                                                        vertical: 6.h,
-                                                      ),
-                                                      child: Text(
-                                                        MydashboardScreenConstants.CLOSE.tr(),
-                                                        textAlign: TextAlign.center,
-                                                        style: TextStyle(
-                                                          fontSize: 10.sp,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: AppColors.black,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                        if (_data[index].status == "Pending") ...[
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            crossAxisAlignment: CrossAxisAlignment.end,
-                                            children: [
-                                              InkWell(
-                                                onTap: () {
-                                                  setState(() {});
-
-                                                  _dashboardBloc.add(UpdateStatus(id: _data[index].taskAllocationId!, status: "7"));
-
-                                                  // Navigator.of(context).push(
-                                                  //   MaterialPageRoute(
-                                                  //     builder: (context) => SelfieScreen(
-                                                  //       isFromChooseFacility: true,
-                                                  //       isFromTask: false,
-                                                  //       templateId: _data[index].templateId!,
-                                                  //       allocationId: _data[index].taskAllocationId!,
-                                                  //     ),
-                                                  //   ),
-                                                  // );
-                                                },
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-                                                  child: Container(
-                                                    alignment: Alignment.centerRight,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(8.r),
-                                                      color: AppColors.rejectButtonColor,
-                                                    ),
-                                                    child: Padding(
-                                                      padding: EdgeInsets.symmetric(
-                                                        horizontal: 15.w,
-                                                        vertical: 6.h,
-                                                      ),
-                                                      child: Text(
-                                                        MydashboardScreenConstants.REJECT.tr(),
-                                                        textAlign: TextAlign.center,
-                                                        style: TextStyle(
-                                                          fontSize: 10.sp,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: AppColors.rejectGreyTextColor,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  // Navigator.of(context).push(
-                                                  //   MaterialPageRoute(
-                                                  //     builder: (context) => const JanitorList(),
-                                                  //   ),
-                                                  // );
-                                                  _dashboardBloc.add(UpdateStatus(id: _data[index].taskAllocationId ?? '', status: "2"));
-                                                },
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-                                                  child: Container(
-                                                    alignment: Alignment.center,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(8.r),
-                                                      color: AppColors.acceptButtonColor,
-                                                    ),
-                                                    child: Padding(
-                                                      padding: EdgeInsets.symmetric(
-                                                        horizontal: 15.w,
-                                                        vertical: 6.h,
-                                                      ),
-                                                      child: Text(
-                                                        MydashboardScreenConstants.ACCEPT.tr(),
-                                                        textAlign: TextAlign.center,
-                                                        style: TextStyle(
-                                                          fontSize: 10.sp,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: AppColors.white,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ],
-                                        if (_data[index].status == "Accepted") ...[
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            crossAxisAlignment: CrossAxisAlignment.end,
-                                            children: [
-                                              InkWell(
-                                                onTap: () async {
-                                                  checkGps();
-                                                  setState(() {
-                                                    facility_lattitude = _data[index].lat;
-                                                    facility_longitude = _data[index].lng;
-                                                  });
-                                                  await MapUtils.openMap(_data[index].lat ?? 0.0, _data[index].lng ?? 0.0);
-                                                  // _url = Uri.parse(
-                                                  //     'https://www.google.com/maps/dir/${latitude},${longitude}/${_data[index].lat},${_data[index].lng}');
-                                                  // await _launchUrl();
-                                                },
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-                                                  child: Container(
-                                                    alignment: Alignment.centerRight,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(8.r),
-                                                      color: AppColors.buttonColor,
-                                                    ),
-                                                    child: Padding(
-                                                      padding: EdgeInsets.symmetric(
-                                                        horizontal: 15.w,
-                                                        vertical: 6.h,
-                                                      ),
-                                                      child: Text(
-                                                        MydashboardScreenConstants.DIRECTION.tr(),
-                                                        textAlign: TextAlign.center,
-                                                        style: TextStyle(
-                                                          fontSize: 10.sp,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: AppColors.black,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              InkWell(
-                                                onTap: () async {
-                                                  await Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                      builder: (context) => SelfieScreen(
-                                                        templateId: _data[index].templateId ?? 0,
-                                                        allocationId: _data[index].taskAllocationId ?? '',
-                                                      ),
-                                                    ),
-                                                  );
-                                                  print("afasdfasfsadf" + _data[index].taskAllocationId.toString());
-                                                  _dashboardBloc.add(GetTaskTamplates());
-                                                },
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-                                                  child: Container(
-                                                    alignment: Alignment.center,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(8.r),
-                                                      color: AppColors.acceptButtonColor,
-                                                    ),
-                                                    child: Padding(
-                                                      padding: EdgeInsets.symmetric(
-                                                        horizontal: 15.w,
-                                                        vertical: 6.h,
-                                                      ),
-                                                      child: Text(
-                                                        MydashboardScreenConstants.START.tr(),
-                                                        textAlign: TextAlign.center,
-                                                        style: TextStyle(
-                                                          fontSize: 10.sp,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: AppColors.white,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ],
-                                        if (_data[index].status == "Re-open") ...[
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            crossAxisAlignment: CrossAxisAlignment.end,
-                                            children: [
-                                              InkWell(
-                                                onTap: () async {
-                                                  checkGps();
-                                                  await MapUtils.openMap(_data[index].lat ?? 0.0, _data[index].lng ?? 0.0);
-                                                  // _url = Uri.parse(
-                                                  //     'https://www.google.com/maps/dir/${latitude},${longitude}/${_data[index].lat},${_data[index].lng}');
-                                                  // await _launchUrl();
-                                                },
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-                                                  child: Container(
-                                                    alignment: Alignment.centerRight,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(8.r),
-                                                      color: AppColors.buttonColor,
-                                                    ),
-                                                    child: Padding(
-                                                      padding: EdgeInsets.symmetric(
-                                                        horizontal: 15.w,
-                                                        vertical: 6.h,
-                                                      ),
-                                                      child: Text(
-                                                        MydashboardScreenConstants.DIRECTION.tr(),
-                                                        textAlign: TextAlign.center,
-                                                        style: TextStyle(
-                                                          fontSize: 10.sp,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: AppColors.black,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              InkWell(
-                                                onTap: () async {
-                                                  await Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                      builder: (context) => SelfieScreen(
-                                                        templateId: _data[index].templateId!,
-                                                        allocationId: _data[index].taskAllocationId ?? '',
-                                                      ),
-                                                    ),
-                                                  );
-                                                  print("afasdfasfsadf" + _data[index].taskAllocationId.toString());
-                                                  _dashboardBloc.add(const GetTaskTamplates());
-                                                },
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-                                                  child: Container(
-                                                    alignment: Alignment.center,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(8.r),
-                                                      color: AppColors.acceptButtonColor,
-                                                    ),
-                                                    child: Padding(
-                                                      padding: EdgeInsets.symmetric(
-                                                        horizontal: 15.w,
-                                                        vertical: 6.h,
-                                                      ),
-                                                      child: Text(
-                                                        MydashboardScreenConstants.START.tr(),
-                                                        textAlign: TextAlign.center,
-                                                        style: TextStyle(
-                                                          fontSize: 10.sp,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: AppColors.white,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ],
-                                      ],
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                      vertical: 2.h,
+                                    ),
+                                    child: Text(
+                                      "${MydashboardScreenConstants.LOCATION.tr()} : ${_data[index].location}",
+                                      style: TextStyle(
+                                        color: AppColors.containerBorder,
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                     ),
                                   ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                      vertical: 2.h,
+                                    ),
+                                    child: Text(
+                                      "${MydashboardScreenConstants.BOOTHS.tr()} :${_data[index].booths.toString() ?? ''}",
+                                      style: TextStyle(
+                                        color: AppColors.containerBorder,
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                  if ((_data[index].requestType == "Issue")) ...[
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                                      child: Text(
+                                        "${(_data[index].requestType ?? '').tr()} : ${_data[index].issueDescription ?? ''}",
+                                        style: TextStyle(
+                                          color: AppColors.ListTitleColor,
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 5.w,
+                                          vertical: 2.h,
+                                        ),
+                                        child: Text(
+                                          "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${_data[index].totalTasks.toString() ?? ''}",
+                                          style: TextStyle(
+                                            color: AppColors.disabledGreenColor,
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 5.w,
+                                          vertical: 2.h,
+                                        ),
+                                        child: Text(
+                                          "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${_data[index].pendingTasks.toString()}",
+                                          style: TextStyle(
+                                            color: AppColors.disabledRedColor,
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  // Padding(
+                                  //   padding: EdgeInsets.symmetric(
+                                  //     horizontal: 5.w,
+                                  //     vertical: 5.h,
+                                  //   ),
+                                  //   child: Text(
+                                  //     "Classic cleaning",
+                                  //     maxLines: 2,
+                                  //     style: TextStyle(
+                                  //       color: AppColors.containerBorder,
+                                  //       fontSize: 16.sp,
+                                  //       fontWeight: FontWeight.w500,
+                                  //       letterSpacing: 0.8,
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  // Padding(
+                                  //   padding: EdgeInsets.symmetric(
+                                  //     horizontal: 5.w,
+                                  //     vertical: 1.h,
+                                  //   ),
+                                  //   child: Text(
+                                  //     "Customer Name : Amol Jagtap",
+                                  //     maxLines: 2,
+                                  //     style: TextStyle(
+                                  //       color: AppColors.containerBorder,
+                                  //       fontSize: 12.sp,
+                                  //       fontWeight: FontWeight.w500,
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  // Padding(
+                                  //   padding: EdgeInsets.symmetric(
+                                  //     horizontal: 5.w,
+                                  //     vertical: 2.h,
+                                  //   ),
+                                  //   child: Text(
+                                  //     "Pimple Nilakh",
+                                  //     maxLines: 2,
+                                  //     style: TextStyle(
+                                  //       color: AppColors.containerBorder,
+                                  //       fontSize: 12.sp,
+                                  //       fontWeight: FontWeight.w400,
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  // Padding(
+                                  //   padding: EdgeInsets.symmetric(
+                                  //     horizontal: 5.w,
+                                  //     vertical: 2.h,
+                                  //   ),
+                                  //   child: Text(
+                                  //     "Pin Code : 441256",
+                                  //     style: TextStyle(
+                                  //       color: AppColors.containerBorder,
+                                  //       fontSize: 12.sp,
+                                  //       fontWeight: FontWeight.w400,
+                                  //     ),
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),
-                    ));
-              });
-        });
+                          ],
+                        ),
+                      )
+                    : Container(
+                        // height: 240.h,
+                        padding: EdgeInsets.symmetric(
+                          vertical: 5.h,
+                          horizontal: 10.w,
+                        ),
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 20.w,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: AppColors.containerBorder,
+                            width: 1.w,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.calendar_month_outlined,
+                                        size: 15.sp,
+                                        color: AppColors.timeSlotColor,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 5.w,
+                                          vertical: 1.h,
+                                        ),
+                                        child: Text(
+                                          _data[index].date ?? '',
+                                          style: TextStyle(
+                                            color: AppColors.timeSlotColor,
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.access_time,
+                                        size: 15.sp,
+                                        color: AppColors.timeSlotColor,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 5.w,
+                                          vertical: 1.h,
+                                        ),
+                                        child: Text(
+                                          "${_data[index].startTime}-${_data[index].endTime}",
+                                          style: TextStyle(
+                                            color: AppColors.timeSlotColor,
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 5.w,
+                                          vertical: 5.h,
+                                        ),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: getColorByRequestType(_data[index].requestType ?? ''),
+                                            borderRadius: BorderRadius.circular(10.r),
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: 5.h,
+                                              horizontal: 20.w,
+                                            ),
+                                            child: Text(
+                                              (_data[index].requestType ?? '').tr(),
+                                              style: TextStyle(
+                                                color: AppColors.black,
+                                                fontSize: 14.sp,
+                                                fontWeight: FontWeight.w600,
+                                                letterSpacing: 0.8,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 5.w,
+                                          vertical: 1.h,
+                                        ),
+                                        child: Text(
+                                          (_data[index].status ?? '').tr(),
+                                          style: TextStyle(
+                                            color: getColorByStatus(_data[index].status ?? ''),
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 5.w,
+                                            vertical: 5.h,
+                                          ),
+                                          child: Text(
+                                            _data[index].facilityName ?? '',
+                                            maxLines: 1,
+                                            softWrap: false,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              color: AppColors.ListTitleColor,
+                                              fontSize: 13.sp,
+                                              fontWeight: FontWeight.w600,
+                                              letterSpacing: 0.8,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+                                            child: const Icon(
+                                              Icons.access_time_filled,
+                                              size: 20,
+                                              color: AppColors.ListTitleColor,
+                                            ),
+                                          ),
+                                          Text(
+                                            _data[index].estimatedTime.toString(),
+                                            style: TextStyle(
+                                              color: AppColors.ListTitleColor,
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                      vertical: 1.h,
+                                    ),
+                                    child: Text(
+                                      "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${_data[index].description}",
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        color: AppColors.ListTitleColor,
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                      vertical: 2.h,
+                                    ),
+                                    child: Text(
+                                      "${MydashboardScreenConstants.LOCATION.tr()}: ${_data[index].location}",
+                                      style: TextStyle(
+                                        color: AppColors.ListTitleColor,
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                      vertical: 2.h,
+                                    ),
+                                    child: Text(
+                                      "${MydashboardScreenConstants.BOOTHS.tr()} :${_data[index].booths.toString()}" ?? '',
+                                      style: TextStyle(
+                                        color: AppColors.ListTitleColor,
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                  if ((_data[index].requestType == "Issue")) ...[
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                                      child: Text(
+                                        "${(_data[index].requestType ?? '').tr()} : ${_data[index].issueDescription ?? ''}",
+                                        style: TextStyle(
+                                          color: AppColors.ListTitleColor,
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 5.w,
+                                          vertical: 2.h,
+                                        ),
+                                        child: Text(
+                                          "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${_data[index].totalTasks.toString()}" ?? '',
+                                          style: TextStyle(
+                                            color: AppColors.greenTextColor,
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 5.w,
+                                          vertical: 2.h,
+                                        ),
+                                        child: Text(
+                                          "${MydashboardScreenConstants.PENDING_TASK.tr()}: ${_data[index].pendingTasks.toString()}",
+                                          style: TextStyle(
+                                            color: AppColors.redTextColor,
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  if (_data[index].status == "Ongoing") ...[
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Expanded(
+                                          child: Container(),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            // Navigator.of(context).push(
+                                            //   MaterialPageRoute(
+                                            //     builder: (context) => const TaskCompletionScreen(),
+                                            //   ),
+                                            // );
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) => TaskCompletionScreen(
+                                                  allocationId: _data[index].taskAllocationId ?? '',
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(8.r),
+                                                color: AppColors.buttonColor,
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 40.w,
+                                                  vertical: 6.h,
+                                                ),
+                                                child: Text(
+                                                  MydashboardScreenConstants.CLOSE.tr(),
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontSize: 10.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: AppColors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                  if (_data[index].status == "Pending") ...[
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            setState(() {});
+
+                                            _dashboardBloc.add(UpdateStatus(id: _data[index].taskAllocationId!, status: "7"));
+
+                                            // Navigator.of(context).push(
+                                            //   MaterialPageRoute(
+                                            //     builder: (context) => SelfieScreen(
+                                            //       isFromChooseFacility: true,
+                                            //       isFromTask: false,
+                                            //       templateId: _data[index].templateId!,
+                                            //       allocationId: _data[index].taskAllocationId!,
+                                            //     ),
+                                            //   ),
+                                            // );
+                                          },
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                            child: Container(
+                                              alignment: Alignment.centerRight,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(8.r),
+                                                color: AppColors.rejectButtonColor,
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 15.w,
+                                                  vertical: 6.h,
+                                                ),
+                                                child: Text(
+                                                  MydashboardScreenConstants.REJECT.tr(),
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontSize: 10.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: AppColors.rejectGreyTextColor,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            // Navigator.of(context).push(
+                                            //   MaterialPageRoute(
+                                            //     builder: (context) => const JanitorList(),
+                                            //   ),
+                                            // );
+                                            _dashboardBloc.add(UpdateStatus(id: _data[index].taskAllocationId ?? '', status: "2"));
+                                          },
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(8.r),
+                                                color: AppColors.acceptButtonColor,
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 15.w,
+                                                  vertical: 6.h,
+                                                ),
+                                                child: Text(
+                                                  MydashboardScreenConstants.ACCEPT.tr(),
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontSize: 10.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: AppColors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                  if (_data[index].status == "Accepted") ...[
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        InkWell(
+                                          onTap: () async {
+                                            checkGps();
+                                            setState(() {
+                                              facility_lattitude = _data[index].lat;
+                                              facility_longitude = _data[index].lng;
+                                            });
+                                            await MapUtils.openMap(_data[index].lat ?? 0.0, _data[index].lng ?? 0.0);
+                                            // _url = Uri.parse(
+                                            //     'https://www.google.com/maps/dir/${latitude},${longitude}/${_data[index].lat},${_data[index].lng}');
+                                            // await _launchUrl();
+                                          },
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                            child: Container(
+                                              alignment: Alignment.centerRight,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(8.r),
+                                                color: AppColors.buttonColor,
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 15.w,
+                                                  vertical: 6.h,
+                                                ),
+                                                child: Text(
+                                                  MydashboardScreenConstants.DIRECTION.tr(),
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontSize: 10.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: AppColors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: () async {
+                                            await Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) => SelfieScreen(
+                                                  templateId: _data[index].templateId ?? 0,
+                                                  allocationId: _data[index].taskAllocationId ?? '',
+                                                ),
+                                              ),
+                                            );
+                                            print("afasdfasfsadf" + _data[index].taskAllocationId.toString());
+                                            _dashboardBloc.add(GetTaskTamplates());
+                                          },
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(8.r),
+                                                color: AppColors.acceptButtonColor,
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 15.w,
+                                                  vertical: 6.h,
+                                                ),
+                                                child: Text(
+                                                  MydashboardScreenConstants.START.tr(),
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontSize: 10.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: AppColors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                  if (_data[index].status == "Re-open") ...[
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        InkWell(
+                                          onTap: () async {
+                                            checkGps();
+                                            await MapUtils.openMap(_data[index].lat ?? 0.0, _data[index].lng ?? 0.0);
+                                            // _url = Uri.parse(
+                                            //     'https://www.google.com/maps/dir/${latitude},${longitude}/${_data[index].lat},${_data[index].lng}');
+                                            // await _launchUrl();
+                                          },
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                            child: Container(
+                                              alignment: Alignment.centerRight,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(8.r),
+                                                color: AppColors.buttonColor,
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 15.w,
+                                                  vertical: 6.h,
+                                                ),
+                                                child: Text(
+                                                  MydashboardScreenConstants.DIRECTION.tr(),
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontSize: 10.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: AppColors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: () async {
+                                            await Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) => SelfieScreen(
+                                                  templateId: _data[index].templateId!,
+                                                  allocationId: _data[index].taskAllocationId ?? '',
+                                                ),
+                                              ),
+                                            );
+                                            print("afasdfasfsadf" + _data[index].taskAllocationId.toString());
+                                            _dashboardBloc.add(const GetTaskTamplates());
+                                          },
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(8.r),
+                                                color: AppColors.acceptButtonColor,
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 15.w,
+                                                  vertical: 6.h,
+                                                ),
+                                                child: Text(
+                                                  MydashboardScreenConstants.START.tr(),
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontSize: 10.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: AppColors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   Future<void> _launchUrl() async {
