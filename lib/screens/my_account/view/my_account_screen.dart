@@ -21,7 +21,8 @@ class SupervisorAccountScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<SupervisorAccountScreen> createState() => SupervisorAccountScreenState();
+  State<SupervisorAccountScreen> createState() =>
+      SupervisorAccountScreenState();
 }
 
 class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
@@ -75,11 +76,13 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
                   decoration: const BoxDecoration(
                     color: AppColors.greyBgColor,
                     border: Border(
-                      bottom: BorderSide(width: 1.0, color: AppColors.greyBorder),
+                      bottom:
+                          BorderSide(width: 1.0, color: AppColors.greyBorder),
                     ),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
                     child: Row(
                       children: [
                         Icon(
@@ -114,11 +117,13 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
                   decoration: const BoxDecoration(
                     color: AppColors.greyBgColor,
                     border: Border(
-                      bottom: BorderSide(width: 1.0, color: AppColors.greyBorder),
+                      bottom:
+                          BorderSide(width: 1.0, color: AppColors.greyBorder),
                     ),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
                     child: Row(
                       children: [
                         Icon(
@@ -148,14 +153,18 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
               ),
               GestureDetector(
                 onTap: () async {
-                  EasyLoading.show(status: MyJanitorProfileScreenConstants.LOGGING_OUT_TOAST.tr());
+                  EasyLoading.show(
+                      status: MyJanitorProfileScreenConstants.LOGGING_OUT_TOAST
+                          .tr());
                   var storage = GetIt.instance<GlobalStorage>();
                   storage.removeToken();
                   storage.removeLocation();
                   storage.removeTime();
                   await Future.delayed(const Duration(seconds: 3));
                   EasyLoading.dismiss();
-                  EasyLoading.showToast(MyJanitorProfileScreenConstants.LOG_OUT_SUCCESS_TOAST.tr());
+                  EasyLoading.showToast(MyJanitorProfileScreenConstants
+                      .LOG_OUT_SUCCESS_TOAST
+                      .tr());
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => LoginScreen()),

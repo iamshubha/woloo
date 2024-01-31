@@ -1,8 +1,10 @@
 import 'package:Woloo_Smart_hygiene/firebase_options.dart';
 import 'package:Woloo_Smart_hygiene/injection_container.dart' as di;
+import 'package:Woloo_Smart_hygiene/messaging.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,8 +16,8 @@ import 'app.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseMessaging.onBackgroundMessage(backgroundNotificationHandler);
   await GetStorage.init();
   await di.init();
 

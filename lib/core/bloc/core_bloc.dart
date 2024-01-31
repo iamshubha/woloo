@@ -37,7 +37,10 @@ class CoreBloc extends Bloc<CoreEvent, CoreState> {
   FutureOr<void> _mapUpdateTokenToState(UpdateToken event, Emitter<CoreState> emit) async {
     try {
       emit(UpdateTokenLoading());
-      var response = await coreService.updateFCMToken(token: event.token.toString());
+      var token = globalStorage.getToken();
+      if (token.isNotEmpty) {
+        await coreService.updateFCMToken(token: event.token.toString());
+      }
       emit(UpdateTokenSuccess());
     } catch (e) {
       emit(UpdateTokenError(error: e.toString()));

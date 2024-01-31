@@ -59,7 +59,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDyJDAP9AhZDNDvFxB82N816xjWG9Lmji0',
-    appId: '1:620752914415:android:35abfc245772eea8e4581a',
+    appId: '1:620752914415:android:3ab02444dccc58f0e4581a',
     messagingSenderId: '620752914415',
     projectId: 'woloo-44ef1',
     databaseURL: 'https://woloo-44ef1.firebaseio.com',
@@ -68,13 +68,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAnqhrBVa89ey6O8b6xGvlx2UOmD6Np6Go',
-    appId: '1:620752914415:ios:4e99d3a71ec83891e4581a',
+    appId: '1:620752914415:ios:4a94b347e3b90c27e4581a',
     messagingSenderId: '620752914415',
     projectId: 'woloo-44ef1',
     databaseURL: 'https://woloo-44ef1.firebaseio.com',
     storageBucket: 'woloo-44ef1.appspot.com',
     androidClientId: '620752914415-4b90lfeprnceaoflhtiustd22l1j65vo.apps.googleusercontent.com',
-    iosClientId: '620752914415-2o0c53snsk32s05812u5ebv09mc4fob1.apps.googleusercontent.com',
-    iosBundleId: 'com.woloo.janitor',
+    iosBundleId: 'com.woloo.whms',
   );
 }

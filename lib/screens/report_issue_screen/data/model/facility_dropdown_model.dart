@@ -3,8 +3,9 @@
 
 class FacilityDropdownModel {
   FacilityDropdownModel({
-      this.id, 
-      this.facilityName,});
+    this.id,
+    this.facilityName,
+  });
 
   FacilityDropdownModel.fromJson(dynamic json) {
     id = json['id'];
@@ -19,5 +20,4 @@ class FacilityDropdownModel {
     map['facility_name'] = facilityName;
     return map;
   }
-
 }

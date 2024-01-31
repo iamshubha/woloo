@@ -36,7 +36,11 @@ class LoginPageState extends State<LoginScreen> {
   GlobalStorage globalStorage = GetIt.instance();
   int? _selectedLanguage;
   final List<String> _languages = ["English", "हिंदी", "मराठी"];
-  final List<Locale> _locales = const [Locale('en', 'US'), Locale('hi', 'IN'), Locale('mr', 'IN')];
+  final List<Locale> _locales = const [
+    Locale('en', 'US'),
+    Locale('hi', 'IN'),
+    Locale('mr', 'IN')
+  ];
 
   @override
   void initState() {
@@ -101,7 +105,8 @@ class LoginPageState extends State<LoginScreen> {
                       counterText: "",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.r),
-                        borderSide: const BorderSide(color: AppColors.greyBoxBorder),
+                        borderSide:
+                            const BorderSide(color: AppColors.greyBoxBorder),
                       ),
                       hintText: MyLoginConstants.MOBILE_NO.tr(),
                       hintStyle: TextStyle(
@@ -156,10 +161,12 @@ class LoginPageState extends State<LoginScreen> {
                 builder: (context, state) {
                   return GestureDetector(
                     onTap: () async {
-                      bool isValid = _loginFormKey.currentState?.validate() ?? false;
+                      bool isValid =
+                          _loginFormKey.currentState?.validate() ?? false;
                       if (!isValid) return;
 
-                      globalStorage.saveMobileNumber(accessMobileNumber: _controller.text ?? '');
+                      globalStorage.saveMobileNumber(
+                          accessMobileNumber: _controller.text ?? '');
                       if (_loginFormKey.currentState?.validate() ?? false) {
                         loginBloc.add(SendOTP(mobileNumber: _controller.text));
                       }
@@ -227,7 +234,8 @@ class LoginPageState extends State<LoginScreen> {
                       },
                     );
                   },
-                  separatorBuilder: (context, index) => const Divider(height: 0),
+                  separatorBuilder: (context, index) =>
+                      const Divider(height: 0),
                 ),
               ),
             ],

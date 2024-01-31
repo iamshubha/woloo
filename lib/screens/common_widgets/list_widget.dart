@@ -27,7 +27,16 @@ class ListWidget extends StatefulWidget {
 
   List<bool> checkList;
 
-  ListWidget({super.key, required this.controller, required this.onTapItem, required this.janitorId, this.isCheckedSelectAll = false, required this.onChecked, required this.onSetData, required this.checkList, this.clusterId});
+  ListWidget(
+      {super.key,
+      required this.controller,
+      required this.onTapItem,
+      required this.janitorId,
+      this.isCheckedSelectAll = false,
+      required this.onChecked,
+      required this.onSetData,
+      required this.checkList,
+      this.clusterId});
 
   @override
   State<ListWidget> createState() => _ListWidgetState();
@@ -52,7 +61,13 @@ class _ListWidgetState extends State<ListWidget> {
           return;
         }
 
-        _search = _data.where((element) => element.facilityName?.toLowerCase().contains(widget.controller.text.toLowerCase()) ?? false).toList();
+        _search = _data
+            .where((element) =>
+                element.facilityName
+                    ?.toLowerCase()
+                    .contains(widget.controller.text.toLowerCase()) ??
+                false)
+            .toList();
       });
     });
 
@@ -77,7 +92,8 @@ class _ListWidgetState extends State<ListWidget> {
       },
       builder: (context, state) {
         if (state is FacilityListLoading && _search.isEmpty) {
-          EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
+          EasyLoading.show(
+              status: MydashboardScreenConstants.LOADING_TOAST.tr());
         }
 
         if (state is FacilityListError) {
@@ -95,7 +111,8 @@ class _ListWidgetState extends State<ListWidget> {
             return Future.delayed(
               Duration(seconds: 1),
               () {
-                _facilityListBloc.add(GetAllFacility(janitorId: widget.janitorId ?? ''));
+                _facilityListBloc
+                    .add(GetAllFacility(janitorId: widget.janitorId ?? ''));
               },
             );
           },
@@ -118,7 +135,8 @@ class _ListWidgetState extends State<ListWidget> {
                     try {
                       setState(() {
                         widget.checkList[index] = !widget.checkList[index];
-                        widget.onChecked(widget.checkList[index], _search[index], _data);
+                        widget.onChecked(
+                            widget.checkList[index], _search[index], _data);
                       });
                     } catch (e) {
                       print("onTapppppp" + e.toString());
@@ -136,7 +154,9 @@ class _ListWidgetState extends State<ListWidget> {
                       color: AppColors.white,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color: widget.checkList[index] ? AppColors.buttonColor : AppColors.containerBorder,
+                        color: widget.checkList[index]
+                            ? AppColors.buttonColor
+                            : AppColors.containerBorder,
                         width: widget.checkList[index] ? 2.w : 1.w,
                       ),
                     ),
@@ -149,7 +169,8 @@ class _ListWidgetState extends State<ListWidget> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Padding(
@@ -159,8 +180,10 @@ class _ListWidgetState extends State<ListWidget> {
                                     ),
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        color: getColorByRequestType(_search[index].requestType ?? ''),
-                                        borderRadius: BorderRadius.circular(10.r),
+                                        color: getColorByRequestType(
+                                            _search[index].requestType ?? ''),
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
                                       ),
                                       child: Padding(
                                         padding: EdgeInsets.symmetric(
@@ -168,7 +191,8 @@ class _ListWidgetState extends State<ListWidget> {
                                           horizontal: 20.w,
                                         ),
                                         child: Text(
-                                          (_search[index].requestType ?? '').tr(),
+                                          (_search[index].requestType ?? '')
+                                              .tr(),
                                           style: TextStyle(
                                             color: AppColors.black,
                                             fontSize: 14.sp,
@@ -181,7 +205,8 @@ class _ListWidgetState extends State<ListWidget> {
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Padding(
                                         padding: EdgeInsets.symmetric(
@@ -202,7 +227,8 @@ class _ListWidgetState extends State<ListWidget> {
                                 ],
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Expanded(
@@ -226,10 +252,12 @@ class _ListWidgetState extends State<ListWidget> {
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 5.w, vertical: 5.h),
                                         child: const Icon(
                                           Icons.access_time_filled,
                                           size: 20,
@@ -237,7 +265,8 @@ class _ListWidgetState extends State<ListWidget> {
                                         ),
                                       ),
                                       Text(
-                                        "${_search[index].estimatedTime.toString()} ${MyFacilityListConstants.MIN.tr()}" ?? '',
+                                        "${_search[index].estimatedTime.toString()} ${MyFacilityListConstants.MIN.tr()}" ??
+                                            '',
                                         style: TextStyle(
                                           color: AppColors.ListTitleColor,
                                           fontSize: 10.sp,
@@ -292,14 +321,19 @@ class _ListWidgetState extends State<ListWidget> {
                                 ),
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
-                                      Icon(Icons.person, color: AppColors.black, size: 15.sp, weight: 0.5),
+                                      Icon(Icons.person,
+                                          color: AppColors.black,
+                                          size: 15.sp,
+                                          weight: 0.5),
                                       Padding(
                                         padding: EdgeInsets.symmetric(
                                           horizontal: 5.w,
@@ -316,7 +350,12 @@ class _ListWidgetState extends State<ListWidget> {
                                       ),
                                     ],
                                   ),
-                                  widget.checkList[index] ? Icon(Icons.check_circle, color: AppColors.acceptButtonColor, size: 20.sp, weight: 0.5) : Container(),
+                                  widget.checkList[index]
+                                      ? Icon(Icons.check_circle,
+                                          color: AppColors.acceptButtonColor,
+                                          size: 20.sp,
+                                          weight: 0.5)
+                                      : Container(),
                                 ],
                               ),
                             ],

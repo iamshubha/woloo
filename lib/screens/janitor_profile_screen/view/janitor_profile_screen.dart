@@ -72,7 +72,8 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AttendanceHistoryScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => AttendanceHistoryScreen()),
                     // (route) => false,
                   );
                 },
@@ -80,11 +81,13 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                   height: 60.h,
                   decoration: BoxDecoration(
                     border: Border(
-                      top: BorderSide(width: 1.0.w, color: AppColors.greyBorderColor),
+                      top: BorderSide(
+                          width: 1.0.w, color: AppColors.greyBorderColor),
                     ),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                     child: Row(
                       children: [
                         Image.asset(
@@ -97,7 +100,8 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                             padding: EdgeInsets.symmetric(horizontal: 20.w),
                             child: Text(
                               textAlign: TextAlign.start,
-                              MyJanitorProfileScreenConstants.ATTENDANCE_HISTORY.tr(),
+                              MyJanitorProfileScreenConstants.ATTENDANCE_HISTORY
+                                  .tr(),
                               style: TextStyle(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 16.sp,
@@ -121,14 +125,18 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
               ),
               GestureDetector(
                 onTap: () async {
-                  EasyLoading.show(status: MyJanitorProfileScreenConstants.LOGGING_OUT_TOAST.tr());
+                  EasyLoading.show(
+                      status: MyJanitorProfileScreenConstants.LOGGING_OUT_TOAST
+                          .tr());
                   var storage = GetIt.instance<GlobalStorage>();
                   storage.removeToken();
                   storage.removeLocation();
                   storage.removeTime();
                   await Future.delayed(const Duration(seconds: 3));
                   EasyLoading.dismiss();
-                  EasyLoading.showToast(MyJanitorProfileScreenConstants.LOG_OUT_SUCCESS_TOAST.tr());
+                  EasyLoading.showToast(MyJanitorProfileScreenConstants
+                      .LOG_OUT_SUCCESS_TOAST
+                      .tr());
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => LoginScreen()),
@@ -139,12 +147,15 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                   height: 60.h,
                   decoration: BoxDecoration(
                     border: Border(
-                      top: BorderSide(width: 1.0.w, color: AppColors.greyBorderColor),
-                      bottom: BorderSide(width: 1.0.w, color: AppColors.greyBorderColor),
+                      top: BorderSide(
+                          width: 1.0.w, color: AppColors.greyBorderColor),
+                      bottom: BorderSide(
+                          width: 1.0.w, color: AppColors.greyBorderColor),
                     ),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                     child: Row(
                       children: [
                         Image.asset(

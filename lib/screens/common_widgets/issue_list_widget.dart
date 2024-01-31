@@ -60,7 +60,8 @@ class _IssueListWidgetState extends State<IssueListWidget> {
       },
       builder: (context, state) {
         if (state is IssueListLoading && _data.isEmpty) {
-          EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
+          EasyLoading.show(
+              status: MydashboardScreenConstants.LOADING_TOAST.tr());
         }
 
         if (state is IssueListError) {
@@ -109,7 +110,9 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                       horizontal: 20.w,
                     ),
                     decoration: BoxDecoration(
-                      color: selectedCard == index ? AppColors.containerColor : AppColors.white,
+                      color: selectedCard == index
+                          ? AppColors.containerColor
+                          : AppColors.white,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
                         color: AppColors.containerBorder,
@@ -122,13 +125,17 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                           child: Row(
                             children: [
                               Padding(
-                                padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 5.w),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 10.h, horizontal: 5.w),
                                 child: Container(
                                   height: 62.h,
                                   width: 62.w,
-                                  decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.darkGreyColor),
+                                  decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: AppColors.darkGreyColor),
                                   child: Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 8.w, vertical: 10.h),
                                     child: Image.asset(
                                       AppImages.bed_img,
                                       height: 39.h,
@@ -191,7 +198,9 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                                     child: Text(
                                       (_data[index].status ?? '').tr(),
                                       style: TextStyle(
-                                        color: pending ? AppColors.redText : AppColors.greenText,
+                                        color: pending
+                                            ? AppColors.redText
+                                            : AppColors.greenText,
                                         fontSize: 16.sp,
                                         fontWeight: FontWeight.w500,
                                       ),
