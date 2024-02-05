@@ -9,8 +9,7 @@ class DashboardService {
   final DioClient dio;
   const DashboardService({required this.dio});
 
-  Future<AttendanceModel> markAttendance(
-      {required String type, required List<double> locations}) async {
+  Future<AttendanceModel> markAttendance({required String type, required List<double> locations}) async {
     try {
       var response = await dio.post(
         APIConstants.ATTENDANCE,
@@ -45,8 +44,7 @@ class DashboardService {
     }
   }
 
-  Future<String> updateStatus(
-      {required String id, required String status}) async {
+  Future<String> updateStatus({required String id, required String status}) async {
     try {
       var response = await dio.post(
         APIConstants.UPDATE_STATUS,
@@ -57,7 +55,7 @@ class DashboardService {
         options: Options(extra: {"auth": true}),
       );
 
-      return response['results'].toString();
+      return response['results']?.toString() ?? '';
     } catch (e) {
       rethrow;
     }

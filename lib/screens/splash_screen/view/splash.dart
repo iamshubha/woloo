@@ -9,6 +9,7 @@ import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
+import 'package:dio_log/dio_log.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     loadApp();
+    showDebugBtn(context);
   }
 
   loadApp() async {

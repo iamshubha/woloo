@@ -11,8 +11,8 @@ class ItemModel {
   }
 
   ItemModel.fromJson(dynamic json) {
-    _label = json['label'].toString();
-    _value = int.tryParse(json['value'].toString());
+    _label = json['label']?.toString();
+    _value = int.tryParse(json['value']?.toString() ?? '0');
   }
 
   String? _label;

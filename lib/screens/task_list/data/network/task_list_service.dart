@@ -17,8 +17,8 @@ class TaskListService {
           "id": id,
         },
       );
-      print(response['results'].toString() == '[]');
-      if (response['results'].toString() == '[]') {
+      print(response['results']?.toString() == '[]');
+      if (response['results']?.toString() == '[]') {
         return TaskListModel(templateId: id.toString(), tasks: []);
       }
       return TaskListModel.fromJson(response['results']);
@@ -34,14 +34,13 @@ class TaskListService {
         options: Options(extra: {"auth": true}),
         data: createTaskModel.toJson(),
       );
-      return response['results'].toString();
+      return response['results']?.toString() ?? '';
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<String> updateStatus(
-      {required String id, required String status}) async {
+  Future<String> updateStatus({required String id, required String status}) async {
     try {
       var response = await dio.post(
         APIConstants.UPDATE_STATUS,
@@ -52,7 +51,7 @@ class TaskListService {
         options: Options(extra: {"auth": true}),
       );
 
-      return response['results'].toString();
+      return response['results']?.toString() ?? '';
     } catch (e) {
       rethrow;
     }

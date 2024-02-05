@@ -8,8 +8,7 @@ class SubmittedTaskService {
 
   const SubmittedTaskService({required this.dio});
 
-  Future<SubmittedTaskModel> getAllSubmittedTasks(
-      {required String allocationId}) async {
+  Future<SubmittedTaskModel> getAllSubmittedTasks({required String allocationId}) async {
     try {
       var response = await dio.get(
         APIConstants.GET_ALL_SUBMITTED_TASK,
@@ -36,7 +35,7 @@ class SubmittedTaskService {
         options: Options(extra: {"auth": true}),
       );
 
-      return response['results'].toString();
+      return response['results']?.toString() ?? '';
     } catch (e) {
       rethrow;
     }

@@ -14,11 +14,11 @@ class AttendanceHistoryModel {
   });
 
   AttendanceHistoryModel.fromJson(dynamic json) {
-    checkIn = json['check_in'].toString();
-    checkOut = json['check_out'].toString();
-    dayOfWeek = json['day_of_week'].toString();
-    date = json['date'].toString();
-    attendance = json['attendance'].toString();
+    checkIn = json['check_in']?.toString();
+    checkOut = json['check_out']?.toString();
+    dayOfWeek = json['day_of_week']?.toString();
+    date = json['date']?.toString();
+    attendance = json['attendance']?.toString();
   }
   String? checkIn;
   String? checkOut;

@@ -24,12 +24,10 @@ class SupervisorDashboardListWidget extends StatefulWidget {
   });
 
   @override
-  State<SupervisorDashboardListWidget> createState() =>
-      _SupervisorDashboardListWidgetState();
+  State<SupervisorDashboardListWidget> createState() => _SupervisorDashboardListWidgetState();
 }
 
-class _SupervisorDashboardListWidgetState
-    extends State<SupervisorDashboardListWidget> {
+class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListWidget> {
   int selectedCard = -1;
   late SupervisorDashboardBloc _supervisorDashboardBloc;
   List<SupervisorModelDashboard> _data = [];
@@ -40,7 +38,7 @@ class _SupervisorDashboardListWidgetState
 
   @override
   void initState() {
-    _supervisorDashboardBloc = SupervisorDashboardBloc();
+    _supervisorDashboardBloc = GetIt.instance<SupervisorDashboardBloc>();
     supervisorId = globalStorage.getId();
     _supervisorDashboardBloc.add(GetSupervisorDashboardData());
     super.initState();
@@ -75,8 +73,7 @@ class _SupervisorDashboardListWidgetState
       },
       builder: (context, state) {
         if (state is SupervisorDashboardLoading && _data.isEmpty) {
-          EasyLoading.show(
-              status: MydashboardScreenConstants.LOADING_TOAST.tr());
+          EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
         }
 
         if (state is SupervisorDashboardError) {
@@ -93,8 +90,7 @@ class _SupervisorDashboardListWidgetState
           return const EmptyListWidget();
         }
         if (state is SupervisorUpdateStatusLoading) {
-          EasyLoading.show(
-              status: MydashboardScreenConstants.LOADING_TOAST.tr());
+          EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
         }
 
         if (state is SupervisorUpdateStatusError) {
@@ -171,14 +167,12 @@ class _SupervisorDashboardListWidgetState
                             children: [
                               Expanded(
                                 child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         Icon(
                                           Icons.calendar_month_outlined,
@@ -210,8 +204,7 @@ class _SupervisorDashboardListWidgetState
                                             vertical: 1.h,
                                           ),
                                           child: Text(
-                                            "${_data[index].startTime} - ${_data[index].endTime}" ??
-                                                '',
+                                            "${_data[index].startTime} - ${_data[index].endTime}" ?? '',
                                             style: TextStyle(
                                               color: AppColors.containerBorder,
                                               fontSize: 12.sp,
@@ -222,8 +215,7 @@ class _SupervisorDashboardListWidgetState
                                       ],
                                     ),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Padding(
                                           padding: EdgeInsets.symmetric(
@@ -232,11 +224,8 @@ class _SupervisorDashboardListWidgetState
                                           ),
                                           child: Container(
                                             decoration: BoxDecoration(
-                                              color: getColorByRequestType(
-                                                  _data[index].requestType ??
-                                                      ''),
-                                              borderRadius:
-                                                  BorderRadius.circular(10.r),
+                                              color: getColorByRequestType(_data[index].requestType ?? ''),
+                                              borderRadius: BorderRadius.circular(10.r),
                                             ),
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(
@@ -244,15 +233,9 @@ class _SupervisorDashboardListWidgetState
                                                 horizontal: 20.w,
                                               ),
                                               child: Text(
-                                                _data[index].requestType ==
-                                                        "Customer Request"
-                                                    ? "Customer"
-                                                    : _data[index]
-                                                            .requestType ??
-                                                        '',
+                                                _data[index].requestType == "Customer Request" ? "Customer" : _data[index].requestType ?? '',
                                                 style: TextStyle(
-                                                  color:
-                                                      AppColors.containerBorder,
+                                                  color: AppColors.containerBorder,
                                                   fontSize: 14.sp,
                                                   fontWeight: FontWeight.w600,
                                                   letterSpacing: 0.8,
@@ -269,8 +252,7 @@ class _SupervisorDashboardListWidgetState
                                           child: Text(
                                             (_data[index].status ?? '').tr(),
                                             style: TextStyle(
-                                              color: getColorByStatus(
-                                                  _data[index].status ?? ''),
+                                              color: getColorByStatus(_data[index].status ?? ''),
                                               fontSize: 12.sp,
                                               fontWeight: FontWeight.w600,
                                             ),
@@ -279,10 +261,8 @@ class _SupervisorDashboardListWidgetState
                                       ],
                                     ),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Expanded(
                                           child: Padding(
@@ -296,8 +276,7 @@ class _SupervisorDashboardListWidgetState
                                               softWrap: false,
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
-                                                color:
-                                                    AppColors.containerBorder,
+                                                color: AppColors.containerBorder,
                                                 fontSize: 13.sp,
                                                 fontWeight: FontWeight.w600,
                                                 letterSpacing: 0.8,
@@ -306,27 +285,21 @@ class _SupervisorDashboardListWidgetState
                                           ),
                                         ),
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 5.w,
-                                                  vertical: 5.h),
+                                              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
                                               child: const Icon(
                                                 Icons.access_time_filled,
                                                 size: 20,
-                                                color:
-                                                    AppColors.containerBorder,
+                                                color: AppColors.containerBorder,
                                               ),
                                             ),
                                             Text(
                                               " ${_data[index].estimatedTime ?? ''}",
                                               style: TextStyle(
-                                                color:
-                                                    AppColors.containerBorder,
+                                                color: AppColors.containerBorder,
                                                 fontSize: 10.sp,
                                                 fontWeight: FontWeight.w400,
                                               ),
@@ -379,10 +352,8 @@ class _SupervisorDashboardListWidgetState
                                       ),
                                     ),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         Padding(
                                           padding: EdgeInsets.symmetric(
@@ -392,8 +363,7 @@ class _SupervisorDashboardListWidgetState
                                           child: Text(
                                             "${MydashboardScreenConstants.TOTAL_TASK.tr()} : ${_data[index].totalTasks ?? ''}",
                                             style: TextStyle(
-                                              color:
-                                                  AppColors.disabledGreenColor,
+                                              color: AppColors.disabledGreenColor,
                                               fontSize: 14.sp,
                                               fontWeight: FontWeight.w600,
                                             ),
@@ -416,21 +386,14 @@ class _SupervisorDashboardListWidgetState
                                       ],
                                     ),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
-                                            Icon(Icons.person,
-                                                color: AppColors.black,
-                                                size: 15.sp,
-                                                weight: 0.5),
+                                            Icon(Icons.person, color: AppColors.black, size: 15.sp, weight: 0.5),
                                             Padding(
                                               padding: EdgeInsets.symmetric(
                                                 horizontal: 5.w,
@@ -439,8 +402,7 @@ class _SupervisorDashboardListWidgetState
                                               child: Text(
                                                 _data[index].janitorName ?? '',
                                                 style: TextStyle(
-                                                  color:
-                                                      AppColors.containerBorder,
+                                                  color: AppColors.containerBorder,
                                                   fontSize: 12.sp,
                                                   fontWeight: FontWeight.w400,
                                                 ),
@@ -477,14 +439,12 @@ class _SupervisorDashboardListWidgetState
                             children: [
                               Expanded(
                                 child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         Icon(
                                           Icons.calendar_month_outlined,
@@ -516,8 +476,7 @@ class _SupervisorDashboardListWidgetState
                                             vertical: 1.h,
                                           ),
                                           child: Text(
-                                            "${_data[index].startTime} - ${_data[index].endTime}" ??
-                                                '',
+                                            "${_data[index].startTime} - ${_data[index].endTime}" ?? '',
                                             style: TextStyle(
                                               color: AppColors.timeSlotColor,
                                               fontSize: 12.sp,
@@ -528,8 +487,7 @@ class _SupervisorDashboardListWidgetState
                                       ],
                                     ),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Padding(
                                           padding: EdgeInsets.symmetric(
@@ -538,11 +496,8 @@ class _SupervisorDashboardListWidgetState
                                           ),
                                           child: Container(
                                             decoration: BoxDecoration(
-                                              color: getColorByRequestType(
-                                                  _data[index].requestType ??
-                                                      ''),
-                                              borderRadius:
-                                                  BorderRadius.circular(10.r),
+                                              color: getColorByRequestType(_data[index].requestType ?? ''),
+                                              borderRadius: BorderRadius.circular(10.r),
                                             ),
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(
@@ -550,12 +505,7 @@ class _SupervisorDashboardListWidgetState
                                                 horizontal: 20.w,
                                               ),
                                               child: Text(
-                                                _data[index].requestType ==
-                                                        "Customer Request"
-                                                    ? "Customer"
-                                                    : _data[index]
-                                                            .requestType ??
-                                                        '',
+                                                _data[index].requestType == "Customer Request" ? "Customer" : _data[index].requestType ?? '',
                                                 style: TextStyle(
                                                   color: AppColors.black,
                                                   fontSize: 14.sp,
@@ -574,8 +524,7 @@ class _SupervisorDashboardListWidgetState
                                           child: Text(
                                             (_data[index].status ?? '').tr(),
                                             style: TextStyle(
-                                              color: getColorByStatus(
-                                                  _data[index].status ?? ''),
+                                              color: getColorByStatus(_data[index].status ?? ''),
                                               fontSize: 12.sp,
                                               fontWeight: FontWeight.w600,
                                             ),
@@ -584,10 +533,8 @@ class _SupervisorDashboardListWidgetState
                                       ],
                                     ),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Expanded(
                                           child: Padding(
@@ -610,15 +557,11 @@ class _SupervisorDashboardListWidgetState
                                           ),
                                         ),
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 5.w,
-                                                  vertical: 5.h),
+                                              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
                                               child: const Icon(
                                                 Icons.access_time_filled,
                                                 size: 20,
@@ -626,10 +569,7 @@ class _SupervisorDashboardListWidgetState
                                               ),
                                             ),
                                             Text(
-                                              _data[index]
-                                                      .estimatedTime
-                                                      .toString() ??
-                                                  '',
+                                              _data[index].estimatedTime.toString() ?? '',
                                               style: TextStyle(
                                                 color: AppColors.ListTitleColor,
                                                 fontSize: 10.sp,
@@ -684,10 +624,8 @@ class _SupervisorDashboardListWidgetState
                                       ),
                                     ),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         Padding(
                                           padding: EdgeInsets.symmetric(
@@ -720,21 +658,14 @@ class _SupervisorDashboardListWidgetState
                                       ],
                                     ),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
-                                            Icon(Icons.person,
-                                                color: AppColors.black,
-                                                size: 15.sp,
-                                                weight: 0.5),
+                                            Icon(Icons.person, color: AppColors.black, size: 15.sp, weight: 0.5),
                                             Padding(
                                               padding: EdgeInsets.symmetric(
                                                 horizontal: 5.w,
@@ -743,8 +674,7 @@ class _SupervisorDashboardListWidgetState
                                               child: Text(
                                                 _data[index].janitorName ?? '',
                                                 style: TextStyle(
-                                                  color: AppColors
-                                                      .janitorNameColor,
+                                                  color: AppColors.janitorNameColor,
                                                   fontSize: 12.sp,
                                                   fontWeight: FontWeight.w400,
                                                 ),
@@ -752,28 +682,17 @@ class _SupervisorDashboardListWidgetState
                                             ),
                                           ],
                                         ),
-                                        if (_data[index].status ==
-                                            "Request for closure")
+                                        if (_data[index].status == "Request for closure")
                                           InkWell(
                                             onTap: () {
-                                              _supervisorDashboardBloc.add(
-                                                  SupervisorUpdateStatus(
-                                                      id: _data[index]
-                                                              .taskAllocationId
-                                                              .toString() ??
-                                                          '',
-                                                      status: 4));
+                                              _supervisorDashboardBloc.add(SupervisorUpdateStatus(id: _data[index].taskAllocationId.toString() ?? '', status: 4));
                                             },
                                             child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 10.w,
-                                                  vertical: 8.h),
+                                              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                                               child: Container(
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.r),
+                                                  borderRadius: BorderRadius.circular(8.r),
                                                   color: AppColors.buttonColor,
                                                 ),
                                                 child: Padding(
@@ -782,14 +701,11 @@ class _SupervisorDashboardListWidgetState
                                                     vertical: 6.h,
                                                   ),
                                                   child: Text(
-                                                    MyTaskDetailsScreenConstants
-                                                        .APPROVE_BUTTON
-                                                        .tr(),
+                                                    MyTaskDetailsScreenConstants.APPROVE_BUTTON.tr(),
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                       fontSize: 10.sp,
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                      fontWeight: FontWeight.w600,
                                                       color: AppColors.black,
                                                     ),
                                                   ),
@@ -797,44 +713,26 @@ class _SupervisorDashboardListWidgetState
                                               ),
                                             ),
                                           ),
-                                        if (_data[index].status == "Pending" &&
-                                                _data[index].requestType ==
-                                                    "IOT" &&
-                                                _data[index].janitorId ==
-                                                    null ||
-                                            _data[index].status == "Pending" &&
-                                                _data[index].requestType ==
-                                                    "Regular" &&
-                                                _data[index].janitorId == null)
+                                        if (_data[index].status == "Pending" && _data[index].requestType == "IOT" && _data[index].janitorId == null || _data[index].status == "Pending" && _data[index].requestType == "Regular" && _data[index].janitorId == null)
                                           InkWell(
                                             onTap: () {
                                               Navigator.of(context).push(
                                                 MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      JanitorList(
+                                                  builder: (context) => JanitorList(
                                                     isFromCluster: false,
                                                     isFromDashboard: false,
-                                                    allocationId: [
-                                                      _data[index]
-                                                          .taskAllocationId
-                                                          .toString()
-                                                    ],
-                                                    isFromDashboardAssignment:
-                                                        true,
+                                                    allocationId: [_data[index].taskAllocationId.toString()],
+                                                    isFromDashboardAssignment: true,
                                                   ),
                                                 ),
                                               );
                                             },
                                             child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 10.w,
-                                                  vertical: 8.h),
+                                              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                                               child: Container(
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.r),
+                                                  borderRadius: BorderRadius.circular(8.r),
                                                   color: AppColors.buttonColor,
                                                 ),
                                                 child: Padding(
@@ -843,14 +741,11 @@ class _SupervisorDashboardListWidgetState
                                                     vertical: 6.h,
                                                   ),
                                                   child: Text(
-                                                    MyFacilityListConstants
-                                                        .ASSIGN
-                                                        .tr(),
+                                                    MyFacilityListConstants.ASSIGN.tr(),
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                       fontSize: 10.sp,
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                      fontWeight: FontWeight.w600,
                                                       color: AppColors.black,
                                                     ),
                                                   ),

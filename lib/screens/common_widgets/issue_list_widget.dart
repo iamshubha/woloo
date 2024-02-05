@@ -17,10 +17,12 @@ import 'empty_list_widget.dart';
 import 'error_widget.dart';
 
 class IssueListWidget extends StatefulWidget {
+  final IssueListBloc issueListBloc;
   final Function onTapItem;
 
   const IssueListWidget({
     super.key,
+    required this.issueListBloc,
     required this.onTapItem,
   });
 
@@ -35,11 +37,12 @@ class _IssueListWidgetState extends State<IssueListWidget> {
   late int supervisorId;
 
   GlobalStorage globalStorage = GetIt.instance();
-  IssueListBloc _issueListBloc = IssueListBloc();
+  late IssueListBloc _issueListBloc;
 
   @override
   void initState() {
     supervisorId = globalStorage.getId();
+    _issueListBloc = widget.issueListBloc;
     _issueListBloc.add(GetAllIssues(supervisorId: supervisorId));
     pending = true;
     super.initState();
@@ -60,8 +63,7 @@ class _IssueListWidgetState extends State<IssueListWidget> {
       },
       builder: (context, state) {
         if (state is IssueListLoading && _data.isEmpty) {
-          EasyLoading.show(
-              status: MydashboardScreenConstants.LOADING_TOAST.tr());
+          EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
         }
 
         if (state is IssueListError) {
@@ -110,9 +112,7 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                       horizontal: 20.w,
                     ),
                     decoration: BoxDecoration(
-                      color: selectedCard == index
-                          ? AppColors.containerColor
-                          : AppColors.white,
+                      color: selectedCard == index ? AppColors.containerColor : AppColors.white,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
                         color: AppColors.containerBorder,
@@ -125,17 +125,13 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                           child: Row(
                             children: [
                               Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 10.h, horizontal: 5.w),
+                                padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 5.w),
                                 child: Container(
                                   height: 62.h,
                                   width: 62.w,
-                                  decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: AppColors.darkGreyColor),
+                                  decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.darkGreyColor),
                                   child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 8.w, vertical: 10.h),
+                                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
                                     child: Image.asset(
                                       AppImages.bed_img,
                                       height: 39.h,
@@ -167,12 +163,17 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                                       horizontal: 5.w,
                                       vertical: 2.h,
                                     ),
-                                    child: Text(
-                                      "${MyIssuesListScreenConstants.FACILITY_NAME.tr()} - ${_data[index].facilityName}",
-                                      style: TextStyle(
-                                        color: AppColors.clusterTitleColor,
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w400,
+                                    child: SizedBox(
+                                      width: 200.w,
+                                      child: Text(
+                                        "${MyIssuesListScreenConstants.FACILITY_NAME.tr()} - ${_data[index].facilityName}",
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                          color: AppColors.clusterTitleColor,
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -181,12 +182,17 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                                       horizontal: 5.w,
                                       vertical: 2.h,
                                     ),
-                                    child: Text(
-                                      "${MyIssuesListScreenConstants.JANITOR_NAME.tr()}- ${_data[index].janitorName}",
-                                      style: TextStyle(
-                                        color: AppColors.clusterTitleColor,
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w400,
+                                    child: SizedBox(
+                                      width: 200.w,
+                                      child: Text(
+                                        "${MyIssuesListScreenConstants.JANITOR_NAME.tr()}- ${_data[index].janitorName}",
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                          color: AppColors.clusterTitleColor,
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -198,9 +204,7 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                                     child: Text(
                                       (_data[index].status ?? '').tr(),
                                       style: TextStyle(
-                                        color: pending
-                                            ? AppColors.redText
-                                            : AppColors.greenText,
+                                        color: pending ? AppColors.redText : AppColors.greenText,
                                         fontSize: 16.sp,
                                         fontWeight: FontWeight.w500,
                                       ),

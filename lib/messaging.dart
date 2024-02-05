@@ -1,9 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
+import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
+import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/bloc/issue_list_bloc.dart';
+import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/bloc/issue_list_event.dart';
+import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_bloc.dart';
+import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_event.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get_it/get_it.dart';
 
 class Messaging {
   Future initialize() async {
@@ -20,6 +26,15 @@ class Messaging {
         notificationDetails(),
         payload: jsonEncode(message.data),
       );
+
+      try {
+        int role = GetIt.instance<GlobalStorage>().getRoleId();
+        if (role == 2) {
+          GetIt.instance<SupervisorDashboardBloc>().add(const GetSupervisorDashboardData());
+          int supervisorId = GetIt.instance<GlobalStorage>().getId();
+          GetIt.instance<IssueListBloc>().add(GetAllIssues(supervisorId: supervisorId));
+        }
+      } catch (e) {}
     });
 
     var notificationSettings = InitializationSettings(

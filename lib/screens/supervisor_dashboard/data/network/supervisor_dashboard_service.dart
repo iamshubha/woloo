@@ -37,7 +37,7 @@ class SupervisorDashboardService {
         options: Options(extra: {"auth": true}),
       );
 
-      return response['results'].toString();
+      return response['results']?.toString() ?? '';
     } catch (e) {
       rethrow;
     }
