@@ -22,9 +22,7 @@ class OTPScreen extends StatefulWidget {
   final String? type;
 
   final LoginBloc loginBloc;
-  const OTPScreen(
-      {Key? key, required this.phoneNumber, required this.loginBloc, this.type})
-      : super(key: key);
+  const OTPScreen({Key? key, required this.phoneNumber, required this.loginBloc, this.type}) : super(key: key);
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
@@ -70,8 +68,7 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   getLocation() async {
-    position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     print(position.longitude); //Output: 80.24599079
     print(position.latitude); //Output: 29.6593457
 
@@ -84,9 +81,7 @@ class _OTPScreenState extends State<OTPScreen> {
       //device must move horizontally before an update event is generated;
     );
 
-    StreamSubscription<Position> positionStream =
-        Geolocator.getPositionStream(locationSettings: locationSettings)
-            .listen((Position position) {
+    StreamSubscription<Position> positionStream = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
       print(position.longitude); //Output: 80.24599079
       print(position.latitude); //Output: 29.6593457
 
@@ -98,15 +93,12 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   Future<void> _getAddressFromLatLng(Position position) async {
-    await placemarkFromCoordinates(position.latitude, position.longitude)
-        .then((List<Placemark> placemarks) {
+    await placemarkFromCoordinates(position.latitude, position.longitude).then((List<Placemark> placemarks) {
       Placemark place = placemarks[0];
       setState(() {
-        _currentAddress =
-            '${place.name},${place.street}, ${place.subLocality},${place.subAdministrativeArea}, ${place.administrativeArea},${place.postalCode}';
+        _currentAddress = '${place.name},${place.street}, ${place.subLocality},${place.subAdministrativeArea}, ${place.administrativeArea},${place.postalCode}';
         print("address - $_currentAddress");
-        EasyLoading.showToast(
-            "${MyLoginConstants.LOCATION_DETECTED_TOAST.tr()} : $_currentAddress");
+        EasyLoading.showToast("${MyLoginConstants.LOCATION_DETECTED_TOAST.tr()} : $_currentAddress");
       });
     }).catchError((e) {
       debugPrint(e);
@@ -138,9 +130,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   child: Container(
                     height: 120.h,
                     width: 120.w,
-                    decoration: BoxDecoration(
-                        color: AppColors.greyContainer,
-                        borderRadius: BorderRadius.circular(100)),
+                    decoration: BoxDecoration(color: AppColors.greyContainer, borderRadius: BorderRadius.circular(100)),
                     child: Center(
                       child: Image.asset(
                         AppImages.otp_img,
@@ -173,7 +163,7 @@ class _OTPScreenState extends State<OTPScreen> {
                     children: [
                       RichText(
                         text: TextSpan(
-                          text: MyLoginConstants.ENTER_OTP.tr(),
+                          text: "${MyLoginConstants.ENTER_OTP.tr()}\n",
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.sp,
@@ -235,8 +225,7 @@ class _OTPScreenState extends State<OTPScreen> {
                         roleId = globalStorage.getRoleId();
                         print("screen role id ----- " + roleId.toString());
                       });
-                      widget.loginBloc.add(
-                          UpdateTokenOnVerifyOTP(token: fcmToken.toString()));
+                      widget.loginBloc.add(UpdateTokenOnVerifyOTP(token: fcmToken.toString()));
 
                       EasyLoading.dismiss();
                       if (roleId == 1) {
@@ -278,15 +267,13 @@ class _OTPScreenState extends State<OTPScreen> {
                         widget.loginBloc.add(VerifyOTP(otp: _pin));
                       }
                       if (_pin.isEmpty) {
-                        EasyLoading.showToast(
-                            MyLoginConstants.ENTER_OTP_TOAST.tr());
+                        EasyLoading.showToast(MyLoginConstants.ENTER_OTP_TOAST.tr());
                       }
 
                       print("button pressed");
                     },
                     child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: 10.h, horizontal: 10.w),
+                      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
                       child: ButtonWidget(
                         text: MyLoginConstants.VERIFY_OTP_BTN.tr(),
                       ),

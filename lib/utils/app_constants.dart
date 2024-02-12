@@ -132,6 +132,7 @@ class MyIssuesListScreenConstants {
   static const String REPORT_ISSUE_BUTTON = 'reportIssue';
   static const String FACILITY_NAME = 'facilityName';
   static const String JANITOR_NAME = 'janitorName';
+  static const String DESCRIPTION = 'description';
 }
 
 class MyReportIssueScreenConstants {

@@ -115,8 +115,7 @@ class _DashboardState extends State<Dashboard> {
               onTapCheckIn = true;
               showList = true;
             });
-            String formattedDate =
-                DateFormat('hh:mm:ss  a').format(currentTime);
+            String formattedDate = DateFormat('hh:mm:ss  a').format(currentTime);
             check_in_time = formattedDate;
 
             globalStorage.saveTime(accessTime: check_in_time);
@@ -142,8 +141,7 @@ class _DashboardState extends State<Dashboard> {
               onTapCheckIn = false;
               showList = false;
             });
-            String formattedDate =
-                DateFormat('hh:mm:ss  a').format(currentTime);
+            String formattedDate = DateFormat('hh:mm:ss  a').format(currentTime);
             check_out_time = formattedDate;
             globalStorage.saveTime(accessTime: check_out_time);
             outTime = globalStorage.getTime();
@@ -199,15 +197,13 @@ class _DashboardState extends State<Dashboard> {
                         // );
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => JanitorProfileScreen()),
+                          MaterialPageRoute(builder: (context) => JanitorProfileScreen()),
                         );
                       },
                       child: Column(
                         children: [
                           Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 2.w, vertical: 2.h),
+                            padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),
                             // child: Icon(
                             //   Icons.logout,
                             //   color: AppColors.black,
@@ -303,17 +299,11 @@ class _DashboardState extends State<Dashboard> {
                                         child: Container(
                                           height: 40.h,
                                           width: 40.w,
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: AppColors.greyCircleColor),
+                                          decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.greyCircleColor),
                                           child: Center(
                                             child: Text(
-                                              MydashboardScreenConstants.IN
-                                                  .tr(),
-                                              style: TextStyle(
-                                                  color: AppColors.white,
-                                                  fontSize: 12.sp,
-                                                  fontWeight: FontWeight.w700),
+                                              MydashboardScreenConstants.IN.tr(),
+                                              style: TextStyle(color: AppColors.white, fontSize: 12.sp, fontWeight: FontWeight.w700),
                                             ),
                                           ),
                                         ),
@@ -323,35 +313,20 @@ class _DashboardState extends State<Dashboard> {
                                           await checkGps();
                                           if (!haspermission) return;
 
-                                          var latitude =
-                                              double.tryParse(lat) ?? 0;
-                                          var longitude =
-                                              double.tryParse(long) ?? 0;
-                                          print("lattttt   " +
-                                              latitude.toString());
-                                          print("longggg   " +
-                                              longitude.toString());
-                                          dashboardBloc.add(MarkAttendance(
-                                              type: 'check_in',
-                                              locations: [
-                                                latitude,
-                                                longitude
-                                              ]));
+                                          var latitude = double.tryParse(lat) ?? 0;
+                                          var longitude = double.tryParse(long) ?? 0;
+                                          print("lattttt   " + latitude.toString());
+                                          print("longggg   " + longitude.toString());
+                                          dashboardBloc.add(MarkAttendance(type: 'check_in', locations: [latitude, longitude]));
                                         },
                                         child: Container(
                                           height: 40.h,
                                           width: 40.w,
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color:
-                                                  AppColors.acceptButtonColor),
+                                          decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.acceptButtonColor),
                                           child: Center(
                                             child: Text(
                                               MydashboardScreenConstants.IN,
-                                              style: TextStyle(
-                                                  color: AppColors.white,
-                                                  fontSize: 12.sp,
-                                                  fontWeight: FontWeight.w700),
+                                              style: TextStyle(color: AppColors.white, fontSize: 12.sp, fontWeight: FontWeight.w700),
                                             ),
                                           ),
                                         ),
@@ -360,10 +335,7 @@ class _DashboardState extends State<Dashboard> {
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 5.w,
                                   ),
-                                  child: Container(
-                                      height: 1.0,
-                                      width: 150.w,
-                                      color: AppColors.greyLineColor),
+                                  child: Container(height: 1.0, width: 150.w, color: AppColors.greyLineColor),
                                 ),
                                 !onTapCheckIn
                                     ? GestureDetector(
@@ -378,10 +350,7 @@ class _DashboardState extends State<Dashboard> {
                                           child: Center(
                                             child: Text(
                                               MydashboardScreenConstants.OUT,
-                                              style: TextStyle(
-                                                  color: AppColors.white,
-                                                  fontSize: 12.sp,
-                                                  fontWeight: FontWeight.w700),
+                                              style: TextStyle(color: AppColors.white, fontSize: 12.sp, fontWeight: FontWeight.w700),
                                             ),
                                           ),
                                         ),
@@ -399,12 +368,8 @@ class _DashboardState extends State<Dashboard> {
                                           ),
                                           child: Center(
                                             child: Text(
-                                              MydashboardScreenConstants.OUT
-                                                  .tr(),
-                                              style: TextStyle(
-                                                  color: AppColors.white,
-                                                  fontSize: 12.sp,
-                                                  fontWeight: FontWeight.w700),
+                                              MydashboardScreenConstants.OUT.tr(),
+                                              style: TextStyle(color: AppColors.white, fontSize: 12.sp, fontWeight: FontWeight.w700),
                                             ),
                                           ),
                                         ),
@@ -416,27 +381,19 @@ class _DashboardState extends State<Dashboard> {
                                 horizontal: 10.w,
                               ),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Column(
                                     children: [
                                       Text(
-                                        MydashboardScreenConstants.CHECK_IN
-                                            .tr(),
-                                        style: TextStyle(
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.black),
+                                        MydashboardScreenConstants.CHECK_IN.tr(),
+                                        style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w400, color: Colors.black),
                                       ),
                                       onTapCheckIn
                                           ? Text(
                                               inTime,
-                                              style: TextStyle(
-                                                  fontSize: 8.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.timeColor),
+                                              style: TextStyle(fontSize: 8.sp, fontWeight: FontWeight.w400, color: AppColors.timeColor),
                                             )
                                           : Container(),
                                     ],
@@ -444,20 +401,13 @@ class _DashboardState extends State<Dashboard> {
                                   Column(
                                     children: [
                                       Text(
-                                        MydashboardScreenConstants.CHECK_OUT
-                                            .tr(),
-                                        style: TextStyle(
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.black),
+                                        MydashboardScreenConstants.CHECK_OUT.tr(),
+                                        style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w400, color: Colors.black),
                                       ),
                                       !onTapCheckIn
                                           ? Text(
                                               outTime,
-                                              style: TextStyle(
-                                                  fontSize: 8.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.timeColor),
+                                              style: TextStyle(fontSize: 8.sp, fontWeight: FontWeight.w400, color: AppColors.timeColor),
                                             )
                                           : Container(),
                                     ],
@@ -496,8 +446,7 @@ class _DashboardState extends State<Dashboard> {
                                   width: 100.w,
                                 ),
                                 Text(
-                                  MydashboardScreenConstants.BLANK_LIST_TEXT
-                                      .tr(),
+                                  MydashboardScreenConstants.BLANK_LIST_TEXT.tr(),
                                   maxLines: 2,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
@@ -516,8 +465,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   checkGps() async {
-    EasyLoading.show(
-        status: MydashboardScreenConstants.LOCATION_FETCHING_TOAST.tr());
+    EasyLoading.show(status: MydashboardScreenConstants.LOCATION_FETCHING_TOAST.tr());
     serviceStatus = await Geolocator.isLocationServiceEnabled();
     if (serviceStatus) {
       permission = await Geolocator.checkPermission();
@@ -547,8 +495,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   getLocation() async {
-    position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     print(position.longitude); //Output: 80.24599079
     print(position.latitude); //Output: 29.6593457
 
@@ -560,9 +507,7 @@ class _DashboardState extends State<Dashboard> {
       distanceFilter: 100, //minimum distance (measured in meters) a
     );
 
-    StreamSubscription<Position> positionStream =
-        Geolocator.getPositionStream(locationSettings: locationSettings)
-            .listen((Position position) {
+    StreamSubscription<Position> positionStream = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
       print(position.longitude); //Output: 80.24599079
       print(position.latitude); //Output: 29.6593457
 
@@ -579,12 +524,10 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<void> _getAddressFromLatLng(Position position) async {
-    await placemarkFromCoordinates(position.latitude, position.longitude)
-        .then((List<Placemark> placemarks) {
+    await placemarkFromCoordinates(position.latitude, position.longitude).then((List<Placemark> placemarks) {
       Placemark place = placemarks[0];
       setState(() {
-        _currentAddress =
-            '${place.name},${place.street}, ${place.subLocality},${place.subAdministrativeArea}, ${place.administrativeArea},${place.postalCode}';
+        _currentAddress = '${place.name},${place.street}, ${place.subLocality},${place.subAdministrativeArea}, ${place.administrativeArea},${place.postalCode}';
         print("address - $_currentAddress");
 
         globalStorage.saveLocation(accessLocation: _currentAddress ?? '');
@@ -612,8 +555,7 @@ class _DashboardState extends State<Dashboard> {
             double latitude = double.tryParse(lat) ?? 0;
             double longitude = double.tryParse(long) ?? 0;
 
-            dashboardBloc.add(MarkAttendance(
-                type: 'check_out', locations: [latitude, longitude]));
+            dashboardBloc.add(MarkAttendance(type: 'check_out', locations: [latitude, longitude]));
           },
           onTapCancel: () {
             Navigator.pop(context);

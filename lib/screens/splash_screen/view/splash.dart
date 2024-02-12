@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     loadApp();
-    showDebugBtn(context);
+    //showDebugBtn(context);
   }
 
   loadApp() async {

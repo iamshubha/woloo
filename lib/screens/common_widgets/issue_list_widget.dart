@@ -201,6 +201,25 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                                       horizontal: 5.w,
                                       vertical: 2.h,
                                     ),
+                                    child: SizedBox(
+                                      width: 200.w,
+                                      child: Text(
+                                        "${MyIssuesListScreenConstants.DESCRIPTION.tr()}- ${_data[index].description ?? "-"}",
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                          color: AppColors.clusterTitleColor,
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                      vertical: 2.h,
+                                    ),
                                     child: Text(
                                       (_data[index].status ?? '').tr(),
                                       style: TextStyle(

@@ -86,8 +86,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
       },
       builder: (context, state) {
         if (state is DashboardLoading && _data.isEmpty) {
-          EasyLoading.show(
-              status: MydashboardScreenConstants.LOADING_TOAST.tr());
+          EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
         }
 
         if (state is DashboardError) {
@@ -98,8 +97,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
           return CustomErrorWidget(error: state.error);
         }
         if (state is UpdateStatusLoading) {
-          EasyLoading.show(
-              status: MydashboardScreenConstants.LOADING_TOAST.tr());
+          EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
         }
 
         if (state is GetDashboardDataSuccess && _data.isEmpty) {
@@ -150,14 +148,12 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                           children: [
                             Expanded(
                               child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       Icon(
                                         Icons.calendar_month_outlined,
@@ -171,6 +167,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                         ),
                                         child: Text(
                                           _data[index].date ?? '',
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color: AppColors.containerBorder,
                                             fontSize: 12.sp,
@@ -190,6 +187,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                         ),
                                         child: Text(
                                           "${_data[index].startTime}-${_data[index].endTime}",
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color: AppColors.containerBorder,
                                             fontSize: 12.sp,
@@ -200,8 +198,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                     ],
                                   ),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Padding(
                                         padding: EdgeInsets.symmetric(
@@ -210,10 +207,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                         ),
                                         child: Container(
                                           decoration: BoxDecoration(
-                                            color: getColorByRequestType(
-                                                _data[index].requestType ?? ''),
-                                            borderRadius:
-                                                BorderRadius.circular(10.r),
+                                            color: getColorByRequestType(_data[index].requestType ?? ''),
+                                            borderRadius: BorderRadius.circular(10.r),
                                           ),
                                           child: Padding(
                                             padding: EdgeInsets.symmetric(
@@ -221,11 +216,10 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               horizontal: 20.w,
                                             ),
                                             child: Text(
-                                              (_data[index].requestType ?? '')
-                                                  .tr(),
+                                              (_data[index].requestType ?? '').tr(),
+                                              overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
-                                                color:
-                                                    AppColors.containerBorder,
+                                                color: AppColors.containerBorder,
                                                 fontSize: 14.sp,
                                                 fontWeight: FontWeight.w600,
                                                 letterSpacing: 0.8,
@@ -241,9 +235,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                         ),
                                         child: Text(
                                           (_data[index].status ?? '').tr(),
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
-                                            color: getColorByStatus(
-                                                _data[index].status ?? ''),
+                                            color: getColorByStatus(_data[index].status ?? ''),
                                             fontSize: 12.sp,
                                             fontWeight: FontWeight.w600,
                                           ),
@@ -251,12 +245,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                       ),
                                     ],
                                   ),
-
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Expanded(
                                         child: Padding(
@@ -279,14 +270,11 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                         ),
                                       ),
                                       Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w, vertical: 5.h),
+                                            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
                                             child: const Icon(
                                               Icons.access_time_filled,
                                               size: 20,
@@ -294,9 +282,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             ),
                                           ),
                                           Text(
-                                            _data[index]
-                                                .estimatedTime
-                                                .toString(),
+                                            _data[index].estimatedTime.toString(),
+                                            overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                               color: AppColors.containerBorder,
                                               fontSize: 10.sp,
@@ -315,6 +302,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                     child: Text(
                                       "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${_data[index].description}",
                                       maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         color: AppColors.containerBorder,
                                         fontSize: 12.sp,
@@ -329,6 +317,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                     ),
                                     child: Text(
                                       "${MydashboardScreenConstants.LOCATION.tr()} : ${_data[index].location}",
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         color: AppColors.containerBorder,
                                         fontSize: 12.sp,
@@ -342,7 +331,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                       vertical: 2.h,
                                     ),
                                     child: Text(
-                                      "${MydashboardScreenConstants.BOOTHS.tr()} :${_data[index].booths.toString() ?? ''}",
+                                      "${MydashboardScreenConstants.BOOTHS.tr()} :${_data[index].booths?.toString() ?? ''}",
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         color: AppColors.containerBorder,
                                         fontSize: 12.sp,
@@ -350,13 +340,12 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                       ),
                                     ),
                                   ),
-                                  if ((_data[index].requestType ==
-                                      "Issue")) ...[
+                                  if ((_data[index].requestType == "Issue")) ...[
                                     Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 5.w, vertical: 2.h),
+                                      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
                                       child: Text(
-                                        "${(_data[index].requestType ?? '').tr()} : ${_data[index].issueDescription ?? ''}",
+                                        "${(_data[index].requestType ?? '').tr()} : ${_data[index].issueDescription ?? '-'}",
+                                        overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                           color: AppColors.ListTitleColor,
                                           fontSize: 12.sp,
@@ -367,8 +356,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                   ],
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       Padding(
                                         padding: EdgeInsets.symmetric(
@@ -377,6 +365,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                         ),
                                         child: Text(
                                           "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${_data[index].totalTasks.toString() ?? ''}",
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color: AppColors.disabledGreenColor,
                                             fontSize: 14.sp,
@@ -391,6 +380,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                         ),
                                         child: Text(
                                           "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${_data[index].pendingTasks.toString()}",
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color: AppColors.disabledRedColor,
                                             fontSize: 14.sp,
@@ -400,66 +390,6 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                       ),
                                     ],
                                   ),
-                                  // Padding(
-                                  //   padding: EdgeInsets.symmetric(
-                                  //     horizontal: 5.w,
-                                  //     vertical: 5.h,
-                                  //   ),
-                                  //   child: Text(
-                                  //     "Classic cleaning",
-                                  //     maxLines: 2,
-                                  //     style: TextStyle(
-                                  //       color: AppColors.containerBorder,
-                                  //       fontSize: 16.sp,
-                                  //       fontWeight: FontWeight.w500,
-                                  //       letterSpacing: 0.8,
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  // Padding(
-                                  //   padding: EdgeInsets.symmetric(
-                                  //     horizontal: 5.w,
-                                  //     vertical: 1.h,
-                                  //   ),
-                                  //   child: Text(
-                                  //     "Customer Name : Amol Jagtap",
-                                  //     maxLines: 2,
-                                  //     style: TextStyle(
-                                  //       color: AppColors.containerBorder,
-                                  //       fontSize: 12.sp,
-                                  //       fontWeight: FontWeight.w500,
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  // Padding(
-                                  //   padding: EdgeInsets.symmetric(
-                                  //     horizontal: 5.w,
-                                  //     vertical: 2.h,
-                                  //   ),
-                                  //   child: Text(
-                                  //     "Pimple Nilakh",
-                                  //     maxLines: 2,
-                                  //     style: TextStyle(
-                                  //       color: AppColors.containerBorder,
-                                  //       fontSize: 12.sp,
-                                  //       fontWeight: FontWeight.w400,
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  // Padding(
-                                  //   padding: EdgeInsets.symmetric(
-                                  //     horizontal: 5.w,
-                                  //     vertical: 2.h,
-                                  //   ),
-                                  //   child: Text(
-                                  //     "Pin Code : 441256",
-                                  //     style: TextStyle(
-                                  //       color: AppColors.containerBorder,
-                                  //       fontSize: 12.sp,
-                                  //       fontWeight: FontWeight.w400,
-                                  //     ),
-                                  //   ),
-                                  // ),
                                 ],
                               ),
                             ),
@@ -488,14 +418,12 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                           children: [
                             Expanded(
                               child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       Icon(
                                         Icons.calendar_month_outlined,
@@ -509,6 +437,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                         ),
                                         child: Text(
                                           _data[index].date ?? '',
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color: AppColors.timeSlotColor,
                                             fontSize: 12.sp,
@@ -528,6 +457,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                         ),
                                         child: Text(
                                           "${_data[index].startTime}-${_data[index].endTime}",
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color: AppColors.timeSlotColor,
                                             fontSize: 12.sp,
@@ -538,10 +468,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                     ],
                                   ),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       Padding(
                                         padding: EdgeInsets.symmetric(
@@ -550,10 +478,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                         ),
                                         child: Container(
                                           decoration: BoxDecoration(
-                                            color: getColorByRequestType(
-                                                _data[index].requestType ?? ''),
-                                            borderRadius:
-                                                BorderRadius.circular(10.r),
+                                            color: getColorByRequestType(_data[index].requestType ?? ''),
+                                            borderRadius: BorderRadius.circular(10.r),
                                           ),
                                           child: Padding(
                                             padding: EdgeInsets.symmetric(
@@ -561,8 +487,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               horizontal: 20.w,
                                             ),
                                             child: Text(
-                                              (_data[index].requestType ?? '')
-                                                  .tr(),
+                                              (_data[index].requestType ?? '').tr(),
+                                              overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                 color: AppColors.black,
                                                 fontSize: 14.sp,
@@ -580,9 +506,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                         ),
                                         child: Text(
                                           (_data[index].status ?? '').tr(),
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
-                                            color: getColorByStatus(
-                                                _data[index].status ?? ''),
+                                            color: getColorByStatus(_data[index].status ?? ''),
                                             fontSize: 12.sp,
                                             fontWeight: FontWeight.w600,
                                           ),
@@ -591,10 +517,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                     ],
                                   ),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Expanded(
                                         child: Padding(
@@ -617,14 +541,11 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                         ),
                                       ),
                                       Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w, vertical: 5.h),
+                                            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
                                             child: const Icon(
                                               Icons.access_time_filled,
                                               size: 20,
@@ -632,9 +553,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             ),
                                           ),
                                           Text(
-                                            _data[index]
-                                                .estimatedTime
-                                                .toString(),
+                                            _data[index].estimatedTime.toString(),
+                                            overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                               color: AppColors.ListTitleColor,
                                               fontSize: 10.sp,
@@ -651,8 +571,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                       vertical: 1.h,
                                     ),
                                     child: Text(
-                                      "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${_data[index].description}",
+                                      "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${_data[index].description ?? '-'}",
                                       maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         color: AppColors.ListTitleColor,
                                         fontSize: 12.sp,
@@ -666,7 +587,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                       vertical: 2.h,
                                     ),
                                     child: Text(
-                                      "${MydashboardScreenConstants.LOCATION.tr()}: ${_data[index].location}",
+                                      "${MydashboardScreenConstants.LOCATION.tr()}: ${_data[index].location ?? '-'}",
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         color: AppColors.ListTitleColor,
                                         fontSize: 12.sp,
@@ -680,8 +602,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                       vertical: 2.h,
                                     ),
                                     child: Text(
-                                      "${MydashboardScreenConstants.BOOTHS.tr()} :${_data[index].booths.toString()}" ??
-                                          '',
+                                      "${MydashboardScreenConstants.BOOTHS.tr()} :${_data[index].booths?.toString() ?? ''}",
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         color: AppColors.ListTitleColor,
                                         fontSize: 12.sp,
@@ -689,13 +611,12 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                       ),
                                     ),
                                   ),
-                                  if ((_data[index].requestType ==
-                                      "Issue")) ...[
+                                  if ((_data[index].requestType == "Issue")) ...[
                                     Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 5.w, vertical: 2.h),
+                                      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
                                       child: Text(
-                                        "${(_data[index].requestType ?? '').tr()} : ${_data[index].issueDescription ?? ''}",
+                                        "${(_data[index].requestType ?? '').tr()} : ${_data[index].issueDescription ?? '-'}",
+                                        overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                           color: AppColors.ListTitleColor,
                                           fontSize: 12.sp,
@@ -706,8 +627,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                   ],
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       Padding(
                                         padding: EdgeInsets.symmetric(
@@ -715,8 +635,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                           vertical: 2.h,
                                         ),
                                         child: Text(
-                                          "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${_data[index].totalTasks.toString()}" ??
-                                              '',
+                                          "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${_data[index].totalTasks?.toString() ?? '-'}",
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color: AppColors.greenTextColor,
                                             fontSize: 14.sp,
@@ -730,7 +650,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                           vertical: 2.h,
                                         ),
                                         child: Text(
-                                          "${MydashboardScreenConstants.PENDING_TASK.tr()}: ${_data[index].pendingTasks.toString()}",
+                                          "${MydashboardScreenConstants.PENDING_TASK.tr()}: ${_data[index].pendingTasks?.toString() ?? '-'}",
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color: AppColors.redTextColor,
                                             fontSize: 14.sp,
@@ -743,8 +664,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                   if (_data[index].status == "Ongoing") ...[
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         Expanded(
                                           child: Container(),
@@ -758,24 +678,18 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             // );
                                             Navigator.of(context).push(
                                               MaterialPageRoute(
-                                                builder: (context) =>
-                                                    TaskCompletionScreen(
-                                                  allocationId: _data[index]
-                                                          .taskAllocationId ??
-                                                      '',
+                                                builder: (context) => TaskCompletionScreen(
+                                                  allocationId: _data[index].taskAllocationId ?? '',
                                                 ),
                                               ),
                                             );
                                           },
                                           child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 10.w,
-                                                vertical: 8.h),
+                                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                                             child: Container(
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.r),
+                                                borderRadius: BorderRadius.circular(8.r),
                                                 color: AppColors.buttonColor,
                                               ),
                                               child: Padding(
@@ -784,10 +698,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   vertical: 6.h,
                                                 ),
                                                 child: Text(
-                                                  MydashboardScreenConstants
-                                                      .CLOSE
-                                                      .tr(),
+                                                  MydashboardScreenConstants.CLOSE.tr(),
                                                   textAlign: TextAlign.center,
+                                                  overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                     fontSize: 10.sp,
                                                     fontWeight: FontWeight.w600,
@@ -804,17 +717,13 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                   if (_data[index].status == "Pending") ...[
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         InkWell(
                                           onTap: () {
                                             setState(() {});
 
-                                            _dashboardBloc.add(UpdateStatus(
-                                                id: _data[index]
-                                                    .taskAllocationId!,
-                                                status: "7"));
+                                            _dashboardBloc.add(UpdateStatus(id: _data[index].taskAllocationId!, status: "7"));
 
                                             // Navigator.of(context).push(
                                             //   MaterialPageRoute(
@@ -828,16 +737,12 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             // );
                                           },
                                           child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 10.w,
-                                                vertical: 8.h),
+                                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                                             child: Container(
                                               alignment: Alignment.centerRight,
                                               decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.r),
-                                                color:
-                                                    AppColors.rejectButtonColor,
+                                                borderRadius: BorderRadius.circular(8.r),
+                                                color: AppColors.rejectButtonColor,
                                               ),
                                               child: Padding(
                                                 padding: EdgeInsets.symmetric(
@@ -845,15 +750,13 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   vertical: 6.h,
                                                 ),
                                                 child: Text(
-                                                  MydashboardScreenConstants
-                                                      .REJECT
-                                                      .tr(),
+                                                  MydashboardScreenConstants.REJECT.tr(),
                                                   textAlign: TextAlign.center,
+                                                  overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                     fontSize: 10.sp,
                                                     fontWeight: FontWeight.w600,
-                                                    color: AppColors
-                                                        .rejectGreyTextColor,
+                                                    color: AppColors.rejectGreyTextColor,
                                                   ),
                                                 ),
                                               ),
@@ -867,23 +770,15 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                             //     builder: (context) => const JanitorList(),
                                             //   ),
                                             // );
-                                            _dashboardBloc.add(UpdateStatus(
-                                                id: _data[index]
-                                                        .taskAllocationId ??
-                                                    '',
-                                                status: "2"));
+                                            _dashboardBloc.add(UpdateStatus(id: _data[index].taskAllocationId ?? '', status: "2"));
                                           },
                                           child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 10.w,
-                                                vertical: 8.h),
+                                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                                             child: Container(
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.r),
-                                                color:
-                                                    AppColors.acceptButtonColor,
+                                                borderRadius: BorderRadius.circular(8.r),
+                                                color: AppColors.acceptButtonColor,
                                               ),
                                               child: Padding(
                                                 padding: EdgeInsets.symmetric(
@@ -891,10 +786,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   vertical: 6.h,
                                                 ),
                                                 child: Text(
-                                                  MydashboardScreenConstants
-                                                      .ACCEPT
-                                                      .tr(),
+                                                  MydashboardScreenConstants.ACCEPT.tr(),
                                                   textAlign: TextAlign.center,
+                                                  overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                     fontSize: 10.sp,
                                                     fontWeight: FontWeight.w600,
@@ -911,34 +805,26 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                   if (_data[index].status == "Accepted") ...[
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         InkWell(
                                           onTap: () async {
                                             checkGps();
                                             setState(() {
-                                              facility_lattitude =
-                                                  _data[index].lat;
-                                              facility_longitude =
-                                                  _data[index].lng;
+                                              facility_lattitude = _data[index].lat;
+                                              facility_longitude = _data[index].lng;
                                             });
-                                            await MapUtils.openMap(
-                                                _data[index].lat ?? 0.0,
-                                                _data[index].lng ?? 0.0);
+                                            await MapUtils.openMap(_data[index].lat ?? 0.0, _data[index].lng ?? 0.0);
                                             // _url = Uri.parse(
                                             //     'https://www.google.com/maps/dir/${latitude},${longitude}/${_data[index].lat},${_data[index].lng}');
                                             // await _launchUrl();
                                           },
                                           child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 10.w,
-                                                vertical: 8.h),
+                                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                                             child: Container(
                                               alignment: Alignment.centerRight,
                                               decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.r),
+                                                borderRadius: BorderRadius.circular(8.r),
                                                 color: AppColors.buttonColor,
                                               ),
                                               child: Padding(
@@ -947,10 +833,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   vertical: 6.h,
                                                 ),
                                                 child: Text(
-                                                  MydashboardScreenConstants
-                                                      .DIRECTION
-                                                      .tr(),
+                                                  MydashboardScreenConstants.DIRECTION.tr(),
                                                   textAlign: TextAlign.center,
+                                                  overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                     fontSize: 10.sp,
                                                     fontWeight: FontWeight.w600,
@@ -965,35 +850,22 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                           onTap: () async {
                                             await Navigator.of(context).push(
                                               MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SelfieScreen(
-                                                  templateId:
-                                                      _data[index].templateId ??
-                                                          0,
-                                                  allocationId: _data[index]
-                                                          .taskAllocationId ??
-                                                      '',
+                                                builder: (context) => SelfieScreen(
+                                                  templateId: _data[index].templateId ?? 0,
+                                                  allocationId: _data[index].taskAllocationId ?? '',
                                                 ),
                                               ),
                                             );
-                                            print("afasdfasfsadf" +
-                                                _data[index]
-                                                    .taskAllocationId
-                                                    .toString());
-                                            _dashboardBloc
-                                                .add(GetTaskTamplates());
+                                            print("afasdfasfsadf" + _data[index].taskAllocationId.toString());
+                                            _dashboardBloc.add(GetTaskTamplates());
                                           },
                                           child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 10.w,
-                                                vertical: 8.h),
+                                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                                             child: Container(
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.r),
-                                                color:
-                                                    AppColors.acceptButtonColor,
+                                                borderRadius: BorderRadius.circular(8.r),
+                                                color: AppColors.acceptButtonColor,
                                               ),
                                               child: Padding(
                                                 padding: EdgeInsets.symmetric(
@@ -1001,9 +873,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   vertical: 6.h,
                                                 ),
                                                 child: Text(
-                                                  MydashboardScreenConstants
-                                                      .START
-                                                      .tr(),
+                                                  MydashboardScreenConstants.START.tr(),
+                                                  overflow: TextOverflow.ellipsis,
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                     fontSize: 10.sp,
@@ -1021,28 +892,22 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                   if (_data[index].status == "Re-open") ...[
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         InkWell(
                                           onTap: () async {
                                             checkGps();
-                                            await MapUtils.openMap(
-                                                _data[index].lat ?? 0.0,
-                                                _data[index].lng ?? 0.0);
+                                            await MapUtils.openMap(_data[index].lat ?? 0.0, _data[index].lng ?? 0.0);
                                             // _url = Uri.parse(
                                             //     'https://www.google.com/maps/dir/${latitude},${longitude}/${_data[index].lat},${_data[index].lng}');
                                             // await _launchUrl();
                                           },
                                           child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 10.w,
-                                                vertical: 8.h),
+                                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                                             child: Container(
                                               alignment: Alignment.centerRight,
                                               decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.r),
+                                                borderRadius: BorderRadius.circular(8.r),
                                                 color: AppColors.buttonColor,
                                               ),
                                               child: Padding(
@@ -1051,10 +916,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   vertical: 6.h,
                                                 ),
                                                 child: Text(
-                                                  MydashboardScreenConstants
-                                                      .DIRECTION
-                                                      .tr(),
+                                                  MydashboardScreenConstants.DIRECTION.tr(),
                                                   textAlign: TextAlign.center,
+                                                  overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                     fontSize: 10.sp,
                                                     fontWeight: FontWeight.w600,
@@ -1069,34 +933,22 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                           onTap: () async {
                                             await Navigator.of(context).push(
                                               MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SelfieScreen(
-                                                  templateId:
-                                                      _data[index].templateId!,
-                                                  allocationId: _data[index]
-                                                          .taskAllocationId ??
-                                                      '',
+                                                builder: (context) => SelfieScreen(
+                                                  templateId: _data[index].templateId!,
+                                                  allocationId: _data[index].taskAllocationId ?? '',
                                                 ),
                                               ),
                                             );
-                                            print("afasdfasfsadf" +
-                                                _data[index]
-                                                    .taskAllocationId
-                                                    .toString());
-                                            _dashboardBloc
-                                                .add(const GetTaskTamplates());
+                                            print("afasdfasfsadf" + _data[index].taskAllocationId.toString());
+                                            _dashboardBloc.add(const GetTaskTamplates());
                                           },
                                           child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 10.w,
-                                                vertical: 8.h),
+                                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                                             child: Container(
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.r),
-                                                color:
-                                                    AppColors.acceptButtonColor,
+                                                borderRadius: BorderRadius.circular(8.r),
+                                                color: AppColors.acceptButtonColor,
                                               ),
                                               child: Padding(
                                                 padding: EdgeInsets.symmetric(
@@ -1104,10 +956,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   vertical: 6.h,
                                                 ),
                                                 child: Text(
-                                                  MydashboardScreenConstants
-                                                      .START
-                                                      .tr(),
+                                                  MydashboardScreenConstants.START.tr(),
                                                   textAlign: TextAlign.center,
+                                                  overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                     fontSize: 10.sp,
                                                     fontWeight: FontWeight.w600,
@@ -1171,8 +1022,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
   }
 
   getLocation() async {
-    position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     print(position.longitude); //Output: 80.24599079
     print(position.latitude); //Output: 29.6593457
 
@@ -1185,9 +1035,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
       //device must move horizontally before an update event is generated;
     );
 
-    StreamSubscription<Position> positionStream =
-        Geolocator.getPositionStream(locationSettings: locationSettings)
-            .listen((Position position) {
+    StreamSubscription<Position> positionStream = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
       print(position.longitude); //Output: 80.24599079
       print(position.latitude); //Output: 29.6593457
 
@@ -1199,12 +1047,10 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
   }
 
   Future<void> _getAddressFromLatLng(Position position) async {
-    await placemarkFromCoordinates(position.latitude, position.longitude)
-        .then((List<Placemark> placemarks) {
+    await placemarkFromCoordinates(position.latitude, position.longitude).then((List<Placemark> placemarks) {
       Placemark place = placemarks[0];
       setState(() {
-        _currentAddress =
-            '${place.name},${place.street}, ${place.subLocality},${place.subAdministrativeArea}, ${place.administrativeArea},${place.postalCode}';
+        _currentAddress = '${place.name},${place.street}, ${place.subLocality},${place.subAdministrativeArea}, ${place.administrativeArea},${place.postalCode}';
         print("address - $_currentAddress");
         // EasyLoading.showToast("Current Location Detected : $_currentAddress");
       });
