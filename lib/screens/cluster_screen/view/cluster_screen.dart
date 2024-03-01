@@ -21,6 +21,8 @@ class _ClusterListState extends State<ClusterList> {
   int selectedCard = -1;
   final TextEditingController _searchController = TextEditingController();
   ClusterModel _clusterModel = ClusterModel();
+  var key = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -85,9 +87,10 @@ class _ClusterListState extends State<ClusterList> {
           ),
           Expanded(
             child: ClusterListWidget(
+              key: key,
               controller: _searchController,
-              onTapItem: (ClusterModel list) {
-                Navigator.of(context).push(
+              onTapItem: (ClusterModel list) async {
+                await Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => JanitorList(
                       isFromCluster: true,
@@ -97,6 +100,7 @@ class _ClusterListState extends State<ClusterList> {
                     ),
                   ),
                 );
+                setState(() => key = GlobalKey());
               },
             ),
           ),

@@ -16,14 +16,7 @@ class JanitorList extends StatefulWidget {
 
   final String? clusterId;
   List<String>? allocationId;
-  JanitorList(
-      {Key? key,
-      required this.isFromCluster,
-      required this.isFromDashboard,
-      required this.isFromDashboardAssignment,
-      this.allocationId,
-      this.clusterId})
-      : super(key: key);
+  JanitorList({Key? key, required this.isFromCluster, required this.isFromDashboard, required this.isFromDashboardAssignment, this.allocationId, this.clusterId}) : super(key: key);
 
   @override
   State<JanitorList> createState() => _JanitorListState();
@@ -33,6 +26,7 @@ class _JanitorListState extends State<JanitorList> {
   final TextEditingController _searchController = TextEditingController();
   bool cancelButtonTap = true;
   bool yesButtonTap = false;
+  var key = GlobalKey();
 
   @override
   void initState() {
@@ -118,11 +112,12 @@ class _JanitorListState extends State<JanitorList> {
                 vertical: 7.h,
               ),
               child: JanitorListWidget(
+                key: key,
                 controller: _searchController,
                 clusterId: widget.clusterId,
-                onTapItem: (JanitorListModel data) {
+                onTapItem: (JanitorListModel data) async {
                   if (widget.isFromCluster && data.isPresent == true) {
-                    Navigator.of(context).push(
+                    await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => ChooseFacilityList(
                           janitorId: data.id ?? '',
@@ -130,9 +125,10 @@ class _JanitorListState extends State<JanitorList> {
                         ),
                       ),
                     );
+                    setState(() => key = GlobalKey());
                   }
-                  if (widget.isFromDashboard) {
-                    Navigator.of(context).push(
+                  if (widget.isFromDashboard && context.mounted) {
+                    await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => JanitorDetails(
                           id: data.id ?? '',
@@ -148,6 +144,7 @@ class _JanitorListState extends State<JanitorList> {
                         ),
                       ),
                     );
+                    setState(() => key = GlobalKey());
                   }
                 },
                 isFromCluster: widget.isFromCluster,
