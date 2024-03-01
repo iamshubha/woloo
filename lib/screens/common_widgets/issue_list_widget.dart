@@ -103,7 +103,6 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                     });
                   },
                   child: Container(
-                    height: 140.h,
                     padding: EdgeInsets.symmetric(
                       vertical: 5.h,
                       horizontal: 10.w,
@@ -121,117 +120,85 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                     ),
                     child: Row(
                       children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 5.w),
+                          child: Container(
+                            height: 50.h,
+                            width: 50.w,
+                            decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.darkGreyColor),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
+                              child: Image.asset(
+                                AppImages.bed_img,
+                              ),
+                            ),
+                          ),
+                        ),
                         Expanded(
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 5.w),
-                                child: Container(
-                                  height: 62.h,
-                                  width: 62.w,
-                                  decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.darkGreyColor),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
-                                    child: Image.asset(
-                                      AppImages.bed_img,
-                                      height: 39.h,
-                                      width: 39.w,
-                                    ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 5.w,
+                              vertical: 5.h,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _data[index].clusterName ?? '',
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  style: TextStyle(
+                                    color: AppColors.janitorNameColor,
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.w400,
                                   ),
                                 ),
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                      vertical: 2.h,
-                                    ),
-                                    child: Text(
-                                      _data[index].clusterName ?? '',
-                                      style: TextStyle(
-                                        color: AppColors.janitorNameColor,
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
+                                SizedBox(height: 10.h),
+                                Text(
+                                  "${MyIssuesListScreenConstants.FACILITY_NAME.tr()} - ${_data[index].facilityName}",
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                    color: AppColors.clusterTitleColor,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w400,
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                      vertical: 2.h,
-                                    ),
-                                    child: SizedBox(
-                                      width: 200.w,
-                                      child: Text(
-                                        "${MyIssuesListScreenConstants.FACILITY_NAME.tr()} - ${_data[index].facilityName}",
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                        style: TextStyle(
-                                          color: AppColors.clusterTitleColor,
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
+                                ),
+                                SizedBox(height: 5.h),
+                                Text(
+                                  "${MyIssuesListScreenConstants.JANITOR_NAME.tr()} - ${_data[index].janitorName}",
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                    color: AppColors.clusterTitleColor,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w400,
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                      vertical: 2.h,
-                                    ),
-                                    child: SizedBox(
-                                      width: 200.w,
-                                      child: Text(
-                                        "${MyIssuesListScreenConstants.JANITOR_NAME.tr()}- ${_data[index].janitorName}",
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                        style: TextStyle(
-                                          color: AppColors.clusterTitleColor,
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
+                                ),
+                                SizedBox(height: 5.h),
+                                Text(
+                                  "${MyIssuesListScreenConstants.DESCRIPTION.tr()}- ${_data[index].description ?? "-"}",
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                    color: AppColors.clusterTitleColor,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w400,
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                      vertical: 2.h,
-                                    ),
-                                    child: SizedBox(
-                                      width: 200.w,
-                                      child: Text(
-                                        "${MyIssuesListScreenConstants.DESCRIPTION.tr()}- ${_data[index].description ?? "-"}",
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                        style: TextStyle(
-                                          color: AppColors.clusterTitleColor,
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
+                                ),
+                                SizedBox(height: 10.h),
+                                Text(
+                                  (_data[index].status ?? '').tr(),
+                                  style: TextStyle(
+                                    color: pending ? AppColors.redText : AppColors.greenText,
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                      vertical: 2.h,
-                                    ),
-                                    child: Text(
-                                      (_data[index].status ?? '').tr(),
-                                      style: TextStyle(
-                                        color: pending ? AppColors.redText : AppColors.greenText,
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],

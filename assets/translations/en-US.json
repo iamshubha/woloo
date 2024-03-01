@@ -66,8 +66,8 @@
   "mobNo": "Mob.no",
   "issueList": "Issue list",
   "reportIssue": "Report Issue",
-  "facilityName": "Facility Name",
-  "janitorName": "Janitor name",
+  "facilityName": "Facility",
+  "janitorName": "Janitor",
   "clusterName": "Cluster Name",
   "clusterNameValidation": "Cluster Name is required",
   "facility": "Facility",
@@ -83,10 +83,8 @@
   "templateNameValidation": "Template Name is required.",
   "chooseFile": "Choose file",
   "uploadImage": "Please upload an image to proceed",
-
   "fileNotAllowed": "file is not allowed.",
   "fileNotSelected": "File not selected.",
-
   "addLooPhotos": "Add Photos of loo",
   "pleaseCaptureImageOfArea": "Please capture an image of the area you have been working on to validate it.",
   "endTask": "End Task",

@@ -715,8 +715,8 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                           ),
                                         if (_data[index].status == "Pending" && _data[index].requestType == "IOT" && _data[index].janitorId == null || _data[index].status == "Pending" && _data[index].requestType == "Regular" && _data[index].janitorId == null)
                                           InkWell(
-                                            onTap: () {
-                                              Navigator.of(context).push(
+                                            onTap: () async {
+                                              await Navigator.of(context).push(
                                                 MaterialPageRoute(
                                                   builder: (context) => JanitorList(
                                                     isFromCluster: false,
@@ -726,6 +726,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                   ),
                                                 ),
                                               );
+                                              _supervisorDashboardBloc.add(const GetSupervisorDashboardData());
                                             },
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
