@@ -179,6 +179,7 @@ class MyAccountScreenConstants {
 class MyJanitorProfileScreenConstants {
   static const String MY_PROFILE = 'myProfile';
   static const String ATTENDANCE_HISTORY = 'attendanceHistory';
+  static const String HISTORY = 'history';
   static const String LOG_OUT = 'logOut';
   static const String STATUS_PRESENT = 'present';
   static const String STATUS_ABSENT = 'absent';
