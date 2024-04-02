@@ -32,9 +32,11 @@ class _IssuesListState extends State<IssuesList> {
   List<IssueListModel> _data = [];
 
   GlobalStorage globalStorage = GetIt.instance();
+  IssueListBloc issueListBloc = GetIt.instance();
 
   @override
   void initState() {
+    supervisorId = globalStorage.getId();
     super.initState();
   }
 
@@ -62,12 +64,14 @@ class _IssuesListState extends State<IssuesList> {
                 ),
               ),
               GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
+                onTap: () async {
+                  await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => const ReportIssueScreen(),
                     ),
                   );
+
+                  issueListBloc.add(GetAllIssues(supervisorId: supervisorId));
                 },
                 child: Container(
                   height: 32.h,
@@ -102,6 +106,7 @@ class _IssuesListState extends State<IssuesList> {
           ),
           Expanded(
             child: IssueListWidget(
+              issueListBloc: issueListBloc,
               onTapItem: () {},
             ),
           ),

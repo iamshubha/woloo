@@ -32,6 +32,7 @@ class DashboardModelClass {
     this.templateId,
     this.templateName,
     this.description,
+    this.issueDescription,
     this.facilityName,
     this.estimatedTime,
     this.totalTasks,
@@ -56,6 +57,7 @@ class DashboardModelClass {
     templateId = json['template_id'];
     templateName = json['template_name']?.toString();
     description = json['description']?.toString();
+    issueDescription = json['issue_description']?.toString();
     facilityName = json['facility_name']?.toString();
     estimatedTime = json['estimated_time']?.toString();
     totalTasks = json['total_tasks']?.toString();
@@ -78,6 +80,7 @@ class DashboardModelClass {
   int? templateId;
   String? templateName;
   String? description;
+  String? issueDescription;
   String? facilityName;
   String? estimatedTime;
   String? totalTasks;

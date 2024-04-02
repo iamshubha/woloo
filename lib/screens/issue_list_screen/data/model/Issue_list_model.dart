@@ -9,14 +9,15 @@
 
 class IssueListModel {
   IssueListModel({
-      this.facilityId, 
-      this.janitorId, 
-      this.janitorName, 
-      this.status, 
-      this.facilityName, 
-      this.floorNumber, 
-      this.description, 
-      this.clusterName,});
+    this.facilityId,
+    this.janitorId,
+    this.janitorName,
+    this.status,
+    this.facilityName,
+    this.floorNumber,
+    this.description,
+    this.clusterName,
+  });
 
   IssueListModel.fromJson(dynamic json) {
     facilityId = json['facility_id'];
@@ -49,5 +50,4 @@ class IssueListModel {
     map['cluster_name'] = clusterName;
     return map;
   }
-
 }

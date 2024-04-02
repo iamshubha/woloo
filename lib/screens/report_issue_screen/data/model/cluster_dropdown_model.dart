@@ -3,8 +3,9 @@
 
 class ClusterDropdownModel {
   ClusterDropdownModel({
-      this.clusterId, 
-      this.clusterName,});
+    this.clusterId,
+    this.clusterName,
+  });
 
   ClusterDropdownModel.fromJson(dynamic json) {
     clusterId = json['cluster_id'];
@@ -19,5 +20,4 @@ class ClusterDropdownModel {
     map['cluster_name'] = clusterName;
     return map;
   }
-
 }

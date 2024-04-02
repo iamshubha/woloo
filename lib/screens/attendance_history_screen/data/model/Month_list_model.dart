@@ -8,8 +8,8 @@ class MonthListModel {
   });
 
   MonthListModel.fromJson(dynamic json) {
-    month = json['month'].toString();
-    year = json['year'].toString();
+    month = json['month']?.toString();
+    year = json['year']?.toString();
   }
   String? month;
   String? year;

@@ -132,6 +132,7 @@ class MyIssuesListScreenConstants {
   static const String REPORT_ISSUE_BUTTON = 'reportIssue';
   static const String FACILITY_NAME = 'facilityName';
   static const String JANITOR_NAME = 'janitorName';
+  static const String DESCRIPTION = 'description';
 }
 
 class MyReportIssueScreenConstants {
@@ -178,6 +179,7 @@ class MyAccountScreenConstants {
 class MyJanitorProfileScreenConstants {
   static const String MY_PROFILE = 'myProfile';
   static const String ATTENDANCE_HISTORY = 'attendanceHistory';
+  static const String HISTORY = 'history';
   static const String LOG_OUT = 'logOut';
   static const String STATUS_PRESENT = 'present';
   static const String STATUS_ABSENT = 'absent';

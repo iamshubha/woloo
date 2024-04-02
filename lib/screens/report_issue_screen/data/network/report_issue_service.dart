@@ -35,8 +35,7 @@ class ReportIssueService {
     }
   }
 
-  Future<List<FacilityDropdownModel>> getFacilitiesDropdownData(
-      {required int clusterId}) async {
+  Future<List<FacilityDropdownModel>> getFacilitiesDropdownData({required int clusterId}) async {
     try {
       var response = await dio.get(APIConstants.GET_FACILITIES_DROPDOWN_DATA,
           options: Options(
@@ -75,8 +74,7 @@ class ReportIssueService {
     }
   }
 
-  Future<List<JanitorDropdownModel>> getJanitorsDropdownData(
-      {required int clusterId}) async {
+  Future<List<JanitorDropdownModel>> getJanitorsDropdownData({required int clusterId}) async {
     try {
       var response = await dio.get(APIConstants.GET_JANITOR_DROPDOWN_DATA,
           options: Options(
@@ -106,8 +104,8 @@ class ReportIssueService {
           "id": id,
         },
       );
-      print(response['results'].toString() == '[]');
-      if (response['results'].toString() == '[]') {
+      print(response['results']?.toString() == '[]');
+      if (response['results']?.toString() == '[]') {
         return TaskListModel(templateId: id.toString(), tasks: []);
       }
       return TaskListModel.fromJson(response['results']);
@@ -142,8 +140,7 @@ class ReportIssueService {
           await MultipartFile.fromFile(
             task_images.path,
             filename: getFileName(task_images.path),
-            contentType: MediaType(
-                getType(task_images.path), getFileExtension(task_images.path)),
+            contentType: MediaType(getType(task_images.path), getFileExtension(task_images.path)),
           ),
         ),
       ]);

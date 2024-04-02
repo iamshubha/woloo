@@ -32,8 +32,7 @@ class SubmitImagesService {
           await MultipartFile.fromFile(
             file.path,
             filename: getFileName(file.path),
-            contentType:
-                MediaType(getType(file.path), getFileExtension(file.path)),
+            contentType: MediaType(getType(file.path), getFileExtension(file.path)),
           ),
         ));
       }
@@ -44,7 +43,7 @@ class SubmitImagesService {
         options: Options(extra: {"auth": true}),
       );
 
-      return response['results'].toString();
+      return response['results']?.toString() ?? '';
     } catch (e) {
       rethrow;
     }
@@ -64,7 +63,7 @@ class SubmitImagesService {
         options: Options(extra: {"auth": true}),
       );
 
-      return response['results'].toString();
+      return response['results']?.toString() ?? '';
     } catch (e) {
       rethrow;
     }

@@ -1,3 +1,5 @@
+import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/bloc/issue_list_bloc.dart';
+import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_log/interceptor/dio_log_interceptor.dart';
 import 'package:get_it/get_it.dart';
@@ -22,4 +24,6 @@ Future<void> init() async {
 
   sl.registerLazySingleton(() => DioClient(dio));
   sl.registerLazySingleton(() => GlobalStorage(GetStorage()));
+  sl.registerLazySingleton(() => SupervisorDashboardBloc());
+  sl.registerLazySingleton(() => IssueListBloc());
 }

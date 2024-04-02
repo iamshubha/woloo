@@ -41,6 +41,7 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
   List<FacilityListModel> _facilityListModel = [];
   List<bool> _checkList = [];
   SelectTaskModel selectTaskModel = SelectTaskModel();
+  var key = GlobalKey(); // using this to refresh the list widget
 
   @override
   void initState() {
@@ -130,14 +131,11 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
                   onTap: () {
                     setState(() {
                       selectAll = !selectAll;
-                      print(
-                          "_facilityListModel---->${_facilityListModel.length}");
+                      print("_facilityListModel---->${_facilityListModel.length}");
                       if (selectAll) {
                         for (var i = 0; i < _facilityListModel.length; i++) {
-                          if (!selectedIds
-                              .contains(_facilityListModel[i].id.toString())) {
-                            selectedIds
-                                .add(_facilityListModel[i].id.toString());
+                          if (!selectedIds.contains(_facilityListModel[i].id.toString())) {
+                            selectedIds.add(_facilityListModel[i].id.toString());
                           }
                           _checkList[i] = true;
                         }
@@ -161,14 +159,9 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
                         width: 15.w,
                         height: 15.h,
                         decoration: BoxDecoration(
-                          color: selectAll
-                              ? AppColors.buttonColor
-                              : AppColors.white,
+                          color: selectAll ? AppColors.buttonColor : AppColors.white,
                           borderRadius: BorderRadius.circular(3.r),
-                          border: Border.all(
-                              color: selectAll
-                                  ? Colors.transparent
-                                  : AppColors.checkboxGreyBorder),
+                          border: Border.all(color: selectAll ? Colors.transparent : AppColors.checkboxGreyBorder),
                         ),
                         child: !selectAll
                             ? null
@@ -188,12 +181,12 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
           ),
           Expanded(
             child: ListWidget(
+                key: key,
                 controller: _searchController,
                 janitorId: widget.janitorId ?? '',
                 clusterId: widget.clusterId ?? '',
                 onTapItem: () {},
-                onChecked: (bool selected, FacilityListModel listObject,
-                    List<FacilityListModel> list) {
+                onChecked: (bool selected, FacilityListModel listObject, List<FacilityListModel> list) {
                   setState(() {
                     _facilityListModel = list;
                     if (selectAll) {
@@ -239,9 +232,9 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
               horizontal: 20.w,
             ),
             child: GestureDetector(
-              onTap: () {
+              onTap: () async {
                 if (selectedIds.isNotEmpty) {
-                  Navigator.of(context).push(
+                  await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => ReassignJanitorScreen(
                         isFromCluster: true,
@@ -252,6 +245,7 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
                       ),
                     ),
                   );
+                  setState(() => key = GlobalKey());
                 }
               },
               child: ButtonWidget(

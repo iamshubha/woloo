@@ -2,23 +2,25 @@ import 'dart:io';
 
 import 'package:Woloo_Smart_hygiene/core/bloc/core_bloc.dart';
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
+import 'package:Woloo_Smart_hygiene/messaging.dart';
 import 'package:Woloo_Smart_hygiene/screens/login/view/login_screen.dart';
 import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/view/supervisor_dashboard_screen.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
-import 'package:dio_log/overlay_draggable_button.dart';
+import 'package:dio_log/dio_log.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
+
 import '../../dashboard/view/dashboard_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
+
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
@@ -26,121 +28,45 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   CoreBloc coreBloc = CoreBloc();
   GlobalStorage globalStorage = GetIt.instance();
-  late int? roleId;
-  String? fcmToken;
-  var _notification;
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      fcmToken = globalStorage.getFCMToken();
-    });
-    if (Platform.isAndroid) {
-      coreBloc.add(CheckUserIsLoggedInOrNot());
-    }
-
-    if (Platform.isIOS) {
-      requestTracking();
-    }
-
-    init();
+    loadApp();
     showDebugBtn(context);
   }
 
-  Future getDeviceToken() async {
-    //request user permission for push notification
-    FirebaseMessaging.instance.requestPermission();
-    FirebaseMessaging _firebaseMessage = FirebaseMessaging.instance;
-    String? deviceToken = await _firebaseMessage.getToken();
-
-    globalStorage.saveFCMToken(accessFCMToken: deviceToken ?? '');
-    fcmToken = deviceToken;
-    coreBloc.add(UpdateToken(token: fcmToken ?? ''));
-
-    print("Device Token----->${deviceToken}");
-    return (deviceToken == null) ? "" : deviceToken;
+  loadApp() async {
+    if (Platform.isIOS) {
+      await requestTracking();
+    }
+    Messaging messaging = Messaging();
+    await messaging.initialize();
+    updateDeviceToken();
   }
 
-  init() async {
-    _notification = FlutterLocalNotificationsPlugin();
-    _notification.initialize(
-      const InitializationSettings(
-        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-        iOS: DarwinInitializationSettings(),
-      ),
-    );
-
-    var iOSPlatformChannelSpecifics = const DarwinNotificationDetails(
-      sound: 'notification.caf',
-    ); //put your own sound text here
-
-    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
-      '10000012',
-      'smart_hygiene_channel',
-      sound: RawResourceAndroidNotificationSound('notification'),
-      enableLights: true,
-      color: AppColors.buttonColor,
-      ledColor: Color.fromARGB(255, 255, 0, 0),
-      ledOnMs: 1000,
-      ledOffMs: 500,
-      importance: Importance.max,
-      playSound: true,
-      priority: Priority.high,
-    );
-
-    var platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformChannelSpecifics,
-      iOS: iOSPlatformChannelSpecifics,
-    );
-
-    String deviceToken = await getDeviceToken();
-    print("###### PRINT DEVICE TOKEN TO USE FOR PUSH NOTIFICATION ######");
-    print("TOKENNNNNNNN.....-----" + deviceToken);
-    print("############################################################");
-    setState(() {
-      fcmToken = globalStorage.getFCMToken();
-      print("FCM Token----->${fcmToken}");
-    });
-
-    FirebaseMessaging.onMessage.listen((message) async {
-      print("token generating---->$message");
-      await _notification.show(
-        10000012,
-        message.notification!.title,
-        message.notification!.body,
-        platformChannelSpecifics,
-      );
-    });
-
-    // listen for user to click on notification
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage remoteMessage) {
-      String? title = remoteMessage.notification!.title;
-
-      String? description = remoteMessage.notification!.body;
-    });
+  Future updateDeviceToken() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    String? deviceToken = await messaging.getToken();
+    print(deviceToken);
+    if (deviceToken != null) coreBloc.add(UpdateToken(token: deviceToken));
+    coreBloc.add(CheckUserIsLoggedInOrNot());
   }
 
   Future<void> requestTracking() async {
     try {
-      final TrackingStatus status =
-          await AppTrackingTransparency.trackingAuthorizationStatus;
+      final TrackingStatus status = await AppTrackingTransparency.trackingAuthorizationStatus;
       if (status == TrackingStatus.notDetermined) {
-        await showCustomTrackingDialog(context);
+        if (context.mounted) await showCustomTrackingDialog(context);
         await Future.delayed(const Duration(milliseconds: 200));
-        final TrackingStatus status =
-            await AppTrackingTransparency.requestTrackingAuthorization();
+        await AppTrackingTransparency.requestTrackingAuthorization();
       }
-      final uuid = await AppTrackingTransparency.getAdvertisingIdentifier();
-      print("UUID: $uuid");
-      coreBloc.add(CheckUserIsLoggedInOrNot());
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
-  Future<void> showCustomTrackingDialog(BuildContext context) async =>
-      await showDialog<void>(
+  Future<void> showCustomTrackingDialog(BuildContext context) async => await showDialog<void>(
         context: context,
         builder: (context) => AlertDialog(
           title: Text(MySplashScreenConstants.DEAR_USER.tr()),
@@ -163,29 +89,18 @@ class _SplashScreenState extends State<SplashScreen> {
       listener: (context, state) {
         if (state is CoreSuccess) {
           try {
-            setState(() {
-              roleId = globalStorage.getRoleId();
-            });
-          } catch (e) {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const LoginScreen(),
-              ),
-              (route) => false,
-            );
-          }
+            if (!state.isLoggedIn) throw "Not logged in";
 
-          if (state.isLoggedIn) {
+            int roleId = globalStorage.getRoleId();
+
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    roleId == 1 ? Dashboard() : SupervisorDashboard(),
+                builder: (context) => roleId == 1 ? const Dashboard() : const SupervisorDashboard(),
               ),
               (route) => false,
             );
-          } else {
+          } catch (e) {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(

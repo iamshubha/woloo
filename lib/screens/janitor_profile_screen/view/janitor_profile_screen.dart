@@ -1,13 +1,13 @@
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/view/attendance_history_screen.dart';
 import 'package:Woloo_Smart_hygiene/screens/login/view/login_screen.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
 import 'package:get_it/get_it.dart';
 
 class JanitorProfileScreen extends StatefulWidget {
@@ -130,7 +130,6 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                           .tr());
                   var storage = GetIt.instance<GlobalStorage>();
                   storage.removeToken();
-                  storage.removeFCMToken();
                   storage.removeLocation();
                   storage.removeTime();
                   await Future.delayed(const Duration(seconds: 3));

@@ -55,6 +55,7 @@ class _TemplateScreenState extends State<TemplateScreen> {
 
   var _bottomNavIndex = 0; // efault index of first screen
   DashboardBloc dashboardBloc = DashboardBloc();
+  GlobalKey key = GlobalKey();
 
   @override
   void initState() {
@@ -119,8 +120,7 @@ class _TemplateScreenState extends State<TemplateScreen> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 0.w),
                     child: Text(
-                      "${MyTemplateScreenConstants.HELLO.tr()} ${widget.supervisorName}" ??
-                          '',
+                      "${MyTemplateScreenConstants.HELLO.tr()} ${widget.supervisorName}" ?? '',
                       maxLines: 1,
                       softWrap: false,
                       style: TextStyle(
@@ -136,9 +136,10 @@ class _TemplateScreenState extends State<TemplateScreen> {
             ),
           ),
           body: SupervisorDashboardListWidget(
-            onTapItem: (SupervisorModelDashboard data, bool isApproved) {
+            key: key,
+            onTapItem: (SupervisorModelDashboard data, bool isApproved) async {
               print("templates " + isApproved.toString());
-              Navigator.push(
+              await Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => TaskDetailsScreen(
@@ -148,6 +149,9 @@ class _TemplateScreenState extends State<TemplateScreen> {
                           isApproved: isApproved,
                         )),
               );
+              setState(() {
+                key = GlobalKey();
+              });
             },
           )),
     );

@@ -24,8 +24,7 @@ class LoginService {
     }
   }
 
-  Future<String> checkIn(
-      {required String type, required List<double> locations}) async {
+  Future<String> checkIn({required String type, required List<double> locations}) async {
     try {
       var response = await dio.post(
         APIConstants.SEND_OTP,
@@ -36,7 +35,7 @@ class LoginService {
         options: Options(extra: {"auth": true}),
       );
 
-      return response['results'].toString();
+      return response['results']?.toString() ?? '';
     } catch (e) {
       rethrow;
     }
@@ -61,8 +60,7 @@ class LoginService {
     }
   }
 
-  Future<VerifyOtpModel> verifyOTP(
-      {required String otp, required String requestId}) async {
+  Future<VerifyOtpModel> verifyOTP({required String otp, required String requestId}) async {
     try {
       var response = await dio.post(
         APIConstants.VERIFY_OTP,

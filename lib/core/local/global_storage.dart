@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
 class GlobalStorage {
@@ -80,25 +79,7 @@ class GlobalStorage {
 
   int getRoleId() {
     int roleId = _box.read(_roleIdKey);
-    print("storage -- role id --" + roleId.toString());
     return roleId;
-  }
-
-  void saveFCMToken({required String accessFCMToken}) {
-    if (accessFCMToken.isEmpty) {
-      throw 'Access Token is empty';
-    }
-    _box.write(_fcmTokenKey, accessFCMToken);
-  }
-
-  String getFCMToken() {
-    String? fcmToken = _box.read(_fcmTokenKey);
-    return fcmToken ?? '';
-  }
-
-  void removeFCMToken() {
-    print("removedfcm");
-    _box.remove(_fcmTokenKey);
   }
 
   void saveSupervisorName({required String accessSupervisorName}) {
