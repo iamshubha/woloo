@@ -56,20 +56,20 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
       backgroundColor: AppColors.white,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.appbarBgColor,
         title: Text(
           MyFacilityScreenConstants.TITLE_TEXT.tr(),
           style: TextStyle(
             fontSize: 24.sp,
             fontWeight: FontWeight.w400,
-            color: Colors.black,
+            color: AppColors.yellowSplashColor,
           ),
         ),
         leading: IconButton(
           color: AppColors.black30,
           icon: const Icon(
             Icons.arrow_back,
-            color: Colors.black,
+            color: Colors.white,
             size: 30,
           ),
           // color: AppColors.black,

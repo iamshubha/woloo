@@ -110,7 +110,7 @@ class _TemplateScreenState extends State<TemplateScreen> {
           backgroundColor: AppColors.white,
           appBar: AppBar(
             elevation: 0,
-            backgroundColor: AppColors.white,
+            backgroundColor: AppColors.appbarBgColor,
             title: Padding(
               padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
               child: Row(
@@ -120,14 +120,15 @@ class _TemplateScreenState extends State<TemplateScreen> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 0.w),
                     child: Text(
-                      "${MyTemplateScreenConstants.HELLO.tr()} ${widget.supervisorName}" ?? '',
+                      "${MyTemplateScreenConstants.HELLO.tr()}, ${widget.supervisorName.toTitleCase()}"
+                          ?? '',
                       maxLines: 1,
                       softWrap: false,
                       style: TextStyle(
                         fontSize: 24.sp,
                         overflow: TextOverflow.ellipsis,
                         fontWeight: FontWeight.w400,
-                        color: Colors.black,
+                        color: AppColors.yellowSplashColor,
                       ),
                     ),
                   ),
@@ -156,4 +157,8 @@ class _TemplateScreenState extends State<TemplateScreen> {
           )),
     );
   }
+}
+extension StringCasingExtension on String {
+  String toCapitalized() => length > 0 ?'${this[0].toUpperCase()}${substring(1).toLowerCase()}':'';
+  String toTitleCase() => replaceAll(RegExp(' +'), ' ').split(' ').map((str) => str.toCapitalized()).join(' ');
 }

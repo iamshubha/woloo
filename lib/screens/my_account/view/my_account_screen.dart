@@ -36,27 +36,54 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColors.white,
+        appBar: AppBar(
+
+          elevation: 0,
+          backgroundColor: AppColors.appbarBgColor,
+          title: Text(
+            MyAccountScreenConstants.MY_ACCOUNT.tr(),
+            style: TextStyle(
+              fontSize: 24.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.yellowSplashColor,
+            ),
+          ),
+          // leading: IconButton(
+          //   color: AppColors.black30,
+          //   icon: const Icon(
+          //     Icons.arrow_back,
+          //     color: Colors.black,
+          //     size: 30,
+          //   ),
+          //   // color: AppColors.black,
+          //   onPressed: () {
+          //     Navigator.pop(context);
+          //   },
+          // ),
+        ),
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+
+
+              // SizedBox(
+              //   height: 70.h,
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.symmetric(horizontal: 20.w),
+              //   child: Text(
+              //     MyAccountScreenConstants.MY_ACCOUNT.tr(),
+              //     style: TextStyle(
+              //       fontWeight: FontWeight.w400,
+              //       fontSize: 24.sp,
+              //       color: AppColors.black,
+              //     ),
+              //   ),
+              // ),
               SizedBox(
-                height: 70.h,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Text(
-                  MyAccountScreenConstants.MY_ACCOUNT.tr(),
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 24.sp,
-                    color: AppColors.black,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 30.h,
+                height: 50.h,
               ),
               Center(
                 child: Image.asset(

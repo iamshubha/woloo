@@ -70,6 +70,7 @@ class LoginService {
         },
       );
 
+
       return VerifyOtpModel.fromJson(response['results']);
     } catch (e) {
       rethrow;

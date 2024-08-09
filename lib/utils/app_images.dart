@@ -35,4 +35,6 @@ abstract class AppImages {
   static String get profile_img => _assetImgPath + 'profile.png';
   static String get history_img => _assetImgPath + 'listcheck.png';
   static String get logout_img => _assetImgPath + 'logout.png';
+  static String get repeat_icon => _assetImgPath + 'irepeat.png';
+  static String get delete_icon => _assetImgPath + 'delete.png';
 }

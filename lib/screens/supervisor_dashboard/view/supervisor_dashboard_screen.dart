@@ -26,7 +26,6 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
   int _currentIndex = 0;
   String? supervisorName;
   String? mobile;
-
   final _controller = PageController(
     initialPage: 4,
   );
@@ -79,7 +78,7 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
         child: Container(
           width: 58,
           height: 58,
-          decoration: ShapeDecoration(
+          decoration: const ShapeDecoration(
             color: Color(0xFF3D443D),
             shape: OvalBorder(
               side: BorderSide(
@@ -94,7 +93,9 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
               horizontal: 10.w,
               vertical: 10.h,
             ),
-            child: Image.asset(
+            child:
+            Image.asset(
+              color: Colors.white,
               AppImages.fab_img,
               height: 26.h,
               width: 26.w,
@@ -102,14 +103,44 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
           ),
         ),
       ),
+
       bottomNavigationBar: AnimatedBottomNavigationBar.builder(
+
         itemCount: imageList.length, height: 60.h,
+        gapWidth: 40.h,
         tabBuilder: (int index, bool isActive) {
           // final color = isActive
           //     ? colors.activeNavigationBarColor
           //     : colors.notActiveNavigationBarColor;
 
-          return Column(
+          return
+            isActive ?
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
+                  imageList[index],
+                  height: 20.h,
+                  width: 20.w,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.h),
+                  child: Text(
+                    labelList[index],
+                    // maxLines: 1,
+                    style: TextStyle(
+                        color: AppColors.greenText,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w400),
+                  ),
+                )
+              ],
+            )
+
+                :
+            Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -136,9 +167,11 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
 
         backgroundColor: AppColors.bottomNavigationColor,
         activeIndex: _bottomNavIndex,
+
         splashSpeedInMilliseconds: 300,
         notchSmoothness: NotchSmoothness.softEdge,
         gapLocation: GapLocation.center,
+
         // leftCornerRadius: 32,
         // rightCornerRadius: 32,
         onTap: (index) {

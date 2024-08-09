@@ -17,12 +17,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   String requestId = '';
   late int roleId;
   late int janitorId;
+   List<UpdateTokenModel>? profileList;
 
   LoginBloc() : super(LoginInitial()) {
     on<LoginEvent>((event, emit) {});
     on<SendOTP>(_mapSendOTPToState);
     on<VerifyOTP>(_mapVerifyOTPToState);
-    on<UpdateTokenOnVerifyOTP>(_mapUpdateTokenToState);
+    on<UpdateTokenOnVerifyOTP>(mapUpdateTokenToState);
   }
 
   FutureOr<void> _mapSendOTPToState(
@@ -71,7 +72,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  FutureOr<void> _mapUpdateTokenToState(
+  FutureOr<void> mapUpdateTokenToState(
       UpdateTokenOnVerifyOTP event, Emitter<LoginState> emit) async {
     try {
       emit(UpdateTokenLoading());
@@ -79,9 +80,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       var firebase = FirebaseMessaging.instance;
       var token = await firebase.getToken();
       var response = await loginService.updateFCMToken(token: token ?? '');
-
+      GlobalStorage globalStorage = GetIt.instance();
       print("updateTokenResponse  -------->$response");
+           profileList = response;
 
+      globalStorage.saveProfile(profileName: response.first.name!);
+      print("profile names  -------->$profileList");
       emit(UpdateTokenSuccess(data: response));
     } catch (e) {
       emit(UpdateTokenError(error: e.toString()));

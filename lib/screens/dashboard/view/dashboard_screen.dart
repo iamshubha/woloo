@@ -163,7 +163,7 @@ class _DashboardState extends State<Dashboard> {
             backgroundColor: AppColors.white,
             appBar: AppBar(
               elevation: 0,
-              backgroundColor: AppColors.white,
+              backgroundColor: AppColors.appbarBgColor,
               title: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
                 child: Row(
@@ -175,7 +175,7 @@ class _DashboardState extends State<Dashboard> {
                       style: TextStyle(
                         fontSize: 24.sp,
                         fontWeight: FontWeight.w400,
-                        color: Colors.black,
+                        color: AppColors.yellowSplashColor,
                       ),
                     ),
                     GestureDetector(
@@ -197,7 +197,9 @@ class _DashboardState extends State<Dashboard> {
                         // );
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => JanitorProfileScreen()),
+                          MaterialPageRoute(builder: (context) => JanitorProfileScreen()
+
+                          ),
                         );
                       },
                       child: Column(
@@ -211,7 +213,7 @@ class _DashboardState extends State<Dashboard> {
                             // ),
                             child: Icon(
                               Icons.account_circle_outlined,
-                              color: AppColors.black,
+                              color: AppColors.yellowSplashColor,
                               size: 25.sp,
                             ),
                           ),

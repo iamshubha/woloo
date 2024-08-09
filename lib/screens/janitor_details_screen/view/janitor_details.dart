@@ -46,7 +46,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
-            color: Colors.black,
+            color: Colors.white,
             size: 30,
           ),
           color: AppColors.appBarIconColor,
@@ -63,13 +63,14 @@ class _JanitorDetailsState extends State<JanitorDetails> {
             MyJanitorsDetailsScreenConstants.APP_BAR.tr(),
             textAlign: TextAlign.start,
             style: TextStyle(
-              color: AppColors.appBarTitleColor,
+              color: AppColors.yellowSplashColor,
               fontSize: 24.sp,
               fontWeight: FontWeight.w400,
             ),
           ),
         ),
-        backgroundColor: AppColors.white,
+
+        backgroundColor: AppColors.appbarBgColor,
         elevation: 0,
       ),
       body: SingleChildScrollView(

@@ -38,14 +38,15 @@ class _JanitorListState extends State<JanitorList> {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
+
         elevation: 0,
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.appbarBgColor,
         title: Text(
           MyJanitorsListScreenConstants.TITLE_TEXT.tr(),
           style: TextStyle(
             fontSize: 24.sp,
             fontWeight: FontWeight.w400,
-            color: Colors.black,
+            color: AppColors.yellowSplashColor,
           ),
         ),
         leading: widget.isFromCluster || widget.isFromDashboardAssignment
@@ -53,7 +54,7 @@ class _JanitorListState extends State<JanitorList> {
                 color: AppColors.black30,
                 icon: const Icon(
                   Icons.arrow_back,
-                  color: Colors.black,
+                  color: Colors.white,
                   size: 30,
                 ),
                 // color: AppColors.black,

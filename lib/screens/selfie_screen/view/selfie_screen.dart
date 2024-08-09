@@ -14,6 +14,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../utils/app_images.dart';
+
 enum PickSource { CAMERA }
 
 class SelfieScreen extends StatefulWidget {
@@ -47,32 +49,96 @@ class _SelfieScreenState extends State<SelfieScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
+      appBar:
+       _file != null ?
+      AppBar(
+        toolbarHeight: 75,
+        leadingWidth: 0,
+        leading: const SizedBox(),
+        backgroundColor: AppColors.appbarBgColor,
+        title:    Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            GestureDetector(
+              onTap: ()async{
+                _file = await pickFile(null, PickSource.CAMERA);
+                setState(() {});
+              },
+              child: Image.asset(
+                AppImages.repeat_icon,
+                //"assets/images/irepeat.png",
+              width: 40.h,
+              ),
+            ),
+
+            GestureDetector(
+              onTap: ()async{
+                _file = null;
+                      setState(() {
+
+                       });
+              },
+              child: Image.asset(
+                AppImages.delete_icon,
+                //"assets/images/irepeat.png",
+                width: 40.h,
+              ),
+            ),
+            // IconButton(onPressed: (){
+            //   _file = null;
+            //   setState(() {
+            //
+            //   });
+            // }, icon:   Icon( AppImages.repeat_icon,
+            //   color: AppColors.red300,
+            //   size: 40.h,
+            // ) ),
+          ],
+        ),
+      )
+           : null
+       ,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+
+
           SizedBox(
-            height: 180.h,
+            height:
+            _file != null ?
+                20.h
+                :
+            180.h,
           ),
           _file != null
               ? Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: 20.w,
                   ),
-                  child: Container(
-                    height: 300.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                        15.r,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                       SizedBox(
+                         height: 20.h,
+                       ),
+                      Container(
+                        height: 440.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                            15.r,
+                          ),
+                          child: Image.file(
+                            _file!,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
-                      child: Image.file(
-                        _file!,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                    ],
                   ),
                 )
               : Column(
@@ -85,7 +151,7 @@ class _SelfieScreenState extends State<SelfieScreen> {
                         color: AppColors.checkboxGreyBorder,
                       ),
                       child: IconButton(
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.camera_alt_outlined,
                           color: AppColors.buttonColor,
                           size: 100,

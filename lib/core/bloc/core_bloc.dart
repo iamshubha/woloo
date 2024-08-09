@@ -13,7 +13,7 @@ class CoreBloc extends Bloc<CoreEvent, CoreState> {
   final CoreService coreService = CoreService();
   final globalStorage = GetIt.instance<GlobalStorage>();
 
-  CoreBloc() : super(CoreInitial()) {
+CoreBloc() : super(CoreInitial()) {
     on<CoreEvent>((event, emit) {});
     on<CheckUserIsLoggedInOrNot>(_mapCheckUserState);
     on<UpdateToken>(_mapUpdateTokenToState);

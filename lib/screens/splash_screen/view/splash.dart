@@ -15,6 +15,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:http/http.dart' as http ;
 
 import '../../dashboard/view/dashboard_screen.dart';
 
@@ -36,19 +37,34 @@ class _SplashScreenState extends State<SplashScreen> {
     showDebugBtn(context);
   }
 
+
+
+
   loadApp() async {
     if (Platform.isIOS) {
       await requestTracking();
     }
     Messaging messaging = Messaging();
     await messaging.initialize();
-    updateDeviceToken();
+     updateDeviceToken();
+
+
+
   }
+
+   apiCall(){
+
+
+   }
 
   Future updateDeviceToken() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
+     //  await Future.delayed(Duration(seconds: 1));
+    String? aspn =     await messaging.getAPNSToken();
+    print("aspn $aspn");
+
     String? deviceToken = await messaging.getToken();
-    print(deviceToken);
+     print(deviceToken);
     if (deviceToken != null) coreBloc.add(UpdateToken(token: deviceToken));
     coreBloc.add(CheckUserIsLoggedInOrNot());
   }
@@ -96,7 +112,10 @@ class _SplashScreenState extends State<SplashScreen> {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) => roleId == 1 ? const Dashboard() : const SupervisorDashboard(),
+                builder: (context) => 
+                
+                roleId == 1 ? const Dashboard() : const
+                SupervisorDashboard(),
               ),
               (route) => false,
             );

@@ -1,14 +1,18 @@
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/view/attendance_history_screen.dart';
+import 'package:Woloo_Smart_hygiene/screens/login/bloc/login_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/login/view/login_screen.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+
+import '../../login/bloc/login_bloc.dart';
 
 class JanitorProfileScreen extends StatefulWidget {
   const JanitorProfileScreen({
@@ -20,21 +24,37 @@ class JanitorProfileScreen extends StatefulWidget {
 }
 
 class JanitorProfileScreenState extends State<JanitorProfileScreen> {
+   LoginBloc? profileBloc;
+   var name;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    // print("sdf");
+    // print(" sadas ${loginBloc.profileList}");
+     profileBloc = BlocProvider.of<LoginBloc>(context,);
+
+    profileBloc?.add(const UpdateTokenOnVerifyOTP(token: "e2E8G5n5T0OAm4aH7PIcTf:APA91bG9pDBP0RAvMBYuQM9ZHAvva_GsgsnAaUHLU4n7xF6gcytrAzDC6HJiWSn0nOsO8m4mrZy9GpuaCAXQAoM6854kdlRvCVYAnUYxtlVL62A-e3Y442lm5FItZY60htbBCv6qdYx1"));
+    // BlocProvider.of<LoginBloc>(context);
+    name = globalStorage.getProfileName();
+    print(profileBloc!.profileList);
   }
 
+   final globalStorage = GetIt.instance<GlobalStorage>();
+
+ // LoginBloc loginBloc = LoginBloc();
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
         backgroundColor: AppColors.white,
         appBar: AppBar(
+          backgroundColor: AppColors.appbarBgColor,
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,
-              color: Colors.black,
+              color: Colors.white,
               size: 25,
             ),
             color: AppColors.appBarIconColor,
@@ -51,13 +71,13 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
               MyJanitorProfileScreenConstants.MY_PROFILE.tr(),
               textAlign: TextAlign.start,
               style: TextStyle(
-                color: AppColors.appBarTitleColor,
+                color: AppColors.yellowSplashColor,
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w400,
               ),
             ),
           ),
-          backgroundColor: AppColors.white,
+
           elevation: 0,
         ),
         body: SingleChildScrollView(
@@ -65,15 +85,55 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+               SizedBox(
+                height: 20.h,
+              ),
+              Center(
+                child: Image.asset(
+                  AppImages.profile_img,
+                  height: 70.h,
+                  width: 70.w,
+                  alignment: Alignment.center,
+                ),
+              ),
+                SizedBox(
+                 height: 15.h,
+               ),
+              Center(child:
+
+              Row(
+                 mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                   Text("Name:",
+                   style: TextStyle(
+                     fontWeight: FontWeight.w400,
+                     fontSize: 16.sp,
+                     color: AppColors.greyText,
+                   ),
+                   ),
+                  SizedBox(
+                    width: 15.h,
+                  ),
+
+                  Text(name,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16.sp,
+                      color: AppColors.black,
+                    ),
+                  ),
+                ],
+              )),
+
               SizedBox(
-                height: 50.h,
+                height: 40.h,
               ),
               GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => AttendanceHistoryScreen()),
+                        builder: (context) => const AttendanceHistoryScreen()),
                     // (route) => false,
                   );
                 },
@@ -113,7 +173,7 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                         // SizedBox(
                         //   width: 40.w,
                         // ),
-                        Icon(
+                        const Icon(
                           Icons.arrow_forward_ios,
                           color: Colors.black,
                           size: 20,
@@ -129,6 +189,7 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                       status: MyJanitorProfileScreenConstants.LOGGING_OUT_TOAST
                           .tr());
                   var storage = GetIt.instance<GlobalStorage>();
+                  storage.removeProfile();
                   storage.removeToken();
                   storage.removeLocation();
                   storage.removeTime();
@@ -139,7 +200,7 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                       .tr());
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                    MaterialPageRoute(builder: (context) => const LoginScreen()),
                     (route) => false,
                   );
                 },

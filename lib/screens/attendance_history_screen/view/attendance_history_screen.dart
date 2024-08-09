@@ -62,7 +62,7 @@ class AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,
-              color: Colors.black,
+              color: Colors.white,
               size: 30,
             ),
             color: AppColors.appBarIconColor,
@@ -79,13 +79,13 @@ class AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
               MyJanitorProfileScreenConstants.ATTENDANCE_HISTORY.tr(),
               textAlign: TextAlign.start,
               style: TextStyle(
-                color: AppColors.appBarTitleColor,
+                color: AppColors.yellowSplashColor,
                 fontSize: 24.sp,
                 fontWeight: FontWeight.w400,
               ),
             ),
           ),
-          backgroundColor: AppColors.white,
+          backgroundColor: AppColors.appbarBgColor,
           elevation: 0,
         ),
         body: BlocConsumer(
@@ -143,55 +143,83 @@ class AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 20.w,
-                            vertical: 10.h,
-                          ),
-                          child: SizedBox(
-                            width: 140.w,
-                            height: 50.h,
-                            child: DropdownButtonFormField(
-                              // Initial Value
-                              decoration: InputDecoration(
-                                border: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10.0),
-                                  ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20.w,
+                          vertical: 10.h,
+                        ),
+                        child: SizedBox(
+                          width: 140.w,
+                          height: 50.h,
+                          child: DropdownButtonFormField(
+                         //   isDense: true,
+                            isExpanded: true,
+
+                            // Initial Value
+                            decoration: const InputDecoration(
+                                // labelText:'Select City',
+                              border: OutlineInputBorder(
+                                 borderSide: BorderSide(
+                                   color: AppColors.black
+                                 ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10.0),
+
+
                                 ),
-                                hintStyle: TextStyle(color: Colors.grey[800]),
-                                hintText: MyAttendanceHistoryScreenConstants
-                                    .SELECT
-                                    .tr(),
+
+                              ),
+                            focusedBorder:
+                            OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: AppColors.black
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10.0),
+
+
                               ),
 
-                              // Down Arrow Icon
-                              icon: const Icon(Icons.arrow_drop_down_outlined),
-
-                              // Array list of items
-                              items: _data.map((MonthListModel items) {
-                                return DropdownMenuItem(
-                                  value: items,
-                                  child: Text(
-                                    "${monthItems[(int.tryParse(items.month.toString()) ?? 1) - 1]} ${items.year}",
-                                    style: TextStyle(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.darkGreyText),
-                                  ),
-                                );
-                              }).toList(),
-                              // onChanged: (String? value) {  },
-                              // After selecting the desired option,it will
-                              // change button value to selected value
-                              onChanged: (item) {
-                                var i = item as MonthListModel;
-                                _historyListBloc.add(GetAllHistory(
-                                    month: i.month ?? '', year: i.year ?? ''));
-                              },
                             ),
+                            //  hintMaxLines: 1,
+
+                            //focusColor: AppColors.yellowCardColor
+                            ),
+
+                            focusColor: AppColors.yellowCardColor,
+                            // Down Arrow Icon
+                            //icon: const Icon(Icons.arrow_drop_down_outlined),
+
+                            // Array list of items
+                            items:
+                            _data.map((MonthListModel items) {
+                              return DropdownMenuItem(
+                                value: items,
+                                child: Text(
+                                  "${monthItems[(int.tryParse(items.month.toString()) ?? 1) - 1]} ${items.year}",
+                                  style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.darkGreyText),
+                                ),
+                              );
+                            }).toList(),
+                           alignment: Alignment.topCenter,
+                            hint: Text( MyAttendanceHistoryScreenConstants
+                                .SELECT
+                                .tr(),
+                             style:  TextStyle(
+                                 color: Colors.grey[800]),
+                            ),
+
+                            // onChanged: (String? value) {  },
+                            // After selecting the desired option,it will
+                            // change button value to selected value
+                            onChanged: (item) {
+                              var i = item as MonthListModel;
+                              _historyListBloc.add(GetAllHistory(
+                                  month: i.month ?? '', year: i.year ?? ''));
+                            },
                           ),
                         ),
                       ),

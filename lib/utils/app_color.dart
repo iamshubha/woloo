@@ -159,4 +159,6 @@ class AppColors {
   static const Color redBold = Color(0xFFDB755F);
   static const Color containerShadow = Color(0xFFFCFCFC);
   static const Color boxShadow = Color(0xFFE9E3E3);
+  static const Color appbarBgColor = Color(0xff414042);
+
 }

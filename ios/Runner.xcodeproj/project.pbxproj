@@ -51,7 +51,7 @@
 		2D2D987E09DE04F0FC64914D /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		3C3151BFEE4E91A89B1FF118 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4C1254A02AC4158100DFE846 /* notification.caf */ = {isa = PBXFileReference; lastKnownFileType = file; name = notification.caf; path = ../../../Downloads/notification.caf; sourceTree = "<group>"; };
+		4C1254A02AC4158100DFE846 /* notification.caf */ = {isa = PBXFileReference; lastKnownFileType = file; name = notification.caf; path = ../assets/audio/notification.caf; sourceTree = SOURCE_ROOT; };
 		4C22894D2A8CEAEB0039935E /* firebase_messaging.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = firebase_messaging.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C2289502A8CEB2C0039935E /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		4C2289512A8CEC050039935E /* FirebaseCrashlytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FirebaseCrashlytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -201,9 +201,9 @@
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
+				4C7CB73E2A8F86BF001729D2 /* Embed Foundation Extensions */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				87E6B517B11A63F97B5E53B9 /* [CP] Embed Pods Frameworks */,
-				4C7CB73E2A8F86BF001729D2 /* Embed Foundation Extensions */,
 				2FD6ABEA4273D4E2BFF3F59B /* [firebase_crashlytics] Crashlytics Upload Symbols */,
 			);
 			buildRules = (
@@ -223,7 +223,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1420;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1510;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					4C7CB7352A8F86BE001729D2 = {

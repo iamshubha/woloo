@@ -33,14 +33,15 @@ class _ClusterListState extends State<ClusterList> {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
+
         elevation: 0,
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.appbarBgColor,
         title: Text(
           MyClusterListScreenConstants.TITLE_TEXT.tr(),
           style: TextStyle(
             fontSize: 24.sp,
             fontWeight: FontWeight.w400,
-            color: Colors.black,
+            color: AppColors.yellowSplashColor,
           ),
         ),
         // leading: IconButton(
@@ -68,6 +69,7 @@ class _ClusterListState extends State<ClusterList> {
               horizontal: 20.w,
             ),
             child: TextField(
+              textInputAction: TextInputAction.search,
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: MyFacilityListConstants.SEARCH.tr(),

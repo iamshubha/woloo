@@ -13,10 +13,10 @@ import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issu
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issue_state.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/Cluster_dropdown_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/facility_dropdown_model.dart';
-
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/Janitor_dropdown_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/report_issue_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/task_names_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/widget/view_image.dart';
 import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
@@ -60,7 +60,6 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
   List<JanitorDropdownModel> janitorList = [];
   ReportIssueModel _reportIssueModel = ReportIssueModel();
   List<String> selectedIds = [];
-
   String templateId = "";
   late int janitorId;
   late int facilityId;
@@ -187,16 +186,17 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
 
           return GestureDetector(
             onTap: () {
-              if (Platform.isAndroid) hideKeyboard(context);
-              if (Platform.isIOS) hideKeyboard(context);
+           if (Platform.isAndroid) hideKeyboard(context);
+            if (Platform.isIOS) hideKeyboard(context);
             },
             child: Scaffold(
               backgroundColor: AppColors.white,
               appBar: AppBar(
+
                 leading: IconButton(
                   icon: const Icon(
                     Icons.arrow_back,
-                    color: Colors.black,
+                    color: Colors.white,
                     size: 30,
                   ),
                   color: AppColors.appBarIconColor,
@@ -213,13 +213,13 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                     MydashboardScreenConstants.REPORT_ISSUE.tr(),
                     textAlign: TextAlign.start,
                     style: TextStyle(
-                      color: AppColors.appBarTitleColor,
+                      color: AppColors.yellowSplashColor,
                       fontSize: 24.sp,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
-                backgroundColor: AppColors.white,
+                backgroundColor: AppColors.appbarBgColor,
                 elevation: 0,
               ),
               body: SingleChildScrollView(
@@ -442,12 +442,13 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                                   .tr()
                               : null,
                           onChanged: (JanitorDropdownModel item) {
-                            setState(() {
+                            // setState(() {
+                             FocusScope.of(context).requestFocus(FocusNode());
                               janitorId = item.id!;
                               print("selectedTasks---->${selectedIds}");
 
                               print("janitorId --->" + janitorId.toString());
-                            });
+                            // });
                           },
                         ),
                       ),
@@ -479,7 +480,104 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                               horizontal: 20.w,
                               vertical: 20.h,
                             ),
-                            child: GestureDetector(
+                            child: _file != null
+                                ?
+
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+
+                                    GestureDetector(
+                                      onTap: (){
+                                         Navigator.of(context).push( MaterialPageRoute(builder:  (context) {
+                                             return  ViewImage(
+                                              file: _file,
+                                             );
+                                         }, ) );
+                                      },
+                                      child: Center(
+                                        child: Container(
+                                          height: 40.h,
+                                          width: 130.w,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.lightGray1,
+                                            borderRadius: BorderRadius.circular(
+                                              10.r,
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              MyReportIssueScreenConstants
+                                                  .VIEW_PHOTO
+                                                  .tr(),
+                                              style: TextStyle(
+                                                fontSize: 14.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors
+                                                    .clusterTitleColor,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+
+                                    GestureDetector(
+                                      onTap: (){
+                                        _file = null;
+
+                                        setState(() {});
+                                      },
+                                      child: Center(
+                                        child: Container(
+                                          height: 40.h,
+                                          width: 130.w,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.lightGray1,
+                                            borderRadius: BorderRadius.circular(
+                                              10.r,
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              MyReportIssueScreenConstants
+                                                  .DELETE_PHOTO
+                                                  .tr(),
+                                              style: TextStyle(
+                                                fontSize: 14.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors
+                                                    .clusterTitleColor,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                            // Center(
+                            //         child: Container(
+                            //           decoration: BoxDecoration(
+                            //             borderRadius:
+                            //                 BorderRadius.circular(10.r),
+                            //           ),
+                            //           child: ClipRRect(
+                            //             borderRadius: BorderRadius.circular(
+                            //               10.r,
+                            //             ),
+                            //             child: Image.file(
+                            //               _file!,
+                            //               width: ScreenUtil().screenWidth,
+                            //               height: 80.h,
+                            //               fit: BoxFit.cover,
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       )
+                                :
+                            GestureDetector(
                               onTap: () async {
                                 _file = await pickFile(
                                   null,
@@ -487,27 +585,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                                 );
                                 setState(() {});
                               },
-                              child: _file != null
-                                  ? Center(
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10.r),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                            10.r,
-                                          ),
-                                          child: Image.file(
-                                            _file!,
-                                            width: ScreenUtil().screenWidth,
-                                            height: 80.h,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : Center(
+                              child: Center(
                                       child: Container(
                                         height: 40.h,
                                         width: 140.w,
@@ -580,6 +658,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                                 .UPLOAD_IMG_TOAST
                                 .tr());
                           }
+
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(

@@ -46,7 +46,7 @@ class _IssuesListState extends State<IssuesList> {
       backgroundColor: AppColors.white,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: AppColors.white,
+       backgroundColor:  AppColors.appbarBgColor,
         title: Padding(
           padding: EdgeInsets.symmetric(
             vertical: 10.h,
@@ -60,7 +60,7 @@ class _IssuesListState extends State<IssuesList> {
                 style: TextStyle(
                   fontSize: 24.sp,
                   fontWeight: FontWeight.w400,
-                  color: Colors.black,
+                  color: AppColors.yellowSplashColor,
                 ),
               ),
               GestureDetector(

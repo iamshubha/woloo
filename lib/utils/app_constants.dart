@@ -151,6 +151,8 @@ class MyReportIssueScreenConstants {
   static const String POP_UP_TEXT = 'issueSubmittedText';
   static const String TEMPLATE_NAME_VALIDATION = 'templateNameValidation';
   static const String CHOOSE_PHOTO = 'chooseFile';
+  static const String VIEW_PHOTO = 'View Image';
+  static const String DELETE_PHOTO = 'Delete Image ';
   static const String UPLOAD_IMG_TOAST = 'uploadImage';
   static const String FILE_NOT_ALLOWED = 'fileNotAllowed';
   static const String FILE_NOT_SELECTED = 'fileNotSelected';

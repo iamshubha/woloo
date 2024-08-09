@@ -16,7 +16,7 @@ class GlobalStorage {
   final String _latitudeKey = 'accessLatitude';
   final String _longitudeKey = 'accessLongitude';
   final String _currentTimeKey = 'accessCurrentTime';
-
+  final String _profileKey = 'profileKey';
   /// Save Token
   void saveToken({required String accessToken}) {
     if (accessToken.isEmpty) {
@@ -35,6 +35,24 @@ class GlobalStorage {
 
     _box.remove(_tokenKey);
   }
+
+  void saveProfile({required String profileName }) {
+    if (profileName.isEmpty) {
+      throw 'Access Token is empty';
+    }
+    _box.write(_profileKey, profileName);
+  }
+
+  String getProfileName() {
+    String? name = _box.read(_profileKey);
+    return name ?? '';
+  }
+
+  void removeProfile() {
+    print("profile");
+    _box.remove(_profileKey);
+  }
+
 
   void saveJanitorId({required int accessId}) {
     _box.write(_idKey, accessId);
