@@ -15,12 +15,13 @@ import 'error_widget.dart';
 
 class ClusterListWidget extends StatefulWidget {
   final TextEditingController controller;
-
+    Function searchResult;
   final Function onTapItem;
-  const ClusterListWidget({
+   ClusterListWidget({
     Key? key,
     required this.controller,
     required this.onTapItem,
+    required this.searchResult
   }) : super(key: key);
 
   @override
@@ -31,7 +32,6 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
   int selectedCard = -1;
   ClusterListBloc _clusterListBloc = ClusterListBloc();
   List<ClusterModel> _search = [];
-
   List<ClusterModel> _data = [];
 
   @override
@@ -51,7 +51,10 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
                     .contains(widget.controller.text.toLowerCase()) ??
                 false)
             .toList();
+
+           widget.searchResult(_search) ;
       });
+
     });
     super.initState();
   }

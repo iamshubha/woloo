@@ -22,7 +22,7 @@ class _ClusterListState extends State<ClusterList> {
   final TextEditingController _searchController = TextEditingController();
   ClusterModel _clusterModel = ClusterModel();
   var key = GlobalKey();
-
+  List<ClusterModel> search = [];
   @override
   void initState() {
     super.initState();
@@ -69,14 +69,36 @@ class _ClusterListState extends State<ClusterList> {
               horizontal: 20.w,
             ),
             child: TextField(
+              onSubmitted: (s){
+
+                _searchController.clear();
+
+                   if(search.length > 1){
+
+                   }else
+                   if(search.length == 1){
+                     Navigator.of(context).push(
+                       MaterialPageRoute(
+                         builder: (context) => JanitorList(
+                           isFromCluster: true,
+                           isFromDashboard: false,
+                           clusterId: search.first.clusterId.toString(),
+                           isFromDashboardAssignment: false,
+                         ),
+                       ),
+                     );
+                   }
+              },
               textInputAction: TextInputAction.search,
               controller: _searchController,
+
               decoration: InputDecoration(
                 hintText: MyFacilityListConstants.SEARCH.tr(),
                 prefixIcon: IconButton(
-                  icon: Icon(Icons.search),
+                  icon: const Icon(Icons.search),
                   onPressed: () {
-                    // Perform the search here
+                      print("shrirang");
+                    print("result $search");
                   },
                 ),
                 border: OutlineInputBorder(
@@ -91,10 +113,25 @@ class _ClusterListState extends State<ClusterList> {
             child: ClusterListWidget(
               key: key,
               controller: _searchController,
+              searchResult: (searchValue){
+                           if(search.isNotEmpty){
+                              search = [];
+                           }
+                      search.addAll(searchValue) ;
+                       setState(() {
+
+                       });
+                      print("result $search");
+                       // ClusterModel list
+              },
               onTapItem: (ClusterModel list) async {
-                await Navigator.of(context).push(
+                    print("janitor naem  ${list.janitorName}");
+                _searchController.clear();
+                await
+                Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => JanitorList(
+                      janitorName: list.janitorName,
                       isFromCluster: true,
                       isFromDashboard: false,
                       clusterId: list.clusterId.toString(),
@@ -102,6 +139,7 @@ class _ClusterListState extends State<ClusterList> {
                     ),
                   ),
                 );
+
                 setState(() => key = GlobalKey());
               },
             ),

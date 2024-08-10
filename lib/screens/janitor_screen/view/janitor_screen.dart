@@ -15,8 +15,11 @@ class JanitorList extends StatefulWidget {
   final bool isFromDashboardAssignment;
 
   final String? clusterId;
+  final String? janitorName;
   List<String>? allocationId;
-  JanitorList({Key? key, required this.isFromCluster, required this.isFromDashboard, required this.isFromDashboardAssignment, this.allocationId, this.clusterId}) : super(key: key);
+  JanitorList({Key? key,
+      this.janitorName,
+    required this.isFromCluster, required this.isFromDashboard, required this.isFromDashboardAssignment, this.allocationId, this.clusterId}) : super(key: key);
 
   @override
   State<JanitorList> createState() => _JanitorListState();

@@ -15,14 +15,18 @@ import 'package:Woloo_Smart_hygiene/screens/task_details_screen/view/task_detail
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 
+import 'assign_succefully.dart';
+
 class ChooseFacilityList extends StatefulWidget {
   final String? janitorId;
   final String? clusterId;
+  final String? janitorName;
 
   const ChooseFacilityList({
     Key? key,
     required this.janitorId,
     this.clusterId,
+    this.janitorName
   }) : super(key: key);
 
   @override
@@ -35,11 +39,13 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
   bool yesButtonTap = false;
   bool selectAll = false;
   bool isDisabled = false;
+  String  janitorName = "";
   List<String> selectedIds = [];
   String allocationId = "";
 
   List<FacilityListModel> _facilityListModel = [];
   List<bool> _checkList = [];
+
   SelectTaskModel selectTaskModel = SelectTaskModel();
   var key = GlobalKey(); // using this to refresh the list widget
 
@@ -134,8 +140,10 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
                       print("_facilityListModel---->${_facilityListModel.length}");
                       if (selectAll) {
                         for (var i = 0; i < _facilityListModel.length; i++) {
+
                           if (!selectedIds.contains(_facilityListModel[i].id.toString())) {
                             selectedIds.add(_facilityListModel[i].id.toString());
+
                           }
                           _checkList[i] = true;
                         }
@@ -207,6 +215,7 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
                   }
                   bool flag = true;
                   for (var i = 0; i < _facilityListModel.length; i++) {
+                janitorName =    _facilityListModel[i].janitorName!;
                     if (!_checkList[i]) {
                       flag = false;
                       break;
@@ -233,16 +242,24 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
             ),
             child: GestureDetector(
               onTap: () async {
+                          print("dsfsd${janitorName}");
+                          print("sdf $_checkList");
+                          print("sdfdsf $selectedIds");
                 if (selectedIds.isNotEmpty) {
                   await Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => ReassignJanitorScreen(
-                        isFromCluster: true,
-                        clusterId: widget.clusterId,
-                        janitorId: widget.janitorId ?? '',
-                        allocationId: allocationId,
-                        selectedIds: selectedIds,
-                      ),
+                      builder: (context) =>
+                      AssignSuccefully(
+                        janitorName: janitorName,
+                        assignTask: selectedIds,
+                      )
+                      //     ReassignJanitorScreen(
+                      //   isFromCluster: true,
+                      //   clusterId: widget.clusterId,
+                      //   janitorId: widget.janitorId ?? '',
+                      //   allocationId: allocationId,
+                      //   selectedIds: selectedIds,
+                      // ),
                     ),
                   );
                   setState(() => key = GlobalKey());

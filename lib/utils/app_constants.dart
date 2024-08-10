@@ -41,6 +41,7 @@ class MyFacilityListConstants {
   static const String SELECT_ALL = 'selectAll';
   static const String ASSIGN = 'assign';
   static const String MIN = 'min';
+  static const String GOBACK = 'Go Back';
 }
 
 class MyTemplateScreenConstants {

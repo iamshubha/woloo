@@ -81,7 +81,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       var token = await firebase.getToken();
       var response = await loginService.updateFCMToken(token: token ?? '');
       GlobalStorage globalStorage = GetIt.instance();
-      print("updateTokenResponse  -------->$response");
+      print("updateTokenResponse  --------> $response");
+      print("updateTokenResponse  --------> ${response}");
            profileList = response;
 
       globalStorage.saveProfile(profileName: response.first.name!);
