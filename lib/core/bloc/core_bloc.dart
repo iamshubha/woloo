@@ -41,6 +41,9 @@ CoreBloc() : super(CoreInitial()) {
       if (token.isNotEmpty) {
         await coreService.updateFCMToken(token: event.token.toString());
       }
+
+
+
       emit(UpdateTokenSuccess());
     } catch (e) {
       emit(UpdateTokenError(error: e.toString()));

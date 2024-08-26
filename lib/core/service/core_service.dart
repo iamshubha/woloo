@@ -21,6 +21,8 @@ class CoreService {
         options: Options(extra: {"auth": true}),
       );
 
+       print("token update notitification $response ");
+
       return response['results']?.toString() ?? '';
     } catch (e) {
       rethrow;

@@ -65,6 +65,7 @@ void main() async {
             BlocProvider<LoginBloc>(
               create: (BuildContext context) => LoginBloc(),
             ),
+          
           ],
           child: const
           App(),

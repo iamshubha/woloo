@@ -56,7 +56,7 @@ class DashboardModelClass {
     facilityId = json['facility_id']?.toString();
     templateId = json['template_id'];
     templateName = json['template_name']?.toString();
-    description = json['description']?.toString();
+    description = json['task_description']?.toString()  ?? "-"  ;
     issueDescription = json['issue_description']?.toString();
     facilityName = json['facility_name']?.toString();
     estimatedTime = json['estimated_time']?.toString();

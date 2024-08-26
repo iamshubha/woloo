@@ -22,8 +22,7 @@ class _AssignSuccefullyState extends State<AssignSuccefully> {
   @override
   Widget build(BuildContext context) {
     return  
-     
-     Scaffold(
+      Scaffold(
       appBar: AppBar(),
       body: Padding(
         padding:  EdgeInsets.all(16.0),

@@ -249,17 +249,17 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
                   await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) =>
-                      AssignSuccefully(
-                        janitorName: janitorName,
-                        assignTask: selectedIds,
-                      )
-                      //     ReassignJanitorScreen(
-                      //   isFromCluster: true,
-                      //   clusterId: widget.clusterId,
-                      //   janitorId: widget.janitorId ?? '',
-                      //   allocationId: allocationId,
-                      //   selectedIds: selectedIds,
-                      // ),
+                      // AssignSuccefully(
+                      //   janitorName: janitorName,
+                      //   assignTask: selectedIds,
+                      // )
+                          ReassignJanitorScreen(
+                        isFromCluster: true,
+                        clusterId: widget.clusterId,
+                        janitorId: widget.janitorId ?? '',
+                        allocationId: allocationId,
+                        selectedIds: selectedIds,
+                      ),
                     ),
                   );
                   setState(() => key = GlobalKey());

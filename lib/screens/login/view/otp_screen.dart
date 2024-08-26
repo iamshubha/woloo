@@ -161,41 +161,47 @@ class _OTPScreenState extends State<OTPScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      RichText(
-                        text: TextSpan(
-                          text: "${MyLoginConstants.ENTER_OTP.tr()}\n",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14.sp,
-                            color: AppColors.greyText,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: widget.phoneNumber,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14.sp,
-                                color: AppColors.boldTextColor,
-                              ),
+                      SizedBox(
+                        width :MediaQuery.of(context).size.width/1.3,
+
+                        child: RichText(
+                          textAlign: TextAlign.center,
+                         overflow: TextOverflow.visible,
+                          text: TextSpan(
+                            text: "${MyLoginConstants.ENTER_OTP.tr()}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14.sp,
+                              color: AppColors.greyText,
                             ),
-                            WidgetSpan(
-                              child: SizedBox(
-                                width: 5.w,
-                              ),
-                            ),
-                            WidgetSpan(
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Image.asset(
-                                  AppImages.edit_icon_img,
-                                  height: 12.h,
-                                  width: 11.h,
+                            children: [
+                              TextSpan(
+                                text: widget.phoneNumber,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14.sp,
+                                  color: AppColors.boldTextColor,
                                 ),
                               ),
-                            )
-                          ],
+                              WidgetSpan(
+                                child: SizedBox(
+                                  width: 5.w,
+                                ),
+                              ),
+                              WidgetSpan(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Image.asset(
+                                    AppImages.edit_icon_img,
+                                    height: 12.h,
+                                    width: 11.h,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ],

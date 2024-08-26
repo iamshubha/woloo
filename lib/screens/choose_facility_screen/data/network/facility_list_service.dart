@@ -17,12 +17,14 @@ class FacilityListService {
         },
         options: Options(extra: {"auth": true}),
       );
+        print("chosse facility  $response");
       List<FacilityListModel> output = [];
       for (var item in response['results']) {
         output.add(FacilityListModel.fromJson(item));
       }
       return output;
     } catch (e) {
+      print("chosse facility  $e");
       rethrow;
     }
   }

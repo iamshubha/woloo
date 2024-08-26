@@ -3,13 +3,16 @@ import 'dart:io';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/custom_dialogue_widget.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/white_button_widget.dart';
 import 'package:Woloo_Smart_hygiene/screens/dashboard/view/dashboard_screen.dart';
+import 'package:Woloo_Smart_hygiene/screens/selfie_screen/view/camera.dart';
 import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/bloc/images_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/bloc/images_event.dart';
 import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/bloc/images_state.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -104,23 +107,60 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               _file1 != null
-                                  ? Container(
-                                      height: 135.h,
-                                      width: 150.w,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(
-                                            10.0), //add border radius
-                                        child: Image.file(
-                                          _file1!,
-                                          fit: BoxFit.cover,
+                                  ? 
+                              Stack(
+                                children: [
+                                  Container(
+                                          height: 135.h,
+                                          width: 150.w,
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                                10.0), //add border radius
+                                            child: Image.file(
+                                              _file1!,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    )
+                                  
+                                      Positioned(
+                                       right: 5,
+                                       top: 5,
+
+                                       child: GestureDetector(
+                                         onTap: (){
+                                            _file1 = null;
+                                             setState(() {
+
+                                             });
+
+                                         },
+                                         child: const CircleAvatar(
+                                           backgroundColor: AppColors.black,
+                                           child: Center(
+                                             child: Icon(
+                                                  color: AppColors.red,
+                                                 Icons.delete  ),
+                                           ),
+                                         ),
+                                       ),
+                                     )
+                                ],
+                              )
                                   : GestureDetector(
                                       onTap: () async {
-                                        _file1 = await pickFile(
-                                            null, PickSource.CAMERA);
-                                        fileList.add(_file1!);
+                                          Navigator.of(context).push( MaterialPageRoute(builder: (context) =>  CameraPage(
+                                            sensorPosition: SensorPosition.back,
+                                             captureImage: (val){
+                                                _file1 = val;
+                                                setState(() {
+
+                                                });
+                                             },
+                                          ),  ) );
+                                        // _file1 = await pickFile(
+                                        //     null, PickSource.CAMERA);
+                                        // fileList.add(_file1!);
                                         print("fileeeee1" + _file1.toString());
                                         setState(() {});
                                       },
@@ -140,7 +180,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 Icons.camera_alt_outlined,
                                                 size: 40,
                                                 color:
@@ -163,22 +203,60 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                       ),
                                     ),
                               _file2 != null
-                                  ? Container(
-                                      height: 135.h,
-                                      width: 150.w,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(
-                                            10.0), //add border radius
-                                        child: Image.file(
-                                          _file2!,
-                                          fit: BoxFit.cover,
+                                  ?
+                              Stack(
+                                children: [
+                                  Container(
+                                          height: 135.h,
+                                          width: 150.w,
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                                10.0), //add border radius
+                                            child: Image.file(
+                                              _file2!,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+
+                                  Positioned(
+                                    right: 5,
+                                    top: 5,
+
+                                    child: GestureDetector(
+                                      onTap: (){
+                                        _file2 = null;
+                                        setState(() {
+
+                                        });
+
+                                      },
+                                      child: const CircleAvatar(
+                                        backgroundColor: AppColors.black,
+                                        child: Center(
+                                          child: Icon(
+                                              color: AppColors.red,
+                                              Icons.delete  ),
                                         ),
                                       ),
-                                    )
+                                    ),
+                                  )
+                                ],
+                              )
                                   : GestureDetector(
                                       onTap: () async {
-                                        _file2 = await pickFile(
-                                            null, PickSource.CAMERA);
+
+                                        Navigator.of(context).push( MaterialPageRoute(builder: (context) =>  CameraPage(
+                                          sensorPosition: SensorPosition.back,
+                                          captureImage: (val){
+                                            _file2 = val;
+                                            setState(() {
+
+                                            });
+                                          },
+                                        ),  ) );
+                                        // _file2 = await pickFile(
+                                        //     null, PickSource.CAMERA);
                                         fileList.add(_file2!);
 
                                         print("fileeeee2" + _file2.toString());
@@ -201,7 +279,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 Icons.camera_alt_outlined,
                                                 size: 40,
                                                 color:
@@ -236,22 +314,60 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               _file3 != null
-                                  ? Container(
-                                      height: 135.h,
-                                      width: 150.w,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(
-                                            10.0), //add border radius
-                                        child: Image.file(
-                                          _file3!,
-                                          fit: BoxFit.cover,
+                                  ?
+                              Stack(
+                                children: [
+                                  Container(
+                                          height: 135.h,
+                                          width: 150.w,
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                                10.0), //add border radius
+                                            child: Image.file(
+                                              _file3!,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                  Positioned(
+                                    right: 5,
+                                    top: 5,
+
+                                    child: GestureDetector(
+                                      onTap: (){
+                                        _file3 = null;
+                                        setState(() {
+
+                                        });
+
+                                      },
+                                      child: const CircleAvatar(
+                                        backgroundColor: AppColors.black,
+                                        child: Center(
+                                          child: Icon(
+                                              color: AppColors.red,
+                                              Icons.delete  ),
                                         ),
                                       ),
-                                    )
+                                    ),
+                                  )
+                                ],
+                              )
                                   : GestureDetector(
                                       onTap: () async {
-                                        _file3 = await pickFile(
-                                            null, PickSource.CAMERA);
+
+                                        Navigator.of(context).push( MaterialPageRoute(builder: (context) =>  CameraPage(
+                                          sensorPosition: SensorPosition.back,
+                                          captureImage: (val){
+                                            _file3 = val;
+                                            setState(() {
+
+                                            });
+                                          },
+                                        ),  ) );
+
+                                        // _file3 = await pickFile(
+                                        //     null, PickSource.CAMERA);
                                         fileList.add(_file3!);
 
                                         print("fileeeee3" + _file3.toString());
@@ -274,7 +390,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 Icons.camera_alt_outlined,
                                                 size: 40,
                                                 color:
@@ -332,7 +448,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                         ),
                         child: TextField(
                           controller: _controller,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             border: InputBorder.none,
                           ),
                         ),

@@ -102,11 +102,13 @@ class _TaskListState extends State<TaskList> {
 
           return Scaffold(
             backgroundColor: AppColors.white,
+
             appBar: AppBar(
+              backgroundColor: AppColors.appbarBgColor,
               leading: IconButton(
                 icon: const Icon(
                   Icons.arrow_back,
-                  color: Colors.black,
+                  color: Colors.white,
                   size: 30,
                 ),
                 onPressed: () {
@@ -122,13 +124,13 @@ class _TaskListState extends State<TaskList> {
                   MyTaskListConstants.APP_BAR.tr(),
                   textAlign: TextAlign.start,
                   style: TextStyle(
-                    color: AppColors.appBarTitleColor,
+                    color: AppColors.yellowSplashColor,
                     fontSize: 24.sp,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
               ),
-              backgroundColor: AppColors.white,
+
               elevation: 0,
             ),
             body: Column(

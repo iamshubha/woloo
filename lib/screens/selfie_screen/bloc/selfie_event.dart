@@ -26,3 +26,4 @@ class UploadSelfie extends SelfieEvent {
         remarks,
       ];
 }
+

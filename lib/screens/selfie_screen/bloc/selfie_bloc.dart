@@ -27,11 +27,22 @@ class SelfieBloc extends Bloc<SelfieEvent, SelfieState> {
         id: event.id,
         remarks: event.remarks,
       );
+      
+        Future.delayed( Duration( seconds: 2 ) );
 
-      print("responseeee  ------  " + response);
+    print("responseeee image  upload  ------  " + response);
       emit(UploadSelfieSuccessful());
     } catch (e) {
       emit(UploadSelfieError(error: e.toString()));
     }
   }
 }
+
+
+FutureOr<void>  _captureImage(){
+
+
+
+
+
+  }

@@ -48,7 +48,7 @@ extension ResponseCurl on Response {
 }
 
 class CurlLogInterceptor extends PrettyDioLogger {
-  CurlLogInterceptor({bool disableRequestBody: false})
+  CurlLogInterceptor({bool disableRequestBody =false})
       : super(
           requestBody: !disableRequestBody,
           requestHeader: true,

@@ -44,7 +44,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
 
   SubmittedTaskModel submittedTaskModel = SubmittedTaskModel();
   SubmittedTaskBloc submittedTaskBloc = SubmittedTaskBloc();
-  CarouselController buttonCarouselController = CarouselController();
+  // CarouselController buttonCarouselController = CarouselController();
+  final CarouselSliderController buttonCarouselController = CarouselSliderController();
+
   GlobalStorage _globalStorage = GetIt.instance();
   late SupervisorDashboardBloc _supervisorDashboardBloc =
       SupervisorDashboardBloc();

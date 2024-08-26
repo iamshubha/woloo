@@ -153,9 +153,11 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.h),
                 child: Text(
+                  textAlign: TextAlign.center,
                   labelList[index],
                   // maxLines: 1,
                   style: TextStyle(
+
                       color: AppColors.labelColor,
                       fontSize: 10.sp,
                       fontWeight: FontWeight.w400),

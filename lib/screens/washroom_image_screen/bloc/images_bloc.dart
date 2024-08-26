@@ -24,6 +24,7 @@ class ImagesBloc extends Bloc<ImagesEvent, ImagesState> {
   FutureOr<void> _mapUploadImagesToState(
       UploadImages event, Emitter<ImagesState> emit) async {
     try {
+
       emit(const UploadImagesLoading(message: ""));
 
       var response = await submitImagesService.uploadImages(
@@ -32,12 +33,14 @@ class ImagesBloc extends Bloc<ImagesEvent, ImagesState> {
         id: event.id,
         remarks: event.remarks,
       );
+
       await submitImagesService.updateStatus(
           id: event.allocationId, status: "6");
 
       print("responseeee  ------  $response");
       emit(UploadImagesSuccessful());
     } catch (e) {
+
       emit(UploadImagesError(error: e.toString()));
     }
   }

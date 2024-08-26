@@ -44,6 +44,7 @@ class Messaging {
 
     await flNotificationsPlugin.initialize(
       notificationSettings,
+
       onDidReceiveNotificationResponse: (details) {},
     );
   }
@@ -51,6 +52,7 @@ class Messaging {
   AndroidInitializationSettings androidNotificationSettings() {
     const AndroidInitializationSettings androidSettings = AndroidInitializationSettings(
       '@mipmap/ic_launcher',
+
     );
     return androidSettings;
   }
@@ -62,7 +64,9 @@ class Messaging {
 
   NotificationDetails notificationDetails() {
     return const NotificationDetails(
+
       android: AndroidNotificationDetails(
+
         "10000012",
         "smart_hygiene_channel",
         sound: RawResourceAndroidNotificationSound('notification'),
@@ -89,6 +93,9 @@ class Messaging {
       ledColor: Color.fromARGB(255, 255, 0, 0),
       importance: Importance.max,
       playSound: true,
+
+
+
     );
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>() //

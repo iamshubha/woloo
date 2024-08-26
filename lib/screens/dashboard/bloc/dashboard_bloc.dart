@@ -73,6 +73,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       emit(const UpdateStatusLoading(message: "Loading Please Wait..."));
 
       await dashboardService.updateStatus(id: event.id, status: event.status);
+      
       data = await dashboardService.getTasksByJanitorId();
 
       emit(GetDashboardDataSuccess(data: data));
