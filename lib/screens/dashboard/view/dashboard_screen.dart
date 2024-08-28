@@ -236,7 +236,6 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             body: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
               child: Column(
                 children: [
                   if (location != null && location != "") ...[

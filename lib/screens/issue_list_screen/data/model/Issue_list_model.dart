@@ -22,9 +22,9 @@ class IssueListModel {
   IssueListModel.fromJson(dynamic json) {
     facilityId = json['facility_id'];
     janitorId = json['janitor_id'];
-    janitorName = json['janitor_name'];
+    janitorName = json['janitor_name'] ?? "-" ;
     status = json['status'];
-    facilityName = json['facility_name'];
+    facilityName = json['facility_name' ] ?? "-" ;
     floorNumber = json['floor_number'];
     description = json['description'];
     clusterName = json['cluster_name'];

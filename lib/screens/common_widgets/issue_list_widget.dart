@@ -157,7 +157,7 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                                 ),
                                 SizedBox(height: 10.h),
                                 Text(
-                                  "${MyIssuesListScreenConstants.FACILITY_NAME.tr()} - ${_data[index].facilityName}",
+                                  "${MyIssuesListScreenConstants.FACILITY_NAME.tr()} : ${_data[index].facilityName}",
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 2,
                                   style: TextStyle(
@@ -168,7 +168,7 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                                 ),
                                 SizedBox(height: 5.h),
                                 Text(
-                                  "${MyIssuesListScreenConstants.JANITOR_NAME.tr()} - ${_data[index].janitorName}",
+                                  "${MyIssuesListScreenConstants.JANITOR_NAME.tr()} : ${_data[index].janitorName}",
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 2,
                                   style: TextStyle(
@@ -179,7 +179,7 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                                 ),
                                 SizedBox(height: 5.h),
                                 Text(
-                                  "${MyIssuesListScreenConstants.DESCRIPTION.tr()}- ${_data[index].description ?? "-"}",
+                                  "${MyIssuesListScreenConstants.DESCRIPTION.tr()} : ${_data[index].description ?? "-"}",
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 2,
                                   style: TextStyle(

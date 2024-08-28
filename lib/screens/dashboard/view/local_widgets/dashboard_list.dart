@@ -40,7 +40,8 @@ class DashboardListWidget extends StatefulWidget {
 class _DashboardListWidgetState extends State<DashboardListWidget> {
   int selectedCard = -1;
   late DashboardBloc _dashboardBloc;
-  List<DashboardModelClass> _data = [];
+  List<DashboardModelClass> filter = [];
+  List<DashboardModelClass> _data = [] ;
   late double? facility_lattitude;
   late double? facility_longitude;
   bool servicestatus = false;
@@ -56,6 +57,19 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
   String longitude = "";
 
   String? _currentAddress;
+  String dropdownvalue = 'All';
+
+  // List of items in our dropdown menu
+  var items = [
+    'All',
+    'Ongoing',
+    'Pending',
+    'Accepted',
+    'Completed',
+    'Request for closure'
+  ];
+
+
   @override
   void initState() {
     _dashboardBloc = DashboardBloc();
@@ -76,6 +90,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
           EasyLoading.dismiss();
           setState(() {
             _data = state.data;
+             filter =  _data  ;
           });
         }
 
@@ -102,886 +117,1077 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
 
         if (state is GetDashboardDataSuccess && _data.isEmpty) {
           EasyLoading.dismiss();
-          return const EmptyListWidget();
+          return EmptyListWidget();
         }
 
-        return ListView.builder(
-          physics: BouncingScrollPhysics(),
-          itemCount: _data.length,
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          itemBuilder: (
-            BuildContext context,
-            int index,
-          ) {
-            return Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: 7.h,
-              ),
-              child: GestureDetector(
-                onTap: () {
-                  widget.onTapItem();
-                  setState(() {
-                    selectedCard = index;
-                  });
-                },
-                child: _data[index].status == "Completed"
-                    ? Container(
-                        // height: 240.h,
-                        padding: EdgeInsets.symmetric(
-                          vertical: 5.h,
-                          horizontal: 10.w,
-                        ),
-                        margin: EdgeInsets.symmetric(
-                          horizontal: 20.w,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.disabledContainerColor,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: AppColors.containerBorder,
-                            width: 1.w,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.calendar_month_outlined,
-                                        size: 15.sp,
-                                        color: AppColors.containerBorder,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 5.w,
-                                          vertical: 1.h,
-                                        ),
-                                        child: Text(
-                                          _data[index].date ?? '',
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: AppColors.containerBorder,
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                      ),
-                                      Icon(
-                                        Icons.access_time,
-                                        size: 15.sp,
-                                        color: AppColors.containerBorder,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 5.w,
-                                          vertical: 1.h,
-                                        ),
-                                        child: Text(
-                                          "${_data[index].startTime}-${_data[index].endTime}",
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: AppColors.containerBorder,
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+        return
+
+
+           Container(
+             height: MediaQuery.of(context).size.height/1.3,
+             child: Scaffold(
+                backgroundColor: AppColors.white,
+                appBar: AppBar(
+                  toolbarHeight: 79,
+                  surfaceTintColor: Colors.transparent,
+                  backgroundColor: AppColors.white,
+                   actions: [
+                     Center(
+                       child: Padding(
+                         padding: EdgeInsets.symmetric(
+                           horizontal: 25.h,
+                            vertical: 10.h
+                         ),
+                         child: SizedBox(
+                           width:  250,
+                           height: 70,
+                           child: DropdownButtonFormField(
+                             decoration: const InputDecoration(
+
+                               border: OutlineInputBorder(
+                                 borderRadius: BorderRadius.all(
+                                   Radius.circular(30.0),
+                                 ),
+                               ),),
+                             elevation: 0,
+                             // Initial Value
+                             value: dropdownvalue,
+                             // Down Arrow Icon
+                             icon: const Icon(Icons.keyboard_arrow_down),
+
+                             // Array list of items
+                             items: items.map((String items) {
+                               return DropdownMenuItem(
+
+                                 value: items,
+                                 child: Text(items),
+                               );
+                             }).toList(),
+                             dropdownColor: Colors.white,
+
+                             onChanged: (String? newValue) {
+                               setState(() {
+                                 dropdownvalue = newValue!;
+                               });
+                               print('new $newValue ');
+                               if(newValue == "All"){
+                                 filter = _data;
+                               }else {
+                                 filter =  _data.where( (e)=> e.status == newValue ).toList();
+                               }
+
+
+                               print(" filter data${filter}");
+                             },
+                           ),
+                         ),
+                       ),
+                     ),
+                   ],
+
+
+
+                ),
+              body: Padding(
+                padding: const EdgeInsets.only( top: 10 , bottom: 20 ),
+                child:
+
+                filter.isEmpty ?
+
+                EmptyListWidget()
+
+                 :
+                ListView.builder(
+                  // physics: BouncingScrollPhysics(),
+                  itemCount: filter.length,
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemBuilder: (
+                    BuildContext context,
+                    int index,
+                  ) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 6.h,
+
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          widget.onTapItem();
+                          setState(() {
+                            selectedCard = index;
+                          });
+                        },
+                        child: filter[index].status == "Completed"
+                            ? Container(
+                                // height: 240.h,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 5.h,
+                                  horizontal: 10.w,
+                                ),
+                                margin: EdgeInsets.symmetric(
+                                  horizontal: 20.w,
+                                ),
+                                decoration: BoxDecoration(
+                                  color:
+
+                                  AppColors.disabledContainerColor,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: AppColors.containerBorder,
+                                    width: 1.w,
                                   ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 5.w,
-                                          vertical: 5.h,
-                                        ),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: getColorByRequestType(_data[index].requestType ?? ''),
-                                            borderRadius: BorderRadius.circular(10.r),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.calendar_month_outlined,
+                                                size: 15.sp,
+                                                color: AppColors.containerBorder,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 5.w,
+                                                  vertical: 1.h,
+                                                ),
+                                                child: Text(
+                                                  filter[index].date ?? '',
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: AppColors.containerBorder,
+                                                    fontSize: 12.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ),
+                                              Icon(
+                                                Icons.access_time,
+                                                size: 15.sp,
+                                                color: AppColors.containerBorder,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 5.w,
+                                                  vertical: 1.h,
+                                                ),
+                                                child: Text(
+                                                  "${filter[index].startTime}-${filter[index].endTime}",
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: AppColors.containerBorder,
+                                                    fontSize: 12.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          child: Padding(
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 5.w,
+                                                  vertical: 5.h,
+                                                ),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: getColorByRequestType(filter[index].requestType ?? ''),
+                                                    borderRadius: BorderRadius.circular(10.r),
+                                                  ),
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(
+                                                      vertical: 5.h,
+                                                      horizontal: 20.w,
+                                                    ),
+                                                    child: Text(
+                                                      (filter[index].requestType ?? '').tr(),
+                                                      overflow: TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                        color: AppColors.containerBorder,
+                                                        fontSize: 14.sp,
+                                                        fontWeight: FontWeight.w600,
+                                                        letterSpacing: 0.8,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 5.w,
+                                                  vertical: 1.h,
+                                                ),
+                                                child: Text(
+                                                  (filter[index].status ?? '').tr(),
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: getColorByStatus(filter[index].status ?? ''),
+                                                    fontSize: 12.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+
+                                          Row(
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 5.w,
+                                                  vertical: 0.h,
+                                                ),
+                                                child: Text(
+                                                   'Task ID :'
+
+                                                      ?? '',
+                                                  maxLines: 1,
+                                                  softWrap: false,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: AppColors.containerBorder,
+                                                    fontSize: 13.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                    letterSpacing: 0.8,
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 0.w,
+                                                   vertical: 0.h,
+                                                ),
+                                                child: Text(
+                                                  filter[index].taskAllocationId
+
+                                                      ?? '',
+                                                  maxLines: 1,
+                                                  softWrap: false,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: AppColors.containerBorder,
+                                                    fontSize: 13.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                    letterSpacing: 0.8,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+
+
+                                              Expanded(
+                                                child:
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: 5.w,
+                                                    vertical: 5.h,
+                                                  ),
+                                                  child: Text(
+                                                    filter[index].facilityName
+
+                                                        ?? '',
+                                                    maxLines: 1,
+                                                    softWrap: false,
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      color: AppColors.containerBorder,
+                                                      fontSize: 13.sp,
+                                                      fontWeight: FontWeight.w600,
+                                                      letterSpacing: 0.8,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+                                                    child: const Icon(
+                                                      Icons.access_time_filled,
+                                                      size: 20,
+                                                      color: AppColors.containerBorder,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    filter[index].estimatedTime.toString(),
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      color: AppColors.containerBorder,
+                                                      fontSize: 10.sp,
+                                                      fontWeight: FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          Padding(
                                             padding: EdgeInsets.symmetric(
-                                              vertical: 5.h,
-                                              horizontal: 20.w,
+                                              horizontal: 5.w,
+                                              vertical: 1.h,
                                             ),
                                             child: Text(
-                                              (_data[index].requestType ?? '').tr(),
+                                              "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${filter[index].description}",
+                                              maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                 color: AppColors.containerBorder,
-                                                fontSize: 14.sp,
-                                                fontWeight: FontWeight.w600,
-                                                letterSpacing: 0.8,
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.w500,
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 5.w,
-                                          vertical: 1.h,
-                                        ),
-                                        child: Text(
-                                          (_data[index].status ?? '').tr(),
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: getColorByStatus(_data[index].status ?? ''),
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 5.w,
-                                            vertical: 5.h,
-                                          ),
-                                          child: Text(
-                                            _data[index].facilityName ?? '',
-                                            maxLines: 1,
-                                            softWrap: false,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              color: AppColors.containerBorder,
-                                              fontSize: 13.sp,
-                                              fontWeight: FontWeight.w600,
-                                              letterSpacing: 0.8,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
                                           Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
-                                            child: const Icon(
-                                              Icons.access_time_filled,
-                                              size: 20,
-                                              color: AppColors.containerBorder,
-                                            ),
-                                          ),
-                                          Text(
-                                            _data[index].estimatedTime.toString(),
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              color: AppColors.containerBorder,
-                                              fontSize: 10.sp,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                      vertical: 1.h,
-                                    ),
-                                    child: Text(
-                                      "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${_data[index].description}",
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: AppColors.containerBorder,
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                      vertical: 2.h,
-                                    ),
-                                    child: Text(
-                                      "${MydashboardScreenConstants.LOCATION.tr()} : ${_data[index].location}",
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: AppColors.containerBorder,
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                      vertical: 2.h,
-                                    ),
-                                    child: Text(
-                                      "${MydashboardScreenConstants.BOOTHS.tr()} :${_data[index].booths?.toString() ?? ''}",
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: AppColors.containerBorder,
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ),
-                                  if ((_data[index].requestType == "Issue")) ...[
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                                      child: Text(
-                                        "${(_data[index].requestType ?? '').tr()} : ${_data[index].issueDescription ?? '-'}",
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          color: AppColors.ListTitleColor,
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 5.w,
-                                          vertical: 2.h,
-                                        ),
-                                        child: Text(
-                                          "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${_data[index].totalTasks.toString() ?? ''}",
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: AppColors.disabledGreenColor,
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 5.w,
-                                          vertical: 2.h,
-                                        ),
-                                        child: Text(
-                                          "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${_data[index].pendingTasks.toString()}",
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: AppColors.disabledRedColor,
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : Container(
-                        // height: 240.h,
-                        padding: EdgeInsets.symmetric(
-                          vertical: 5.h,
-                          horizontal: 10.w,
-                        ),
-                        margin: EdgeInsets.symmetric(
-                          horizontal: 20.w,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: AppColors.containerBorder,
-                            width: 1.w,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.calendar_month_outlined,
-                                        size: 15.sp,
-                                        color: AppColors.timeSlotColor,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 5.w,
-                                          vertical: 1.h,
-                                        ),
-                                        child: Text(
-                                          _data[index].date ?? '',
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: AppColors.timeSlotColor,
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                      ),
-                                      Icon(
-                                        Icons.access_time,
-                                        size: 15.sp,
-                                        color: AppColors.timeSlotColor,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 5.w,
-                                          vertical: 1.h,
-                                        ),
-                                        child: Text(
-                                          "${_data[index].startTime}-${_data[index].endTime}",
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: AppColors.timeSlotColor,
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 5.w,
-                                          vertical: 5.h,
-                                        ),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: getColorByRequestType(_data[index].requestType ?? ''),
-                                            borderRadius: BorderRadius.circular(10.r),
-                                          ),
-                                          child: Padding(
                                             padding: EdgeInsets.symmetric(
-                                              vertical: 5.h,
-                                              horizontal: 20.w,
+                                              horizontal: 5.w,
+                                              vertical: 2.h,
                                             ),
                                             child: Text(
-                                              (_data[index].requestType ?? '').tr(),
+                                              "${MydashboardScreenConstants.LOCATION.tr()} : ${filter[index].location}",
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
-                                                color: AppColors.black,
-                                                fontSize: 14.sp,
-                                                fontWeight: FontWeight.w600,
-                                                letterSpacing: 0.8,
+                                                color: AppColors.containerBorder,
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.w400,
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 5.w,
-                                          vertical: 1.h,
-                                        ),
-                                        child: Text(
-                                          (_data[index].status ?? '').tr(),
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: getColorByStatus(_data[index].status ?? ''),
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 5.w,
-                                            vertical: 5.h,
-                                          ),
-                                          child: Text(
-                                            _data[index].facilityName ?? '',
-                                            maxLines: 1,
-                                            softWrap: false,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              color: AppColors.ListTitleColor,
-                                              fontSize: 13.sp,
-                                              fontWeight: FontWeight.w600,
-                                              letterSpacing: 0.8,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
                                           Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
-                                            child: const Icon(
-                                              Icons.access_time_filled,
-                                              size: 20,
-                                              color: AppColors.ListTitleColor,
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 5.w,
+                                              vertical: 2.h,
+                                            ),
+                                            child: Text(
+                                              "${MydashboardScreenConstants.BOOTHS.tr()} :${filter[index].booths?.toString() ?? ''}",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                color: AppColors.containerBorder,
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.w400,
+                                              ),
                                             ),
                                           ),
-                                          Text(
-                                            _data[index].estimatedTime.toString(),
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              color: AppColors.ListTitleColor,
-                                              fontSize: 10.sp,
-                                              fontWeight: FontWeight.w400,
+                                          if ((filter[index].requestType == "Issue")) ...[
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                                              child: Text(
+                                                "${(filter[index].requestType ?? '').tr()} : ${filter[index].issueDescription ?? '-'}",
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  color: AppColors.ListTitleColor,
+                                                  fontSize: 12.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
                                             ),
+                                          ],
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 5.w,
+                                                  vertical: 2.h,
+                                                ),
+                                                child: Text(
+                                                  "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${filter[index].totalTasks.toString() ?? ''}",
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: AppColors.disabledGreenColor,
+                                                    fontSize: 14.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 5.w,
+                                                  vertical: 2.h,
+                                                ),
+                                                child: Text(
+                                                  "${MydashboardScreenConstants.COMPLETE_TASK.tr()}: ${filter[index].pendingTasks.toString()}",
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: AppColors.disabledRedColor,
+                                                    fontSize: 14.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                      vertical: 1.h,
-                                    ),
-                                    child: Text(
-                                      "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${_data[index].description ?? '-'}",
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: AppColors.ListTitleColor,
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                      vertical: 2.h,
-                                    ),
-                                    child: Text(
-                                      "${MydashboardScreenConstants.LOCATION.tr()}: ${_data[index].location ?? '-'}",
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: AppColors.ListTitleColor,
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                      vertical: 2.h,
-                                    ),
-                                    child: Text(
-                                      "${MydashboardScreenConstants.BOOTHS.tr()} :${_data[index].booths?.toString() ?? ''}",
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: AppColors.ListTitleColor,
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ),
-                                  if ((_data[index].requestType == "Issue")) ...[
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                                      child: Text(
-                                        "${(_data[index].requestType ?? '').tr()} : ${_data[index].issueDescription ?? '-'}",
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          color: AppColors.ListTitleColor,
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
                                     ),
                                   ],
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 5.w,
-                                          vertical: 2.h,
-                                        ),
-                                        child: Text(
-                                          "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${_data[index].totalTasks?.toString() ?? '-'}",
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: AppColors.greenTextColor,
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 5.w,
-                                          vertical: 2.h,
-                                        ),
-                                        child: Text(
-                                          "${MydashboardScreenConstants.PENDING_TASK.tr()}: ${_data[index].pendingTasks?.toString() ?? '-'}",
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: AppColors.redTextColor,
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  if (_data[index].status == "Ongoing") ...[
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Expanded(
-                                          child: Container(),
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            // Navigator.of(context).push(
-                                            //   MaterialPageRoute(
-                                            //     builder: (context) => const TaskCompletionScreen(),
-                                            //   ),
-                                            // );
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (context) => TaskCompletionScreen(
-                                                  allocationId: _data[index].taskAllocationId ?? '',
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(8.r),
-                                                color: AppColors.buttonColor,
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: 40.w,
-                                                  vertical: 6.h,
-                                                ),
-                                                child: Text(
-                                                  MydashboardScreenConstants.CLOSE.tr(),
-                                                  textAlign: TextAlign.center,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    fontSize: 10.sp,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: AppColors.black,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                  if (_data[index].status == "Pending") ...[
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        InkWell(
-                                          onTap: () {
-                                            setState(() {});
+                                ),
+                              )
+                            : Container(
+                                // height: 240.h,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 5.h,
+                                  horizontal: 10.w,
+                                ),
+                                margin: EdgeInsets.symmetric(
+                                  horizontal: 20.w,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color:
 
-                                            _dashboardBloc.add(UpdateStatus(id: _data[index].taskAllocationId!, status: "7"));
+                                    filter[index].status == "Pending" ?
 
-                                            // Navigator.of(context).push(
-                                            //   MaterialPageRoute(
-                                            //     builder: (context) => SelfieScreen(
-                                            //       isFromChooseFacility: true,
-                                            //       isFromTask: false,
-                                            //       templateId: _data[index].templateId!,
-                                            //       allocationId: _data[index].taskAllocationId!,
-                                            //     ),
-                                            //   ),
-                                            // );
-                                          },
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-                                            child: Container(
-                                              alignment: Alignment.centerRight,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(8.r),
-                                                color: AppColors.rejectButtonColor,
+                                    AppColors.redTextColor :
+                                    filter[index].status == "Ongoing" ?
+                                    AppColors.buttonColor :
+                                    filter[index].status == "Accepted" ?
+                                    AppColors.acceptButtonColor :
+                                    filter[index].status == "Request for closure" ?
+                                    AppColors.issueButtonColor
+
+                                      :   AppColors.disabledContainerBorder
+                                    ,
+                                    width: 1.w,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.calendar_month_outlined,
+                                                size: 15.sp,
+                                                color: AppColors.timeSlotColor,
                                               ),
-                                              child: Padding(
+                                              Padding(
                                                 padding: EdgeInsets.symmetric(
-                                                  horizontal: 15.w,
-                                                  vertical: 6.h,
+                                                  horizontal: 5.w,
+                                                  vertical: 1.h,
                                                 ),
                                                 child: Text(
-                                                  MydashboardScreenConstants.REJECT.tr(),
-                                                  textAlign: TextAlign.center,
+                                                  filter[index].date ?? '',
                                                   overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
-                                                    fontSize: 10.sp,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: AppColors.rejectGreyTextColor,
+                                                    color: AppColors.timeSlotColor,
+                                                    fontSize: 12.sp,
+                                                    fontWeight: FontWeight.w400,
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                          ),
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            // Navigator.of(context).push(
-                                            //   MaterialPageRoute(
-                                            //     builder: (context) => const JanitorList(),
-                                            //   ),
-                                            // );
-                                            _dashboardBloc.add(UpdateStatus(id: _data[index].taskAllocationId ?? '', status: "2"));
-                                          },
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(8.r),
-                                                color: AppColors.acceptButtonColor,
+                                              Icon(
+                                                Icons.access_time,
+                                                size: 15.sp,
+                                                color: AppColors.timeSlotColor,
                                               ),
-                                              child: Padding(
+                                              Padding(
                                                 padding: EdgeInsets.symmetric(
-                                                  horizontal: 15.w,
-                                                  vertical: 6.h,
+                                                  horizontal: 5.w,
+                                                  vertical: 1.h,
                                                 ),
                                                 child: Text(
-                                                  MydashboardScreenConstants.ACCEPT.tr(),
-                                                  textAlign: TextAlign.center,
+                                                  "${filter[index].startTime}-${filter[index].endTime}",
                                                   overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
-                                                    fontSize: 10.sp,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: AppColors.white,
+                                                    color: AppColors.timeSlotColor,
+                                                    fontSize: 12.sp,
+                                                    fontWeight: FontWeight.w400,
                                                   ),
                                                 ),
                                               ),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 5.w,
+                                                  vertical: 5.h,
+                                                ),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: getColorByRequestType(filter[index].requestType ?? ''),
+                                                    borderRadius: BorderRadius.circular(10.r),
+                                                  ),
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(
+                                                      vertical: 5.h,
+                                                      horizontal: 20.w,
+                                                    ),
+                                                    child: Text(
+                                                      (filter[index].requestType ?? '').tr(),
+                                                      overflow: TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                        color: AppColors.black,
+                                                        fontSize: 14.sp,
+                                                        fontWeight: FontWeight.w600,
+                                                        letterSpacing: 0.8,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 5.w,
+                                                  vertical: 1.h,
+                                                ),
+                                                child: Text(
+                                                  (filter[index].status ?? '').tr(),
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: getColorByStatus(filter[index].status ?? ''),
+                                                    fontSize: 12.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 5.w,
+                                                  vertical: 0.h,
+                                                ),
+                                                child: Text(
+                                                  'Task ID :'
+
+                                                      ?? '',
+                                                  maxLines: 1,
+                                                  softWrap: false,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: AppColors.ListTitleColor,
+                                                    fontSize: 13.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                    letterSpacing: 0.8,
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 0.w,
+                                                  vertical: 0.h,
+                                                ),
+                                                child: Text(
+                                                  filter[index].taskAllocationId
+
+                                                      ?? '',
+                                                  maxLines: 1,
+                                                  softWrap: false,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: AppColors.ListTitleColor,
+                                                    fontSize: 13.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                    letterSpacing: 0.8,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Expanded(
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: 5.w,
+                                                    vertical: 5.h,
+                                                  ),
+                                                  child: Text(
+                                                    filter[index].facilityName ?? '',
+                                                    maxLines: 1,
+                                                    softWrap: false,
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      color: AppColors.ListTitleColor,
+                                                      fontSize: 13.sp,
+                                                      fontWeight: FontWeight.w600,
+                                                      letterSpacing: 0.8,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+                                                    child: const Icon(
+                                                      Icons.access_time_filled,
+                                                      size: 20,
+                                                      color: AppColors.ListTitleColor,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    filter[index].estimatedTime.toString(),
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      color: AppColors.ListTitleColor,
+                                                      fontSize: 10.sp,
+                                                      fontWeight: FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 5.w,
+                                              vertical: 1.h,
+                                            ),
+                                            child: Text(
+                                              "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${filter[index].description ?? '-'}",
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                color: AppColors.ListTitleColor,
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.w500,
+                                              ),
                                             ),
                                           ),
-                                        )
-                                      ],
+                                          Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 5.w,
+                                              vertical: 2.h,
+                                            ),
+                                            child: Text(
+                                              "${MydashboardScreenConstants.LOCATION.tr()}: ${filter[index].location ?? '-'}",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                color: AppColors.ListTitleColor,
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 5.w,
+                                              vertical: 2.h,
+                                            ),
+                                            child: Text(
+                                              "${MydashboardScreenConstants.BOOTHS.tr()} :${filter[index].booths?.toString() ?? ''}",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                color: AppColors.ListTitleColor,
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ),
+                                          if ((filter[index].requestType == "Issue")) ...[
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                                              child: Text(
+                                                "${(filter[index].requestType ?? '').tr()} : ${filter[index].issueDescription ?? '-'}",
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  color: AppColors.ListTitleColor,
+                                                  fontSize: 12.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 5.w,
+                                                  vertical: 2.h,
+                                                ),
+                                                child: Text(
+                                                  "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${filter[index].totalTasks?.toString() ?? '-'}",
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: AppColors.greenTextColor,
+                                                    fontSize: 14.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 5.w,
+                                                  vertical: 2.h,
+                                                ),
+                                                child: Text(
+                                                  "${MydashboardScreenConstants.PENDING_TASK.tr()}: ${filter[index].pendingTasks?.toString() ?? '-'}",
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: AppColors.redTextColor,
+                                                    fontSize: 14.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          if (filter[index].status == "Ongoing") ...[
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              crossAxisAlignment: CrossAxisAlignment.end,
+                                              children: [
+                                                Expanded(
+                                                  child: Container(),
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    // Navigator.of(context).push(
+                                                    //   MaterialPageRoute(
+                                                    //     builder: (context) => const TaskCompletionScreen(),
+                                                    //   ),
+                                                    // );
+                                                    Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                        builder: (context) => TaskCompletionScreen(
+                                                          allocationId: filter[index].taskAllocationId ?? '',
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                                    child: Container(
+                                                      alignment: Alignment.center,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(8.r),
+                                                        color: AppColors.buttonColor,
+                                                      ),
+                                                      child: Padding(
+                                                        padding: EdgeInsets.symmetric(
+                                                          horizontal: 40.w,
+                                                          vertical: 6.h,
+                                                        ),
+                                                        child: Text(
+                                                          MydashboardScreenConstants.CLOSE.tr(),
+                                                          textAlign: TextAlign.center,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: TextStyle(
+                                                            fontSize: 10.sp,
+                                                            fontWeight: FontWeight.w600,
+                                                            color: AppColors.black,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                          if (filter[index].status == "Pending") ...[
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              crossAxisAlignment: CrossAxisAlignment.end,
+                                              children: [
+                                                InkWell(
+                                                  onTap: () {
+                                                    setState(() {});
+
+                                                    _dashboardBloc.add(UpdateStatus(id: filter[index].taskAllocationId!, status: "7"));
+
+                                                    // Navigator.of(context).push(
+                                                    //   MaterialPageRoute(
+                                                    //     builder: (context) => SelfieScreen(
+                                                    //       isFromChooseFacility: true,
+                                                    //       isFromTask: false,
+                                                    //       templateId: filter[index].templateId!,
+                                                    //       allocationId: filter[index].taskAllocationId!,
+                                                    //     ),
+                                                    //   ),
+                                                    // );
+                                                  },
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                                    child: Container(
+                                                      alignment: Alignment.centerRight,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(8.r),
+                                                        color: AppColors.rejectButtonColor,
+                                                      ),
+                                                      child: Padding(
+                                                        padding: EdgeInsets.symmetric(
+                                                          horizontal: 15.w,
+                                                          vertical: 6.h,
+                                                        ),
+                                                        child: Text(
+                                                          MydashboardScreenConstants.REJECT.tr(),
+                                                          textAlign: TextAlign.center,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: TextStyle(
+                                                            fontSize: 10.sp,
+                                                            fontWeight: FontWeight.w600,
+                                                            color: AppColors.rejectGreyTextColor,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    // Navigator.of(context).push(
+                                                    //   MaterialPageRoute(
+                                                    //     builder: (context) => const JanitorList(),
+                                                    //   ),
+                                                    // );
+                                                    _dashboardBloc.add(UpdateStatus(id: filter[index].taskAllocationId ?? '', status: "2"));
+                                                  },
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                                    child: Container(
+                                                      alignment: Alignment.center,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(8.r),
+                                                        color: AppColors.acceptButtonColor,
+                                                      ),
+                                                      child: Padding(
+                                                        padding: EdgeInsets.symmetric(
+                                                          horizontal: 15.w,
+                                                          vertical: 6.h,
+                                                        ),
+                                                        child: Text(
+                                                          MydashboardScreenConstants.ACCEPT.tr(),
+                                                          textAlign: TextAlign.center,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: TextStyle(
+                                                            fontSize: 10.sp,
+                                                            fontWeight: FontWeight.w600,
+                                                            color: AppColors.white,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                          if (filter[index].status == "Accepted") ...[
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              crossAxisAlignment: CrossAxisAlignment.end,
+                                              children: [
+                                                InkWell(
+                                                  onTap: () async {
+                                                    checkGps();
+                                                    setState(() {
+                                                      facility_lattitude = filter[index].lat;
+                                                      facility_longitude = filter[index].lng;
+                                                    });
+                                                    await MapUtils.openMap(filter[index].lat ?? 0.0, filter[index].lng ?? 0.0);
+                                                    // _url = Uri.parse(
+                                                    //     'https://www.google.com/maps/dir/${latitude},${longitude}/${filter[index].lat},${filter[index].lng}');
+                                                    // await _launchUrl();
+                                                  },
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                                    child: Container(
+                                                      alignment: Alignment.centerRight,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(8.r),
+                                                        color: AppColors.buttonColor,
+                                                      ),
+                                                      child: Padding(
+                                                        padding: EdgeInsets.symmetric(
+                                                          horizontal: 15.w,
+                                                          vertical: 6.h,
+                                                        ),
+                                                        child: Text(
+                                                          MydashboardScreenConstants.DIRECTION.tr(),
+                                                          textAlign: TextAlign.center,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: TextStyle(
+                                                            fontSize: 10.sp,
+                                                            fontWeight: FontWeight.w600,
+                                                            color: AppColors.black,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                InkWell(
+                                                  onTap: () async {
+                                                    await Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                        builder: (context) => SelfieScreen(
+                                                          templateId: filter[index].templateId ?? 0,
+                                                          allocationId: filter[index].taskAllocationId ?? '',
+                                                        ),
+                                                      ),
+                                                    );
+                                                    print("afasdfasfsadf" + filter[index].taskAllocationId.toString());
+                                                    _dashboardBloc.add(GetTaskTamplates());
+                                                  },
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                                    child: Container(
+                                                      alignment: Alignment.center,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(8.r),
+                                                        color: AppColors.acceptButtonColor,
+                                                      ),
+                                                      child: Padding(
+                                                        padding: EdgeInsets.symmetric(
+                                                          horizontal: 15.w,
+                                                          vertical: 6.h,
+                                                        ),
+                                                        child: Text(
+                                                          MydashboardScreenConstants.START.tr(),
+                                                          overflow: TextOverflow.ellipsis,
+                                                          textAlign: TextAlign.center,
+                                                          style: TextStyle(
+                                                            fontSize: 10.sp,
+                                                            fontWeight: FontWeight.w600,
+                                                            color: AppColors.white,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                          if (filter[index].status == "Re-open") ...[
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              crossAxisAlignment: CrossAxisAlignment.end,
+                                              children: [
+                                                InkWell(
+                                                  onTap: () async {
+                                                    checkGps();
+                                                    await MapUtils.openMap(filter[index].lat ?? 0.0, filter[index].lng ?? 0.0);
+                                                    // _url = Uri.parse(
+                                                    //     'https://www.google.com/maps/dir/${latitude},${longitude}/${filter[index].lat},${filter[index].lng}');
+                                                    // await _launchUrl();
+                                                  },
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                                    child: Container(
+                                                      alignment: Alignment.centerRight,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(8.r),
+                                                        color: AppColors.buttonColor,
+                                                      ),
+                                                      child: Padding(
+                                                        padding: EdgeInsets.symmetric(
+                                                          horizontal: 15.w,
+                                                          vertical: 6.h,
+                                                        ),
+                                                        child: Text(
+                                                          MydashboardScreenConstants.DIRECTION.tr(),
+                                                          textAlign: TextAlign.center,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: TextStyle(
+                                                            fontSize: 10.sp,
+                                                            fontWeight: FontWeight.w600,
+                                                            color: AppColors.black,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                InkWell(
+                                                  onTap: () async {
+                                                    await Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                        builder: (context) => SelfieScreen(
+                                                          templateId: filter[index].templateId!,
+                                                          allocationId: filter[index].taskAllocationId ?? '',
+                                                        ),
+                                                      ),
+                                                    );
+                                                    print("afasdfasfsadf" + filter[index].taskAllocationId.toString());
+                                                    _dashboardBloc.add(const GetTaskTamplates());
+                                                  },
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                                    child: Container(
+                                                      alignment: Alignment.center,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(8.r),
+                                                        color: AppColors.acceptButtonColor,
+                                                      ),
+                                                      child: Padding(
+                                                        padding: EdgeInsets.symmetric(
+                                                          horizontal: 15.w,
+                                                          vertical: 6.h,
+                                                        ),
+                                                        child: Text(
+                                                          MydashboardScreenConstants.START.tr(),
+                                                          textAlign: TextAlign.center,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: TextStyle(
+                                                            fontSize: 10.sp,
+                                                            fontWeight: FontWeight.w600,
+                                                            color: AppColors.white,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ],
+                                      ),
                                     ),
                                   ],
-                                  if (_data[index].status == "Accepted") ...[
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        InkWell(
-                                          onTap: () async {
-                                            checkGps();
-                                            setState(() {
-                                              facility_lattitude = _data[index].lat;
-                                              facility_longitude = _data[index].lng;
-                                            });
-                                            await MapUtils.openMap(_data[index].lat ?? 0.0, _data[index].lng ?? 0.0);
-                                            // _url = Uri.parse(
-                                            //     'https://www.google.com/maps/dir/${latitude},${longitude}/${_data[index].lat},${_data[index].lng}');
-                                            // await _launchUrl();
-                                          },
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-                                            child: Container(
-                                              alignment: Alignment.centerRight,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(8.r),
-                                                color: AppColors.buttonColor,
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: 15.w,
-                                                  vertical: 6.h,
-                                                ),
-                                                child: Text(
-                                                  MydashboardScreenConstants.DIRECTION.tr(),
-                                                  textAlign: TextAlign.center,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    fontSize: 10.sp,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: AppColors.black,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        InkWell(
-                                          onTap: () async {
-                                            await Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (context) => SelfieScreen(
-                                                  templateId: _data[index].templateId ?? 0,
-                                                  allocationId: _data[index].taskAllocationId ?? '',
-                                                ),
-                                              ),
-                                            );
-                                            print("afasdfasfsadf" + _data[index].taskAllocationId.toString());
-                                            _dashboardBloc.add(GetTaskTamplates());
-                                          },
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(8.r),
-                                                color: AppColors.acceptButtonColor,
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: 15.w,
-                                                  vertical: 6.h,
-                                                ),
-                                                child: Text(
-                                                  MydashboardScreenConstants.START.tr(),
-                                                  overflow: TextOverflow.ellipsis,
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    fontSize: 10.sp,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: AppColors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                  if (_data[index].status == "Re-open") ...[
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        InkWell(
-                                          onTap: () async {
-                                            checkGps();
-                                            await MapUtils.openMap(_data[index].lat ?? 0.0, _data[index].lng ?? 0.0);
-                                            // _url = Uri.parse(
-                                            //     'https://www.google.com/maps/dir/${latitude},${longitude}/${_data[index].lat},${_data[index].lng}');
-                                            // await _launchUrl();
-                                          },
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-                                            child: Container(
-                                              alignment: Alignment.centerRight,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(8.r),
-                                                color: AppColors.buttonColor,
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: 15.w,
-                                                  vertical: 6.h,
-                                                ),
-                                                child: Text(
-                                                  MydashboardScreenConstants.DIRECTION.tr(),
-                                                  textAlign: TextAlign.center,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    fontSize: 10.sp,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: AppColors.black,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        InkWell(
-                                          onTap: () async {
-                                            await Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (context) => SelfieScreen(
-                                                  templateId: _data[index].templateId!,
-                                                  allocationId: _data[index].taskAllocationId ?? '',
-                                                ),
-                                              ),
-                                            );
-                                            print("afasdfasfsadf" + _data[index].taskAllocationId.toString());
-                                            _dashboardBloc.add(const GetTaskTamplates());
-                                          },
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(8.r),
-                                                color: AppColors.acceptButtonColor,
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: 15.w,
-                                                  vertical: 6.h,
-                                                ),
-                                                child: Text(
-                                                  MydashboardScreenConstants.START.tr(),
-                                                  textAlign: TextAlign.center,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    fontSize: 10.sp,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: AppColors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
                       ),
+                    );
+                  },
+                ),
               ),
-            );
-          },
-        );
+                       ),
+           );
       },
     );
   }

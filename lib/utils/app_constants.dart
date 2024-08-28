@@ -78,6 +78,7 @@ class MydashboardScreenConstants {
   static const String LOCATION = 'location';
   static const String BOOTHS = 'booths';
   static const String TOTAL_TASK = 'totalTask';
+  static const String COMPLETE_TASK = 'completedTask';
   static const String PENDING_TASK = 'pendingTask';
   static const String CLOSE = 'close';
   static const String REJECT = 'reject';

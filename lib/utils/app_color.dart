@@ -72,6 +72,7 @@ class AppColors {
   static const Color lightGray1 = Color(0xffCCCCCC);
   static const Color blue = Color(0xff108BD0);
   static const Color darkBlue = Color(0xff122F78);
+  static const Color orange = Colors.orange;
 
   static const Color greyBorderProfile = Color(0xffB5B5B5);
 

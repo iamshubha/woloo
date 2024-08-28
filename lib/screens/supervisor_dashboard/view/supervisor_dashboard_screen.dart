@@ -51,7 +51,7 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
     mobile = globalStorage.getMobileNumber();
     print("mobile ----> $mobile");
     print(supervisorName);
-
+    _bottomNavIndex = 4;
     super.initState();
   }
 
@@ -194,6 +194,7 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
           setState(
             () {
               _bottomNavIndex = index;
+               print(" botttt $_bottomNavIndex");
             },
           );
         },
