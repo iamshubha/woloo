@@ -223,7 +223,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                     submittedTaskModel.taskStatus != null) ...[
                   Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 30.w, vertical: 20.h),
+                        EdgeInsets.symmetric(horizontal: 25.w, vertical: 20.h),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -240,7 +240,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                   color: AppColors.greyButtonColor),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: 40.w,
+                                  horizontal: 25.w,
                                   vertical: 10.h,
                                 ),
                                 child: Center(
@@ -266,7 +266,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                   color: AppColors.buttonColor),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: 40.w,
+                                  horizontal: 25.w,
                                   vertical: 10.h,
                                 ),
                                 child: Center(

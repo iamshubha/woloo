@@ -153,6 +153,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                             sensorPosition: SensorPosition.back,
                                              captureImage: (val){
                                                 _file1 = val;
+                                                fileList.add(_file1!);
                                                 setState(() {
 
                                                 });
@@ -160,9 +161,9 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                           ),  ) );
                                         // _file1 = await pickFile(
                                         //     null, PickSource.CAMERA);
-                                        // fileList.add(_file1!);
+
                                         print("fileeeee1" + _file1.toString());
-                                        setState(() {});
+
                                       },
                                       child: DottedBorder(
                                         color: AppColors.dottedBorderColor,
@@ -250,6 +251,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                           sensorPosition: SensorPosition.back,
                                           captureImage: (val){
                                             _file2 = val;
+                                            fileList.add(_file2!);
                                             setState(() {
 
                                             });
@@ -257,11 +259,11 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                         ),  ) );
                                         // _file2 = await pickFile(
                                         //     null, PickSource.CAMERA);
-                                        fileList.add(_file2!);
+
 
                                         print("fileeeee2" + _file2.toString());
 
-                                        setState(() {});
+
                                       },
                                       child: DottedBorder(
                                         color: AppColors.dottedBorderColor,
@@ -360,6 +362,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                           sensorPosition: SensorPosition.back,
                                           captureImage: (val){
                                             _file3 = val;
+                                            fileList.add(_file3!);
                                             setState(() {
 
                                             });
@@ -368,11 +371,11 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
 
                                         // _file3 = await pickFile(
                                         //     null, PickSource.CAMERA);
-                                        fileList.add(_file3!);
+
 
                                         print("fileeeee3" + _file3.toString());
 
-                                        setState(() {});
+
                                       },
                                       child: DottedBorder(
                                         color: AppColors.dottedBorderColor,
@@ -466,7 +469,8 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                         text: MyTaskListConstants.SUBMIT_BTN.tr(),
                         color: AppColors.buttonColor,
                         onTap: () {
-                          openDialog();
+
+                         openDialog();
                           // if (widget.isFromChooseFacility) {
                           //   Navigator.pushReplacement(
                           //     context,

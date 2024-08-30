@@ -26,11 +26,15 @@ class DashboardListWidget extends StatefulWidget {
   final Function onTapItem;
   final current_lattitude;
   final current_longitude;
+  final  List<DashboardModelClass> filter;
+  final DashboardBloc dashboardBloc;
   const DashboardListWidget({
     Key? key,
     required this.onTapItem,
     required this.current_lattitude,
     required this.current_longitude,
+    required this.filter,
+    required this.dashboardBloc
   }) : super(key: key);
 
   @override
@@ -39,9 +43,9 @@ class DashboardListWidget extends StatefulWidget {
 
 class _DashboardListWidgetState extends State<DashboardListWidget> {
   int selectedCard = -1;
-  late DashboardBloc _dashboardBloc;
+  // late DashboardBloc _dashboardBloc;
   List<DashboardModelClass> filter = [];
-  List<DashboardModelClass> _data = [] ;
+  List<DashboardModelClass> _data = [];
   late double? facility_lattitude;
   late double? facility_longitude;
   bool servicestatus = false;
@@ -72,9 +76,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
 
   @override
   void initState() {
-    _dashboardBloc = DashboardBloc();
+   // _dashboardBloc = DashboardBloc();
     janitorId = globalStorage.getId();
-    _dashboardBloc.add(GetTaskTamplates());
+   // _dashboardBloc.add(GetTaskTamplates());
 
     latitude = globalStorage.getLatitude();
     longitude = globalStorage.getLongitude();
@@ -83,123 +87,71 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer(
-      bloc: _dashboardBloc,
-      listener: (context, state) {
-        if (state is GetDashboardDataSuccess) {
-          EasyLoading.dismiss();
-          setState(() {
-            _data = state.data;
-             filter =  _data  ;
-          });
-        }
+    return
+      // BlocConsumer(
+      // bloc: _dashboardBloc,
+      // listener: (context, state) {
+      //   if (state is GetDashboardDataSuccess) {
+      //     EasyLoading.dismiss();
+      //     setState(() {
+      //       _data = state.data;
+      //        filter =  _data  ;
+      //     });
+      //   }
+      //
+      //   if (state is UpdateStatusSuccessful) {
+      //     EasyLoading.dismiss();
+      //     print("status updated");
+      //   }
+      // },
+      // builder: (context, state) {
+      //   if (state is DashboardLoading && _data.isEmpty) {
+      //     EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
+      //   }
+      //
+      //   if (state is DashboardError) {
+      //     return CustomErrorWidget(error: state.error);
+      //   }
+      //
+      //   if (state is UpdateStatusError) {
+      //     return CustomErrorWidget(error: state.error);
+      //   }
+      //   if (state is UpdateStatusLoading) {
+      //     EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
+      //   }
+      //
+      //   if (state is GetDashboardDataSuccess && _data.isEmpty) {
+      //     EasyLoading.dismiss();
+      //     return EmptyListWidget();
+      //   }
 
-        if (state is UpdateStatusSuccessful) {
-          EasyLoading.dismiss();
-          print("status updated");
-        }
-      },
-      builder: (context, state) {
-        if (state is DashboardLoading && _data.isEmpty) {
-          EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
-        }
-
-        if (state is DashboardError) {
-          return CustomErrorWidget(error: state.error);
-        }
-
-        if (state is UpdateStatusError) {
-          return CustomErrorWidget(error: state.error);
-        }
-        if (state is UpdateStatusLoading) {
-          EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
-        }
-
-        if (state is GetDashboardDataSuccess && _data.isEmpty) {
-          EasyLoading.dismiss();
-          return EmptyListWidget();
-        }
-
-        return
+      //  return
 
 
            Container(
              height: MediaQuery.of(context).size.height/1.3,
              child: Scaffold(
                 backgroundColor: AppColors.white,
-                appBar: AppBar(
-                  toolbarHeight: 79,
-                  surfaceTintColor: Colors.transparent,
-                  backgroundColor: AppColors.white,
-                   actions: [
-                     Center(
-                       child: Padding(
-                         padding: EdgeInsets.symmetric(
-                           horizontal: 25.h,
-                            vertical: 10.h
-                         ),
-                         child: SizedBox(
-                           width:  250,
-                           height: 70,
-                           child: DropdownButtonFormField(
-                             decoration: const InputDecoration(
-
-                               border: OutlineInputBorder(
-                                 borderRadius: BorderRadius.all(
-                                   Radius.circular(30.0),
-                                 ),
-                               ),),
-                             elevation: 0,
-                             // Initial Value
-                             value: dropdownvalue,
-                             // Down Arrow Icon
-                             icon: const Icon(Icons.keyboard_arrow_down),
-
-                             // Array list of items
-                             items: items.map((String items) {
-                               return DropdownMenuItem(
-
-                                 value: items,
-                                 child: Text(items),
-                               );
-                             }).toList(),
-                             dropdownColor: Colors.white,
-
-                             onChanged: (String? newValue) {
-                               setState(() {
-                                 dropdownvalue = newValue!;
-                               });
-                               print('new $newValue ');
-                               if(newValue == "All"){
-                                 filter = _data;
-                               }else {
-                                 filter =  _data.where( (e)=> e.status == newValue ).toList();
-                               }
-
-
-                               print(" filter data${filter}");
-                             },
-                           ),
-                         ),
-                       ),
-                     ),
-                   ],
-
-
-
-                ),
+                // appBar: AppBar(
+                //   toolbarHeight: 79,
+                //   surfaceTintColor: Colors.transparent,
+                //   backgroundColor: AppColors.white,
+                //    actions: [
+                //
+                //    ],
+                // ),
               body: Padding(
-                padding: const EdgeInsets.only( top: 10 , bottom: 20 ),
+                padding: const EdgeInsets.only( top: 10 , bottom: 140 ),
                 child:
 
-                filter.isEmpty ?
+                widget.filter.isEmpty ?
 
                 EmptyListWidget()
 
                  :
                 ListView.builder(
                   // physics: BouncingScrollPhysics(),
-                  itemCount: filter.length,
+                  itemCount:  widget.filter.length,
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   itemBuilder: (
@@ -218,7 +170,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                             selectedCard = index;
                           });
                         },
-                        child: filter[index].status == "Completed"
+                        child:  widget.filter[index].status == "Completed"
                             ? Container(
                                 // height: 240.h,
                                 padding: EdgeInsets.symmetric(
@@ -261,7 +213,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   vertical: 1.h,
                                                 ),
                                                 child: Text(
-                                                  filter[index].date ?? '',
+                                                   widget.filter[index].date ?? '',
                                                   overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                     color: AppColors.containerBorder,
@@ -281,7 +233,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   vertical: 1.h,
                                                 ),
                                                 child: Text(
-                                                  "${filter[index].startTime}-${filter[index].endTime}",
+                                                  "${ widget.filter[index].startTime}-${ widget.filter[index].endTime}",
                                                   overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                     color: AppColors.containerBorder,
@@ -302,7 +254,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                 ),
                                                 child: Container(
                                                   decoration: BoxDecoration(
-                                                    color: getColorByRequestType(filter[index].requestType ?? ''),
+                                                    color: getColorByRequestType( widget.filter[index].requestType ?? ''),
                                                     borderRadius: BorderRadius.circular(10.r),
                                                   ),
                                                   child: Padding(
@@ -311,7 +263,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                       horizontal: 20.w,
                                                     ),
                                                     child: Text(
-                                                      (filter[index].requestType ?? '').tr(),
+                                                      ( widget.filter[index].requestType ?? '').tr(),
                                                       overflow: TextOverflow.ellipsis,
                                                       style: TextStyle(
                                                         color: AppColors.containerBorder,
@@ -329,10 +281,10 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   vertical: 1.h,
                                                 ),
                                                 child: Text(
-                                                  (filter[index].status ?? '').tr(),
+                                                  ( widget.filter[index].status ?? '').tr(),
                                                   overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
-                                                    color: getColorByStatus(filter[index].status ?? ''),
+                                                    color: getColorByStatus( widget.filter[index].status ?? ''),
                                                     fontSize: 12.sp,
                                                     fontWeight: FontWeight.w600,
                                                   ),
@@ -369,7 +321,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                    vertical: 0.h,
                                                 ),
                                                 child: Text(
-                                                  filter[index].taskAllocationId
+                                                   widget.filter[index].taskAllocationId
 
                                                       ?? '',
                                                   maxLines: 1,
@@ -400,7 +352,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                     vertical: 5.h,
                                                   ),
                                                   child: Text(
-                                                    filter[index].facilityName
+                                                     widget.filter[index].facilityName
 
                                                         ?? '',
                                                     maxLines: 1,
@@ -428,7 +380,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                     ),
                                                   ),
                                                   Text(
-                                                    filter[index].estimatedTime.toString(),
+                                                     widget.filter[index].estimatedTime.toString(),
                                                     overflow: TextOverflow.ellipsis,
                                                     style: TextStyle(
                                                       color: AppColors.containerBorder,
@@ -446,7 +398,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               vertical: 1.h,
                                             ),
                                             child: Text(
-                                              "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${filter[index].description}",
+                                              "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${ widget.filter[index].description}",
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
@@ -462,7 +414,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               vertical: 2.h,
                                             ),
                                             child: Text(
-                                              "${MydashboardScreenConstants.LOCATION.tr()} : ${filter[index].location}",
+                                              "${MydashboardScreenConstants.LOCATION.tr()} : ${ widget.filter[index].location}",
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                 color: AppColors.containerBorder,
@@ -477,7 +429,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               vertical: 2.h,
                                             ),
                                             child: Text(
-                                              "${MydashboardScreenConstants.BOOTHS.tr()} :${filter[index].booths?.toString() ?? ''}",
+                                              "${MydashboardScreenConstants.BOOTHS.tr()} :${ widget.filter[index].booths?.toString() ?? ''}",
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                 color: AppColors.containerBorder,
@@ -486,11 +438,11 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               ),
                                             ),
                                           ),
-                                          if ((filter[index].requestType == "Issue")) ...[
+                                          if (( widget.filter[index].requestType == "Issue")) ...[
                                             Padding(
                                               padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
                                               child: Text(
-                                                "${(filter[index].requestType ?? '').tr()} : ${filter[index].issueDescription ?? '-'}",
+                                                "${( widget.filter[index].requestType ?? '').tr()} : ${ widget.filter[index].issueDescription ?? '-'}",
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                   color: AppColors.ListTitleColor,
@@ -510,7 +462,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   vertical: 2.h,
                                                 ),
                                                 child: Text(
-                                                  "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${filter[index].totalTasks.toString() ?? ''}",
+                                                  "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${ widget.filter[index].totalTasks.toString() ?? ''}",
                                                   overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                     color: AppColors.disabledGreenColor,
@@ -525,7 +477,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   vertical: 2.h,
                                                 ),
                                                 child: Text(
-                                                  "${MydashboardScreenConstants.COMPLETE_TASK.tr()}: ${filter[index].pendingTasks.toString()}",
+                                                  "${MydashboardScreenConstants.COMPLETE_TASK.tr()}: ${ widget.filter[index].pendingTasks.toString()}",
                                                   overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                     color: AppColors.disabledRedColor,
@@ -557,14 +509,14 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                   border: Border.all(
                                     color:
 
-                                    filter[index].status == "Pending" ?
+                                     widget.filter[index].status == "Pending" ?
 
                                     AppColors.redTextColor :
-                                    filter[index].status == "Ongoing" ?
+                                     widget.filter[index].status == "Ongoing" ?
                                     AppColors.buttonColor :
-                                    filter[index].status == "Accepted" ?
+                                     widget.filter[index].status == "Accepted" ?
                                     AppColors.acceptButtonColor :
-                                    filter[index].status == "Request for closure" ?
+                                     widget.filter[index].status == "Request for closure" ?
                                     AppColors.issueButtonColor
 
                                       :   AppColors.disabledContainerBorder
@@ -595,7 +547,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   vertical: 1.h,
                                                 ),
                                                 child: Text(
-                                                  filter[index].date ?? '',
+                                                   widget.filter[index].date ?? '',
                                                   overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                     color: AppColors.timeSlotColor,
@@ -615,7 +567,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   vertical: 1.h,
                                                 ),
                                                 child: Text(
-                                                  "${filter[index].startTime}-${filter[index].endTime}",
+                                                  "${ widget.filter[index].startTime}-${ widget.filter[index].endTime}",
                                                   overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                     color: AppColors.timeSlotColor,
@@ -637,7 +589,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                 ),
                                                 child: Container(
                                                   decoration: BoxDecoration(
-                                                    color: getColorByRequestType(filter[index].requestType ?? ''),
+                                                    color: getColorByRequestType( widget.filter[index].requestType ?? ''),
                                                     borderRadius: BorderRadius.circular(10.r),
                                                   ),
                                                   child: Padding(
@@ -646,7 +598,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                       horizontal: 20.w,
                                                     ),
                                                     child: Text(
-                                                      (filter[index].requestType ?? '').tr(),
+                                                      ( widget.filter[index].requestType ?? '').tr(),
                                                       overflow: TextOverflow.ellipsis,
                                                       style: TextStyle(
                                                         color: AppColors.black,
@@ -664,10 +616,10 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   vertical: 1.h,
                                                 ),
                                                 child: Text(
-                                                  (filter[index].status ?? '').tr(),
+                                                  ( widget.filter[index].status ?? '').tr(),
                                                   overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
-                                                    color: getColorByStatus(filter[index].status ?? ''),
+                                                    color: getColorByStatus( widget.filter[index].status ?? ''),
                                                     fontSize: 12.sp,
                                                     fontWeight: FontWeight.w600,
                                                   ),
@@ -703,7 +655,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   vertical: 0.h,
                                                 ),
                                                 child: Text(
-                                                  filter[index].taskAllocationId
+                                                   widget.filter[index].taskAllocationId
 
                                                       ?? '',
                                                   maxLines: 1,
@@ -730,7 +682,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                     vertical: 5.h,
                                                   ),
                                                   child: Text(
-                                                    filter[index].facilityName ?? '',
+                                                     widget.filter[index].facilityName ?? '',
                                                     maxLines: 1,
                                                     softWrap: false,
                                                     overflow: TextOverflow.ellipsis,
@@ -756,7 +708,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                     ),
                                                   ),
                                                   Text(
-                                                    filter[index].estimatedTime.toString(),
+                                                     widget.filter[index].estimatedTime.toString(),
                                                     overflow: TextOverflow.ellipsis,
                                                     style: TextStyle(
                                                       color: AppColors.ListTitleColor,
@@ -774,7 +726,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               vertical: 1.h,
                                             ),
                                             child: Text(
-                                              "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${filter[index].description ?? '-'}",
+                                              "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${ widget.filter[index].description ?? '-'}",
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
@@ -790,7 +742,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               vertical: 2.h,
                                             ),
                                             child: Text(
-                                              "${MydashboardScreenConstants.LOCATION.tr()}: ${filter[index].location ?? '-'}",
+                                              "${MydashboardScreenConstants.LOCATION.tr()}: ${ widget.filter[index].location ?? '-'}",
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                 color: AppColors.ListTitleColor,
@@ -805,7 +757,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               vertical: 2.h,
                                             ),
                                             child: Text(
-                                              "${MydashboardScreenConstants.BOOTHS.tr()} :${filter[index].booths?.toString() ?? ''}",
+                                              "${MydashboardScreenConstants.BOOTHS.tr()} :${ widget.filter[index].booths?.toString() ?? ''}",
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                 color: AppColors.ListTitleColor,
@@ -814,11 +766,11 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               ),
                                             ),
                                           ),
-                                          if ((filter[index].requestType == "Issue")) ...[
+                                          if (( widget.filter[index].requestType == "Issue")) ...[
                                             Padding(
                                               padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
                                               child: Text(
-                                                "${(filter[index].requestType ?? '').tr()} : ${filter[index].issueDescription ?? '-'}",
+                                                "${( widget.filter[index].requestType ?? '').tr()} : ${ widget.filter[index].issueDescription ?? '-'}",
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                   color: AppColors.ListTitleColor,
@@ -838,7 +790,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   vertical: 2.h,
                                                 ),
                                                 child: Text(
-                                                  "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${filter[index].totalTasks?.toString() ?? '-'}",
+                                                  "${MydashboardScreenConstants.TOTAL_TASK.tr()}: ${ widget.filter[index].totalTasks?.toString() ?? '-'}",
                                                   overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                     color: AppColors.greenTextColor,
@@ -853,7 +805,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   vertical: 2.h,
                                                 ),
                                                 child: Text(
-                                                  "${MydashboardScreenConstants.PENDING_TASK.tr()}: ${filter[index].pendingTasks?.toString() ?? '-'}",
+                                                  "${MydashboardScreenConstants.PENDING_TASK.tr()}: ${ widget.filter[index].pendingTasks?.toString() ?? '-'}",
                                                   overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                     color: AppColors.redTextColor,
@@ -864,7 +816,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               ),
                                             ],
                                           ),
-                                          if (filter[index].status == "Ongoing") ...[
+                                          if ( widget.filter[index].status == "Ongoing") ...[
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.end,
                                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -882,7 +834,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                     Navigator.of(context).push(
                                                       MaterialPageRoute(
                                                         builder: (context) => TaskCompletionScreen(
-                                                          allocationId: filter[index].taskAllocationId ?? '',
+                                                          allocationId:  widget.filter[index].taskAllocationId ?? '',
                                                         ),
                                                       ),
                                                     );
@@ -917,7 +869,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               ],
                                             ),
                                           ],
-                                          if (filter[index].status == "Pending") ...[
+                                          if ( widget.filter[index].status == "Pending") ...[
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.end,
                                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -926,15 +878,15 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   onTap: () {
                                                     setState(() {});
 
-                                                    _dashboardBloc.add(UpdateStatus(id: filter[index].taskAllocationId!, status: "7"));
+                                                    widget.dashboardBloc.add(UpdateStatus(id:  widget.filter[index].taskAllocationId!, status: "7"));
 
                                                     // Navigator.of(context).push(
                                                     //   MaterialPageRoute(
                                                     //     builder: (context) => SelfieScreen(
                                                     //       isFromChooseFacility: true,
                                                     //       isFromTask: false,
-                                                    //       templateId: filter[index].templateId!,
-                                                    //       allocationId: filter[index].taskAllocationId!,
+                                                    //       templateId:  widget.filter[index].templateId!,
+                                                    //       allocationId:  widget.filter[index].taskAllocationId!,
                                                     //     ),
                                                     //   ),
                                                     // );
@@ -973,7 +925,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                     //     builder: (context) => const JanitorList(),
                                                     //   ),
                                                     // );
-                                                    _dashboardBloc.add(UpdateStatus(id: filter[index].taskAllocationId ?? '', status: "2"));
+                                                    widget.dashboardBloc.add(UpdateStatus(id:  widget.filter[index].taskAllocationId ?? '', status: "2"));
                                                   },
                                                   child: Padding(
                                                     padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
@@ -1005,7 +957,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               ],
                                             ),
                                           ],
-                                          if (filter[index].status == "Accepted") ...[
+                                          if ( widget.filter[index].status == "Accepted") ...[
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.end,
                                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -1014,12 +966,12 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                   onTap: () async {
                                                     checkGps();
                                                     setState(() {
-                                                      facility_lattitude = filter[index].lat;
-                                                      facility_longitude = filter[index].lng;
+                                                      facility_lattitude =  widget.filter[index].lat;
+                                                      facility_longitude =  widget.filter[index].lng;
                                                     });
-                                                    await MapUtils.openMap(filter[index].lat ?? 0.0, filter[index].lng ?? 0.0);
+                                                    await MapUtils.openMap( widget.filter[index].lat ?? 0.0,  widget.filter[index].lng ?? 0.0);
                                                     // _url = Uri.parse(
-                                                    //     'https://www.google.com/maps/dir/${latitude},${longitude}/${filter[index].lat},${filter[index].lng}');
+                                                    //     'https://www.google.com/maps/dir/${latitude},${longitude}/${ widget.filter[index].lat},${filter[index].lng}');
                                                     // await _launchUrl();
                                                   },
                                                   child: Padding(
@@ -1054,13 +1006,13 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                     await Navigator.of(context).push(
                                                       MaterialPageRoute(
                                                         builder: (context) => SelfieScreen(
-                                                          templateId: filter[index].templateId ?? 0,
-                                                          allocationId: filter[index].taskAllocationId ?? '',
+                                                          templateId:  widget.filter[index].templateId ?? 0,
+                                                          allocationId:  widget.filter[index].taskAllocationId ?? '',
                                                         ),
                                                       ),
                                                     );
-                                                    print("afasdfasfsadf" + filter[index].taskAllocationId.toString());
-                                                    _dashboardBloc.add(GetTaskTamplates());
+                                                    print("afasdfasfsadf" +  widget.filter[index].taskAllocationId.toString());
+                                                     widget.dashboardBloc.add(GetTaskTamplates());
                                                   },
                                                   child: Padding(
                                                     padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
@@ -1092,7 +1044,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                               ],
                                             ),
                                           ],
-                                          if (filter[index].status == "Re-open") ...[
+                                          if ( widget.filter[index].status == "Re-open") ...[
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.end,
                                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -1100,9 +1052,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                 InkWell(
                                                   onTap: () async {
                                                     checkGps();
-                                                    await MapUtils.openMap(filter[index].lat ?? 0.0, filter[index].lng ?? 0.0);
+                                                    await MapUtils.openMap( widget.filter[index].lat ?? 0.0,  widget.filter[index].lng ?? 0.0);
                                                     // _url = Uri.parse(
-                                                    //     'https://www.google.com/maps/dir/${latitude},${longitude}/${filter[index].lat},${filter[index].lng}');
+                                                    //     'https://www.google.com/maps/dir/${latitude},${longitude}/${ widget.filter[index].lat},${filter[index].lng}');
                                                     // await _launchUrl();
                                                   },
                                                   child: Padding(
@@ -1137,13 +1089,13 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
                                                     await Navigator.of(context).push(
                                                       MaterialPageRoute(
                                                         builder: (context) => SelfieScreen(
-                                                          templateId: filter[index].templateId!,
-                                                          allocationId: filter[index].taskAllocationId ?? '',
+                                                          templateId:  widget.filter[index].templateId!,
+                                                          allocationId:  widget.filter[index].taskAllocationId ?? '',
                                                         ),
                                                       ),
                                                     );
-                                                    print("afasdfasfsadf" + filter[index].taskAllocationId.toString());
-                                                    _dashboardBloc.add(const GetTaskTamplates());
+                                                    print("afasdfasfsadf" +  widget.filter[index].taskAllocationId.toString());
+                                                     widget.dashboardBloc.add(const GetTaskTamplates());
                                                   },
                                                   child: Padding(
                                                     padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
@@ -1188,8 +1140,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
               ),
                        ),
            );
-      },
-    );
+      // },
+    // );
   }
 
   Future<void> _launchUrl() async {

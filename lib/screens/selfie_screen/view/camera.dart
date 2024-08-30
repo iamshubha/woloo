@@ -1,13 +1,9 @@
-
-
-
-
 import 'dart:io';
-
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:camerawesome/pigeon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../bloc/selfie_bloc.dart';
@@ -30,15 +26,24 @@ class _CameraPageState extends State<CameraPage> {
       body: Container(
         color: Colors.white,
         child: CameraAwesomeBuilder.awesome(
-          onMediaCaptureEvent: (event) {
+          onMediaCaptureEvent: (event)  {
             switch ( ( event.status, event.isPicture, event.isVideo)) {
               case (MediaCaptureStatus.capturing, true, false):
                 debugPrint('Capturing picture...');
               case (MediaCaptureStatus.success, true, false):
                 event.captureRequest.when(
-                  single: (single) {
+                  single: (single)  async {
                     debugPrint('Picture saved: ${single.file?.path}');
-                    widget.captureImage!(File(single.file!.path) );
+                    final Directory extDir = await getTemporaryDirectory();
+                    final testDir = await Directory(
+                      '${extDir.path}/woloo',
+                    ).create(recursive: true);
+                    final String filePath =
+                        '${testDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+                   File result =   await testCompressAndGetFile(File(single.file!.path), filePath );
+
+                    widget.captureImage!(File(result.path) );
+
                     Navigator.of(context).pop();
                   },
                   multiple: (multiple) {
@@ -139,4 +144,21 @@ class _CameraPageState extends State<CameraPage> {
       ),
     );
   }
+
+
+  //
+  Future<File> testCompressAndGetFile(File file, String targetPath) async {
+    var result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path, targetPath,
+      quality: 50,
+    );
+
+    print(file.lengthSync());
+      var compress =       File(result!.path);
+
+   print(compress.lengthSync());
+
+    return compress;
+  }
+
 }

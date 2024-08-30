@@ -21,6 +21,10 @@ import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
 
+import '../../common_widgets/empty_list_widget.dart';
+import '../../common_widgets/error_widget.dart';
+import '../data/model/dashboard_model_class.dart';
+
 class Dashboard extends StatefulWidget {
   const Dashboard({
     Key? key,
@@ -51,10 +55,27 @@ class _DashboardState extends State<Dashboard> {
   DashboardBloc dashboardBloc = DashboardBloc();
   AppLaunchModel _appLaunchModel = AppLaunchModel();
   String? type;
+   DashboardBloc? _dashboardBloc;
+  List<DashboardModelClass> _data = [];
+  List<DashboardModelClass> filter = [];
+
+  String dropdownvalue = 'All';
+
+  // List of items in our dropdown menu
+  var items = [
+    'All',
+    'Ongoing',
+    'Pending',
+    'Accepted',
+    'Completed',
+    'Request for closure'
+  ];
+
 
   @override
   void initState() {
     dashboardBloc.add(CheckAttendance());
+    dashboardBloc.add(GetTaskTamplates());
     setState(() {
       inTime = globalStorage.getTime();
     });
@@ -290,6 +311,7 @@ class _DashboardState extends State<Dashboard> {
                         ),
                         child: Column(
                           children: [
+
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -416,20 +438,129 @@ class _DashboardState extends State<Dashboard> {
                                 ],
                               ),
                             ),
+
+                            Center(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 25.h,
+                                    vertical: 10.h
+                                ),
+                                child: SizedBox(
+                                  width:  210,
+                                  height: 60,
+                                  // height: 70,
+                                  child: DropdownButtonFormField(
+                                    decoration: const InputDecoration(
+
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(30.0),
+                                        ),
+                                      ),),
+                                    elevation: 0,
+                                    // Initial Value
+                                    value: dropdownvalue,
+                                    // Down Arrow Icon
+                                    icon: const Icon(Icons.keyboard_arrow_down),
+
+                                    // Array list of items
+                                    items: items.map((String items) {
+                                      return DropdownMenuItem(
+
+                                        value: items,
+                                        child: Text(items.tr()),
+                                      );
+                                    }).toList(),
+                                    dropdownColor: Colors.white,
+
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        dropdownvalue = newValue!;
+                                      });
+                                      print('new $newValue ');
+                                      if(newValue == "All"){
+                                        filter = _data;
+                                      }else {
+                                        filter =  _data.where( (e)=> e.status == newValue ).toList();
+                                      }
+
+
+                                      print(" filter data${filter}");
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+
                           ],
                         ),
                       ),
                     ),
                   ),
                   showList
-                      ? DashboardListWidget(
-                          current_lattitude: lat,
-                          current_longitude: long,
-                          onTapItem: () {
-                            print("lattitudeee " + lat!);
-                            print("longitudeee " + long!);
-                          },
-                        )
+                      ?
+
+
+
+                  BlocConsumer(
+                    bloc: dashboardBloc,
+                    listener: (context, state) {
+                      if (state is GetDashboardDataSuccess) {
+                        EasyLoading.dismiss();
+                        setState(() {
+                          _data = state.data;
+
+                         // filter =  _data  ;
+
+                          if(dropdownvalue == "All"){
+                            filter = _data;
+                          }else {
+                            filter =  _data.where( (e)=> e.status == dropdownvalue ).toList();
+                          }
+
+                           print(" filteredddd   $filter");
+                        });
+                      }
+
+                      if (state is UpdateStatusSuccessful) {
+                        EasyLoading.dismiss();
+                        print("status updated");
+                      }
+                    },
+                     builder: (context, state) {
+
+                       if (state is DashboardLoading && _data.isEmpty) {
+                         EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
+                       }
+
+                       if (state is DashboardError) {
+                         return CustomErrorWidget(error: state.error);
+                       }
+
+                       if (state is UpdateStatusError) {
+                         return CustomErrorWidget(error: state.error);
+                       }
+                       if (state is UpdateStatusLoading) {
+                         EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
+                       }
+
+                       if (state is GetDashboardDataSuccess && _data.isEmpty) {
+                         EasyLoading.dismiss();
+                         return EmptyListWidget();
+                       }
+
+                    return   DashboardListWidget(
+                         current_lattitude: lat,
+                         current_longitude: long,
+                          filter: filter,
+                          dashboardBloc: dashboardBloc,
+                         onTapItem: () {
+                           print("lattitudeee " + lat!);
+                           print("longitudeee " + long!);
+                         },
+                       );
+                     }
+                  )
                       : Center(
                           child: Padding(
                             padding: EdgeInsets.symmetric(
