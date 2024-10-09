@@ -13,6 +13,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../utils/app_textstyle.dart';
+import '../../common_widgets/image_provider.dart';
+
 class SupervisorDashboard extends StatefulWidget {
   const SupervisorDashboard({
     Key? key,
@@ -93,78 +96,82 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
               horizontal: 10.w,
               vertical: 10.h,
             ),
-            child:
-            Image.asset(
+            child: CustomImageProvider(
               color: Colors.white,
-              AppImages.fab_img,
+              image: AppImages.fab_img,
               height: 26.h,
               width: 26.w,
             ),
           ),
         ),
       ),
-
       bottomNavigationBar: AnimatedBottomNavigationBar.builder(
-
         itemCount: imageList.length, height: 60.h,
         gapWidth: 40.h,
         tabBuilder: (int index, bool isActive) {
+               print(" isACTIVEEE  $isActive");
           // final color = isActive
           //     ? colors.activeNavigationBarColor
           //     : colors.notActiveNavigationBarColor;
 
-          return
-            isActive ?
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.asset(
-                  imageList[index],
-                  height: 20.h,
-                  width: 20.w,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.h),
-                  child: Text(
-                    labelList[index],
-                    // maxLines: 1,
-                    style: TextStyle(
-                        color: AppColors.greenText,
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.w400),
-                  ),
+          return isActive
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CustomImageProvider(
+                      image: imageList[index],
+                      height: 20.h,
+                      width: 20.w,
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 5, vertical: 5.h),
+                      child: Text(
+                        labelList[index],
+                        // maxLines: 1,
+                        style: 
+                      AppTextStyle.font10.copyWith(
+                       color: AppColors.greenText,
+                            )
+                        // TextStyle(
+                        //     color: AppColors.greenText,
+                        //     fontSize: 10.sp,
+                        //     fontWeight: FontWeight.w400),
+                      ),
+                    )
+                  ],
                 )
-              ],
-            )
-
-                :
-            Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.asset(
-                imageList[index],
-                height: 20.h,
-                width: 20.w,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.h),
-                child: Text(
-                  textAlign: TextAlign.center,
-                  labelList[index],
-                  // maxLines: 1,
-                  style: TextStyle(
-
-                      color: AppColors.labelColor,
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.w400),
-                ),
-              )
-            ],
-          );
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CustomImageProvider(
+                      image: imageList[index],
+                      height: 20.h,
+                      width: 20.w,
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 5, vertical: 5.h),
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        labelList[index],
+                        // maxLines: 1,
+                        style: 
+                          AppTextStyle.font10.copyWith(
+                             color: AppColors.labelColor, 
+                            )
+                        // TextStyle(
+                        //     color: AppColors.labelColor,
+                        //     fontSize: 10.sp,
+                        //     fontWeight: FontWeight.w400),
+                      ),
+                    )
+                  ],
+                );
         },
 
         backgroundColor: AppColors.bottomNavigationColor,
@@ -194,14 +201,13 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
           setState(
             () {
               _bottomNavIndex = index;
-               print(" botttt $_bottomNavIndex");
+              print(" botttt $_bottomNavIndex");
             },
           );
         },
         children: [
           ClusterList(),
           JanitorList(
-
             isFromDashboard: true,
             isFromCluster: false,
             isFromDashboardAssignment: false,

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:Woloo_Smart_hygiene/core/model/App_launch_model.dart';
 import 'package:dio/dio.dart';
 import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
@@ -28,18 +30,21 @@ class DashboardService {
 
   Future<List<DashboardModelClass>> getTasksByJanitorId() async {
     try {
+        List<DashboardModelClass> output = [];
       var response = await dio.get(
         APIConstants.GET_ALL_TASK_TAMPLATES,
         options: Options(extra: {"auth": true}),
       );
 
-      List<DashboardModelClass> output = [];
+    
 
        print(" janitor task $response");
 
       for (var item in response['results']) {
         output.add(DashboardModelClass.fromJson(item));
       }
+
+       log("output $output");
 
       return output;
     } catch (e) {

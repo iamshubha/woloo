@@ -20,6 +20,8 @@ import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/widget/view_imag
 import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
@@ -30,6 +32,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:queen_validators/queen_validators.dart';
+
+import '../../common_widgets/empty_list_widget.dart';
+import '../../selfie_screen/view/camera.dart';
+import '../../washroom_image_screen/images_bloc/bloc/capture_bloc.dart';
+import '../../washroom_image_screen/images_bloc/event/capture_event.dart';
+import '../../washroom_image_screen/images_bloc/state/capture_state.dart';
 
 enum PickSource {
   CAMERA,
@@ -65,7 +73,11 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
   late int facilityId;
   late File taskImage;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+   
+  final ReportIssueBloc bloc1 = ReportIssueBloc();
+  final ReportIssueBloc bloc2 = ReportIssueBloc();
+  final ReportIssueBloc bloc3 = ReportIssueBloc();
+   CaptureBloc _captureBloc = CaptureBloc(); 
   @override
   void initState() {
     reportIssueBloc.add(GetAllClustersDropdown());
@@ -75,47 +87,13 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer(
+    return 
+    
+
+    BlocConsumer(
         bloc: reportIssueBloc,
         listener: (context, state) {
-          if (state is GetClustersDropdownSuccess) {
-            EasyLoading.dismiss();
-
-            setState(() {
-              clusterNames = state.data;
-            });
-          }
-          if (state is GetFacilityDropdownSuccess) {
-            EasyLoading.dismiss();
-
-            setState(() {
-              facilityNames = state.data;
-            });
-          }
-          if (state is GetTasksDropdownSuccess) {
-            EasyLoading.dismiss();
-
-            setState(() {
-              templateNames = state.data;
-            });
-          }
-          if (state is GetJanitorsDropdownSuccess) {
-            EasyLoading.dismiss();
-
-            setState(() {
-              janitorList = state.data;
-            });
-          }
-          if (state is GetTasksListSuccess) {
-            EasyLoading.dismiss();
-
-            setState(() {
-              taskNames = state.data;
-
-              tasks = taskNames.tasks!;
-            });
-          }
-
+        
           if (state is ReportIssueSuccess) {
             EasyLoading.dismiss();
             _reportIssueModel = state.data;
@@ -124,65 +102,113 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
           }
         },
         builder: (context, state) {
+
+              print("report issue  $state");
           if (state is GetClustersDropdownLoading) {
             EasyLoading.show(
                 status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
+          else
           if (state is GetClustersDropdownError) {
             return CustomErrorWidget(error: state.error);
           }
+          else
+          if (state is GetClustersDropdownSuccess  ) {
 
-          // if (state is GetClustersDropdownSuccess && (state.data.isEmpty)) {
-          //   EasyLoading.dismiss();
-          //   return const EmptyListWidget();
-          // }
+            EasyLoading.dismiss();
+               clusterNames = state.data;
+          //  return const EmptyListWidget();
+          }
+          else
           if (state is GetFacilityDropdownLoading) {
             EasyLoading.show(
                 status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
-
+           else
           if (state is GetFacilityDropdownError) {
             return CustomErrorWidget(error: state.error);
           }
+          else
+          if (state is GetFacilityDropdownSuccess  ) {
 
-          // if (state is GetFacilityDropdownSuccess && (state.data.isEmpty)) {
-          //   EasyLoading.dismiss();
-          //   return const EmptyListWidget();
-          // }
+            EasyLoading.dismiss();
+             facilityNames = state.data;
+         //   return const EmptyListWidget();
+          }
+          else
           if (state is GetTasksDropdownLoading) {
             EasyLoading.show(
                 status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
-
+          else
           if (state is GetTasksDropdownError) {
             return CustomErrorWidget(error: state.error);
           }
+           else
+            if (state is GetTasksDropdownSuccess) {
+            EasyLoading.dismiss();
 
+         
+              templateNames = state.data;
+           
+          }
+           else
           if (state is GetJanitorsDropdownLoading) {
             EasyLoading.show(
                 status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
-
+          else
           if (state is GetJanitorsDropdownError) {
             return CustomErrorWidget(error: state.error);
           }
+           else
+              if (state is GetJanitorsDropdownSuccess) {
+            EasyLoading.dismiss();
 
+            
+              janitorList = state.data;
+            
+          }
+          else
           if (state is GetTasksListLoading) {
             EasyLoading.show(
                 status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
-
+          else
           if (state is GetTasksListError) {
             return CustomErrorWidget(error: state.error);
           }
+          else
+           if (state is GetTasksListSuccess) {
+            EasyLoading.dismiss();
+
+            
+              taskNames = state.data;
+
+              tasks = taskNames.tasks!;
+           
+          }
+          else
           if (state is ReportIssueLoading) {
             EasyLoading.show(
                 status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
-
+           else
           if (state is ReportIssueError) {
             return CustomErrorWidget(error: state.error);
           }
+          else
+           if (state is ReportIssueSuccess) {
+          //  EasyLoading.dismiss();
+          //  _reportIssueModel = state.data;
+             // if(mounted){
+         //  return
+            // openDialog();
+             // }
+
+            // EasyLoading.showToast(_reportIssueModel.message.toString());
+          }
+       
 
           return GestureDetector(
             onTap: () {
@@ -212,11 +238,15 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                   child: Text(
                     MydashboardScreenConstants.REPORT_ISSUE.tr(),
                     textAlign: TextAlign.start,
-                    style: TextStyle(
+                    style:
+                    AppTextStyle.font24.copyWith(
                       color: AppColors.yellowSplashColor,
-                      fontSize: 24.sp,
-                      fontWeight: FontWeight.w400,
-                    ),
+                    )
+                    //  TextStyle(
+                    //   color: AppColors.yellowSplashColor,
+                    //   fontSize: 24.sp,
+                    //   fontWeight: FontWeight.w400,
+                    // ),
                   ),
                 ),
                 backgroundColor: AppColors.appbarBgColor,
@@ -234,11 +264,15 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                             horizontal: 20.h, vertical: 10.h),
                         child: Text(
                           MyReportIssueScreenConstants.CLUSTER_NAME.tr(),
-                          style: TextStyle(
-                            color: AppColors.clusterTitleColor,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w400,
-                          ),
+                          style:
+                           AppTextStyle.font16.copyWith(
+                           color: AppColors.clusterTitleColor,
+                             )
+                          // TextStyle(
+                          //   color: AppColors.clusterTitleColor,
+                          //   fontSize: 16.sp,
+                          //   fontWeight: FontWeight.w400,
+                          // ),
                         ),
                       ),
                       Padding(
@@ -271,11 +305,15 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                         ),
                         child: Text(
                           MyReportIssueScreenConstants.FACILITY.tr(),
-                          style: TextStyle(
-                            color: AppColors.clusterTitleColor,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w400,
-                          ),
+                          style:
+                             AppTextStyle.font16.copyWith(
+                              color: AppColors.clusterTitleColor,
+                             )
+                          //  TextStyle(
+                          //   color: AppColors.clusterTitleColor,
+                          //   fontSize: 16.sp,
+                          //   fontWeight: FontWeight.w400,
+                          // ),
                         ),
                       ),
                       Padding(
@@ -292,10 +330,10 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                               item.facilityName,
 
                           onChanged: (FacilityDropdownModel item) {
-                            setState(() {
+                       
                               facilityId = item.id!;
                               print("facilityId --->" + facilityId.toString());
-                            });
+                           
                           },
                           validator: (value) => value == null
                               ? MyReportIssueScreenConstants.FACILITY_VALIDATION
@@ -310,11 +348,15 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                         ),
                         child: Text(
                           MyReportIssueScreenConstants.TEMPLATE_NAME.tr(),
-                          style: TextStyle(
-                            color: AppColors.clusterTitleColor,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w400,
-                          ),
+                          style:
+                             AppTextStyle.font16.copyWith(
+                           color: AppColors.clusterTitleColor,
+                             )
+                          // TextStyle(
+                          //   color: AppColors.clusterTitleColor,
+                          //   fontSize: 16.sp,
+                          //   fontWeight: FontWeight.w400,
+                          // ),
                         ),
                       ),
                       Padding(
@@ -337,10 +379,10 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           onChanged: (TaskNamesModels item) {
                             reportIssueBloc
                                 .add(GetAllTaskList(id: item.id ?? '0'));
-                            setState(() {
+                            
                               templateId = item.id!;
                               print("templateId --->" + templateId.toString());
-                            });
+                        
                           },
                         ),
                       ),
@@ -350,11 +392,15 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                         ),
                         child: Text(
                           MyReportIssueScreenConstants.TASK_NAME.tr(),
-                          style: TextStyle(
-                            color: AppColors.clusterTitleColor,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w400,
-                          ),
+                          style:
+                             AppTextStyle.font16.copyWith(
+                              color: AppColors.clusterTitleColor,
+                             ),
+                          // TextStyle(
+                          //   color: AppColors.clusterTitleColor,
+                          //   fontSize: 16.sp,
+                          //   fontWeight: FontWeight.w400,
+                          // ),
                         ),
                       ),
                       Padding(
@@ -392,11 +438,15 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                         ),
                         child: Text(
                           MyReportIssueScreenConstants.DESCRIPTION.tr(),
-                          style: TextStyle(
-                            color: AppColors.clusterTitleColor,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w400,
-                          ),
+                          style:
+                             AppTextStyle.font16.copyWith(
+                           color: AppColors.clusterTitleColor,
+                             )
+                          //  TextStyle(
+                          //   color: AppColors.clusterTitleColor,
+                          //   fontSize: 16.sp,
+                          //   fontWeight: FontWeight.w400,
+                          // ),
                         ),
                       ),
                       Padding(
@@ -421,11 +471,15 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                         ),
                         child: Text(
                           MyReportIssueScreenConstants.ASSIGN_TO.tr(),
-                          style: TextStyle(
-                            color: AppColors.clusterTitleColor,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w400,
-                          ),
+                          style:
+                            AppTextStyle.font16.copyWith(
+                           color: AppColors.clusterTitleColor,
+                             )
+                          //  TextStyle(
+                          //   color: AppColors.clusterTitleColor,
+                          //   fontSize: 16.sp,
+                          //   fontWeight: FontWeight.w400,
+                          // ),
                         ),
                       ),
                       Padding(
@@ -442,13 +496,13 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                                   .tr()
                               : null,
                           onChanged: (JanitorDropdownModel item) {
-                            // setState(() {
+                           
                              FocusScope.of(context).requestFocus(FocusNode());
                               janitorId = item.id!;
                               print("selectedTasks---->${selectedIds}");
 
                               print("janitorId --->" + janitorId.toString());
-                            // });
+                          
                           },
                         ),
                       ),
@@ -459,11 +513,15 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                         ),
                         child: Text(
                           MyReportIssueScreenConstants.UPLOAD_PHOTO.tr(),
-                          style: TextStyle(
-                            color: AppColors.clusterTitleColor,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w400,
-                          ),
+                          style:
+                             AppTextStyle.font16.copyWith(
+                           color: AppColors.clusterTitleColor,
+                             )
+                          // TextStyle(
+                          //   color: AppColors.clusterTitleColor,
+                          //   fontSize: 16.sp,
+                          //   fontWeight: FontWeight.w400,
+                          // ),
                         ),
                       ),
                       Padding(
@@ -480,110 +538,28 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                               horizontal: 20.w,
                               vertical: 20.h,
                             ),
-                            child: _file != null
-                                ?
+                            child:
 
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
+                             BlocBuilder(
+                               bloc: _captureBloc,
+                              builder: (context, state) {
+                                   print("  reposrt issue $state");
+                                 if ( state  is AddImagesInitial ) {
 
-                                    GestureDetector(
-                                      onTap: (){
-                                         Navigator.of(context).push( MaterialPageRoute(builder:  (context) {
-                                             return  ViewImage(
-                                              file: _file,
-                                             );
-                                         }, ) );
-                                      },
-                                      child: Center(
-                                        child: Container(
-                                          height: 40.h,
-                                          width: 130.w,
-                                          decoration: BoxDecoration(
-                                            color: AppColors.lightGray1,
-                                            borderRadius: BorderRadius.circular(
-                                              10.r,
-                                            ),
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              MyReportIssueScreenConstants
-                                                  .VIEW_PHOTO
-                                                  .tr(),
-                                              style: TextStyle(
-                                                fontSize: 14.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors
-                                                    .clusterTitleColor,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-
-
-                                    GestureDetector(
-                                      onTap: (){
-                                        _file = null;
-
-                                        setState(() {});
-                                      },
-                                      child: Center(
-                                        child: Container(
-                                          height: 40.h,
-                                          width: 130.w,
-                                          decoration: BoxDecoration(
-                                            color: AppColors.lightGray1,
-                                            borderRadius: BorderRadius.circular(
-                                              10.r,
-                                            ),
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              MyReportIssueScreenConstants
-                                                  .DELETE_PHOTO
-                                                  .tr(),
-                                              style: TextStyle(
-                                                fontSize: 14.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors
-                                                    .clusterTitleColor,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                            // Center(
-                            //         child: Container(
-                            //           decoration: BoxDecoration(
-                            //             borderRadius:
-                            //                 BorderRadius.circular(10.r),
-                            //           ),
-                            //           child: ClipRRect(
-                            //             borderRadius: BorderRadius.circular(
-                            //               10.r,
-                            //             ),
-                            //             child: Image.file(
-                            //               _file!,
-                            //               width: ScreenUtil().screenWidth,
-                            //               height: 80.h,
-                            //               fit: BoxFit.cover,
-                            //             ),
-                            //           ),
-                            //         ),
-                            //       )
-                                :
-                            GestureDetector(
+                                      return       GestureDetector(
                               onTap: () async {
-                                _file = await pickFile(
-                                  null,
-                                  PickSource.CAMERA,
-                                );
-                                setState(() {});
+                                 
+                                       Navigator.of(context).push( MaterialPageRoute(builder: (context) =>  CameraPage(
+                                            sensorPosition: SensorPosition.back,
+                                             captureImage: (val){
+                                                _file = val;
+                                                _captureBloc.add(AddImages(file:_file));
+                                         
+                                              
+                                             },
+                                          ),  ) );
+                                  
+
                               },
                               child: Center(
                                       child: Container(
@@ -616,19 +592,144 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                                                 MyReportIssueScreenConstants
                                                     .CHOOSE_PHOTO
                                                     .tr(),
-                                                style: TextStyle(
-                                                  fontSize: 14.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors
-                                                      .clusterTitleColor,
-                                                ),
+                                                style:
+                                                   AppTextStyle.font14.copyWith(
+                                                color: AppColors
+                                                    .clusterTitleColor,
+                                              )
+                                                //  TextStyle(
+                                                //   fontSize: 14.sp,
+                                                //   fontWeight: FontWeight.w400,
+                                                //   color: AppColors
+                                                //       .clusterTitleColor,
+                                                // ),
                                               ),
                                             ),
                                           ],
                                         ),
                                       ),
                                     ),
-                            ),
+                            );
+                                   
+                                 }
+                                 else if (
+                                  state  is AddImagesSuccessful 
+                                 ){
+
+                              return 
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+
+                                    GestureDetector(
+                                      onTap: (){
+                                         Navigator.of(context).push( MaterialPageRoute(builder:  (context) {
+                                             return  ViewImage(
+                                              file: _file,
+                                             );
+                                         }, ) );
+                                      },
+                                      child: Center(
+                                        child: Container(
+                                          height: 40.h,
+                                          width: 130.w,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.lightGray1,
+                                            borderRadius: BorderRadius.circular(
+                                              10.r,
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              MyReportIssueScreenConstants
+                                                  .VIEW_PHOTO
+                                                  .tr(),
+                                              style:
+                                                 AppTextStyle.font14.copyWith(
+                                             color: AppColors.clusterTitleColor,)
+                                              //  TextStyle(
+                                              //   fontSize: 14.sp,
+                                              //   fontWeight: FontWeight.w400,
+                                              //   color: AppColors
+                                              //       .clusterTitleColor,
+                                              // ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                           
+                                    GestureDetector(
+                                      onTap: (){
+                                         _captureBloc.add(  RemoveImages(file: _file ));
+                                       
+                                      },
+                                      child: Center(
+                                        child: Container(
+                                          height: 40.h,
+                                          width: 130.w,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.lightGray1,
+                                            borderRadius: BorderRadius.circular(
+                                              10.r,
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              MyReportIssueScreenConstants
+                                                  .DELETE_PHOTO
+                                                  .tr(),
+                                              style:
+                                              AppTextStyle.font14.copyWith(
+                                                color: AppColors
+                                                    .clusterTitleColor,
+                                              )
+                                              // TextStyle(
+                                              //   fontSize: 14.sp,
+                                              //   fontWeight: FontWeight.w400,
+                                              //   color: AppColors
+                                              //       .clusterTitleColor,
+                                              // ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+
+                                 }
+                                 else {
+                                   return SizedBox();
+                                 }
+                             },)
+                               
+                               
+                            //  _file != null
+                            //     ?
+
+                            // Center(
+                            //         child: Container(
+                            //           decoration: BoxDecoration(
+                            //             borderRadius:
+                            //                 BorderRadius.circular(10.r),
+                            //           ),
+                            //           child: ClipRRect(
+                            //             borderRadius: BorderRadius.circular(
+                            //               10.r,
+                            //             ),
+                            //             child: Image.file(
+                            //               _file!,
+                            //               width: ScreenUtil().screenWidth,
+                            //               height: 80.h,
+                            //               fit: BoxFit.cover,
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       )
+                            //    :
+                          
                           ),
                         ),
                       ),
@@ -643,16 +744,19 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                             return;
                           }
 
-                          print("ids---->${selectedIds}");
+                     
 
                           if (_file != null) {
+                          
                             reportIssueBloc.add(ReportIssue(
                                 template_id: templateId,
                                 facility_id: facilityId,
                                 janitor_id: janitorId,
                                 description: _controller.text,
                                 task_images: _file!,
-                                taskList: selectedIds));
+                                taskList: selectedIds
+                                )
+                                );
                           } else {
                             EasyLoading.showToast(MyReportIssueScreenConstants
                                 .UPLOAD_IMG_TOAST
@@ -674,6 +778,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
             ),
           );
         });
+
   }
 
   Future<File?> pickFile(File? old, PickSource source) async {

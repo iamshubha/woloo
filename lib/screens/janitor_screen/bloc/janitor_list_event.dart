@@ -19,12 +19,14 @@ class GetAllJanitors extends JanitorsListEvent {
 class ReassignTask extends JanitorsListEvent {
   final List<String> id;
   final String janitor_id;
+  final bool? fromReassign;
 
   const ReassignTask({
     required this.id,
     required this.janitor_id,
+    required this.fromReassign
   });
 
   @override
-  List<Object?> get props => [id, janitor_id, Random().nextInt(100)];
+  List<Object?> get props => [id, janitor_id, Random().nextInt(100), fromReassign];
 }

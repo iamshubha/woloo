@@ -19,8 +19,9 @@ class JanitorListLoading extends JanitorListState {
 
 class JanitorListSuccess extends JanitorListState {
   final List<JanitorListModel> data;
+  final bool fromReassign;
 
-  const JanitorListSuccess({required this.data});
+  const JanitorListSuccess({required this.data, required this.fromReassign});
 
   @override
   List<Object?> get props => [data];

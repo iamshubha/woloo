@@ -9,9 +9,17 @@ import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
+import 'package:get/utils.dart';
 import 'package:get_it/get_it.dart';
 
+import 'screens/dashboard/bloc/dashboard_bloc.dart';
+import 'screens/dashboard/bloc/dashboard_event.dart';
+import 'screens/dashboard/controller/dash_controller.dart';
+
 class Messaging {
+  DashboardBloc dashboardBloc = DashboardBloc();
+  DashController dashController = Get.put(DashController());
   Future initialize() async {
     var flNotificationsPlugin = FlutterLocalNotificationsPlugin();
     if (Platform.isAndroid) await createNotificationChannel();
@@ -19,6 +27,9 @@ class Messaging {
     await FirebaseMessaging.instance.requestPermission();
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    //   dashboardBloc.add(GetTaskTamplates());
+  //   GetIt.instance<DashboardBloc>().add(const GetTaskTamplates());
+
       flNotificationsPlugin.show(
         message.hashCode,
         message.notification?.title,
@@ -26,15 +37,29 @@ class Messaging {
         notificationDetails(),
         payload: jsonEncode(message.data),
       );
-
-      try {
+      
+ 
+      // try {
         int role = GetIt.instance<GlobalStorage>().getRoleId();
+        // print(" role $role");
         if (role == 2) {
           GetIt.instance<SupervisorDashboardBloc>().add(const GetSupervisorDashboardData());
           int supervisorId = GetIt.instance<GlobalStorage>().getId();
           GetIt.instance<IssueListBloc>().add(GetAllIssues(supervisorId: supervisorId));
         }
-      } catch (e) {}
+        else
+        if(role == 1){
+
+             dashController.mapGetDashboardToState();
+          print("iin roll calll");
+        
+        // GetIt.instance<DashboardBloc>().add(GetTaskTamplates());
+
+           
+        }
+      //
+      // } catch (e) {}
+
     });
 
     var notificationSettings = InitializationSettings(
@@ -45,7 +70,9 @@ class Messaging {
     await flNotificationsPlugin.initialize(
       notificationSettings,
 
-      onDidReceiveNotificationResponse: (details) {},
+      onDidReceiveNotificationResponse: (details) {
+          print("notificatiss recived on local $details ");
+      },
     );
   }
 
@@ -106,7 +133,8 @@ class Messaging {
 @pragma("vm:entry-point")
 Future<void> backgroundNotificationHandler(RemoteMessage message) async {
   Messaging messaging = Messaging();
-
+ 
+    print("backgroun  notitficationssssssss");
   var flNotificationsPlugin = FlutterLocalNotificationsPlugin();
   var notificationSettings = InitializationSettings(
     android: messaging.androidNotificationSettings(),

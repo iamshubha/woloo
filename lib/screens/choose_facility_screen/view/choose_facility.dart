@@ -1,32 +1,23 @@
-import 'dart:convert';
 
-import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
 import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/data/model/Facility_list_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/data/model/selected_tasks.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/button_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/custom_dialogue_widget.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/list_widget.dart';
 import 'package:Woloo_Smart_hygiene/screens/reassign_janitor_screen/view/reassign_janitor_screen.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_details_screen/view/task_details.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-
-import 'assign_succefully.dart';
 
 class ChooseFacilityList extends StatefulWidget {
   final String? janitorId;
   final String? clusterId;
-  final String? janitorName;
 
   const ChooseFacilityList({
     Key? key,
     required this.janitorId,
     this.clusterId,
-    this.janitorName
   }) : super(key: key);
 
   @override
@@ -39,13 +30,11 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
   bool yesButtonTap = false;
   bool selectAll = false;
   bool isDisabled = false;
-  String  janitorName = "";
   List<String> selectedIds = [];
   String allocationId = "";
 
   List<FacilityListModel> _facilityListModel = [];
   List<bool> _checkList = [];
-
   SelectTaskModel selectTaskModel = SelectTaskModel();
   var key = GlobalKey(); // using this to refresh the list widget
 
@@ -62,20 +51,20 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
       backgroundColor: AppColors.white,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: AppColors.appbarBgColor,
+        backgroundColor: AppColors.white,
         title: Text(
           MyFacilityScreenConstants.TITLE_TEXT.tr(),
           style: TextStyle(
             fontSize: 24.sp,
             fontWeight: FontWeight.w400,
-            color: AppColors.yellowSplashColor,
+            color: Colors.black,
           ),
         ),
         leading: IconButton(
           color: AppColors.black30,
           icon: const Icon(
             Icons.arrow_back,
-            color: Colors.white,
+            color: Colors.black,
             size: 30,
           ),
           // color: AppColors.black,
@@ -140,10 +129,8 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
                       print("_facilityListModel---->${_facilityListModel.length}");
                       if (selectAll) {
                         for (var i = 0; i < _facilityListModel.length; i++) {
-
                           if (!selectedIds.contains(_facilityListModel[i].id.toString())) {
                             selectedIds.add(_facilityListModel[i].id.toString());
-
                           }
                           _checkList[i] = true;
                         }
@@ -174,12 +161,12 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
                         child: !selectAll
                             ? null
                             : const Center(
-                                child: Icon(
-                                  Icons.check,
-                                  size: 15,
-                                  color: AppColors.black,
-                                ),
-                              ),
+                          child: Icon(
+                            Icons.check,
+                            size: 15,
+                            color: AppColors.black,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -209,13 +196,12 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
                   } else {
                     //_selectedProductIds.removeWhere((element) => element == data.tasks?[index].taskId);
                     selectedIds.removeWhere(
-                      (element) => element == listObject.id,
+                          (element) => element == listObject.id,
                     );
                     print("remove---->$selectedIds");
                   }
                   bool flag = true;
                   for (var i = 0; i < _facilityListModel.length; i++) {
-                janitorName =    _facilityListModel[i].janitorName!;
                     if (!_checkList[i]) {
                       flag = false;
                       break;
@@ -242,18 +228,10 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
             ),
             child: GestureDetector(
               onTap: () async {
-                          print("dsfsd${janitorName}");
-                          print("sdf $_checkList");
-                          print("sdfdsf $selectedIds");
                 if (selectedIds.isNotEmpty) {
                   await Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) =>
-                      // AssignSuccefully(
-                      //   janitorName: janitorName,
-                      //   assignTask: selectedIds,
-                      // )
-                          ReassignJanitorScreen(
+                      builder: (context) => ReassignJanitorScreen(
                         isFromCluster: true,
                         clusterId: widget.clusterId,
                         janitorId: widget.janitorId ?? '',

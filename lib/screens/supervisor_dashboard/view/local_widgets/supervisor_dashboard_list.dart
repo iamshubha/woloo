@@ -8,6 +8,7 @@ import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor
 import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,7 +29,7 @@ class SupervisorDashboardListWidget extends StatefulWidget {
 }
 
 class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListWidget> {
-  int selectedCard = -1;
+  // int selectedCard = -1;
   late SupervisorDashboardBloc _supervisorDashboardBloc;
   List<SupervisorModelDashboard> _data = [];
   GlobalStorage globalStorage = GetIt.instance();
@@ -51,16 +52,16 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
       listener: (context, state) {
         if (state is GetSupervisorDashboardDataSuccess) {
           EasyLoading.dismiss();
-          setState(() {
-            _data = state.data;
+     
+         
             print("GetSupervisorDashboardDataSuccess--->" + _data.toString());
-          });
+         
         }
         if (state is SupervisorUpdateStatusSuccessful) {
           EasyLoading.dismiss();
-          setState(() {
-            isApproved = true;
-          });
+          
+          //  isApproved = true;
+         
           print("SupervisorUpdateStatusSuccessful " + isApproved.toString());
         }
 
@@ -72,42 +73,30 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
         // }
       },
       builder: (context, state) {
-        if (state is SupervisorDashboardLoading && _data.isEmpty) {
+
+           debugPrint("suepr visor list $state ");
+        if (state is SupervisorDashboardLoading) {
           EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
-        }
+        } else
 
         if (state is SupervisorDashboardError) {
           EasyLoading.dismiss();
           print("SupervisorDashboardError--->" + _data.toString());
 
           return CustomErrorWidget(error: state.error);
-        }
+        } 
+        else
 
-        if (state is GetSupervisorDashboardDataSuccess && _data.isEmpty) {
+        if (state is GetSupervisorDashboardDataSuccess  ) {
           EasyLoading.dismiss();
-          print("GetSupervisorDashboardDataSuccess--->" + _data.toString());
+             _data = state.data;
+         // print("GetSupervisorDashboardDataSuccess--->" + _data.toString());
 
-          return const EmptyListWidget();
-        }
-        if (state is SupervisorUpdateStatusLoading) {
-          EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
-        }
-
-        if (state is SupervisorUpdateStatusError) {
-          EasyLoading.dismiss();
-
-          return CustomErrorWidget(error: state.error);
-        }
-        // if (state is AssignTaskLoading) {
-        //   EasyLoading.show(status: __MydashboardScreenConstants.LOADING_TOAST.tr());
-        // }
-        //
-        // if (state is AssignTaskError) {
-        //   EasyLoading.dismiss();
-        //   return CustomErrorWidget(error: state.error);
-        // }
-
-        return RefreshIndicator(
+          return
+           _data.isEmpty ?
+           const EmptyListWidget()
+               :
+           RefreshIndicator(
           onRefresh: () {
             return Future.delayed(
               Duration(seconds: 1),
@@ -133,9 +122,9 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                 child: GestureDetector(
                   onTap: () {
                     widget.onTapItem(_data[index], isApproved);
-                    setState(() {
-                      selectedCard = index;
-                    });
+                    
+                    //  selectedCard = index;
+                    
                   },
                   child: _data[index].status == "Completed"
                       ? Container(
@@ -186,11 +175,15 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                           ),
                                           child: Text(
                                             _data[index].date ?? '',
-                                            style: TextStyle(
-                                              color: AppColors.containerBorder,
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w400,
-                                            ),
+                                            style: 
+                                            AppTextStyle.font12.copyWith(
+                                              color: AppColors.containerBorder, 
+                                            )
+                                            // TextStyle(
+                                            //   color: AppColors.containerBorder,
+                                            //   fontSize: 12.sp,
+                                            //   fontWeight: FontWeight.w400,
+                                            // ),
                                           ),
                                         ),
                                         Icon(
@@ -205,11 +198,15 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                           ),
                                           child: Text(
                                             "${_data[index].startTime} - ${_data[index].endTime}" ?? '',
-                                            style: TextStyle(
-                                              color: AppColors.containerBorder,
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w400,
-                                            ),
+                                            style: 
+                                              AppTextStyle.font12.copyWith(
+                                              color: AppColors.containerBorder, 
+                                            )
+                                            // TextStyle(
+                                            //   color: AppColors.containerBorder,
+                                            //   fontSize: 12.sp,
+                                            //   fontWeight: FontWeight.w400,
+                                            // ),
                                           ),
                                         ),
                                       ],
@@ -234,12 +231,16 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                               ),
                                               child: Text(
                                                 _data[index].requestType == "Customer Request" ? "Customer" : _data[index].requestType ?? '',
-                                                style: TextStyle(
+                                                style:
+                                                AppTextStyle.font14w6.copyWith(
                                                   color: AppColors.containerBorder,
-                                                  fontSize: 14.sp,
-                                                  fontWeight: FontWeight.w600,
-                                                  letterSpacing: 0.8,
-                                                ),
+                                                )
+                                                //  TextStyle(
+                                                //   color: AppColors.containerBorder,
+                                                //   fontSize: 14.sp,
+                                                //   fontWeight: FontWeight.w600,
+                                                //   letterSpacing: 0.8,
+                                                // ),
                                               ),
                                             ),
                                           ),
@@ -251,10 +252,14 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                           ),
                                           child: Text(
                                             (_data[index].status ?? '').tr(),
-                                            style: TextStyle(
-                                              color: getColorByStatus(_data[index].status ?? ''),
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w600,
+                                            style:
+                                             AppTextStyle.font12w6.copyWith(
+                                               color: getColorByStatus(_data[index].status ?? ''
+                                            )
+                                            //  TextStyle(
+                                            //   color: getColorByStatus(_data[index].status ?? ''),
+                                            //   fontSize: 12.sp,
+                                            //   fontWeight: FontWeight.w600,
                                             ),
                                           ),
                                         ),
@@ -265,22 +270,28 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Expanded(
-                                          child: Padding(
+                                          child:
+                                          Padding(
                                             padding: EdgeInsets.symmetric(
                                               horizontal: 5.w,
                                               vertical: 5.h,
                                             ),
-                                            child: Text(
+                                            child:
+                                            Text(
                                               _data[index].templateName ?? '',
                                               maxLines: 1,
                                               softWrap: false,
                                               overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
+                                              style:
+                                              AppTextStyle.font13w6.copyWith(
                                                 color: AppColors.containerBorder,
-                                                fontSize: 13.sp,
-                                                fontWeight: FontWeight.w600,
-                                                letterSpacing: 0.8,
-                                              ),
+                                              )
+                                              // TextStyle(
+                                              //   color: AppColors.containerBorder,
+                                              //   fontSize: 13.sp,
+                                              //   fontWeight: FontWeight.w600,
+                                              //   letterSpacing: 0.8,
+                                              // ),
                                             ),
                                           ),
                                         ),
@@ -298,11 +309,15 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                             ),
                                             Text(
                                               " ${_data[index].estimatedTime ?? ''}",
-                                              style: TextStyle(
+                                              style: 
+                                                 AppTextStyle.font10.copyWith(
                                                 color: AppColors.containerBorder,
-                                                fontSize: 10.sp,
-                                                fontWeight: FontWeight.w400,
                                               ),
+                                              // TextStyle(
+                                              //   color: AppColors.containerBorder,
+                                              //   fontSize: 10.sp,
+                                              //   fontWeight: FontWeight.w400,
+                                              // ),
                                             ),
                                           ],
                                         ),
@@ -316,11 +331,15 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                       child: Text(
                                         "${MydashboardScreenConstants.DESCRIPTION.tr()} : ${_data[index].description ?? ''}",
                                         maxLines: 2,
-                                        style: TextStyle(
-                                          color: AppColors.containerBorder,
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w500,
-                                        ),
+                                        style:
+                                           AppTextStyle.font12w5.copyWith(
+                                                color: AppColors.containerBorder,
+                                              )
+                                        //  TextStyle(
+                                        //   color: AppColors.containerBorder,
+                                        //   fontSize: 12.sp,
+                                        //   fontWeight: FontWeight.w500,
+                                        // ),
                                       ),
                                     ),
                                     Padding(
@@ -330,11 +349,15 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                       ),
                                       child: Text(
                                         "${MydashboardScreenConstants.DESCRIPTION.tr()} : ${_data[index].location ?? ''}",
-                                        style: TextStyle(
-                                          color: AppColors.containerBorder,
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w400,
-                                        ),
+                                        style: 
+                                            AppTextStyle.font12.copyWith(
+                                                color: AppColors.containerBorder,
+                                              )
+                                        // TextStyle(
+                                        //   color: AppColors.containerBorder,
+                                        //   fontSize: 12.sp,
+                                        //   fontWeight: FontWeight.w400,
+                                        // ),
                                       ),
                                     ),
                                     Padding(
@@ -344,11 +367,33 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                       ),
                                       child: Text(
                                         "${MydashboardScreenConstants.BOOTHS.tr()}  :${_data[index].booths ?? ''}",
-                                        style: TextStyle(
-                                          color: AppColors.containerBorder,
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w400,
-                                        ),
+                                        style: 
+                                           AppTextStyle.font12.copyWith(
+                                                color: AppColors.containerBorder,
+                                              )
+                                        // TextStyle(
+                                        //   color: AppColors.containerBorder,
+                                        //   fontSize: 12.sp,
+                                        //   fontWeight: FontWeight.w400,
+                                        // ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 5.w,
+                                        vertical: 2.h,
+                                      ),
+                                      child: Text(
+                                          "${MydashboardScreenConstants.FACILITY.tr()} : ${_data[index].facilityName ?? ''}",
+                                          style:
+                                          AppTextStyle.font12.copyWith(
+                                            color: AppColors.containerBorder,
+                                          )
+                                        // TextStyle(
+                                        //   color: AppColors.ListTitleColor,
+                                        //   fontSize: 12.sp,
+                                        //   fontWeight: FontWeight.w400,
+                                        // ),
                                       ),
                                     ),
                                     Row(
@@ -362,11 +407,15 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                           ),
                                           child: Text(
                                             "${MydashboardScreenConstants.TOTAL_TASK.tr()} : ${_data[index].totalTasks ?? ''}",
-                                            style: TextStyle(
-                                              color: AppColors.disabledGreenColor,
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                            style:
+                                               AppTextStyle.font14w6.copyWith(
+                                                color: AppColors.disabledGreenColor,
+                                              )
+                                            //  TextStyle(
+                                            //   color: AppColors.disabledGreenColor,
+                                            //   fontSize: 14.sp,
+                                            //   fontWeight: FontWeight.w600,
+                                            // ),
                                           ),
                                         ),
                                         Padding(
@@ -376,11 +425,15 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                           ),
                                           child: Text(
                                             "${MydashboardScreenConstants.PENDING_TASK.tr()}  : ${_data[index].pendingTasks ?? ''}",
-                                            style: TextStyle(
-                                              color: AppColors.disabledRedColor,
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                            style:
+                                              AppTextStyle.font14w6.copyWith(
+                                               color: AppColors.disabledRedColor,
+                                              )
+                                            //  TextStyle(
+                                            //   color: AppColors.disabledRedColor,
+                                            //   fontSize: 14.sp,
+                                            //   fontWeight: FontWeight.w600,
+                                            // ),
                                           ),
                                         ),
                                       ],
@@ -401,11 +454,15 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                               ),
                                               child: Text(
                                                 _data[index].janitorName ?? '',
-                                                style: TextStyle(
-                                                  color: AppColors.containerBorder,
-                                                  fontSize: 12.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
+                                                style:
+                                                   AppTextStyle.font12.copyWith(
+                                                color: AppColors.containerBorder,
+                                              )
+                                                //  TextStyle(
+                                                //   color: AppColors.containerBorder,
+                                                //   fontSize: 12.sp,
+                                                //   fontWeight: FontWeight.w400,
+                                                // ),
                                               ),
                                             ),
                                           ],
@@ -458,11 +515,15 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                           ),
                                           child: Text(
                                             _data[index].date ?? '',
-                                            style: TextStyle(
-                                              color: AppColors.timeSlotColor,
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w400,
-                                            ),
+                                            style: 
+                                               AppTextStyle.font12.copyWith(
+                                               color: AppColors.timeSlotColor,
+                                              )
+                                            // TextStyle(
+                                            //   color: AppColors.timeSlotColor,
+                                            //   fontSize: 12.sp,
+                                            //   fontWeight: FontWeight.w400,
+                                            // ),
                                           ),
                                         ),
                                         Icon(
@@ -477,11 +538,15 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                           ),
                                           child: Text(
                                             "${_data[index].startTime} - ${_data[index].endTime}" ?? '',
-                                            style: TextStyle(
-                                              color: AppColors.timeSlotColor,
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w400,
-                                            ),
+                                            style: 
+                                                 AppTextStyle.font12.copyWith(
+                                               color: AppColors.timeSlotColor,
+                                              )
+                                            // TextStyle(
+                                            //   color: AppColors.timeSlotColor,
+                                            //   fontSize: 12.sp,
+                                            //   fontWeight: FontWeight.w400,
+                                            // ),
                                           ),
                                         ),
                                       ],
@@ -506,12 +571,17 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                               ),
                                               child: Text(
                                                 _data[index].requestType == "Customer Request" ? "Customer" : _data[index].requestType ?? '',
-                                                style: TextStyle(
-                                                  color: AppColors.black,
-                                                  fontSize: 14.sp,
-                                                  fontWeight: FontWeight.w600,
-                                                  letterSpacing: 0.8,
-                                                ),
+                                                style: 
+                                                  AppTextStyle.font14w6.copyWith(
+                                                   color: AppColors.black,
+                                                   letterSpacing: 0.8,
+                                               )
+                                                // TextStyle(
+                                                //   color: AppColors.black,
+                                                //   fontSize: 14.sp,
+                                                //   fontWeight: FontWeight.w600,
+                                                //   letterSpacing: 0.8,
+                                                // ),
                                               ),
                                             ),
                                           ),
@@ -523,10 +593,13 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                           ),
                                           child: Text(
                                             (_data[index].status ?? '').tr(),
-                                            style: TextStyle(
-                                              color: getColorByStatus(_data[index].status ?? ''),
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w600,
+                                            style: AppTextStyle.font12w6.copyWith(
+                                               color: getColorByStatus(_data[index].status ?? ''
+                                                )
+                                            // TextStyle(
+                                            //   color: getColorByStatus(_data[index].status ?? ''),
+                                            //   fontSize: 12.sp,
+                                            //   fontWeight: FontWeight.w600,
                                             ),
                                           ),
                                         ),
@@ -547,12 +620,15 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                               maxLines: 1,
                                               softWrap: false,
                                               overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
+                                              style: AppTextStyle.font13w6.copyWith(
                                                 color: AppColors.ListTitleColor,
-                                                fontSize: 13.sp,
-                                                fontWeight: FontWeight.w600,
-                                                letterSpacing: 0.8,
-                                              ),
+                                              )
+                                              // TextStyle(
+                                              //   color: AppColors.ListTitleColor,
+                                              //   fontSize: 13.sp,
+                                              //   fontWeight: FontWeight.w600,
+                                              //   letterSpacing: 0.8,
+                                              // ),
                                             ),
                                           ),
                                         ),
@@ -570,11 +646,15 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                             ),
                                             Text(
                                               _data[index].estimatedTime.toString() ?? '',
-                                              style: TextStyle(
+                                              style:
+                                              AppTextStyle.font10.copyWith(
                                                 color: AppColors.ListTitleColor,
-                                                fontSize: 10.sp,
-                                                fontWeight: FontWeight.w400,
-                                              ),
+                                              )
+                                              //  TextStyle(
+                                              //   color: AppColors.ListTitleColor,
+                                              //   fontSize: 10.sp,
+                                              //   fontWeight: FontWeight.w400,
+                                              // ),
                                             ),
                                           ],
                                         ),
@@ -588,11 +668,15 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                       child: Text(
                                         "${MydashboardScreenConstants.DESCRIPTION.tr()} : ${_data[index].description ?? ''}",
                                         maxLines: 2,
-                                        style: TextStyle(
-                                          color: AppColors.ListTitleColor,
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w500,
-                                        ),
+                                        style: 
+                                          AppTextStyle.font12w5.copyWith(
+                                                color: AppColors.ListTitleColor,
+                                              )
+                                        // TextStyle(
+                                        //   color: AppColors.ListTitleColor,
+                                        //   fontSize: 12.sp,
+                                        //   fontWeight: FontWeight.w500,
+                                        // ),
                                       ),
                                     ),
                                     Padding(
@@ -602,11 +686,15 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                       ),
                                       child: Text(
                                         "${MydashboardScreenConstants.LOCATION.tr()} : ${_data[index].location ?? ''}",
-                                        style: TextStyle(
-                                          color: AppColors.ListTitleColor,
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w400,
-                                        ),
+                                        style: 
+                                        AppTextStyle.font12.copyWith(
+                                          color: AppColors.ListTitleColor, 
+                                        )
+                                        // TextStyle(
+                                        //   color: AppColors.ListTitleColor,
+                                        //   fontSize: 12.sp,
+                                        //   fontWeight: FontWeight.w400,
+                                        // ),
                                       ),
                                     ),
                                     Padding(
@@ -616,11 +704,33 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                       ),
                                       child: Text(
                                         "${MydashboardScreenConstants.BOOTHS.tr()}  :${_data[index].booths ?? ''}",
-                                        style: TextStyle(
-                                          color: AppColors.ListTitleColor,
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w400,
-                                        ),
+                                        style: 
+                                         AppTextStyle.font12.copyWith(
+                                          color: AppColors.ListTitleColor, 
+                                        )
+                                        // TextStyle(
+                                        //   color: AppColors.ListTitleColor,
+                                        //   fontSize: 12.sp,
+                                        //   fontWeight: FontWeight.w400,
+                                        // ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 5.w,
+                                        vertical: 2.h,
+                                      ),
+                                      child: Text(
+                                          "${MydashboardScreenConstants.FACILITY.tr()} : ${_data[index].facilityName ?? ''}",
+                                          style:
+                                          AppTextStyle.font12.copyWith(
+                                            color: AppColors.ListTitleColor,
+                                          )
+                                        // TextStyle(
+                                        //   color: AppColors.ListTitleColor,
+                                        //   fontSize: 12.sp,
+                                        //   fontWeight: FontWeight.w400,
+                                        // ),
                                       ),
                                     ),
                                     Row(
@@ -634,11 +744,15 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                           ),
                                           child: Text(
                                             "${MydashboardScreenConstants.TOTAL_TASK.tr()}  : ${_data[index].totalTasks ?? ''}",
-                                            style: TextStyle(
+                                            style: 
+                                            AppTextStyle.font14w6.copyWith(
                                               color: AppColors.greenTextColor,
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                            )
+                                            // TextStyle(
+                                            //   color: AppColors.greenTextColor,
+                                            //   fontSize: 14.sp,
+                                            //   fontWeight: FontWeight.w600,
+                                            // ),
                                           ),
                                         ),
                                         Padding(
@@ -648,11 +762,15 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                           ),
                                           child: Text(
                                             "${MydashboardScreenConstants.PENDING_TASK.tr()}  : ${_data[index].pendingTasks ?? ''}",
-                                            style: TextStyle(
-                                              color: AppColors.redTextColor,
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                            style: 
+                                             AppTextStyle.font14w6.copyWith(
+                                             color: AppColors.redTextColor,
+                                            )
+                                            // TextStyle(
+                                            //   color: AppColors.redTextColor,
+                                            //   fontSize: 14.sp,
+                                            //   fontWeight: FontWeight.w600,
+                                            // ),
                                           ),
                                         ),
                                       ],
@@ -673,11 +791,14 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                               ),
                                               child: Text(
                                                 _data[index].janitorName ?? '',
-                                                style: TextStyle(
-                                                  color: AppColors.janitorNameColor,
-                                                  fontSize: 12.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
+                                                style: 
+                                                  AppTextStyle.font12.copyWith(
+                                                color: AppColors.janitorNameColor,)
+                                                // TextStyle(
+                                                //   color: AppColors.janitorNameColor,
+                                                //   fontSize: 12.sp,
+                                                //   fontWeight: FontWeight.w400,
+                                                // ),
                                               ),
                                             ),
                                           ],
@@ -703,11 +824,13 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                   child: Text(
                                                     MyTaskDetailsScreenConstants.APPROVE_BUTTON.tr(),
                                                     textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      fontSize: 10.sp,
-                                                      fontWeight: FontWeight.w600,
-                                                      color: AppColors.black,
-                                                    ),
+                                                    style:AppTextStyle.font10w6.copyWith(
+                                                          color: AppColors.black, )
+                                                    //  TextStyle(
+                                                    //   fontSize: 10.sp,
+                                                    //   fontWeight: FontWeight.w600,
+                                                    //   color: AppColors.black,
+                                                    // ),
                                                   ),
                                                 ),
                                               ),
@@ -744,11 +867,13 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                   child: Text(
                                                     MyFacilityListConstants.ASSIGN.tr(),
                                                     textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      fontSize: 10.sp,
-                                                      fontWeight: FontWeight.w600,
-                                                      color: AppColors.black,
-                                                    ),
+                                                    style: AppTextStyle.font10w6.copyWith(
+                                                          color: AppColors.black, )
+                                                    // TextStyle(
+                                                    //   fontSize: 10.sp,
+                                                    //   fontWeight: FontWeight.w600,
+                                                    //   color: AppColors.black,
+                                                    // ),
                                                   ),
                                                 ),
                                               ),
@@ -767,6 +892,37 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
             },
           ),
         );
+          //const EmptyListWidget();
+        }
+        else
+        if (state is SupervisorUpdateStatusLoading) {
+          EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
+        }
+        else
+           if (state is SupervisorUpdateStatusSuccessful) {
+          EasyLoading.dismiss();
+       
+            isApproved = true;
+        
+          print("SupervisorUpdateStatusSuccessful " + isApproved.toString());
+        }
+        else
+        if (state is SupervisorUpdateStatusError) {
+          EasyLoading.dismiss();
+
+          return CustomErrorWidget(error: state.error);
+        }
+        // if (state is AssignTaskLoading) {
+        //   EasyLoading.show(status: __MydashboardScreenConstants.LOADING_TOAST.tr());
+        // }
+        //
+        // if (state is AssignTaskError) {
+        //   EasyLoading.dismiss();
+        //   return CustomErrorWidget(error: state.error);
+        // }
+
+        return SizedBox();
+        
       },
     );
   }

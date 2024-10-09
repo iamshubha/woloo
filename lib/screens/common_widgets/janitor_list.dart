@@ -1,3 +1,4 @@
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +10,6 @@ import 'package:Woloo_Smart_hygiene/screens/janitor_screen/bloc/janitor_list_eve
 import 'package:Woloo_Smart_hygiene/screens/janitor_screen/bloc/janitor_list_state.dart';
 import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_list_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Reassign_janitor_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/view/janitor_screen.dart';
 import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_event.dart';
 import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_state.dart';
 import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
@@ -19,6 +19,7 @@ import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
 import '../../utils/app_color.dart';
 import '../supervisor_dashboard/bloc/supervisor_dashboard_bloc.dart';
 import 'error_widget.dart';
+import 'image_provider.dart';
 
 class JanitorListWidget extends StatefulWidget {
   final TextEditingController controller;
@@ -71,6 +72,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
     _janitorListBloc.add(GetAllJanitors(cluster_id: widget.clusterId ?? "0"));
     print("janitor_list_clusterId ====> ${widget.clusterId}");
     widget.controller.addListener(() {
+
       setState(() {
         if (widget.controller.text.isEmpty) {
           _search = _data;
@@ -84,10 +86,12 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                     .contains(widget.controller.text.toLowerCase()) ??
                 false)
             .toList();
+      print("some $_search");
+      _search.map( (e)=> print(" sdds${e.id}")  );
       });
     });
-    print(widget.isFromDashboard);
-    print(widget.isFromDashboardAssignment);
+    print(" is dash  ${widget.isFromDashboard}");
+    print(" from dash boardassign ment ${widget.isFromDashboardAssignment}");
     print("cluster---->${widget.isFromCluster}");
     print(widget.isFromFacility);
     print("assignment ---->${widget.isFromDashboardAssignment}");
@@ -101,445 +105,537 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
         listener: (context, state) {
           if (state is JanitorListSuccess) {
             EasyLoading.dismiss();
-
-            setState(() {
-              _data = state.data;
-              _search = _data;
-            });
-
-            if (janitorListReloading) {
-              setState(() {
-                _data = state.data;
-                _search = _data;
-              });
-            }
-
-            if (widget.isFromFacility) {
-              setState(() {
-                _data.removeWhere((element) {
-                  return element.id == widget.janitorId;
-                });
-                _search = _data;
-              });
-            }
           }
 
-          if (state is ReassignTaskSuccessful) {
+     
+        },
+        builder: (context, state) {
+           print(" janitorssssss $state");
+
+               if( state is  ReassignTaskSuccessful ){
+                 if (widget.isFromCluster) {
+                   _janitorListBloc
+                       .add(GetAllJanitors(cluster_id: widget.clusterId ?? "0"));
+                   
+                     janitorListReloading = true;
+                  
+
+                   Navigator.pop(context);
+                   Navigator.pop(context);
+                 }
+                 if (widget.isFromDashboardAssignment) {
+                   _supervisorDashboardBloc.add(GetSupervisorDashboardData());
+                
+                     dashboardListReloading = true;
+                   
+                   Navigator.pop(context);
+                 }
+
+               }
+            if (state is GetSupervisorDashboardDataSuccess) {
             EasyLoading.dismiss();
-
-            if (widget.isFromCluster) {
-              _janitorListBloc
-                  .add(GetAllJanitors(cluster_id: widget.clusterId ?? "0"));
-              setState(() {
-                janitorListReloading = true;
-              });
-
-              Navigator.pop(context);
-              Navigator.pop(context);
-            }
-            if (widget.isFromDashboardAssignment) {
-              _supervisorDashboardBloc.add(GetSupervisorDashboardData());
-              setState(() {
-                dashboardListReloading = true;
-              });
-              Navigator.pop(context);
-            }
-          }
-
-          if (state is GetSupervisorDashboardDataSuccess) {
-            EasyLoading.dismiss();
-            setState(() {
+            
               _supervisorDashboardData = state.data;
               print("GetSupervisorDashboardDataSuccess--->" +
                   _supervisorDashboardData.toString());
-            });
+          
 
             if (dashboardListReloading) {
-              setState(() {
-                _supervisorDashboardData = state.data;
-              });
+              
+          _supervisorDashboardData = state.data;
+          
             }
           }
-        },
-        builder: (context, state) {
-          if (state is JanitorListLoading && _data.isEmpty) {
+
+
+          if (state is JanitorListLoading) {
             EasyLoading.show(
                 status: MydashboardScreenConstants.LOADING_TOAST.tr());
-          }
-
-          if (state is JanitorListError) {
+            return SizedBox();
+          } else if (state is JanitorListError) {
             return CustomErrorWidget(error: state.error);
-          }
-
-          if (state is ReassignTaskLoading) {
+          } else if (state is ReassignTaskLoading) {
             EasyLoading.show(
                 status: MydashboardScreenConstants.LOADING_TOAST.tr());
-          }
-
-          if (state is ReassignTaskError) {
+            return SizedBox();
+          } else if (state is ReassignTaskError) {
             EasyLoading.dismiss();
             return CustomErrorWidget(error: state.error);
-          }
-          if (state is SupervisorDashboardLoading &&
+          } else if (state is SupervisorDashboardLoading &&
               _supervisorDashboardData.isEmpty) {
             EasyLoading.show(
                 status: MydashboardScreenConstants.LOADING_TOAST.tr());
-          }
-
-          if (state is SupervisorDashboardError) {
+            return SizedBox();
+          } else if (state is SupervisorDashboardError) {
             EasyLoading.dismiss();
             print("SupervisorDashboardError--->$_supervisorDashboardData");
 
             return CustomErrorWidget(error: state.error);
-          }
-
-          if (state is GetSupervisorDashboardDataSuccess &&
+          } else if (state is GetSupervisorDashboardDataSuccess &&
               _supervisorDashboardData.isEmpty) {
             EasyLoading.dismiss();
             print(
                 "GetSupervisorDashboardDataSuccess--->$_supervisorDashboardData");
 
             return const EmptyListWidget();
-          }
-          if (state is JanitorListSuccess && _data.isEmpty) {
+          } else
+            if (state is JanitorListSuccess) {
             EasyLoading.dismiss();
-            return const EmptyListWidget();
-          }
-          return RefreshIndicator(
-            onRefresh: () {
-              return Future.delayed(
-                Duration(seconds: 1),
-                () {
-                  _janitorListBloc
-                      .add(GetAllJanitors(cluster_id: widget.clusterId ?? "0"));
-                },
-              );
-            },
-            color: AppColors.buttonColor,
-            child: ListView.builder(
-                physics: const AlwaysScrollableScrollPhysics(),
-                itemCount: _search.length,
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemBuilder: (
-                  BuildContext context,
-                  int index,
-                ) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(vertical: 7.h),
-                    child: GestureDetector(
-                      onTap: () {
-                        widget.onTapItem(_search[index]);
-                        setState(() {
-                          selectedCard = index;
-                        });
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 5.h,
-                          horizontal: 10.w,
-                        ),
-                        margin: EdgeInsets.symmetric(
-                          horizontal: 20.w,
-                        ),
-                        decoration: BoxDecoration(
-                          color: selectedCard == index
-                              ? AppColors.containerColor
-                              : AppColors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: AppColors.containerBorder,
-                            width: 1.w,
+     
+
+                   if(state.fromReassign){
+                     // if(_search.isEmpty){
+                       _data = state.data;
+                       _search = _data;
+                     // }
+                       _janitorListBloc.add(
+                           const ReassignTask(
+                               id:[],
+                               janitor_id:
+                                   '',
+                               fromReassign: false
+                           ));
+                     //   state.fromReassign = false;
+                   }
+                   else{
+                         if(_search.isEmpty){
+                           _data = state.data;
+                           _search = _data;
+                         }
+                   }
+
+
+
+               // if( _search.isEmpty ){
+               //   _data = state.data;
+               //      _search = _data;
+               // }
+               //  print("search ${_search} ");
+               //    //  print("search ${} ");
+               // if(  state.fromReassign){
+               //    _data = state.data;
+               //
+               //     _search = _data;
+               //    print("from reassing ${_search} ");
+               //    // _search =_search;
+               // }
+            if (janitorListReloading) {
+              _data = state.data;
+              _search = _data;
+            }
+            if (widget.isFromFacility) {
+              _data.removeWhere((element) {
+                return element.id == widget.janitorId;
+              });
+              if( _search.isEmpty ){
+                _search = _data;
+              }
+            }
+
+             print("ssssssss $_search ");
+            return 
+                _search.isEmpty ? 
+            const EmptyListWidget() :     
+            RefreshIndicator(
+              onRefresh: () {
+                return Future.delayed(
+                  const Duration(seconds: 1),
+                  () {
+                    _janitorListBloc.add(
+                        GetAllJanitors(cluster_id: widget.clusterId ?? "0"));
+                  },
+                );
+              },
+              color: AppColors.buttonColor,
+              child: ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: _search.length,
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemBuilder: (
+                    BuildContext context,
+                    int index,
+                  ) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 7.h),
+                      child: GestureDetector(
+                        onTap: () {
+                          widget.onTapItem(_search[index]);
+                         
+                            selectedCard = index;
+                     
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 5.h,
+                            horizontal: 10.w,
                           ),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 5.h),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 10.h, horizontal: 5.w),
-                                child: Container(
-                                  height: 40.h,
-                                  width: 40.w,
-                                  decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: AppColors.darkGreyColor),
-                                  child: const Icon(
-                                    Icons.person_2_outlined,
-                                    color: AppColors.buttonColor,
+                          margin: EdgeInsets.symmetric(
+                            horizontal: 20.w,
+                          ),
+                          decoration: BoxDecoration(
+                            color: selectedCard == index
+                                ? AppColors.containerColor
+                                : AppColors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: AppColors.containerBorder,
+                              width: 1.w,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 5.h),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 10.h, horizontal: 5.w),
+                                  child: Container(
+                                    height: 40.h,
+                                    width: 40.w,
+                                    decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppColors.darkGreyColor),
+                                    child: const Icon(
+                                      Icons.person_2_outlined,
+                                      color: AppColors.buttonColor,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    width: ScreenUtil().screenWidth - 120.w,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 5.w,
-                                              vertical: 2.h,
-                                            ),
-                                            child: Text(
-                                              _search[index].name ?? '',
-                                              style: TextStyle(
-                                                color:
-                                                    AppColors.janitorNameColor,
-                                                fontSize: 18.sp,
-                                                fontWeight: FontWeight.w400,
+                                Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: ScreenUtil().screenWidth - 120.w,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 5.w,
+                                                vertical: 2.h,
                                               ),
+                                              child: Text(
+                                                  _search[index].name ?? '',
+                                                  style: AppTextStyle.font18
+                                                      .copyWith(
+                                                    color: AppColors
+                                                        .janitorNameColor,
+                                                  )
+                                                  //  TextStyle(
+                                                  //   color:
+                                                  //       AppColors.janitorNameColor,
+                                                  //   fontSize: 18.sp,
+                                                  //   fontWeight: FontWeight.w400,
+                                                  // ),
+                                                  ),
                                             ),
                                           ),
-                                        ),
-                                        if (widget.isFromCluster ||
-                                            widget
-                                                .isFromDashboardAssignment) ...[
-                                          _search[index].isPresent == true
-                                              ? Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                    horizontal: 20.w,
-                                                  ),
-                                                  child: Column(
+                                          if (widget.isFromCluster ||
+                                              widget
+                                                  .isFromDashboardAssignment) ...[
+                                            _search[index].isPresent == true
+                                                ? Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                      horizontal: 20.w,
+                                                    ),
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        CustomImageProvider(
+                                                          image: AppImages
+                                                              .janitor_present,
+                                                          height: 20.h,
+                                                          width: 20.w,
+                                                        ),
+                                                        Text(
+                                                            MyJanitorsListScreenConstants
+                                                                .JANITOR_PRESENT
+                                                                .tr(),
+                                                            style: AppTextStyle
+                                                                .font12
+                                                                .copyWith(
+                                                              color: AppColors
+                                                                  .greenText,
+                                                            )
+                                                            // TextStyle(
+                                                            //     color: AppColors
+                                                            //         .greenText,
+                                                            //     fontSize: 12.sp,
+                                                            //     fontWeight:
+                                                            //         FontWeight
+                                                            //             .w400),
+                                                            )
+                                                      ],
+                                                    ),
+                                                  )
+                                                : Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
                                                             .center,
                                                     children: [
-                                                      Image.asset(
-                                                        AppImages
-                                                            .janitor_present,
+                                                      CustomImageProvider(
+                                                        image: AppImages
+                                                            .janitor_absent,
                                                         height: 20.h,
                                                         width: 20.w,
                                                       ),
                                                       Text(
-                                                        MyJanitorsListScreenConstants
-                                                            .JANITOR_PRESENT
-                                                            .tr(),
-                                                        style: TextStyle(
+                                                          MyJanitorsListScreenConstants
+                                                              .JANITOR_ABSENT
+                                                              .tr(),
+                                                          style: AppTextStyle
+                                                              .font12
+                                                              .copyWith(
                                                             color: AppColors
-                                                                .greenText,
-                                                            fontSize: 12.sp,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400),
-                                                      )
+                                                                .redText,
+                                                          )
+                                                          //  TextStyle(
+                                                          //     color:
+                                                          //         AppColors.redText,
+                                                          //     fontSize: 12.sp,
+                                                          //     fontWeight:
+                                                          //         FontWeight.w400),
+                                                          )
                                                     ],
+                                                  )
+                                          ],
+                                          if (widget.isFromFacility) ...[
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 20.w),
+                                              child: InkWell(
+                                                onTap: () {
+                                                  _janitorListBloc.add(
+                                                      ReassignTask(
+                                                          id: widget
+                                                              .allocationId,
+                                                          janitor_id:
+                                                              _data[index].id ??
+                                                                  '',
+                                                           fromReassign: true       
+                                                                  ));
+                                                },
+                                                child: Container(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.r),
+                                                    color:
+                                                        AppColors.buttonColor,
                                                   ),
-                                                )
-                                              : Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Image.asset(
-                                                      AppImages.janitor_absent,
-                                                      height: 20.h,
-                                                      width: 20.w,
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                      horizontal: 8.w,
+                                                      vertical: 8.h,
                                                     ),
-                                                    Text(
-                                                      MyJanitorsListScreenConstants
-                                                          .JANITOR_ABSENT
-                                                          .tr(),
-                                                      style: TextStyle(
-                                                          color:
-                                                              AppColors.redText,
-                                                          fontSize: 12.sp,
-                                                          fontWeight:
-                                                              FontWeight.w400),
-                                                    )
-                                                  ],
-                                                )
-                                        ],
-                                        if (widget.isFromFacility) ...[
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 20.w),
-                                            child: InkWell(
-                                              onTap: () {
-                                                _janitorListBloc.add(
-                                                    ReassignTask(
-                                                        id: widget.allocationId,
-                                                        janitor_id:
-                                                            _data[index].id ??
-                                                                ''));
-                                              },
-                                              child: Container(
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.r),
-                                                  color: AppColors.buttonColor,
-                                                ),
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                    horizontal: 8.w,
-                                                    vertical: 8.h,
-                                                  ),
-                                                  child: Text(
-                                                    MyClusterListScreenConstants
-                                                        .BTN_TEXT
-                                                        .tr(),
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      fontSize: 12.sp,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: Colors.black,
-                                                    ),
+                                                    child: Text(
+                                                        MyClusterListScreenConstants
+                                                            .BTN_TEXT
+                                                            .tr(),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: AppTextStyle
+                                                            .font12
+                                                            .copyWith(
+                                                          color: Colors.black,
+                                                        )
+                                                        //  TextStyle(
+                                                        //   fontSize: 12.sp,
+                                                        //   fontWeight:
+                                                        //       FontWeight.w400,
+                                                        //   color: Colors.black,
+                                                        // ),
+                                                        ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ),
+                                          ],
                                         ],
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                      vertical: 2.h,
-                                    ),
-                                    child: Text(
-                                      "Mob.no. ${_search[index].mobile ?? ''}",
-                                      style: TextStyle(
-                                        color: AppColors.clusterTitleColor,
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w400,
                                       ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                      vertical: 2.h,
-                                    ),
-                                    child: Text(
-                                      _search[index].clusterName ?? '',
-                                      style: TextStyle(
-                                        color: AppColors.clusterTitleColor,
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                      vertical: 2.h,
-                                    ),
-                                    child: Text(
-                                      "Pin code : ${_search[index].pincode ?? ''}",
-                                      style: TextStyle(
-                                        color: AppColors.clusterTitleColor,
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 5.w,
-                                          vertical: 2.h,
-                                        ),
-                                        child: Text(
-                                          "Total task :${_search[index].totalTaskCount ?? ''}",
-                                          style: TextStyle(
-                                            color: AppColors.greenTextColor,
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 5.w,
-                                          vertical: 2.h,
-                                        ),
-                                        child: Text(
-                                          "Pending task : ${_search[index].pendingTaskCount ?? ''}",
-                                          style: TextStyle(
-                                            color: AppColors.redTextColor,
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  if (widget.isFromDashboardAssignment &&
-                                      _search[index].isPresent == true) ...[
                                     Padding(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: 5.w, vertical: 5.h),
-                                      child: InkWell(
-                                        onTap: () {
-                                          _janitorListBloc.add(
-                                            ReassignTask(
-                                                id: widget.allocationId,
-                                                janitor_id:
-                                                    _data[index].id ?? ''),
-                                          );
-                                        },
-                                        child: Container(
-                                          alignment: Alignment.centerRight,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(8.r),
-                                            color: AppColors.buttonColor,
+                                        horizontal: 5.w,
+                                        vertical: 2.h,
+                                      ),
+                                      child: Text(
+                                          "Mob.no. ${_search[index].mobile ?? ''}",
+                                          style: AppTextStyle.font12.copyWith(
+                                            color: AppColors.clusterTitleColor,
+                                          )
+                                          // TextStyle(
+                                          //   color: AppColors.clusterTitleColor,
+                                          //   fontSize: 12.sp,
+                                          //   fontWeight: FontWeight.w400,
+                                          // ),
                                           ),
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 8.w,
-                                              vertical: 8.h,
-                                            ),
-                                            child: Text(
-                                              MyClusterListScreenConstants
-                                                  .BTN_TEXT
-                                                  .tr(),
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 12.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: Colors.black,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 5.w,
+                                        vertical: 2.h,
+                                      ),
+                                      child: Text(
+                                          _search[index].clusterName ?? '',
+                                          style: AppTextStyle.font14.copyWith(
+                                            color: AppColors.clusterTitleColor,
+                                          )
+
+                                          //  TextStyle(
+                                          //   color: AppColors.clusterTitleColor,
+                                          //   fontSize: 14.sp,
+                                          //   fontWeight: FontWeight.w500,
+                                          // ),
+                                          ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 5.w,
+                                        vertical: 2.h,
+                                      ),
+                                      child: Text(
+                                          "Pin code : ${_search[index].pincode ?? ''}",
+                                          style: AppTextStyle.font12.copyWith(
+                                            color: AppColors.clusterTitleColor,
+                                          )
+                                          //  TextStyle(
+                                          //   color: AppColors.clusterTitleColor,
+                                          //   fontSize: 12.sp,
+                                          //   fontWeight: FontWeight.w400,
+                                          // ),
+                                          ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 5.w,
+                                            vertical: 2.h,
+                                          ),
+                                          child: Text(
+                                              "Total task :${_search[index].totalTaskCount ?? ''}",
+                                              style: AppTextStyle.font12w5
+                                                  .copyWith(
+                                                color: AppColors.greenTextColor,
+                                              )
+
+                                              // TextStyle(
+                                              //   color: AppColors.greenTextColor,
+                                              //   fontSize: 12.sp,
+                                              //   fontWeight: FontWeight.w500,
+                                              // ),
                                               ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 5.w,
+                                            vertical: 2.h,
+                                          ),
+                                          child: Text(
+                                              "Pending task : ${_search[index].pendingTaskCount ?? ''}",
+                                              style: AppTextStyle.font12w5
+                                                  .copyWith(
+                                                color: AppColors.redTextColor,
+                                              )
+                                              //  TextStyle(
+                                              //   color: AppColors.redTextColor,
+                                              //   fontSize: 12.sp,
+                                              //   fontWeight: FontWeight.w500,
+                                              // ),
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                    if (widget.isFromDashboardAssignment &&
+                                        _search[index].isPresent == true) ...[
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 5.w, vertical: 5.h),
+                                        child: InkWell(
+                                          onTap: () {
+                                            _janitorListBloc.add(
+                                              ReassignTask(
+                                                  id: widget.allocationId,
+                                                  janitor_id:
+                                                  _search[index].id ?? '',
+                                                    fromReassign: true
+                                                  ),
+                                            );
+                                          },
+                                          child: Container(
+                                            alignment: Alignment.centerRight,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.r),
+                                              color: AppColors.buttonColor,
+                                            ),
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 8.w,
+                                                vertical: 8.h,
+                                              ),
+                                              child: Text(
+                                                  MyClusterListScreenConstants
+                                                      .BTN_TEXT
+                                                      .tr(),
+                                                  textAlign: TextAlign.center,
+                                                  style: AppTextStyle.font12
+                                                      .copyWith(
+                                                    color: Colors.black,
+                                                  )
+                                                  // TextStyle(
+                                                  //   fontSize: 12.sp,
+                                                  //   fontWeight: FontWeight.w400,
+                                                  //   color: Colors.black,
+                                                  // ),
+                                                  ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ]
-                                ],
-                              ),
-                            ],
+                                    ]
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                }),
-          );
+                    );
+                  }),
+            );
+         //   const EmptyListWidget();
+          } 
+          else 
+          {
+            return SizedBox();
+          }
         });
   }
 }
+

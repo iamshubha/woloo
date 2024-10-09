@@ -6,6 +6,8 @@ import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_li
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 
+import '../../../utils/app_textstyle.dart';
+
 class ReassignJanitorScreen extends StatefulWidget {
   final bool isFromCluster;
   final String janitorId;
@@ -48,11 +50,15 @@ class _ReassignJanitorScreenState extends State<ReassignJanitorScreen> {
         backgroundColor: AppColors.appbarBgColor,
         title: Text(
           MyJanitorsListScreenConstants.TITLE_TEXT.tr(),
-          style: TextStyle(
-            fontSize: 24.sp,
-            fontWeight: FontWeight.w400,
+          style:
+          AppTextStyle.font24.copyWith(
             color: AppColors.yellowSplashColor,
-          ),
+          )
+          //  TextStyle(
+          //   fontSize: 24.sp,
+          //   fontWeight: FontWeight.w400,
+          //   color: AppColors.yellowSplashColor,
+          // ),
         ),
         leading: IconButton(
           color: AppColors.black30,
@@ -103,11 +109,15 @@ class _ReassignJanitorScreenState extends State<ReassignJanitorScreen> {
             ),
             child: Text(
               MyJanitorsListScreenConstants.SUB_TITLE.tr(),
-              style: TextStyle(
-                color: AppColors.titleColor,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w400,
-              ),
+              style: 
+              AppTextStyle.font16.copyWith(
+                 color: AppColors.titleColor,
+              )
+              // TextStyle(
+              //   color: AppColors.titleColor,
+              //   fontSize: 16.sp,
+              //   fontWeight: FontWeight.w400,
+              // ),
             ),
           ),
           Expanded(

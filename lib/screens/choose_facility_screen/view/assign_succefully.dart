@@ -1,6 +1,7 @@
 
 
 
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../utils/app_color.dart';
 import '../../../utils/app_constants.dart';
 import '../../../utils/app_images.dart';
+import '../../../utils/app_textstyle.dart';
 
 class AssignSuccefully extends StatefulWidget {
   final  List<String>  assignTask;
@@ -31,20 +33,20 @@ class _AssignSuccefullyState extends State<AssignSuccefully> {
                SizedBox(
                  height: 100.h,
                ),
-              Image.asset(AppImages.submittedIcon,
-               color: AppColors.greenText,
-              ),
-
+               CustomImageProvider(
+                image: AppImages.submittedIcon,
+                   color: AppColors.greenText,
+               ),
               SizedBox(
                 height: 20.h,
               ),
 
              Text("Successfully assign ${widget.assignTask.length} tasks to ${widget.janitorName}",
-             textAlign: TextAlign.center, style: TextStyle(
-              color: AppColors.black,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w400,
-            ),
+             textAlign: TextAlign.center, style:
+              AppTextStyle.font16.copyWith(
+               color:AppColors.black, 
+              )
+        
              ),
 
              SizedBox(
@@ -70,11 +72,9 @@ class _AssignSuccefullyState extends State<AssignSuccefully> {
                    child: Text(
                      MyFacilityListConstants.GOBACK.tr(),
                      textAlign: TextAlign.center,
-                     style: TextStyle(
-                       fontWeight: FontWeight.w700,
-                       color: AppColors.black,
-                       fontSize: 16.sp,
-                     ),
+                     style:
+                       AppTextStyle.font16w7.copyWith(
+                       color:AppColors.black, )
                    ),
                  ),
                ),

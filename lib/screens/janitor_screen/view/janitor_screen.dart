@@ -1,8 +1,8 @@
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/view/choose_facility.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/custom_dialogue_widget.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/janitor_list.dart';
 import 'package:Woloo_Smart_hygiene/screens/janitor_details_screen/view/janitor_details.dart';
 import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_list_model.dart';
@@ -46,11 +46,15 @@ class _JanitorListState extends State<JanitorList> {
         backgroundColor: AppColors.appbarBgColor,
         title: Text(
           MyJanitorsListScreenConstants.TITLE_TEXT.tr(),
-          style: TextStyle(
-            fontSize: 24.sp,
-            fontWeight: FontWeight.w400,
-            color: AppColors.yellowSplashColor,
-          ),
+          style: 
+          AppTextStyle.font24.copyWith(
+             color: AppColors.yellowSplashColor,
+          )
+          // TextStyle(
+          //   fontSize: 24.sp,
+          //   fontWeight: FontWeight.w400,
+          //   color: AppColors.yellowSplashColor,
+          // ),
         ),
         leading: widget.isFromCluster || widget.isFromDashboardAssignment
             ? IconButton(
@@ -103,11 +107,15 @@ class _JanitorListState extends State<JanitorList> {
             ),
             child: Text(
               MyJanitorsListScreenConstants.SUB_TITLE.tr(),
-              style: TextStyle(
-                color: AppColors.titleColor,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w400,
+              style:
+              AppTextStyle.font16.copyWith(
+                 color: AppColors.titleColor,
               ),
+              //  TextStyle(
+              //   color: AppColors.titleColor,
+              //   fontSize: 16.sp,
+              //   fontWeight: FontWeight.w400,
+             // ),
             ),
           ),
           Expanded(

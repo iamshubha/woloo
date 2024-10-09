@@ -15,8 +15,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:http/http.dart' as http ;
-
+import '../../common_widgets/image_provider.dart';
 import '../../dashboard/view/dashboard_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -30,6 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
   CoreBloc coreBloc = CoreBloc();
   GlobalStorage globalStorage = GetIt.instance();
 
+
   @override
   void initState() {
     super.initState();
@@ -40,16 +40,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
 
 
+
   loadApp() async {
     if (Platform.isIOS) {
       await requestTracking();
     }
     Messaging messaging = Messaging();
     await messaging.initialize();
-     updateDeviceToken();
-
-
-
+   // updateDeviceToken();
+    coreBloc.add(CheckUserIsLoggedInOrNot());
   }
 
    apiCall(){
@@ -57,17 +56,35 @@ class _SplashScreenState extends State<SplashScreen> {
 
    }
 
+  // void setToken(String? token) {
+  //   print('FCM Token: $token');
+  //   
+  //     deviceToken = token;
+  //  
+  // }
+
+  late Stream<String> _tokenStream;
+  String? deviceToken;
+
+
   Future updateDeviceToken() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
      //  await Future.delayed(Duration(seconds: 1));
     String? aspn =     await messaging.getAPNSToken();
-    print("aspn $aspn");
+       print("aspn $aspn");
+     //  onNewToken
 
-    String? deviceToken = await messaging.getToken();
-     print(deviceToken);
-    if (deviceToken != null) coreBloc.add(UpdateToken(token: deviceToken));
-    coreBloc.add(CheckUserIsLoggedInOrNot());
-  }
+    print("refresh token ${messaging.onTokenRefresh}");
+
+     deviceToken = await messaging.getToken();
+    _tokenStream = FirebaseMessaging.instance.onTokenRefresh;
+//     _tokenStream.listen(setToken);
+
+     print("device token $deviceToken");
+    if (deviceToken != null) coreBloc.add(UpdateToken(token: deviceToken!));
+         coreBloc.add(CheckUserIsLoggedInOrNot());
+
+       }
 
   Future<void> requestTracking() async {
     try {
@@ -143,10 +160,15 @@ class _SplashScreenState extends State<SplashScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      AppImages.splash_logo,
-                      scale: 5,
-                    ),
+                CustomImageProvider(
+                  scale: 5,
+                 image: 
+                  AppImages.splash_logo,
+                ),  
+                    // Image.asset(
+                    //   AppImages.splash_logo,
+                    //   scale: 5,
+                    // ),
                   ],
                 ),
               ),

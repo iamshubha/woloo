@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:Woloo_Smart_hygiene/screens/splash_screen/view/splash.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
@@ -9,6 +8,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class App extends StatefulWidget {
@@ -32,8 +32,11 @@ class _AppState extends State<App> {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return ConnectivityAppWrapper(
-          app: MaterialApp(
+        return 
+        // ConnectivityAppWrapper(
+        //   app: 
+          
+          GetMaterialApp(
             navigatorKey: ContextHolder.key,
             debugShowCheckedModeBanner: false,
             title: AppName.APP_NAME,
@@ -42,10 +45,12 @@ class _AppState extends State<App> {
             localizationsDelegates: context.localizationDelegates,
             builder: EasyLoading.init(
               builder: (context, child) {
-                return ConnectivityWidgetWrapper(
-                  disableInteraction: true,
-                  child: child!,
-                );
+                return 
+                // ConnectivityWidgetWrapper(
+                //   disableInteraction: true,
+                //   child:
+                   child!;
+                // );
               },
             ),
             theme: ThemeData(
@@ -55,7 +60,7 @@ class _AppState extends State<App> {
             home: GestureDetector(
               child: child,
             ),
-          ),
+          // ),
         );
       },
       child: const SplashScreen(),

@@ -1,7 +1,6 @@
 import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/data/model/Attendance_history_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/data/model/Month_list_model.dart';
 import 'package:equatable/equatable.dart';
-import 'package:Woloo_Smart_hygiene/screens/cluster_screen/data/model/Cluster_model.dart';
 
 abstract class HistoryListState extends Equatable {
   const HistoryListState();

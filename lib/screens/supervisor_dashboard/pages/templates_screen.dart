@@ -1,25 +1,20 @@
 import 'dart:async';
-
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/login/view/login_screen.dart';
 import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
 import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/view/local_widgets/supervisor_dashboard_list.dart';
 import 'package:Woloo_Smart_hygiene/screens/task_details_screen/view/task_details.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
-import 'package:intl/intl.dart';
 
 class TemplateScreen extends StatefulWidget {
   final String supervisorName;
@@ -39,11 +34,11 @@ class _TemplateScreenState extends State<TemplateScreen> {
 
   bool servicestatus = false;
   bool haspermission = false;
-  bool showList = false;
-  bool onTapCheckIn = false;
+  // bool showList = false;
+  // bool onTapCheckIn = false;
 
-  String check_in_time = "";
-  String check_out_time = "";
+  // String check_in_time = "";
+  // String check_out_time = "";
 
   late LocationPermission permission;
   late Position position;
@@ -64,10 +59,11 @@ class _TemplateScreenState extends State<TemplateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(" template screeen");
     return BlocListener(
       bloc: dashboardBloc,
       listener: (context, state) {
-        print(state);
+        print(" template screeen   $state");
         if (state is ClockInLoading) {
           EasyLoading.show(status: state.message);
         }
@@ -79,23 +75,23 @@ class _TemplateScreenState extends State<TemplateScreen> {
         if (state is ClockInSuccessful) {
           EasyLoading.dismiss();
 
-          setState(() {
-            showList = true;
-            onTapCheckIn = true;
-          });
-          String formattedDate = DateFormat('hh:mm:ss  a').format(currentTime);
-          check_in_time = formattedDate;
+          // setState(() {
+          //   showList = true;
+          //   onTapCheckIn = true;
+          // });
+          // String formattedDate = DateFormat('hh:mm:ss  a').format(currentTime);
+          // check_in_time = formattedDate;
         }
 
         if (state is ClockOutSuccessful) {
           EasyLoading.dismiss();
           print(state);
-          setState(() {
-            showList = false;
-            onTapCheckIn = false;
-          });
-          String formattedDate = DateFormat('hh:mm:ss  a').format(currentTime);
-          check_out_time = formattedDate;
+          // setState(() {
+          //   showList = false;
+          //   onTapCheckIn = false;
+          // });
+          // String formattedDate = DateFormat('hh:mm:ss  a').format(currentTime);
+          // check_out_time = formattedDate;
         }
         if (state is ClockOutLoading) {
           EasyLoading.show(status: state.message);
@@ -106,7 +102,8 @@ class _TemplateScreenState extends State<TemplateScreen> {
           EasyLoading.showError(state.error);
         }
       },
-      child: Scaffold(
+      child: 
+      Scaffold(
           backgroundColor: AppColors.white,
           appBar: AppBar(
             elevation: 0,
@@ -124,19 +121,25 @@ class _TemplateScreenState extends State<TemplateScreen> {
                           ?? '',
                       maxLines: 1,
                       softWrap: false,
-                      style: TextStyle(
-                        fontSize: 24.sp,
+                      style:
+                      AppTextStyle.font24.copyWith(
                         overflow: TextOverflow.ellipsis,
-                        fontWeight: FontWeight.w400,
                         color: AppColors.yellowSplashColor,
-                      ),
+                      )
+                      //  TextStyle(
+                      //   fontSize: 24.sp,
+                      //   overflow: TextOverflow.ellipsis,
+                      //   fontWeight: FontWeight.w400,
+                      //   color: AppColors.yellowSplashColor,
+                      // ),
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          body: SupervisorDashboardListWidget(
+          body:
+          SupervisorDashboardListWidget(
             key: key,
             onTapItem: (SupervisorModelDashboard data, bool isApproved) async {
               print("templates " + isApproved.toString());
@@ -150,9 +153,7 @@ class _TemplateScreenState extends State<TemplateScreen> {
                           isApproved: isApproved,
                         )),
               );
-              setState(() {
-                key = GlobalKey();
-              });
+                   key = GlobalKey();
             },
           )),
     );

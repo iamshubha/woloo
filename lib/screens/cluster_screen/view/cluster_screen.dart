@@ -1,7 +1,7 @@
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/view/choose_facility.dart';
 import 'package:Woloo_Smart_hygiene/screens/cluster_screen/data/model/Cluster_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/cluster_list.dart';
 import 'package:Woloo_Smart_hygiene/screens/janitor_screen/view/janitor_screen.dart';
@@ -25,7 +25,9 @@ class _ClusterListState extends State<ClusterList> {
   List<ClusterModel> search = [];
   @override
   void initState() {
-    super.initState();
+  super.initState();
+
+
   }
 
   @override
@@ -38,11 +40,10 @@ class _ClusterListState extends State<ClusterList> {
         backgroundColor: AppColors.appbarBgColor,
         title: Text(
           MyClusterListScreenConstants.TITLE_TEXT.tr(),
-          style: TextStyle(
-            fontSize: 24.sp,
-            fontWeight: FontWeight.w400,
-            color: AppColors.yellowSplashColor,
-          ),
+          style: 
+         AppTextStyle.font24.copyWith(
+          color: AppColors.yellowSplashColor,
+         )  
         ),
         // leading: IconButton(
         //   color: AppColors.black30,
@@ -97,7 +98,7 @@ class _ClusterListState extends State<ClusterList> {
                 prefixIcon: IconButton(
                   icon: const Icon(Icons.search),
                   onPressed: () {
-                      print("shrirang");
+            
                     print("result $search");
                   },
                 ),
@@ -121,7 +122,7 @@ class _ClusterListState extends State<ClusterList> {
                        setState(() {
 
                        });
-                      print("result $search");
+                    //  print("result $search");
                        // ClusterModel list
               },
               onTapItem: (ClusterModel list) async {

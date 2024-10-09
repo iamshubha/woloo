@@ -1,10 +1,9 @@
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/image_provider.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/button_widget.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/pop_up_buttons.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/white_button_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/view/issue_list.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
@@ -48,11 +47,13 @@ class _DialogueWidgetState extends State<DialogueWidget> {
                     horizontal: 8.w,
                   ),
                   child: Center(
-                    child: Image.asset(
-                      AppImages.submittedIcon,
+                    child:
+                     CustomImageProvider(
+                      image: 
+                        AppImages.submittedIcon,
                       height: 70.h,
                       width: 70.w,
-                    ),
+                     ),                 
                   )),
               Center(
                 child: Padding(
@@ -60,11 +61,15 @@ class _DialogueWidgetState extends State<DialogueWidget> {
                   child: Text(
                     MyReportIssueScreenConstants.POP_UP_TEXT.tr(),
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 20.sp,
+                    style: 
+                    AppTextStyle.font20w5.copyWith(
                       color: AppColors.black,
-                    ),
+                    )
+                    // TextStyle(
+                    //   fontWeight: FontWeight.w500,
+                    //   fontSize: 20.sp,
+                    //   color: AppColors.black,
+                    // ),
                   ),
                 ),
               ),

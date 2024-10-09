@@ -133,5 +133,7 @@
   "Re-open": "Re Open",
   "Rejected": "Rejected",
   "GoBack": "Go Back",
-  "All": "All"
+  "All": "All",
+  "Download To Excel": "Download To Excel",
+  "Excel exported into download folder successfully": "Excel exported into download folder successfully"
 }

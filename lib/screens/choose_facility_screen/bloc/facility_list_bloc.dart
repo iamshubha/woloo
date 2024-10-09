@@ -6,6 +6,7 @@ import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/bloc/facility
 import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/bloc/facility_list_state.dart';
 import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/data/network/facility_list_service.dart';
 
+
 class FacilityListBloc extends Bloc<FacilityListEvent, FacilityListState> {
   final FacilityListService facilityListService =
       FacilityListService(dio: GetIt.instance());
@@ -13,6 +14,8 @@ class FacilityListBloc extends Bloc<FacilityListEvent, FacilityListState> {
   FacilityListBloc() : super(FacilityListInitial()) {
     on<FacilityListEvent>((event, emit) {});
     on<GetAllFacility>(_mapGetAllFacilityToState);
+
+
   }
 
   FutureOr<void> _mapGetAllFacilityToState(
@@ -27,4 +30,11 @@ class FacilityListBloc extends Bloc<FacilityListEvent, FacilityListState> {
       emit(FacilityListError(error: e.toString()));
     }
   }
+
+   // bool selectAll = false;
+  // bool isDisabled = false;
+  // String  janitorName = "";
+
+ 
+
 }

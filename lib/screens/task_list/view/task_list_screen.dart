@@ -10,6 +10,7 @@ import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/submit_task_mod
 import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -55,10 +56,6 @@ class _TaskListState extends State<TaskList> {
         listener: (context, state) {
           if (state is GetTasksSuccess) {
             EasyLoading.dismiss();
-
-            setState(() {
-              data = state.data;
-            });
           }
 
           if (state is SubmitTasksSuccess) {
@@ -74,33 +71,16 @@ class _TaskListState extends State<TaskList> {
             EasyLoading.show(
                 status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
-
+          else
           if (state is GetTasksError) {
             return CustomErrorWidget(error: state.error);
           }
-
-          if (state is GetTasksSuccess && (state.data.tasks?.isEmpty ?? true)) {
+           else
+          if (state is GetTasksSuccess  ) {
             EasyLoading.dismiss();
-            return const EmptyListWidget();
-          }
-          if (state is SubmitTasksLoading) {
-            EasyLoading.show(
-                status: MydashboardScreenConstants.LOADING_TOAST.tr());
-          }
-
-          if (state is SubmitTasksError) {
-            print(state);
-
-            return CustomErrorWidget(error: state.error);
-          }
-
-          if (state is SubmitTasksSuccess && (state.data.isEmpty)) {
-            EasyLoading.dismiss();
-
-            return const EmptyListWidget();
-          }
-
-          return Scaffold(
+             data = state.data;
+            return
+             Scaffold(
             backgroundColor: AppColors.white,
 
             appBar: AppBar(
@@ -123,11 +103,15 @@ class _TaskListState extends State<TaskList> {
                 child: Text(
                   MyTaskListConstants.APP_BAR.tr(),
                   textAlign: TextAlign.start,
-                  style: TextStyle(
+                  style:
+                  AppTextStyle.font24.copyWith(
                     color: AppColors.yellowSplashColor,
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.w400,
-                  ),
+                  )
+                  //  TextStyle(
+                  //   color: AppColors.yellowSplashColor,
+                  //   fontSize: 24.sp,
+                  //   fontWeight: FontWeight.w400,
+                  // ),
                 ),
               ),
 
@@ -148,11 +132,15 @@ class _TaskListState extends State<TaskList> {
                   child: Text(
                     MyTaskListConstants.LIST_OF_ACTIVITIES.tr(),
                     textAlign: TextAlign.start,
-                    style: TextStyle(
-                      color: AppColors.titleColor,
-                      fontSize: 24.sp,
-                      fontWeight: FontWeight.w400,
-                    ),
+                    style:
+                      AppTextStyle.font24.copyWith(
+                        color: AppColors.titleColor,
+                  )
+                    //  TextStyle(
+                    //   color: AppColors.titleColor,
+                    //   fontSize: 24.sp,
+                    //   fontWeight: FontWeight.w400,
+                    // ),
                   ),
                 ),
                 Expanded(
@@ -256,6 +244,30 @@ class _TaskListState extends State<TaskList> {
               ],
             ),
           );
+            
+            // const EmptyListWidget();
+          }
+           else
+          if (state is SubmitTasksLoading) {
+            EasyLoading.show(
+                status: MydashboardScreenConstants.LOADING_TOAST.tr());
+          }
+           else
+          if (state is SubmitTasksError) {
+            print(state);
+
+            return CustomErrorWidget(error: state.error);
+          }
+           else
+
+          if (state is SubmitTasksSuccess && (state.data.isEmpty)) {
+            EasyLoading.dismiss();
+
+            return const EmptyListWidget();
+          }
+
+          return SizedBox();
+          
         });
   }
 }

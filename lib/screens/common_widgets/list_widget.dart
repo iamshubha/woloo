@@ -4,6 +4,7 @@ import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/bloc/facility
 import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/bloc/facility_list_state.dart';
 import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/data/model/Facility_list_model.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:Woloo_Smart_hygiene/utils/date_utils.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -193,12 +194,17 @@ class _ListWidgetState extends State<ListWidget> {
                                         child: Text(
                                           (_search[index].requestType ?? '')
                                               .tr(),
-                                          style: TextStyle(
-                                            color: AppColors.black,
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w600,
+                                          style: 
+                                          AppTextStyle.font14w6.copyWith(
                                             letterSpacing: 0.8,
-                                          ),
+                                            color: AppColors.black,
+                                          )
+                                          // TextStyle(
+                                          //   color: AppColors.black,
+                                          //   fontSize: 14.sp,
+                                          //   fontWeight: FontWeight.w600,
+                                          //   letterSpacing: 0.8,
+                                          // ),
                                         ),
                                       ),
                                     ),
@@ -215,11 +221,15 @@ class _ListWidgetState extends State<ListWidget> {
                                         ),
                                         child: Text(
                                           "${CustomDateUtils.formatDate(_search[index].startTime ?? '')} - ${CustomDateUtils.formatDate(_search[index].endTime ?? '')}",
-                                          style: TextStyle(
+                                          style:
+                                          AppTextStyle.font12.copyWith(
                                             color: AppColors.timeSlotColor,
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w400,
-                                          ),
+                                          )
+                                          //  TextStyle(
+                                          //   color: AppColors.timeSlotColor,
+                                          //   fontSize: 12.sp,
+                                          //   fontWeight: FontWeight.w400,
+                                          // ),
                                         ),
                                       ),
                                     ],
@@ -241,12 +251,16 @@ class _ListWidgetState extends State<ListWidget> {
                                         looping(_search[index]),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
+                                        style:
+                                        AppTextStyle.font13w6.copyWith(
                                           color: AppColors.ListTitleColor,
-                                          fontSize: 13.sp,
-                                          fontWeight: FontWeight.w600,
-                                          letterSpacing: 0.8,
-                                        ),
+                                        )
+                                        //  TextStyle(
+                                        //   color: AppColors.ListTitleColor,
+                                        //   fontSize: 13.sp,
+                                        //   fontWeight: FontWeight.w600,
+                                        //   letterSpacing: 0.8,
+                                        // ),
                                       ),
                                     ),
                                   ),
@@ -267,11 +281,15 @@ class _ListWidgetState extends State<ListWidget> {
                                       Text(
                                         "${_search[index].estimatedTime.toString()} ${MyFacilityListConstants.MIN.tr()}" ??
                                             '',
-                                        style: TextStyle(
+                                        style: 
+                                        AppTextStyle.font10.copyWith(
                                           color: AppColors.ListTitleColor,
-                                          fontSize: 10.sp,
-                                          fontWeight: FontWeight.w400,
-                                        ),
+                                        )
+                                        //  TextStyle(
+                                        //   color: AppColors.ListTitleColor,
+                                        //   fontSize: 10.sp,
+                                        //   fontWeight: FontWeight.w400,
+                                        // ),
                                       ),
                                     ],
                                   ),
@@ -285,11 +303,15 @@ class _ListWidgetState extends State<ListWidget> {
                                 child: Text(
                                   _search[index].facilityName ?? '',
                                   maxLines: 2,
-                                  style: TextStyle(
+                                  style:
+                                  AppTextStyle.font12w5.copyWith(
                                     color: AppColors.ListTitleColor,
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  )
+                                  //  TextStyle(
+                                  //   color: AppColors.ListTitleColor,
+                                  //   fontSize: 12.sp,
+                                  //   fontWeight: FontWeight.w500,
+                                  // ),
                                 ),
                               ),
                               Padding(
@@ -299,11 +321,15 @@ class _ListWidgetState extends State<ListWidget> {
                                 ),
                                 child: Text(
                                   "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${_search[index].description ?? ''}",
-                                  style: TextStyle(
+                                  style: 
+                                  AppTextStyle.font12w5.copyWith(
                                     color: AppColors.ListTitleColor,
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  )
+                                  // TextStyle(
+                                  //   color: AppColors.ListTitleColor,
+                                  //   fontSize: 12.sp,
+                                  //   fontWeight: FontWeight.w500,
+                                  // ),
                                 ),
                               ),
                               Padding(
@@ -313,11 +339,15 @@ class _ListWidgetState extends State<ListWidget> {
                                 ),
                                 child: Text(
                                   "${MydashboardScreenConstants.LOCATION.tr()}: ${_search[index].locationName ?? ''}",
-                                  style: TextStyle(
-                                    color: AppColors.ListTitleColor,
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w400,
-                                  ),
+                                  style:
+                                  AppTextStyle.font12.copyWith(
+                                     color: AppColors.ListTitleColor,
+                                  )
+                                  //  TextStyle(
+                                  //   color: AppColors.ListTitleColor,
+                                  //   fontSize: 12.sp,
+                                  //   fontWeight: FontWeight.w400,
+                                  // ),
                                 ),
                               ),
                               Row(
@@ -341,11 +371,15 @@ class _ListWidgetState extends State<ListWidget> {
                                         ),
                                         child: Text(
                                           _search[index].janitorName ?? '',
-                                          style: TextStyle(
+                                          style:
+                                          AppTextStyle.font12.copyWith(
                                             color: AppColors.janitorNameColor,
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w400,
-                                          ),
+                                          )
+                                          //  TextStyle(
+                                          //   color: AppColors.janitorNameColor,
+                                          //   fontSize: 12.sp,
+                                          //   fontWeight: FontWeight.w400,
+                                          // ),
                                         ),
                                       ),
                                     ],

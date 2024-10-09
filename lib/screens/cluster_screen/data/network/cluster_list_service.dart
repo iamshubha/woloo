@@ -2,9 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
 import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
 import 'package:Woloo_Smart_hygiene/screens/cluster_screen/data/model/Cluster_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/data/model/Issue_list_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/create_task_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model.dart';
 
 class ClusterListService {
   final DioClient dio;

@@ -9,6 +9,7 @@ import 'core/interceptor/auth_interceptor.dart';
 import 'core/interceptor/error_interceptor.dart';
 import 'core/local/global_storage.dart';
 import 'core/network/dio_client.dart';
+import 'screens/dashboard/bloc/dashboard_bloc.dart';
 
 // import 'data/services/network/dio_client.dart';
 
@@ -25,5 +26,6 @@ Future<void> init() async {
   sl.registerLazySingleton(() => DioClient(dio));
   sl.registerLazySingleton(() => GlobalStorage(GetStorage()));
   sl.registerLazySingleton(() => SupervisorDashboardBloc());
+ // sl.registerLazySingleton(() => DashboardBloc());
   sl.registerLazySingleton(() => IssueListBloc());
 }

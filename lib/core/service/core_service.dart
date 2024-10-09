@@ -1,10 +1,7 @@
-import 'dart:io';
 
-import 'package:Woloo_Smart_hygiene/core/model/App_launch_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/Attendance_model.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-import 'package:http_parser/http_parser.dart';
+// import 'package:http_parser/http_parser.dart';
 import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
 import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
 
@@ -13,6 +10,7 @@ class CoreService {
 
   Future<String> updateFCMToken({required String token}) async {
     try {
+       print("api call $token");
       var response = await dio.put(
         APIConstants.UPDATE_TOKEN_FCM,
         data: {

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class AppColors {
@@ -10,6 +12,7 @@ class AppColors {
   static const Color dashboardContainerColor = Color(0xffFDFDFD);
   static const Color filterBorder = Color(0xffC0BCBC);
   static const Color filterContainer = Color(0xffF5F5F5);
+  static const Color backgroundColor = Color(0xff00C3DE);
 
   static const Color acceptButtonColor = Color(0xFF2DA323);
   static const Color rejectGreyTextColor = Color(0xff6A6161);
@@ -19,7 +22,7 @@ class AppColors {
   static const Color alertTitleColor = Color(0xFF6F6868);
 
   static const Color disabledCheckBoxColor = Color(0xFF7AFFF035);
-  static const Color rejectButtonColor = Color(0xFFEAE5E5);
+  static const Color rejectButtonColor = Color(0xFF6B766A);
 
   static const Color buttonColor = Color(0xFFFFEF34);
   static const Color yellowSplashColor = Color(0xFFFFF035);
@@ -161,5 +164,19 @@ class AppColors {
   static const Color containerShadow = Color(0xFFFCFCFC);
   static const Color boxShadow = Color(0xFFE9E3E3);
   static const Color appbarBgColor = Color(0xff414042);
+
+
+  static const Color pendingCardBgColor =  Color(0xffFFF9F9);
+  static const Color acceptedCardBgColor =  Color(0xffF9FFF9);
+  static const Color accepCardBgColor =  Color(0xffF9FFF9);
+  static const Color onGoingCardBgColor =  Color(0xffFDFAF2);
+  static const Color rfcCardBgColor =  Color(0xffF7F7F7);
+  static const Color completedBgColor =    Color(0xff90d5ff);
+
+  static const Color pendingBorderBgColor =    Color(0xffB90404);
+  static const Color rfcBorderBgColor =    Color(0xffA4A4A6);
+  static const Color onGoingBorderBgColor =    Color(0xffF8CE3B);
+  static const Color completedBorderBgColor =    Color(0xff3597DB);
+
 
 }

@@ -2,10 +2,6 @@ import 'dart:math';
 
 import 'package:equatable/equatable.dart';
 import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/data/model/Facility_list_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/cluster_screen/data/model/Cluster_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/data/model/Issue_list_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_list_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model.dart';
 
 abstract class FacilityListState extends Equatable {
   const FacilityListState();
@@ -37,3 +33,41 @@ class FacilityListError extends FacilityListState {
   @override
   List<Object> get props => [error];
 }
+
+
+class FacilityListSelect extends FacilityListState {
+final List<bool>? checkList;
+  final  List<FacilityListModel>? list;
+final  bool selectAll;
+final List<String>? selectedIds;
+
+const FacilityListSelect({required this.checkList, required this.selectAll, this.list, this.selectedIds });
+
+  @override
+  List<Object?> get props =>  [checkList];
+}
+
+class FacilityListUnSelect extends FacilityListState {
+  final List<bool>? checkList;
+  final  List<FacilityListModel>? list;
+  final  bool selectAll;
+  final List<String>? selectedIds;
+
+  const FacilityListUnSelect({required this.checkList, required this.selectAll, this.list, this.selectedIds });
+
+  @override
+  List<Object?> get props =>  [checkList, list, checkList ];
+}
+
+
+
+// class  SelectIndivualsFacility extends FacilityListState {
+//   final List<bool>? checkList;
+//   final  List<FacilityListModel>? list;
+//   final  bool selectAll;
+
+//   const SelectIndivualsFacility({required this.checkList, required this.selectAll, this.list });
+
+//   @override
+//   List<Object?> get props =>  [checkList, selectAll, list ];
+// }

@@ -1,10 +1,13 @@
 import 'package:Woloo_Smart_hygiene/screens/janitor_details_screen/view/sup_jani_attendance_screen.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
+
+import '../../common_widgets/image_provider.dart';
 
 class JanitorDetails extends StatefulWidget {
   final String id;
@@ -62,14 +65,17 @@ class _JanitorDetailsState extends State<JanitorDetails> {
           child: Text(
             MyJanitorsDetailsScreenConstants.APP_BAR.tr(),
             textAlign: TextAlign.start,
-            style: TextStyle(
-              color: AppColors.yellowSplashColor,
-              fontSize: 24.sp,
-              fontWeight: FontWeight.w400,
-            ),
+            style:
+            AppTextStyle.font24.copyWith(
+              color: AppColors.yellowSplashColor, 
+            )
+            // TextStyle(
+            //   color: AppColors.yellowSplashColor,
+            //   fontSize: 24.sp,
+            //   fontWeight: FontWeight.w400,
+            // ),
           ),
         ),
-
         backgroundColor: AppColors.appbarBgColor,
         elevation: 0,
       ),
@@ -91,7 +97,8 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                   Container(
                     height: 40.h,
                     width: 40.w,
-                    decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.darkGreyColor),
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle, color: AppColors.darkGreyColor),
                     child: const Icon(
                       Icons.person_2_outlined,
                       color: AppColors.buttonColor,
@@ -107,22 +114,30 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                           widget.name,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: AppColors.black,
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w400,
-                          ),
+                          style:
+                          AppTextStyle.font18.copyWith(
+                              color: AppColors.black,
+                          )
+                          //  TextStyle(
+                          //   color: AppColors.black,
+                          //   fontSize: 18.sp,
+                          //   fontWeight: FontWeight.w400,
+                          // ),
                         ),
                         SizedBox(height: 5.h),
                         Text(
                           widget.mobile,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
+                          style:
+                          AppTextStyle.font14.copyWith(
                             color: Colors.grey,
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w400,
-                          ),
+                          )
+                          //  TextStyle(
+                          //   color: Colors.grey,
+                          //   fontSize: 14.sp,
+                          //   fontWeight: FontWeight.w400,
+                          // ),
                         ),
                       ],
                     ),
@@ -132,14 +147,21 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Image.asset(
-                              AppImages.janitor_present,
+                            CustomImageProvider(
+                              image: AppImages.janitor_present,
                               height: 20.h,
                               width: 20.w,
                             ),
                             Text(
                               MyJanitorsListScreenConstants.JANITOR_PRESENT,
-                              style: TextStyle(color: AppColors.greenText, fontSize: 12.sp, fontWeight: FontWeight.w400),
+                              style:
+                              AppTextStyle.font12.copyWith(
+                                color: AppColors.greenText,
+                              )
+                              //  TextStyle(
+                              //     color: AppColors.greenText,
+                              //     fontSize: 12.sp,
+                              //     fontWeight: FontWeight.w400),
                             )
                           ],
                         )
@@ -147,14 +169,20 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Image.asset(
-                              AppImages.janitor_absent,
+                            CustomImageProvider(
+                              image: AppImages.janitor_absent,
                               height: 20.h,
                               width: 20.w,
                             ),
                             Text(
                               MyJanitorsListScreenConstants.JANITOR_ABSENT.tr(),
-                              style: TextStyle(color: AppColors.redText, fontSize: 12.sp, fontWeight: FontWeight.w400),
+                              style:AppTextStyle.font12.copyWith(
+                                color: AppColors.redText,
+                              )
+                              // TextStyle(
+                              //     color: AppColors.redText,
+                              //     fontSize: 12.sp,
+                              //     fontWeight: FontWeight.w400),
                             )
                           ],
                         ),
@@ -164,7 +192,8 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SupJaniAttendanceScreen(janiId: int.parse(widget.id)),
+                          builder: (context) => SupJaniAttendanceScreen(
+                              janiId: int.parse(widget.id)),
                         ),
                       );
                     },
@@ -175,10 +204,14 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                         const Icon(Icons.history),
                         Text(
                           MyJanitorProfileScreenConstants.HISTORY.tr(),
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w400,
-                          ),
+                          style: 
+                          AppTextStyle.font12.copyWith(
+                                // color: AppColors.redText,
+                              )
+                          // TextStyle(
+                          //   fontSize: 12.sp,
+                          //   fontWeight: FontWeight.w400,
+                          // ),
                         )
                       ],
                     ),
@@ -200,11 +233,15 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               ),
               child: Text(
                 MyJanitorsDetailsScreenConstants.SHIFT.tr(),
-                style: TextStyle(
+                style:
+                AppTextStyle.font18.copyWith(
                   color: AppColors.greyTextColor,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w400,
-                ),
+                )
+                //  TextStyle(
+                //   color: AppColors.greyTextColor,
+                //   fontSize: 18.sp,
+                //   fontWeight: FontWeight.w400,
+                // ),
               ),
             ),
             Padding(
@@ -213,11 +250,15 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               ),
               child: Text(
                 widget.shift,
-                style: TextStyle(
+                style: 
+                 AppTextStyle.font20.copyWith(
                   color: AppColors.black,
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w400,
-                ),
+                )
+                // TextStyle(
+                //   color: AppColors.black,
+                //   fontSize: 20.sp,
+                //   fontWeight: FontWeight.w400,
+                // ),
               ),
             ),
             Padding(
@@ -227,11 +268,15 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               ),
               child: Text(
                 "${MyJanitorsDetailsScreenConstants.CHECK_IN.tr()} :",
-                style: TextStyle(
-                  color: AppColors.greyTextColor,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w400,
-                ),
+                style:
+                  AppTextStyle.font18.copyWith(
+                    color: AppColors.greyTextColor,
+                )
+                //  TextStyle(
+                //   color: AppColors.greyTextColor,
+                //   fontSize: 18.sp,
+                //   fontWeight: FontWeight.w400,
+                // ),
               ),
             ),
             Padding(
@@ -240,11 +285,15 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               ),
               child: Text(
                 widget.check_in_time,
-                style: TextStyle(
-                  color: AppColors.black,
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w400,
-                ),
+                style: 
+                AppTextStyle.font20.copyWith(
+                   color: AppColors.black,
+                )
+                // TextStyle(
+                //   color: AppColors.black,
+                //   fontSize: 20.sp,
+                //   fontWeight: FontWeight.w400,
+                // ),
               ),
             ),
             Padding(
@@ -254,11 +303,15 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               ),
               child: Text(
                 "${MyJanitorsDetailsScreenConstants.CHECK_OUT.tr()} :",
-                style: TextStyle(
-                  color: AppColors.greyTextColor,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w400,
-                ),
+                style:
+                AppTextStyle.font18.copyWith(
+                   color: AppColors.greyTextColor,
+                )
+                //  TextStyle(
+                //   color: AppColors.greyTextColor,
+                //   fontSize: 18.sp,
+                //   fontWeight: FontWeight.w400,
+                // ),
               ),
             ),
             Padding(
@@ -267,11 +320,15 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               ),
               child: Text(
                 widget.check_out_time,
-                style: TextStyle(
-                  color: AppColors.black,
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w400,
-                ),
+                style:
+                AppTextStyle.font20.copyWith(
+                   color: AppColors.black,
+                )
+                //  TextStyle(
+                //   color: AppColors.black,
+                //   fontSize: 20.sp,
+                //   fontWeight: FontWeight.w400,
+                // ),
               ),
             ),
             Padding(
@@ -281,11 +338,15 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               ),
               child: Text(
                 "${MyJanitorsDetailsScreenConstants.COMPLETE_TASK.tr()} :",
-                style: TextStyle(
-                  color: AppColors.greyTextColor,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w400,
-                ),
+                style: 
+                AppTextStyle.font18.copyWith(
+                   color: AppColors.greyTextColor,
+                )
+                // TextStyle(
+                //   color: AppColors.greyTextColor,
+                //   fontSize: 18.sp,
+                //   fontWeight: FontWeight.w400,
+                // ),
               ),
             ),
             Padding(
@@ -294,11 +355,15 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               ),
               child: Text(
                 widget.complete_task,
-                style: TextStyle(
+                style:
+                AppTextStyle.font20.copyWith(
                   color: AppColors.black,
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w400,
-                ),
+                )
+                //  TextStyle(
+                //   color: AppColors.black,
+                //   fontSize: 20.sp,
+                //   fontWeight: FontWeight.w400,
+                // ),
               ),
             ),
             Padding(
@@ -308,11 +373,15 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               ),
               child: Text(
                 "${MyJanitorsDetailsScreenConstants.PENDING_TASK.tr()} :",
-                style: TextStyle(
+                style: 
+                AppTextStyle.font18.copyWith(
                   color: AppColors.greyTextColor,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w400,
-                ),
+                )
+                // TextStyle(
+                //   color: AppColors.greyTextColor,
+                //   fontSize: 18.sp,
+                //   fontWeight: FontWeight.w400,
+                // ),
               ),
             ),
             Padding(
@@ -321,11 +390,15 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               ),
               child: Text(
                 widget.pending_task,
-                style: TextStyle(
+                style:
+                 AppTextStyle.font20.copyWith(
                   color: AppColors.black,
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w400,
-                ),
+                )
+                //  TextStyle(
+                //   color: AppColors.black,
+                //   fontSize: 20.sp,
+                //   fontWeight: FontWeight.w400,
+                // ),
               ),
             ),
             Padding(
@@ -335,11 +408,15 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               ),
               child: Text(
                 "${MyJanitorsDetailsScreenConstants.TOTAL_TASK.tr()} :",
-                style: TextStyle(
+                style:
+                AppTextStyle.font18.copyWith(
                   color: AppColors.greyTextColor,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w400,
-                ),
+                )
+                //  TextStyle(
+                //   color: AppColors.greyTextColor,
+                //   fontSize: 18.sp,
+                //   fontWeight: FontWeight.w400,
+                // ),
               ),
             ),
             Padding(
@@ -348,11 +425,15 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               ),
               child: Text(
                 widget.total_task,
-                style: TextStyle(
+                style: 
+                 AppTextStyle.font20.copyWith(
                   color: AppColors.black,
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w400,
-                ),
+                )
+                // TextStyle(
+                //   color: AppColors.black,
+                //   fontSize: 20.sp,
+                //   fontWeight: FontWeight.w400,
+                // ),
               ),
             ),
           ],

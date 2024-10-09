@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -59,8 +60,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       GetTaskTamplates event, Emitter<DashboardState> emit) async {
     try {
       emit(DashboardLoading());
+      
       data = await dashboardService.getTasksByJanitorId();
-
       emit(GetDashboardDataSuccess(data: data));
     } catch (e) {
       emit(DashboardError(error: e.toString()));
@@ -101,3 +102,35 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     }
   }
 }
+
+
+class FirebaseAuthBloc extends Bloc<DashboardEvent, DashboardState> {
+ 
+  final DashboardService dashboardService =
+  DashboardService(dio: GetIt.instance());
+  final GlobalStorage globalStorage = GetIt.instance<GlobalStorage>();
+  List<DashboardModelClass> data = [];
+  late int janitorId;
+  var message;
+ 
+ FirebaseAuthBloc() : super(ClockInInitial());
+
+  @override
+  Stream<DashboardState> mapEventToState(DashboardEvent event) async* {
+    if (event is MarkAttendance) {
+      yield FirebaseAuthFailedState();
+    } else if (event is FirebaseAuthCompleting) {
+      AuthUser? userServerData = await repository.getFirebaseAuthUser(
+        uid: event.uid,
+        email: event.email,
+        phone: event.phone,
+      );
+      yield FirebaseAuthStateCompleted(userServerData);
+    } else if (event is FirebaseAuthNotStarted) {
+      yield FirebaseAuthIsNotStartState();
+    } else if (event is FirebaseAuthStarted) {
+      yield FirebaseAuthStartedState();
+    }
+  }
+}
+

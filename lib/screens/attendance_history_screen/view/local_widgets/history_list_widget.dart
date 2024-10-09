@@ -3,6 +3,7 @@ import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/bloc/histo
 import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/data/model/Attendance_history_model.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -58,9 +59,7 @@ class _HistoryListWidgetState extends State<HistoryListWidget> {
               child: GestureDetector(
                 onTap: () {
                   widget.onTapItem(widget.data[index]);
-                  setState(() {
-                    selectedCard = index;
-                  });
+               
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(
@@ -72,7 +71,7 @@ class _HistoryListWidgetState extends State<HistoryListWidget> {
                   ),
                   decoration: BoxDecoration(
                     color: selectedCard == index
-                        ? AppColors.containerColor
+                        ? AppColors.red
                         : AppColors.containerShadow,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
@@ -106,71 +105,81 @@ class _HistoryListWidgetState extends State<HistoryListWidget> {
                             children: [
                               Text(
                                 widget.data[index].date ?? '',
-                                style: TextStyle(
-                                  color: AppColors.historyText,
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.w400,
-                                ),
+                                style: 
+                               AppTextStyle.font18.copyWith(
+                                color: AppColors.historyText,
+                              )     
                               ),
                               Text(
                                 widget.data[index].dayOfWeek ?? '',
-                                style: TextStyle(
-                                  color: AppColors.historyText,
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.w400,
-                                ),
+                                style:
+                                 AppTextStyle.font18.copyWith(
+                                color: AppColors.historyText,
+                              )  
+                            
                               )
                             ],
                           ),
                         ),
                         Column(
                           children: [
-                            Text(
-                              MydashboardScreenConstants.CHECK_IN.tr(),
-                              style: TextStyle(
-                                color: AppColors.historyText,
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w400,
+                              Container(
+                              width: 90.w,
+                              child: Text(
+                                  textAlign: TextAlign.center,
+                                maxLines: 2,
+                               overflow: TextOverflow.clip,
+                                MydashboardScreenConstants.CHECK_IN.tr(),
+                                style:
+                                 AppTextStyle.font16.copyWith(
+                                  color: AppColors.historyText,
+                                                         )
                               ),
                             ),
                             Text(
                               " ${widget.data[index].checkIn ?? '-'}",
-                              style: TextStyle(
-                                color: AppColors.lightGreyText,
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w400,
-                              ),
+                              style:
+                              AppTextStyle.font13.copyWith(
+                                 color: AppColors.lightGreyText,
+                              )  
                             )
                           ],
                         ),
                         Column(
                           children: [
-                            Text(
-                              MydashboardScreenConstants.CHECK_OUT.tr(),
-                              style: TextStyle(
-                                color: AppColors.historyText,
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w400,
+                            Container(
+                              width: 90.w,
+                              child: Center(
+                                child: Text(
+                                   textAlign: TextAlign.center,
+                                   maxLines: 2,                        //     overflow: TextOverflow.fade,
+                                  MydashboardScreenConstants.CHECK_OUT.tr(),
+                                  style:
+                                  AppTextStyle.font16.copyWith(
+                                    color: AppColors.historyText,
+                                  )
+                                ),
                               ),
                             ),
                             Text(
                               widget.data[index].checkOut ?? '-',
-                              style: TextStyle(
+                              style:
+                              AppTextStyle.font13.copyWith(
                                 color: AppColors.lightGreyText,
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w400,
-                              ),
+                              )
                             )
                           ],
                         ),
-                        Text(
-                          widget.data[index].attendance ?? '',
-                          style: TextStyle(
-                            color: widget.data[index].attendance == "Present"
-                                ? AppColors.greenBold
-                                : AppColors.redBold,
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w700,
+                        Center(
+                          child: Text(
+                            widget.data[index].attendance ?? '',
+                            style: 
+                              AppTextStyle.font13w7.copyWith(
+                                  color: 
+                                  widget.data[index].attendance == "Present"
+                                  ? AppColors.greenBold
+                                  : AppColors.redBold,
+                                )
                           ),
                         ),
                       ],

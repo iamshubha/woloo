@@ -2,6 +2,7 @@ abstract class AppImages {
   AppImages._();
 
   static const String _assetImgPath = "assets/images/";
+  static const String _assetSvgImgPath = "assets/images/svg/";
   static const String _assetLottiePath = "assets/lottie/";
 
   static String get appLogo => _assetImgPath + 'logo_woloo.png';
@@ -37,4 +38,11 @@ abstract class AppImages {
   static String get logout_img => _assetImgPath + 'logout.png';
   static String get repeat_icon => _assetImgPath + 'irepeat.png';
   static String get delete_icon => _assetImgPath + 'delete.png';
+  static String get up => _assetSvgImgPath +'up.svg';
+  static String get down => _assetSvgImgPath +'down.svg';
+  static String get home => _assetSvgImgPath +'home.svg';
+  static String get layout => _assetSvgImgPath +'layout.svg';
+  static String get forward => _assetImgPath +'chevrons.png';
+
+  static String get logo => _assetSvgImgPath +'woloo.svg';
 }

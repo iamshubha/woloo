@@ -133,5 +133,7 @@
   "Re-open": "पुनरावलोकन",
   "Rejected": "अस्वीकृत",
   "GoBack": "परत जा",
-  "All": "सर्व"
+  "All": "सर्व",
+  "Download To Excel": "एक्सेलमध्ये डाउनलोड करा",
+  "Excel exported into download folder successfully": "एक्सेल डाउनलोड फोल्डरमध्ये यशस्वीरित्या डाउनलोड झाली"
 }

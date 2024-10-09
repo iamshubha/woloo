@@ -1,3 +1,4 @@
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -52,11 +53,15 @@ class _CustomDialogueWidgetState extends State<CustomDialogueWidget> {
               Text(
                 widget.text,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16.sp,
-                  color: AppColors.black,
-                ),
+                style:
+                 AppTextStyle.font16.copyWith(
+                    color: AppColors.black,
+                 )
+                //  TextStyle(
+                //   fontWeight: FontWeight.w400,
+                //   fontSize: 16.sp,
+                //   color: AppColors.black,
+                // ),
               ),
               SizedBox(
                 height: 10.h,

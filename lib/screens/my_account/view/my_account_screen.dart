@@ -10,6 +10,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../utils/app_textstyle.dart';
+import '../../common_widgets/image_provider.dart';
+
 class SupervisorAccountScreen extends StatefulWidget {
   final String supervisorName;
   final String mobile_number;
@@ -42,11 +45,15 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
           backgroundColor: AppColors.appbarBgColor,
           title: Text(
             MyAccountScreenConstants.MY_ACCOUNT.tr(),
-            style: TextStyle(
-              fontSize: 24.sp,
-              fontWeight: FontWeight.w400,
-              color: AppColors.yellowSplashColor,
-            ),
+            style:
+              AppTextStyle.font24.copyWith(
+                  color: AppColors.yellowSplashColor,
+                  )
+            //  TextStyle(
+            //   fontSize: 24.sp,
+            //   fontWeight: FontWeight.w400,
+            //   color: AppColors.yellowSplashColor,
+            // ),
           ),
           // leading: IconButton(
           //   color: AppColors.black30,
@@ -86,12 +93,14 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
                 height: 50.h,
               ),
               Center(
-                child: Image.asset(
-                  AppImages.profile_img,
+                child: 
+                    CustomImageProvider(
+                 image: AppImages.profile_img,
                   height: 98.h,
                   width: 97.w,
                   alignment: Alignment.center,
-                ),
+                ),    
+              
               ),
               SizedBox(
                 height: 20.h,
@@ -122,11 +131,15 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
                           child: Text(
                             textAlign: TextAlign.center,
                             widget.supervisorName,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16.sp,
+                            style:
+                            AppTextStyle.font16.copyWith(
                               color: AppColors.black,
-                            ),
+                            )
+                            //  TextStyle(
+                            //   fontWeight: FontWeight.w400,
+                            //   fontSize: 16.sp,
+                            //   color: AppColors.black,
+                            // ),
                           ),
                         ),
                       ],
@@ -163,11 +176,15 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
                           child: Text(
                             textAlign: TextAlign.center,
                             "+91 ${widget.mobile_number}",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16.sp,
+                            style:
+                               AppTextStyle.font16.copyWith(
                               color: AppColors.black,
-                            ),
+                            )                          
+                            //  TextStyle(
+                            //   fontWeight: FontWeight.w400,
+                            //   fontSize: 16.sp,
+                            //   color: AppColors.black,
+                            // ),
                           ),
                         ),
                       ],

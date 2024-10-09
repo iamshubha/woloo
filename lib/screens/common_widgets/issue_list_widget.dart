@@ -1,10 +1,12 @@
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/bloc/issue_list_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/bloc/issue_list_event.dart';
 import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/bloc/issue_list_state.dart';
 import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/data/model/Issue_list_model.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -56,25 +58,27 @@ class _IssueListWidgetState extends State<IssueListWidget> {
         if (state is IssueListSuccess) {
           EasyLoading.dismiss();
 
-          setState(() {
-            _data = state.data;
-          });
+         
         }
       },
       builder: (context, state) {
-        if (state is IssueListLoading && _data.isEmpty) {
+        if (state is IssueListLoading ) {
           EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
-        }
+        } 
+        else
 
         if (state is IssueListError) {
           return CustomErrorWidget(error: state.error);
-        }
+        } 
+        else
 
-        if (state is IssueListSuccess && (state.data.isEmpty)) {
+        if (state is IssueListSuccess  ) {
+               _data = state.data;
           EasyLoading.dismiss();
-          return const EmptyListWidget();
-        }
-        return RefreshIndicator(
+          return _data.isEmpty ?
+          EmptyListWidget()
+              :
+           RefreshIndicator(
           onRefresh: () {
             return Future.delayed(
               Duration(seconds: 1),
@@ -98,9 +102,9 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                 child: GestureDetector(
                   onTap: () {
                     widget.onTapItem();
-                    setState(() {
+                   
                       selectedCard = index;
-                    });
+                   
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(
@@ -128,9 +132,8 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                             decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.darkGreyColor),
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
-                              child: Image.asset(
-                                AppImages.bed_img,
-                              ),
+                              child:
+                              CustomImageProvider( image:  AppImages.bed_img,) 
                             ),
                           ),
                         ),
@@ -149,53 +152,73 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                   softWrap: true,
-                                  style: TextStyle(
-                                    color: AppColors.janitorNameColor,
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.w400,
-                                  ),
+                                  style:
+                                   AppTextStyle.font18.copyWith(
+                                     color: AppColors.janitorNameColor,
+                                   )
+                                  //  TextStyle(
+                                  //   color: AppColors.janitorNameColor,
+                                  //   fontSize: 18.sp,
+                                  //   fontWeight: FontWeight.w400,
+                                  // ),
                                 ),
                                 SizedBox(height: 10.h),
                                 Text(
                                   "${MyIssuesListScreenConstants.FACILITY_NAME.tr()} : ${_data[index].facilityName}",
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 2,
-                                  style: TextStyle(
-                                    color: AppColors.clusterTitleColor,
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w400,
-                                  ),
+                                  style:
+                                    AppTextStyle.font12.copyWith(
+                                     color: AppColors.clusterTitleColor,
+                                   )
+                                  //  TextStyle(
+                                  //   color: AppColors.clusterTitleColor,
+                                  //   fontSize: 12.sp,
+                                  //   fontWeight: FontWeight.w400,
+                                  // ),
                                 ),
                                 SizedBox(height: 5.h),
                                 Text(
                                   "${MyIssuesListScreenConstants.JANITOR_NAME.tr()} : ${_data[index].janitorName}",
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 2,
-                                  style: TextStyle(
-                                    color: AppColors.clusterTitleColor,
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w400,
-                                  ),
+                                  style:
+                                   AppTextStyle.font12.copyWith(
+                                     color: AppColors.clusterTitleColor,
+                                   )
+                                  //  TextStyle(
+                                  //   color: AppColors.clusterTitleColor,
+                                  //   fontSize: 12.sp,
+                                  //   fontWeight: FontWeight.w400,
+                                  // ),
                                 ),
                                 SizedBox(height: 5.h),
                                 Text(
                                   "${MyIssuesListScreenConstants.DESCRIPTION.tr()} : ${_data[index].description ?? "-"}",
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 2,
-                                  style: TextStyle(
-                                    color: AppColors.clusterTitleColor,
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w400,
-                                  ),
+                                  style: 
+                                   AppTextStyle.font12.copyWith(
+                                     color: AppColors.clusterTitleColor,
+                                   )
+                                  // TextStyle(
+                                  //   color: AppColors.clusterTitleColor,
+                                  //   fontSize: 12.sp,
+                                  //   fontWeight: FontWeight.w400,
+                                  // ),
                                 ),
                                 SizedBox(height: 10.h),
                                 Text(
                                   (_data[index].status ?? '').tr(),
-                                  style: TextStyle(
-                                    color: pending ? AppColors.redText : AppColors.greenText,
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  style:
+                                   AppTextStyle.font16w5.copyWith(
+                                     color:  pending ? AppColors.redText : AppColors.greenText,
+                                   )
+                                  //  TextStyle(
+                                  //   color: pending ? AppColors.redText : AppColors.greenText,
+                                  //   fontSize: 16.sp,
+                                  //   fontWeight: FontWeight.w500,
+                                  // ),
                                 ),
                               ],
                             ),
@@ -209,6 +232,10 @@ class _IssueListWidgetState extends State<IssueListWidget> {
             },
           ),
         );
+          // const EmptyListWidget();
+        }
+        return  SizedBox();
+       
       },
     );
   }

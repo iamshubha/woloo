@@ -29,3 +29,9 @@ class UploadSelfieError extends SelfieState {
   @override
   List<Object> get props => [error];
 }
+
+
+
+
+
+

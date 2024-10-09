@@ -1,3 +1,4 @@
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,7 +39,8 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
   void initState() {
     _clusterListBloc.add(GetAllClusters());
     widget.controller.addListener(() {
-      setState(() {
+       
+
         if (widget.controller.text.isEmpty) {
           _search = _data;
           return;
@@ -51,11 +53,11 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
                     .contains(widget.controller.text.toLowerCase()) ??
                 false)
             .toList();
-
-           widget.searchResult(_search) ;
+        print("print me  searc cluster ");
+           widget.searchResult(_search);
       });
 
-    });
+    
     super.initState();
   }
 
@@ -67,28 +69,29 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
           if (state is ClusterListSuccess) {
             EasyLoading.dismiss();
 
-            setState(() {
-              _data = state.data;
-              _search = _data;
-            });
+         
+               _data = state.data;
+               _search = _data;
           }
         },
         builder: (context, state) {
-          if (state is ClusterListLoading && _search.isEmpty) {
+          if (state is ClusterListLoading  ) {
             EasyLoading.show(
                 status: MydashboardScreenConstants.LOADING_TOAST.tr());
           }
-
+         else
           if (state is ClusterListError) {
             EasyLoading.dismiss();
             return CustomErrorWidget(error: state.error);
           }
+            else
 
-          if (state is ClusterListSuccess && (state.data.isEmpty)) {
+          if (state is ClusterListSuccess  ) {
+          
+             
             EasyLoading.dismiss();
-            return const EmptyListWidget();
-          }
-          return RefreshIndicator(
+            return 
+              RefreshIndicator(
             onRefresh: () {
               return Future.delayed(
                 Duration(seconds: 1),
@@ -114,9 +117,9 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
                     child: GestureDetector(
                       onTap: () {
                         widget.onTapItem(_search[index]);
-                        setState(() {
+                    
                           selectedCard = index;
-                        });
+                      
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
@@ -151,11 +154,15 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
                                     ),
                                     child: Text(
                                       _search[index].clusterName ?? '',
-                                      style: TextStyle(
+                                      style: 
+                                      AppTextStyle.font18.copyWith(
                                         color: AppColors.clusterTitleColor,
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.w400,
-                                      ),
+                                      )
+                                      // TextStyle(
+                                      //   color: AppColors.clusterTitleColor,
+                                      //   fontSize: 18.sp,
+                                      //   fontWeight: FontWeight.w400,
+                                      // ),
                                     ),
                                   ),
                                 ],
@@ -168,6 +175,13 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
                   );
                 }),
           );
-        });
+            
+           // const EmptyListWidget();
+          }
+          return
+           const EmptyListWidget();
+         
+        }
+        );
   }
 }

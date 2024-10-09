@@ -3,7 +3,6 @@ import 'package:Woloo_Smart_hygiene/injection_container.dart' as di;
 import 'package:Woloo_Smart_hygiene/messaging.dart';
 import 'package:Woloo_Smart_hygiene/screens/login/bloc/login_bloc.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -14,6 +13,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'app.dart';
+import 'screens/dashboard/bloc/dashboard_bloc.dart';
+import 'screens/washroom_image_screen/images_bloc/bloc/capture_bloc.dart';
 // import 'messaging.dart';
 
 void main() async {
@@ -60,12 +61,16 @@ void main() async {
         path: 'assets/translations',
         fallbackLocale: const Locale('en', 'US'),
         child:
-        MultiRepositoryProvider(
+        MultiBlocProvider(
           providers: [
             BlocProvider<LoginBloc>(
               create: (BuildContext context) => LoginBloc(),
             ),
-          
+               BlocProvider<CaptureBloc>(
+              create: (BuildContext context) => CaptureBloc(),),
+              BlocProvider<DashboardBloc>(
+              create: (BuildContext context) => DashboardBloc(),  
+            ),
           ],
           child: const
           App(),

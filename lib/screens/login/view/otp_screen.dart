@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -13,7 +15,9 @@ import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/view/supervisor
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
+import '../../../core/bloc/core_bloc.dart';
 import '../../common_widgets/button_widget.dart';
+import '../../common_widgets/image_provider.dart';
 import '../../dashboard/view/dashboard_screen.dart';
 import 'local_widgets/otp_widget.dart';
 
@@ -22,7 +26,9 @@ class OTPScreen extends StatefulWidget {
   final String? type;
 
   final LoginBloc loginBloc;
-  const OTPScreen({Key? key, required this.phoneNumber, required this.loginBloc, this.type}) : super(key: key);
+  const OTPScreen(
+      {Key? key, required this.phoneNumber, required this.loginBloc, this.type})
+      : super(key: key);
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
@@ -36,6 +42,7 @@ class _OTPScreenState extends State<OTPScreen> {
   late Position position;
   String long = "", lat = "";
   String? _currentAddress;
+  CoreBloc coreBloc = CoreBloc();
 
   late StreamSubscription<Position> positionStream;
   GlobalStorage globalStorage = GetIt.instance();
@@ -68,7 +75,8 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   getLocation() async {
-    position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     print(position.longitude); //Output: 80.24599079
     print(position.latitude); //Output: 29.6593457
 
@@ -81,7 +89,9 @@ class _OTPScreenState extends State<OTPScreen> {
       //device must move horizontally before an update event is generated;
     );
 
-    StreamSubscription<Position> positionStream = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
+    StreamSubscription<Position> positionStream =
+        Geolocator.getPositionStream(locationSettings: locationSettings)
+            .listen((Position position) {
       print(position.longitude); //Output: 80.24599079
       print(position.latitude); //Output: 29.6593457
 
@@ -93,16 +103,42 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   Future<void> _getAddressFromLatLng(Position position) async {
-    await placemarkFromCoordinates(position.latitude, position.longitude).then((List<Placemark> placemarks) {
+    await placemarkFromCoordinates(position.latitude, position.longitude)
+        .then((List<Placemark> placemarks) {
       Placemark place = placemarks[0];
-      setState(() {
-        _currentAddress = '${place.name},${place.street}, ${place.subLocality},${place.subAdministrativeArea}, ${place.administrativeArea},${place.postalCode}';
+     
+        _currentAddress =
+            '${place.name},${place.street}, ${place.subLocality},${place.subAdministrativeArea}, ${place.administrativeArea},${place.postalCode}';
         print("address - $_currentAddress");
-        EasyLoading.showToast("${MyLoginConstants.LOCATION_DETECTED_TOAST.tr()} : $_currentAddress");
-      });
+        EasyLoading.showToast(
+            "${MyLoginConstants.LOCATION_DETECTED_TOAST.tr()} : $_currentAddress");
+      
     }).catchError((e) {
       debugPrint(e);
     });
+  }
+
+
+  late Stream<String> _tokenStream;
+  String? deviceToken;
+
+  Future updateDeviceToken() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    //  await Future.delayed(Duration(seconds: 1));
+    String? aspn =     await messaging.getAPNSToken();
+    print("aspn $aspn");
+    //  onNewToken
+
+    print("refresh token ${messaging.onTokenRefresh}");
+
+    deviceToken = await messaging.getToken();
+    _tokenStream = FirebaseMessaging.instance.onTokenRefresh;
+//     _tokenStream.listen(setToken);
+
+    print("device token $deviceToken");
+    if (deviceToken != null) coreBloc.add(UpdateToken(token: deviceToken!));
+   /// coreBloc.add(CheckUserIsLoggedInOrNot());
+
   }
 
   @override
@@ -130,10 +166,12 @@ class _OTPScreenState extends State<OTPScreen> {
                   child: Container(
                     height: 120.h,
                     width: 120.w,
-                    decoration: BoxDecoration(color: AppColors.greyContainer, borderRadius: BorderRadius.circular(100)),
+                    decoration: BoxDecoration(
+                        color: AppColors.greyContainer,
+                        borderRadius: BorderRadius.circular(100)),
                     child: Center(
-                      child: Image.asset(
-                        AppImages.otp_img,
+                      child: CustomImageProvider(
+                        image: AppImages.otp_img,
                         height: 78.h,
                         alignment: Alignment.center,
                       ),
@@ -144,14 +182,16 @@ class _OTPScreenState extends State<OTPScreen> {
                   height: 10.h,
                 ),
                 Center(
-                  child: Text(
-                    MyLoginConstants.OTP_VERIFICATION.tr(),
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 24.sp,
-                      color: AppColors.black,
-                    ),
-                  ),
+                  child: Text(MyLoginConstants.OTP_VERIFICATION.tr(),
+                      style: AppTextStyle.font24.copyWith(
+                        color: AppColors.black,
+                      )
+                      // TextStyle(
+                      //   fontWeight: FontWeight.w400,
+                      //   fontSize: 24.sp,
+                      //   color: AppColors.black,
+                      // ),
+                      ),
                 ),
                 SizedBox(
                   height: 10.h,
@@ -162,26 +202,31 @@ class _OTPScreenState extends State<OTPScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(
-                        width :MediaQuery.of(context).size.width/1.3,
-
+                        width: MediaQuery.of(context).size.width / 1.3,
                         child: RichText(
                           textAlign: TextAlign.center,
-                         overflow: TextOverflow.visible,
+                          overflow: TextOverflow.visible,
                           text: TextSpan(
                             text: "${MyLoginConstants.ENTER_OTP.tr()}",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14.sp,
+                            style: AppTextStyle.font14.copyWith(
                               color: AppColors.greyText,
                             ),
+                            // TextStyle(
+                            //   fontWeight: FontWeight.w500,
+                            //   fontSize: 14.sp,
+                            //   color: AppColors.greyText,
+                            // ),
                             children: [
                               TextSpan(
                                 text: widget.phoneNumber,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14.sp,
+                                style: AppTextStyle.font14w5.copyWith(
                                   color: AppColors.boldTextColor,
                                 ),
+                                //  TextStyle(
+                                //   fontWeight: FontWeight.w500,
+                                //   fontSize: 14.sp,
+                                //   color: AppColors.boldTextColor,
+                                // ),
                               ),
                               WidgetSpan(
                                 child: SizedBox(
@@ -193,8 +238,8 @@ class _OTPScreenState extends State<OTPScreen> {
                                   onTap: () {
                                     Navigator.pop(context);
                                   },
-                                  child: Image.asset(
-                                    AppImages.edit_icon_img,
+                                  child: CustomImageProvider(
+                                    image: AppImages.edit_icon_img,
                                     height: 12.h,
                                     width: 11.h,
                                   ),
@@ -227,11 +272,13 @@ class _OTPScreenState extends State<OTPScreen> {
                       EasyLoading.dismiss();
                     }
                     if (state is LoginOTPVerified) {
-                      setState(() {
+                     
                         roleId = globalStorage.getRoleId();
                         print("screen role id ----- " + roleId.toString());
-                      });
-                      widget.loginBloc.add(UpdateTokenOnVerifyOTP(token: fcmToken.toString()));
+                        print("fcm token id ----- " + fcmToken.toString());
+                        updateDeviceToken();
+                      // widget.loginBloc.add(
+                      //     UpdateTokenOnVerifyOTP(token: fcmToken.toString()));
 
                       EasyLoading.dismiss();
                       if (roleId == 1) {
@@ -261,10 +308,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
                     if (state is LoginGetDataSuccess) {
                       EasyLoading.dismiss();
-                      setState(() {
-                        /// Show hint only one time
-                        /// * Works only on android platform
-                      });
+                  
                     }
                   },
                   child: GestureDetector(
@@ -273,13 +317,15 @@ class _OTPScreenState extends State<OTPScreen> {
                         widget.loginBloc.add(VerifyOTP(otp: _pin));
                       }
                       if (_pin.isEmpty) {
-                        EasyLoading.showToast(MyLoginConstants.ENTER_OTP_TOAST.tr());
+                        EasyLoading.showToast(
+                            MyLoginConstants.ENTER_OTP_TOAST.tr());
                       }
 
                       print("button pressed");
                     },
                     child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
+                      padding: EdgeInsets.symmetric(
+                          vertical: 10.h, horizontal: 10.w),
                       child: ButtonWidget(
                         text: MyLoginConstants.VERIFY_OTP_BTN.tr(),
                       ),

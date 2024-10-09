@@ -2,6 +2,7 @@ import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/data/model
 import 'package:Woloo_Smart_hygiene/screens/janitor_details_screen/cubit/janitor_attendance_cubit.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -57,9 +58,11 @@ class _JanitorAttendanceView extends StatelessWidget {
                     return DropdownMenuItem(
                       value: item,
                       child: Text(
-                        "${monthItems[(int.tryParse(item.month.toString()) ?? 1) - 1]} ${item.year}",
-                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColors.darkGreyText),
-                      ),
+                          "${monthItems[(int.tryParse(item.month.toString()) ?? 1) - 1]} ${item.year}",
+                          style: AppTextStyle.font14
+                              .copyWith(color: AppColors.darkGreyText)
+                          // TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColors.darkGreyText),
+                          ),
                     );
                   }).toList(),
                   onChanged: (item) => cubit.getMonth(item!),
@@ -78,12 +81,15 @@ class _JanitorAttendanceView extends StatelessWidget {
                       cubit.sort("absent");
                     },
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
                       decoration: BoxDecoration(
                         color: Colors.red.withOpacity(.1),
                         borderRadius: BorderRadius.circular(20.r),
                         border: Border.all(
-                          color: state.sortBy == "absent" ? Colors.red : Colors.transparent,
+                          color: state.sortBy == "absent"
+                              ? Colors.red
+                              : Colors.transparent,
                         ),
                       ),
                       child: const Text(
@@ -103,12 +109,15 @@ class _JanitorAttendanceView extends StatelessWidget {
                     },
                     borderRadius: BorderRadius.circular(20.r),
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
                       decoration: BoxDecoration(
                         color: Colors.greenAccent.withOpacity(.1),
                         borderRadius: BorderRadius.circular(20.r),
                         border: Border.all(
-                          color: state.sortBy == "present" ? Colors.green : Colors.transparent,
+                          color: state.sortBy == "present"
+                              ? Colors.green
+                              : Colors.transparent,
                         ),
                       ),
                       child: const Text(
@@ -135,10 +144,12 @@ class _JanitorAttendanceView extends StatelessWidget {
                 )
               : ListView.separated(
                   itemCount: state.attendance.length,
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                   itemBuilder: (context, index) {
                     return Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 10.w, vertical: 10.h),
                       decoration: BoxDecoration(
                         color: AppColors.containerColor,
                         borderRadius: BorderRadius.circular(10),
@@ -169,24 +180,30 @@ class _JanitorAttendanceView extends StatelessWidget {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(
-                                  state.attendance[index].date ?? '',
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                    color: AppColors.historyText,
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
+                                Text(state.attendance[index].date ?? '',
+                                    maxLines: 1,
+                                    style: AppTextStyle.font14.copyWith(
+                                      color: AppColors.historyText,
+                                    )
+                                    //  TextStyle(
+                                    //   color: AppColors.historyText,
+                                    //   fontSize: 14.sp,
+                                    //   fontWeight: FontWeight.w400,
+                                    // ),
+                                    ),
                                 Text(
                                   state.attendance[index].dayOfWeek ?? '-',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: AppColors.historyText,
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w400,
-                                  ),
+                                  style:
+                                  AppTextStyle.font14.copyWith(
+                                      color: AppColors.historyText,
+                                    )
+                                  //  TextStyle(
+                                  //   color: AppColors.historyText,
+                                  //   fontSize: 14.sp,
+                                  //   fontWeight: FontWeight.w400,
+                                  // ),
                                 )
                               ],
                             ),
@@ -196,20 +213,29 @@ class _JanitorAttendanceView extends StatelessWidget {
                             children: [
                               Text(
                                 MydashboardScreenConstants.CHECK_IN.tr(),
-                                style: TextStyle(
-                                  color: AppColors.historyText,
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w400,
-                                ),
+                                style: 
+                                AppTextStyle.font14.copyWith(
+                                color: AppColors.historyText,
+                                    )
+                                
+                                // TextStyle(
+                                //   color: AppColors.historyText,
+                                //   fontSize: 14.sp,
+                                //   fontWeight: FontWeight.w400,
+                                // ),
                               ),
                               SizedBox(height: 5.h),
                               Text(
                                 " ${state.attendance[index].checkIn ?? '-'}",
-                                style: TextStyle(
-                                  color: AppColors.lightGreyText,
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w400,
-                                ),
+                                style: 
+                                AppTextStyle.font12.copyWith(
+                                   color: AppColors.lightGreyText, 
+                                )
+                                // TextStyle(
+                                //   color: AppColors.lightGreyText,
+                                //   fontSize: 12.sp,
+                                //   fontWeight: FontWeight.w400,
+                                // ),
                               )
                             ],
                           ),
@@ -218,33 +244,61 @@ class _JanitorAttendanceView extends StatelessWidget {
                             children: [
                               Text(
                                 MydashboardScreenConstants.CHECK_OUT.tr(),
-                                style: TextStyle(
+                                style:AppTextStyle.font14.copyWith(
                                   color: AppColors.historyText,
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w400,
-                                ),
+                                )
+                                
+                                //  TextStyle(
+                                //   color: AppColors.historyText,
+                                //   fontSize: 14.sp,
+                                //   fontWeight: FontWeight.w400,
+                                // ),
                               ),
                               SizedBox(height: 5.h),
                               Text(
                                 state.attendance[index].checkOut ?? '-',
-                                style: TextStyle(
+                                style: 
+                                AppTextStyle.font12.copyWith(
                                   color: AppColors.lightGreyText,
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w400,
-                                ),
+                                )
+                                
+                                // TextStyle(
+                                //   color: AppColors.lightGreyText,
+                                //   fontSize: 12.sp,
+                                //   fontWeight: FontWeight.w400,
+                                // ),
                               )
                             ],
                           ),
                           CircleAvatar(
                             radius: 25.r,
-                            backgroundColor: state.attendance[index].attendance?.toLowerCase().contains("present") == true ? Colors.green.withOpacity(.1) : Colors.red.withOpacity(.1),
+                            backgroundColor: state.attendance[index].attendance
+                                        ?.toLowerCase()
+                                        .contains("present") ==
+                                    true
+                                ? Colors.green.withOpacity(.1)
+                                : Colors.red.withOpacity(.1),
                             child: Text(
                               state.attendance[index].attendance ?? '',
-                              style: TextStyle(
-                                color: state.attendance[index].attendance?.toLowerCase().contains("present") == true ? Colors.green : Colors.redAccent,
-                                fontSize: 10.sp,
-                                fontWeight: FontWeight.w700,
-                              ),
+                              style:
+                                 AppTextStyle.font10w7.copyWith(
+                                 color: state.attendance[index].attendance
+                                            ?.toLowerCase()
+                                            .contains("present") ==
+                                        true
+                                    ? Colors.green
+                                    : Colors.redAccent,
+                                )
+                              //  TextStyle(
+                              //   color: state.attendance[index].attendance
+                              //               ?.toLowerCase()
+                              //               .contains("present") ==
+                              //           true
+                              //       ? Colors.green
+                              //       : Colors.redAccent,
+                              //   fontSize: 10.sp,
+                              //   fontWeight: FontWeight.w700,
+                              // ),
                             ),
                           ),
                         ],

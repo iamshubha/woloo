@@ -1,3 +1,4 @@
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
@@ -32,11 +33,15 @@ class _PopUpButtonWidgetState extends State<PopUpButtonWidget> {
           child: Text(
             widget.text,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight: FontWeight.w700,
-              color: AppColors.black,
-              fontSize: 14.sp,
-            ),
+            style: 
+            AppTextStyle.font14w7.copyWith(
+               color: AppColors.black,
+            )
+            // TextStyle(
+            //   fontWeight: FontWeight.w700,
+            //   color: AppColors.black,
+            //   fontSize: 14.sp,
+            // ),
           ),
         ),
       ),

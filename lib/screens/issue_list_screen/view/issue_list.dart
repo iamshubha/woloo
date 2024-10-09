@@ -1,3 +1,4 @@
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,11 +58,15 @@ class _IssuesListState extends State<IssuesList> {
             children: [
               Text(
                 MyIssuesListScreenConstants.TITLE_TEXT.tr(),
-                style: TextStyle(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.w400,
+                style:
+                AppTextStyle.font24.copyWith(
                   color: AppColors.yellowSplashColor,
-                ),
+                )
+                //  TextStyle(
+                //   fontSize: 24.sp,
+                //   fontWeight: FontWeight.w400,
+                //   color: AppColors.yellowSplashColor,
+                // ),
               ),
               GestureDetector(
                 onTap: () async {
@@ -84,11 +89,15 @@ class _IssuesListState extends State<IssuesList> {
                     child: Text(
                       MyIssuesListScreenConstants.REPORT_ISSUE_BUTTON.tr(),
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.black,
-                        fontSize: 16.sp,
-                      ),
+                      style:
+                      AppTextStyle.font16w7.copyWith(
+                         color: AppColors.black,
+                      )
+                      //  TextStyle(
+                      //   fontWeight: FontWeight.w700,
+                      //   color: AppColors.black,
+                      //   fontSize: 16.sp,
+                      // ),
                     ),
                   ),
                 ),

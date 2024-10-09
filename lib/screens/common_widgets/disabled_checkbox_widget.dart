@@ -1,3 +1,4 @@
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -99,12 +100,18 @@ class _DisabledCheckboxListWidgetState
                       children: [
                         Text(
                           widget.name ?? '',
-                          style: TextStyle(
+                          style:
+                          AppTextStyle.font20.copyWith(
                             overflow: TextOverflow.visible,
                             color: AppColors.disabledTextColor,
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w400,
-                          ),
+                          )
+                          
+                          //  TextStyle(
+                          //   overflow: TextOverflow.visible,
+                          //   color: AppColors.disabledTextColor,
+                          //   fontSize: 20.sp,
+                          //   fontWeight: FontWeight.w400,
+                          // ),
                         ),
                       ],
                     ),

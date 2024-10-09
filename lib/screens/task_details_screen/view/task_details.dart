@@ -9,6 +9,7 @@ import 'package:Woloo_Smart_hygiene/screens/task_details_screen/bloc/submitted_t
 import 'package:Woloo_Smart_hygiene/screens/task_details_screen/data/model/Submitted_tasks_model.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -53,9 +54,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
 
   @override
   void initState() {
-    setState(() {
-      // allocationId = _globalStorage.getAllocationId();
-    });
+   
     print("isApproved --- >" + widget.isApproved.toString());
     submittedTaskBloc
         .add(GetAllSubmittedTasks(allocationId: widget.allocationId));
@@ -65,230 +64,248 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer(
-        bloc: submittedTaskBloc,
-        listener: (context, state) {
-          if (state is GetSubmittedTasksSuccess) {
-            EasyLoading.dismiss();
-            setState(() {
-              submittedTaskModel = state.data;
-              print("images ---- ${submittedTaskModel.taskImages}");
-            });
-          }
-          if (state is UpdateStatusSuccessful) {
-            EasyLoading.dismiss();
-
-            Navigator.pop(context);
-          }
-        },
-        builder: (context, state) {
-          if (state is GetSubmittedTasksLoading) {
-            EasyLoading.show(
-                status: MydashboardScreenConstants.LOADING_TOAST.tr());
-          }
-
-          if (state is GetSubmittedTasksError) {
-            return CustomErrorWidget(error: state.error);
-          }
-
-          if (state is UpdateStatusLoading) {
-            EasyLoading.show(
-                status: MydashboardScreenConstants.LOADING_TOAST.tr());
-          }
-
-          if (state is UpdateStatusError) {
-            EasyLoading.dismiss();
-            return CustomErrorWidget(error: state.error);
-          }
-
-          return Scaffold(
-            backgroundColor: AppColors.white,
-            appBar: AppBar(
-              leading: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.black,
-                  size: 30,
-                ),
-                color: AppColors.appBarIconColor,
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              title: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 15.w,
-                  vertical: 10.h,
-                ),
-                child: Text(
-                  MyTaskListConstants.APP_BAR.tr(),
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    color: AppColors.appBarTitleColor,
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              backgroundColor: AppColors.white,
-              elevation: 0,
+    return
+      Scaffold(
+        backgroundColor: AppColors.white,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+              size: 30,
             ),
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (submittedTaskModel.taskImages?.isNotEmpty ?? false) ...[
-                  SizedBox(
-                    height: 180.h,
-                    width: ScreenUtil().screenWidth,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 20.w,
-                        vertical: 10.h,
-                      ),
-                      child: CarouselSlider(
-                        options: CarouselOptions(
-                          enableInfiniteScroll: false,
-                          viewportFraction: 1,
-                        ),
-                        items: List.generate(
-                          submittedTaskModel.taskImages?.length ?? 0,
-                          (index) => Center(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                10.r,
-                              ),
-                              child: Image.network(
-                                submittedTaskModel.taskImages![index],
-                                fit: BoxFit.cover,
-                                width: ScreenUtil().screenWidth,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 5.h,
-                    horizontal: 20.w,
-                  ),
-                  child: Text(
-                    MyTaskDetailsScreenConstants.TITLE.tr(),
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      color: AppColors.titleColor,
-                      fontSize: 24.sp,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-                submittedTaskModel.taskStatus == null
-                    ? const EmptyListWidget()
-                    : Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 5.h,
-                          ),
-                          child: ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            scrollDirection: Axis.vertical,
-                            itemCount:
-                                submittedTaskModel.taskStatus?.length ?? 0,
-                            itemBuilder: (
-                              BuildContext context,
-                              int index,
-                            ) {
-                              return Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 7.h,
-                                ),
-                                child: DisabledCheckboxListWidget(
-                                    key: Key(
-                                        "${submittedTaskModel.taskStatus?[index].status}$index"),
-                                    name: submittedTaskModel
-                                        .taskStatus?[index].taskName,
-                                    isChecked: submittedTaskModel
-                                            .taskStatus?[index].status ==
-                                        "1"),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                if (widget.isFromDashboard &&
-                    !widget.isApproved &&
-                    submittedTaskModel.taskStatus != null) ...[
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 25.w, vertical: 20.h),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            print(widget.allocationId);
-                            submittedTaskBloc.add(UpdateStatus(
-                                id: widget.allocationId, status: 7));
-                          },
-                          child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.r),
-                                  color: AppColors.greyButtonColor),
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 25.w,
-                                  vertical: 10.h,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    MydashboardScreenConstants.REJECT.tr(),
-                                    style: TextStyle(
-                                      color: AppColors.black,
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ),
-                              )),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            submittedTaskBloc.add(UpdateStatus(
-                                id: widget.allocationId, status: 4));
-                          },
-                          child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.r),
-                                  color: AppColors.buttonColor),
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 25.w,
-                                  vertical: 10.h,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    MyTaskDetailsScreenConstants.APPROVE_BUTTON
-                                        .tr(),
-                                    style: TextStyle(
-                                      color: AppColors.black,
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              )),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ],
+            color: AppColors.appBarIconColor,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 15.w,
+              vertical: 10.h,
             ),
-          );
-        });
+            child: Text(
+                MyTaskListConstants.APP_BAR.tr(),
+                textAlign: TextAlign.start,
+                style:AppTextStyle.font24.copyWith(
+                  color: AppColors.appBarTitleColor,
+                )
+              //  TextStyle(
+              //   color: AppColors.appBarTitleColor,
+              //   fontSize: 24.sp,
+              //   fontWeight: FontWeight.w400,
+              // ),
+            ),
+          ),
+          backgroundColor: AppColors.white,
+          elevation: 0,
+        ),
+        body: BlocConsumer(
+          bloc: submittedTaskBloc,
+          listener: (context, state) {
+            if (state is GetSubmittedTasksSuccess) {
+              EasyLoading.dismiss();
+                print("images ---- ${submittedTaskModel.taskImages}");
+            }
+            if (state is UpdateStatusSuccessful) {
+              EasyLoading.dismiss();
+
+              Navigator.pop(context);
+            }
+          },
+          builder: (context, state) {
+          //   print(" details task state  $state");
+            if (state is GetSubmittedTasksLoading) {
+              EasyLoading.show(
+                  status: MydashboardScreenConstants.LOADING_TOAST.tr());
+            } else
+              if(state is GetSubmittedTasksSuccess){
+                submittedTaskModel = state.data;
+                 return
+                   // Scaffold(
+                   //
+                   // body:
+                   Column(
+                     mainAxisAlignment: MainAxisAlignment.start,
+                     crossAxisAlignment: CrossAxisAlignment.start,
+                     children: [
+                       if (submittedTaskModel.taskImages?.isNotEmpty ?? false) ...[
+                         SizedBox(
+                           height: 180.h,
+                           width: ScreenUtil().screenWidth,
+                           child: Padding(
+                             padding: EdgeInsets.symmetric(
+                               horizontal: 20.w,
+                               vertical: 10.h,
+                             ),
+                             child: CarouselSlider(
+                               options: CarouselOptions(
+                                 enableInfiniteScroll: false,
+                                 viewportFraction: 1,
+                               ),
+                               items: List.generate(
+                                 submittedTaskModel.taskImages?.length ?? 0,
+                                     (index) => Center(
+                                   child: ClipRRect(
+                                     borderRadius: BorderRadius.circular(
+                                       10.r,
+                                     ),
+                                     child: Image.network(
+                                       submittedTaskModel.taskImages![index],
+                                       fit: BoxFit.cover,
+                                       width: ScreenUtil().screenWidth,
+                                     ),
+                                   ),
+                                 ),
+                               ),
+                             ),
+                           ),
+                         ),
+                       ],
+                       Padding(
+                         padding: EdgeInsets.symmetric(
+                           vertical: 5.h,
+                           horizontal: 20.w,
+                         ),
+                         child: Text(
+                             MyTaskDetailsScreenConstants.TITLE.tr(),
+                             textAlign: TextAlign.start,
+                             style:
+                             AppTextStyle.font24.copyWith(
+                               color: AppColors.titleColor,
+                             )
+                           //  TextStyle(
+                           //   color: AppColors.titleColor,
+                           //   fontSize: 24.sp,
+                           //   fontWeight: FontWeight.w400,
+                           // ),
+                         ),
+                       ),
+                       submittedTaskModel.taskStatus == null
+                           ? const EmptyListWidget()
+                           : Expanded(
+                         child: Padding(
+                           padding: EdgeInsets.symmetric(
+                             vertical: 5.h,
+                           ),
+                           child: ListView.builder(
+                             physics: const BouncingScrollPhysics(),
+                             scrollDirection: Axis.vertical,
+                             itemCount:
+                             submittedTaskModel.taskStatus?.length ?? 0,
+                             itemBuilder: (
+                                 BuildContext context,
+                                 int index,
+                                 ) {
+                               return Padding(
+                                 padding: EdgeInsets.symmetric(
+                                   vertical: 7.h,
+                                 ),
+                                 child: DisabledCheckboxListWidget(
+                                     key: Key(
+                                         "${submittedTaskModel.taskStatus?[index].status}$index"),
+                                     name: submittedTaskModel
+                                         .taskStatus?[index].taskName,
+                                     isChecked: submittedTaskModel
+                                         .taskStatus?[index].status ==
+                                         "1"),
+                               );
+                             },
+                           ),
+                         ),
+                       ),
+                       if (widget.isFromDashboard &&
+                           !widget.isApproved &&
+                           submittedTaskModel.taskStatus != null) ...[
+                         Padding(
+                           padding:
+                           EdgeInsets.symmetric(horizontal: 25.w, vertical: 20.h),
+                           child: Row(
+                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                             crossAxisAlignment: CrossAxisAlignment.center,
+                             children: [
+                               GestureDetector(
+                                 onTap: () {
+                                   print(widget.allocationId);
+                                   submittedTaskBloc.add(UpdateStatus(
+                                       id: widget.allocationId, status: 7));
+                                 },
+                                 child: Container(
+                                     decoration: BoxDecoration(
+                                         borderRadius: BorderRadius.circular(10.r),
+                                         color: AppColors.greyButtonColor),
+                                     child: Padding(
+                                       padding: EdgeInsets.symmetric(
+                                         horizontal: 25.w,
+                                         vertical: 10.h,
+                                       ),
+                                       child: Center(
+                                         child: Text(
+                                             MydashboardScreenConstants.REJECT.tr(),
+                                             style:
+                                             AppTextStyle.font16.copyWith( color: AppColors.titleColor,  )
+                                           // TextStyle(
+                                           //   color: AppColors.black,
+                                           //   fontSize: 16.sp,
+                                           //   fontWeight: FontWeight.w400,
+                                           // ),
+                                         ),
+                                       ),
+                                     )),
+                               ),
+                               GestureDetector(
+                                 onTap: () {
+                                   submittedTaskBloc.add(UpdateStatus(
+                                       id: widget.allocationId, status: 4));
+                                 },
+                                 child: Container(
+                                     decoration: BoxDecoration(
+                                         borderRadius: BorderRadius.circular(10.r),
+                                         color: AppColors.buttonColor),
+                                     child: Padding(
+                                       padding: EdgeInsets.symmetric(
+                                         horizontal: 25.w,
+                                         vertical: 10.h,
+                                       ),
+                                       child: Center(
+                                         child: Text(
+                                             MyTaskDetailsScreenConstants.APPROVE_BUTTON
+                                                 .tr(),
+                                             style:
+                                             AppTextStyle.font16w6.copyWith( color: AppColors.titleColor,  )
+                                           //  TextStyle(
+                                           //   color: AppColors.black,
+                                           //   fontSize: 16.sp,
+                                           //   fontWeight: FontWeight.w600,
+                                           // ),
+                                         ),
+                                       ),
+                                     )),
+                               )
+                             ],
+                           ),
+                         )
+                       ],
+                     ],
+
+                 );
+              }  else
+            if (state is GetSubmittedTasksError) {
+              return CustomErrorWidget(error: state.error);
+            }
+             else
+            if (state is UpdateStatusLoading) {
+              EasyLoading.show(
+                  status: MydashboardScreenConstants.LOADING_TOAST.tr());
+            }
+            else
+            if (state is UpdateStatusError) {
+              EasyLoading.dismiss();
+              return CustomErrorWidget(error: state.error);
+            }
+            return  SizedBox();
+
+          }),
+      );
   }
 }

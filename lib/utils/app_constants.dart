@@ -77,6 +77,7 @@ class MydashboardScreenConstants {
   static const String DESCRIPTION = 'description';
   static const String LOCATION = 'location';
   static const String BOOTHS = 'booths';
+
   static const String TOTAL_TASK = 'totalTask';
   static const String COMPLETE_TASK = 'completedTask';
   static const String PENDING_TASK = 'pendingTask';
@@ -206,6 +207,8 @@ class MyAttendanceHistoryScreenConstants {
   static const String DEC = 'dec';
   static const String SELECT = 'select';
   static const String BLANK_LIST_TEXT = 'selectMonth';
+  static const String DOWNLOAD_TO_EXCEL = 'Download To Excel';
+  static const String DOWNLOAD_SUCCESS_MESSAGE = 'Excel exported into download folder successfully';
 }
 
 class MapUtilsConstants {

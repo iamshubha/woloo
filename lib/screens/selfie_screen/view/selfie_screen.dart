@@ -6,8 +6,10 @@ import 'package:Woloo_Smart_hygiene/screens/selfie_screen/bloc/selfie_event.dart
 import 'package:Woloo_Smart_hygiene/screens/selfie_screen/bloc/selfie_state.dart';
 import 'package:Woloo_Smart_hygiene/screens/selfie_screen/view/camera.dart';
 import 'package:Woloo_Smart_hygiene/screens/task_list/view/task_list_screen.dart';
+import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/images_bloc/event/capture_event.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../utils/app_images.dart';
+import '../../common_widgets/image_provider.dart';
+import '../../washroom_image_screen/images_bloc/bloc/capture_bloc.dart';
+import '../../washroom_image_screen/images_bloc/state/capture_state.dart';
 
 
 enum PickSource { CAMERA }
@@ -42,6 +47,7 @@ class SelfieScreen extends StatefulWidget {
 class _SelfieScreenState extends State<SelfieScreen> {
   File? _file;
   SelfieBloc selfieBloc = SelfieBloc();
+  CaptureBloc _captureBloc = CaptureBloc(); 
 
   @override
   void initState() {
@@ -51,109 +57,23 @@ class _SelfieScreenState extends State<SelfieScreen> {
   @override
   Widget build(BuildContext context) {
     return
-
-      Scaffold(
+     BlocBuilder<CaptureBloc, CaptureState> (
+       bloc: _captureBloc,
+      builder:  (context, state) {
+              print(" statesssss $state ");
+           if ( state is AddImagesInitial  ) {
+             return Scaffold(
         backgroundColor: AppColors.white,
-        appBar:
-        _file != null ?
-        AppBar(
-          toolbarHeight: 75,
-          leadingWidth: 0,
-          leading: const SizedBox(),
-          backgroundColor: AppColors.appbarBgColor,
-          title:    Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              GestureDetector(
-                onTap: ()async{
-
-                  Navigator.of(context).push( MaterialPageRoute(builder: (context) =>  CameraPage(
-                    sensorPosition: SensorPosition.front,
-                     captureImage: (value){
-                       _file = value;
-
-                       setState(() {
-
-                       });
-                     },
-
-                  ),  ) );
-                  //   _file = await pickFile(null, PickSource.CAMERA);
-                  setState(() {});
-                },
-                child: Image.asset(
-                  AppImages.repeat_icon,
-                  //"assets/images/irepeat.png",
-                  width: 40.h,
-                ),
-              ),
-
-              GestureDetector(
-                onTap: ()async{
-
-
-                   _file = null;
-                  setState(() {
-
-                  });
-                },
-                child: Image.asset(
-                  AppImages.delete_icon,
-                  //"assets/images/irepeat.png",
-                  width: 40.h,
-                ),
-              ),
-              // IconButton(onPressed: (){
-              //   _file = null;
-              //   setState(() {
-              //
-              //   });
-              // }, icon:   Icon( AppImages.repeat_icon,
-              //   color: AppColors.red300,
-              //   size: 40.h,
-              // ) ),
-            ],
-          ),
-        )
-            : null
-        ,
+        appBar: null,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-              height:
-              _file != null ?
-              20.h
-                  :
-              180.h,
-            ),
-
-
-
-            _file !=  null  ?
-            Container(
-              height: 440.h,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(
-                  15.r,
-                ),
-                child: Image.file(
-                  _file!,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            )
-
-
-
-
-:
-            Column(
+          
+               Column(
               children: [
+                  SizedBox(
+                       height:180.h,),
                 Container(
                   height: 180.h,
                   width: 180.h,
@@ -174,17 +94,13 @@ class _SelfieScreenState extends State<SelfieScreen> {
                         captureImage: (value){
 
                           _file = value;
-
-                            setState(() {
-
-                            });
-
+                           
+                         _captureBloc.add( AddImages(file: _file)); 
 
                         },
 
                       ),  ) );
                       //  _file = await pickFile(null, PickSource.CAMERA);
-                      // setState(() {});
                     },
                   ),
                 ),
@@ -194,11 +110,15 @@ class _SelfieScreenState extends State<SelfieScreen> {
                   ),
                   child: Text(
                     MySelfieScreenConstants.TITLE_TEXT.tr(),
-                    style: TextStyle(
+                    style:
+                    AppTextStyle.font24.copyWith(
                       color: AppColors.black,
-                      fontSize: 24.sp,
-                      fontWeight: FontWeight.w400,
-                    ),
+                    )
+                    //  TextStyle(
+                    //   color: AppColors.black,
+                    //   fontSize: 24.sp,
+                    //   fontWeight: FontWeight.w400,
+                    // ),
                   ),
                 ),
                 Center(
@@ -209,22 +129,29 @@ class _SelfieScreenState extends State<SelfieScreen> {
                       MySelfieScreenConstants.TITLE_SUBTEXT.tr(),
                       maxLines: 2,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: AppColors.black,
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w400,
-                      ),
+                      style:
+                      AppTextStyle.font12.copyWith(
+                         color: AppColors.black,
+                      )
+                      //  TextStyle(
+                      //   color: AppColors.black,
+                      //   fontSize: 15.sp,
+                      //   fontWeight: FontWeight.w400,
+                      // ),
                     ),
                   ),
                 ),
 
 
-                //  ElevatedButton(onPressed: (){
-                //    print( " iamge  value  ${value.existsSync()}" );
-                //  },
-                //      child: Text("dsfsd")  )
               ],
             ),
+           
+             
+
+            // _file !=  null  ?
+          
+ // :
+      
 
 
             Expanded(child: Container()),
@@ -292,6 +219,179 @@ class _SelfieScreenState extends State<SelfieScreen> {
           ],
         ),
       );
+           } else if (
+             state is AddImagesSuccessful
+           ){
+             
+              print(" omf ${state.image} ");
+
+              File? image = state.image;
+            return 
+            
+             Scaffold(
+        backgroundColor: AppColors.white,
+        appBar:
+        AppBar(
+          toolbarHeight: 75,
+          leadingWidth: 0,
+          leading: const SizedBox(),
+          backgroundColor: AppColors.appbarBgColor,
+          title: 
+             Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                onTap: ()async{
+
+                  Navigator.of(context).push( MaterialPageRoute(builder: (context) =>  CameraPage(
+                    sensorPosition: SensorPosition.front,
+                     captureImage: (value){
+                       _file = value;
+
+                          _captureBloc.add(AddImages(file: _file ));                       
+
+                   
+                     },
+
+                  ),  ) );
+               
+               
+                },
+                child: 
+                  CustomImageProvider(
+                 image: 
+                 AppImages.repeat_icon,
+                  //"assets/images/irepeat.png",
+                  width: 40.h,
+                  alignment: Alignment.center,
+                ),   
+                
+              ),
+
+              GestureDetector(
+                onTap: ()async{
+
+
+                
+                  _captureBloc.add(RemoveImages(file: _file ));
+                },
+                child:
+                     CustomImageProvider(
+                 image: 
+                AppImages.delete_icon,
+                  //"assets/images/irepeat.png",
+                  width: 40.h,
+                ),   
+                
+              ),
+       
+            ],
+          ),
+        ),
+      
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+        
+
+
+                     Padding(
+                       padding: const EdgeInsets.symmetric( horizontal: 16 ),
+                       child: Column(
+                                       children: [
+                                         SizedBox(height:20.h),
+                                         Container(
+                                         height: 440.h,
+                                         decoration: BoxDecoration(
+                                           borderRadius: BorderRadius.circular(10.r),
+                                         ),
+                                         child: ClipRRect(
+                                           borderRadius: BorderRadius.circular(
+                        15.r,
+                                           ),
+                                           child: Image.file(
+                        state.image!,
+                        fit: BoxFit.cover,
+                                           ),
+                                         ),
+                                ),
+                                       ],
+                                     ),
+                     ),
+            Expanded(child: Container()),
+            _file != null
+                ? BlocConsumer<SelfieBloc, SelfieState>(
+                bloc: selfieBloc,
+                listener: (context, selfiestate) async {
+                  if (selfiestate is UploadSelfieLoading) {
+                    EasyLoading.show(status: selfiestate.message);
+                  }
+
+                  if (selfiestate is UploadSelfieSuccessful) {
+                    EasyLoading.dismiss();
+                    // Navigator.pop(context);
+
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TaskList(
+                            allocationId: widget.allocationId,
+                            templateId: widget.templateId,
+                          ),
+                        ));
+                  }
+
+                  if (selfiestate is UploadSelfieError) {
+                    EasyLoading.dismiss();
+                    EasyLoading.showError(selfiestate.error);
+                  }
+                },
+                builder: (context, state) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 15.h,
+                      horizontal: 30.w,
+                    ),
+                    child: WhiteButtonWidget(
+                      text: MyTaskListConstants.SUBMIT_BTN.tr(),
+                      color: AppColors.buttonColor,
+                      onTap: () {
+                        print("image#######" + _file!.path);
+
+                        selfieBloc.add(UploadSelfie(
+                          type: MySelfieScreenConstants.IMAGE_TYPE_SELFIE,
+                          image: image!,
+                          id: widget.allocationId,
+                          remarks: MySelfieScreenConstants.REMARKS,
+                        ));
+
+                      },
+                    ),
+                  );
+                })
+                : Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: 15.h,
+                horizontal: 30.w,
+              ),
+              child: WhiteButtonWidget(
+                text: MyTaskListConstants.SUBMIT_BTN.tr(),
+                color: AppColors.disabledYellowButtonColor,
+                onTap: () {},
+              ),
+            ),
+          ],
+        ),
+      );
+
+           }
+          else {
+              return const SizedBox();
+          }
+     }, );
+
+  
 
   }
 

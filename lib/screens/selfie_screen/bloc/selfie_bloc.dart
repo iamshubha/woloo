@@ -36,6 +36,7 @@ class SelfieBloc extends Bloc<SelfieEvent, SelfieState> {
       emit(UploadSelfieError(error: e.toString()));
     }
   }
+  
 }
 
 

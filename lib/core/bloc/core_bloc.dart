@@ -36,11 +36,13 @@ CoreBloc() : super(CoreInitial()) {
 
   FutureOr<void> _mapUpdateTokenToState(UpdateToken event, Emitter<CoreState> emit) async {
     try {
+
       emit(UpdateTokenLoading());
-      var token = globalStorage.getToken();
-      if (token.isNotEmpty) {
+  //    var token = globalStorage.getToken();
+       //  print( " from strage $token");
+   //   if (token.isNotEmpty) {
         await coreService.updateFCMToken(token: event.token.toString());
-      }
+   //   }
 
 
 

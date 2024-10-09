@@ -7,6 +7,8 @@ import 'package:Woloo_Smart_hygiene/screens/selfie_screen/view/camera.dart';
 import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/bloc/images_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/bloc/images_event.dart';
 import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/bloc/images_state.dart';
+import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/images_bloc/bloc/capture_bloc.dart';
+import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/images_bloc/event/capture_event.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:camerawesome/camerawesome_plugin.dart';
@@ -18,6 +20,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../../../utils/app_textstyle.dart';
+import '../images_bloc/bloc/capture_bloc1.dart';
+import '../images_bloc/bloc/capture_bloc2.dart';
+import '../images_bloc/event/capture_event1.dart';
+import '../images_bloc/event/capture_event2.dart';
+import '../images_bloc/state/capture_state.dart';
+import '../images_bloc/state/capture_state1.dart';
+import '../images_bloc/state/capture_state2.dart';
 
 enum PickSource { CAMERA }
 
@@ -36,6 +47,9 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
   File? _file2;
   File? _file3;
   ImagesBloc _imagesBloc = ImagesBloc();
+  CaptureBloc _captureBloc = CaptureBloc(); 
+  CaptureBloc1 _captureBloc1 = CaptureBloc1(); 
+     CaptureBloc2 _captureBloc2 = CaptureBloc2(); 
   List<File> fileList = [];
   final TextEditingController _controller = TextEditingController();
 
@@ -87,11 +101,14 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                       ),
                       child: Text(
                         TaskCompletionScreenConstants.TITLE_TEXT.tr(),
-                        style: TextStyle(
-                          fontSize: 24.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.black,
-                        ),
+                        style: AppTextStyle.font24.copyWith(
+                        color: AppColors.titleColor,
+                  )
+                        //  TextStyle(
+                        //   fontSize: 24.sp,
+                        //   fontWeight: FontWeight.w400,
+                        //   color: AppColors.black,
+                        // ),
                       ),
                     ),
                     Column(
@@ -106,61 +123,28 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              _file1 != null
-                                  ? 
-                              Stack(
-                                children: [
-                                  Container(
-                                          height: 135.h,
-                                          width: 150.w,
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                                10.0), //add border radius
-                                            child: Image.file(
-                                              _file1!,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                  
-                                      Positioned(
-                                       right: 5,
-                                       top: 5,
 
-                                       child: GestureDetector(
-                                         onTap: (){
-                                            _file1 = null;
-                                             setState(() {
-
-                                             });
-
-                                         },
-                                         child: const CircleAvatar(
-                                           backgroundColor: AppColors.black,
-                                           child: Center(
-                                             child: Icon(
-                                                  color: AppColors.red,
-                                                 Icons.delete  ),
-                                           ),
-                                         ),
-                                       ),
-                                     )
-                                ],
-                              )
-                                  : GestureDetector(
+                               BlocBuilder(
+                                 bloc:_captureBloc ,
+                                builder:  (context, state) {
+                                   
+                                      print("print state  $state");
+                                    
+                                     if (  state is AddImagesInitial ) {
+                                          return 
+                                          GestureDetector(
                                       onTap: () async {
                                           Navigator.of(context).push( MaterialPageRoute(builder: (context) =>  CameraPage(
                                             sensorPosition: SensorPosition.back,
                                              captureImage: (val){
                                                 _file1 = val;
                                                 fileList.add(_file1!);
-                                                setState(() {
-
-                                                });
+                                                 _captureBloc.add(AddImages(file:_file1));
+                                               // fileList.add(_file1!);
+                                              
                                              },
                                           ),  ) );
-                                        // _file1 = await pickFile(
-                                        //     null, PickSource.CAMERA);
+                                  
 
                                         print("fileeeee1" + _file1.toString());
 
@@ -191,21 +175,26 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                                 TaskCompletionScreenConstants
                                                     .ADD_PHOTO
                                                     .tr(),
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 15.sp,
+                                                style:
+                                                AppTextStyle.font15.copyWith(
                                                   color: AppColors
                                                       .imageScreenGreyColor,
-                                                ),
+                                                )
+                                                //  TextStyle(
+                                                //   fontWeight: FontWeight.w400,
+                                                //   fontSize: 15.sp,
+                                                //   color: AppColors
+                                                //       .imageScreenGreyColor,
+                                                // ),
                                               )
                                             ],
                                           ),
                                         ),
                                       ),
-                                    ),
-                              _file2 != null
-                                  ?
-                              Stack(
+                                    ); 
+                                     }
+                                      else if( state  is AddImagesSuccessful   ){
+                                  return  Stack(
                                 children: [
                                   Container(
                                           height: 135.h,
@@ -214,47 +203,59 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                             borderRadius: BorderRadius.circular(
                                                 10.0), //add border radius
                                             child: Image.file(
-                                              _file2!,
+                                              state.image!,
                                               fit: BoxFit.cover,
                                             ),
                                           ),
                                         ),
-
-                                  Positioned(
-                                    right: 5,
-                                    top: 5,
-
-                                    child: GestureDetector(
-                                      onTap: (){
-                                        _file2 = null;
-                                        setState(() {
-
-                                        });
-
-                                      },
-                                      child: const CircleAvatar(
-                                        backgroundColor: AppColors.black,
-                                        child: Center(
-                                          child: Icon(
-                                              color: AppColors.red,
-                                              Icons.delete  ),
-                                        ),
-                                      ),
-                                    ),
-                                  )
+                                  
+                                      Positioned(
+                                       right: 5,
+                                       top: 5,
+                                       child: GestureDetector(
+                                         onTap: (){
+                                             _captureBloc.add(  RemoveImages(file: _file1 ));
+                                         },
+                                         child: const CircleAvatar(
+                                           backgroundColor: AppColors.black,
+                                           child: Center(
+                                             child: Icon(
+                                                  color: AppColors.red,
+                                                 Icons.delete  ),
+                                           ),
+                                         ),
+                                       ),
+                                     )
                                 ],
-                              )
-                                  : GestureDetector(
+                              );
+                                      }
+                                      else{
+
+                                        return SizedBox();
+                                      }
+
+                                    
+                                },  ),
+
+                        
+
+                                 BlocBuilder(
+                                  
+                                  bloc:  _captureBloc1,
+                                  builder: (context, state) {
+                                           print(" object  $state ");
+                                     if ( state is AddImagesInitial1) {
+                                        
+                                         return 
+                                            GestureDetector(
                                       onTap: () async {
 
                                         Navigator.of(context).push( MaterialPageRoute(builder: (context) =>  CameraPage(
                                           sensorPosition: SensorPosition.back,
                                           captureImage: (val){
                                             _file2 = val;
-                                            fileList.add(_file2!);
-                                            setState(() {
-
-                                            });
+                                            fileList.add(_file2!);     
+                                           _captureBloc1.add(AddImages1(file:_file2));
                                           },
                                         ),  ) );
                                         // _file2 = await pickFile(
@@ -291,33 +292,32 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                                 TaskCompletionScreenConstants
                                                     .ADD_PHOTO
                                                     .tr(),
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 15.sp,
+                                                style:
+                                                AppTextStyle.font15.copyWith(
                                                   color: AppColors
                                                       .imageScreenGreyColor,
-                                                ),
+                                                )
+                                                //  TextStyle(
+                                                //   fontWeight: FontWeight.w400,
+                                                //   fontSize: 15.sp,
+                                                //   color: AppColors
+                                                //       .imageScreenGreyColor,
+                                                // ),
                                               )
                                             ],
                                           ),
                                         ),
                                       ),
-                                    ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 25.w,
-                            vertical: 10.h,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              _file3 != null
-                                  ?
-                              Stack(
+                                    );
+
+
+
+                                          
+                                     } 
+                                     else  if(  state  is AddImagesSuccessful1 ){
+                                    
+                                     return
+                                        Stack(
                                 children: [
                                   Container(
                                           height: 135.h,
@@ -326,7 +326,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                             borderRadius: BorderRadius.circular(
                                                 10.0), //add border radius
                                             child: Image.file(
-                                              _file3!,
+                                              state.image!,
                                               fit: BoxFit.cover,
                                             ),
                                           ),
@@ -337,10 +337,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
 
                                     child: GestureDetector(
                                       onTap: (){
-                                        _file3 = null;
-                                        setState(() {
-
-                                        });
+                                           _captureBloc1.add(RemoveImages1(file:_file2));
 
                                       },
                                       child: const CircleAvatar(
@@ -354,8 +351,42 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                     ),
                                   )
                                 ],
-                              )
-                                  : GestureDetector(
+                              );
+                                      
+                                     } 
+                                      else {    
+                                         return SizedBox();
+                                      }
+
+                                 }, ),
+                         
+                           //   _file2 != null
+                               //   ?
+                          
+                              //    :
+                                 
+                            ],
+                          ),
+                        ),
+
+
+
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 25.w,
+                            vertical: 10.h,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                             BlocBuilder(
+                              bloc: _captureBloc2,
+                              builder:  (context, state) {
+
+                                     print("bloc 2 $state ");
+                                     if ( state is  AddImagesInitial2 ) {
+                                     return   GestureDetector(
                                       onTap: () async {
 
                                         Navigator.of(context).push( MaterialPageRoute(builder: (context) =>  CameraPage(
@@ -363,9 +394,8 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                           captureImage: (val){
                                             _file3 = val;
                                             fileList.add(_file3!);
-                                            setState(() {
-
-                                            });
+                                           _captureBloc2.add(AddImages2(file:_file3) );
+                                          
                                           },
                                         ),  ) );
 
@@ -403,18 +433,74 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                                 TaskCompletionScreenConstants
                                                     .ADD_PHOTO
                                                     .tr(),
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 15.sp,
+                                                style:
+                                                  AppTextStyle.font15.copyWith(
                                                   color: AppColors
                                                       .imageScreenGreyColor,
-                                                ),
+                                                )
+                                                //  TextStyle(
+                                                //   fontWeight: FontWeight.w400,
+                                                //   fontSize: 15.sp,
+                                                //   color: AppColors
+                                                //       .imageScreenGreyColor,
+                                                // ),
                                               )
                                             ],
                                           ),
                                         ),
                                       ),
+                                    );
+                                     }
+                                     else if ( state is AddImagesSuccessful2 ) {
+                                   return Stack(
+                                children: [
+                                  Container(
+                                          height: 135.h,
+                                          width: 150.w,
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                                10.0), //add border radius
+                                            child: Image.file(
+                                              _file3!,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                  Positioned(
+                                    right: 5,
+                                    top: 5,
+
+                                    child: GestureDetector(
+                                      onTap: (){
+                                       //  print("object");
+                                           _captureBloc2.add(RemoveImages2(file:_file3));
+                                    
+
+                                      },
+                                      child: const CircleAvatar(
+                                        backgroundColor: AppColors.black,
+                                        child: Center(
+                                          child: Icon(
+                                              color: AppColors.red,
+                                              Icons.delete  ),
+                                        ),
+                                      ),
                                     ),
+                                  )
+                                ],
+                              );
+                                     }
+                                      else {
+                                         return SizedBox();
+                                      }
+                                  
+                              }, )
+
+                              // _file3 != null
+                              //     ?
+                    
+                               //   :
+                                  
                             ],
                           ),
                         ),
@@ -427,11 +513,14 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                       ),
                       child: Text(
                         TaskCompletionScreenConstants.REMARKS.tr(),
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.black,
-                        ),
+                        style: 
+                         AppTextStyle.font16.copyWith(
+                              color: AppColors.black, )
+                        // TextStyle(
+                        //   fontSize: 16.sp,
+                        //   fontWeight: FontWeight.w400,
+                        //   color: AppColors.black,
+                        // ),
                       ),
                     ),
                     Padding(
@@ -469,8 +558,8 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                         text: MyTaskListConstants.SUBMIT_BTN.tr(),
                         color: AppColors.buttonColor,
                         onTap: () {
-
-                         openDialog();
+                         
+                        openDialog();
                           // if (widget.isFromChooseFacility) {
                           //   Navigator.pushReplacement(
                           //     context,

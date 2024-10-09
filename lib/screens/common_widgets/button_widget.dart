@@ -1,3 +1,4 @@
+import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
@@ -25,11 +26,15 @@ class ButtonWidget extends StatelessWidget {
         child: Text(
           text,
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontWeight: FontWeight.w700,
-            color: AppColors.black,
-            fontSize: 16.sp,
-          ),
+          style: 
+          AppTextStyle.font16w7.copyWith(
+            color: AppColors.black, 
+          )
+          // TextStyle(
+          //   fontWeight: FontWeight.w700,
+          //   color: AppColors.black,
+          //   fontSize: 16.sp,
+          // ),
         ),
       ),
     );
