@@ -142,8 +142,9 @@ class _TemplateScreenState extends State<TemplateScreen> {
           SupervisorDashboardListWidget(
             key: key,
             onTapItem: (SupervisorModelDashboard data, bool isApproved) async {
-              print("templates " + isApproved.toString());
-              await Navigator.push(
+              print("templates " + data.status!);
+               if( data.status == "Request for closure" ){
+                    await Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => TaskDetailsScreen(
@@ -153,9 +154,14 @@ class _TemplateScreenState extends State<TemplateScreen> {
                           isApproved: isApproved,
                         )),
               );
-                   key = GlobalKey();
+               key = GlobalKey();
+               }
+           
+                  
             },
-          )),
+
+          )
+          ),
     );
   }
 }

@@ -26,6 +26,6 @@ Future<void> init() async {
   sl.registerLazySingleton(() => DioClient(dio));
   sl.registerLazySingleton(() => GlobalStorage(GetStorage()));
   sl.registerLazySingleton(() => SupervisorDashboardBloc());
- // sl.registerLazySingleton(() => DashboardBloc());
+   sl.registerLazySingleton(() => DashboardBloc());
   sl.registerLazySingleton(() => IssueListBloc());
 }

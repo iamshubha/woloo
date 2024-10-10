@@ -26,7 +26,7 @@ class Messaging {
 
     await FirebaseMessaging.instance.requestPermission();
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async{
     //   dashboardBloc.add(GetTaskTamplates());
   //   GetIt.instance<DashboardBloc>().add(const GetTaskTamplates());
 
@@ -39,7 +39,7 @@ class Messaging {
       );
       
  
-      // try {
+      try {
         int role = GetIt.instance<GlobalStorage>().getRoleId();
         // print(" role $role");
         if (role == 2) {
@@ -50,15 +50,15 @@ class Messaging {
         else
         if(role == 1){
 
-             dashController.mapGetDashboardToState();
+               // dashController.mapGetDashboardToState();
           print("iin roll calll");
-        
-        // GetIt.instance<DashboardBloc>().add(GetTaskTamplates());
+          dashboardBloc.add(GetTaskTamplates());
+      //  GetIt.instance<DashboardBloc>().add(GetTaskTamplates());
 
            
         }
       //
-      // } catch (e) {}
+      } catch (e) {}
 
     });
 
@@ -124,6 +124,7 @@ class Messaging {
 
 
     );
+
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>() //
         ?.createNotificationChannel(androidNotificationChannel);

@@ -14,6 +14,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' hide Trans;
 // import 'package:get/state_manager.dart';
 import 'package:get_it/get_it.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/custom_dialogue_widget.dart';
@@ -114,8 +115,8 @@ class _DashboardState extends State<Dashboard> {
             print("appLaunchResponse---->${_appLaunchModel.toJson()}");
 
             if (_appLaunchModel.lastAttendance == "check_in") {
-           //   dashboardBloc.add(const GetTaskTamplates());
-                dashController.mapGetDashboardToState();
+             dashboardBloc.add(const GetTaskTamplates());
+               
               print("lastAttendance--->${_appLaunchModel.lastAttendance}");
              
                 onTapCheckIn = true;
@@ -143,7 +144,7 @@ class _DashboardState extends State<Dashboard> {
 
           if (state is ClockInSuccessful) {
             EasyLoading.dismiss();
-         //   dashboardBloc.add(const GetTaskTamplates());
+           dashboardBloc.add(const GetTaskTamplates());
            dashController.mapGetDashboardToState();
               onTapCheckIn = true;
               showList = true;
@@ -591,14 +592,14 @@ class _DashboardState extends State<Dashboard> {
 
                                           print('new $newValue ');
                                           if (newValue == "All") {
-                                            filter = _data;
+                                            dashController.filterData.value = dashController.data.value;
                                           } else {
-                                            filter = _data
+                                            dashController.filterData.value = dashController.data.value
                                                 .where((e) => e.status == newValue)
-                                                .toList();
+                                                .toList();    
                                           }
 
-                                          print(" filter data${filter}");
+                                          print(" filter data${ dashController.filterData.value}");
                                         },
                                       ),
                                     ),
@@ -609,61 +610,67 @@ class _DashboardState extends State<Dashboard> {
                           ),
                         ),
                       ),
-                      // showList
-                      //     ?
+                      showList
+                          ?
 
-                  //  BlocConsumer(
-                  //   bloc: dashboardBloc,
-                  //   listener: (context, state) {
-                  //          print("innnner dashvaord $state ");
-                  //     if (state is GetDashboardDataSuccess) {
-                  //       EasyLoading.dismiss();
+                   BlocConsumer(
+                    bloc: dashboardBloc,
+                    listener: (context, state) {
+                           print("innnner dashvaord $state ");
+                      if (state is GetDashboardDataSuccess) {
+                        EasyLoading.dismiss();
 
-                  //     }
+                      }
 
-                  //     if (state is UpdateStatusSuccessful) {
-                  //       EasyLoading.dismiss();
-                  //       print("status updated");
-                  //     }
-                  //   },
-                  //    builder: (context, state) {
+                      if (state is UpdateStatusSuccessful) {
+                        EasyLoading.dismiss();
+                        print("status updated");
+                      }
+                    },
+                     builder: (context, state) {
 
-                  //      if (state is DashboardLoading && _data.isEmpty) {
-                  //        EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
-                  //      }
+                       if (state is DashboardLoading && _data.isEmpty) {
+                         EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
+                       }
 
-                  //      if (state is DashboardError) {
-                  //        return CustomErrorWidget(error: state.error);
-                  //      }
+                       if (state is DashboardError) {
+                         return CustomErrorWidget(error: state.error);
+                       }
 
-                  //      if (state is UpdateStatusError) {
-                  //        return CustomErrorWidget(error: state.error);
-                  //      }
-                  //      if (state is UpdateStatusLoading) {
-                  //        EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
-                  //      }
+                       if (state is UpdateStatusError) {
+                         return CustomErrorWidget(error: state.error);
+                       }
+                       if (state is UpdateStatusLoading) {
+                         EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
+                       }
 
-                  //      if (state is GetDashboardDataSuccess  ) {
+                       if (state is GetDashboardDataSuccess  ) {
 
-                  //        EasyLoading.dismiss();
-                  //        filter = state.data;
+                         EasyLoading.dismiss();
+              
 
-                  //     //   filter =  _data;
+                        // filter =  dashController.data.value!;
 
-                  //        // if(dropdownvalue == "All"){
-                  //        //   filter = _data;
-                  //        // }else {
-                  //        //   filter =  _data.where( (e)=> e.status == dropdownvalue ).toList();
-                  //        // }
-                  //        print(" Allll   ${filter.map( (e) =>  e.requestType)}");
+                      //    if(dropdownvalue == "All"){
+                      //            print(" data from gextg ${dashController.data.value}");
+                      //                filter.value = dashController.data.value;
+                      //    //   filter = _data;
+                      //    }else {
+                      //      filter.value = 
+                      //      //  dashController.data.value.where()
+                      //     dashController.data.value.where( (e)=> e.status == dropdownvalue ).toList();
+                      //    }
+                      //    print(" Allll   ${filter.map( (e) =>  e.requestType)}");
 
-                  //      }
+                       }
 
-                 //   return 
+                       
+
+                   return
                       RefreshIndicator(
                       onRefresh: (){
                         return  Future.delayed( Duration( seconds: 1), () {
-                          //  dashboardBloc.add(const GetTaskTamplates());
+                           dashboardBloc.add(const GetTaskTamplates());
                           }, );
 
 
@@ -671,10 +678,11 @@ class _DashboardState extends State<Dashboard> {
                       child:
                       
                        Obx(
-                         () =>  DashboardListWidget(
+                         () => 
+                          DashboardListWidget(
                              current_lattitude: lat,
                              current_longitude: long,
-                              filter: dashController.data.value,
+                              filter: dashController.filterData.value,
                               dashboardBloc: dashboardBloc,
                              onTapItem: () {
                                print("lattitudeee " + lat!);
@@ -682,45 +690,46 @@ class _DashboardState extends State<Dashboard> {
                              },
                            ),
                        ),
-                    )
-                    //  }
-                 // )
+                    );
+                     }
+                 )
 
-                      //     : Center(
-                      //   child: Padding(
-                      //     padding: EdgeInsets.symmetric(
-                      //       horizontal: 20.w,
-                      //       vertical: 10.h,
-                      //     ),
-                      //     child: Column(
-                      //       children: [
-                      //         SizedBox(
-                      //           height: 100.h,
-                      //         ),
-                      //         CustomImageProvider(
-                      //           image: AppImages.blank_list_img,
-                      //           height: 100.h,
-                      //           width: 100.w,
-                      //         ),
-                      //         Text(
-                      //             MydashboardScreenConstants.BLANK_LIST_TEXT
-                      //                 .tr(),
-                      //             maxLines: 2,
-                      //             textAlign: TextAlign.center,
-                      //             style:
-                      //             AppTextStyle.font24.copyWith(
-                      //               color: AppColors.black,
-                      //             )
-                      //           //  TextStyle(
-                      //           //   color: AppColors.black,
-                      //           //   fontSize: 24.sp,
-                      //           //   fontWeight: FontWeight.w400,
-                      //           // ),
-                      //         )
-                      //       ],
-                      //     ),
-                      //   ),
-                      // )
+                          :
+                      Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20.w,
+                            vertical: 10.h,
+                          ),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 100.h,
+                              ),
+                              CustomImageProvider(
+                                image: AppImages.blank_list_img,
+                                height: 100.h,
+                                width: 100.w,
+                              ),
+                              Text(
+                                  MydashboardScreenConstants.BLANK_LIST_TEXT
+                                      .tr(),
+                                  maxLines: 2,
+                                  textAlign: TextAlign.center,
+                                  style:
+                                  AppTextStyle.font24.copyWith(
+                                    color: AppColors.black,
+                                  )
+                                //  TextStyle(
+                                //   color: AppColors.black,
+                                //   fontSize: 24.sp,
+                                //   fontWeight: FontWeight.w400,
+                                // ),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
                  
                     ]
                   ),
@@ -729,11 +738,11 @@ class _DashboardState extends State<Dashboard> {
 
          },
 
-        //  child: 
-        
-       
-  //     
-            );
+       //  child:
+
+     );
+  //
+            // );
   }
 
   checkGps() async {

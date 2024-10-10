@@ -42,8 +42,8 @@ class SubmittedTaskBloc extends Bloc<SubmittedTaskEvent, SubmittedTaskState> {
       await _supervisorDashboardService.updateStatus(
           id: event.id, status: event.status);
       data = await _supervisorDashboardService.getSupervisorDashboardData();
-
-      emit(UpdateStatusSuccessful());
+     
+      emit(UpdateStatusSuccessful( ));
     } catch (e) {
       emit(UpdateStatusError(error: e.toString()));
     }

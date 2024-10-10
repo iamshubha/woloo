@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_event.dart';
@@ -9,9 +11,12 @@ import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_state.dart'
 import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
 import 'package:Woloo_Smart_hygiene/screens/dashboard/data/network/dashboard_service.dart';
 
+import '../controller/dash_controller.dart';
+
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final DashboardService dashboardService =
       DashboardService(dio: GetIt.instance());
+      DashController dashController = Get.put(DashController());
   final GlobalStorage globalStorage = GetIt.instance<GlobalStorage>();
   List<DashboardModelClass> data = [];
   late int janitorId;
@@ -19,8 +24,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   DashboardBloc() : super(ClockInInitial()) {
     on<DashboardEvent>((event, emit) {});
-    on<MarkAttendance>(_mapMarkAttendanceToState);
-    on<GetTaskTamplates>(_mapGetDashboardToState);
+    on<MarkAttendance>(_mapMarkAttendanceToState );
+    on<GetTaskTamplates>(_mapGetDashboardToState ,);
     on<UpdateStatus>(_mapUpdateStatusToState);
     on<CheckAttendance>(_mapAppLaunchToState);
   }
@@ -60,8 +65,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       GetTaskTamplates event, Emitter<DashboardState> emit) async {
     try {
       emit(DashboardLoading());
-      
-      data = await dashboardService.getTasksByJanitorId();
+      dashController.mapGetDashboardToState();
+     // await  dashboardService.getTasksByJanitorId();
       emit(GetDashboardDataSuccess(data: data));
     } catch (e) {
       emit(DashboardError(error: e.toString()));
@@ -72,10 +77,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       UpdateStatus event, Emitter<DashboardState> emit) async {
     try {
       emit(const UpdateStatusLoading(message: "Loading Please Wait..."));
-
+         
       await dashboardService.updateStatus(id: event.id, status: event.status);
-      
-      data = await dashboardService.getTasksByJanitorId();
+        await dashController.mapGetDashboardToState();
+      // data = await dashboardService.getTasksByJanitorId();
 
       emit(GetDashboardDataSuccess(data: data));
     } catch (e) {
@@ -104,33 +109,33 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 }
 
 
-class FirebaseAuthBloc extends Bloc<DashboardEvent, DashboardState> {
- 
-  final DashboardService dashboardService =
-  DashboardService(dio: GetIt.instance());
-  final GlobalStorage globalStorage = GetIt.instance<GlobalStorage>();
-  List<DashboardModelClass> data = [];
-  late int janitorId;
-  var message;
- 
- FirebaseAuthBloc() : super(ClockInInitial());
-
-  @override
-  Stream<DashboardState> mapEventToState(DashboardEvent event) async* {
-    if (event is MarkAttendance) {
-      yield FirebaseAuthFailedState();
-    } else if (event is FirebaseAuthCompleting) {
-      AuthUser? userServerData = await repository.getFirebaseAuthUser(
-        uid: event.uid,
-        email: event.email,
-        phone: event.phone,
-      );
-      yield FirebaseAuthStateCompleted(userServerData);
-    } else if (event is FirebaseAuthNotStarted) {
-      yield FirebaseAuthIsNotStartState();
-    } else if (event is FirebaseAuthStarted) {
-      yield FirebaseAuthStartedState();
-    }
-  }
-}
+// class FirebaseAuthBloc extends Bloc<DashboardEvent, DashboardState> {
+//
+//   final DashboardService dashboardService =
+//   DashboardService(dio: GetIt.instance());
+//   final GlobalStorage globalStorage = GetIt.instance<GlobalStorage>();
+//   List<DashboardModelClass> data = [];
+//   late int janitorId;
+//   var message;
+//
+//  FirebaseAuthBloc() : super(ClockInInitial());
+//
+//   @override
+//   Stream<DashboardState> mapEventToState(DashboardEvent event) async* {
+//     if (event is MarkAttendance) {
+//       yield FirebaseAuthFailedState();
+//     } else if (event is FirebaseAuthCompleting) {
+//       AuthUser? userServerData = await repository.getFirebaseAuthUser(
+//         uid: event.uid,
+//         email: event.email,
+//         phone: event.phone,
+//       );
+//       yield FirebaseAuthStateCompleted(userServerData);
+//     } else if (event is FirebaseAuthNotStarted) {
+//       yield FirebaseAuthIsNotStartState();
+//     } else if (event is FirebaseAuthStarted) {
+//       yield FirebaseAuthStartedState();
+//     }
+//   }
+// }
 

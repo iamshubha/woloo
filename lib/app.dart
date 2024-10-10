@@ -33,8 +33,8 @@ class _AppState extends State<App> {
       splitScreenMode: true,
       builder: (context, child) {
         return 
-        // ConnectivityAppWrapper(
-        //   app: 
+        ConnectivityAppWrapper(
+          app: 
           
           GetMaterialApp(
             navigatorKey: ContextHolder.key,
@@ -46,11 +46,11 @@ class _AppState extends State<App> {
             builder: EasyLoading.init(
               builder: (context, child) {
                 return 
-                // ConnectivityWidgetWrapper(
-                //   disableInteraction: true,
-                //   child:
-                   child!;
-                // );
+                ConnectivityWidgetWrapper(
+                  disableInteraction: true,
+                  child:
+                   child!
+                );
               },
             ),
             theme: ThemeData(
@@ -60,7 +60,7 @@ class _AppState extends State<App> {
             home: GestureDetector(
               child: child,
             ),
-          // ),
+          ),
         );
       },
       child: const SplashScreen(),

@@ -21,6 +21,23 @@ class GetTaskTamplates extends DashboardEvent {
   @override
   List<Object?> get props => [Random().nextInt(100)];
 }
+ 
+class DashboardLoadingEvent extends DashboardEvent {
+  const DashboardLoadingEvent();
+
+  @override
+  List<Object?> get props => [];
+} 
+
+ 
+class DashboardErrorEvent extends DashboardEvent {
+  const DashboardErrorEvent();
+
+  @override
+  List<Object?> get props => [];
+} 
+
+
 
 class UpdateStatus extends DashboardEvent {
   final String id;
