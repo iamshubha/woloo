@@ -23,6 +23,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../utils/app_images.dart';
@@ -1686,7 +1687,11 @@ class _DashboardListWidgetState extends State<DashboardListWidget> {
         if (permission == LocationPermission.denied) {
           print('Location permissions are denied');
         } else if (permission == LocationPermission.deniedForever) {
+
+
           print("Location permissions are permanently denied");
+          print(" denied");
+           openAppSettings();
         } else {
           haspermission = true;
         }

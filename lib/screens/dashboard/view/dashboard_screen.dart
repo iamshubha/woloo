@@ -25,6 +25,7 @@ import 'package:Woloo_Smart_hygiene/screens/dashboard/view/local_widgets/dashboa
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../common_widgets/error_widget.dart';
 import '../data/model/dashboard_model_class.dart';
@@ -381,22 +382,27 @@ class _DashboardState extends State<Dashboard> {
                                         : GestureDetector(
                                       onTap: () async {
                                         await checkGps();
-                                        if (!haspermission) return;
+                                       if (!haspermission) return;
 
-                                        var latitude =
-                                            double.tryParse(lat) ?? 0;
-                                        var longitude =
-                                            double.tryParse(long) ?? 0;
-                                        print("lattttt   " +
-                                            latitude.toString());
-                                        print("longggg   " +
-                                            longitude.toString());
-                                        dashboardBloc.add(MarkAttendance(
-                                            type: 'check_in',
-                                            locations: [
-                                              latitude,
-                                              longitude
-                                            ]));
+
+
+                                           var latitude =
+                                               double.tryParse(lat) ?? 0;
+                                           var longitude =
+                                               double.tryParse(long) ?? 0;
+                                           print("lattttt   " +
+                                               latitude.toString());
+                                           print("longggg   " +
+                                               longitude.toString());
+                                           dashboardBloc.add(MarkAttendance(
+                                               type: 'check_in',
+                                               locations: [
+                                                 latitude,
+                                                 longitude
+                                               ]));
+
+
+
                                       },
                                       child: Container(
                                         height: 40.h,
@@ -746,26 +752,45 @@ class _DashboardState extends State<Dashboard> {
   }
 
   checkGps() async {
-    EasyLoading.show(
-        status: MydashboardScreenConstants.LOCATION_FETCHING_TOAST.tr());
+    // EasyLoading.show(
+    //     status: MydashboardScreenConstants.LOCATION_FETCHING_TOAST.tr());
     serviceStatus = await Geolocator.isLocationServiceEnabled();
     if (serviceStatus) {
       permission = await Geolocator.checkPermission();
 
+         print("permission $permission");
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
           print('Location permissions are denied');
-        } else if (permission == LocationPermission.deniedForever) {
-          print("'Location permissions are permanently denied");
-        } else {
+         // permission = await Geolocator.requestPermission();
+        } else if (permission == LocationPermission.deniedForever ) {
+           print('print me');
+       //  print("Location permissions are permanently denied");
+          openAppSettings();
+        //  permission = await Geolocator.requestPermission();
+        }
+     
+         else
+         if(permission == LocationPermission.always  || permission == LocationPermission.whileInUse)
+         {
           haspermission = true;
         }
-      } else {
+      }
+      else if(permission == LocationPermission.deniedForever){
+              print('denieddsdddd forever');
+               openAppSettings();
+            //  permission = await Geolocator.requestPermission();
+         }
+       else
+        if(permission == LocationPermission.always  || permission == LocationPermission.whileInUse )
+        {
           haspermission = true;
       }
 
-      if (haspermission) {
+       print("given the permsiion $haspermission");
+      print("permission222222 $permission");
+      if (haspermission ) {
         await getLocation();
       }
 
@@ -774,12 +799,15 @@ class _DashboardState extends State<Dashboard> {
       EasyLoading.dismiss();
       EasyLoading.showToast(MydashboardScreenConstants.GPS_DISABLED_TOAST.tr());
     }
+
+     return haspermission;
   }
 
   getLocation() async {
+     print("get location");
     position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    print(position.longitude); //Output: 80.24599079
+    print(" posr${position.longitude}"); //Output: 80.24599079
     print(position.latitude); //Output: 29.6593457
 
     long = position.longitude.toString();

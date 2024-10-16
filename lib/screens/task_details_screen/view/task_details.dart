@@ -18,6 +18,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../supervisor_dashboard/bloc/supervisor_dashboard_event.dart';
+
 class TaskDetailsScreen extends StatefulWidget {
   final bool isFromDashboard;
   final bool isFromFacility;
@@ -49,7 +51,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   final CarouselSliderController buttonCarouselController = CarouselSliderController();
 
   GlobalStorage _globalStorage = GetIt.instance();
-  late SupervisorDashboardBloc _supervisorDashboardBloc =
+  late final SupervisorDashboardBloc _supervisorDashboardBloc =
       SupervisorDashboardBloc();
 
   @override
@@ -106,11 +108,14 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
             if (state is GetSubmittedTasksSuccess) {
               EasyLoading.dismiss();
                 print("images ---- ${submittedTaskModel.taskImages}");
+                   _supervisorDashboardBloc.add(GetSupervisorDashboardData());
             }
             if (state is UpdateStatusSuccessful) {
               EasyLoading.dismiss();
+             
 
               Navigator.pop(context);
+            
             }
           },
           builder: (context, state) {
