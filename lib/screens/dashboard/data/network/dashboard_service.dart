@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:Woloo_Smart_hygiene/core/model/App_launch_model.dart';
@@ -11,7 +12,7 @@ class DashboardService {
   final DioClient dio;
   const DashboardService({required this.dio});
 
-  Future<AttendanceModel> markAttendance({required String type, required List<double> locations}) async {
+  FutureOr<AttendanceModel> markAttendance({required String type, required List<double> locations}) async {
     try {
       var response = await dio.post(
         APIConstants.ATTENDANCE,
@@ -19,12 +20,26 @@ class DashboardService {
           "type": type,
           "location": locations,
         },
-        options: Options(extra: {"auth": true}),
+        options:
+        // Options(
+        //     headers: {
+        //       "x-woloo-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDE2LCJyb2xlX2lkIjoxLCJpYXQiOjE3MzA4MDc5MzIsImV4cCI6MTczMTQxMjczMn0.cxN_JTM5VPmufui4DLFz2WcDfXmM9-HibkBgEJZpOfk"
+        //     },
+        //   ),
+       Options(extra: {"auth": true}),
       );
 
       return AttendanceModel.fromJson(response['results']);
-    } catch (e) {
-      rethrow;
+    } 
+     on  Exception catch (exception) {
+
+      // rethrow;
+        throw Exception('Failed to Mark attendace');
+      // print(" expetionn $exception");
+  // ... // only executed if error is of type Exception
+}
+    catch (e) {
+        throw Exception('Failed to Mark attendace');
     }
   }
 
@@ -33,7 +48,14 @@ class DashboardService {
         List<DashboardModelClass> output = [];
       var response = await dio.get(
         APIConstants.GET_ALL_TASK_TAMPLATES,
-        options: Options(extra: {"auth": true}),
+        options: 
+          // Options(
+          //   headers: {
+          //     "x-woloo-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDE2LCJyb2xlX2lkIjoxLCJpYXQiOjE3MzA4MDc5MzIsImV4cCI6MTczMTQxMjczMn0.cxN_JTM5VPmufui4DLFz2WcDfXmM9-HibkBgEJZpOfk"
+          //   },
+          // ),
+        
+        Options(extra: {"auth": true}),
       );
 
     
@@ -73,11 +95,18 @@ class DashboardService {
     try {
       var response = await dio.post(
         APIConstants.APP_LAUNCH,
-        options: Options(extra: {"auth": true}),
+        options:
+           // Options(
+          //   headers: {
+          //     "x-woloo-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDE2LCJyb2xlX2lkIjoxLCJpYXQiOjE3MzA4MDc5MzIsImV4cCI6MTczMTQxMjczMn0.cxN_JTM5VPmufui4DLFz2WcDfXmM9-HibkBgEJZpOfk"
+          //   },
+          // ),
+        
+        Options(extra: {"auth": true}),
       );
       return AppLaunchModel.fromJson(response['results']);
     } catch (e) {
-      rethrow;
+      throw  Exception('Failed to Mark attendace');
     }
   }
 }

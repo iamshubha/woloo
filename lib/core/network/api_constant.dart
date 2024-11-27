@@ -2,9 +2,13 @@
 
 class APIConstants {
 //
-  static var BASE_URL = 'https://staging-api.woloo.in'; // QA
-// static var BASE_URL = 'https://api.woloo.in'; // Production
-//  static var BASE_URL = 'http://192.168.1.11:5000'; // P
+
+//
+// = "https://53f2-2409-4062-2097-da56-25a7-ecec-f87a-6912.ngrok-free.app";
+
+  // static var BASE_URL  = 'https://staging-api.woloo.in'; // QA
+ static var BASE_URL = 'https://api.woloo.in'; // Production
+//  static var BASE_URL = 'http://192.168.1.103:5000'; // P
   static var SEND_OTP = '$BASE_URL/api/whms/users/sendOTP';
   static var VERIFY_OTP = '$BASE_URL/api/whms/users/verifyOTP';
 

@@ -1,3 +1,4 @@
+import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
 import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model.dart';
 import 'package:equatable/equatable.dart';
 
@@ -52,7 +53,7 @@ class SubmitTasksSuccess extends TaskListState {
 }
 
 class SubmitTasksError extends TaskListState {
-  final String error;
+  final Failure error;
   const SubmitTasksError({required this.error});
 
   @override

@@ -1,7 +1,7 @@
 import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/bloc/issue_list_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_bloc.dart';
 import 'package:dio/dio.dart';
-// import 'package:dio_log/interceptor/dio_log_interceptor.dart';
+import 'package:dio_log/interceptor/dio_log_interceptor.dart';
 import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -18,8 +18,8 @@ final sl = GetIt.instance;
 Future<void> init() async {
   /// Dio
   var dio = Dio();
-  // DioLogInterceptor.enablePrintLog = false;
-  // dio.interceptors.add(DioLogInterceptor());
+  DioLogInterceptor.enablePrintLog = false;
+  dio.interceptors.add(DioLogInterceptor());
   dio.interceptors.add(AuthInterceptor());
   dio.interceptors.add(ErrorInterceptor());
 

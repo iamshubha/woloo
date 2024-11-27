@@ -1,3 +1,4 @@
+import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class SelfieState extends Equatable {
@@ -23,7 +24,7 @@ class UploadSelfieSuccessful extends SelfieState {
 }
 
 class UploadSelfieError extends SelfieState {
-  final String error;
+  final Failure error;
   const UploadSelfieError({required this.error});
 
   @override

@@ -22,7 +22,7 @@ class ClusterModel {
   ClusterModel.fromJson(dynamic json) {
     clusterId = json['cluster_id'];
     clusterName = json['cluster_name'];
-    pincode = json['pincode'];
+    pincode = json['pincode']  ;
     janitorId = json['janitor_id'];
     janitorName = json['janitor_name'];
     completedTask = json['completed_task'];
@@ -42,7 +42,7 @@ class ClusterModel {
     final map = <String, dynamic>{};
     map['cluster_id'] = clusterId;
     map['cluster_name'] = clusterName;
-    map['pincode'] = pincode;
+    map['pincode'] = pincode ;
     map['janitor_id'] = janitorId;
     map['janitor_name'] = janitorName;
     map['completed_task'] = completedTask;

@@ -5,10 +5,12 @@ import 'package:get_it/get_it.dart';
 import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
 import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
 
+import '../../screens/login/data/model/Update_token_model.dart';
+
 class CoreService {
   final DioClient dio = GetIt.instance<DioClient>();
 
-  Future<String> updateFCMToken({required String token}) async {
+  Future<List<UpdateTokenModel>>  updateFCMToken({required String token}) async {
     try {
        print("api call $token");
       var response = await dio.put(
@@ -19,9 +21,16 @@ class CoreService {
         options: Options(extra: {"auth": true}),
       );
 
-       print("token update notitification $response ");
 
-      return response['results']?.toString() ?? '';
+
+        List<UpdateTokenModel> output = [];
+      for (var item in response['results']) {
+        output.add(UpdateTokenModel.fromJson(item));
+      }
+
+       print("token update notitification $output");
+
+      return output;
     } catch (e) {
       rethrow;
     }

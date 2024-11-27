@@ -3,6 +3,7 @@ import 'package:Woloo_Smart_hygiene/screens/janitor_details_screen/cubit/janitor
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:bubble/bubble.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -34,38 +35,63 @@ class _JanitorAttendanceView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 10.h),
+
+     
+
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
+              Text(
+          MyJanitorProfileScreenConstants.ATTENDANCE_HISTORY.tr(),
+          style: AppTextStyle.font24bold,
+        ),
+           SizedBox(height: 10.h),
+              Container(
                 height: 50.h,
-                child: DropdownButtonFormField<MonthListModel>(
-                  value: state.selected,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25.r),
+                    color: AppColors.white,
+                      boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2), // Shadow color
+                        spreadRadius: 1, // How wide the shadow should spread
+                        blurRadius: 10, // The blur effect of the shadow
+                        offset:
+                            Offset(0, 0), // No offset for shadow on all sides
                       ),
+                    ],
+                ),
+                child: Center(
+                  child: DropdownButtonFormField<MonthListModel>(
+                    value: state.selected,
+                    decoration: InputDecoration(
+                          contentPadding:EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 10.0),
+                      border: InputBorder.none,
+                      //  const OutlineInputBorder(
+                      //   borderRadius: BorderRadius.all(
+                      //     Radius.circular(10),
+                      //   ),
+                      // ),
+                      hintStyle: TextStyle(color: Colors.grey[800]),
+                      hintText: MyAttendanceHistoryScreenConstants.SELECT.tr(),
                     ),
-                    hintStyle: TextStyle(color: Colors.grey[800]),
-                    hintText: MyAttendanceHistoryScreenConstants.SELECT.tr(),
+                    icon: const Icon(Icons.arrow_drop_down_outlined),
+                    items: state.months.map((item) {
+                      return DropdownMenuItem(
+                        value: item,
+                        child: Text(
+                            "${monthItems[(int.tryParse(item.month.toString()) ?? 1) - 1]} ${item.year}",
+                            style: AppTextStyle.font14
+                                .copyWith(color: AppColors.darkGreyText)
+                            // TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColors.darkGreyText),
+                            ),
+                      );
+                    }).toList(),
+
+                    onChanged: (item) => cubit.getMonth(item!),
                   ),
-                  icon: const Icon(Icons.arrow_drop_down_outlined),
-                  items: state.months.map((item) {
-                    return DropdownMenuItem(
-                      value: item,
-                      child: Text(
-                          "${monthItems[(int.tryParse(item.month.toString()) ?? 1) - 1]} ${item.year}",
-                          style: AppTextStyle.font14
-                              .copyWith(color: AppColors.darkGreyText)
-                          // TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColors.darkGreyText),
-                          ),
-                    );
-                  }).toList(),
-                  onChanged: (item) => cubit.getMonth(item!),
                 ),
               ),
               SizedBox(height: 10.h),
@@ -147,99 +173,103 @@ class _JanitorAttendanceView extends StatelessWidget {
                   padding:
                       EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                   itemBuilder: (context, index) {
-                    return Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 10.w, vertical: 10.h),
-                      decoration: BoxDecoration(
-                        color: AppColors.containerColor,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: Colors.grey.withOpacity(.2),
-                          width: 1.5.w,
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            width: 55.w,
-                            height: 55.w,
-                            padding: EdgeInsets.symmetric(horizontal: 5.w),
-                            decoration: BoxDecoration(
-                              boxShadow: const [
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 46.w,
+                          height: 46.w,
+                          padding: EdgeInsets.symmetric(horizontal: 5.w),
+                          decoration: BoxDecoration(
+                             boxShadow: [
                                 BoxShadow(
-                                  blurRadius: 2,
+                                  blurRadius: 11.0,
                                   spreadRadius: 0,
-                                  offset: Offset.zero,
+                                  offset: Offset(1, 1),
                                   color: AppColors.greyShadow,
                                 ),
                               ],
-                              borderRadius: BorderRadius.circular(8),
-                              color: Colors.white,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(state.attendance[index].date ?? '',
-                                    maxLines: 1,
-                                    style: AppTextStyle.font14.copyWith(
-                                      color: AppColors.historyText,
-                                    )
-                                    //  TextStyle(
-                                    //   color: AppColors.historyText,
-                                    //   fontSize: 14.sp,
-                                    //   fontWeight: FontWeight.w400,
-                                    // ),
-                                    ),
-                                Text(
-                                  state.attendance[index].dayOfWeek ?? '-',
+                            borderRadius: BorderRadius.circular(10),
+                            color:AppColors.buttonBgColor,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(state.attendance[index].date ?? '',
                                   maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style:
-                                  AppTextStyle.font14.copyWith(
-                                      color: AppColors.historyText,
-                                    )
+                                  style: AppTextStyle.font16bold.copyWith(
+                                    color: AppColors.historyText,
+                                  )
                                   //  TextStyle(
                                   //   color: AppColors.historyText,
                                   //   fontSize: 14.sp,
                                   //   fontWeight: FontWeight.w400,
                                   // ),
-                                )
-                              ],
-                            ),
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
+                                  ),
                               Text(
-                                MydashboardScreenConstants.CHECK_IN.tr(),
-                                style: 
-                                AppTextStyle.font14.copyWith(
-                                color: AppColors.historyText,
-                                    )
-                                
-                                // TextStyle(
+                                state.attendance[index].dayOfWeek ?? '-',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style:
+                                AppTextStyle.font12bold.copyWith(
+                                    color: AppColors.historyText,
+                                  )
+                                //  TextStyle(
                                 //   color: AppColors.historyText,
                                 //   fontSize: 14.sp,
-                                //   fontWeight: FontWeight.w400,
-                                // ),
-                              ),
-                              SizedBox(height: 5.h),
-                              Text(
-                                " ${state.attendance[index].checkIn ?? '-'}",
-                                style: 
-                                AppTextStyle.font12.copyWith(
-                                   color: AppColors.lightGreyText, 
-                                )
-                                // TextStyle(
-                                //   color: AppColors.lightGreyText,
-                                //   fontSize: 12.sp,
                                 //   fontWeight: FontWeight.w400,
                                 // ),
                               )
                             ],
                           ),
-                          Column(
+                        ),
+                      Bubble(
+                         radius:Radius.circular(25.0),
+                        elevation: 5,
+                        nipWidth: 14,
+                        // margin: BubbleEdges.only(top: 10),
+                        nip: BubbleNip.leftCenter,
+                         color: AppColors.white,
+                        alignment: Alignment.topCenter,
+                    
+                          child: 
+                          Container(
+                            width: 200.w,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      MydashboardScreenConstants.CHECK_IN.tr(),
+                                      style: 
+                                      AppTextStyle.font14.copyWith(
+                                      color: AppColors.historyText,
+                                          )
+                                      
+                                      // TextStyle(
+                                      //   color: AppColors.historyText,
+                                      //   fontSize: 14.sp,
+                                      //   fontWeight: FontWeight.w400,
+                                      // ),
+                                    ),
+                                    SizedBox(height: 5.h),
+                                    Text(
+                                      " ${state.attendance[index].checkIn ?? '-'}",
+                                      style: 
+                                      AppTextStyle.font12.copyWith(
+                                         color: AppColors.lightGreyText, 
+                                      )
+                                      // TextStyle(
+                                      //   color: AppColors.lightGreyText,
+                                      //   fontSize: 12.sp,
+                                      //   fontWeight: FontWeight.w400,
+                                      // ),
+                                    )
+                                  ],
+                                ),
+                                 Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
@@ -269,8 +299,9 @@ class _JanitorAttendanceView extends StatelessWidget {
                                 // ),
                               )
                             ],
-                          ),
-                          CircleAvatar(
+                                                    ),
+                             
+                                                    CircleAvatar(
                             radius: 25.r,
                             backgroundColor: state.attendance[index].attendance
                                         ?.toLowerCase()
@@ -300,9 +331,14 @@ class _JanitorAttendanceView extends StatelessWidget {
                               //   fontWeight: FontWeight.w700,
                               // ),
                             ),
+                                                    ),
+                                                
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
+                        ),
+                                     
+                      ],
                     );
                   },
                   separatorBuilder: (context, index) {

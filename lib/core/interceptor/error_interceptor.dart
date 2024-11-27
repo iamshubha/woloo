@@ -3,9 +3,9 @@ import 'package:logger/logger.dart';
 
 class ErrorInterceptor extends Interceptor {
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) {
+  void onError( DioException err, ErrorInterceptorHandler handler) {
     print("Error-----> $err");
-    if (err.type == DioErrorType.other) {
+    if (err.type ==  DioExceptionType.unknown ) {
       if (err.toString().contains('No address associated with hostname')) {
         throw "Please check your internet connection";
       }

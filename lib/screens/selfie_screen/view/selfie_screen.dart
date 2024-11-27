@@ -84,7 +84,7 @@ class _SelfieScreenState extends State<SelfieScreen> {
                   child: IconButton(
                     icon: const Icon(
                       Icons.camera_alt_outlined,
-                      color: AppColors.buttonColor,
+                      color: AppColors.camColor,
                       size: 100,
                     ),
                     onPressed: () async {
@@ -179,7 +179,7 @@ class _SelfieScreenState extends State<SelfieScreen> {
 
                   if (state is UploadSelfieError) {
                     EasyLoading.dismiss();
-                    EasyLoading.showError(state.error);
+                    EasyLoading.showError(state.error.message);
                   }
                 },
                 builder: (context, state) {
@@ -212,7 +212,7 @@ class _SelfieScreenState extends State<SelfieScreen> {
               ),
               child: WhiteButtonWidget(
                 text: MyTaskListConstants.SUBMIT_BTN.tr(),
-                color: AppColors.disabledYellowButtonColor,
+                color: AppColors.disabledCamButtonColor.withOpacity(0.6),
                 onTap: () {},
               ),
             ),
@@ -344,7 +344,7 @@ class _SelfieScreenState extends State<SelfieScreen> {
 
                   if (selfiestate is UploadSelfieError) {
                     EasyLoading.dismiss();
-                    EasyLoading.showError(selfiestate.error);
+                    EasyLoading.showError(selfiestate.error.message);
                   }
                 },
                 builder: (context, state) {
@@ -377,7 +377,7 @@ class _SelfieScreenState extends State<SelfieScreen> {
               ),
               child: WhiteButtonWidget(
                 text: MyTaskListConstants.SUBMIT_BTN.tr(),
-                color: AppColors.disabledYellowButtonColor,
+                color: AppColors.disabledCamButtonColor.withOpacity(0.3),
                 onTap: () {},
               ),
             ),

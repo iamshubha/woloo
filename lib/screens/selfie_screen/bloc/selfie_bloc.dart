@@ -6,6 +6,8 @@ import 'package:Woloo_Smart_hygiene/screens/selfie_screen/data/network/selfie_se
 import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../core/network/error_handler.dart';
+
 class SelfieBloc extends Bloc<SelfieEvent, SelfieState> {
   final SelfieService selfieService = SelfieService(dio: GetIt.instance());
   // String requestId = '';
@@ -20,11 +22,12 @@ class SelfieBloc extends Bloc<SelfieEvent, SelfieState> {
       UploadSelfie event, Emitter<SelfieState> emit) async {
     try {
       emit(const UploadSelfieLoading(message: ""));
-
+          print("type   ${event.type}");
+          print("type   ${event.id}");
       var response = await selfieService.uploadSelfie(
         type: event.type,
         image: event.image,
-        id: event.id,
+        id:  event.id,
         remarks: event.remarks,
       );
       
@@ -33,7 +36,7 @@ class SelfieBloc extends Bloc<SelfieEvent, SelfieState> {
     print("responseeee image  upload  ------  " + response);
       emit(UploadSelfieSuccessful());
     } catch (e) {
-      emit(UploadSelfieError(error: e.toString()));
+      emit(UploadSelfieError(error: ErrorHandler.handle(e).failure  ));
     }
   }
   

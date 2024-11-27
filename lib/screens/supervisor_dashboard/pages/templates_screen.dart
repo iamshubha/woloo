@@ -16,6 +16,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
 
+import '../view/local_widgets/iot_task.dart';
+import '../view/local_widgets/regular_task.dart';
+
 class TemplateScreen extends StatefulWidget {
   final String supervisorName;
 
@@ -34,6 +37,12 @@ class _TemplateScreenState extends State<TemplateScreen> {
 
   bool servicestatus = false;
   bool haspermission = false;
+       int _selectedIndex = 0;
+       void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
   // bool showList = false;
   // bool onTapCheckIn = false;
 
@@ -43,6 +52,7 @@ class _TemplateScreenState extends State<TemplateScreen> {
   late LocationPermission permission;
   late Position position;
   String long = "", lat = "";
+   List<Widget> _widgetOptions = <Widget>[];
 
   DateTime currentTime = DateTime.now();
 
@@ -60,9 +70,12 @@ class _TemplateScreenState extends State<TemplateScreen> {
   @override
   Widget build(BuildContext context) {
     print(" template screeen");
-    return BlocListener(
+    return BlocConsumer(
       bloc: dashboardBloc,
       listener: (context, state) {
+        
+      },
+      builder: (context, state) {
         print(" template screeen   $state");
         if (state is ClockInLoading) {
           EasyLoading.show(status: state.message);
@@ -70,10 +83,11 @@ class _TemplateScreenState extends State<TemplateScreen> {
 
         if (state is ClockInError) {
           EasyLoading.dismiss();
-          EasyLoading.showError(state.error);
+          EasyLoading.showError(state.error.message);
         }
         if (state is ClockInSuccessful) {
           EasyLoading.dismiss();
+          
 
           // setState(() {
           //   showList = true;
@@ -86,6 +100,7 @@ class _TemplateScreenState extends State<TemplateScreen> {
         if (state is ClockOutSuccessful) {
           EasyLoading.dismiss();
           print(state);
+      
           // setState(() {
           //   showList = false;
           //   onTapCheckIn = false;
@@ -99,15 +114,21 @@ class _TemplateScreenState extends State<TemplateScreen> {
 
         if (state is ClockOutError) {
           EasyLoading.dismiss();
-          EasyLoading.showError(state.error);
+          EasyLoading.showError(state.error.message);
         }
-      },
-      child: 
-      Scaffold(
+                    _widgetOptions = [
+           RegularTask(),
+           IotTask()
+          
+        ];
+      // },
+
+      // child: 
+   return   Scaffold(
           backgroundColor: AppColors.white,
           appBar: AppBar(
             elevation: 0,
-            backgroundColor: AppColors.appbarBgColor,
+            backgroundColor: AppColors.white,
             title: Padding(
               padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
               child: Row(
@@ -122,9 +143,9 @@ class _TemplateScreenState extends State<TemplateScreen> {
                       maxLines: 1,
                       softWrap: false,
                       style:
-                      AppTextStyle.font24.copyWith(
+                      AppTextStyle.font24bold.copyWith(
                         overflow: TextOverflow.ellipsis,
-                        color: AppColors.yellowSplashColor,
+                        color: AppColors.black,
                       )
                       //  TextStyle(
                       //   fontSize: 24.sp,
@@ -139,29 +160,60 @@ class _TemplateScreenState extends State<TemplateScreen> {
             ),
           ),
           body:
-          SupervisorDashboardListWidget(
-            key: key,
-            onTapItem: (SupervisorModelDashboard data, bool isApproved) async {
-              print("templates " + data.status!);
-               if( data.status == "Request for closure" ){
-                    await Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => TaskDetailsScreen(
-                          isFromDashboard: true,
-                          isFromFacility: false,
-                          allocationId: "${data.taskAllocationId ?? ''}",
-                          isApproved: isApproved,
-                        )),
-              );
-               key = GlobalKey();
-               }
+         _widgetOptions.elementAt(_selectedIndex),
+          // SupervisorDashboardListWidget(
+          //   key: key,
+          //   onTapItem: (SupervisorModelDashboard data, bool isApproved) async {
+          //     print("templates " + data.status!);
+          //      if( data.status == "Request for closure" ){
+          //           await Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //           builder: (context) => TaskDetailsScreen(
+          //                 isFromDashboard: true,
+          //                 isFromFacility: false,
+          //                 allocationId: "${data.taskAllocationId ?? ''}",
+          //                 isApproved: isApproved,
+          //               )),
+          //     );
+          //      key = GlobalKey();
+          //      }
            
                   
-            },
+          //   },
+          
+          
 
-          )
+
+          // ),
+
+            bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: AppColors.white,
+        elevation: 15,
+        unselectedItemColor:  AppColors.black,
+        unselectedLabelStyle:  AppTextStyle.font12bold,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.task_outlined,
+             size: 30,
+            ),
+            label: 'Regular Task',
+
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bus_alert),
+            label: 'IOT Task',
+
+          ),
+        
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: AppColors.buttonBgColor,
+        onTap: _onItemTapped,
+      ),
+      
+          );
+      }
     );
   }
 }

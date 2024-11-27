@@ -25,9 +25,9 @@ class DioClient {
       );
       return response.data;
     } catch (e) {
-      if (e is DioError) {
+      if (e is DioException) {
         if (e.response == null) {
-          throw e.error;
+          rethrow;
         }
 
         if (e.response != null) {
@@ -60,9 +60,9 @@ class DioClient {
       );
       return response.data;
     } catch (e) {
-      if (e is DioError) {
+      if (e is DioException) {
         if (e.response == null) {
-          throw e.error;
+          rethrow;
         }
 
         if (e.response != null) {
@@ -95,9 +95,9 @@ class DioClient {
       );
       return response.data;
     } catch (e) {
-      if (e is DioError) {
+      if (e is DioException) {
         if (e.response == null) {
-          throw e.error;
+          rethrow;
         }
 
         if (e.response != null) {
@@ -128,9 +128,9 @@ class DioClient {
       );
       return response.data;
     } catch (e) {
-      if (e is DioError) {
+      if (e is DioException) {
         if (e.response == null) {
-          throw e.error;
+          rethrow;
         }
 
         if (e.response != null) {

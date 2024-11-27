@@ -31,6 +31,7 @@ class UpdateTokenModel {
     this.email,
     this.client,
     this.fcmToken,
+    this.profileImage,
     this.clientId,
     this.password,
   });
@@ -50,8 +51,10 @@ class UpdateTokenModel {
     email = json['email'];
     client = json['client'];
     fcmToken = json['fcm_token'];
+    profileImage = json['profile_image'] ?? "";
     clientId = json['client_id'];
     password = json['password'];
+
   }
   int? id;
   String? name;
@@ -67,6 +70,7 @@ class UpdateTokenModel {
   String? email;
   dynamic client;
   String? fcmToken;
+  String? profileImage;
   dynamic clientId;
   dynamic password;
 
@@ -86,6 +90,7 @@ class UpdateTokenModel {
     map['email'] = email;
     map['client'] = client;
     map['fcm_token'] = fcmToken;
+    map['profile_image'] = profileImage ?? "";
     map['client_id'] = clientId;
     map['password'] = password;
     return map;

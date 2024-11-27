@@ -37,12 +37,12 @@ class _ClusterListState extends State<ClusterList> {
       appBar: AppBar(
 
         elevation: 0,
-        backgroundColor: AppColors.appbarBgColor,
+        backgroundColor: AppColors.white,
         title: Text(
           MyClusterListScreenConstants.TITLE_TEXT.tr(),
           style: 
-         AppTextStyle.font24.copyWith(
-          color: AppColors.yellowSplashColor,
+         AppTextStyle.font24bold.copyWith(
+          color: AppColors.black,
          )  
         ),
         // leading: IconButton(
@@ -69,46 +69,71 @@ class _ClusterListState extends State<ClusterList> {
             padding: EdgeInsets.symmetric(
               horizontal: 20.w,
             ),
-            child: TextField(
-              onSubmitted: (s){
-
-                _searchController.clear();
-
-                   if(search.length > 1){
-
-                   }else
-                   if(search.length == 1){
-                     Navigator.of(context).push(
-                       MaterialPageRoute(
-                         builder: (context) => JanitorList(
-                           isFromCluster: true,
-                           isFromDashboard: false,
-                           clusterId: search.first.clusterId.toString(),
-                           isFromDashboardAssignment: false,
-                         ),
-                       ),
-                     );
-                   }
-              },
-              textInputAction: TextInputAction.search,
-              controller: _searchController,
-
-              decoration: InputDecoration(
-                hintText: MyFacilityListConstants.SEARCH.tr(),
-                prefixIcon: IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: () {
-            
-                    print("result $search");
+            child: Container(
+              height: 45.h,
+                   decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(25.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2), // S hadow color
+                        spreadRadius: 1, // How wide the shadow should spread
+                        blurRadius: 10, // The blur effect of the shadow
+                        offset:
+                            Offset(0, 0), // No offset for shadow on all sides
+                      ),
+                    ],
+                  ),
+              child: Center(
+                child: 
+                TextField(
+                  onSubmitted: (s){
+                
+                    _searchController.clear();
+                
+                       if(search.length > 1){
+                
+                       }else
+                       if(search.length == 1){
+                         Navigator.of(context).push(
+                           MaterialPageRoute(
+                             builder: (context) => JanitorList(
+                               isFromCluster: true,
+                               isFromDashboard: false,
+                               clusterId: search.first.clusterId.toString(),
+                               isFromDashboardAssignment: false,
+                             ),
+                           ),
+                         );
+                       }
                   },
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                    10.r,
+                  textInputAction: TextInputAction.search,
+                  controller: _searchController,
+                   textAlign: TextAlign.start,
+                  decoration: InputDecoration(
+                     contentPadding: EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 10.0),
+                    hintText: MyFacilityListConstants.SEARCH.tr(),
+                    hintStyle: AppTextStyle.font14.copyWith(
+                      color: AppColors.searchText
+
+                    ),
+                    prefixIcon: IconButton(
+                      icon: const Icon(Icons.search),
+                      onPressed: () {
+                
+                        print("result $search");
+                      },
+                    ),
+                    border:  InputBorder.none
+                    
+                    
                   ),
                 ),
               ),
             ),
+          ),
+            SizedBox(
+            height: 10.h,
           ),
           Expanded(
             child: ClusterListWidget(

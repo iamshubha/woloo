@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
@@ -48,23 +49,38 @@ class _OTPWidgetState extends State<OTPWidget> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+      children: <Widget>[
         Center(
           child: Pinput(
             controller: _pinController,
             hapticFeedbackType: HapticFeedbackType.lightImpact,
             defaultPinTheme: PinTheme(
               margin: EdgeInsets.symmetric(horizontal: 5.w),
-              height: 60.h,
-              width: 60.w,
+              height: 51.h,
+              width: 51.w,
+
+              
               decoration: BoxDecoration(
-                border: Border.all(
-                  color: AppColors.greyBoxBorder,
-                  width: 1.sp,
+                color: AppColors.white,
+                 
+                boxShadow: [
+                    BoxShadow(
+                          color: Colors.black.withOpacity(0.2), // Shadow color
+                          spreadRadius: 1, // How wide the shadow should spread
+                          blurRadius: 10, // The blur effect of the shadow
+                          offset: const Offset(0,
+                              5), // Shadow offset, with y-offset for bottom shadow
+                        ),
+                ],
+                border:
+                 Border.all(
+                  color: AppColors.white,
+                  width: 0.sp,
                 ),
                 borderRadius: BorderRadius.circular(10.r),
               ),
             ),
+             
             onCompleted: (pin) {
               print(pin);
               widget.onComplete(pin);
@@ -89,8 +105,8 @@ class _OTPWidgetState extends State<OTPWidget> {
                   MyLoginConstants.DIDNT_RECIEVED_OTP.tr(),
                   textAlign: TextAlign.center,
                   style:
-                  AppTextStyle.font14.copyWith(
-                      color: AppColors.greyMap,
+                  AppTextStyle.font14bold.copyWith(
+                      color: AppColors.black,
                   )
                   //  TextStyle(
                   //   fontWeight: FontWeight.w400,
@@ -102,8 +118,8 @@ class _OTPWidgetState extends State<OTPWidget> {
               Text(
                 '$seconds ${MyLoginConstants.SEC.tr()}',
                 textAlign: TextAlign.center,
-                style: 
-                  AppTextStyle.font14.copyWith(
+                style:
+                  AppTextStyle.font14bold.copyWith(
                     color: AppColors.black,
                   )
                 // TextStyle(

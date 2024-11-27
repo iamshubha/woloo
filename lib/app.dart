@@ -11,6 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+
 class App extends StatefulWidget {
   const App({super.key});
 
@@ -56,6 +57,9 @@ class _AppState extends State<App> {
             theme: ThemeData(
               disabledColor: Colors.grey,
               textTheme: GoogleFonts.poppinsTextTheme(),
+              appBarTheme: AppBarTheme(
+                  surfaceTintColor: Colors.transparent
+              )
             ),
             home: GestureDetector(
               child: child,

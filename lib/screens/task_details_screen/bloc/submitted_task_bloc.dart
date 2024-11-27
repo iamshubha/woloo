@@ -8,6 +8,8 @@ import 'package:Woloo_Smart_hygiene/screens/task_details_screen/data/network/sub
 import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../core/network/error_handler.dart';
+
 class SubmittedTaskBloc extends Bloc<SubmittedTaskEvent, SubmittedTaskState> {
   final SubmittedTaskService submittedTaskService =
       SubmittedTaskService(dio: GetIt.instance());
@@ -30,7 +32,7 @@ class SubmittedTaskBloc extends Bloc<SubmittedTaskEvent, SubmittedTaskState> {
 
       emit(GetSubmittedTasksSuccess(data: data));
     } catch (e) {
-      emit(GetSubmittedTasksError(error: e.toString()));
+      emit(GetSubmittedTasksError(error: ErrorHandler.handle(e).failure ));
     }
   }
 
@@ -45,7 +47,7 @@ class SubmittedTaskBloc extends Bloc<SubmittedTaskEvent, SubmittedTaskState> {
      
       emit(UpdateStatusSuccessful( ));
     } catch (e) {
-      emit(UpdateStatusError(error: e.toString()));
+      emit(UpdateStatusError(error: ErrorHandler.handle(e).failure  ));
     }
   }
 }

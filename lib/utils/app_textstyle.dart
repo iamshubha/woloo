@@ -156,4 +156,34 @@ class AppTextStyle {
     fontSize: 10.sp,
     fontWeight: FontWeight.w700,
   );
+
+  static TextStyle font24bold = TextStyle(
+    fontSize: 24.sp,
+    fontWeight: FontWeight.bold,
+    // color: AppColors.yellowSplashColor,
+  );
+  static TextStyle font16bold = TextStyle(
+    // color: AppColors.historyText,
+    fontSize: 18.sp,
+    fontWeight: FontWeight.bold,
+  );
+
+  static TextStyle font14bold = TextStyle(
+    color: AppColors.clusterTitleColor,
+    fontSize: 14.sp,
+    fontWeight: FontWeight.bold,
+  );
+
+  static TextStyle font12bold = TextStyle(
+      color: AppColors.black, fontSize: 12.sp, fontWeight: FontWeight.bold );
+
+  static TextStyle font10bold = TextStyle(
+      color: AppColors.black, fontSize: 10.sp, fontWeight: FontWeight.bold );
+
+  static TextStyle font20bold = TextStyle(
+    overflow: TextOverflow.visible,
+    color: AppColors.appBarTitleColor,
+    fontSize: 20.sp,
+    fontWeight: FontWeight.bold,
+  );
 }

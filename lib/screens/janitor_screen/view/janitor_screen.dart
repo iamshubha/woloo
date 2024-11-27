@@ -9,6 +9,8 @@ import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_li
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 
+import '../../common_widgets/leading_button.dart';
+
 class JanitorList extends StatefulWidget {
   final bool isFromCluster;
   final bool isFromDashboard;
@@ -43,32 +45,43 @@ class _JanitorListState extends State<JanitorList> {
       appBar: AppBar(
 
         elevation: 0,
-        backgroundColor: AppColors.appbarBgColor,
-        title: Text(
+        backgroundColor: AppColors.white,
+        leadingWidth:
+        widget.isFromDashboard ?
+         15 :
+        100,
+        title:
+        widget.isFromDashboard ?
+        Text(
+
           MyJanitorsListScreenConstants.TITLE_TEXT.tr(),
-          style: 
-          AppTextStyle.font24.copyWith(
-             color: AppColors.yellowSplashColor,
+          style:
+          AppTextStyle.font24bold.copyWith(
+             color: AppColors.black,
           )
           // TextStyle(
           //   fontSize: 24.sp,
           //   fontWeight: FontWeight.w400,
           //   color: AppColors.yellowSplashColor,
           // ),
-        ),
+        ) : Container(),
         leading: widget.isFromCluster || widget.isFromDashboardAssignment
-            ? IconButton(
-                color: AppColors.black30,
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                  size: 30,
-                ),
-                // color: AppColors.black,
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
+            ?
+
+             LeadingButton()
+            
+            //  IconButton(
+            //     color: AppColors.black30,
+            //     icon: const Icon(
+            //       Icons.arrow_back,
+            //       color: Colors.white,
+            //       size: 30,
+            //     ),
+            //     // color: AppColors.black,
+            //     onPressed: () {
+            //       Navigator.pop(context);
+            //     },
+            //   )
             : Container(),
       ),
       body: Column(
@@ -76,48 +89,94 @@ class _JanitorListState extends State<JanitorList> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 20.h,
+            height: 10.h,
+          ),
+          widget.isFromCluster || widget.isFromDashboardAssignment ?
+         Padding(
+           padding:  EdgeInsets.symmetric(   horizontal: 20.w,),
+           child: Text(
+            MyJanitorsListScreenConstants.TITLE_TEXT.tr(),
+            style: 
+            AppTextStyle.font24bold.copyWith(
+               color: AppColors.black,
+            )
+            // TextStyle(
+            //   fontSize: 24.sp,
+            //   fontWeight: FontWeight.w400,
+            //   color: AppColors.yellowSplashColor,
+            // ),
+                   ),
+         )
+          : Container(),
+         SizedBox(
+            height: 10.h,
           ),
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: 20.w,
             ),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: MyFacilityListConstants.SEARCH.tr(),
-                prefixIcon: IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: () {
-                    // Perform the search here
-                  },
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                    10.r,
+            child:
+            
+             Container(
+                 height: 45.h,
+                   decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(25.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2), // Shadow color
+                        spreadRadius: 1, // How wide the shadow should spread
+                        blurRadius: 10, // The blur effect of the shadow
+                        offset:
+                            Offset(0, 0), // No offset for shadow on all sides
+                      ),
+                    ],
+
                   ),
-                ),
-              ),
-            ),
+               child: Center(
+
+                 child: TextField(
+                    textAlign: TextAlign.start,
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: MyFacilityListConstants.SEARCH.tr(),
+                    prefixIcon: IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: () {
+                        
+                      },
+
+                    ),
+                   contentPadding:EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 10.0),
+                    border: InputBorder.none,
+                    ),
+                  ),
+               ),
+                           ),
+            //  ),
+      // )
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 20.w,
-              vertical: 10.h,
-            ),
-            child: Text(
-              MyJanitorsListScreenConstants.SUB_TITLE.tr(),
-              style:
-              AppTextStyle.font16.copyWith(
-                 color: AppColors.titleColor,
-              ),
-              //  TextStyle(
-              //   color: AppColors.titleColor,
-              //   fontSize: 16.sp,
-              //   fontWeight: FontWeight.w400,
-             // ),
-            ),
+             SizedBox(
+            height: 10.h,
           ),
+          // Padding(
+          //   padding: EdgeInsets.symmetric(
+          //     horizontal: 20.w,
+          //     vertical: 10.h,
+          //   ),
+          //   child: Text(
+          //     MyJanitorsListScreenConstants.SUB_TITLE.tr(),
+          //     style:
+          //     AppTextStyle.font16.copyWith(
+          //        color: AppColors.titleColor,
+          //     ),
+          //     //  TextStyle(
+          //     //   color: AppColors.titleColor,
+          //     //   fontSize: 16.sp,
+          //     //   fontWeight: FontWeight.w400,
+          //    // ),
+          //   ),
+          // ),
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(

@@ -28,7 +28,7 @@ class CustomImageProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
      print("image $image");
-    return image!.startsWith("http:") ?
+    return image!.startsWith("https:") ?
            Image.network(image!,
             width: width,
             height: height,

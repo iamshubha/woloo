@@ -11,6 +11,7 @@ import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_state.dart'
 import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
 import 'package:Woloo_Smart_hygiene/screens/dashboard/data/network/dashboard_service.dart';
 
+import '../../../core/network/error_handler.dart';
 import '../controller/dash_controller.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
@@ -53,10 +54,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       print("responseeee  ------>>>>>>  " + response.toString());
     } catch (e) {
       if (event.type == "check_in") {
-        emit(ClockInError(error: e.toString(), message: message));
+        emit(ClockInError(error: ErrorHandler.handle(e).failure , message: message));
       }
       if (event.type == "check_out") {
-        emit(ClockOutError(error: e.toString(), message: message));
+        emit(ClockOutError(error: ErrorHandler.handle(e).failure, message: message));
       }
     }
   }
@@ -69,7 +70,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
      // await  dashboardService.getTasksByJanitorId();
       emit(GetDashboardDataSuccess(data: data));
     } catch (e) {
-      emit(DashboardError(error: e.toString()));
+      emit(DashboardError(error: ErrorHandler.handle(e).failure ));
     }
   }
 
@@ -84,7 +85,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
       emit(GetDashboardDataSuccess(data: data));
     } catch (e) {
-      emit(UpdateStatusError(error: e.toString()));
+      emit(UpdateStatusError(error: ErrorHandler.handle(e).failure  ));
     }
   }
 
@@ -103,7 +104,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       print("appLaunchResponse  ------  " + response.toJson().toString());
       emit(AppLaunchSuccess(data: response));
     } catch (e) {
-      emit(AppLaunchError(error: e.toString()));
+      emit(AppLaunchError(error: ErrorHandler.handle(e).failure  ));
     }
   }
 }

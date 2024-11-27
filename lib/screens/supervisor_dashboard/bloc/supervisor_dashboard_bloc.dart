@@ -8,6 +8,8 @@ import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Superviso
 import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../core/network/error_handler.dart';
+
 class SupervisorDashboardBloc
     extends Bloc<SupervisorDashboardEvent, SupervisorDashboardState> {
   final SupervisorDashboardService _supervisorDashboardService =
@@ -32,7 +34,7 @@ class SupervisorDashboardBloc
 
       emit(GetSupervisorDashboardDataSuccess(data: data));
     } catch (e) {
-      emit(SupervisorDashboardError(error: e.toString()));
+      emit(SupervisorDashboardError(error: ErrorHandler.handle(e).failure ));
     }
   }
 
@@ -48,7 +50,7 @@ class SupervisorDashboardBloc
 
       emit(GetSupervisorDashboardDataSuccess(data: data));
     } catch (e) {
-      emit(SupervisorUpdateStatusError(error: e.toString()));
+      emit(SupervisorUpdateStatusError(error: ErrorHandler.handle(e).failure ));
     }
   }
 
@@ -61,7 +63,7 @@ class SupervisorDashboardBloc
       data = await _supervisorDashboardService.getSupervisorDashboardData();
       emit(GetSupervisorDashboardDataSuccess(data: data));
     } catch (e) {
-      emit(AssignTaskError(error: e.toString()));
+      emit(AssignTaskError(error: ErrorHandler.handle(e).failure  ));
     }
   }
 }

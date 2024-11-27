@@ -23,7 +23,8 @@ class MyLoginConstants {
   static const String LANGUAGE_MARATHI = 'Marathi';
 
   static const String SEND_OTP_BTN = 'sendOTP';
-  static const String VERIFY_OTP_BTN = 'verify&Proceed';
+  static const String VERIFY_OTP_BTN = 'Submit';
+  static const String LOGIN_WITH_OTP = 'LoginwithOTP';
 
   static const String OTP_VERIFICATION = 'otpVerification';
   static const String ENTER_OTP = 'enterVerificationCode';
@@ -37,7 +38,7 @@ class MyFacilityListConstants {
   static const String POPUP_TEXT = 'taskStartingPermission';
   static const String POPUP_CANCEL_BUTTON = 'cancel';
   static const String POPUP_YES_BUTTON = 'yes';
-  static const String SEARCH = 'search';
+  static const String SEARCH = 'search ';
   static const String SELECT_ALL = 'selectAll';
   static const String ASSIGN = 'assign';
   static const String MIN = 'min';
@@ -50,6 +51,7 @@ class MyTemplateScreenConstants {
 
 class MyTaskListConstants {
   static const String APP_BAR = 'task';
+  static const String BACK = 'Back';
   static const String SUBMIT_BTN = 'submit';
   static const String POPUP_TITLE = 'taskSubmissionPermission';
   static const String TASK_SUBMISSION_TOAST = 'taskSubmittedSuccessfully';
@@ -57,13 +59,17 @@ class MyTaskListConstants {
 }
 
 class MySelfieScreenConstants {
+  static const String UPLOAD_TITLE_TEXT = 'Upload A Profile Image';
   static const String TITLE_TEXT = 'takeASelfie';
   static const String TITLE_SUBTEXT = 'selfieGuidelines';
   static const String SUBMIT_BTN = 'submit';
   static const String REMARKS = 'remarks';
-
+  static const String IMAGE_TYPE_UPLOAD = 'profile';
   static const String IMAGE_TYPE_SELFIE = 'selfie';
 }
+
+//        "PROFILE": "profile",
+//
 
 class MydashboardScreenConstants {
   static const String TITLE_TEXT = 'myDashboard';
@@ -72,8 +78,8 @@ class MydashboardScreenConstants {
   static const String LOG_OUT = 'logOut';
   static const String URL_ERR_TOAST = 'couldNotLaunch';
   static const String REPORT_ISSUE = 'reportIssue';
-  static const String IN = 'in';
-  static const String OUT = 'out';
+  static const String IN = 'IN';
+  static const String OUT = 'OUT';
   static const String DESCRIPTION = 'description';
   static const String LOCATION = 'location';
   static const String BOOTHS = 'booths';
@@ -81,6 +87,8 @@ class MydashboardScreenConstants {
   static const String TOTAL_TASK = 'totalTask';
   static const String COMPLETE_TASK = 'completedTask';
   static const String PENDING_TASK = 'pendingTask';
+  static const String Onging_TASK = 'Ongoing';
+  static const String Rquest_TASK = 'Requestforclosure';
   static const String CLOSE = 'close';
   static const String REJECT = 'reject';
   static const String ACCEPT = 'accept';
@@ -93,6 +101,8 @@ class MydashboardScreenConstants {
   static const String POPUP_TITLE = 'checkOutPermission';
   static const String LOCATION_FETCHING_TOAST = 'waitForLocationFetchingText';
   static const String GPS_DISABLED_TOAST = 'turnOnGPSText';
+  static const String PULL_TO_REFRESH = 'pullToRefresh';
+
 }
 
 class MyClusterListScreenConstants {
@@ -118,7 +128,7 @@ class MyTaskDetailsScreenConstants {
 }
 
 class MyJanitorsDetailsScreenConstants {
-  static const String APP_BAR = 'janitorsDetails';
+  static const String APP_BAR = 'janitorDetails';
   static const String SHIFT = 'shift';
 
   static const String CHECK_IN = 'check-in';
@@ -150,7 +160,7 @@ class MyReportIssueScreenConstants {
   static const String DESCRIPTION_VALIDATION = 'descriptionValidation';
   static const String ASSIGN_TO = 'assignTo';
   static const String ASSIGN_VALIDATION = 'assigningValidation';
-  static const String UPLOAD_PHOTO = 'uploadPhoto';
+  static const String UPLOAD_PHOTO = 'upload\n Photo';
   static const String POP_UP_TEXT = 'issueSubmittedText';
   static const String TEMPLATE_NAME_VALIDATION = 'templateNameValidation';
   static const String CHOOSE_PHOTO = 'chooseFile';
@@ -184,7 +194,7 @@ class MyAccountScreenConstants {
 class MyJanitorProfileScreenConstants {
   static const String MY_PROFILE = 'myProfile';
   static const String ATTENDANCE_HISTORY = 'attendanceHistory';
-  static const String HISTORY = 'history';
+  static const String HISTORY = 'History';
   static const String LOG_OUT = 'logOut';
   static const String STATUS_PRESENT = 'present';
   static const String STATUS_ABSENT = 'absent';
@@ -221,8 +231,31 @@ class ErrorWidgetConstants {
 
 class EmptyWidgetConstants {
   static const String DATA_NOT_FOUND = 'dataNotFound';
+  static const String PENDING_TASK_ERROR = "pending_task";
+  static const String ACCEPTED_TASK_ERROR = "accpeted_task";
+  static const String RFC_TASK_ERROR = "rfc_task";
+  static const String ONGOING_TASK_ERROR = "ongoing_task";
+  static const String COMPELTED_TASK_ERROR = "completed_task";
+
 }
 
 class DialogueReportIssueConstants {
   static const String DONE = 'done';
+}
+
+class AppError {
+
+  static const String success = "success";
+  static const String strBadRequestError = "bad_request_error";
+  static const String strNoContent = "no_content";
+  static const String strForbiddenError = "forbidden_error";
+  static const String strUnauthorizedError = "unauthorized_error";
+  static const String strNotFoundError = "not_found_error";
+  static const String strConflictError = "conflict_error";
+  static const String strInternalServerError = "internal_server_error";
+  static const String strUnknownError = "unknown_error";
+  static const String strTimeoutError = "timeout_error";
+  static const String strDefaultError = "default_error";
+  static const String strCacheError = "cache_error";
+  static const String strNoInternetError = "no_internet_error";
 }

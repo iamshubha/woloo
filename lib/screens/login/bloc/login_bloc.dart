@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
 import 'package:Woloo_Smart_hygiene/screens/login/data/model/Update_token_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -8,6 +9,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_it/get_it.dart';
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/login/data/network/login_services.dart';
+
+import '../../../core/network/error_handler.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -39,7 +42,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       print("requestId $requestId");
       emit(LoginOTPSent());
     } catch (e) {
-      emit(LoginError(error: e.toString()));
+      emit(LoginError(error:  ErrorHandler.handle(e).failure ));
     }
   }
 
@@ -68,7 +71,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(LoginOTPVerified());
     } catch (e) {
       print(e.toString());
-      emit(LoginError(error: e.toString()));
+      emit(LoginError(error: ErrorHandler.handle(e).failure ));
     }
   }
 
@@ -82,14 +85,17 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       var response = await loginService.updateFCMToken(token: token ?? '');
       GlobalStorage globalStorage = GetIt.instance();
       print("updateTokenResponse  --------> $response");
-      print("updateTokenResponse  --------> ${response}");
+      print("profile imagesssssss  --------> ${response.first.profileImage }");
            profileList = response;
 
       globalStorage.saveProfile(profileName: response.first.name!);
+
+      globalStorage.saveProfileImg(profileimg: response.first.profileImage !);
       print("profile names  -------->$profileList");
       emit(UpdateTokenSuccess(data: response));
     } catch (e) {
-      emit(UpdateTokenError(error: e.toString()));
+         print("eeeee$e");
+      emit(UpdateTokenError(error: ErrorHandler.handle(e).failure ));
     }
   }
 }

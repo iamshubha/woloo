@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 // import '../event/capture_event.dart';
+import '../../../../core/network/error_handler.dart';
 import '../event/capture_event1.dart';
 // import '../state/capture_state.dart';
 import '../state/capture_state1.dart';
@@ -35,7 +36,7 @@ class CaptureBloc1 extends Bloc<CaptureEvent1, CaptureState1> {
         ));
       }
     } catch (e) {
-      emit(AddImagesError1(error: e.toString()));
+      emit(AddImagesError1(error: ErrorHandler.handle(e).failure ));
     }
   }
 
@@ -48,7 +49,7 @@ class CaptureBloc1 extends Bloc<CaptureEvent1, CaptureState1> {
 
       emit(AddImagesInitial1());
     } catch (e) {
-      emit(AddImagesError1(error: e.toString()));
+      emit(AddImagesError1(error:  ErrorHandler.handle(e).failure  ));
     }
   }
 

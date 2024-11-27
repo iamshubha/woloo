@@ -6,6 +6,8 @@ import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/data/netwo
 import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../core/network/error_handler.dart';
+
 class HistoryListBloc extends Bloc<HistoryListEvent, HistoryListState> {
   final AttendanceHistoryService attendanceHistoryService =
       AttendanceHistoryService(dio: GetIt.instance());
@@ -27,7 +29,7 @@ class HistoryListBloc extends Bloc<HistoryListEvent, HistoryListState> {
 
       emit(HistoryListSuccess(data: data));
     } catch (e) {
-      emit(HistoryListError(error: e.toString()));
+      emit(HistoryListError(error: ErrorHandler.handle(e).failure  ));
     }
   }
 
@@ -39,7 +41,7 @@ class HistoryListBloc extends Bloc<HistoryListEvent, HistoryListState> {
 
       emit(MonthListSuccess(data: data));
     } catch (e) {
-      emit(MonthListError(error: e.toString()));
+      emit(MonthListError(error:ErrorHandler.handle(e).failure   ));
     }
   }
 }

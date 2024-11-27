@@ -7,6 +7,7 @@ import 'package:Woloo_Smart_hygiene/screens/common_widgets/custom_input_field.da
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/dialogue_box_issue_report.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/dropdown_dialogue.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/error_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/leading_button.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/multiselect_dropdown.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issue_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issue_event.dart';
@@ -110,7 +111,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
           }
           else
           if (state is GetClustersDropdownError) {
-            return CustomErrorWidget(error: state.error);
+            return CustomErrorWidget(error: state.error.message);
           }
           else
           if (state is GetClustersDropdownSuccess  ) {
@@ -126,7 +127,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
           }
            else
           if (state is GetFacilityDropdownError) {
-            return CustomErrorWidget(error: state.error);
+            return CustomErrorWidget(error: state.error.message);
           }
           else
           if (state is GetFacilityDropdownSuccess  ) {
@@ -142,7 +143,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
           }
           else
           if (state is GetTasksDropdownError) {
-            return CustomErrorWidget(error: state.error);
+            return CustomErrorWidget(error: state.error.message);
           }
            else
             if (state is GetTasksDropdownSuccess) {
@@ -159,7 +160,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
           }
           else
           if (state is GetJanitorsDropdownError) {
-            return CustomErrorWidget(error: state.error);
+            return CustomErrorWidget(error: state.error.message);
           }
            else
               if (state is GetJanitorsDropdownSuccess) {
@@ -195,7 +196,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
           }
            else
           if (state is ReportIssueError) {
-            return CustomErrorWidget(error: state.error);
+            return CustomErrorWidget(error: state.error.message);
           }
           else
            if (state is ReportIssueSuccess) {
@@ -217,39 +218,11 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
             },
             child: Scaffold(
               backgroundColor: AppColors.white,
-              appBar: AppBar(
-
-                leading: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back,
-                    color: Colors.white,
-                    size: 30,
-                  ),
-                  color: AppColors.appBarIconColor,
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                title: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 15.w,
-                    vertical: 10.h,
-                  ),
-                  child: Text(
-                    MydashboardScreenConstants.REPORT_ISSUE.tr(),
-                    textAlign: TextAlign.start,
-                    style:
-                    AppTextStyle.font24.copyWith(
-                      color: AppColors.yellowSplashColor,
-                    )
-                    //  TextStyle(
-                    //   color: AppColors.yellowSplashColor,
-                    //   fontSize: 24.sp,
-                    //   fontWeight: FontWeight.w400,
-                    // ),
-                  ),
-                ),
-                backgroundColor: AppColors.appbarBgColor,
+              appBar:
+               AppBar(
+                 leadingWidth: 100.w,
+                leading:LeadingButton(),           
+                backgroundColor: AppColors.white,
                 elevation: 0,
               ),
               body: SingleChildScrollView(
@@ -259,26 +232,32 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 20.h, vertical: 10.h),
-                        child: Text(
-                          MyReportIssueScreenConstants.CLUSTER_NAME.tr(),
-                          style:
-                           AppTextStyle.font16.copyWith(
-                           color: AppColors.clusterTitleColor,
-                             )
-                          // TextStyle(
-                          //   color: AppColors.clusterTitleColor,
-                          //   fontSize: 16.sp,
-                          //   fontWeight: FontWeight.w400,
-                          // ),
-                        ),
-                      ),
+                       Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 15.w,
+                    vertical: 10.h,
+                  ),
+                  child: Text(
+                    MydashboardScreenConstants.REPORT_ISSUE.tr(),
+                    textAlign: TextAlign.start,
+                    style:
+                    AppTextStyle.font24.copyWith(
+                      color: AppColors.black,
+                    )
+                    //  TextStyle(
+                    //   color: AppColors.yellowSplashColor,
+                    //   fontSize: 24.sp,
+                    //   fontWeight: FontWeight.w400,
+                    // ),
+                  ),
+                ),
+                  
                       Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: 20.w, vertical: 10.h),
                         child: DropDownDialog(
+                          hint:   MyReportIssueScreenConstants.CLUSTER_NAME.tr(),
+                          
                           items: clusterNames,
                           itemAsString: (ClusterDropdownModel item) =>
                               item.clusterName,
@@ -299,29 +278,15 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                               : null,
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20.h,
-                        ),
-                        child: Text(
-                          MyReportIssueScreenConstants.FACILITY.tr(),
-                          style:
-                             AppTextStyle.font16.copyWith(
-                              color: AppColors.clusterTitleColor,
-                             )
-                          //  TextStyle(
-                          //   color: AppColors.clusterTitleColor,
-                          //   fontSize: 16.sp,
-                          //   fontWeight: FontWeight.w400,
-                          // ),
-                        ),
-                      ),
+                   
+                      // ),
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 20.w,
                           vertical: 10.h,
                         ),
                         child: DropDownDialog(
+                          hint:  MyReportIssueScreenConstants.FACILITY.tr(),
                           // key: Key('${_editMarketModel.city?.label}T4'),
                           // selected: cities.firstWhereOrNull((element) => element.value == _editMarketModel.city?.value),
                           // widgetKey: _keys[2],xx
@@ -341,30 +306,14 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                               : null,
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20.h,
-                          // vertical: 10.h,
-                        ),
-                        child: Text(
-                          MyReportIssueScreenConstants.TEMPLATE_NAME.tr(),
-                          style:
-                             AppTextStyle.font16.copyWith(
-                           color: AppColors.clusterTitleColor,
-                             )
-                          // TextStyle(
-                          //   color: AppColors.clusterTitleColor,
-                          //   fontSize: 16.sp,
-                          //   fontWeight: FontWeight.w400,
-                          // ),
-                        ),
-                      ),
+                    
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 20.w,
                           vertical: 10.h,
                         ),
                         child: DropDownDialog(
+                          hint:    MyReportIssueScreenConstants.TEMPLATE_NAME.tr(),
                           // key: Key('${_editMarketModel.city?.label}T4'),
                           // selected: cities.firstWhereOrNull((element) => element.value == _editMarketModel.city?.value),
                           // widgetKey: _keys[2],
@@ -386,108 +335,127 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           },
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20.h,
-                        ),
-                        child: Text(
-                          MyReportIssueScreenConstants.TASK_NAME.tr(),
-                          style:
-                             AppTextStyle.font16.copyWith(
-                              color: AppColors.clusterTitleColor,
-                             ),
-                          // TextStyle(
-                          //   color: AppColors.clusterTitleColor,
-                          //   fontSize: 16.sp,
-                          //   fontWeight: FontWeight.w400,
-                          // ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20.w,
-                          vertical: 10.h,
-                        ),
-                        child: MultiselectDropDownDialog(
-                          // key: Key(
-                          //     '${_editProductModel.paymentMethodId?.firstOrNull?.label}T5'),
-                          // selected: _editProductModel.paymentMethodId,
-                          items: tasks,
-                          itemAsString: (Tasks item) => item.taskName,
-                          validator: (value) => value == null
-                              ? MyReportIssueScreenConstants
-                                  .TASK_NAME_VALIDATION
-                                  .tr()
-                              : null,
-                          onSaved: (List<Tasks> i) {
-                            // selectedIds.add(i[1].taskId!);
-                            selectedIds =
-                                i.map((e) => e.taskId.toString()).toList();
-                          },
-                          onChanged: (List<Tasks> i) {
-                            selectedIds =
-                                i.map((e) => e.taskId.toString()).toList();
-                            print(selectedIds);
-                          },
-                          // label: 'Template Name',
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20.h,
-                        ),
-                        child: Text(
-                          MyReportIssueScreenConstants.DESCRIPTION.tr(),
-                          style:
-                             AppTextStyle.font16.copyWith(
-                           color: AppColors.clusterTitleColor,
-                             )
-                          //  TextStyle(
-                          //   color: AppColors.clusterTitleColor,
-                          //   fontSize: 16.sp,
-                          //   fontWeight: FontWeight.w400,
-                          // ),
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: EdgeInsets.symmetric(
+                      //     horizontal: 20.h,
+                      //   ),
+                      //   child: Text(
+                      //     MyReportIssueScreenConstants.TASK_NAME.tr(),
+                      //     style:
+                      //        AppTextStyle.font16.copyWith(
+                      //         color: AppColors.clusterTitleColor,
+                      //        ),
+                      //     // TextStyle(
+                      //     //   color: AppColors.clusterTitleColor,
+                      //     //   fontSize: 16.sp,
+                      //     //   fontWeight: FontWeight.w400,
+                      //     // ),
+                      //   ),
+                      // ),
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 20.w,
                           vertical: 10.h,
                         ),
-                        child: CustomInputField(
-                          controller: _controller,
-                          validator: qValidator([
-                            IsRequired(
-                              MyReportIssueScreenConstants
-                                  .DESCRIPTION_VALIDATION
-                                  .tr(),
-                            ),
-                          ]),
+                        child: Container(
+                             decoration: BoxDecoration(
+        color: Colors.white,
+        
+        borderRadius: BorderRadius.circular(25.r),
+          boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2), // Shadow color
+                          spreadRadius: 1, // How wide the shadow should spread
+                          blurRadius: 10, // The blur effect of the shadow
+                          offset: const Offset(0,
+                              5), // Shadow offset, with y-offset for bottom shadow
+                        ),
+                      ],
+      ),
+                          child: MultiselectDropDownDialog(
+                            hint: MyReportIssueScreenConstants.TASK_NAME.tr(),
+                            // key: Key(
+                            //     '${_editProductModel.paymentMethodId?.firstOrNull?.label}T5'),
+                            // selected: _editProductModel.paymentMethodId,
+                            items: tasks,
+                            itemAsString: (Tasks item) => item.taskName,
+                            validator: (value) => value == null
+                                ? MyReportIssueScreenConstants
+                                    .TASK_NAME_VALIDATION
+                                    .tr()
+                                : null,
+                            onSaved: (List<Tasks> i) {
+                              // selectedIds.add(i[1].taskId!);
+                              selectedIds =
+                                  i.map((e) => e.taskId.toString()).toList();
+                            },
+                            onChanged: (List<Tasks> i) {
+                              selectedIds =
+                                  i.map((e) => e.taskId.toString()).toList();
+                              print(selectedIds);
+                            },
+                            // label: 'Template Name',
+                          ),
                         ),
                       ),
+                   
                       Padding(
                         padding: EdgeInsets.symmetric(
-                          horizontal: 20.h,
+                          horizontal: 20.w,
+                          vertical: 10.h,
                         ),
-                        child: Text(
-                          MyReportIssueScreenConstants.ASSIGN_TO.tr(),
-                          style:
-                            AppTextStyle.font16.copyWith(
-                           color: AppColors.clusterTitleColor,
-                             )
-                          //  TextStyle(
-                          //   color: AppColors.clusterTitleColor,
-                          //   fontSize: 16.sp,
-                          //   fontWeight: FontWeight.w400,
-                          // ),
+                        child: Container(
+                             decoration: BoxDecoration(
+        color: Colors.white,
+        
+        borderRadius: BorderRadius.circular(25.r),
+          boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2), // Shadow color
+                          spreadRadius: 1, // How wide the shadow should spread
+                          blurRadius: 10, // The blur effect of the shadow
+                          offset: const Offset(0,
+                              5), // Shadow offset, with y-offset for bottom shadow
+                        ),
+                      ],
+      ),
+                          child: CustomInputField(
+                            hint:  MyReportIssueScreenConstants.DESCRIPTION.tr(),
+                            controller: _controller,
+                            validator: qValidator([
+                              IsRequired(
+                                MyReportIssueScreenConstants
+                                    .DESCRIPTION_VALIDATION
+                                    .tr(),
+                              ),
+                            ]),
+                          ),
                         ),
                       ),
+                      // Padding(
+                      //   padding: EdgeInsets.symmetric(
+                      //     horizontal: 20.h,
+                      //   ),
+                      //   child: Text(
+                      //     MyReportIssueScreenConstants.ASSIGN_TO.tr(),
+                      //     style:
+                      //       AppTextStyle.font16.copyWith(
+                      //      color: AppColors.clusterTitleColor,
+                      //        )
+                      //     //  TextStyle(
+                      //     //   color: AppColors.clusterTitleColor,
+                      //     //   fontSize: 16.sp,
+                      //     //   fontWeight: FontWeight.w400,
+                      //     // ),
+                      //   ),
+                      // ),
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 20.w,
                           vertical: 10.h,
                         ),
                         child: DropDownDialog(
+                          hint:      MyReportIssueScreenConstants.ASSIGN_TO.tr(),
                           items: janitorList,
                           itemAsString: (JanitorDropdownModel item) =>
                               item.name,
@@ -506,32 +474,20 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           },
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20.h,
-                          vertical: 10.h,
-                        ),
-                        child: Text(
-                          MyReportIssueScreenConstants.UPLOAD_PHOTO.tr(),
-                          style:
-                             AppTextStyle.font16.copyWith(
-                           color: AppColors.clusterTitleColor,
-                             )
-                          // TextStyle(
-                          //   color: AppColors.clusterTitleColor,
-                          //   fontSize: 16.sp,
-                          //   fontWeight: FontWeight.w400,
-                          // ),
-                        ),
+                      SizedBox(
+                        height: 10.h,
                       ),
+                   
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 20.w,
                         ),
                         child: DottedBorder(
+                          dashPattern: [4, 4, 4, 4],
                           color: Colors.black,
                           borderType: BorderType.RRect,
-                          radius: Radius.circular(10.r),
+                          radius: Radius.circular(25.r),
+                          
                           strokeWidth: 0.5.w,
                           child: Padding(
                             padding: EdgeInsets.symmetric(
@@ -561,54 +517,91 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                                   
 
                               },
-                              child: Center(
-                                      child: Container(
-                                        height: 40.h,
-                                        width: 140.w,
-                                        decoration: BoxDecoration(
-                                          color: AppColors.lightGray1,
-                                          borderRadius: BorderRadius.circular(
-                                            10.r,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+
+                        Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20.h,
+                          vertical: 10.h,
+                        ),
+                        child: Text(
+                          MyReportIssueScreenConstants.UPLOAD_PHOTO.tr(),
+                          style:
+                             AppTextStyle.font16bold.copyWith(
+                           color: AppColors.disabledButtonTextColor,
+                             )
+                          // TextStyle(
+                          //   color: AppColors.clusterTitleColor,
+                          //   fontSize: 16.sp,
+                          //   fontWeight: FontWeight.w400,
+                          // ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 80.h,
+                        child: VerticalDivider(
+                          color: AppColors.black,
+                        ),
+                      ),
+ 
+
+                                  Center(
+                                          child: Container(
+                                            height: 70.h,
+                                            width: 140.w,
+                                            decoration: BoxDecoration(
+                                              color: AppColors.lightGray1,
+                                              borderRadius: BorderRadius.circular(
+                                                25.r,
+                                              ),
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                            
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: 5.w,
+                                                  ),
+                                                  child: Text(
+                                                    MyReportIssueScreenConstants
+                                                        .CHOOSE_PHOTO
+                                                        .tr(),
+                                                    style:
+                                                       AppTextStyle.font14bold.copyWith(
+                                                    color: AppColors
+                                                        .clusterTitleColor,
+                                                  )
+                                                    //  TextStyle(
+                                                    //   fontSize: 14.sp,
+                                                    //   fontWeight: FontWeight.w400,
+                                                    //   color: AppColors
+                                                    //       .clusterTitleColor,
+                                                    // ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 5.h,
+                                                ),
+
+                                                    Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: 5.w,
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.file_open_outlined,
+                                                    size: 23,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w,
-                                              ),
-                                              child: Icon(
-                                                Icons.file_open_outlined,
-                                                size: 20,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w,
-                                              ),
-                                              child: Text(
-                                                MyReportIssueScreenConstants
-                                                    .CHOOSE_PHOTO
-                                                    .tr(),
-                                                style:
-                                                   AppTextStyle.font14.copyWith(
-                                                color: AppColors
-                                                    .clusterTitleColor,
-                                              )
-                                                //  TextStyle(
-                                                //   fontSize: 14.sp,
-                                                //   fontWeight: FontWeight.w400,
-                                                //   color: AppColors
-                                                //       .clusterTitleColor,
-                                                // ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
+                                ],
+                              ),
                             );
                                    
                                  }
@@ -768,6 +761,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           padding: EdgeInsets.symmetric(
                               horizontal: 30.w, vertical: 20.h),
                           child: ButtonWidget(
+                            color: AppColors.buttonYellowColor,
                               text: MySelfieScreenConstants.SUBMIT_BTN.tr()),
                         ),
                       ),

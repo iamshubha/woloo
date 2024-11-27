@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:Woloo_Smart_hygiene/core/model/App_launch_model.dart';
+import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
 import 'package:equatable/equatable.dart';
 import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/Attendance_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
@@ -50,7 +51,7 @@ class ClockOutSuccessful extends DashboardState {
 }
 
 class ClockInError extends DashboardState {
-  final String error;
+  final Failure error;
   final String? message;
 
   const ClockInError({required this.error, this.message});
@@ -60,7 +61,7 @@ class ClockInError extends DashboardState {
 }
 
 class ClockOutError extends DashboardState {
-  final String error;
+  final Failure error;
   final String? message;
 
   const ClockOutError({required this.error, this.message});
@@ -89,7 +90,7 @@ class GetDashboardDataSuccess extends DashboardState {
 }
 
 class DashboardError extends DashboardState {
-  final String error;
+  final Failure error;
   const DashboardError({required this.error});
 
   @override
@@ -115,7 +116,7 @@ class UpdateStatusSuccessful extends DashboardState {
 }
 
 class UpdateStatusError extends DashboardState {
-  final String error;
+  final Failure error;
   const UpdateStatusError({required this.error});
 
   @override
@@ -137,7 +138,7 @@ class AppLaunchSuccess extends DashboardState {
 }
 
 class AppLaunchError extends DashboardState {
-  final String error;
+  final Failure error;
   const AppLaunchError({required this.error});
 
   @override

@@ -1,19 +1,25 @@
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/view/attendance_history_screen.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/leading_button.dart';
 import 'package:Woloo_Smart_hygiene/screens/login/bloc/login_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/login/view/login_screen.dart';
+import 'package:Woloo_Smart_hygiene/screens/selfie_screen/view/selfie_screen.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 
+// import '../../../core/bloc/core_bloc.dart';
 import '../../common_widgets/image_provider.dart';
+import '../../login/data/model/Update_token_model.dart';
+import '../upload_profile.dart';
 
 class JanitorProfileScreen extends StatefulWidget {
   const JanitorProfileScreen({
@@ -26,6 +32,8 @@ class JanitorProfileScreen extends StatefulWidget {
 
 class JanitorProfileScreenState extends State<JanitorProfileScreen> {
   LoginBloc? profileBloc;
+  List<UpdateTokenModel>? profile;
+    // CoreBloc coreBloc = CoreBloc();
   var name;
   @override
   void initState() {
@@ -36,14 +44,25 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
     profileBloc = BlocProvider.of<LoginBloc>(
       context,
     );
-
-    profileBloc?.add(const UpdateTokenOnVerifyOTP(
-        token:
-            "e2E8G5n5T0OAm4aH7PIcTf:APA91bG9pDBP0RAvMBYuQM9ZHAvva_GsgsnAaUHLU4n7xF6gcytrAzDC6HJiWSn0nOsO8m4mrZy9GpuaCAXQAoM6854kdlRvCVYAnUYxtlVL62A-e3Y442lm5FItZY60htbBCv6qdYx1"));
+   // updat();
     // BlocProvider.of<LoginBloc>(context);
     name = globalStorage.getProfileName();
+
+
+
     print(profileBloc!.profileList);
   }
+
+   updat()async{
+          var firebase = FirebaseMessaging.instance;
+                          var token = await firebase.getToken();
+    profileBloc?.add( UpdateTokenOnVerifyOTP(
+        token:token!
+
+         //   "e2E8G5n5T0OAm4aH7PIcTf:APA91bG9pDBP0RAvMBYuQM9ZHAvva_GsgsnAaUHLU4n7xF6gcytrAzDC6HJiWSn0nOsO8m4mrZy9GpuaCAXQAoM6854kdlRvCVYAnUYxtlVL62A-e3Y442lm5FItZY60htbBCv6qdYx1"
+
+    ));
+   }
 
   final globalStorage = GetIt.instance<GlobalStorage>();
 
@@ -53,52 +72,117 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
     return Scaffold(
         backgroundColor: AppColors.white,
         appBar: AppBar(
-          backgroundColor: AppColors.appbarBgColor,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-              size: 25,
-            ),
-            color: AppColors.appBarIconColor,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 15.w,
-              vertical: 10.h,
-            ),
-            child: Text(MyJanitorProfileScreenConstants.MY_PROFILE.tr(),
-                textAlign: TextAlign.start,
-                style: AppTextStyle.font20.copyWith(
-                  color: AppColors.yellowSplashColor,
-                )
-                // TextStyle(
-                //   color: AppColors.yellowSplashColor,
-                //   fontSize: 20.sp,
-                //   fontWeight: FontWeight.w400,
-                // ),
-                ),
-          ),
-          elevation: 0,
+           leadingWidth: 100,
+          backgroundColor: AppColors.white,
+          leading:
+              LeadingButton()
+
+          // IconButton(
+          //   icon: const Icon(
+          //     Icons.arrow_back,
+          //     color: Colors.white,
+          //     size: 25,
+          //   ),
+          //   color: AppColors.appBarIconColor,
+          //   onPressed: () {
+          //     Navigator.pop(context);
+          //   },
+          // ),
+        //  title:
+
+        //  elevation: 0,
         ),
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 15.w,
+                  vertical: 10.h,
+                ),
+                child: Text(MyJanitorProfileScreenConstants.MY_PROFILE.tr(),
+                    textAlign: TextAlign.start,
+                    style: AppTextStyle.font20bold.copyWith(
+                      color: AppColors.black,
+                    )
+                  // TextStyle(
+                  //   color: AppColors.yellowSplashColor,
+                  //   fontSize: 20.sp,
+                  //   fontWeight: FontWeight.w400,
+                  // ),
+                ),
+              ),
               SizedBox(
                 height: 20.h,
               ),
-              Center(
-                child: CustomImageProvider(
-                  image: AppImages.profile_img,
-                  height: 70.h,
-                  width: 70.w,
-                  alignment: Alignment.center,
-                ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+
+                  //  BlocBuilder<LoginBloc, LoginState>(
+                  //    bloc: profileBloc,
+                  //   builder: 
+                  //   (context, state) {
+                  //      if (state is  UpdateTokenLoading ) {
+                  //        EasyLoading.show(status: "");
+                              
+                  //      }
+                  //       if (state is UpdateTokenSuccess ){
+                  //         EasyLoading.dismiss();
+                 
+                  //         profile =  state.data  ;
+                  //      }
+                  //       if(state is UpdateTokenError ){
+                  //         EasyLoading.show(status: state.error.message);
+                         
+                  //      }
+                       
+                  //                    return
+
+                                       profile == null ?
+
+                                       Center(
+                                         child: CustomImageProvider(
+                                           image: AppImages.profile_img,
+                                           height: 70.h,
+                                           width: 70.w,
+                                           alignment: Alignment.center,
+                                         ),
+                                       )
+                                       :
+
+                                       Center(
+                    child: CustomImageProvider(
+                      image: "https://woloo-taskmanagement-s3bucket.s3.ap-south-1.amazonaws.com/${profile!.first.profileImage!.replaceAll("[", "").replaceAll("]", "").replaceAll('"', '')}",
+                      height: 70.h,
+                      width: 70.w,
+                      alignment: Alignment.center,
+                    ),
+                  ),
+
+                    // },
+                  //  ),
+
+               
+                  InkWell(
+                     onTap: () {
+                          Navigator.of(context).push(  MaterialPageRoute(builder: (context) {
+                              return  const UplopadProfile(
+                             
+                              );
+                          },  )  );
+                     },
+                    child: CustomImageProvider(
+                      image: AppImages.edit_icon,
+                      width: 30,
+                      height: 30,
+                    ),
+                  ),
+                ],
               ),
               SizedBox(
                 height: 15.h,

@@ -17,6 +17,8 @@ class GlobalStorage {
   final String _longitudeKey = 'accessLongitude';
   final String _currentTimeKey = 'accessCurrentTime';
   final String _profileKey = 'profileKey';
+  final String _profileImgKey = 'profileImgKey';
+  final String _profileshiftKey = 'profileShiftKey';
   /// Save Token
   void saveToken({required String accessToken}) {
     if (accessToken.isEmpty) {
@@ -43,14 +45,46 @@ class GlobalStorage {
     _box.write(_profileKey, profileName);
   }
 
+    void saveProfileImg({required String profileimg }) {
+    if (profileimg.isEmpty) {
+      throw 'Access Token is empty';
+    }
+    _box.write(_profileImgKey, profileimg);
+  }
+
+    void saveShift({required String profileimg }) {
+    if (profileimg.isEmpty) {
+      throw 'Access Token is empty';
+    }
+    _box.write(_profileshiftKey, profileimg);
+  }
+
   String getProfileName() {
     String? name = _box.read(_profileKey);
     return name ?? '';
+  }
+    String getProfileImage() {
+    String? img = _box.read(_profileImgKey);
+    return img ?? '';
+  }
+    String getShift() {
+    String? img = _box.read(_profileshiftKey);
+    return img ?? '';
   }
 
   void removeProfile() {
     print("profile");
     _box.remove(_profileKey);
+  }
+
+    void removeProfileImg() {
+    print("profile");
+    _box.remove(_profileImgKey);
+  }
+
+    void removeShift() {
+    print("profile");
+    _box.remove(_profileshiftKey);
   }
 
 
@@ -65,6 +99,7 @@ class GlobalStorage {
 
   void removeList() {
     _box.remove(_idKey);
+
   }
 
   void saveCheckIn({required bool isCheckedIn}) {

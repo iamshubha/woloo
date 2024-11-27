@@ -1,3 +1,4 @@
+import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/Cluster_dropdown_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/Janitor_dropdown_model.dart';
 import 'package:equatable/equatable.dart';
@@ -31,7 +32,7 @@ class GetClustersDropdownSuccess extends ReportIssueState {
 }
 
 class GetClustersDropdownError extends ReportIssueState {
-  final String error;
+  final Failure error;
   const GetClustersDropdownError({required this.error});
 
   @override
@@ -53,7 +54,7 @@ class GetFacilityDropdownSuccess extends ReportIssueState {
 }
 
 class GetFacilityDropdownError extends ReportIssueState {
-  final String error;
+  final Failure error;
   const GetFacilityDropdownError({required this.error});
 
   @override
@@ -75,7 +76,7 @@ class GetTasksDropdownSuccess extends ReportIssueState {
 }
 
 class GetTasksDropdownError extends ReportIssueState {
-  final String error;
+  final Failure error;
   const GetTasksDropdownError({required this.error});
 
   @override
@@ -97,7 +98,7 @@ class GetJanitorsDropdownSuccess extends ReportIssueState {
 }
 
 class GetJanitorsDropdownError extends ReportIssueState {
-  final String error;
+  final Failure error;
   const GetJanitorsDropdownError({required this.error});
 
   @override
@@ -144,7 +145,7 @@ class ReportIssueSuccess extends ReportIssueState {
 }
 
 class ReportIssueError extends ReportIssueState {
-  final String error;
+  final Failure error;
   const ReportIssueError({required this.error});
 
   @override

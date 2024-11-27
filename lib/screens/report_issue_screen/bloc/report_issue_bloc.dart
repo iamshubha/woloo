@@ -5,6 +5,8 @@ import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issu
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issue_state.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/network/report_issue_service.dart';
 
+import '../../../core/network/error_handler.dart';
+
 class ReportIssueBloc extends Bloc<ReportIssueEvent, ReportIssueState> {
   final ReportIssueService reportIssueService =
       ReportIssueService(dio: GetIt.instance());
@@ -28,7 +30,7 @@ class ReportIssueBloc extends Bloc<ReportIssueEvent, ReportIssueState> {
 
       emit(GetClustersDropdownSuccess(data: data));
     } catch (e) {
-      emit(GetClustersDropdownError(error: e.toString()));
+      emit(GetClustersDropdownError(error:ErrorHandler.handle(e).failure));
     }
   }
 
@@ -41,7 +43,7 @@ class ReportIssueBloc extends Bloc<ReportIssueEvent, ReportIssueState> {
 
       emit(GetFacilityDropdownSuccess(data: data));
     } catch (e) {
-      emit(GetFacilityDropdownError(error: e.toString()));
+      emit(GetFacilityDropdownError(error: ErrorHandler.handle(e).failure ));
     }
   }
 
@@ -53,7 +55,7 @@ class ReportIssueBloc extends Bloc<ReportIssueEvent, ReportIssueState> {
 
       emit(GetTasksDropdownSuccess(data: data));
     } catch (e) {
-      emit(GetTasksDropdownError(error: e.toString()));
+      emit(GetTasksDropdownError(error: ErrorHandler.handle(e).failure));
     }
   }
 
@@ -66,7 +68,7 @@ class ReportIssueBloc extends Bloc<ReportIssueEvent, ReportIssueState> {
 
       emit(GetJanitorsDropdownSuccess(data: data));
     } catch (e) {
-      emit(GetJanitorsDropdownError(error: e.toString()));
+      emit(GetJanitorsDropdownError(error: ErrorHandler.handle(e).failure ));
     }
   }
 
@@ -96,7 +98,7 @@ class ReportIssueBloc extends Bloc<ReportIssueEvent, ReportIssueState> {
 
       emit(ReportIssueSuccess(data: data));
     } catch (e) {
-      emit(ReportIssueError(error: e.toString()));
+      emit(ReportIssueError(error:ErrorHandler.handle(e).failure  ));
     }
   }
 

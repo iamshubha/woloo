@@ -27,7 +27,8 @@ class AuthInterceptor extends Interceptor {
     GlobalStorage globalStorage = GetIt.instance();
     bool isAuth = options.extra['auth'] ?? false;
     if (isAuth) {
-      options.headers.addAll({"x-woloo-token": globalStorage.getToken()});
+       print("is auth");
+         options.headers.addAll({"x-woloo-token": globalStorage.getToken()});
     }
     super.onRequest(options, handler);
   }

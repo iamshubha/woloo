@@ -1,3 +1,4 @@
+import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
 import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/data/model/Attendance_history_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/data/model/Month_list_model.dart';
 import 'package:equatable/equatable.dart';
@@ -26,7 +27,7 @@ class HistoryListSuccess extends HistoryListState {
 }
 
 class HistoryListError extends HistoryListState {
-  final String error;
+  final Failure error;
   const HistoryListError({required this.error});
 
   @override
@@ -48,7 +49,7 @@ class MonthListSuccess extends HistoryListState {
 }
 
 class MonthListError extends HistoryListState {
-  final String error;
+  final Failure error;
   const MonthListError({required this.error});
 
   @override

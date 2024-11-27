@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
 import 'package:Woloo_Smart_hygiene/screens/task_details_screen/data/model/Submitted_tasks_model.dart';
 import 'package:equatable/equatable.dart';
 
@@ -27,7 +28,7 @@ class GetSubmittedTasksSuccess extends SubmittedTaskState {
 }
 
 class GetSubmittedTasksError extends SubmittedTaskState {
-  final String error;
+  final Failure error;
   const GetSubmittedTasksError({required this.error});
 
   @override
@@ -48,7 +49,7 @@ class UpdateStatusSuccessful extends SubmittedTaskState {
 }
 
 class UpdateStatusError extends SubmittedTaskState {
-  final String error;
+  final Failure error;
   const UpdateStatusError({required this.error});
 
   @override

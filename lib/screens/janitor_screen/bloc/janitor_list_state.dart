@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
 import 'package:equatable/equatable.dart';
 import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_list_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Reassign_janitor_model.dart';
@@ -28,7 +29,7 @@ class JanitorListSuccess extends JanitorListState {
 }
 
 class JanitorListError extends JanitorListState {
-  final String error;
+  final Failure error;
   const JanitorListError({required this.error});
 
   @override
@@ -50,7 +51,7 @@ class ReassignTaskSuccessful extends JanitorListState {
 }
 
 class ReassignTaskError extends JanitorListState {
-  final String error;
+  final Failure error;
   const ReassignTaskError({required this.error});
 
   @override

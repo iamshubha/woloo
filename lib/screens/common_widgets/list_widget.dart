@@ -25,6 +25,7 @@ class ListWidget extends StatefulWidget {
   final Function onChecked;
   final Function onSetData;
   final String? clusterId;
+  final String? type;
 
   List<bool> checkList;
 
@@ -37,7 +38,9 @@ class ListWidget extends StatefulWidget {
       required this.onChecked,
       required this.onSetData,
       required this.checkList,
-      this.clusterId});
+      this.clusterId,
+      this.type
+      });
 
   @override
   State<ListWidget> createState() => _ListWidgetState();
@@ -84,7 +87,8 @@ class _ListWidgetState extends State<ListWidget> {
           EasyLoading.dismiss();
 
           setState(() {
-            _data = state.data;
+            _data = state.data.where( (e) => e.requestType ==   widget.type).toList();
+             print("sdfsfsdfs ${ widget.type} ");
             _search = _data;
             widget.onSetData(_data);
             widget.onSetData(_search);
@@ -99,12 +103,14 @@ class _ListWidgetState extends State<ListWidget> {
 
         if (state is FacilityListError) {
           EasyLoading.dismiss();
-          return CustomErrorWidget(error: state.error);
+          return CustomErrorWidget(error: state.error.message);
         }
 
         if (state is FacilityListSuccess && (state.data.isEmpty)) {
           EasyLoading.dismiss();
-          return const EmptyListWidget();
+          return  EmptyListWidget(
+            filter:  EmptyWidgetConstants.DATA_NOT_FOUND.tr(),
+          );
         }
 
         return RefreshIndicator(
@@ -153,13 +159,26 @@ class _ListWidgetState extends State<ListWidget> {
                     ),
                     decoration: BoxDecoration(
                       color: AppColors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: widget.checkList[index]
-                            ? AppColors.buttonColor
-                            : AppColors.containerBorder,
-                        width: widget.checkList[index] ? 2.w : 1.w,
-                      ),
+                      borderRadius: BorderRadius.circular(25.r),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black
+                              .withOpacity(0.2), // Shadow color
+                          spreadRadius:
+                          1, // How wide the shadow should spread
+                          blurRadius:
+                          10, // The blur effect of the shadow
+                          offset: Offset(0,
+                              0), // No offset for shadow on all sides
+                        ),
+                      ],
+
+                      // border: Border.all(
+                      //   color: widget.checkList[index]
+                      //       ? AppColors.buttonColor
+                      //       : AppColors.containerBorder,
+                      //   width: widget.checkList[index] ? 2.w : 1.w,
+                      // ),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -174,41 +193,30 @@ class _ListWidgetState extends State<ListWidget> {
                                     MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                      vertical: 5.h,
-                                    ),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: getColorByRequestType(
-                                            _search[index].requestType ?? ''),
-                                        borderRadius:
-                                            BorderRadius.circular(10.r),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 5.w,
+                                        vertical: 5.h,
                                       ),
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: 5.h,
-                                          horizontal: 20.w,
-                                        ),
-                                        child: Text(
-                                          (_search[index].requestType ?? '')
-                                              .tr(),
-                                          style: 
-                                          AppTextStyle.font14w6.copyWith(
-                                            letterSpacing: 0.8,
-                                            color: AppColors.black,
+                                      child: Text(
+                                          looping(_search[index]),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style:
+                                          AppTextStyle.font12bold.copyWith(
+                                            color: AppColors.ListTitleColor,
                                           )
-                                          // TextStyle(
-                                          //   color: AppColors.black,
-                                          //   fontSize: 14.sp,
-                                          //   fontWeight: FontWeight.w600,
-                                          //   letterSpacing: 0.8,
-                                          // ),
-                                        ),
+                                        //  TextStyle(
+                                        //   color: AppColors.ListTitleColor,
+                                        //   fontSize: 13.sp,
+                                        //   fontWeight: FontWeight.w600,
+                                        //   letterSpacing: 0.8,
+                                        // ),
                                       ),
                                     ),
                                   ),
+
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment:
@@ -222,7 +230,7 @@ class _ListWidgetState extends State<ListWidget> {
                                         child: Text(
                                           "${CustomDateUtils.formatDate(_search[index].startTime ?? '')} - ${CustomDateUtils.formatDate(_search[index].endTime ?? '')}",
                                           style:
-                                          AppTextStyle.font12.copyWith(
+                                          AppTextStyle.font10bold.copyWith(
                                             color: AppColors.timeSlotColor,
                                           )
                                           //  TextStyle(
@@ -236,84 +244,8 @@ class _ListWidgetState extends State<ListWidget> {
                                   ),
                                 ],
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 5.w,
-                                        vertical: 5.h,
-                                      ),
-                                      child: Text(
-                                        looping(_search[index]),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style:
-                                        AppTextStyle.font13w6.copyWith(
-                                          color: AppColors.ListTitleColor,
-                                        )
-                                        //  TextStyle(
-                                        //   color: AppColors.ListTitleColor,
-                                        //   fontSize: 13.sp,
-                                        //   fontWeight: FontWeight.w600,
-                                        //   letterSpacing: 0.8,
-                                        // ),
-                                      ),
-                                    ),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 5.w, vertical: 5.h),
-                                        child: const Icon(
-                                          Icons.access_time_filled,
-                                          size: 20,
-                                          color: AppColors.ListTitleColor,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_search[index].estimatedTime.toString()} ${MyFacilityListConstants.MIN.tr()}" ??
-                                            '',
-                                        style: 
-                                        AppTextStyle.font10.copyWith(
-                                          color: AppColors.ListTitleColor,
-                                        )
-                                        //  TextStyle(
-                                        //   color: AppColors.ListTitleColor,
-                                        //   fontSize: 10.sp,
-                                        //   fontWeight: FontWeight.w400,
-                                        // ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 5.w,
-                                  vertical: 1.h,
-                                ),
-                                child: Text(
-                                  _search[index].facilityName ?? '',
-                                  maxLines: 2,
-                                  style:
-                                  AppTextStyle.font12w5.copyWith(
-                                    color: AppColors.ListTitleColor,
-                                  )
-                                  //  TextStyle(
-                                  //   color: AppColors.ListTitleColor,
-                                  //   fontSize: 12.sp,
-                                  //   fontWeight: FontWeight.w500,
-                                  // ),
-                                ),
-                              ),
+
+
                               Padding(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: 5.w,

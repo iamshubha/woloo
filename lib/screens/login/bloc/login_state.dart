@@ -28,7 +28,7 @@ class LoginOTPVerified extends LoginState {
 }
 
 class LoginError extends LoginState {
-  final String error;
+  final Failure error;
   const LoginError({required this.error});
 
   @override
@@ -58,7 +58,7 @@ class UpdateTokenSuccess extends LoginState {
 }
 
 class UpdateTokenError extends LoginState {
-  final String error;
+  final  Failure error;
   const UpdateTokenError({required this.error});
 
   @override

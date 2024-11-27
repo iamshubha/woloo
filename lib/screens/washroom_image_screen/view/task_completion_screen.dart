@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/custom_dialogue_widget.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/white_button_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/view/dashboard_screen.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/view/regular_task.dart';
 import 'package:Woloo_Smart_hygiene/screens/selfie_screen/view/camera.dart';
 import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/bloc/images_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/bloc/images_event.dart';
@@ -22,13 +22,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../utils/app_textstyle.dart';
+import '../../common_widgets/leading_button.dart';
+import '../../dashboard/bloc/dashboard_bloc.dart';
+import '../../dashboard/bloc/dashboard_event.dart';
+import '../../dashboard/view/dashboard_screen.dart';
+import '../images_bloc/bloc/capture3_bloc.dart';
 import '../images_bloc/bloc/capture_bloc1.dart';
 import '../images_bloc/bloc/capture_bloc2.dart';
 import '../images_bloc/event/capture_event1.dart';
 import '../images_bloc/event/capture_event2.dart';
+import '../images_bloc/event/capture_event3.dart';
 import '../images_bloc/state/capture_state.dart';
 import '../images_bloc/state/capture_state1.dart';
 import '../images_bloc/state/capture_state2.dart';
+import '../images_bloc/state/capture_state3.dart';
 
 enum PickSource { CAMERA }
 
@@ -46,12 +53,15 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
   File? _file1;
   File? _file2;
   File? _file3;
+   File? _file4;
   ImagesBloc _imagesBloc = ImagesBloc();
   CaptureBloc _captureBloc = CaptureBloc(); 
   CaptureBloc1 _captureBloc1 = CaptureBloc1(); 
      CaptureBloc2 _captureBloc2 = CaptureBloc2(); 
+     CaptureBloc3 _captureBloc3 = CaptureBloc3(); 
   List<File> fileList = [];
   final TextEditingController _controller = TextEditingController();
+  DashboardBloc dashboardBloc = DashboardBloc();
 
   @override
   void initState() {
@@ -68,6 +78,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
           }
 
           if (state is UploadImagesSuccessful) {
+           // dashboardBloc.add(CheckAttendance());
             EasyLoading.dismiss();
             Navigator.pushAndRemoveUntil(
               context,
@@ -80,11 +91,16 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
 
           if (state is UploadImagesError) {
             EasyLoading.dismiss();
-            EasyLoading.showError(state.error);
+            EasyLoading.showError(state.error.message);
           }
         },
         builder: (context, state) {
           return Scaffold(
+            appBar: AppBar(
+              backgroundColor: AppColors.white,
+               leadingWidth: 100.w,
+              leading: LeadingButton(),
+            ),
             backgroundColor: AppColors.white,
             body: SafeArea(
               child: SingleChildScrollView(
@@ -373,11 +389,11 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
 
                         Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: 25.w,
+                            horizontal: 15.w,
                             vertical: 10.h,
                           ),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                              BlocBuilder(
@@ -494,13 +510,128 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                          return SizedBox();
                                       }
                                   
-                              }, )
+                              }, ),
 
                               // _file3 != null
                               //     ?
                     
                                //   :
                                   
+                                         BlocBuilder(
+                              bloc: _captureBloc3,
+                              builder:  (context, state) {
+
+                                     print("bloc 2 $state ");
+                                     if ( state is  AddImagesInitial3 ) {
+                                     return   GestureDetector(
+                                      onTap: () async {
+
+                                        Navigator.of(context).push( MaterialPageRoute(builder: (context) =>  CameraPage(
+                                          sensorPosition: SensorPosition.back,
+                                          captureImage: (val){
+                                            _file3 = val;
+                                            fileList.add(_file3!);
+                                           _captureBloc3.add(AddImages3(file:_file3) );
+                                          
+                                          },
+                                        ),  ) );
+
+                                        // _file3 = await pickFile(
+                                        //     null, PickSource.CAMERA);
+
+
+                                        print("fileeeee3" + _file3.toString());
+
+
+                                      },
+                                      child: DottedBorder(
+                                        color: AppColors.dottedBorderColor,
+                                        borderType: BorderType.RRect,
+                                        radius: Radius.circular(10.r),
+                                        strokeWidth: 0.8.w,
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 30.w,
+                                            vertical: 40.h,
+                                          ),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              const Icon(
+                                                Icons.camera_alt_outlined,
+                                                size: 40,
+                                                color:
+                                                    AppColors.dottedBorderColor,
+                                              ),
+                                              Text(
+                                                TaskCompletionScreenConstants
+                                                    .ADD_PHOTO
+                                                    .tr(),
+                                                style:
+                                                  AppTextStyle.font15.copyWith(
+                                                  color: AppColors
+                                                      .imageScreenGreyColor,
+                                                )
+                                                //  TextStyle(
+                                                //   fontWeight: FontWeight.w400,
+                                                //   fontSize: 15.sp,
+                                                //   color: AppColors
+                                                //       .imageScreenGreyColor,
+                                                // ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                     }
+                                     else if ( state is AddImagesSuccessful3 ) {
+                                   return Stack(
+                                children: [
+                                  Container(
+                                          height: 135.h,
+                                          width: 150.w,
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                                10.0), //add border radius
+                                            child: Image.file(
+                                              _file3!,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                  Positioned(
+                                    right: 5,
+                                    top: 5,
+
+                                    child: GestureDetector(
+                                      onTap: (){
+                                       //  print("object");
+                                           _captureBloc3.add(RemoveImages3(file:_file3));
+                                    
+
+                                      },
+                                      child: const CircleAvatar(
+                                        backgroundColor: AppColors.black,
+                                        child: Center(
+                                          child: Icon(
+                                              color: AppColors.red,
+                                              Icons.delete  ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              );
+                                     }
+                                      else {
+                                         return SizedBox();
+                                      }
+                                  
+                              }, )
                             ],
                           ),
                         ),

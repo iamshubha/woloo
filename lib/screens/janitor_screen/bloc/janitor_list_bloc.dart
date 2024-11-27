@@ -7,6 +7,8 @@ import 'package:Woloo_Smart_hygiene/screens/janitor_screen/bloc/janitor_list_sta
 import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_list_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/netwrok/janitor_list_service.dart';
 
+import '../../../core/network/error_handler.dart';
+
 class JanitorListBloc extends Bloc<JanitorsListEvent, JanitorListState> {
   final JanitorListService janitorListService =
       JanitorListService(dio: GetIt.instance());
@@ -29,7 +31,7 @@ class JanitorListBloc extends Bloc<JanitorsListEvent, JanitorListState> {
       clusterId = event.cluster_id;
       emit(JanitorListSuccess(data: data, fromReassign: false ));
     } catch (e) {
-      emit(JanitorListError(error: e.toString()));
+      emit(JanitorListError(error: ErrorHandler.handle(e).failure ));
     }
   }
 
@@ -50,7 +52,7 @@ class JanitorListBloc extends Bloc<JanitorsListEvent, JanitorListState> {
      
     
     } catch (e) {
-      emit(ReassignTaskError(error: e.toString()));
+      emit(ReassignTaskError(error: ErrorHandler.handle(e).failure  ));
     }
   }
 }

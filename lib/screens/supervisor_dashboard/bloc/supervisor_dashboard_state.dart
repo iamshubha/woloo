@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
 import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_list_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
 import 'package:equatable/equatable.dart';
@@ -28,7 +29,7 @@ class GetSupervisorDashboardDataSuccess extends SupervisorDashboardState {
 }
 
 class SupervisorDashboardError extends SupervisorDashboardState {
-  final String error;
+  final Failure error;
   const SupervisorDashboardError({required this.error});
 
   @override
@@ -49,7 +50,7 @@ class SupervisorUpdateStatusSuccessful extends SupervisorDashboardState {
 }
 
 class SupervisorUpdateStatusError extends SupervisorDashboardState {
-  final String error;
+  final Failure error;
   const SupervisorUpdateStatusError({required this.error});
 
   @override
@@ -72,7 +73,7 @@ class AssignTaskSuccessful extends SupervisorDashboardState {
 }
 
 class AssignTaskError extends SupervisorDashboardState {
-  final String error;
+  final Failure error;
   const AssignTaskError({required this.error});
 
   @override

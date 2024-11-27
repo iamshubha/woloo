@@ -13,6 +13,7 @@ class DropDownDialog<T> extends StatefulWidget {
   final Function? onChanged;
   final Function? validator;
   final Key? widgetKey;
+  final String? hint;
   final T? selected;
 
   const DropDownDialog({
@@ -25,6 +26,7 @@ class DropDownDialog<T> extends StatefulWidget {
     this.onChanged,
     this.validator,
     this.widgetKey,
+   required this.hint
   }) : super(key: key);
 
   @override
@@ -36,80 +38,121 @@ class _DropDownDialogState<T> extends State<DropDownDialog<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownSearch<T>(
-      selectedItem: widget.selected,
-      key: widget.widgetKey,
-      enabled: widget.enabled ?? true,
-      autoValidateMode: _startValidation
-          ? AutovalidateMode.always
-          : AutovalidateMode.disabled,
-      items: widget.items,
-      popupProps: PopupProps.dialog(
-          showSearchBox: true,
-          searchFieldProps: TextFieldProps(
-            decoration: InputDecoration(
-              border: const OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(horizontal: 10.w),
-              hintText: MyFacilityListConstants.SEARCH.tr(),
+    return 
+    Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        
+        borderRadius: BorderRadius.circular(25.r),
+          boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2), // Shadow color
+                          spreadRadius: 1, // How wide the shadow should spread
+                          blurRadius: 10, // The blur effect of the shadow
+                          offset: const Offset(0,
+                              5), // Shadow offset, with y-offset for bottom shadow
+                        ),
+                      ],
+      ),
+      child: DropdownSearch<T>(
+        selectedItem: widget.selected,
+        key: widget.widgetKey,
+        enabled: widget.enabled ?? true,
+        autoValidateMode: _startValidation
+            ? AutovalidateMode.always
+            : AutovalidateMode.disabled,
+        items: widget.items,
+        
+        popupProps: PopupProps.dialog(
+            showSearchBox: true,
+            searchFieldProps: TextFieldProps(
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(horizontal: 10.w),
+                hintText: MyFacilityListConstants.SEARCH.tr(),
+              ),
             ),
-          ),
-          containerBuilder: (context, child) {
-            return SizedBox(
-              height: 350.h,
-              child: child,
-            );
-          }),
-      dropdownDecoratorProps: DropDownDecoratorProps(
-        dropdownSearchDecoration: InputDecoration(
-          labelStyle: const TextStyle(
-            color: AppColors.black,
-          ),
-          errorStyle: const TextStyle(
-            color: Colors.redAccent,
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(
-              5.r,
+            containerBuilder: (context, child) {
+              return SizedBox(
+                height: 350.h,
+                child: child,
+              );
+            }),
+            
+            //  dropdownBuilder: (ctx, selectedItem) =>
+            //             Icon(Icons.face, color:  Colors.black , size: 24),
+        dropdownDecoratorProps: DropDownDecoratorProps(
+          
+          dropdownSearchDecoration: InputDecoration(
+            hintText: widget.hint,
+
+              suffixIcon: IconButton(
+                              icon: Icon(Icons.clear),
+                              onPressed: (){}
+                            ),
+
+          //  suffixIcon: Icon( Icons.arrow_back,
+          //   color: AppColors.black,
+          //  ),
+            //  suffix: Icon( Icons.arrow_back,
+            //  color: AppColors.black,
+            //  ),
+
+      
+            labelStyle: const TextStyle(
+              color: AppColors.black,
             ),
-            borderSide: const BorderSide(
+            errorStyle: const TextStyle(
               color: Colors.redAccent,
             ),
-          ),
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: 10.w,
-            vertical: 10.h,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(
-              5.r,
+            errorBorder:  InputBorder.none,
+
+            // OutlineInputBorder(
+            //   borderRadius: BorderRadius.circular(
+            //     5.r,
+            //   ),
+            //   borderSide: const BorderSide(
+            //     color: Colors.redAccent,
+            //   ),
+            // ),
+            
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 10.w,
+              vertical: 10.h,
             ),
-            borderSide: const BorderSide(color: AppColors.black),
+            border:  InputBorder.none
+            // OutlineInputBorder(
+            //   borderRadius: BorderRadius.circular(
+            //     5.r,
+            //   ),
+            //   borderSide: const BorderSide(color: AppColors.black),
+            // ),
+          ),
+          baseStyle: TextStyle(
+            color: widget.enabled ?? true ? Colors.black : Colors.grey,
           ),
         ),
-        baseStyle: TextStyle(
-          color: widget.enabled ?? true ? Colors.black : Colors.grey,
-        ),
+        itemAsString: (item) =>
+            widget.itemAsString != null ? widget.itemAsString!(item) : "",
+        validator: (value) =>
+            widget.validator != null ? widget.validator!(value) : null,
+        onSaved: (item) {
+          if (item != null && widget.onSaved != null && widget.items.isNotEmpty) {
+            widget.onSaved!(item);
+          }
+        },
+        onChanged: (item) {
+          if (widget.onChanged != null) {
+            widget.onChanged!(item);
+          }
+        },
+        onBeforePopupOpening: (a) async {
+          setState(() {
+            _startValidation = true;
+          });
+          return true;
+        },
       ),
-      itemAsString: (item) =>
-          widget.itemAsString != null ? widget.itemAsString!(item) : "",
-      validator: (value) =>
-          widget.validator != null ? widget.validator!(value) : null,
-      onSaved: (item) {
-        if (item != null && widget.onSaved != null && widget.items.isNotEmpty) {
-          widget.onSaved!(item);
-        }
-      },
-      onChanged: (item) {
-        if (widget.onChanged != null) {
-          widget.onChanged!(item);
-        }
-      },
-      onBeforePopupOpening: (a) async {
-        setState(() {
-          _startValidation = true;
-        });
-        return true;
-      },
     );
   }
 }

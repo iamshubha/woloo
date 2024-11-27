@@ -70,7 +70,7 @@ class _CheckboxListWidgetState extends State<CheckboxListWidget> {
                     : const Center(
                         child: Icon(
                           Icons.check,
-                          size: 15,
+                          size: 20,
                           color: AppColors.black,
                         ),
                       ),
@@ -106,7 +106,7 @@ class _CheckboxListWidgetState extends State<CheckboxListWidget> {
                         Text(
                           widget.name ?? '',
                           style: 
-                          AppTextStyle.font20.copyWith(
+                          AppTextStyle.font20bold.copyWith(
                             overflow: TextOverflow.visible,
                             color: AppColors.appBarTitleColor,
                           )

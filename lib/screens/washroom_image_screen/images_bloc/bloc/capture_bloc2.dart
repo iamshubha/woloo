@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/network/error_handler.dart';
 import '../event/capture_event2.dart';
 // import '../state/capture_state.dart';
 import '../state/capture_state2.dart';
@@ -27,7 +28,7 @@ class CaptureBloc2 extends Bloc<CaptureEvent2, CaptureState2> {
         emit(AddImagesSuccessful2(image: event.file));
       }
     } catch (e) {
-      emit(AddImagesError2(error: e.toString()));
+      emit(AddImagesError2(error: ErrorHandler.handle(e).failure ));
     }
   }
 
@@ -40,7 +41,7 @@ class CaptureBloc2 extends Bloc<CaptureEvent2, CaptureState2> {
 
       emit(AddImagesInitial2());
     } catch (e) {
-      emit(AddImagesError2(error: e.toString()));
+      emit(AddImagesError2(error: ErrorHandler.handle(e).failure ));
     }
   }
 }

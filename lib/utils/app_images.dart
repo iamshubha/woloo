@@ -32,17 +32,20 @@ abstract class AppImages {
       _assetImgPath + 'custom_request.png';
   static String get janitor_present => _assetImgPath + 'present.png';
   static String get janitor_absent => _assetImgPath + 'absent.png';
-  static String get submittedIcon => _assetImgPath + 'submitted_image.png';
+  static String get submittedIcon => _assetImgPath + 'verify_Green 1.png';
   static String get profile_img => _assetImgPath + 'profile.png';
   static String get history_img => _assetImgPath + 'listcheck.png';
   static String get logout_img => _assetImgPath + 'logout.png';
   static String get repeat_icon => _assetImgPath + 'irepeat.png';
   static String get delete_icon => _assetImgPath + 'delete.png';
+  static String get edit_icon => _assetImgPath + 'editt.png';
   static String get up => _assetSvgImgPath +'up.svg';
   static String get down => _assetSvgImgPath +'down.svg';
   static String get home => _assetSvgImgPath +'home.svg';
   static String get layout => _assetSvgImgPath +'layout.svg';
   static String get forward => _assetImgPath +'chevrons.png';
-
+  static String get woloologo => _assetImgPath + 'woloologo.png';
+  static String get languageIcons => _assetImgPath + 'language.png';
+  static String get profileIcons => _assetImgPath + 'proflieicon.png';
   static String get logo => _assetSvgImgPath +'woloo.svg';
 }

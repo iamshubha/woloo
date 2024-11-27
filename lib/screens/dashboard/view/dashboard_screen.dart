@@ -1,883 +1,235 @@
-import 'dart:async';
-import 'package:Woloo_Smart_hygiene/core/model/App_launch_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/image_provider.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/controller/dash_controller.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_profile_screen/view/janitor_profile_screen.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/tab_widget.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/view/iot_task.dart';
+import 'package:Woloo_Smart_hygiene/screens/dashboard/view/regular_task.dart';
+import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart' hide Trans;
-// import 'package:get/state_manager.dart';
-import 'package:get_it/get_it.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:intl/intl.dart';
-import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/custom_dialogue_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/view/local_widgets/dashboard_list.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:get/get.dart'hide Trans;
 
-import '../../common_widgets/error_widget.dart';
+import '../../../utils/app_color.dart';
+import '../../../utils/app_textstyle.dart';
+import '../bloc/dashboard_bloc.dart';
+import '../bloc/dashboard_event.dart';
 import '../data/model/dashboard_model_class.dart';
+import 'local_widgets/dashboard_list.dart';
 
-class Dashboard extends StatefulWidget {
-  const Dashboard({
-    Key? key,
-  }) : super(key: key);
+class RegularTask extends StatefulWidget {
+ 
+  final lat;
+  final long;
+  final List<DashboardModelClass> filter;
+  final DashboardBloc dashboardBloc;
+  const RegularTask({
+  super.key, 
+  this.lat, 
+  this.long,  
+  required this.dashboardBloc,
+  required this.filter, 
+   });
+  
 
   @override
-  State<Dashboard> createState() => _DashboardState();
+  State<RegularTask> createState() => _RegularTaskState();
 }
 
-class _DashboardState extends State<Dashboard> {
-  int selectedCard = -1;
-  GlobalStorage globalStorage = GetIt.instance();
-  bool serviceStatus = false;
-  bool haspermission = false;
-  bool showList = false;
-  bool onTapCheckIn = false;
-  String check_in_time = "";
-  String check_out_time = "";
-  String inTime = "";
-  String outTime = "";
-  late LocationPermission permission;
-  late Position position;
-  String long = "", lat = "";
-  String? _currentAddress;
-  DateTime currentTime = DateTime.now();
-  late StreamSubscription<Position> positionStream;
-  String? location;
-  DashboardBloc dashboardBloc = DashboardBloc();
-  AppLaunchModel _appLaunchModel = AppLaunchModel();
-  String? type;
-  List<DashboardModelClass> _data = [];
-  List<DashboardModelClass> filter = [];
-  DashController dashController = Get.put(DashController());
-  
-  String dropdownvalue = 'All';
+class _RegularTaskState extends State<RegularTask> with SingleTickerProviderStateMixin {
+      int _selectedIndex = 0;
+   static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  // static const List<Widget> _widgetOptions = <Widget>[
+  //   RegularTask(),
+  //   IotTask()
+  //   // Text(
+  //   //   'Index 1: Business',
+  //   //   style: optionStyle,
+  //   // ),
+  //   // Text(
+  //   //   'Index 2: School',
+  //   //   style: optionStyle,
+  //   // ),
+  // ];
 
-  // List of items in our dropdown menu
-  var items = [
-    'All',
-    'Ongoing',
-    'Pending',
-    'Accepted',
-    'Completed',
-    'Request for closure'
-  ];
-
-  @override
-  void initState() {
-    dashboardBloc.add(CheckAttendance());
-
+  void _onItemTapped(int index) {
     setState(() {
-      inTime = globalStorage.getTime();
+      _selectedIndex = index;
     });
-    super.initState();
   }
+  TabController? _tabController;
+  DashboardBloc dashboardBloc = DashboardBloc();
+
+   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+      _tabController = new TabController(length: 5, vsync: this);
+  }
+
+
+  
 
   @override
   Widget build(BuildContext context) {
-    return
-     BlocConsumer(
-        bloc: dashboardBloc,
-        listener: (context, state) {
+    return 
+     Scaffold(
+       backgroundColor: AppColors.white,
+      // appBar: AppBar(
+      //   title: const Text('BottomNavigationBar Sample'),
+      // ),
+      body:
+       Column(
+                                children: [
 
-           print(" dashbaordddd $state ");
-
-        },
-         builder: (context, state) {
-
-            print("dashboard ka state $state ");
-          if (state is AppLaunchLoading) {
-            EasyLoading.show(status: state.message);
-          }
-
-          if (state is AppLaunchError) {
-            EasyLoading.dismiss();
-          }
-
-          if (state is AppLaunchSuccess) {
-            EasyLoading.dismiss();
-           
-              _appLaunchModel = state.data;
-              type = _appLaunchModel.lastAttendance;
-            
-            print("appLaunchResponse---->${_appLaunchModel.toJson()}");
-
-            if (_appLaunchModel.lastAttendance == "check_in") {
-             dashboardBloc.add(const GetTaskTamplates());
-               
-              print("lastAttendance--->${_appLaunchModel.lastAttendance}");
-             
-                onTapCheckIn = true;
-                globalStorage.saveCheckIn(isCheckedIn: true);
-                showList = true;
-              
-            }
-
-            if (_appLaunchModel.lastAttendance == "check_out") {
-             
-                onTapCheckIn = false;
-                showList = false;
-                globalStorage.saveCheckIn(isCheckedIn: false);
-            
-            }
-           
-              onTapCheckIn = globalStorage.isCheckedIn();
-              location = globalStorage.getLocation();
-              inTime = globalStorage.getTime();
-              outTime = globalStorage.getTime();
-          
-          }
-
-          print(state);
-
-          if (state is ClockInSuccessful) {
-            EasyLoading.dismiss();
-           dashboardBloc.add(const GetTaskTamplates());
-           dashController.mapGetDashboardToState();
-              onTapCheckIn = true;
-              showList = true;
-       
-            String formattedDate =
-                DateFormat('hh:mm:ss  a').format(currentTime);
-            check_in_time = formattedDate;
-
-            globalStorage.saveTime(accessTime: check_in_time);
-            inTime = globalStorage.getTime();
-          }
-          if (state is ClockInLoading) {
-            EasyLoading.show(status: state.message);
-          }
-
-          if (state is ClockInError) {
-            EasyLoading.dismiss();
-            EasyLoading.showError(state.error);
-           
-              onTapCheckIn = true;
-              showList = true;
-          
-          }
-
-          if (state is ClockOutSuccessful) {
-            EasyLoading.dismiss();
-            print(state);
-          
-              onTapCheckIn = false;
-              showList = false;
-           
-            String formattedDate =
-                DateFormat('hh:mm:ss  a').format(currentTime);
-            check_out_time = formattedDate;
-            globalStorage.saveTime(accessTime: check_out_time);
-            outTime = globalStorage.getTime();
-          }
-          if (state is ClockOutLoading) {
-            EasyLoading.show(status: state.message);
-          }
-          if (state is ClockOutError) {
-            EasyLoading.dismiss();
-            print("onTapCheckIn----->$onTapCheckIn");
-            EasyLoading.showError(state.error);
-         
-              onTapCheckIn = false;
-              showList = false;
-          
-          }
-         return 
-          Scaffold(
-                backgroundColor: AppColors.white,
-                appBar: AppBar(
-                  elevation: 0,
-                  backgroundColor: AppColors.appbarBgColor,
-                  title: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          MydashboardScreenConstants.TITLE_TEXT.tr(),
-                          style: AppTextStyle.font24.copyWith(
-                            color: AppColors.yellowSplashColor,
-                          ),
-                          //  TextStyle(
-                          //   fontSize: 24.sp,
-                          //   fontWeight: FontWeight.w400,
-                          //   color: AppColors.yellowSplashColor,
-                          // ),
-                        ),
-                        // ElevatedButton(onPressed: ()async{
-                        //   FirebaseMessaging messaging = FirebaseMessaging.instance;
-                        //   //  await Future.delayed(Duration(seconds: 1));
-                        //   String? aspn =     await messaging.getToken();
-                        //   print("aspn $aspn");
-                        //   FirebaseMessaging.instance
-                        //       .getToken(
-                        //       vapidKey:
-                        //       'BNKkaUWxyP_yC_lki1kYazgca0TNhuzt2drsOrL6WrgGbqnMnr8ZMLzg_rSPDm6HKphABS0KzjPfSqCXHXEd06Y')
-                        //       .then(setToken);
-                        //
-                        //
-                        //   //  onNewToken
-                        //  print("refresh token ${  await  messaging.onTokenRefresh.toString()}");
-                        // }, child:
-                        //  Text("sdfs")
-                        //
-                        // ),
-                        GestureDetector(
-                          onTap: () async {
-                            // EasyLoading.show(status: "Logging out...");
-                            // var storage = GetIt.instance<GlobalStorage>();
-                            // storage.removeToken();
-                            // storage.removeFCMToken();
-                            // storage.removeLocation();
-                            // storage.removeTime();
-                            // await Future.delayed(const Duration(seconds: 3));
-                            // EasyLoading.dismiss();
-                            // EasyLoading.showToast("Logout success...");
-                            // Navigator.pushAndRemoveUntil(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => LoginScreen()),
-                            //   (route) => false,
-                            // );
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const JanitorProfileScreen()),
-                            );
-                          },
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 2.w, vertical: 2.h),
-                                // child: Icon(
-                                //   Icons.logout,
-                                //   color: AppColors.black,
-                                //   size: 20.sp,
-                                // ),
-                                child: Icon(
-                                  Icons.account_circle_outlined,
-                                  color: AppColors.yellowSplashColor,
-                                  size: 25.sp,
-                                ),
-                              ),
-                              // Padding(
-                              //   padding: EdgeInsets.symmetric(
-                              //       horizontal: 2.w, vertical: 2.h),
-                              //   child: Text(
-                              //     MydashboardScreenConstants.LOG_OUT,
-                              //     style: TextStyle(
-                              //         fontSize: 8.sp,
-                              //         fontWeight: FontWeight.w600,
-                              //         color: Colors.black),
-                              //   ),
-                              // )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                body: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      if (location != null && location != "") ...[
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 15.w,
-                            vertical: 10.h,
-                          ),
-                          child: Row(
-                            children: [
-                              CustomImageProvider(
-                                image: AppImages.location_icon_img,
-                                height: 14.h,
-                                width: 11.w,
-                              ),
-                              Flexible(
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                  child: Text("$location " ?? '',
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      softWrap: false,
-                                      style: AppTextStyle.font12.copyWith(
-                                        color: AppColors.locationColor,
-                                      )
-                                    // TextStyle(
-                                    //   fontSize: 12.sp,
-                                    //   fontWeight: FontWeight.w400,
-                                    //   color: AppColors.locationColor,
-                                    // ),
+                                  SizedBox(
+                                    height: 10.h,
                                   ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20.w,
-                          vertical: 10.h,
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                color: AppColors.containerBorder,
-                                width: 1.w,
-                              ),
-                              borderRadius: BorderRadius.circular(10.r)),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 10.w,
-                              vertical: 10.h,
-                            ),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    onTapCheckIn
-                                        ? GestureDetector(
-                                      onTap: () async {},
-                                      child: Container(
-                                        height: 40.h,
-                                        width: 40.w,
-                                        decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: AppColors.greyCircleColor),
-                                        child: Center(
-                                          child: Text(
-                                              MydashboardScreenConstants.IN
-                                                  .tr(),
-                                              style: AppTextStyle.font12w7
-                                                  .copyWith(
-                                                color: AppColors.white,
-                                              )
-                                            //  TextStyle(
-                                            //     color: AppColors.white,
-                                            //     fontSize: 12.sp,
-                                            //     fontWeight: FontWeight.w700),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                        : GestureDetector(
-                                      onTap: () async {
-                                        await checkGps();
-                                       if (!haspermission) return;
+                                   TabBar(
+                                     padding: EdgeInsets.zero,
+                                   indicatorPadding: EdgeInsets.zero,
+                                   indicatorSize: TabBarIndicatorSize.label,
+                                   labelPadding: EdgeInsets.only(right: 0, left: 8 ),
 
-
-
-                                           var latitude =
-                                               double.tryParse(lat) ?? 0;
-                                           var longitude =
-                                               double.tryParse(long) ?? 0;
-                                           print("lattttt   " +
-                                               latitude.toString());
-                                           print("longggg   " +
-                                               longitude.toString());
-                                           dashboardBloc.add(MarkAttendance(
-                                               type: 'check_in',
-                                               locations: [
-                                                 latitude,
-                                                 longitude
-                                               ]));
-
-
-
-                                      },
-                                      child: Container(
-                                        height: 40.h,
-                                        width: 40.w,
-                                        decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color:
-                                            AppColors.acceptButtonColor),
-                                        child: Center(
-                                          child: Text(
-                                              MydashboardScreenConstants.IN,
-                                              style: AppTextStyle.font12w7
-                                                  .copyWith(
-                                                color: AppColors.white,
-                                              )
-                                            //  TextStyle(
-                                            //     color: AppColors.white,
-                                            //     fontSize: 12.sp,
-                                            //     fontWeight: FontWeight.w700),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 5.w,
-                                      ),
-                                      child: Container(
-                                          height: 1.0,
-                                          width: 150.w,
-                                          color: AppColors.greyLineColor),
-                                    ),
-                                    !onTapCheckIn
-                                        ? GestureDetector(
-                                      onTap: () {},
-                                      child: Container(
-                                        height: 40.h,
-                                        width: 40.w,
-                                        decoration: const BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: AppColors.greyCircleColor,
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                              MydashboardScreenConstants.OUT,
-                                              style: AppTextStyle.font12w7
-                                                  .copyWith(
-                                                color: AppColors.white,
-                                              )
-                                            //  TextStyle(
-                                            //     color: AppColors.white,
-                                            //     fontSize: 12.sp,
-                                            //     fontWeight: FontWeight.w700),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                        : GestureDetector(
-                                      onTap: () {
-                                        openDialog();
-                                      },
-                                      child: Container(
-                                        height: 40.h,
-                                        width: 40.w,
-                                        decoration: const BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: AppColors.checkOutColor,
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                              MydashboardScreenConstants.OUT
-                                                  .tr(),
-                                              style: AppTextStyle.font12w7
-                                                  .copyWith(
-                                                color: AppColors.white,
-                                              )
-                                            //  TextStyle(
-                                            //     color: AppColors.white,
-                                            //     fontSize: 12.sp,
-                                            //     fontWeight: FontWeight.w700),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 10.w,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Text(
-                                              MydashboardScreenConstants.CHECK_IN
-                                                  .tr(),
-                                              style:
-                                              AppTextStyle.font12.copyWith(
-                                                  color: Colors.black
-                                              )
-                                            // TextStyle(
-                                            //     fontSize: 12.sp,
-                                            //     fontWeight: FontWeight.w400,
-                                            //     color: Colors.black),
-                                          ),
-                                          onTapCheckIn
-                                              ? Text(
-                                              inTime,
-                                              style:
-                                              AppTextStyle.font8.copyWith(
-                                                  color: Colors.black
-                                              )
-                                            //  TextStyle(
-                                            //     fontSize: 8.sp,
-                                            //     fontWeight: FontWeight.w400,
-                                            //     color: AppColors.timeColor),
-                                          )
-                                              : Container(),
-                                        ],
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text(
-                                              MydashboardScreenConstants.CHECK_OUT
-                                                  .tr(),
-                                              style:
-                                              AppTextStyle.font12.copyWith(
-                                                  color: Colors.black
-                                              )
-                                            // TextStyle(
-                                            //     fontSize: 12.sp,
-                                            //     fontWeight: FontWeight.w400,
-                                            //     color: Colors.black),
-                                          ),
-                                          !onTapCheckIn
-                                              ? Text(
-                                              outTime,
-                                              style:
-                                              AppTextStyle.font8.copyWith(
-                                                  color: AppColors.timeColor
-                                              )
-                                            //  TextStyle(
-                                            //     fontSize: 8.sp,
-                                            //     fontWeight: FontWeight.w400,
-                                            //     color: AppColors.timeColor),
-                                          )
-                                              : Container(),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 25.h, vertical: 10.h),
-                                    child: SizedBox(
-                                      width: 210,
-                                      height: 60,
-                                      // height: 70,
-                                      child: DropdownButtonFormField(
-                                        decoration: const InputDecoration(
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(30.0),
-                                            ),
-                                          ),
-                                        ),
-                                        elevation: 0,
-                                        // Initial Value
-                                        value: dropdownvalue,
-                                        // Down Arrow Icon
-                                        icon: const Icon(Icons.keyboard_arrow_down),
-
-                                        // Array list of items
-                                        items: items.map((String items) {
-                                          return DropdownMenuItem(
-                                            value: items,
-                                            child: Text(items.tr()),
-                                          );
-                                        }).toList(),
-                                        dropdownColor: Colors.white,
-
-                                        onChanged: (String? newValue) {
-                                     setState(() {
-                                       dropdownvalue = newValue!;
-                                     });
-
-
-                                          print('new $newValue ');
-                                          if (newValue == "All") {
-                                            dashController.filterData.value = dashController.data.value;
-                                          } else {
-                                            dashController.filterData.value = dashController.data.value
-                                                .where((e) => e.status == newValue)
-                                                .toList();    
-                                          }
-
-                                          print(" filter data${ dashController.filterData.value}");
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      showList
-                          ?
-
-                   BlocConsumer(
-                    bloc: dashboardBloc,
-                    listener: (context, state) {
-                           print("innnner dashvaord $state ");
-                      if (state is GetDashboardDataSuccess) {
-                        EasyLoading.dismiss();
-
-                      }
-
-                      if (state is UpdateStatusSuccessful) {
-                        EasyLoading.dismiss();
-                        print("status updated");
-                      }
-                    },
-                     builder: (context, state) {
-
-                       if (state is DashboardLoading && _data.isEmpty) {
-                         EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
-                       }
-
-                       if (state is DashboardError) {
-                         return CustomErrorWidget(error: state.error);
-                       }
-
-                       if (state is UpdateStatusError) {
-                         return CustomErrorWidget(error: state.error);
-                       }
-                       if (state is UpdateStatusLoading) {
-                         EasyLoading.show(status: MydashboardScreenConstants.LOADING_TOAST.tr());
-                       }
-
-                       if (state is GetDashboardDataSuccess  ) {
-
-                         EasyLoading.dismiss();
-              
-
-                        // filter =  dashController.data.value!;
-
-                      //    if(dropdownvalue == "All"){
-                      //            print(" data from gextg ${dashController.data.value}");
-                      //                filter.value = dashController.data.value;
-                      //    //   filter = _data;
-                      //    }else {
-                      //      filter.value = 
-                      //      //  dashController.data.value.where()
-                      //     dashController.data.value.where( (e)=> e.status == dropdownvalue ).toList();
-                      //    }
-                      //    print(" Allll   ${filter.map( (e) =>  e.requestType)}");
-
-                       }
-
-                       
-
-                   return
-                      RefreshIndicator(
-                      onRefresh: (){
-                        return  Future.delayed( Duration( seconds: 1), () {
-                           dashboardBloc.add(const GetTaskTamplates());
-                          }, );
-
-
+                                   //  labelColor:AppColors.buttonBgColor ,
+                                     tabAlignment: TabAlignment.start,
+                                     isScrollable: true, labelStyle: AppTextStyle
+                                       .font12bold
+                                       .copyWith(
+                                   color: AppColors.black,
+                                   ),
+    // physics: NeverScrollableScrollPhysics(),
+                                     controller: _tabController,
+        tabs: [
+               Tab(icon:
+              TabWidget(title: MydashboardScreenConstants.PENDING_TASK.tr() )
+           ),
+        
+           Tab(icon: 
+             TabWidget(title: MydashboardScreenConstants.ACCEPT.tr()  )
+            ),
+      
+            Tab(icon:
+              TabWidget(title: MydashboardScreenConstants.Onging_TASK.tr()  )
+            ),
+          Tab(icon: 
+            TabWidget(title: MydashboardScreenConstants.Rquest_TASK.tr() )  
+             ),
+           Tab(icon:
+            TabWidget(title: MydashboardScreenConstants.COMPLETE_TASK.tr()  )
+            ),
+        ]
+      ),
+              Expanded(
+                // height: MediaQuery.of(context).size.height/2.2,
+                child: RefreshIndicator(
+                  onRefresh: () {
+                    return Future.delayed(
+                      Duration(seconds: 1),
+                          () {
+                        dashboardBloc.add(const GetTaskTamplates());
                       },
-                      child:
-                      
-                       Obx(
-                         () => 
-                          DashboardListWidget(
-                             current_lattitude: lat,
-                             current_longitude: long,
-                              filter: dashController.filterData.value,
-                              dashboardBloc: dashboardBloc,
-                             onTapItem: () {
-                               print("lattitudeee " + lat!);
-                               print("longitudeee " + long!);
-                             },
-                           ),
-                       ),
                     );
-                     }
-                 )
+                  },
+                  child: TabBarView(
+                    physics: const NeverScrollableScrollPhysics(),
 
-                          :
-                      Center(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 20.w,
-                            vertical: 10.h,
-                          ),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 100.h,
+                    controller: _tabController,
+
+                        children: [
+
+                                         DashboardListWidget(
+                                                                        current_lattitude: widget.lat,
+                                                                        current_longitude: widget.long,
+                                                                        filter: widget.filter.where( (e)=> e.status == "Pending" ).toList(),
+                                                                        dashboardBloc:  widget.dashboardBloc,
+                                                                        onTapItem: () {
+
+                                                                        },
+                                           dataforEmyptyList:  EmptyWidgetConstants.PENDING_TASK_ERROR.tr(),
+                                                                      ),
+
+
+
+                                          DashboardListWidget(
+                                            current_lattitude: widget.lat,
+                                            current_longitude: widget.long,
+                                            filter: widget.filter.where( (e)=> e.status == "Accepted" ).toList(),
+                                            dashboardBloc:  widget.dashboardBloc,
+                                            onTapItem: () {
+
+                                            },
+                                          dataforEmyptyList: EmptyWidgetConstants.ACCEPTED_TASK_ERROR.tr(),
+                                          ),
+
+
+                                          DashboardListWidget(
+                                            current_lattitude: widget.lat,
+                                            current_longitude: widget.long,
+                                            filter: widget.filter.where( (e)=> e.status == "Ongoing" ).toList(),
+                                            dashboardBloc:  widget.dashboardBloc,
+                                            onTapItem: () {
+
+                                            },
+                                          dataforEmyptyList: EmptyWidgetConstants.ONGOING_TASK_ERROR.tr(),
+                                          ),
+
+
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            children: [
+                                              DashboardListWidget(
+                                             current_lattitude: widget.lat,
+                                            current_longitude: widget.long,
+                                                filter: widget.filter.where( (e)=> e.status == "Request for closure" ).toList(),
+                                                dashboardBloc:  widget.dashboardBloc,
+                                                onTapItem: () {
+
+                                                },
+                                             dataforEmyptyList: EmptyWidgetConstants.RFC_TASK_ERROR.tr(),
+                                              ),
+
+                                            ],
+                                          ),
+
+
+                                          DashboardListWidget(
+                                            current_lattitude: widget.lat,
+                                            current_longitude: widget.long,
+                                            filter: widget.filter.where( (e)=> e.status == "Completed" ).toList(),
+                                            dashboardBloc: widget.dashboardBloc,
+                                            onTapItem: () {
+
+                                            },
+                                           dataforEmyptyList: EmptyWidgetConstants.ACCEPTED_TASK_ERROR.tr(),
+                                          ),
+
+                        ],
+                      ),
+                ),
+              ),
+
+
+
+                          ]
+
                               ),
-                              CustomImageProvider(
-                                image: AppImages.blank_list_img,
-                                height: 100.h,
-                                width: 100.w,
-                              ),
-                              Text(
-                                  MydashboardScreenConstants.BLANK_LIST_TEXT
-                                      .tr(),
-                                  maxLines: 2,
-                                  textAlign: TextAlign.center,
-                                  style:
-                                  AppTextStyle.font24.copyWith(
-                                    color: AppColors.black,
-                                  )
-                                //  TextStyle(
-                                //   color: AppColors.black,
-                                //   fontSize: 24.sp,
-                                //   fontWeight: FontWeight.w400,
-                                // ),
-                              )
-                            ],
-                          ),
-                        ),
-                      )
-                 
-                    ]
-                  ),
-                )
-            );
 
-         },
-
-       //  child:
-
-     );
-  //
-            // );
-  }
-
-  checkGps() async {
-    // EasyLoading.show(
-    //     status: MydashboardScreenConstants.LOCATION_FETCHING_TOAST.tr());
-    serviceStatus = await Geolocator.isLocationServiceEnabled();
-    if (serviceStatus) {
-      permission = await Geolocator.checkPermission();
-
-         print("permission $permission");
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          print('Location permissions are denied');
-         // permission = await Geolocator.requestPermission();
-        } else if (permission == LocationPermission.deniedForever ) {
-           print('print me');
-       //  print("Location permissions are permanently denied");
-          openAppSettings();
-        //  permission = await Geolocator.requestPermission();
-        }
-     
-         else
-         if(permission == LocationPermission.always  || permission == LocationPermission.whileInUse)
-         {
-          haspermission = true;
-        }
-      }
-      else if(permission == LocationPermission.deniedForever){
-              print('denieddsdddd forever');
-               openAppSettings();
-            //  permission = await Geolocator.requestPermission();
-         }
-       else
-        if(permission == LocationPermission.always  || permission == LocationPermission.whileInUse )
-        {
-          haspermission = true;
-      }
-
-       print("given the permsiion $haspermission");
-      print("permission222222 $permission");
-      if (haspermission ) {
-        await getLocation();
-      }
-
-      EasyLoading.dismiss();
-    } else {
-      EasyLoading.dismiss();
-      EasyLoading.showToast(MydashboardScreenConstants.GPS_DISABLED_TOAST.tr());
-    }
-
-     return haspermission;
-  }
-
-  getLocation() async {
-     print("get location");
-    position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    print(" posr${position.longitude}"); //Output: 80.24599079
-    print(position.latitude); //Output: 29.6593457
-
-    long = position.longitude.toString();
-    lat = position.latitude.toString();
-
-    LocationSettings locationSettings = const LocationSettings(
-      accuracy: LocationAccuracy.high, //accuracy of the location data
-      distanceFilter: 100, //minimum distance (measured in meters) a
+      // bottomNavigationBar: BottomNavigationBar(
+      //   items: const <BottomNavigationBarItem>[
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.home),
+      //       label: 'Home',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.business),
+      //       label: 'Business',
+      //     ),
+      //
+      //   ],
+      //   currentIndex: _selectedIndex,
+      //   selectedItemColor: Colors.amber[800],
+      //   onTap: _onItemTapped,
+      // ),
     );
 
-    StreamSubscription<Position> positionStream =
-        Geolocator.getPositionStream(locationSettings: locationSettings)
-            .listen((Position position) {
-      print(position.longitude); //Output: 80.24599079
-      print(position.latitude); //Output: 29.6593457
-
-      long = position.longitude.toString();
-      lat = position.latitude.toString();
-      globalStorage.saveLattitude(accessLatitude: lat);
-      globalStorage.saveLongitude(accessLongitude: long);
-
-      print(" lattttt---- > ${globalStorage.getLatitude()}");
-      print(" longitttt---- > ${globalStorage.getLongitude()}");
-
-      _getAddressFromLatLng(position);
-    });
-  }
-
-  Future<void> _getAddressFromLatLng(Position position) async {
-    await placemarkFromCoordinates(position.latitude, position.longitude)
-        .then((List<Placemark> placemarks) {
-      Placemark place = placemarks[0];
-      setState(() {
-        _currentAddress =
-            '${place.name},${place.street}, ${place.subLocality},${place.subAdministrativeArea}, ${place.administrativeArea},${place.postalCode}';
-        print("address - $_currentAddress");
-
-        globalStorage.saveLocation(accessLocation: _currentAddress ?? '');
-        location = globalStorage.getLocation();
-
-        print("locccccc --- > ${globalStorage.getLocation()}");
-      });
-    }).catchError((e) {
-      debugPrint(e);
-    });
-  }
-
-  openDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CustomDialogueWidget(
-          text: MydashboardScreenConstants.POPUP_TITLE.tr(),
-          onTapSubmit: () async {
-            Navigator.pop(context);
-            await checkGps();
-
-            if (!haspermission) return;
-
-            double latitude = double.tryParse(lat) ?? 0;
-            double longitude = double.tryParse(long) ?? 0;
-
-            dashboardBloc.add(MarkAttendance(
-                type: 'check_out', locations: [latitude, longitude]));
-          },
-          onTapCancel: () {
-            Navigator.pop(context);
-          },
-        );
-      },
-    );
   }
 }

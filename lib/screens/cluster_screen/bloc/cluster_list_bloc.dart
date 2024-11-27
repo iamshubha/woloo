@@ -6,6 +6,8 @@ import 'package:Woloo_Smart_hygiene/screens/cluster_screen/bloc/cluster_list_eve
 import 'package:Woloo_Smart_hygiene/screens/cluster_screen/bloc/cluster_list_state.dart';
 import 'package:Woloo_Smart_hygiene/screens/cluster_screen/data/network/cluster_list_service.dart';
 
+import '../../../core/network/error_handler.dart';
+
 class ClusterListBloc extends Bloc<ClusterListEvent, ClusterListState> {
   final ClusterListService clusterListService =
       ClusterListService(dio: GetIt.instance());
@@ -21,9 +23,10 @@ class ClusterListBloc extends Bloc<ClusterListEvent, ClusterListState> {
       emit(ClusterListLoading());
       var data = await clusterListService.getAllCluster();
 
+       print("sds $data");
       emit(ClusterListSuccess(data: data));
     } catch (e) {
-      emit(ClusterListError(error: e.toString()));
+      emit(ClusterListError(error: ErrorHandler.handle(e).failure   ));
     }
   }
 }

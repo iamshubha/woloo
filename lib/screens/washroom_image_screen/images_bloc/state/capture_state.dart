@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class CaptureState extends Equatable {
@@ -36,7 +37,7 @@ class AddImagesSuccessful extends CaptureState {
 
 
 class AddImagesError extends CaptureState {
-  final String error;
+  final Failure error;
   const AddImagesError({required this.error});
 
   @override

@@ -18,6 +18,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../common_widgets/leading_button.dart';
+
 class TaskList extends StatefulWidget {
   final int? templateId;
   final String allocationId;
@@ -84,36 +86,41 @@ class _TaskListState extends State<TaskList> {
             backgroundColor: AppColors.white,
 
             appBar: AppBar(
-              backgroundColor: AppColors.appbarBgColor,
-              leading: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                  size: 30,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              title: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 15.w,
-                  vertical: 10.h,
-                ),
-                child: Text(
-                  MyTaskListConstants.APP_BAR.tr(),
-                  textAlign: TextAlign.start,
-                  style:
-                  AppTextStyle.font24.copyWith(
-                    color: AppColors.yellowSplashColor,
-                  )
-                  //  TextStyle(
-                  //   color: AppColors.yellowSplashColor,
-                  //   fontSize: 24.sp,
-                  //   fontWeight: FontWeight.w400,
-                  // ),
-                ),
-              ),
+              backgroundColor: AppColors.white,
+              leadingWidth: 100.w,
+              leading:
+              LeadingButton(),
+
+              // IconButton(
+              //   icon:
+              //   const Icon(
+              //     Icons.arrow_back,
+              //     color: Colors.white,
+              //     size: 30,
+              //   ),
+              //   onPressed: () {
+              //     Navigator.pop(context);
+              //   },
+              // ),
+              // title: Padding(
+              //   padding: EdgeInsets.symmetric(
+              //     horizontal: 15.w,
+              //     vertical: 10.h,
+              //   ),
+              //   child: Text(
+              //     MyTaskListConstants.APP_BAR.tr(),
+              //     textAlign: TextAlign.start,
+              //     style:
+              //     AppTextStyle.font24.copyWith(
+              //       color: AppColors.yellowSplashColor,
+              //     )
+              //     //  TextStyle(
+              //     //   color: AppColors.yellowSplashColor,
+              //     //   fontSize: 24.sp,
+              //     //   fontWeight: FontWeight.w400,
+              //     // ),
+              //   ),
+              // ),
 
               elevation: 0,
             ),
@@ -129,13 +136,14 @@ class _TaskListState extends State<TaskList> {
                     vertical: 15.h,
                     horizontal: 20.w,
                   ),
-                  child: Text(
-                    MyTaskListConstants.LIST_OF_ACTIVITIES.tr(),
-                    textAlign: TextAlign.start,
-                    style:
-                      AppTextStyle.font24.copyWith(
-                        color: AppColors.titleColor,
-                  )
+                  child:
+                  Text(
+                      MyTaskListConstants.APP_BAR.tr(),
+                      textAlign: TextAlign.start,
+                      style:
+                      AppTextStyle.font24bold.copyWith(
+                     //   color: AppColors.yellowSplashColor,
+                      )
                     //  TextStyle(
                     //   color: AppColors.titleColor,
                     //   fontSize: 24.sp,
@@ -237,7 +245,7 @@ class _TaskListState extends State<TaskList> {
                         ),
                         child: WhiteButtonWidget(
                           text: MyTaskListConstants.SUBMIT_BTN.tr(),
-                          color: AppColors.disabledYellowButtonColor,
+                          color: AppColors.disabledCamButtonColor,
                           onTap: () {},
                         ),
                       ),
@@ -256,14 +264,16 @@ class _TaskListState extends State<TaskList> {
           if (state is SubmitTasksError) {
             print(state);
 
-            return CustomErrorWidget(error: state.error);
+            return CustomErrorWidget(error: state.error.message);
           }
            else
 
           if (state is SubmitTasksSuccess && (state.data.isEmpty)) {
             EasyLoading.dismiss();
 
-            return const EmptyListWidget();
+            return  EmptyListWidget(
+              filter:  EmptyWidgetConstants.DATA_NOT_FOUND.tr(),
+            );
           }
 
           return SizedBox();

@@ -82,7 +82,7 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
          else
           if (state is ClusterListError) {
             EasyLoading.dismiss();
-            return CustomErrorWidget(error: state.error);
+            return CustomErrorWidget(error: state.error.message);
           }
             else
 
@@ -133,39 +133,126 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
                           color: selectedCard == index
                               ? AppColors.containerColor
                               : AppColors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: AppColors.containerBorder,
-                            width: 1.w,
-                          ),
+                          borderRadius: BorderRadius.circular(25.r),
+                                 boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2), // Shadow color
+                        spreadRadius: 1, // How wide the shadow should spread
+                        blurRadius: 10, // The blur effect of the shadow
+                        offset:
+                            Offset(0, 0), // No offset for shadow on all sides
+                      ),
+                    ],
+                  
+                          // border: Border.all(
+                          //   color: AppColors.containerBorder,
+                          //   width: 1.w,
+                          // ),
                         ),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
                                       horizontal: 5.w,
                                       vertical: 2.h,
                                     ),
-                                    child: Text(
-                                      _search[index].clusterName ?? '',
-                                      style: 
-                                      AppTextStyle.font18.copyWith(
-                                        color: AppColors.clusterTitleColor,
-                                      )
-                                      // TextStyle(
-                                      //   color: AppColors.clusterTitleColor,
-                                      //   fontSize: 18.sp,
-                                      //   fontWeight: FontWeight.w400,
-                                      // ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  // crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                              _search[index].clusterName ?? '',
+                                              style:
+                                              AppTextStyle.font14bold.copyWith(
+                                                color: AppColors.clusterTitleColor,
+                                              )
+                                            // TextStyle(
+                                            //   color: AppColors.clusterTitleColor,
+                                            //   fontSize: 18.sp,
+                                            //   fontWeight: FontWeight.w400,
+                                            // ),
+                                          ),
+                                      
+                                          SizedBox(
+                                            height: 10.h,
+                                          ),
+                                      
+                                          Text(
+                                              _search[index].pincode  == null ? "-" :
+                                      
+                                              _search[index].pincode.toString() ?? '',
+                                              style:
+                                              AppTextStyle.font14.copyWith(
+                                                color: AppColors.clusterTitleColor,
+                                              )
+                                            // TextStyle(
+                                            //   color: AppColors.clusterTitleColor,
+                                            //   fontSize: 18.sp,
+                                            //   fontWeight: FontWeight.w400,
+                                            // ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+
+
+
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Row(
+                                        children: [
+                                          Center(
+                                            child: SizedBox(
+                                              height: 35.w,
+                                              child: const Center(
+                                                child: VerticalDivider(
+                                                  color: AppColors.black,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+
+                                              Container(
+                                                 padding
+                                           : EdgeInsets.symmetric( horizontal: 8, vertical: 5),
+                                                 decoration: BoxDecoration(
+                                                   color: Color(0xff76E16D),
+                                                   borderRadius: BorderRadius.circular(25.r),
+
+                                           ),
+
+                                                child:  Text("Total Tasks: ${_search[index].totalTask.toString()}"),
+                                              ),
+                                              SizedBox(
+                                                height: 10.h,
+                                              ),
+                                              Container(
+                                                padding
+                                                    : EdgeInsets.symmetric( horizontal: 8, vertical: 5),
+                                                decoration: BoxDecoration(
+                                                  color: Color(0xffE9AAAA),
+                                                  borderRadius: BorderRadius.circular(25.r),
+                                                ),
+
+                                                child:  Text("Pending Tasks:  ${_search[index].pendingTask.toString()}"),
+                                              )
+                                            ],
+                                           ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           ],
@@ -179,7 +266,9 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
            // const EmptyListWidget();
           }
           return
-           const EmptyListWidget();
+           const EmptyListWidget(
+             filter: "",
+           );
          
         }
         );

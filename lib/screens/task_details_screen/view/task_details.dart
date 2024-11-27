@@ -187,7 +187,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                          ),
                        ),
                        submittedTaskModel.taskStatus == null
-                           ? const EmptyListWidget()
+                           ?  EmptyListWidget(
+                            filter:  EmptyWidgetConstants.DATA_NOT_FOUND.tr(),
+                           )
                            : Expanded(
                          child: Padding(
                            padding: EdgeInsets.symmetric(
@@ -296,7 +298,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                  );
               }  else
             if (state is GetSubmittedTasksError) {
-              return CustomErrorWidget(error: state.error);
+              return CustomErrorWidget(error: state.error.message);
             }
              else
             if (state is UpdateStatusLoading) {
@@ -306,7 +308,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
             else
             if (state is UpdateStatusError) {
               EasyLoading.dismiss();
-              return CustomErrorWidget(error: state.error);
+              return CustomErrorWidget(error: state.error.message);
             }
             return  SizedBox();
 

@@ -14,6 +14,7 @@ class MultiselectDropDownDialog<T> extends StatefulWidget {
   final Function? validator;
   final Key? widgetKey;
   final List<T>? selected;
+  final String? hint;
 
   const MultiselectDropDownDialog({
     Key? key,
@@ -25,6 +26,7 @@ class MultiselectDropDownDialog<T> extends StatefulWidget {
     this.onChanged,
     this.validator,
     this.widgetKey,
+    this.hint
   }) : super(key: key);
 
   @override
@@ -62,6 +64,7 @@ class _DropDownDialogState<T> extends State<MultiselectDropDownDialog<T>> {
           }),
       dropdownDecoratorProps: DropDownDecoratorProps(
         dropdownSearchDecoration: InputDecoration(
+          hintText: widget.hint,
           floatingLabelBehavior: FloatingLabelBehavior.always,
           labelStyle: const TextStyle(
             color: AppColors.black,
@@ -69,24 +72,29 @@ class _DropDownDialogState<T> extends State<MultiselectDropDownDialog<T>> {
           errorStyle: const TextStyle(
             color: Colors.redAccent,
           ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(
-              5.r,
-            ),
-            borderSide: const BorderSide(
-              color: Colors.redAccent,
-            ),
-          ),
+          errorBorder:  InputBorder.none,
+          // OutlineInputBorder(
+          //   borderRadius: BorderRadius.circular(
+          //     5.r,
+          //   ),
+          //   borderSide: const BorderSide(
+          //     color: Colors.redAccent,
+          //   ),
+          // ),
           contentPadding: EdgeInsets.symmetric(
             horizontal: 10.w,
             vertical: 10.h,
           ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(
-              5.r,
-            ),
-            borderSide: const BorderSide(color: AppColors.black),
-          ),
+          border: InputBorder.none
+          // OutlineInputBorder(
+            
+          //   borderRadius: BorderRadius.circular(
+          //     5.r,
+          //   ),
+          //   borderSide: const BorderSide(
+          //     width: 0,
+          //     color: Colors.transparent),
+          // ),
         ),
         baseStyle: TextStyle(
           color: widget.enabled ?? true ? Colors.black : Colors.grey,

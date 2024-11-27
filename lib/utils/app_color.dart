@@ -14,7 +14,7 @@ class AppColors {
   static const Color filterContainer = Color(0xffF5F5F5);
   static const Color backgroundColor = Color(0xff00C3DE);
 
-  static const Color acceptButtonColor = Color(0xFF2DA323);
+  static const Color acceptButtonColor = Color(0xFF76E16D);
   static const Color rejectGreyTextColor = Color(0xff6A6161);
 
   static const Color homeCardColor = Color(0xFFFFF035);
@@ -24,7 +24,9 @@ class AppColors {
   static const Color disabledCheckBoxColor = Color(0xFF7AFFF035);
   static const Color rejectButtonColor = Color(0xFF6B766A);
 
-  static const Color buttonColor = Color(0xFFFFEF34);
+  static const Color buttonColor = Color(0xFF00C3DE);
+  static const Color buttonYellowColor = Color(0xFFFFEB00);// FFEB00
+  static const Color camColor = Color(0xFFFFF035);
   static const Color yellowSplashColor = Color(0xFFFFF035);
   static const Color alertShadowColor = Color(0xff26000000);
   static const Color greenCardColor = Color(0xFFDDFDEC);
@@ -34,7 +36,7 @@ class AppColors {
   static const Color greyBoxBorder = Color(0xFF7D7A7A);
   static const Color black = Color(0xFF000000);
   static const Color greyContainer = Color(0xFFE9E6E6);
-  static const Color greyColorFields = Color(0xFFA8A4A4);
+  static const Color greyColorFields = Color(0xffC4C6AA);
   static const Color greyText = Color(0xFF595959);
   static const Color greyShadowColor = Color(0xFF14000000);
   static const Color statusbarColor = Color(0xFF00803A);
@@ -97,6 +99,8 @@ class AppColors {
   static const Color otherLightRed = Color(0xffaf5252);
   static const Color otherGray1 = Color(0xffE3E0E0);
 
+
+   static const Color searchText = Color(0xffAEB6CF);
   static const Color offWhite = Color(0xffF4F4F6);
   static const Color black10 = Color(0xff464356);
   static const Color tomato = Color(0xffF1592A);
@@ -107,7 +111,7 @@ class AppColors {
   static const Color red300 = Color(0xffFF5355);
   static const Color sunGlow = Color(0xffF9B416);
   static const Color sunGlowYellow = Color(0xffF9B416);
-  static const Color dividerColor = Color(0xffE1D8D8);
+  static const Color dividerColor = Color(0xff979797);
   static const Color purpleColor = Color(0xff262262);
   static const Color successGreen = Color(0xff195E20);
   static const Color lightWhite = Color(0xffDBDBDB);
@@ -139,11 +143,11 @@ class AppColors {
   static const Color timeColor = Color(0xff646060);
   static const Color greyLineColor = Color(0xffB3B3B3);
   static const Color greyCircleColor = Color(0xffBFBFBF);
-  static const Color checkOutColor = Color(0xffF45757);
+  static const Color checkOutColor = Color(0xffFF0000);
   static const Color bottomNavigationColor = Color(0xffFFE22C);
   static const Color fabColor = Color(0xff3D443D);
   static const Color yellowTextColor = Color(0xffF4C10B);
-  static const Color disabledYellowButtonColor = Color(0xffFFF8A3);
+  static const Color disabledCamButtonColor = Color(0xff00C3DE);
   static const Color greyButtonColor = Color(0xffDADAD7);
   static const Color locationColor = Color(0xff5E5E5E);
   static const Color labelColor = Color(0xff202020);
@@ -165,18 +169,20 @@ class AppColors {
   static const Color boxShadow = Color(0xFFE9E3E3);
   static const Color appbarBgColor = Color(0xff414042);
 
-
-  static const Color pendingCardBgColor =  Color(0xffFFF9F9);
+  static const Color deviderColor = Color(0xff00C3DE);
+  static const Color buttonBgColor = Color(0xff00C3DE);
+  static const Color pendingCardBgColor =  Color(0xffFFFFFF);  // 00C3DE
   static const Color acceptedCardBgColor =  Color(0xffF9FFF9);
   static const Color accepCardBgColor =  Color(0xffF9FFF9);
-  static const Color onGoingCardBgColor =  Color(0xffFDFAF2);
-  static const Color rfcCardBgColor =  Color(0xffF7F7F7);
-  static const Color completedBgColor =    Color(0xff90d5ff);
+  static const Color onGoingCardBgColor =  Color(0xffFDFAF2);// ffFDFAF2
+  static const Color rfcCardBgColor =  Color(0xffFF7777);
+  static const Color completedBgColor =    Color(0xffFFFFFF);
 
-  static const Color pendingBorderBgColor =    Color(0xffB90404);
-  static const Color rfcBorderBgColor =    Color(0xffA4A4A6);
-  static const Color onGoingBorderBgColor =    Color(0xffF8CE3B);
+  static const Color pendingBorderBgColor =    Color(0xffFFFFFF);
+  static const Color rfcBorderBgColor =    Color(0xffFF7777);
+  static const Color onGoingBorderBgColor =    Color(0xff76E16D);
   static const Color completedBorderBgColor =    Color(0xff3597DB);
+  static const Color acceptedBgColor = Color(0xFF76E16D);
 
 
 }

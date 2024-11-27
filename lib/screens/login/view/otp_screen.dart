@@ -19,6 +19,7 @@ import '../../../core/bloc/core_bloc.dart';
 import '../../common_widgets/button_widget.dart';
 import '../../common_widgets/image_provider.dart';
 import '../../dashboard/view/dashboard_screen.dart';
+import '../../dashboard/view/regular_task.dart';
 import 'local_widgets/otp_widget.dart';
 
 class OTPScreen extends StatefulWidget {
@@ -149,6 +150,7 @@ class _OTPScreenState extends State<OTPScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -164,15 +166,17 @@ class _OTPScreenState extends State<OTPScreen> {
                 ),
                 Center(
                   child: Container(
-                    height: 120.h,
-                    width: 120.w,
-                    decoration: BoxDecoration(
-                        color: AppColors.greyContainer,
-                        borderRadius: BorderRadius.circular(100)),
+                    // height: 120.h,
+                    // width: 120.w,
+                    // decoration: BoxDecoration(
+                    //     color: AppColors.greyContainer,
+                    //     borderRadius: BorderRadius.circular(100)),
                     child: Center(
                       child: CustomImageProvider(
-                        image: AppImages.otp_img,
-                        height: 78.h,
+                        image: AppImages.woloologo,
+                        // height: 78.h,
+                        height: 135.h,
+                        width: 135.h,
                         alignment: Alignment.center,
                       ),
                     ),
@@ -181,18 +185,18 @@ class _OTPScreenState extends State<OTPScreen> {
                 SizedBox(
                   height: 10.h,
                 ),
-                Center(
-                  child: Text(MyLoginConstants.OTP_VERIFICATION.tr(),
-                      style: AppTextStyle.font24.copyWith(
-                        color: AppColors.black,
-                      )
-                      // TextStyle(
-                      //   fontWeight: FontWeight.w400,
-                      //   fontSize: 24.sp,
-                      //   color: AppColors.black,
-                      // ),
-                      ),
-                ),
+                // Center(
+                //   child: Text(MyLoginConstants.OTP_VERIFICATION.tr(),
+                //       style: AppTextStyle.font24.copyWith(
+                //         color: AppColors.black,
+                //       )
+                //       // TextStyle(
+                //       //   fontWeight: FontWeight.w400,
+                //       //   fontSize: 24.sp,
+                //       //   color: AppColors.black,
+                //       // ),
+                //       ),
+                // ),
                 SizedBox(
                   height: 10.h,
                 ),
@@ -201,15 +205,14 @@ class _OTPScreenState extends State<OTPScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 1.3,
+                      Expanded(
                         child: RichText(
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.visible,
                           text: TextSpan(
                             text: "${MyLoginConstants.ENTER_OTP.tr()}",
-                            style: AppTextStyle.font14.copyWith(
-                              color: AppColors.greyText,
+                            style: AppTextStyle.font14bold.copyWith(
+                              color: AppColors.boldTextColor,
                             ),
                             // TextStyle(
                             //   fontWeight: FontWeight.w500,
@@ -218,8 +221,8 @@ class _OTPScreenState extends State<OTPScreen> {
                             // ),
                             children: [
                               TextSpan(
-                                text: widget.phoneNumber,
-                                style: AppTextStyle.font14w5.copyWith(
+                                text: "91${widget.phoneNumber}",
+                                style: AppTextStyle.font14bold.copyWith(
                                   color: AppColors.boldTextColor,
                                 ),
                                 //  TextStyle(
@@ -259,7 +262,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   onComplete: (pin) => _pin = pin,
                 ),
                 SizedBox(
-                  height: 30.h,
+                  height: 10.h,
                 ),
                 BlocListener<LoginBloc, LoginState>(
                   bloc: widget.loginBloc,
@@ -303,7 +306,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
                     if (state is LoginError) {
                       EasyLoading.dismiss();
-                      EasyLoading.showError(state.error);
+                      EasyLoading.showError(state.error.message);
                     }
 
                     if (state is LoginGetDataSuccess) {
@@ -327,6 +330,7 @@ class _OTPScreenState extends State<OTPScreen> {
                       padding: EdgeInsets.symmetric(
                           vertical: 10.h, horizontal: 10.w),
                       child: ButtonWidget(
+                        color: AppColors.buttonYellowColor,
                         text: MyLoginConstants.VERIFY_OTP_BTN.tr(),
                       ),
                     ),

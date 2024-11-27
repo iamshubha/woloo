@@ -6,6 +6,8 @@ import 'package:Woloo_Smart_hygiene/screens/task_list/data/network/task_list_ser
 import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../core/network/error_handler.dart';
+
 class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
   final TaskListService taskListService =
       TaskListService(dio: GetIt.instance());
@@ -39,7 +41,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
 
       emit(SubmitTasksSuccess(data: data));
     } catch (e) {
-      emit(SubmitTasksError(error: e.toString()));
+      emit(SubmitTasksError(error: ErrorHandler.handle(e).failure    ));
     }
   }
 }

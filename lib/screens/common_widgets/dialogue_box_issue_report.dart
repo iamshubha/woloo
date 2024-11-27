@@ -28,10 +28,11 @@ class _DialogueWidgetState extends State<DialogueWidget> {
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(
-          10.r,
+          25.r,
         ),
       ),
       child: SizedBox(
+        width: 200.w,
         child: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: 5.w,
@@ -57,12 +58,12 @@ class _DialogueWidgetState extends State<DialogueWidget> {
                   )),
               Center(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w),
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Text(
                     MyReportIssueScreenConstants.POP_UP_TEXT.tr(),
                     textAlign: TextAlign.center,
                     style: 
-                    AppTextStyle.font20w5.copyWith(
+                    AppTextStyle.font14bold.copyWith(
                       color: AppColors.black,
                     )
                     // TextStyle(
@@ -83,7 +84,7 @@ class _DialogueWidgetState extends State<DialogueWidget> {
                   ),
                   child: PopUpButtonWidget(
                     text: DialogueReportIssueConstants.DONE.tr(),
-                    color: AppColors.buttonColor,
+                    color: AppColors.buttonYellowColor,
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pop(context);

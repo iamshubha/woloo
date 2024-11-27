@@ -68,7 +68,7 @@ class _IssueListWidgetState extends State<IssueListWidget> {
         else
 
         if (state is IssueListError) {
-          return CustomErrorWidget(error: state.error);
+          return CustomErrorWidget(error: state.error.message);
         } 
         else
 
@@ -76,7 +76,9 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                _data = state.data;
           EasyLoading.dismiss();
           return _data.isEmpty ?
-          EmptyListWidget()
+          EmptyListWidget(
+            filter: "",
+          )
               :
            RefreshIndicator(
           onRefresh: () {
@@ -116,55 +118,46 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                     ),
                     decoration: BoxDecoration(
                       color: selectedCard == index ? AppColors.containerColor : AppColors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: AppColors.containerBorder,
-                        width: 1.w,
+                      borderRadius: BorderRadius.circular(25.r),
+                        boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2), // Shadow color
+                        spreadRadius: 1, // How wide the shadow should spread
+                        blurRadius: 10, // The blur effect of the shadow
+                        offset:
+                            Offset(0, 0), // No offset for shadow on all sides
                       ),
+                    ],
+                      // border: Border.all(
+                      //   color: AppColors.containerBorder,
+                      //   width: 1.w,
+                      // ),
                     ),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 5.w),
-                          child: Container(
-                            height: 50.h,
-                            width: 50.w,
-                            decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.darkGreyColor),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
-                              child:
-                              CustomImageProvider( image:  AppImages.bed_img,) 
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 5.w,
-                              vertical: 5.h,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
+
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                      _data[index].clusterName ?? '',
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      softWrap: true,
+                                      style:
+                                       AppTextStyle.font18.copyWith(
+                                         color: AppColors.janitorNameColor,
+                                       )
+                                      //  TextStyle(
+                                      //   color: AppColors.janitorNameColor,
+                                      //   fontSize: 18.sp,
+                                      //   fontWeight: FontWeight.w400,
+                                      // ),
+                                    ),
+                                      SizedBox(height: 10.h),
                                 Text(
-                                  _data[index].clusterName ?? '',
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  softWrap: true,
-                                  style:
-                                   AppTextStyle.font18.copyWith(
-                                     color: AppColors.janitorNameColor,
-                                   )
-                                  //  TextStyle(
-                                  //   color: AppColors.janitorNameColor,
-                                  //   fontSize: 18.sp,
-                                  //   fontWeight: FontWeight.w400,
-                                  // ),
-                                ),
-                                SizedBox(height: 10.h),
-                                Text(
-                                  "${MyIssuesListScreenConstants.FACILITY_NAME.tr()} : ${_data[index].facilityName}",
+                                  "${_data[index].facilityName}",
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 2,
                                   style:
@@ -177,9 +170,95 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                                   //   fontWeight: FontWeight.w400,
                                   // ),
                                 ),
-                                SizedBox(height: 5.h),
+
+                                SizedBox(
+                                  height: 10.h,
+                                ),
+
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 15 , vertical: 5 ),
+                                    decoration: BoxDecoration(                     
+                                      color: AppColors.white,
+                                      borderRadius: BorderRadius.circular(25.r),
+                                         boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2), // Shadow color
+                        spreadRadius: 1, // How wide the shadow should spread
+                        blurRadius: 10, // The blur effect of the shadow
+                        offset:
+                            Offset(0, 0), // No offset for shadow on all sides
+                      ),
+                    ],
+                                    ),
+                                    child: Text(
+                                    (_data[index].status ?? '').tr(),
+                                    style:
+                                     AppTextStyle.font15.copyWith(
+                                       color:  pending ? AppColors.redText : AppColors.greenText,
+                                     )
+                                    //  TextStyle(
+                                    //   color: pending ? AppColors.redText : AppColors.greenText,
+                                    //   fontSize: 16.sp,
+                                    //   fontWeight: FontWeight.w500,
+                                    // ),
+                                                                    ),
+                                  ),
+                                   SizedBox(
+                                  height: 10.h,
+                                ),
+                            ],
+                          ),
+                        // Padding(
+                        //   padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 5.w),
+                        //   child: Container(
+                        //     height: 50.h,
+                        //     width: 50.w,
+                        //     decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.darkGreyColor),
+                        //     child: Padding(
+                        //       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
+                        //       child:
+                        //       CustomImageProvider( image:  AppImages.bed_img,) 
+                        //     ),
+                        //   ),
+                        // ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 5.w,
+                            vertical: 5.h,
+                          ),
+                          child: Container(
+                            width: 130.w,
+                            height: 90.h,
+                            
+                            // padding: EdgeInsets.symmetric( vertical: 10 ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25.r),
+                                color: AppColors.white,
+
+                                   boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black.withOpacity(0.2), // Shadow color
+                                                spreadRadius: 1, // How wide the shadow should spread
+                                                blurRadius: 10, // The blur effect of the shadow
+                                                offset:
+                          Offset(0, 0), // No offset for shadow on all sides
+                                              ),
+                                            ],
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                 
+                              
+                                   CustomImageProvider(
+                                    image: "assets/images/prof.png",
+                                    width: 60,
+                                    height: 60,
+                                    ),
+                                SizedBox(height: 5.h), 
                                 Text(
-                                  "${MyIssuesListScreenConstants.JANITOR_NAME.tr()} : ${_data[index].janitorName}",
+                                " ${_data[index].janitorName}",
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 2,
                                   style:
@@ -192,34 +271,9 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                                   //   fontWeight: FontWeight.w400,
                                   // ),
                                 ),
-                                SizedBox(height: 5.h),
-                                Text(
-                                  "${MyIssuesListScreenConstants.DESCRIPTION.tr()} : ${_data[index].description ?? "-"}",
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                  style: 
-                                   AppTextStyle.font12.copyWith(
-                                     color: AppColors.clusterTitleColor,
-                                   )
-                                  // TextStyle(
-                                  //   color: AppColors.clusterTitleColor,
-                                  //   fontSize: 12.sp,
-                                  //   fontWeight: FontWeight.w400,
-                                  // ),
-                                ),
-                                SizedBox(height: 10.h),
-                                Text(
-                                  (_data[index].status ?? '').tr(),
-                                  style:
-                                   AppTextStyle.font16w5.copyWith(
-                                     color:  pending ? AppColors.redText : AppColors.greenText,
-                                   )
-                                  //  TextStyle(
-                                  //   color: pending ? AppColors.redText : AppColors.greenText,
-                                  //   fontSize: 16.sp,
-                                  //   fontWeight: FontWeight.w500,
-                                  // ),
-                                ),
+                            
+                            
+                              
                               ],
                             ),
                           ),

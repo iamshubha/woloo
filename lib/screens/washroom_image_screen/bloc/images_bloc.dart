@@ -7,6 +7,8 @@ import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/data/network/s
 import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../core/network/error_handler.dart';
+
 class ImagesBloc extends Bloc<ImagesEvent, ImagesState> {
   final SubmitImagesService submitImagesService =
       SubmitImagesService(dio: GetIt.instance());
@@ -41,7 +43,7 @@ class ImagesBloc extends Bloc<ImagesEvent, ImagesState> {
       emit(UploadImagesSuccessful());
     } catch (e) {
 
-      emit(UploadImagesError(error: e.toString()));
+      emit(UploadImagesError(error: ErrorHandler.handle(e).failure  ));
     }
   }
 }

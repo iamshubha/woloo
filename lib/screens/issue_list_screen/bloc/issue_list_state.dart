@@ -1,3 +1,4 @@
+import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
 import 'package:equatable/equatable.dart';
 import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/data/model/Issue_list_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model.dart';
@@ -26,7 +27,7 @@ class IssueListSuccess extends IssueListState {
 }
 
 class IssueListError extends IssueListState {
-  final String error;
+  final Failure error;
   const IssueListError({required this.error});
 
   @override

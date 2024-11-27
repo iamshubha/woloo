@@ -13,6 +13,7 @@ class CustomInputField extends StatefulWidget {
   final String? initialValue;
   final TextEditingController? controller;
   final List<TextInputFormatter>? inputFormatter;
+  final String? hint;
 
   const CustomInputField({
     Key? key,
@@ -24,6 +25,7 @@ class CustomInputField extends StatefulWidget {
     this.controller,
     this.validator,
     this.onSaved,
+    required this.hint,
     this.inputFormatter,
   }) : super(key: key);
 
@@ -62,29 +64,29 @@ class _CustomInputFieldState extends State<CustomInputField> {
           vertical: 10.h,
           horizontal: 10.w,
         ),
+        hintText: widget.hint,
         labelStyle: const TextStyle(
           color: AppColors.black,
         ),
         errorStyle: const TextStyle(
           color: Colors.redAccent,
         ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(5.r),
-          borderSide: const BorderSide(
-            color: Colors.redAccent,
-          ),
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(5.r),
-          borderSide: const BorderSide(
-            color: AppColors.greyIcon,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: AppColors.greyText,
-          ),
-        ),
+        errorBorder: InputBorder.none,
+        // OutlineInputBorder(
+        //   borderRadius: BorderRadius.circular(5.r),
+        //   borderSide: const BorderSide(
+        //     color: Colors.redAccent,
+        //   ),
+        // ),
+        border: InputBorder.none,
+        // OutlineInputBorder(
+        //   borderRadius: BorderRadius.circular(5.r),
+        //   borderSide: const BorderSide(
+        //     color: AppColors.greyIcon,
+        //   ),
+        // ),
+        focusedBorder:InputBorder.none,
+       
         suffixIcon: widget.suffixIcon,
       ),
       validator: (value) =>

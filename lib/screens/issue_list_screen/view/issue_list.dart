@@ -47,7 +47,7 @@ class _IssuesListState extends State<IssuesList> {
       backgroundColor: AppColors.white,
       appBar: AppBar(
         elevation: 0,
-       backgroundColor:  AppColors.appbarBgColor,
+       backgroundColor:  AppColors.white,
         title: Padding(
           padding: EdgeInsets.symmetric(
             vertical: 10.h,
@@ -59,8 +59,8 @@ class _IssuesListState extends State<IssuesList> {
               Text(
                 MyIssuesListScreenConstants.TITLE_TEXT.tr(),
                 style:
-                AppTextStyle.font24.copyWith(
-                  color: AppColors.yellowSplashColor,
+                AppTextStyle.font24bold.copyWith(
+                  color: AppColors.black,
                 )
                 //  TextStyle(
                 //   fontSize: 24.sp,
@@ -82,7 +82,7 @@ class _IssuesListState extends State<IssuesList> {
                   height: 32.h,
                   padding: EdgeInsets.symmetric(horizontal: 15.w),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.r),
+                    borderRadius: BorderRadius.circular(25.r),
                     color: AppColors.buttonColor,
                   ),
                   child: Center(
@@ -90,7 +90,7 @@ class _IssuesListState extends State<IssuesList> {
                       MyIssuesListScreenConstants.REPORT_ISSUE_BUTTON.tr(),
                       textAlign: TextAlign.center,
                       style:
-                      AppTextStyle.font16w7.copyWith(
+                      AppTextStyle.font12bold.copyWith(
                          color: AppColors.black,
                       )
                       //  TextStyle(

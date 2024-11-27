@@ -41,9 +41,13 @@ CoreBloc() : super(CoreInitial()) {
   //    var token = globalStorage.getToken();
        //  print( " from strage $token");
    //   if (token.isNotEmpty) {
-        await coreService.updateFCMToken(token: event.token.toString());
+       var response =  await coreService.updateFCMToken(token: event.token.toString());
    //   }
+           print("prooooooooo${response.first.profileImage}");
+        globalStorage.saveProfile(profileName: response.first.name!);
 
+        globalStorage.saveProfileImg(profileimg: response.first.profileImage!);
+        globalStorage.saveShift(profileimg: response.first.startTime!);
 
 
       emit(UpdateTokenSuccess());

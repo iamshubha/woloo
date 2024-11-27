@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:get_it/get_it.dart';
 import 'package:pinput/pinput.dart';
 
@@ -31,8 +32,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginScreen> {
-  final _loginFormKey = GlobalKey<FormState>();
-  final TextEditingController _controller = TextEditingController();
+  final loginFormKey = GlobalKey<FormState>();
+  final TextEditingController controller = TextEditingController();
   bool _isHintShown = false;
 
   LoginBloc loginBloc = LoginBloc();
@@ -48,7 +49,7 @@ class LoginPageState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    _settingModalBottomSheet(context);
+    settingModalBottomSheet(context);
   }
 
   @override
@@ -59,47 +60,60 @@ class LoginPageState extends State<LoginScreen> {
         if (Platform.isIOS) hideKeyboard(context);
       },
       child: Scaffold(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.backgroundColor,
         body: SingleChildScrollView(
-                      child: Column(
-              children: [
-                SizedBox(
-                  height: 100.h,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 140.h,
+              ),
+              Center(
+                child: CustomImageProvider(
+                  image: AppImages.woloologo,
+                  height: 135.h,
+                  width: 135.h,
+                  alignment: Alignment.center,
                 ),
-                Center(
-                  child: CustomImageProvider(
-                    image: AppImages.logo,
-                    height: 150.h,
-                    alignment: Alignment.center,
-                  ),
+              ),
+              Center(
+                child: Text(
+                  textAlign: TextAlign.center,
+                  MyLoginConstants.WELCOME_TEXT.tr(),
+                  style:
+                  AppTextStyle.font24bold.copyWith(
+                  color: AppColors.black,
+                  )
+                  //  TextStyle(
+                  //   fontWeight: FontWeight.w400,
+                  //   fontSize: 24.sp,
+                  //   color: AppColors.black,
+                  // ),
                 ),
-                Center(
-                  child: Text(
-                    textAlign: TextAlign.center,
-                    MyLoginConstants.WELCOME_TEXT.tr(),
-                    style:
-                    AppTextStyle.font24.copyWith(
-                    color: AppColors.black,
-                    )
-                    //  TextStyle(
-                    //   fontWeight: FontWeight.w400,
-                    //   fontSize: 24.sp,
-                    //   color: AppColors.black,
-                    // ),
-                  ),
-                ),
-                SizedBox(
-                  height: 20.h,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
-                  child: Form(
-                    key: _loginFormKey,
+              ),
+              SizedBox(
+                height: 20.h,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
+                child: Form(
+                  key: loginFormKey,
+                  child: Container(
+              decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2), // Shadow color
+                          spreadRadius: 1, // How wide the shadow should spread
+                          blurRadius: 10, // The blur effect of the shadow
+                          offset: const Offset(0,
+                              5), // Shadow offset, with y-offset for bottom shadow
+                        ),
+                      ],
+                    ),
                     child: TextFormField(
                       keyboardType: TextInputType.number,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       textAlign: TextAlign.center,
-                      controller: _controller,
+                      controller: controller,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return MyLoginConstants.MOBILE_VALIDATION.tr();
@@ -108,103 +122,107 @@ class LoginPageState extends State<LoginScreen> {
                       },
                       maxLength: 10,
                       decoration: InputDecoration(
-                        isDense: true,
-                        counterText: "",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.r),
-                          borderSide:
-                              const BorderSide(color: AppColors.greyBoxBorder),
-                        ),
-                        hintText: MyLoginConstants.MOBILE_NO.tr(),
-                        hintStyle:
-                           AppTextStyle.font16.copyWith(
+                          isDense: true,
+                          counterText: "",
+                          fillColor: AppColors.white,
+                          filled: true,
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25.r),
+                              borderSide: BorderSide.none
+                              //  const BorderSide(color: AppColors.greyBoxBorder),
+                              ),
+                          hintText: MyLoginConstants.MOBILE_NO.tr(),        
+                          hintStyle: AppTextStyle.font16.copyWith(
                             color: AppColors.greyColorFields,
-                             )
-                        //  TextStyle(
-                        //   color: AppColors.greyColorFields,
-                        //   fontSize: 16.sp,
-                        //   fontWeight: FontWeight.w400,
-                        // ),
-                      ),
+                             
+                          )
+                          //  TextStyle(
+                          //   color: AppColors.greyColorFields,
+                          //   fontSize: 16.sp,
+                          //   fontWeight: FontWeight.w400,
+                          // ),
+                          ),
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 30.h,
-                ),
-                BlocConsumer<LoginBloc, LoginState>(
-                  bloc: loginBloc,
-                  listener: (context, state) {
-                    if (state is LoginLoading) {
-                      EasyLoading.show(status: state.message);
-                    }
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              BlocConsumer<LoginBloc, LoginState>(
+                bloc: loginBloc,
+                listener: (context, state) {
+                  if (state is LoginLoading) {
+                    EasyLoading.show(status: state.message);
+                  }
 
-                    if (state is LoginOTPSent) {
-                      EasyLoading.dismiss();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => OTPScreen(
-                            phoneNumber: _controller.text,
-                            loginBloc: loginBloc,
-                            type: widget.type,
-                          ),
-                        ),
-                      );
-                    }
-
-                    if (state is LoginError) {
-                      EasyLoading.dismiss();
-                      EasyLoading.showError(state.error);
-                    }
-
-                    if (state is LoginGetDataSuccess) {
-                      EasyLoading.dismiss();
-                      setState(() {
-                        /// Show hint only one time
-                        /// * Works only on android platform
-                        if (!_isHintShown && Platform.isAndroid) {
-                          requestHint();
-                        }
-                      });
-                    }
-                  },
-                  builder: (context, state) {
-                    return GestureDetector(
-                      onTap: () async {
-                        bool isValid =
-                            _loginFormKey.currentState?.validate() ?? false;
-                        if (!isValid) return;
-
-                        globalStorage.saveMobileNumber(
-                            accessMobileNumber: _controller.text ?? '');
-                        if (_loginFormKey.currentState?.validate() ?? false) {
-                          loginBloc.add(SendOTP(mobileNumber: _controller.text));
-                        }
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 10.h,
-                          horizontal: 30.w,
-                        ),
-                        child: ButtonWidget(
-                          text: MyLoginConstants.SEND_OTP_BTN.tr(),
+                  if (state is LoginOTPSent) {
+                    EasyLoading.dismiss();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => OTPScreen(
+                          phoneNumber: controller.text,
+                          loginBloc: loginBloc,
+                          type: widget.type,
                         ),
                       ),
                     );
-                  },
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-              ],
+                  }
+
+                  if (state is LoginError) {
+                    EasyLoading.dismiss();
+                    EasyLoading.showError(state.error.message);
+                  }
+
+                  if (state is LoginGetDataSuccess) {
+                    EasyLoading.dismiss();
+                    setState(() {
+                      /// Show hint only one time
+                      /// * Works only on android platform
+                      if (!_isHintShown && Platform.isAndroid) {
+                        requestHint();
+                      }
+                    });
+                  }
+                },
+                builder: (context, state) {
+                  return GestureDetector(
+                    onTap: () async {
+                      bool isValid =
+                          loginFormKey.currentState?.validate() ?? false;
+                      if (!isValid) return;
+
+                      globalStorage.saveMobileNumber(
+                          accessMobileNumber: controller.text ?? '');
+                      if (loginFormKey.currentState?.validate() ?? false) {
+                        loginBloc.add(SendOTP(mobileNumber: controller.text));
+                      }
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 10.h,
+                        horizontal: 20.w,
+                      ),
+                      child: ButtonWidget(
+                        color:AppColors.buttonYellowColor,
+                        text: MyLoginConstants.LOGIN_WITH_OTP.tr(),
+                      ),
+                    ),
+                  );
+                },
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  void _settingModalBottomSheet(BuildContext context) async {
+  void settingModalBottomSheet(BuildContext context) async {
     await Future.delayed(const Duration(milliseconds: 500));
     if (!context.mounted) return;
     await showModalBottomSheet(
@@ -229,9 +247,7 @@ class LoginPageState extends State<LoginScreen> {
               SizedBox(height: 10.h),
               Text(
                 "Select Language",
-                style:
-                
-                TextStyle(fontSize: 18.sp),
+                style: TextStyle(fontSize: 18.sp),
               ),
               SizedBox(height: 10.h),
               Expanded(
@@ -243,6 +259,8 @@ class LoginPageState extends State<LoginScreen> {
                       titleAlignment: ListTileTitleAlignment.center,
                       onTap: () {
                         _selectedLanguage = index;
+                        context.setLocale(_locales[_selectedLanguage ?? 0]);
+                        Get.updateLocale(_locales[_selectedLanguage ?? 0]);
                         Navigator.pop(context);
                       },
                     );
@@ -274,9 +292,9 @@ class LoginPageState extends State<LoginScreen> {
       showCancelButton: true,
     );
     _isHintShown = true;
-    _controller.text = (res?.id ?? '');
-    _controller.selection = TextSelection.fromPosition(
-      TextPosition(offset: _controller.text.length),
+    controller.text = (res?.id ?? '');
+    controller.selection = TextSelection.fromPosition(
+      TextPosition(offset: controller.text.length),
     );
   }
 }

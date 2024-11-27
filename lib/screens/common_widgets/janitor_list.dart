@@ -153,14 +153,14 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                 status: MydashboardScreenConstants.LOADING_TOAST.tr());
             return SizedBox();
           } else if (state is JanitorListError) {
-            return CustomErrorWidget(error: state.error);
+            return CustomErrorWidget(error: state.error.message);
           } else if (state is ReassignTaskLoading) {
             EasyLoading.show(
                 status: MydashboardScreenConstants.LOADING_TOAST.tr());
             return SizedBox();
           } else if (state is ReassignTaskError) {
             EasyLoading.dismiss();
-            return CustomErrorWidget(error: state.error);
+            return CustomErrorWidget(error: state.error.message);
           } else if (state is SupervisorDashboardLoading &&
               _supervisorDashboardData.isEmpty) {
             EasyLoading.show(
@@ -170,24 +170,27 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
             EasyLoading.dismiss();
             print("SupervisorDashboardError--->$_supervisorDashboardData");
 
-            return CustomErrorWidget(error: state.error);
+            return CustomErrorWidget(error: state.error.message);
           } else if (state is GetSupervisorDashboardDataSuccess &&
               _supervisorDashboardData.isEmpty) {
             EasyLoading.dismiss();
             print(
                 "GetSupervisorDashboardDataSuccess--->$_supervisorDashboardData");
 
-            return const EmptyListWidget();
+            return  EmptyListWidget(
+              filter:  EmptyWidgetConstants.DATA_NOT_FOUND.tr(),
+            );
           } else
             if (state is JanitorListSuccess) {
             EasyLoading.dismiss();
      
 
                    if(state.fromReassign){
-                     // if(_search.isEmpty){
+
+                     if(_search.isEmpty){
                        _data = state.data;
                        _search = _data;
-                     // }
+                     }
                        _janitorListBloc.add(
                            const ReassignTask(
                                id:[],
@@ -224,18 +227,21 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
               _search = _data;
             }
             if (widget.isFromFacility) {
+              print("object reassgin   $_search");
               _data.removeWhere((element) {
                 return element.id == widget.janitorId;
               });
-              if( _search.isEmpty ){
-                _search = _data;
-              }
+              // if( _search.isEmpty ){
+              //   _search = _data;
+              // }
             }
 
              print("ssssssss $_search ");
             return 
                 _search.isEmpty ? 
-            const EmptyListWidget() :     
+             EmptyListWidget(
+              filter:  EmptyWidgetConstants.DATA_NOT_FOUND.tr(),
+            ) :     
             RefreshIndicator(
               onRefresh: () {
                 return Future.delayed(
@@ -257,7 +263,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                     int index,
                   ) {
                     return Padding(
-                      padding: EdgeInsets.symmetric(vertical: 7.h),
+                      padding: EdgeInsets.symmetric(vertical: 7.h, ),
                       child: GestureDetector(
                         onTap: () {
                           widget.onTapItem(_search[index]);
@@ -266,22 +272,31 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                      
                         },
                         child: Container(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 5.h,
-                            horizontal: 10.w,
-                          ),
+                          padding: EdgeInsets.only( top: 5.h , bottom: 15.h, left: 13.w, right: 10.w  ),
+                          // padding: EdgeInsets.symmetric(
+                          //   vertical: 5.h,
+                          //   horizontal: 10.w,
+                          // ),
                           margin: EdgeInsets.symmetric(
                             horizontal: 20.w,
                           ),
-                          decoration: BoxDecoration(
-                            color: selectedCard == index
-                                ? AppColors.containerColor
-                                : AppColors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: AppColors.containerBorder,
-                              width: 1.w,
-                            ),
+                          decoration: BoxDecoration(    
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(25.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2), // Shadow color
+                        spreadRadius: 1, // How wide the shadow should spread
+                        blurRadius: 10, // The blur effect of the shadow
+                        offset:
+                            Offset(0, 0), // No offset for shadow on all sides
+                      ),
+                    ],
+                  
+                            // border: Border.all(
+                            //   color: AppColors.containerBorder,
+                            //   width: 1.w,
+                            // ),
                           ),
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 5.h),
@@ -289,28 +304,15 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 10.h, horizontal: 5.w),
-                                  child: Container(
-                                    height: 40.h,
-                                    width: 40.w,
-                                    decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: AppColors.darkGreyColor),
-                                    child: const Icon(
-                                      Icons.person_2_outlined,
-                                      color: AppColors.buttonColor,
-                                    ),
-                                  ),
-                                ),
+                           
                                 Column(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     SizedBox(
-                                      width: ScreenUtil().screenWidth - 120.w,
+                                      width:  MediaQuery.of(context).size.width/1.5,
+                                      //ScreenUtil().screenWidth - 137.w,
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -429,7 +431,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                                           janitor_id:
                                                               _data[index].id ??
                                                                   '',
-                                                           fromReassign: true       
+                                                           fromReassign: true
                                                                   ));
                                                 },
                                                 child: Container(
@@ -474,24 +476,13 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                         ],
                                       ),
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 5.w,
-                                        vertical: 2.h,
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width/1.6,
+                                      child: const Divider(
+                                        color: Colors.black,
                                       ),
-                                      child: Text(
-                                          "Mob.no. ${_search[index].mobile ?? ''}",
-                                          style: AppTextStyle.font12.copyWith(
-                                            color: AppColors.clusterTitleColor,
-                                          )
-                                          // TextStyle(
-                                          //   color: AppColors.clusterTitleColor,
-                                          //   fontSize: 12.sp,
-                                          //   fontWeight: FontWeight.w400,
-                                          // ),
-                                          ),
                                     ),
-                                    Padding(
+                                        Padding(
                                       padding: EdgeInsets.symmetric(
                                         horizontal: 5.w,
                                         vertical: 2.h,
@@ -515,6 +506,24 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                         vertical: 2.h,
                                       ),
                                       child: Text(
+                                          "Mob.no. ${_search[index].mobile ?? ''}",
+                                          style: AppTextStyle.font12.copyWith(
+                                            color: AppColors.clusterTitleColor,
+                                          )
+                                          // TextStyle(
+                                          //   color: AppColors.clusterTitleColor,
+                                          //   fontSize: 12.sp,
+                                          //   fontWeight: FontWeight.w400,
+                                          // ),
+                                          ),
+                                    ),
+                                
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 5.w,
+                                        vertical: 2.h,
+                                      ),
+                                      child: Text(
                                           "Pin code : ${_search[index].pincode ?? ''}",
                                           style: AppTextStyle.font12.copyWith(
                                             color: AppColors.clusterTitleColor,
@@ -527,48 +536,37 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                           ),
                                     ),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                    //  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                          // MainAxisAlignment.spaceAround,
+                                      // crossAxisAlignment:
+                                      //     CrossAxisAlignment.spaceBetween,
                                       children: [
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 5.w,
-                                            vertical: 2.h,
-                                          ),
-                                          child: Text(
-                                              "Total task :${_search[index].totalTaskCount ?? ''}",
-                                              style: AppTextStyle.font12w5
-                                                  .copyWith(
-                                                color: AppColors.greenTextColor,
-                                              )
+                                        
+                                            Container(
+                                           padding
+                                     : EdgeInsets.symmetric(  horizontal: 13,  vertical: 5),
+                                           decoration: BoxDecoration(
+                                             color: AppColors.backgroundColor,
+                                             borderRadius: BorderRadius.circular(25.r),
 
-                                              // TextStyle(
-                                              //   color: AppColors.greenTextColor,
-                                              //   fontSize: 12.sp,
-                                              //   fontWeight: FontWeight.w500,
-                                              // ),
-                                              ),
+                                     ),
+
+                                          child:  Text(" Gender : F"),
                                         ),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 5.w,
-                                            vertical: 2.h,
-                                          ),
-                                          child: Text(
-                                              "Pending task : ${_search[index].pendingTaskCount ?? ''}",
-                                              style: AppTextStyle.font12w5
-                                                  .copyWith(
-                                                color: AppColors.redTextColor,
-                                              )
-                                              //  TextStyle(
-                                              //   color: AppColors.redTextColor,
-                                              //   fontSize: 12.sp,
-                                              //   fontWeight: FontWeight.w500,
-                                              // ),
-                                              ),
-                                        ),
+                                           SizedBox(
+                                            width: 8,
+                                           ),
+                                               Container(
+                                           padding
+                                     : EdgeInsets.symmetric( horizontal: 13, vertical: 5),
+                                           decoration: BoxDecoration(
+                                             color:AppColors.backgroundColor,
+                                             borderRadius: BorderRadius.circular(25.r),
+
+                                     ),
+
+                                          child:  Text(" Cluter No. : ${_search[index].clusterId }"),
+                                        ),                                   
                                       ],
                                     ),
                                     if (widget.isFromDashboardAssignment &&
@@ -618,14 +616,35 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                           ),
                                         ),
                                       ),
+                                     
                                     ]
                                   ],
+
                                 ),
+                                     Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 10.h, horizontal: 5.w),
+                                  child: Container(
+                                    height: 40.h,
+                                    width: 40.w,
+                                    decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppColors.darkGreyColor),
+                                    child: const Icon(
+                                      Icons.person_2_outlined,
+                                      color: AppColors.buttonColor,
+                                    ),
+                                  ),
+                                ),
+                                    
                               ],
                             ),
+
                           ),
+                          
                         ),
                       ),
+                      
                     );
                   }),
             );

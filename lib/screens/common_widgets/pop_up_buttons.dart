@@ -26,9 +26,20 @@ class _PopUpButtonWidgetState extends State<PopUpButtonWidget> {
       child: Container(
         height: 40.h,
         width: 100.w,
+
         padding: EdgeInsets.symmetric(horizontal: 15.w),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.r), color: widget.color),
+               boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2), // Shadow color
+                          spreadRadius: 1, // How wide the shadow should spread
+                          blurRadius: 10, // The blur effect of the shadow
+                          offset: const Offset(0,
+                              5), // Shadow offset, with y-offset for bottom shadow
+                        ),
+                      ],
+
+            borderRadius: BorderRadius.circular(25.r), color: widget.color),
         child: Center(
           child: Text(
             widget.text,
