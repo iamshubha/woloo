@@ -22,7 +22,7 @@ CoreBloc() : super(CoreInitial()) {
   FutureOr<void> _mapCheckUserState(CheckUserIsLoggedInOrNot event, Emitter<CoreState> emit) async {
     try {
       emit(CoreLoading());
-      await Future.delayed(const Duration(seconds: 2));
+    //  await Future.delayed(const Duration(seconds: 2));
       var token = globalStorage.getToken();
       if (token.isNotEmpty) {
         emit(const CoreSuccess(isLoggedIn: true));
@@ -47,7 +47,7 @@ CoreBloc() : super(CoreInitial()) {
         globalStorage.saveProfile(profileName: response.first.name!);
 
         globalStorage.saveProfileImg(profileimg: response.first.profileImage!);
-        globalStorage.saveShift(profileimg: response.first.startTime!);
+        globalStorage.saveShift(shift: response.first.startTime!);
 
 
       emit(UpdateTokenSuccess());

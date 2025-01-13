@@ -8,7 +8,7 @@ class JanitorAttendanceService {
   final DioClient dio;
   const JanitorAttendanceService({required this.dio});
 
-  Future<List<AttendanceHistoryModel>> getAllHistory({required String month, required String year, required int janiId}) async {
+  Future<List<AttendanceHistoryModel>> getAllHistory({required String month, required String year, required int janiId, String? token }) async {
     try {
       var response = await dio.post(
         APIConstants.ATTENDANCE_HISTORY_LIST_SUP,
@@ -17,7 +17,15 @@ class JanitorAttendanceService {
           "month": month,
           "year": year,
         },
-        options: Options(extra: {"auth": true}),
+        options:
+            token != null
+                ? Options(
+                    headers: {
+                      "x-woloo-token": token
+                    },
+                  )
+                :
+         Options(extra: {"auth": true}),
       );
       List<AttendanceHistoryModel> output = [];
       for (var item in response['results']) {
@@ -29,14 +37,20 @@ class JanitorAttendanceService {
     }
   }
 
-  Future<List<MonthListModel>> getAllMonths(int janiId) async {
+  Future<List<MonthListModel>> getAllMonths(int janiId ,{ String? token }) async {
     try {
       var response = await dio.get(
         APIConstants.MONTH_LIST_SUP,
         queryParameters: {
           "janitor_id": janiId,
         },
-        options: Options(extra: {"auth": true}),
+        options:
+         token != null ? Options(
+            headers: {
+              "x-woloo-token":  token
+            },
+          ) :
+         Options(extra: {"auth": true}),
       );
       List<MonthListModel> output = [];
       for (var item in response['results']) {

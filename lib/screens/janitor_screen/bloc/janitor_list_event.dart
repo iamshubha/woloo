@@ -9,8 +9,10 @@ abstract class JanitorsListEvent extends Equatable {
 
 class GetAllJanitors extends JanitorsListEvent {
   final String? cluster_id;
+  final String? startDate;
+  final String? endDate;
 
-  const GetAllJanitors({this.cluster_id});
+  const GetAllJanitors({this.cluster_id, this.endDate, this.startDate});
 
   @override
   List<Object?> get props => [cluster_id, Random().nextInt(100)];
@@ -20,11 +22,13 @@ class ReassignTask extends JanitorsListEvent {
   final List<String> id;
   final String janitor_id;
   final bool? fromReassign;
+  final bool? isRejected;
 
   const ReassignTask({
     required this.id,
     required this.janitor_id,
-    required this.fromReassign
+    required this.fromReassign,
+    required this.isRejected
   });
 
   @override

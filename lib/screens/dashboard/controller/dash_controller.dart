@@ -19,7 +19,7 @@ import '../data/network/dashboard_service.dart';
          RxList<DashboardModelClass> filterData = <DashboardModelClass>[].obs;
    
       
-        mapGetDashboardToState()async{
+mapGetDashboardToState()async{
 
           try {
             data.value = await dashboardService.getTasksByJanitorId();

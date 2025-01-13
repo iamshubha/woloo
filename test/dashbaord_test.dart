@@ -1,7 +1,11 @@
 
 
-import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
+import 'dart:convert';
+import 'dart:io';
+
+
 import 'package:Woloo_Smart_hygiene/core/model/App_launch_model.dart';
+
 import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
 import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
 import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/Attendance_model.dart';
@@ -10,23 +14,22 @@ import 'package:Woloo_Smart_hygiene/screens/dashboard/data/network/dashboard_ser
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get_it/get_it.dart';
-import 'package:get_storage/get_storage.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
+// import 'attendace_history_test.mocks.dart';
 import 'dashbaord_test.mocks.dart';
 // import 'unit_test.mocks.dart';
 
-@GenerateMocks( [GlobalStorage, GetStorage,  http.Client])
+@GenerateMocks( [ http.Client])
 void main()async{
   WidgetsFlutterBinding.ensureInitialized();
-//  await GetStorage.init(); 
-//  await MockGetStorage.init();
-late DashboardService dashboardService;
-  MockGlobalStorage? mockGlobalStorage;
 
+late DashboardService dashboardService;
+  String mockToken = "";
+  String taskId = "";
 
 
  group("Test Dashbaord Module API Endpoints", (){
@@ -34,30 +37,31 @@ late DashboardService dashboardService;
     setUp(()async{
        
        var dio = Dio();
-         //          when(mockGlobalStorage!.getToken()).thenAnswer((_)  => "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDE2LCJyb2xlX2lkIjoxLCJpYXQiOjE3MzA4MDc5MzIsImV4cCI6MTczMTQxMjczMn0.cxN_JTM5VPmufui4DLFz2WcDfXmM9-HibkBgEJZpOfk");
-        dashboardService = DashboardService(dio:  DioClient( dio)  );
-        // MockGlobalStorage.init();
-      //  mockGlobalStorage = MockGlobalStorage();
+        dashboardService = DashboardService(dio: DioClient( dio));
+      
+           final file = File('assets/testData.json');
+           final jsonData = json.decode(await file.readAsString());
+            
 
+              mockToken = jsonData['mockToken'];
+              taskId = jsonData['taskId'];
 
-    // dashboardService = DashboardService(dio: mockDio, globalStorage: mockGlobalStorage);
     });
+
+
+
  
  
   test("test mark attendance api check in ", ()async{
-          // GlobalStorage globalStorage = GetIt.instance();
-      //  String tokem =       globalStorage.getToken();
-
-    //     print("toenn ${mockGlobalStorage!.getToken()}");
+        
            
-        //  when()
-
+        
              final client = MockClient();
         when(client
               .post(
                 headers:{ 
    
-    "x-woloo-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDE2LCJyb2xlX2lkIjoxLCJpYXQiOjE3MzA4MDc5MzIsImV4cCI6MTczMTQxMjczMn0.cxN_JTM5VPmufui4DLFz2WcDfXmM9-HibkBgEJZpOfk"
+    "x-woloo-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUyLCJyb2xlX2lkIjoxLCJpYXQiOjE3MzU4OTA0ODIsImV4cCI6MTczNjQ5NTI4Mn0.Uy90XgSfIlOyaPqDrxCkdbgV2grzHHaEKiG5FVNpRXE"
    
 },
                 body: {    
@@ -67,15 +71,14 @@ late DashboardService dashboardService;
 
                 Uri.parse(APIConstants.BASE_URL+ APIConstants.ATTENDANCE )))
           .thenAnswer((_) async =>
-              http.Response('{ "message": type is not allowed to be empty", "success": false,  "results": [] }', 404)
-              
-              );
+              http.Response('{ "message": type is not allowed to be empty", "success": false,  "results": [] }', 404)   
+             );
      
 
            var response = await dashboardService.markAttendance(
-          type: "check_in", locations: [19.0760,72.8777 ]
+          type: "check_in", locations: [19.0760,72.8777 ], token: mockToken
           );
-            print("api reposnce  ${response.message} ");
+           // print("api reposnce  ${response.message} ");
           expect(response,  isA<AttendanceModel>() );
 
   });
@@ -108,15 +111,14 @@ late DashboardService dashboardService;
 
             var response = await dashboardService.markAttendance(
           type: "", locations: [19.0760,72.8777 ]
+          , token: mockToken
           );
 
             expect(response,  throwsException );
                }on Exception catch (exception) {
 
 }
-
-      
-            catch ( e) {
+     catch ( e) {
 
                  
                }
@@ -131,12 +133,7 @@ late DashboardService dashboardService;
 
 
    test("test mark attendance api check out ", ()async{
-          // GlobalStorage globalStorage = GetIt.instance();
-      //  String tokem =       globalStorage.getToken();
-
-          print("toenn $mockGlobalStorage!.getToken()");
-           
-        //  when()
+      
 
              final client = MockClient();
         when(client
@@ -146,7 +143,7 @@ late DashboardService dashboardService;
     // "Content-type": "application/json",
     "x-woloo-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDE2LCJyb2xlX2lkIjoxLCJpYXQiOjE3MzA4MDc5MzIsImV4cCI6MTczMTQxMjczMn0.cxN_JTM5VPmufui4DLFz2WcDfXmM9-HibkBgEJZpOfk"
     //  "x-woloo-token": "${mockGlobalStorage!.getToken()}"
-     // globalStorage.getToken()
+    
    // "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDE2LCJyb2xlX2lkIjoxLCJpYXQiOjE3MzA4MDc5MzIsImV4cCI6MTczMTQxMjczMn0.cxN_JTM5VPmufui4DLFz2WcDfXmM9-HibkBgEJZpOfk"
 },
                 body: {    
@@ -160,7 +157,8 @@ late DashboardService dashboardService;
      
 
            var response = await dashboardService.markAttendance(
-          type: "check_out", locations: [19.0760,72.8777]);
+          type: "check_out", locations: [19.0760,72.8777], token: mockToken);
+
             // print("api reposnce  ${response.message} ");
           expect(response, isA<AttendanceModel>());
 
@@ -192,7 +190,7 @@ late DashboardService dashboardService;
             try {
 
          var response = await dashboardService.markAttendance(
-          type: "", locations: [19.0760,72.8777 ]
+          type: "", locations: [19.0760,72.8777 ], token: mockToken
           );
 
             expect(response,  throwsException );
@@ -219,7 +217,7 @@ late DashboardService dashboardService;
               );
      
 
-           var response = await dashboardService.appLaunch();
+           var response = await dashboardService.appLaunch( token: mockToken );
           expect(response, isA<AppLaunchModel>());
 
   });
@@ -236,7 +234,9 @@ late DashboardService dashboardService;
               );
       
            try {
-                  var response = await dashboardService.appLaunch();
+                  var response = await dashboardService.appLaunch(
+                    token: mockToken
+                  );
           expect(response, throwsException );
              
            } catch (e) {
@@ -266,7 +266,9 @@ late DashboardService dashboardService;
               http.Response(' {"results":[{"task_allocation_id":54190,"date":"06-11-2024","janitor_id":416,"request_type":"Regular","issue_description":null,"start_time":"04:00 AM","end_time":"07:00 AM","facility_id":474,"template_id":230,"template_name":"TemplateFloor","task_description":"Daily tasks","facility_name":"FacilityDustingFloors","estimated_time":120,"total_tasks":2,"booths":10,"floor_number":2,"location":"LocationHadpsar","lat":19.076,"lng":72.8777,"block_name":"BuildingBeta","pending_tasks":"0","status":"Request for closure"}],"success":true} ', 200));
      
 
-           var response = await dashboardService.getTasksByJanitorId();
+           var response = await dashboardService.getTasksByJanitorId(
+            token: mockToken
+           );
           expect(response, isA<List<DashboardModelClass>>());
 
   });
@@ -282,10 +284,98 @@ late DashboardService dashboardService;
               http.Response(' {"results":[{"task_allocation_id":54190,"date":"06-11-2024","janitor_id":416,"request_type":"Regular","issue_description":null,"start_time":"04:00 AM","end_time":"07:00 AM","facility_id":474,"template_id":230,"template_name":"TemplateFloor","task_description":"Daily tasks","facility_name":"FacilityDustingFloors","estimated_time":120,"total_tasks":2,"booths":10,"floor_number":2,"location":"LocationHadpsar","lat":19.076,"lng":72.8777,"block_name":"BuildingBeta","pending_tasks":"0","status":"Request for closure"}],"success":true} ', 200));
      
 
-           var response = await dashboardService.getTasksByJanitorId();
+           var response = await dashboardService.getTasksByJanitorId(
+            token: mockToken
+           );
           expect(response, isA<List<DashboardModelClass>>());
 
   });
+
+     test("accept task testing  ", ()async{
+          final client = MockClient();
+        when(client
+              .post(
+                headers:{ 
+            "x-woloo-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUyLCJyb2xlX2lkIjoxLCJpYXQiOjE3MzU4OTA0ODIsImV4cCI6MTczNjQ5NTI4Mn0.Uy90XgSfIlOyaPqDrxCkdbgV2grzHHaEKiG5FVNpRXE"
+                 },
+                body:
+          {
+          "id": [taskId],
+          "status": "2",
+        },
+            Uri.parse(APIConstants.BASE_URL+ APIConstants.UPDATE_STATUS )))
+          .thenAnswer((_) async =>
+              http.Response(' {"results": { "current_Task_status": 2 },"success": true}', 200)
+             );
+
+           var response = await dashboardService.updateStatus(
+            id: taskId,
+            status: "2",
+            token: mockToken
+           );
+          expect(response, "{current_Task_status: 2}" );
+
+  });
+
+    test("start task testing  ", ()async{
+      final client = MockClient();
+      when(client
+          .post(
+          headers:{
+            "x-woloo-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUyLCJyb2xlX2lkIjoxLCJpYXQiOjE3MzU4OTA0ODIsImV4cCI6MTczNjQ5NTI4Mn0.Uy90XgSfIlOyaPqDrxCkdbgV2grzHHaEKiG5FVNpRXE"
+          },
+          body:
+          {
+            "id": [taskId],
+            "status": "3",
+          },
+          Uri.parse(APIConstants.BASE_URL+ APIConstants.UPDATE_STATUS )))
+          .thenAnswer((_) async =>
+          http.Response(' {"results": { "current_Task_status": 2 },"success": true}', 200)
+      );
+
+      var response = await dashboardService.updateStatus(
+          id: taskId,
+          status: "3",
+          token: mockToken
+      );
+      expect(response, "{current_Task_status: 3}" );
+
+    });
+
+
+
+    test(" request for closure task testing  ", ()async{
+      final client = MockClient();
+      when(client
+          .post(
+          headers:{
+            "x-woloo-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUyLCJyb2xlX2lkIjoxLCJpYXQiOjE3MzU4OTA0ODIsImV4cCI6MTczNjQ5NTI4Mn0.Uy90XgSfIlOyaPqDrxCkdbgV2grzHHaEKiG5FVNpRXE"
+          },
+          body:
+          {
+            "id": [taskId],
+            "status": "6",
+          },
+          Uri.parse(APIConstants.BASE_URL+ APIConstants.UPDATE_STATUS )))
+          .thenAnswer((_) async =>
+          http.Response(' {"results": { "current_Task_status": 2 },"success": true}', 200)
+      );
+
+      var response = await dashboardService.updateStatus(
+          id: taskId,
+          status: "6",
+          token: mockToken
+      );
+      expect(response, "{current_Task_status: 6}" );
+
+    });
+
+
+
+
+
+
 
 
  });

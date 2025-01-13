@@ -34,6 +34,7 @@ class LoginScreen extends StatefulWidget {
 class LoginPageState extends State<LoginScreen> {
   final loginFormKey = GlobalKey<FormState>();
   final TextEditingController controller = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
   bool _isHintShown = false;
 
   LoginBloc loginBloc = LoginBloc();
@@ -62,43 +63,100 @@ class LoginPageState extends State<LoginScreen> {
       child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 140.h,
-              ),
-              Center(
-                child: CustomImageProvider(
-                  image: AppImages.woloologo,
-                  height: 135.h,
-                  width: 135.h,
-                  alignment: Alignment.center,
+          child:
+          Form(
+            key: loginFormKey,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 140.h,
                 ),
-              ),
-              Center(
-                child: Text(
-                  textAlign: TextAlign.center,
-                  MyLoginConstants.WELCOME_TEXT.tr(),
-                  style:
-                  AppTextStyle.font24bold.copyWith(
-                  color: AppColors.black,
-                  )
-                  //  TextStyle(
-                  //   fontWeight: FontWeight.w400,
-                  //   fontSize: 24.sp,
-                  //   color: AppColors.black,
-                  // ),
+                Center(
+                  child: CustomImageProvider(
+                    image: AppImages.woloologo,
+                    height: 135.h,
+                    width: 135.h,
+                    alignment: Alignment.center,
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
-                child: Form(
-                  key: loginFormKey,
+                Center(
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    MyLoginConstants.WELCOME_TEXT.tr(),
+                    style:
+                    AppTextStyle.font24bold.copyWith(
+                    color: AppColors.black,
+                    )
+                    //  TextStyle(
+                    //   fontWeight: FontWeight.w400,
+                    //   fontSize: 24.sp,
+                    //   color: AppColors.black,
+                    // ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                // Padding(
+                //   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
+                //   child: Container(
+                //     decoration: BoxDecoration(
+                //       boxShadow: [
+                //         BoxShadow(
+                //           color: Colors.black.withOpacity(0.2), // Shadow color
+                //           spreadRadius: 1, // How wide the shadow should spread
+                //           blurRadius: 10, // The blur effect of the shadow
+                //           offset: const Offset(0,
+                //               5), // Shadow offset, with y-offset for bottom shadow
+                //         ),
+                //       ],
+                //     ),
+                //     child: TextFormField(
+                //       keyboardType: TextInputType.name,
+                //       autovalidateMode: AutovalidateMode.onUserInteraction,
+                //       textAlign: TextAlign.center,
+                //       controller: nameController,
+                //       validator: (value) {
+                //         if (value == null || value.isEmpty) {
+                //           return " Please enter your name";
+
+                //             //MyLoginConstants.MOBILE_VALIDATION.tr();
+                //         }
+                //         return null;
+                //       },
+                //       maxLength: 10,
+                //       decoration: InputDecoration(
+                //           isDense: true,
+                //           counterText: "",
+                //           fillColor: AppColors.white,
+                //           filled: true,
+                //           border: OutlineInputBorder(
+                //               borderRadius: BorderRadius.circular(25.r),
+                //               borderSide: BorderSide.none
+                //             //  const BorderSide(color: AppColors.greyBoxBorder),
+                //           ),
+                //           hintText: "Enter Name No",
+                //           //MyLoginConstants.MOBILE_NO.tr(),
+                //           hintStyle: AppTextStyle.font16.copyWith(
+                //             color: AppColors.greyColorFields,
+
+                //           )
+                //         //  TextStyle(
+                //         //   color: AppColors.greyColorFields,
+                //         //   fontSize: 16.sp,
+                //         //   fontWeight: FontWeight.w400,
+                //         // ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                // SizedBox(
+                //   height: 10.h,
+                // ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
                   child: Container(
-              decoration: BoxDecoration(
+                                decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.2), // Shadow color
@@ -131,10 +189,10 @@ class LoginPageState extends State<LoginScreen> {
                               borderSide: BorderSide.none
                               //  const BorderSide(color: AppColors.greyBoxBorder),
                               ),
-                          hintText: MyLoginConstants.MOBILE_NO.tr(),        
+                          hintText: MyLoginConstants.MOBILE_NO.tr(),
                           hintStyle: AppTextStyle.font16.copyWith(
                             color: AppColors.greyColorFields,
-                             
+
                           )
                           //  TextStyle(
                           //   color: AppColors.greyColorFields,
@@ -145,77 +203,77 @@ class LoginPageState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
-              BlocConsumer<LoginBloc, LoginState>(
-                bloc: loginBloc,
-                listener: (context, state) {
-                  if (state is LoginLoading) {
-                    EasyLoading.show(status: state.message);
-                  }
+                SizedBox(
+                  height: 10.h,
+                ),
+                BlocConsumer<LoginBloc, LoginState>(
+                  bloc: loginBloc,
+                  listener: (context, state) {
+                    if (state is LoginLoading) {
+                      EasyLoading.show(status: state.message);
+                    }
 
-                  if (state is LoginOTPSent) {
-                    EasyLoading.dismiss();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => OTPScreen(
-                          phoneNumber: controller.text,
-                          loginBloc: loginBloc,
-                          type: widget.type,
+                    if (state is LoginOTPSent) {
+                      EasyLoading.dismiss();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OTPScreen(
+                            phoneNumber: controller.text,
+                            loginBloc: loginBloc,
+                            type: widget.type,
+                          ),
+                        ),
+                      );
+                    }
+
+                    if (state is LoginError) {
+                      EasyLoading.dismiss();
+                      EasyLoading.showError(state.error.message);
+                    }
+
+                    if (state is LoginGetDataSuccess) {
+                      EasyLoading.dismiss();
+                      setState(() {
+                        /// Show hint only one time
+                        /// * Works only on android platform
+                        if (!_isHintShown && Platform.isAndroid) {
+                          requestHint();
+                        }
+                      });
+                    }
+                  },
+                  builder: (context, state) {
+                    return GestureDetector(
+                      onTap: () async {
+                        bool isValid =
+                            loginFormKey.currentState?.validate() ?? false;
+                        if (!isValid) return;
+
+                        globalStorage.saveMobileNumber(
+                            accessMobileNumber: controller.text ?? '');
+                        if (loginFormKey.currentState?.validate() ?? false) {
+                          loginBloc.add(SendOTP(mobileNumber: controller.text));
+                        }
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 10.h,
+                          horizontal: 20.w,
+                        ),
+                        child: ButtonWidget(
+                          color:AppColors.buttonYellowColor,
+                          text: MyLoginConstants.LOGIN_WITH_OTP.tr(),
                         ),
                       ),
                     );
-                  }
-
-                  if (state is LoginError) {
-                    EasyLoading.dismiss();
-                    EasyLoading.showError(state.error.message);
-                  }
-
-                  if (state is LoginGetDataSuccess) {
-                    EasyLoading.dismiss();
-                    setState(() {
-                      /// Show hint only one time
-                      /// * Works only on android platform
-                      if (!_isHintShown && Platform.isAndroid) {
-                        requestHint();
-                      }
-                    });
-                  }
-                },
-                builder: (context, state) {
-                  return GestureDetector(
-                    onTap: () async {
-                      bool isValid =
-                          loginFormKey.currentState?.validate() ?? false;
-                      if (!isValid) return;
-
-                      globalStorage.saveMobileNumber(
-                          accessMobileNumber: controller.text ?? '');
-                      if (loginFormKey.currentState?.validate() ?? false) {
-                        loginBloc.add(SendOTP(mobileNumber: controller.text));
-                      }
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 10.h,
-                        horizontal: 20.w,
-                      ),
-                      child: ButtonWidget(
-                        color:AppColors.buttonYellowColor,
-                        text: MyLoginConstants.LOGIN_WITH_OTP.tr(),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
-            ],
+                  },
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -252,10 +310,16 @@ class LoginPageState extends State<LoginScreen> {
               SizedBox(height: 10.h),
               Expanded(
                 child: ListView.separated(
+                  
                   itemCount: _languages.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Text(_languages[index]),
+                      title: Text(
+                        key: ValueKey(_languages[index]),
+                        
+                         
+                        
+                        _languages[index]),
                       titleAlignment: ListTileTitleAlignment.center,
                       onTap: () {
                         _selectedLanguage = index;

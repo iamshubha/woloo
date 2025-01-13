@@ -6,8 +6,8 @@ class APIConstants {
 //
 // = "https://53f2-2409-4062-2097-da56-25a7-ecec-f87a-6912.ngrok-free.app";
 
-  // static var BASE_URL  = 'https://staging-api.woloo.in'; // QA
- static var BASE_URL = 'https://api.woloo.in'; // Production
+  static var BASE_URL   = 'https://staging-api.woloo.in'; // QA
+ // static var BASE_URL = 'https://api.woloo.in'; // Production
 //  static var BASE_URL = 'http://192.168.1.103:5000'; // P
   static var SEND_OTP = '$BASE_URL/api/whms/users/sendOTP';
   static var VERIFY_OTP = '$BASE_URL/api/whms/users/verifyOTP';
@@ -59,7 +59,7 @@ class APIConstants {
   static var CLUSTER_LIST = '$BASE_URL/api/whms/users/clusterListBySupervisorId';
 
   /// Janitor-list
-  static var JANITOR_LIST = '$BASE_URL/api/whms/users/janitorsList';
+static var  JANITOR_LIST = '$BASE_URL/api/whms/users/janitorsList';
 
   /// Facility-list
   static var FACILITY_LIST = '$BASE_URL/api/whms/taskAllocation/getJanitorTaskInfo';
@@ -70,6 +70,10 @@ class APIConstants {
   /// App_Launch
   static var APP_LAUNCH = '$BASE_URL/api/whms/users/onAppLoad';
 
+  static var USER_DETAILS = '$BASE_URL/api/whms/users/getUserByID';
+
+   //api/whms/users/getUserByID?id=151
+
   /// Cluster-list
   static var ATTENDANCE_HISTORY_LIST = '$BASE_URL/api/whms/users/attendanceHistory';
   static var ATTENDANCE_HISTORY_LIST_SUP = '$BASE_URL/api/whms/users/janitorAttendanceHistoryForSupervisor';
@@ -77,4 +81,12 @@ class APIConstants {
   /// Cluster-list
   static var MONTH_LIST = '$BASE_URL/api/whms/users/getMonthlyHistory';
   static var MONTH_LIST_SUP = '$BASE_URL/api/whms/users/getMonthAndYearForSupervisor';
+
+
+  //  janitor list by facility id 
+   static var JANITOR_LIST_FACILITY = '$BASE_URL/api/whms/users/getAllUser';
+
+
+
+
 }

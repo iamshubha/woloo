@@ -29,6 +29,7 @@ class IssueListWidget extends StatefulWidget {
   });
 
   @override
+
   State<IssueListWidget> createState() => _IssueListWidgetState();
 }
 
@@ -77,7 +78,7 @@ class _IssueListWidgetState extends State<IssueListWidget> {
           EasyLoading.dismiss();
           return _data.isEmpty ?
           EmptyListWidget(
-            filter: "",
+            filter:EmptyWidgetConstants.DATA_NOT_FOUND.tr(),
           )
               :
            RefreshIndicator(
@@ -137,76 +138,78 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
 
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                      _data[index].clusterName ?? '',
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      softWrap: true,
-                                      style:
-                                       AppTextStyle.font18.copyWith(
-                                         color: AppColors.janitorNameColor,
-                                       )
-                                      //  TextStyle(
-                                      //   color: AppColors.janitorNameColor,
-                                      //   fontSize: 18.sp,
-                                      //   fontWeight: FontWeight.w400,
-                                      // ),
-                                    ),
-                                      SizedBox(height: 10.h),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
                                 Text(
-                                  "${_data[index].facilityName}",
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                  style:
-                                    AppTextStyle.font12.copyWith(
-                                     color: AppColors.clusterTitleColor,
-                                   )
-                                  //  TextStyle(
-                                  //   color: AppColors.clusterTitleColor,
-                                  //   fontSize: 12.sp,
-                                  //   fontWeight: FontWeight.w400,
-                                  // ),
-                                ),
-
-                                SizedBox(
-                                  height: 10.h,
-                                ),
-
-                                  Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 15 , vertical: 5 ),
-                                    decoration: BoxDecoration(                     
-                                      color: AppColors.white,
-                                      borderRadius: BorderRadius.circular(25.r),
-                                         boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2), // Shadow color
-                        spreadRadius: 1, // How wide the shadow should spread
-                        blurRadius: 10, // The blur effect of the shadow
-                        offset:
-                            Offset(0, 0), // No offset for shadow on all sides
-                      ),
-                    ],
-                                    ),
-                                    child: Text(
-                                    (_data[index].status ?? '').tr(),
+                                        _data[index].clusterName ?? '',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        softWrap: true,
+                                        style:
+                                         AppTextStyle.font18.copyWith(
+                                           color: AppColors.janitorNameColor,
+                                         )
+                                        //  TextStyle(
+                                        //   color: AppColors.janitorNameColor,
+                                        //   fontSize: 18.sp,
+                                        //   fontWeight: FontWeight.w400,
+                                        // ),
+                                      ),
+                                        SizedBox(height: 10.h),
+                                  Text(
+                                    "${_data[index].facilityName}",
+                                    overflow: TextOverflow.visible,
+                                    maxLines: 2,
                                     style:
-                                     AppTextStyle.font15.copyWith(
-                                       color:  pending ? AppColors.redText : AppColors.greenText,
+                                      AppTextStyle.font12.copyWith(
+                                       color: AppColors.clusterTitleColor,
                                      )
                                     //  TextStyle(
-                                    //   color: pending ? AppColors.redText : AppColors.greenText,
-                                    //   fontSize: 16.sp,
-                                    //   fontWeight: FontWeight.w500,
+                                    //   color: AppColors.clusterTitleColor,
+                                    //   fontSize: 12.sp,
+                                    //   fontWeight: FontWeight.w400,
                                     // ),
-                                                                    ),
                                   ),
-                                   SizedBox(
-                                  height: 10.h,
-                                ),
-                            ],
+                            
+                                  SizedBox(
+                                    height: 10.h,
+                                  ),
+                            
+                                    Container(
+                                      padding: EdgeInsets.symmetric(horizontal: 15 , vertical: 5 ),
+                                      decoration: BoxDecoration(                     
+                                        color: AppColors.white,
+                                        borderRadius: BorderRadius.circular(25.r),
+                                           boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black.withOpacity(0.2), // Shadow color
+                                                    spreadRadius: 1, // How wide the shadow should spread
+                                                    blurRadius: 10, // The blur effect of the shadow
+                                                    offset:
+                              Offset(0, 0), // No offset for shadow on all sides
+                                                  ),
+                                                ],
+                                      ),
+                                      child: Text(
+                                      (_data[index].status ?? '').tr(),
+                                      style:
+                                       AppTextStyle.font15.copyWith(
+                                         color:  pending ? AppColors.redText : AppColors.greenText,
+                                       )
+                                      //  TextStyle(
+                                      //   color: pending ? AppColors.redText : AppColors.greenText,
+                                      //   fontSize: 16.sp,
+                                      //   fontWeight: FontWeight.w500,
+                                      // ),
+                                                                      ),
+                                    ),
+                                     SizedBox(
+                                    height: 10.h,
+                                  ),
+                              ],
+                            ),
                           ),
                         // Padding(
                         //   padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 5.w),
@@ -235,6 +238,7 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                               borderRadius: BorderRadius.circular(25.r),
                                 color: AppColors.white,
 
+
                                    boxShadow: [
                                               BoxShadow(
                                                 color: Colors.black.withOpacity(0.2), // Shadow color
@@ -251,11 +255,31 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                               children: [
                                  
                               
-                                   CustomImageProvider(
-                                    image: "assets/images/prof.png",
-                                    width: 60,
-                                    height: 60,
-                                    ),
+                                   CircleAvatar(
+                                     radius: 30,
+                                     backgroundColor:  AppColors.darkGreyColor,
+
+                                     child:
+                                     _data[index].profileImage!.isNotEmpty ?
+
+                                     ClipRRect(
+                                       borderRadius: BorderRadius.circular(100),
+
+
+                                       child: CustomImageProvider(
+                                        image:"${_data[index].baseUrl}/${_data[index].profileImage!.replaceAll("[", "").replaceAll("]", "").replaceAll('"', '')}",
+                                        width: 60,
+                                        height: 60,
+                                        ),
+                                     )
+                                     :
+
+                                     const Icon(
+                                       Icons.person_2_outlined,
+
+                                       color: AppColors.buttonColor,
+                                     ),
+                                   ),
                                 SizedBox(height: 5.h), 
                                 Text(
                                 " ${_data[index].janitorName}",

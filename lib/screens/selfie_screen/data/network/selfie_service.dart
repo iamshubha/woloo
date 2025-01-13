@@ -10,7 +10,7 @@ class SelfieService {
 
   const SelfieService({required this.dio});
 
-  Future<String> uploadSelfie({required String type, required File image, required String id, required String remarks}) async {
+  Future<String> uploadSelfie({required String type, required File image, required String id, required String remarks, String? token}) async {
     try {
       FormData formData = FormData();
 
@@ -20,6 +20,10 @@ class SelfieService {
         "id": id,
         "remarks": remarks,
       });
+       print("image.path ${image.path}");
+       print("dfs $id");
+       print("dsds ${getFileName(image.path)}");
+       print("exr ${getFileExtension(image.path)}");
 
       formData.files.addAll([
         MapEntry(
@@ -35,8 +39,18 @@ class SelfieService {
       var response = await dio.post(
         APIConstants.UPLOAD_SELFIE,
         data: formData,
-        options: Options(extra: {"auth": true}),
+        options:
+         token != null ? 
+            Options(
+            headers: {
+              "x-woloo-token":  token
+            },
+          )
+        // Options(extra: {"auth": true}) 
+         :
+         Options(extra: {"auth": true}),
       );
+       print(response);
 
       return response['results']?.toString() ?? '';
     } catch (e) {

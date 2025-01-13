@@ -69,7 +69,7 @@ class _RegularTaskState extends State<RegularTask> with SingleTickerProviderStat
   void initState() {
     // TODO: implement initState
     super.initState();
-      _tabController = new TabController(length: 3, vsync: this);
+      _tabController = new TabController(length: 4, vsync: this);
   }
 
 
@@ -122,6 +122,9 @@ class _RegularTaskState extends State<RegularTask> with SingleTickerProviderStat
            Tab(icon:
             TabWidget(title: MydashboardScreenConstants.COMPLETE_TASK.tr()  )
             ),
+          Tab(icon:
+          TabWidget(title: MydashboardScreenConstants.REJECTED_TASk.tr())
+          ),
         ],
       ),
               Expanded(
@@ -191,7 +194,7 @@ class _RegularTaskState extends State<RegularTask> with SingleTickerProviderStat
                              
                 
                                   SupervisorDashboardListWidget(
-                                    errorData: EmptyWidgetConstants.ACCEPTED_TASK_ERROR.tr(),
+                                    errorData: EmptyWidgetConstants.COMPELTED_TASK_ERROR.tr(),
                                             status: "Completed",
                                             reqType: "Regular",
                             // key: key,
@@ -210,6 +213,30 @@ class _RegularTaskState extends State<RegularTask> with SingleTickerProviderStat
                               );
                               //  key = GlobalKey();
                                }    
+                            },
+                          ),
+
+
+                          SupervisorDashboardListWidget(
+                            errorData: EmptyWidgetConstants.COMPELTED_TASK_ERROR.tr(),
+                            status: "Rejected",
+                            reqType: "Regular",
+                            // key: key,
+                            onTapItem: (SupervisorModelDashboard data, bool isApproved) async {
+                              print("templates " + data.status!);
+                              if( data.status == "Request for closure" ){
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => TaskDetailsScreen(
+                                        isFromDashboard: true,
+                                        isFromFacility: false,
+                                        allocationId: "${data.taskAllocationId ?? ''}",
+                                        isApproved: isApproved,
+                                      )),
+                                );
+                                //  key = GlobalKey();
+                              }
                             },
                           ),
                 

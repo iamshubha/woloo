@@ -23,7 +23,6 @@ import 'package:excel/excel.dart' as ex;
 import 'package:media_store_plus/media_store_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 import '../../../main.dart';
 
@@ -62,13 +61,20 @@ class AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
   String year = "";
   List<DateTime> absentDates = [];
   List<DateTime> presentDates = [];
+  List<DateTime> clockedDates = [];
+
+
+   bool isChecked = false;
+
 
   @override
   void initState() {
     // TODO: implement initState
     _historyListBloc.add(const GetAllMonths());
     super.initState();
+
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -290,9 +296,14 @@ class AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                  for (var attendance in _historyData) {
                    if (attendance.attendance == "Absent") {
                      absentDates.add(_parseDate(attendance.date ?? "01"));
-                   } else if (attendance.attendance == "Present") {
+                   }
+                  // else  if(attendance.attendance == "Absent" && isChecked ){
+                  // //   clockedDates.add(_parseDate(attendance.date ?? "01"));
+                  //  }
+                   else if (attendance.attendance == "Present") {
                      presentDates.add(_parseDate(attendance.date ?? "01"));
                    }
+
                  }
                 EasyLoading.dismiss();
                return 

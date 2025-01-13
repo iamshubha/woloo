@@ -58,7 +58,7 @@ class UpdateTokenModel {
   }
   int? id;
   String? name;
-  dynamic startTime;
+  String? startTime;
   dynamic endTime;
   String? gender;
   String? mobile;

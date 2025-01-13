@@ -17,6 +17,8 @@ class IssueListModel {
     this.floorNumber,
     this.description,
     this.clusterName,
+    this.baseUrl,
+    this.profileImage
   });
 
   IssueListModel.fromJson(dynamic json) {
@@ -28,6 +30,8 @@ class IssueListModel {
     floorNumber = json['floor_number'];
     description = json['description'];
     clusterName = json['cluster_name'];
+    baseUrl = json['base_url'];
+    profileImage = json['profile_image'] ?? "" ;
   }
   int? facilityId;
   int? janitorId;
@@ -37,6 +41,8 @@ class IssueListModel {
   int? floorNumber;
   String? description;
   String? clusterName;
+  String? profileImage;
+  String? baseUrl;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -48,6 +54,8 @@ class IssueListModel {
     map['floor_number'] = floorNumber;
     map['description'] = description;
     map['cluster_name'] = clusterName;
+    map['base_url'] = baseUrl;
+    map['profile_image'] = profileImage;
     return map;
   }
 }

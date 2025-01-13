@@ -7,6 +7,7 @@ import 'package:Woloo_Smart_hygiene/core/bloc/core_bloc.dart';
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/white_button_widget.dart';
 import 'package:Woloo_Smart_hygiene/screens/login/bloc/login_bloc.dart';
+import 'package:Woloo_Smart_hygiene/screens/my_account/view/bloc/profile_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/selfie_screen/bloc/selfie_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/selfie_screen/bloc/selfie_event.dart';
 import 'package:Woloo_Smart_hygiene/screens/selfie_screen/bloc/selfie_state.dart';
@@ -32,6 +33,7 @@ import '../../../utils/app_images.dart';
 // import '../../washroom_image_screen/images_bloc/bloc/capture_bloc.dart';
 // import '../../washroom_image_screen/images_bloc/state/capture_state.dart';
 import '../common_widgets/image_provider.dart';
+import '../my_account/view/bloc/profile_event.dart';
 import '../washroom_image_screen/images_bloc/bloc/capture_bloc.dart';
 import '../washroom_image_screen/images_bloc/state/capture_state.dart';
 
@@ -39,6 +41,7 @@ import '../washroom_image_screen/images_bloc/state/capture_state.dart';
 enum PickSource { CAMERA }
 
 class UplopadProfile extends StatefulWidget {
+  final  Function?  capture;
   // final bool isFromChooseFacility;
   // final bool isFromTask;
   // final int? templateId;
@@ -46,6 +49,7 @@ class UplopadProfile extends StatefulWidget {
 
   const UplopadProfile({
     Key? key,
+    this.capture
 
     // this.isFromChooseFacility = false,
     // this.isFromTask = false,
@@ -61,7 +65,7 @@ class _UplopadProfileState extends State<UplopadProfile> {
   File? _file;
   SelfieBloc selfieBloc = SelfieBloc();
   CaptureBloc _captureBloc = CaptureBloc(); 
-  LoginBloc loginBloc = LoginBloc();
+  ProfileBloc profileBloc = ProfileBloc();
     GlobalStorage globalStorage = GetIt.instance();
      Map<String, dynamic>? decodedToken;
 
@@ -194,7 +198,19 @@ class _UplopadProfileState extends State<UplopadProfile> {
                       var firebase = FirebaseMessaging.instance;
                           var token = await firebase.getToken();
                      
-                    loginBloc.add(UpdateTokenOnVerifyOTP(token: token!));
+                  //  loginBloc.add(UpdateTokenOnVerifyOTP(token: token!));
+                  //   updat( id)async{
+                   //   print("idddd $id");
+                     // // var firebase = FirebaseMessaging.instance;
+                      //                 var token = await firebase.getToken();
+                      // profileBloc?.add(
+                      //     UpdateProfile(
+                      //     id: decodedToken!["id"]
+                      // )
+
+                      // );
+                         widget.capture!(true);
+                    // }
                          Navigator.of(context).pop();
 
                     // Navigator.push(
@@ -208,6 +224,7 @@ class _UplopadProfileState extends State<UplopadProfile> {
                   }
 
                   if (state is UploadSelfieError) {
+                      widget.capture!(false);
                     EasyLoading.dismiss();
                     EasyLoading.showError(state.error.message);
                   }
@@ -327,6 +344,7 @@ class _UplopadProfileState extends State<UplopadProfile> {
 
 
                      Padding(
+
                        padding: const EdgeInsets.symmetric( horizontal: 16 ),
                        child: Column(
                                        children: [
@@ -354,6 +372,7 @@ class _UplopadProfileState extends State<UplopadProfile> {
                 ? BlocConsumer<SelfieBloc, SelfieState>(
                 bloc: selfieBloc,
                 listener: (context, selfiestate) async {
+                   print(" selfe $selfiestate");
                   if (selfiestate is UploadSelfieLoading) {
                     EasyLoading.show(status: selfiestate.message);
                   }
@@ -363,9 +382,16 @@ class _UplopadProfileState extends State<UplopadProfile> {
                     // Navigator.pop(context);
                          var firebase = FirebaseMessaging.instance;
                           var token = await firebase.getToken();
-                     
-                    loginBloc.add(UpdateTokenOnVerifyOTP(token: token!));
+                    widget.capture!(true);
+
+                    // profileBloc.add(
+                    //     UpdateProfile(
+                    //       id: decodedToken!["id"]
+                    //     )
+                    //
+                    // );
                          Navigator.of(context).pop();
+
 
                     // Navigator.push(
                     //     context,
@@ -374,8 +400,10 @@ class _UplopadProfileState extends State<UplopadProfile> {
                     //         allocationId: widget.allocationId,
                     //         templateId: widget.templateId,
                     //       ),
+
                     //     ));
                   }
+
 
                   if (selfiestate is UploadSelfieError) {
                     EasyLoading.dismiss();
@@ -383,6 +411,10 @@ class _UplopadProfileState extends State<UplopadProfile> {
                   }
                 },
                 builder: (context, state) {
+
+
+
+
                   return Padding(
                     padding: EdgeInsets.symmetric(
                       vertical: 15.h,

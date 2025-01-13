@@ -7,47 +7,49 @@
 /// pending_task : 0
 /// total_task : 2
 
+// To parse this JSON data, do
+//
+//     final clusterModel = clusterModelFromJson(jsonString);
+
+import 'dart:convert';
+
+ClusterModel clusterModelFromJson(String str) => ClusterModel.fromJson(json.decode(str));
+
+String clusterModelToJson(ClusterModel data) => json.encode(data.toJson());
+
 class ClusterModel {
+  int? clusterId;
+  String? clusterName;
+  dynamic pincode;
+  String? pendingTasks;
+  String? completedTasks;
+  String? totalTasks;
+
   ClusterModel({
     this.clusterId,
     this.clusterName,
     this.pincode,
-    this.janitorId,
-    this.janitorName,
-    this.completedTask,
-    this.pendingTask,
-    this.totalTask,
+    this.pendingTasks,
+    this.completedTasks,
+    this.totalTasks,
   });
 
-  ClusterModel.fromJson(dynamic json) {
-    clusterId = json['cluster_id'];
-    clusterName = json['cluster_name'];
-    pincode = json['pincode']  ;
-    janitorId = json['janitor_id'];
-    janitorName = json['janitor_name'];
-    completedTask = json['completed_task'];
-    pendingTask = json['pending_task'];
-    totalTask = json['total_task'];
-  }
-  int? clusterId;
-  String? clusterName;
-  int? pincode;
-  int? janitorId;
-  String? janitorName;
-  int? completedTask;
-  int? pendingTask;
-  int? totalTask;
+  factory ClusterModel.fromJson(Map<String, dynamic> json) => ClusterModel(
+    clusterId: json["cluster_id"],
+    clusterName: json["cluster_name"],
+    pincode: json["pincode"],
+    pendingTasks: json["pending_tasks"],
+    completedTasks: json["completed_tasks"],
+    totalTasks: json["total_tasks"],
+  );
 
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['cluster_id'] = clusterId;
-    map['cluster_name'] = clusterName;
-    map['pincode'] = pincode ;
-    map['janitor_id'] = janitorId;
-    map['janitor_name'] = janitorName;
-    map['completed_task'] = completedTask;
-    map['pending_task'] = pendingTask;
-    map['total_task'] = totalTask;
-    return map;
-  }
+  Map<String, dynamic> toJson() => {
+    "cluster_id": clusterId,
+    "cluster_name": clusterName,
+    "pincode": pincode,
+    "pending_tasks": pendingTasks,
+    "completed_tasks": completedTasks,
+    "total_tasks": totalTasks,
+  };
 }
+

@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:get_it/get_it.dart';
 
 class DropDownDialog<T> extends StatefulWidget {
   final List<T> items;
@@ -12,7 +13,7 @@ class DropDownDialog<T> extends StatefulWidget {
   final Function? onSaved;
   final Function? onChanged;
   final Function? validator;
-  final Key? widgetKey;
+  final GlobalKey<DropdownSearchState>? widgetKey;
   final String? hint;
   final T? selected;
 
@@ -35,9 +36,14 @@ class DropDownDialog<T> extends StatefulWidget {
 
 class _DropDownDialogState<T> extends State<DropDownDialog<T>> {
   bool _startValidation = false;
+  // dropDownKey
+  // GlobalKey<DropdownSearchState> dropDownKey = GetIt.instance();
+
+  //GlobalKey<DropdownSearchState>();
 
   @override
   Widget build(BuildContext context) {
+     print("TEST ${widget.selected}");
     return 
     Container(
       decoration: BoxDecoration(
@@ -55,12 +61,18 @@ class _DropDownDialogState<T> extends State<DropDownDialog<T>> {
                       ],
       ),
       child: DropdownSearch<T>(
-        selectedItem: widget.selected,
+        
+
+
+        selectedItem: widget.selected ,
         key: widget.widgetKey,
         enabled: widget.enabled ?? true,
-        autoValidateMode: _startValidation
-            ? AutovalidateMode.always
-            : AutovalidateMode.disabled,
+        
+        autoValidateMode:
+        // _startValidation
+        //     ? AutovalidateMode.always
+        //    :
+        AutovalidateMode.disabled,
         items: widget.items,
         
         popupProps: PopupProps.dialog(
@@ -142,9 +154,13 @@ class _DropDownDialogState<T> extends State<DropDownDialog<T>> {
           }
         },
         onChanged: (item) {
-          if (widget.onChanged != null) {
-            widget.onChanged!(item);
-          }
+              if(item != null){
+                if (widget.onChanged != null) {
+                  widget.onChanged!(item);
+                }
+
+              }
+
         },
         onBeforePopupOpening: (a) async {
           setState(() {

@@ -7,11 +7,17 @@ class ClusterListService {
   final DioClient dio;
   const ClusterListService({required this.dio});
 
-  Future<List<ClusterModel>> getAllCluster() async {
+  Future<List<ClusterModel>> getAllCluster({String? token }) async {
     try {
       var response = await dio.get(
         APIConstants.CLUSTER_LIST,
-        options: Options(extra: {"auth": true}),
+        options:
+          token != null ?   Options(
+            headers: {
+              "x-woloo-token":  token
+            },
+          ) :
+         Options(extra: {"auth": true}),
       );
       List<ClusterModel> output = [];
       for (var item in response['results']) {

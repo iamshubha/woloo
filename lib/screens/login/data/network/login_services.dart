@@ -24,41 +24,41 @@ class LoginService {
     }
   }
 
-  Future<String> checkIn({required String type, required List<double> locations}) async {
-    try {
-      var response = await dio.post(
-        APIConstants.SEND_OTP,
-        data: {
-          "type": type,
-          "location": locations,
-        },
-        options: Options(extra: {"auth": true}),
-      );
+  // Future<String> checkIn({required String type, required List<double> locations}) async {
+  //   try {
+  //     var response = await dio.post(
+  //       APIConstants.SEND_OTP,
+  //       data: {
+  //         "type": type,
+  //         "location": locations,
+  //       },
+  //       options: Options(extra: {"auth": true}),
+  //     );
 
-      return response['results']?.toString() ?? '';
-    } catch (e) {
-      rethrow;
-    }
-  }
+  //     return response['results']?.toString() ?? '';
+  //   } catch (e) {
+  //     rethrow;
+  //   }
+  // }
 
-  Future<List<UpdateTokenModel>> updateFCMToken({required String token}) async {
-    try {
-      var response = await dio.put(
-        APIConstants.UPDATE_TOKEN_FCM,
-        data: {
-          "token": token,
-        },
-        options: Options(extra: {"auth": true}),
-      );
-      List<UpdateTokenModel> output = [];
-      for (var item in response['results']) {
-        output.add(UpdateTokenModel.fromJson(item));
-      }
-      return output;
-    } catch (e) {
-      rethrow;
-    }
-  }
+  // Future<List<UpdateTokenModel>> updateFCMToken({required String token}) async {
+  //   try {
+  //     var response = await dio.put(
+  //       APIConstants.UPDATE_TOKEN_FCM,
+  //       data: {
+  //         "token": token,
+  //       },
+  //       options: Options(extra: {"auth": true}),
+  //     );
+  //     List<UpdateTokenModel> output = [];
+  //     for (var item in response['results']) {
+  //       output.add(UpdateTokenModel.fromJson(item));
+  //     }
+  //     return output;
+  //   } catch (e) {
+  //     rethrow;
+  //   }
+  // }
 
   Future<VerifyOtpModel> verifyOTP({required String otp, required String requestId}) async {
     try {

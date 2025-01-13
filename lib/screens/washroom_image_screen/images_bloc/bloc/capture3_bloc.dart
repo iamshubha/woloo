@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/network/error_handler.dart';
-import '../event/capture_event2.dart';
 // import '../state/capture_state.dart';
 import '../event/capture_event3.dart';
-import '../state/capture_state2.dart';
 import '../state/capture_state3.dart';
 
 class CaptureBloc3 extends Bloc<CaptureEvent3, CaptureState3> {

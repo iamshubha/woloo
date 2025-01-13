@@ -69,7 +69,7 @@ class _IotTaskState extends State<IotTask> with SingleTickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
-      _tabController = new TabController(length: 3, vsync: this);
+      _tabController =  TabController(length: 4, vsync: this);
   }
 
 
@@ -103,28 +103,32 @@ class _IotTaskState extends State<IotTask> with SingleTickerProviderStateMixin {
                                        .copyWith(
                                    color: AppColors.black,
                                    ),
-    // physics: NeverScrollableScrollPhysics(),
+                                       // physics: NeverScrollableScrollPhysics(),
                                      controller: _tabController,
-        tabs: [
-              Tab(icon:
-              TabWidget(title: MydashboardScreenConstants.PENDING_TASK.tr() )
-           ),
-        
+                                           tabs: [
+                                                 Tab(icon:
+                                                 TabWidget(title: MydashboardScreenConstants.PENDING_TASK.tr() )
+                                              ),
 
-          //  Tab(icon:
-          //    TabWidget(title:"Accepted")
-          //   ),
-          //  Tab(icon:
-          //   TabWidget(title:"Ongoing")
-          //    ),
-          Tab(icon: 
-            TabWidget(title: MydashboardScreenConstants.Rquest_TASK.tr() )  
-             ),
-           Tab(icon:
-            TabWidget(title: MydashboardScreenConstants.COMPLETE_TASK.tr()  )
-            ),
-        ],
-      ),
+
+                                             //  Tab(icon:
+                                             //    TabWidget(title:"Accepted")
+                                             //   ),
+                                             //  Tab(icon:
+                                             //   TabWidget(title:"Ongoing")
+                                             //    ),
+                                             Tab(icon:
+                                               TabWidget(title: MydashboardScreenConstants.Rquest_TASK.tr() )
+                                                ),
+                                              Tab(icon:
+                                               TabWidget(title: MydashboardScreenConstants.COMPLETE_TASK.tr())
+
+                                               
+                                               ),
+         Tab(icon:
+          TabWidget(title: MydashboardScreenConstants.REJECTED_TASk.tr()))
+                                           ],
+                                         ),
               Expanded(
                 child: RefreshIndicator(
                   onRefresh: () {
@@ -213,9 +217,33 @@ class _IotTaskState extends State<IotTask> with SingleTickerProviderStateMixin {
                                }    
                             },
                           ),
-                
-                
-                                          // DashboardListWidget(
+
+                          SupervisorDashboardListWidget(
+                            errorData:  EmptyWidgetConstants.ACCEPTED_TASK_ERROR.tr(),
+                            status: "Rejected",
+                            reqType: "IOT",
+                            // key: key,
+                            onTapItem: (SupervisorModelDashboard data, bool isApproved) async {
+                              print("templates " + data.status!);
+                              if( data.status == "Request for closure" ){
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => TaskDetailsScreen(
+                                        isFromDashboard: true,
+                                        isFromFacility: false,
+                                        allocationId: "${data.taskAllocationId ?? ''}",
+                                        isApproved: isApproved,
+                                      )),
+                                );
+                                //  key = GlobalKey();
+                              }
+                            },
+                          ),
+
+
+
+                          // DashboardListWidget(
                                           //   current_lattitude: widget.lat,
                                           //   current_longitude: widget.long,
                                           //   filter: widget.filter.where( (e)=> e.status == "Completed" ).toList(),

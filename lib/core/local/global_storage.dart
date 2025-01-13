@@ -16,6 +16,9 @@ class GlobalStorage {
   final String _latitudeKey = 'accessLatitude';
   final String _longitudeKey = 'accessLongitude';
   final String _currentTimeKey = 'accessCurrentTime';
+  final String _currentDateKey = 'accessDate';
+  final String _currentoutTimeKey = 'accessOutTime';
+  final String _currentoutDateKey = 'accessOutDateTime';
   final String _profileKey = 'profileKey';
   final String _profileImgKey = 'profileImgKey';
   final String _profileshiftKey = 'profileShiftKey';
@@ -52,11 +55,11 @@ class GlobalStorage {
     _box.write(_profileImgKey, profileimg);
   }
 
-    void saveShift({required String profileimg }) {
-    if (profileimg.isEmpty) {
+    void saveShift({required String shift }) {
+    if (shift.isEmpty) {
       throw 'Access Token is empty';
     }
-    _box.write(_profileshiftKey, profileimg);
+    _box.write(_profileshiftKey, shift);
   }
 
   String getProfileName() {
@@ -222,12 +225,60 @@ class GlobalStorage {
     _box.write(_currentTimeKey, accessTime);
   }
 
+    void saveDate({required String accessTime}) {
+    if (accessTime.isEmpty) {
+      throw 'Time is empty';
+    }
+    _box.write(_currentDateKey, accessTime);
+  }
+  void saveOutTime({required String accessTime}) {
+    if (accessTime.isEmpty) {
+      throw 'Time is empty';
+    }
+    _box.write(_currentoutTimeKey, accessTime);
+  }
+
+    void saveOutDate({required String accessTime}) {
+    if (accessTime.isEmpty) {
+      throw 'Time is empty';
+    }
+    _box.write(_currentoutDateKey, accessTime);
+  }
+
   String getTime() {
     String? time = _box.read(_currentTimeKey);
+    return time ?? '';
+ 
+  }
+  
+  String getDate() {
+    String? time = _box.read(_currentDateKey);
+    return time ?? '';
+  }
+
+  String getOutTime() {
+    String? time = _box.read(_currentoutTimeKey);
+    return time ?? '';
+  }
+
+    String getOutDate() {
+    String? time = _box.read(_currentoutDateKey);
     return time ?? '';
   }
 
   void removeTime() {
     _box.remove(_currentTimeKey);
   }
+   void removeDate() {
+    _box.remove(_currentDateKey);
+  }
+
+
+  void removeOutTime() {
+    _box.remove(_currentoutTimeKey);
+  }
+  void removeOutDate() {
+    _box.remove(_currentoutDateKey);
+  }
+
 }

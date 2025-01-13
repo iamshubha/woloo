@@ -23,6 +23,7 @@ class _ClusterListState extends State<ClusterList> {
   ClusterModel _clusterModel = ClusterModel();
   var key = GlobalKey();
   List<ClusterModel> search = [];
+  
   @override
   void initState() {
   super.initState();
@@ -98,6 +99,7 @@ class _ClusterListState extends State<ClusterList> {
                          Navigator.of(context).push(
                            MaterialPageRoute(
                              builder: (context) => JanitorList(
+                               rejected: false,
                                isFromCluster: true,
                                isFromDashboard: false,
                                clusterId: search.first.clusterId.toString(),
@@ -151,13 +153,14 @@ class _ClusterListState extends State<ClusterList> {
                        // ClusterModel list
               },
               onTapItem: (ClusterModel list) async {
-                    print("janitor naem  ${list.janitorName}");
+                    print("janitor naem  ${list}");
                 _searchController.clear();
                 await
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => JanitorList(
-                      janitorName: list.janitorName,
+                      rejected: false,
+                      // janitorName: list.janitorName,
                       isFromCluster: true,
                       isFromDashboard: false,
                       clusterId: list.clusterId.toString(),

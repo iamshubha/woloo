@@ -18,7 +18,6 @@ class ReportIssueBloc extends Bloc<ReportIssueEvent, ReportIssueState> {
     on<GetAllTasksDropdown>(_mapGetAllTaskDropdownToState);
     on<GetAllJanitorsDropdown>(_mapGetAllJanitorsDropdownToState);
     on<GetAllTaskList>(_mapGetAllTasksToState);
-
     on<ReportIssue>(_mapGetReportIssueToState);
   }
 
@@ -26,7 +25,9 @@ class ReportIssueBloc extends Bloc<ReportIssueEvent, ReportIssueState> {
       GetAllClustersDropdown event, Emitter<ReportIssueState> emit) async {
     try {
       emit(GetClustersDropdownLoading());
-      var data = await reportIssueService.getClusterDropdownData();
+      var data = await reportIssueService.getClusterDropdownData(
+
+      );
 
       emit(GetClustersDropdownSuccess(data: data));
     } catch (e) {
@@ -51,7 +52,9 @@ class ReportIssueBloc extends Bloc<ReportIssueEvent, ReportIssueState> {
       GetAllTasksDropdown event, Emitter<ReportIssueState> emit) async {
     try {
       emit(GetTasksDropdownLoading());
-      var data = await reportIssueService.getTasksDropdownData();
+      var data = await reportIssueService.getTasksDropdownData(
+        event.clusterId
+      );
 
       emit(GetTasksDropdownSuccess(data: data));
     } catch (e) {

@@ -51,8 +51,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   final CarouselSliderController buttonCarouselController = CarouselSliderController();
 
   GlobalStorage _globalStorage = GetIt.instance();
-  late final SupervisorDashboardBloc _supervisorDashboardBloc =
-      SupervisorDashboardBloc();
+  late  SupervisorDashboardBloc _supervisorDashboardBloc = SupervisorDashboardBloc();
 
   @override
   void initState() {
@@ -60,6 +59,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
     print("isApproved --- >" + widget.isApproved.toString());
     submittedTaskBloc
         .add(GetAllSubmittedTasks(allocationId: widget.allocationId));
+        _supervisorDashboardBloc = GetIt.instance<SupervisorDashboardBloc>();
 
     super.initState();
   }
@@ -105,12 +105,14 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
         body: BlocConsumer(
           bloc: submittedTaskBloc,
           listener: (context, state) {
+             print(" details  $state");
             if (state is GetSubmittedTasksSuccess) {
               EasyLoading.dismiss();
                 print("images ---- ${submittedTaskModel.taskImages}");
-                   _supervisorDashboardBloc.add(GetSupervisorDashboardData());
+                   //_supervisorDashboardBloc.add(GetSupervisorDashboardData());
             }
             if (state is UpdateStatusSuccessful) {
+              _supervisorDashboardBloc.add(GetSupervisorDashboardData());
               EasyLoading.dismiss();
              
 
@@ -306,6 +308,11 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                   status: MydashboardScreenConstants.LOADING_TOAST.tr());
             }
             else
+            if 
+            (state is UpdateStatusSuccessful ){
+
+               _supervisorDashboardBloc.add(GetSupervisorDashboardData());
+            }
             if (state is UpdateStatusError) {
               EasyLoading.dismiss();
               return CustomErrorWidget(error: state.error.message);

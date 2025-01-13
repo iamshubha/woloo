@@ -231,7 +231,7 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
 
                                            ),
 
-                                                child:  Text("Total Tasks: ${_search[index].totalTask.toString()}"),
+                                                child:  Text("Total Tasks: ${_search[index].totalTasks.toString()}"),
                                               ),
                                               SizedBox(
                                                 height: 10.h,
@@ -244,7 +244,7 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
                                                   borderRadius: BorderRadius.circular(25.r),
                                                 ),
 
-                                                child:  Text("Pending Tasks:  ${_search[index].pendingTask.toString()}"),
+                                                child:  Text("Pending Tasks:  ${_search[index].pendingTasks.toString()}"),
                                               )
                                             ],
                                            ),

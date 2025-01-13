@@ -45,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
   loadApp() async {
     if (Platform.isIOS) {
       await requestTracking();
-    }
+  }
     Messaging messaging = Messaging();
     await messaging.initialize();
    // updateDeviceToken();

@@ -9,8 +9,10 @@ import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
 
 class DialogueWidget extends StatefulWidget {
+ final String? title;
   const DialogueWidget({
     Key? key,
+    this.title
   }) : super(key: key);
 
   @override
@@ -59,19 +61,23 @@ class _DialogueWidgetState extends State<DialogueWidget> {
               Center(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Text(
+                  child:
+                  widget.title!.isEmpty?
+                  Text(
                     MyReportIssueScreenConstants.POP_UP_TEXT.tr(),
                     textAlign: TextAlign.center,
                     style: 
                     AppTextStyle.font14bold.copyWith(
                       color: AppColors.black,
                     )
-                    // TextStyle(
-                    //   fontWeight: FontWeight.w500,
-                    //   fontSize: 20.sp,
-                    //   color: AppColors.black,
-                    // ),
-                  ),
+                  )
+                  : Text(
+                      AssignScreenConstants.TASK_ASSIGN.tr(),
+                  textAlign: TextAlign.center,
+                  style:
+                  AppTextStyle.font14bold.copyWith(
+                    color: AppColors.black,
+                  ))
                 ),
               ),
               SizedBox(
@@ -86,8 +92,16 @@ class _DialogueWidgetState extends State<DialogueWidget> {
                     text: DialogueReportIssueConstants.DONE.tr(),
                     color: AppColors.buttonYellowColor,
                     onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pop(context);
+                       if( widget.title!.isEmpty){
+                         Navigator.pop(context);
+                         // Navigator.pop(context);
+                       }else{
+                         Navigator.pop(context);
+                         Navigator.pop(context);
+                         Navigator.pop(context);
+
+                       }
+
                     },
                   ),
                 ),

@@ -52,6 +52,8 @@ class _OTPWidgetState extends State<OTPWidget> {
       children: <Widget>[
         Center(
           child: Pinput(
+           key:ValueKey("otptextfield"),
+           
             controller: _pinController,
             hapticFeedbackType: HapticFeedbackType.lightImpact,
             defaultPinTheme: PinTheme(

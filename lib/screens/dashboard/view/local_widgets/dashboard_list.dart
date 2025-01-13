@@ -34,6 +34,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../utils/app_images.dart';
 
 class DashboardListWidget extends StatefulWidget {
+ final TabController? tabController;
   final Function onTapItem;
   final current_lattitude;
   final current_longitude;
@@ -42,6 +43,7 @@ class DashboardListWidget extends StatefulWidget {
   final String dataforEmyptyList;
   const DashboardListWidget(
       {Key? key,
+      required  this.tabController,
       required this.onTapItem,
       required this.current_lattitude,
       required this.current_longitude,
@@ -147,23 +149,28 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
 
         //  return
 
-      Expanded(
-      // height: MediaQuery.of(context).size.height / 2.7,
-      child: Scaffold(
+      Scaffold(
         backgroundColor: AppColors.white,
 
         body: Padding(
           padding: const EdgeInsets.only(top: 0, bottom: 10),
           child: widget.filter.isEmpty
-              ?  EmptyListWidget(
-            filter: widget.dataforEmyptyList,
+              ?  Container(
+            height: 300.h,
+                child: EmptyListWidget(
+                            filter: widget.dataforEmyptyList,
 
-          )
+                          ),
+              )
               : Column(
             crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Container(
-                    height: MediaQuery.of(context).size.height / 2.98,
+                    height:
+                    MediaQuery.of(context).size.height < 800 ?
+
+                    MediaQuery.of(context).size.height /3.1 :
+                    MediaQuery.of(context).size.height / 3.3,
                     child: CardSwiper(
                        isLoop: false,
                         allowedSwipeDirection: AllowedSwipeDirection.symmetric(
@@ -179,7 +186,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                             : 2,
                         cardsCount: widget.filter.length,
                         // allowUnlimitedUnSwipe: false,
-                     
+
 
 
                                                 // onCardPositionChanged: (AppinioSwiperDirection direction) {
@@ -251,27 +258,27 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                               children: [
                                                 Row(
                                                   children: [
-                                                    Padding(
-                                                      padding: EdgeInsets.symmetric(
-                                                        horizontal: 5.w,
-                                                        vertical: 1.h,
-                                                      ),
-                                                      child: Text(
-                                                          "${widget.filter[index].blockName}",
-                                                          overflow:
-                                                          TextOverflow.ellipsis,
-                                                          style: AppTextStyle
-                                                              .font12bold
-                                                              .copyWith(
-                                                            color: AppColors.greyButtonColor,
-                                                          )
-                                                        // TextStyle(
-                                                        //   color: AppColors.timeSlotColor,
-                                                        //   fontSize: 12.sp,
-                                                        //   fontWeight: FontWeight.w400,
-                                                        // ),
-                                                      ),
-                                                    ),
+                                                    // Padding(
+                                                    //   padding: EdgeInsets.symmetric(
+                                                    //     horizontal: 5.w,
+                                                    //     vertical: 1.h,
+                                                    //   ),
+                                                    //   child: Text(
+                                                    //       "${widget.filter[index].blockName}",
+                                                    //       overflow:
+                                                    //       TextOverflow.ellipsis,
+                                                    //       style: AppTextStyle
+                                                    //           .font12bold
+                                                    //           .copyWith(
+                                                    //         color: AppColors.greyButtonColor,
+                                                    //       )
+                                                    //     // TextStyle(
+                                                    //     //   color: AppColors.timeSlotColor,
+                                                    //     //   fontSize: 12.sp,
+                                                    //     //   fontWeight: FontWeight.w400,
+                                                    //     // ),
+                                                    //   ),
+                                                    // ),
                                                     Padding(
                                                       padding: EdgeInsets.symmetric(
                                                         horizontal: 5.w,
@@ -391,7 +398,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                             textAlign: TextAlign.center,
                                                             style: AppTextStyle
                                                                 .font10bold
-                                                                .copyWith()
+                                                                .copyWith(
+                                                              color: AppColors.greyButtonColor,
+                                                            )
                                                           // TextStyle(
                                                           //   color: AppColors.timeSlotColor,
                                                           //   fontSize: 12.sp,
@@ -641,8 +650,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                         ? AppColors.rfcCardBgColor
                                             //.withOpacity(0.7)
                                                         : AppColors
-                                                            .disabledContainerBorder
-                                                            .withOpacity(0.3),
+                                                            .checkOutColor,
+                                                          //  .withOpacity(0.3),
 
                                         borderRadius: BorderRadius.circular(25.r),
                                         // border:
@@ -680,29 +689,29 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
 
 
                                             children: [
-                                              Expanded(
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                    horizontal: 5.w,
-                                                    vertical: 1.h,
-                                                  ),
-                                                  child: Text(
-                                                      "${widget.filter[index].blockName}",
-                                                      overflow:
-                                                      TextOverflow.visible,
-                                                      style: AppTextStyle
-                                                          .font12bold
-                                                          .copyWith(
-                                                        color: AppColors.black,
-                                                      )
-                                                    // TextStyle(
-                                                    //   color: AppColors.timeSlotColor,
-                                                    //   fontSize: 12.sp,
-                                                    //   fontWeight: FontWeight.w400,
-                                                    // ),
-                                                  ),
-                                                ),
-                                              ),
+                                              // Expanded(
+                                              //   child: Padding(
+                                              //     padding: EdgeInsets.symmetric(
+                                              //       horizontal: 5.w,
+                                              //       vertical: 1.h,
+                                              //     ),
+                                              //     child: Text(
+                                              //         "${widget.filter[index].blockName}",
+                                              //         overflow:
+                                              //         TextOverflow.visible,
+                                              //         style: AppTextStyle
+                                              //             .font12bold
+                                              //             .copyWith(
+                                              //           color: AppColors.black,
+                                              //         )
+                                              //       // TextStyle(
+                                              //       //   color: AppColors.timeSlotColor,
+                                              //       //   fontSize: 12.sp,
+                                              //       //   fontWeight: FontWeight.w400,
+                                              //       // ),
+                                              //     ),
+                                              //   ),
+                                              // ),
                                               Expanded(
                                                 child: Padding(
                                                   padding: EdgeInsets.symmetric(
@@ -716,7 +725,12 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                       style: AppTextStyle
                                                           .font12bold
                                                           .copyWith(
-                                                        color: AppColors.black,
+                                                        color:
+                                                        widget.filter[index].status ==
+                                                            "Rejected" ?
+                                                             AppColors.white
+                                                            :
+                                                        AppColors.black,
                                                       )
                                                     // TextStyle(
                                                     //   color: AppColors.timeSlotColor,
@@ -752,7 +766,12 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                       style: AppTextStyle
                                                           .font12bold
                                                           .copyWith(
-                                                        color: AppColors.black,
+                                                        color:
+                                                        widget.filter[index].status ==
+                                                            "Rejected" ?
+                                                        AppColors.white
+                                                            :
+                                                        AppColors.black,
                                                       )
                                                       // TextStyle(
                                                       //   color: AppColors.timeSlotColor,
@@ -781,7 +800,12 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                       textAlign: TextAlign.center,
                                                       style: AppTextStyle
                                                           .font10bold
-                                                          .copyWith()
+                                                          .copyWith(
+                                                        color:  widget.filter[index].status ==
+                                                            "Rejected" ?
+                                                        AppColors.white
+                                                            : AppColors.black
+                                                      )
                                                     // TextStyle(
                                                     //   color: AppColors.timeSlotColor,
                                                     //   fontSize: 12.sp,
@@ -872,7 +896,12 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                         style: AppTextStyle
                                                             .font13w6
                                                             .copyWith(
-                                                          color: AppColors
+                                                          color:
+                                                          widget.filter[index].status ==
+                                                              "Rejected" ?
+                                                          AppColors.white
+                                                              :
+                                                          AppColors
                                                               .ListTitleColor,
                                                           letterSpacing: 0.8,
                                                         )),
@@ -889,12 +918,17 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                         style: AppTextStyle
                                                             .font13w6
                                                             .copyWith(
-                                                          color: AppColors
+                                                          color:
+                                                          widget.filter[index].status ==
+                                                              "Rejected" ?
+                                                          AppColors.white
+                                                              :
+                                                          AppColors
                                                               .ListTitleColor,
                                                           letterSpacing: 0.8,
                                                         )),
-                                                
-                                                
+
+
                                                   ],
                                                 ),
                                               ),
@@ -905,7 +939,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                               //   children: [
                                               if (widget.filter[index].status ==
                                                   "Pending") ...[
-                                                Column(
+                                                Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   crossAxisAlignment:
@@ -933,42 +967,60 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                                         .taskAllocationId ??
                                                                     '',
                                                                 status: "2"));
+                                                     widget.tabController!.animateTo(1);
+
                                                       },
-                                                      child: Padding(
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal:
-                                                                    10.w,
-                                                                vertical: 8.h),
-                                                        child: Container(
-                                                          width: 100.w,
-                                                          height: 27.h,
-                                                          alignment:
-                                                              Alignment.center,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        25.r),
-                                                            color: AppColors
-                                                                .buttonBgColor,
+                                                      child: Container(
+                                                        width: 60.w,
+                                                        height: 60.h,
+                                                        alignment:
+                                                            Alignment.center,
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                              shape: BoxShape.circle,
+                                                          // borderRadius:
+                                                          //     BorderRadius
+                                                          //         .circular(
+                                                          //             100.r),
+                                                          color:
+                                                          AppColors.bottomNavigationColor
+                                                        ),
+                                                        child: Center(
+                                                          child: Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            mainAxisAlignment:
+                                                            MainAxisAlignment.center,
+                                                            children: [
+
+                                                              CustomImageProvider(
+                                                                image: AppImages.checkIcons,
+                                                                width: 19.w,
+                                                                height: 19.h,
+                                                              ),
+                                                              Container(
+                                                                width :50.w,
+                                                                child: Text(
+                                                                  MydashboardScreenConstants.ACCEPT.tr(),
+                                                                  textAlign: TextAlign.center,
+
+                                                                  style:  AppTextStyle.font10.copyWith(
+
+                                                                   fontSize: 10,
+                                                                   overflow: TextOverflow.visible,
+                                                                   fontWeight: FontWeight.bold,
+
+
+
+                                                                 ),
+                                                                ),
+                                                              )
+                                                            ],
                                                           ),
-                                                          child: Padding(
-                                                              padding: EdgeInsets
-                                                                  .symmetric(
-                                                                horizontal:
-                                                                    15.w,
-                                                                vertical: 1.h,
-                                                              ),
-                                                              child:
-                                                            const Icon( Icons.check ,
-                                                           color: AppColors.white,
-                                                            size: 30,
-                                                          )
-                                                              ),
                                                         ),
                                                       ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 6.w,
                                                     ),
                                                     // )
                                                     InkWell(
@@ -982,43 +1034,49 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                                         index]
                                                                     .taskAllocationId!,
                                                                 status: "7"));
+                                                                  widget.tabController!.animateTo(5);
                                                       },
-                                                      child: Padding(
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal:
-                                                                    10.w,
-                                                                vertical: 8.h),
-                                                        child: Container(
-                                                          width: 100.w,
-                                                          height: 27.h,
-                                                          alignment: Alignment
-                                                              .centerRight,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        25.r),
-                                                            color: AppColors
-                                                                .buttonBgColor,
-                                                          ),
-                                                          child: Center(
-                                                            child: Padding(
-                                                                padding: EdgeInsets
-                                                                    .symmetric(
-                                                                  horizontal:
-                                                                      15.w,
-                                                                  vertical: 1.h,
+                                                      child: Container(
+                                                        width: 60.w,
+                                                        height: 60.h,
+                                                        alignment: Alignment
+                                                            .centerRight,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                              shape: BoxShape.circle,
+                                                          // borderRadius:
+                                                          //     BorderRadius
+                                                          //         .circular(
+                                                          //             70.r),
+                                                          color: AppColors
+                                                              .checkOutColor,
+                                                        ),
+                                                        child: Center(
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                            MainAxisAlignment.center,
+
+                                                            children: [
+                                                               CustomImageProvider(
+                                                                image: AppImages.removeIcons,
+                                                                 width: 19.w,
+                                                                 height: 19.h,
+                                                               ),
+                                                              // const Icon(
+                                                              //   Icons.close,
+                                                              //   color:
+                                                              //   AppColors
+                                                              //       .white,
+                                                              //   size: 19,
+                                                              // ),
+                                                              Text(MydashboardScreenConstants.REJECT.tr(),
+                                                                style:  AppTextStyle.font10.copyWith(
+                                                                  color: AppColors.white,
+                                                                    fontSize: 10,
+                                                                    fontWeight: FontWeight.bold
                                                                 ),
-                                                                child:
-                                                                    const Icon(
-                                                                  Icons.close,
-                                                                  color:
-                                                                      AppColors
-                                                                          .white,
-                                                                  size: 30,
-                                                                )),
+                                                              )
+                                                            ],
                                                           ),
                                                         ),
                                                       ),
@@ -1028,7 +1086,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                               ],
                                               if (widget.filter[index].status ==
                                                   "Accepted") ...[
-                                                Column(
+                                                Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   crossAxisAlignment:
@@ -1058,55 +1116,44 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                         //     'https://www.google.com/maps/dir/${latitude},${longitude}/${ widget.filter[index].lat},${filter[index].lng}');
                                                         // await _launchUrl();
                                                       },
-                                                      child: Padding(
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal:
-                                                                    10.w,
-                                                                vertical: 8.h),
-                                                        child: Container(
-                                                          width: 100.w,
-                                                          height: 27.h,
-                                                          // width: 75.w,
-                                                          alignment: Alignment
-                                                              .centerRight,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        25.r),
-                                                            color: AppColors
-                                                                .buttonBgColor,
-                                                          ),
-                                                          child: Padding(
-                                                              padding: EdgeInsets
-                                                                  .symmetric(
-                                                                horizontal:
-                                                                    15.w,
-                                                                vertical: 1.h,
-                                                              ),
-                                                              child: const Center(
-                                                                  child:
-                                                                Icon( Icons.location_on,
-                                                              color: AppColors.white,
-                                                              size: 25,
-                                                            ),
-                                                              )
+                                                      child: Container(
+                                                        width: 60.w,
+                                                        height: 60.h,
+                                                        // width: 75.w,
+                                                        alignment: Alignment
+                                                            .centerRight,
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                         shape: BoxShape.circle,
+                                                          color: AppColors
+                                                              .buttonBgColor,
+                                                        ),
+                                                        child:  Center(
+                                                            child:
+                                                          Column(
+                                                            mainAxisAlignment:
+                                                            MainAxisAlignment.center,
+                                                            children: [
+                                                               CustomImageProvider(
+                                                                image: AppImages.directionIcons,
+                                                                 width: 19.w,
+                                                                 height: 19.h,
+                                                               ),
 
-                                                              // Text(
-                                                              //   MydashboardScreenConstants.DIRECTION.tr(),
-                                                              //   textAlign: TextAlign.center,
-                                                              //   overflow: TextOverflow.ellipsis,
-                                                              //   style: TextStyle(
-                                                              //     fontSize: 10.sp,
-                                                              //     fontWeight: FontWeight.w600,
-                                                              //     color: AppColors.black,
-                                                              //   ),
-                                                              // ),
-                                                              ),
+                                                                    Text(MydashboardScreenConstants.DIRECTION.tr(),
+                                                                        style:  AppTextStyle.font10.copyWith(
+                                                                          color: AppColors.black,
+                                                                            fontSize: 10,
+                                                                            fontWeight: FontWeight.bold
+                                                                        ),
+                                                                      )
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 7.w,
                                                     ),
                                                     InkWell(
                                                       onTap: () async {
@@ -1135,49 +1182,40 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                                 .toString());
                                                         widget.dashboardBloc.add(
                                                             const GetTaskTamplates());
+                                                            widget.tabController!.animateTo(2);
                                                       },
-                                                      child: Padding(
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal:
-                                                                    10.w,
-                                                                vertical: 8.h),
-                                                        child: Container(
-                                                          // width: 75.w,
-                                                          width: 100.w,
-                                                          height: 27.h,
-                                                          alignment:
-                                                              Alignment.center,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        25.r),
-                                                            color: AppColors
-                                                                .buttonBgColor,
-                                                          ),
-                                                          child: Padding(
-                                                              padding: EdgeInsets
-                                                                  .symmetric(
-                                                                horizontal:
-                                                                    15.w,
-                                                                vertical: 0.h,
-                                                              ),
-                                                              child: Center(
-                                                                  child: CustomImageProvider(image:AppImages.forward,)
-                                                              )
-                                                              // Text(
-                                                              //   MydashboardScreenConstants.START.tr(),
-                                                              //   overflow: TextOverflow.ellipsis,
-                                                              //   textAlign: TextAlign.center,
-                                                              //   style: TextStyle(
-                                                              //     fontSize: 10.sp,
-                                                              //     fontWeight: FontWeight.w600,
-                                                              //     color: AppColors.white,
-                                                              //   ),
-                                                              // ),
-                                                              ),
+                                                      child: Container(
+                                                        // width: 75.w,
+                                                        width: 60.w,
+                                                        height: 60.h,
+                                                        alignment:
+                                                            Alignment.center,
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                         shape: BoxShape.circle,
+                                                          color: AppColors
+                                                              .buttonBgColor,
+                                                        ),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment.center,
+                                                          children: [
+                                                            Center(
+                                                                child: CustomImageProvider(image:AppImages.startIcons,
+                                                                  width: 19.w,
+                                                                  height: 19.h,
+                                                                  fit: BoxFit.fill,
+                                                                )
+                                                            ),
+                                                                       Text(MydashboardScreenConstants.START.tr(),
+                                                                        style:  AppTextStyle.font10.copyWith(
+                                                                          color: AppColors.black,
+                                                                            fontSize: 10,
+                                                                            fontWeight: FontWeight.bold
+                                                                        ),
+                                                                      )
+
+                                                          ],
                                                         ),
                                                       ),
                                                     )
@@ -1215,6 +1253,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                             ),
                                                           ),
                                                         );
+                                                       widget.tabController!.animateTo(3);
                                                       },
                                                       child: Padding(
                                                         padding: EdgeInsets
@@ -1223,8 +1262,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                                     10.w,
                                                                 vertical: 8.h),
                                                         child: Container(
-                                                          width: 100.w,
-                                                          height: 27.h,
+                                                          width: 120.w,
+                                                          height: 40.h,
                                                           alignment:
                                                               Alignment.center,
                                                           decoration:
@@ -1233,34 +1272,43 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                                 BorderRadius
                                                                     .circular(
                                                                         25.r),
-                                                            color: AppColors
-                                                                .onGoingBorderBgColor,
+                                                                  color: AppColors
+                                                                      .buttonBgColor
                                                           ),
                                                           child: Center(
-                                                            child: Padding(
-                                                                padding: EdgeInsets
-                                                                    .symmetric(
-                                                                  // horizontal: 40.w,
-                                                                  vertical: 0.h,
-                                                                ),
-                                                                child: Center(
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                              MainAxisAlignment.center,
+                                                              children: [
+                                                                Center(
                                                                     child:
-                                                                 Icon( Icons.arrow_downward_outlined,
-                                                               color: AppColors.white,
-                                                               size: 25,
-                                                             )
-                                                                )
-                                                                // Text(
-                                                                //   MydashboardScreenConstants.CLOSE.tr(),
-                                                                //   textAlign: TextAlign.center,
-                                                                //   overflow: TextOverflow.ellipsis,
-                                                                //   style: TextStyle(
-                                                                //     fontSize: 10.sp,
-                                                                //     fontWeight: FontWeight.w600,
-                                                                //     color: AppColors.black,
-                                                                //   ),
-                                                                // ),
+                                                                 CustomImageProvider(
+                                                                   image: AppImages.rfcIcons,
+                                                                   width: 19.w,
+                                                                   height: 19.h,
+                                                                 ),
                                                                 ),
+                                                                Container(
+                                                                   width: 80.w,
+                                                                  child: Text(
+
+                                                                      MydashboardScreenConstants.Rquest_TASK.tr(),
+                                                                      maxLines: 2,
+                                                                      softWrap: true,
+                                                                      textAlign: TextAlign.center,
+                                                                      overflow: TextOverflow
+                                                                          .visible,
+                                                                      style: AppTextStyle
+                                                                          .font10w6
+                                                                          .copyWith(
+                                                                        fontSize: 11,
+                                                                        color: AppColors
+                                                                            .ListTitleColor,
+                                                                        letterSpacing: 0.8,
+                                                                      )),
+                                                                ),
+                                                              ],
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
@@ -1307,31 +1355,31 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                             height: 5.h,
                                           ),
 
-                                          if ((widget
-                                                  .filter[index].requestType ==
-                                              "Issue")) ...[
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 5.w,
-                                                  vertical: 2.h),
-                                              child: Text(
-                                                  "${(widget.filter[index].requestType ?? '').tr()} : ${widget.filter[index].issueDescription ?? '-'}",
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: AppTextStyle.font12
-                                                      .copyWith(
-                                                    color: AppColors
-                                                        .ListTitleColor,
-                                                  )
+                                          // if ((widget
+                                          //         .filter[index].requestType ==
+                                          //     "Issue")) ...[
+                                          //   Padding(
+                                          //     padding: EdgeInsets.symmetric(
+                                          //         horizontal: 5.w,
+                                          //         vertical: 2.h),
+                                          //     child: Text(
+                                          //         "${(widget.filter[index].requestType ?? '').tr()} : ${widget.filter[index].issueDescription ?? '-'}",
+                                          //         overflow:
+                                          //             TextOverflow.ellipsis,
+                                          //         style: AppTextStyle.font12
+                                          //             .copyWith(
+                                          //           color: AppColors
+                                          //               .ListTitleColor,
+                                          //         )
 
-                                                  // TextStyle(
-                                                  //   color: AppColors.ListTitleColor,
-                                                  //   fontSize: 12.sp,
-                                                  //   fontWeight: FontWeight.w400,
-                                                  // ),
-                                                  ),
-                                            ),
-                                          ],
+                                          //         // TextStyle(
+                                          //         //   color: AppColors.ListTitleColor,
+                                          //         //   fontSize: 12.sp,
+                                          //         //   fontWeight: FontWeight.w400,
+                                          //         // ),
+                                          //         ),
+                                          //   ),
+                                          // ],
 
                                           if (widget.filter[index ].status ==
                                               "Re-open") ...[
@@ -1554,8 +1602,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                 ],
               ),
         ),
-      ),
-    );
+      );
     // },
     // );
   }

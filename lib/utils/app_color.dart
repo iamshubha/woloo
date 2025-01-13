@@ -143,8 +143,8 @@ class AppColors {
   static const Color timeColor = Color(0xff646060);
   static const Color greyLineColor = Color(0xffB3B3B3);
   static const Color greyCircleColor = Color(0xffBFBFBF);
-  static const Color checkOutColor = Color(0xffFF0000);
-  static const Color bottomNavigationColor = Color(0xffFFE22C);
+  static const Color checkOutColor = Color(0xff444242);
+  static const Color bottomNavigationColor = Color(0xff00C3DE);
   static const Color fabColor = Color(0xff3D443D);
   static const Color yellowTextColor = Color(0xffF4C10B);
   static const Color disabledCamButtonColor = Color(0xff00C3DE);

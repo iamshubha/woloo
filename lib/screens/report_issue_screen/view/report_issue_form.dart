@@ -30,10 +30,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:form_builder_extra_fields/form_builder_extra_fields.dart';
+import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:queen_validators/queen_validators.dart';
 
+import '../../../core/local/global_storage.dart';
 import '../../common_widgets/empty_list_widget.dart';
 import '../../selfie_screen/view/camera.dart';
 import '../../washroom_image_screen/images_bloc/bloc/capture_bloc.dart';
@@ -46,8 +49,10 @@ enum PickSource {
 }
 
 class ReportIssueScreen extends StatefulWidget {
+  final PageController? pageController;
   const ReportIssueScreen({
     Key? key,
+    this.pageController
   }) : super(key: key);
 
   @override
@@ -59,7 +64,8 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
 
   ReportIssueBloc reportIssueBloc = ReportIssueBloc();
   final TextEditingController _controller = TextEditingController();
-
+   // GlobalKey<DropdownSearchState> dropDownKey = GetIt.instance();
+  // dropDownKey;
   List<ClusterDropdownModel> clusterNames = [];
   List<FacilityDropdownModel> facilityNames = [];
   List<TaskNamesModels> templateNames = [];
@@ -71,26 +77,36 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
   List<String> selectedIds = [];
   String templateId = "";
   late int janitorId;
+  late int clusterId;
   late int facilityId;
   late File taskImage;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-   
+
   final ReportIssueBloc bloc1 = ReportIssueBloc();
   final ReportIssueBloc bloc2 = ReportIssueBloc();
   final ReportIssueBloc bloc3 = ReportIssueBloc();
-   CaptureBloc _captureBloc = CaptureBloc(); 
+   CaptureBloc _captureBloc = CaptureBloc();
+  final GlobalKey<DropdownSearchState> _clusterNameKey = GlobalKey<DropdownSearchState>();
+  final GlobalKey<DropdownSearchState> _facilityKey = GlobalKey<DropdownSearchState>();
+  final GlobalKey<DropdownSearchState> _templateKey = GlobalKey<DropdownSearchState>();
+  final GlobalKey<DropdownSearchState> _taskNameKey = GlobalKey<DropdownSearchState>();
+  final GlobalKey<DropdownSearchState> _assignKey = GlobalKey<DropdownSearchState>();
+  AutovalidateMode _autoValidate = AutovalidateMode.disabled;
+  // final GlobalKey<DropdownSearchState> _dropDownKey = GlobalKey<DropdownSearchState>();
+  // final GlobalKey<DropdownSearchState> _dropDownKey = GlobalKey<DropdownSearchState>();
+  // final GlobalKey<DropdownSearchState> _dropDownKey = GlobalKey<DropdownSearchState>();
+
+  // GlobalKey<DropdownSearchState> dropDownKey = GlobalKey<DropdownSearchState>();
   @override
   void initState() {
     reportIssueBloc.add(GetAllClustersDropdown());
-    reportIssueBloc.add(GetAllTasksDropdown());
+   
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return 
-    
-
     BlocConsumer(
         bloc: reportIssueBloc,
         listener: (context, state) {
@@ -99,7 +115,23 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
             EasyLoading.dismiss();
             _reportIssueModel = state.data;
             openDialog();
-            // EasyLoading.showToast(_reportIssueModel.message.toString());
+            // clusterNames = [];
+            // facilityNames = [];
+            // templateNames = [];
+            // taskNames = TaskListModel();
+            // tasks.clear();
+            // taskIds.clear();
+            _controller.clear();
+            _facilityKey.currentState?.clear();
+            _clusterNameKey.currentState!.clear();
+            _templateKey.currentState?.clear();
+               _taskNameKey.currentState?.clear();
+               _assignKey.currentState?.clear();
+            _captureBloc.add(  RemoveImages(file: _file ));
+
+           // _autoValidate = AutovalidateMode.always;
+           // _formKey.currentState!.dispose();
+            // EasyLoading.showToast(_repor btIssueModel.message.toString());
           }
         },
         builder: (context, state) {
@@ -134,6 +166,9 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
 
             EasyLoading.dismiss();
              facilityNames = state.data;
+            reportIssueBloc.add(GetAllTasksDropdown(
+                      clusterId: clusterId! ?? 0
+                  ));
          //   return const EmptyListWidget();
           }
           else
@@ -148,9 +183,9 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
            else
             if (state is GetTasksDropdownSuccess) {
             EasyLoading.dismiss();
-
-         
               templateNames = state.data;
+            reportIssueBloc.add(GetAllJanitorsDropdown(
+                       clusterId: clusterId ?? 0));
            
           }
            else
@@ -185,7 +220,6 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
 
             
               taskNames = state.data;
-
               tasks = taskNames.tasks!;
            
           }
@@ -218,55 +252,76 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
             },
             child: Scaffold(
               backgroundColor: AppColors.white,
+
               appBar:
                AppBar(
-                 leadingWidth: 100.w,
-                leading:LeadingButton(),           
+             //    leadingWidth: 100.w,
+              //  leading:LeadingButton(),
                 backgroundColor: AppColors.white,
                 elevation: 0,
+                 title:          Padding(
+                   padding: EdgeInsets.symmetric(
+                     horizontal: 15.w,
+                     vertical: 10.h,
+                   ),
+                   child: Text(
+                       MydashboardScreenConstants.REPORT_ISSUE.tr(),
+                       textAlign: TextAlign.start,
+                       style:
+                       AppTextStyle.font24bold.copyWith(
+                         color: AppColors.black,
+                       )
+                     //  TextStyle(
+                     //   color: AppColors.yellowSplashColor,
+                     //   fontSize: 24.sp,
+                     //   fontWeight: FontWeight.w400,
+                     // ),
+                   ),
+                 ),
               ),
               body: SingleChildScrollView(
                 child: Form(
                   key: _formKey,
+                  autovalidateMode: _autoValidate,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                       Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 15.w,
-                    vertical: 10.h,
-                  ),
-                  child: Text(
-                    MydashboardScreenConstants.REPORT_ISSUE.tr(),
-                    textAlign: TextAlign.start,
-                    style:
-                    AppTextStyle.font24.copyWith(
-                      color: AppColors.black,
-                    )
-                    //  TextStyle(
-                    //   color: AppColors.yellowSplashColor,
-                    //   fontSize: 24.sp,
-                    //   fontWeight: FontWeight.w400,
-                    // ),
-                  ),
-                ),
-                  
+
                       Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: 20.w, vertical: 10.h),
                         child: DropDownDialog(
-                          hint:   MyReportIssueScreenConstants.CLUSTER_NAME.tr(),
-                          
+                          // selected: clusterNames.first,
+                          // key: _dropDownKey,
+                          widgetKey: _clusterNameKey,
+
+                          hint: MyReportIssueScreenConstants.CLUSTER_NAME.tr(),
+
+
+
                           items: clusterNames,
+
                           itemAsString: (ClusterDropdownModel item) =>
                               item.clusterName,
                           onChanged: (ClusterDropdownModel item) {
+                                 print("in drop down $state");
                             try {
+                              clusterId = item.clusterId!;
                               reportIssueBloc.add(GetAllFacilityDropdown(
                                   clusterId: item.clusterId ?? 0));
-                              reportIssueBloc.add(GetAllJanitorsDropdown(
-                                  clusterId: item.clusterId ?? 0));
+                              //
+                              //   // if(state is GetFacilityDropdownSuccess ){
+                              //     reportIssueBloc.add(GetAllTasksDropdown(
+                              //         clusterId: item.clusterId! ?? 0
+                              //     ));
+                              //   // }else
+                              //    // if( state is  GetTasksDropdownSuccess ){
+                              //      reportIssueBloc.add(GetAllJanitorsDropdown(
+                              //          clusterId: item.clusterId ?? 0));
+                                 // }
+
+
                             } catch (e) {
                               print("dropppppp" + e.toString());
                             }
@@ -278,7 +333,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                               : null,
                         ),
                       ),
-                   
+
                       // ),
                       Padding(
                         padding: EdgeInsets.symmetric(
@@ -286,6 +341,9 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           vertical: 10.h,
                         ),
                         child: DropDownDialog(
+                          // key: dropDownKey,
+                          selected: null,
+                          widgetKey: _facilityKey,
                           hint:  MyReportIssueScreenConstants.FACILITY.tr(),
                           // key: Key('${_editMarketModel.city?.label}T4'),
                           // selected: cities.firstWhereOrNull((element) => element.value == _editMarketModel.city?.value),
@@ -295,24 +353,27 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                               item.facilityName,
 
                           onChanged: (FacilityDropdownModel item) {
-                       
+
                               facilityId = item.id!;
                               print("facilityId --->" + facilityId.toString());
-                           
+
                           },
+
                           validator: (value) => value == null
                               ? MyReportIssueScreenConstants.FACILITY_VALIDATION
                                   .tr()
                               : null,
                         ),
                       ),
-                    
+
+
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 20.w,
                           vertical: 10.h,
                         ),
                         child: DropDownDialog(
+                          widgetKey: _templateKey,
                           hint:    MyReportIssueScreenConstants.TEMPLATE_NAME.tr(),
                           // key: Key('${_editMarketModel.city?.label}T4'),
                           // selected: cities.firstWhereOrNull((element) => element.value == _editMarketModel.city?.value),
@@ -328,10 +389,10 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           onChanged: (TaskNamesModels item) {
                             reportIssueBloc
                                 .add(GetAllTaskList(id: item.id ?? '0'));
-                            
+
                               templateId = item.id!;
                               print("templateId --->" + templateId.toString());
-                        
+
                           },
                         ),
                       ),
@@ -360,7 +421,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                         child: Container(
                              decoration: BoxDecoration(
         color: Colors.white,
-        
+
         borderRadius: BorderRadius.circular(25.r),
           boxShadow: [
                         BoxShadow(
@@ -373,6 +434,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                       ],
       ),
                           child: MultiselectDropDownDialog(
+                            widgetKey: _taskNameKey,
                             hint: MyReportIssueScreenConstants.TASK_NAME.tr(),
                             // key: Key(
                             //     '${_editProductModel.paymentMethodId?.firstOrNull?.label}T5'),
@@ -398,7 +460,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           ),
                         ),
                       ),
-                   
+
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 20.w,
@@ -407,7 +469,6 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                         child: Container(
                              decoration: BoxDecoration(
         color: Colors.white,
-        
         borderRadius: BorderRadius.circular(25.r),
           boxShadow: [
                         BoxShadow(
@@ -419,8 +480,18 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                         ),
                       ],
       ),
-                          child: CustomInputField(
-                            hint:  MyReportIssueScreenConstants.DESCRIPTION.tr(),
+                          child: TextFormField(
+                              autovalidateMode: AutovalidateMode.disabled,
+                             decoration: InputDecoration(
+                               hintText:  MyReportIssueScreenConstants.DESCRIPTION.tr(),
+                               contentPadding: EdgeInsets.only( left: 12 ),
+                               border: InputBorder.none
+
+                             ),
+
+
+                            // hint:  MyReportIssueScreenConstants.DESCRIPTION.tr(),
+
                             controller: _controller,
                             validator: qValidator([
                               IsRequired(
@@ -455,6 +526,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           vertical: 10.h,
                         ),
                         child: DropDownDialog(
+                          widgetKey: _assignKey,
                           hint:      MyReportIssueScreenConstants.ASSIGN_TO.tr(),
                           items: janitorList,
                           itemAsString: (JanitorDropdownModel item) =>
@@ -464,13 +536,13 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                                   .tr()
                               : null,
                           onChanged: (JanitorDropdownModel item) {
-                           
+
                              FocusScope.of(context).requestFocus(FocusNode());
                               janitorId = item.id!;
                               print("selectedTasks---->${selectedIds}");
 
                               print("janitorId --->" + janitorId.toString());
-                          
+
                           },
                         ),
                       ),
@@ -731,16 +803,18 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
+
+
                           bool isValid =
                               _formKey.currentState?.validate() ?? false;
                           if (!isValid) {
                             return;
                           }
 
-                     
+
 
                           if (_file != null) {
-                          
+
                             reportIssueBloc.add(ReportIssue(
                                 template_id: templateId,
                                 facility_id: facilityId,
@@ -748,8 +822,8 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                                 description: _controller.text,
                                 task_images: _file!,
                                 taskList: selectedIds
-                                )
-                                );
+                            )
+                            );
                           } else {
                             EasyLoading.showToast(MyReportIssueScreenConstants
                                 .UPLOAD_IMG_TOAST
@@ -761,14 +835,19 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           padding: EdgeInsets.symmetric(
                               horizontal: 30.w, vertical: 20.h),
                           child: ButtonWidget(
-                            color: AppColors.buttonYellowColor,
+                              color: AppColors.buttonYellowColor,
                               text: MySelfieScreenConstants.SUBMIT_BTN.tr()),
                         ),
                       ),
+                      SizedBox(
+                        height: 25.h,
+                      )
                     ],
                   ),
                 ),
               ),
+
+
             ),
           );
         });
@@ -838,8 +917,25 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return const DialogueWidget();
+        return const DialogueWidget(
+
+          title: "",
+        );
       },
-    );
+    ).whenComplete( () {
+      widget.pageController!.animateToPage(
+        5,
+        duration: const Duration(
+          milliseconds: 200,
+        ),
+        curve: Curves.bounceOut,
+      );
+
+    },);
+
+    //     .then( (value) {
+
+    //
+    // },);
   }
 }

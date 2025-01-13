@@ -16,6 +16,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../utils/app_images.dart';
+import '../../common_widgets/image_provider.dart';
 import '../view/local_widgets/iot_task.dart';
 import '../view/local_widgets/regular_task.dart';
 
@@ -117,8 +119,8 @@ class _TemplateScreenState extends State<TemplateScreen> {
           EasyLoading.showError(state.error.message);
         }
                     _widgetOptions = [
-           RegularTask(),
-           IotTask()
+           const RegularTask(),
+           const IotTask()
           
         ];
       // },
@@ -192,8 +194,8 @@ class _TemplateScreenState extends State<TemplateScreen> {
         elevation: 15,
         unselectedItemColor:  AppColors.black,
         unselectedLabelStyle:  AppTextStyle.font12bold,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
+        items:  <BottomNavigationBarItem>[
+          const BottomNavigationBarItem(
             icon: Icon(Icons.task_outlined,
              size: 30,
             ),
@@ -201,7 +203,16 @@ class _TemplateScreenState extends State<TemplateScreen> {
 
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.bus_alert),
+            icon:  CustomImageProvider(
+              image: AppImages.iotIcons,
+              width: 30,
+              height: 30,
+              color:
+              _selectedIndex == 1 ?
+              AppColors.buttonBgColor
+                  : null
+              ,
+            ),
             label: 'IOT Task',
 
           ),

@@ -15,10 +15,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 // import '../../../core/bloc/core_bloc.dart';
 import '../../common_widgets/image_provider.dart';
 import '../../login/data/model/Update_token_model.dart';
+import '../../my_account/data/model/profile_model.dart';
+import '../../my_account/view/bloc/profile_bloc.dart';
+import '../../my_account/view/bloc/profile_event.dart';
+import '../../my_account/view/bloc/profile_state.dart';
 import '../upload_profile.dart';
 
 class JanitorProfileScreen extends StatefulWidget {
@@ -31,37 +36,41 @@ class JanitorProfileScreen extends StatefulWidget {
 }
 
 class JanitorProfileScreenState extends State<JanitorProfileScreen> {
-  LoginBloc? profileBloc;
-  List<UpdateTokenModel>? profile;
+  ProfileBloc? profileBloc =   GetIt.instance<ProfileBloc>();
+
+  //ProfileBloc();
+  ProfileModel profile = ProfileModel();
     // CoreBloc coreBloc = CoreBloc();
   var name;
+   Map<String, dynamic>? decodedToken;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     // print("sdf");
     // print(" sadas ${loginBloc.profileList}");
-    profileBloc = BlocProvider.of<LoginBloc>(
-      context,
-    );
-   // updat();
+    // profileBloc = BlocProvider.of<LoginBloc>(
+    //   context,
+    // );
+      var some =   globalStorage.getToken();
+
+
+     decodedToken = JwtDecoder.decode(some);
+   updat(decodedToken!["id"]);
     // BlocProvider.of<LoginBloc>(context);
     name = globalStorage.getProfileName();
 
 
 
-    print(profileBloc!.profileList);
+   // print(profileBloc!.profileList);
   }
 
-   updat()async{
-          var firebase = FirebaseMessaging.instance;
-                          var token = await firebase.getToken();
-    profileBloc?.add( UpdateTokenOnVerifyOTP(
-        token:token!
+   updat(id)async{
+          profileBloc?.add(UpdateProfile(
+      id: id
+    )
+       );
 
-         //   "e2E8G5n5T0OAm4aH7PIcTf:APA91bG9pDBP0RAvMBYuQM9ZHAvva_GsgsnAaUHLU4n7xF6gcytrAzDC6HJiWSn0nOsO8m4mrZy9GpuaCAXQAoM6854kdlRvCVYAnUYxtlVL62A-e3Y442lm5FItZY60htbBCv6qdYx1"
-
-    ));
    }
 
   final globalStorage = GetIt.instance<GlobalStorage>();
@@ -104,7 +113,7 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                 ),
                 child: Text(MyJanitorProfileScreenConstants.MY_PROFILE.tr(),
                     textAlign: TextAlign.start,
-                    style: AppTextStyle.font20bold.copyWith(
+                    style: AppTextStyle.font24bold.copyWith(
                       color: AppColors.black,
                     )
                   // TextStyle(
@@ -122,28 +131,37 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    width: 20.h,
+                  ),
 
-                  //  BlocBuilder<LoginBloc, LoginState>(
-                  //    bloc: profileBloc,
-                  //   builder: 
-                  //   (context, state) {
-                  //      if (state is  UpdateTokenLoading ) {
-                  //        EasyLoading.show(status: "");
-                              
-                  //      }
-                  //       if (state is UpdateTokenSuccess ){
-                  //         EasyLoading.dismiss();
-                 
-                  //         profile =  state.data  ;
-                  //      }
-                  //       if(state is UpdateTokenError ){
-                  //         EasyLoading.show(status: state.error.message);
-                         
-                  //      }
-                       
-                  //                    return
+                         BlocBuilder<ProfileBloc, ProfileState>(
+                                                 bloc: profileBloc,
+                                                builder:
+                                                (context, state) {
+                                                     print("state $state ");
+                                                   if (state is  ProfleLoading ) {
+                                                     EasyLoading.show(status: "");
+                                       
+                                                   }
+                                                    if (state is ProfleSuccess ){
+                                                   EasyLoading.dismiss();
+                                       
+                                                     profile =  state.data;
 
-                                       profile == null ?
+                                                   }
+                                                    if(state is ProfleError ){
+                                                    EasyLoading.show(status: state.error);
+                                       
+                                                   }
+
+                                                   // print(" profileeee ${profile!.results!.profileImage}");
+                                       
+                                       return
+
+                                       profile.results == null
+                                           || profile!.results!.profileImage ==  null
+                                           ?
 
                                        Center(
                                          child: CustomImageProvider(
@@ -156,22 +174,44 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                                        :
 
                                        Center(
-                    child: CustomImageProvider(
-                      image: "https://woloo-taskmanagement-s3bucket.s3.ap-south-1.amazonaws.com/${profile!.first.profileImage!.replaceAll("[", "").replaceAll("]", "").replaceAll('"', '')}",
-                      height: 70.h,
-                      width: 70.w,
-                      alignment: Alignment.center,
-                    ),
-                  ),
+                    child:
+               CircleAvatar(
+                 backgroundColor:  AppColors.darkGreyColor,
+                radius: 40,
+                 child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                   child: CustomImageProvider(  image:
+                                                    // AppImages.appLogo,
+                      "${profile!.results!.baseUrl}/${profile!.results!.profileImage!.replaceAll("[", "").replaceAll("]", "").replaceAll('"', '')}",
+                                                                               //   "https://woloo-taskmanagement-s3bucket.s3.ap-south-1.amazonaws.com/${profile!.results!.profileImage!.replaceAll("[", "").replaceAll("]", "").replaceAll('"', '')}",
+                                                          height:
+                                                          70.h,
+                                                          width: 70.w,
+                                                          alignment: Alignment.center,
+                                                        ),
+                 ),
+               ),
+                  );
 
-                    // },
-                  //  ),
+                    },
+                   ),
 
                
                   InkWell(
                      onTap: () {
                           Navigator.of(context).push(  MaterialPageRoute(builder: (context) {
-                              return  const UplopadProfile(
+                              return   UplopadProfile(
+                                capture: (v){
+                                   if (v) {
+                                                                     profileBloc?.add(UpdateProfile(
+      id: decodedToken!["id"]
+    ));
+                                     
+                                     
+                                   }
+
+
+                                },
                              
                               );
                           },  )  );
@@ -187,35 +227,98 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
               SizedBox(
                 height: 15.h,
               ),
-              Center(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Name:",
-                      style: AppTextStyle.font16.copyWith(
-                        color: AppColors.greyText,
-                      )
-                      // TextStyle(
-                      //   fontWeight: FontWeight.w400,
-                      //   fontSize: 16.sp,
-                      //   color: AppColors.greyText,
-                      // ),
-                      ),
-                  SizedBox(
-                    width: 15.h,
-                  ),
-                  Text(name,
-                      style: AppTextStyle.font16.copyWith(
-                        color: AppColors.black,
-                      )
-                      //  TextStyle(
-                      //   fontWeight: FontWeight.w400,
-                      //   fontSize: 16.sp,
-                      //   color: AppColors.black,
-                      // ),
-                      ),
-                ],
-              )),
+              BlocBuilder(
+                  bloc: profileBloc,
+                builder:  (context, state) {
+                  print("state $state ");
+                  if (state is  ProfleLoading ) {
+                    EasyLoading.show(status: "");
+
+                  }
+                  if (state is ProfleSuccess ){
+                    EasyLoading.dismiss();
+
+                    profile =  state.data;
+
+                  }
+                  if(state is ProfleError ){
+                    EasyLoading.show(status: state.error);
+
+                  }
+               return   Column(
+                 children: [
+                   Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // Text("Name:",
+                              //     style: AppTextStyle.font16.copyWith(
+                              //       color: AppColors.greyText,
+                              //     )
+                              //     // TextStyle(
+                              //     //   fontWeight: FontWeight.w400,
+                              //     //   fontSize: 16.sp,
+                              //     //   color: AppColors.greyText,
+                              //     // ),
+                              //     ),
+                              // SizedBox(
+                              //   width: 15.h,
+                              // ),
+                              profile.results == null
+                                  || profile.results!.profileImage == null ?
+                              Container()
+                                  :
+                              Text("${profile!.results!.firstName!} ${profile!
+                                  .results!.lastName!}",
+                                  style: AppTextStyle.font24bold.copyWith(
+                                    color: AppColors.black,
+                                  )
+                                //  TextStyle(
+                                //   fontWeight: FontWeight.w400,
+                                //   fontSize: 16.sp,
+                                //   color: AppColors.black,
+                                // ),
+                              )
+                            ],
+                          )),
+                   SizedBox(
+                     height: 10.h,
+                   ),
+                   Row(
+                     mainAxisAlignment: MainAxisAlignment.center,
+                     children: [
+                       Text(
+                         textAlign: TextAlign.center,
+                         "Mob :",
+                         style:
+                         AppTextStyle.font16.copyWith(
+                           color: AppColors.black,
+                         ),),
+                       profile.results == null
+                           || profile.results!.profileImage ==  null ?
+                       Container()
+                           :
+                       Text(
+                           textAlign: TextAlign.center,
+                           " +91${profile!.results!.mobile!}",
+                           style:
+                           AppTextStyle.font16.copyWith(
+                             color: AppColors.black,
+                           )
+                         //  TextStyle(
+                         //   fontWeight: FontWeight.w400,
+                         //   fontSize: 16.sp,
+                         //   color: AppColors.black,
+                         // ),
+                       ),
+                     ],
+                   ),
+                 ],
+               );
+
+                }
+              ),
+
               SizedBox(
                 height: 40.h,
               ),
@@ -288,6 +391,9 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                   storage.removeToken();
                   storage.removeLocation();
                   storage.removeTime();
+                  storage.removeDate();
+                  storage.removeOutTime();
+                  storage.removeOutDate();
                   await Future.delayed(const Duration(seconds: 3));
                   EasyLoading.dismiss();
                   EasyLoading.showToast(MyJanitorProfileScreenConstants

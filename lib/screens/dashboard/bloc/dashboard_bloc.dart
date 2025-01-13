@@ -50,7 +50,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         emit(ClockOutSuccessful(attendanceModel: response));
         return;
       }
-      message = response.message;
+      message = response.results!.message;
       print("responseeee  ------>>>>>>  " + response.toString());
     } catch (e) {
       if (event.type == "check_in") {

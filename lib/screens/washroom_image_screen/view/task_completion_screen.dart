@@ -79,14 +79,19 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
 
           if (state is UploadImagesSuccessful) {
            // dashboardBloc.add(CheckAttendance());
+            Navigator.of(context).pop();
+             Navigator.of(context).pop();
+              dashboardBloc.add(const GetTaskTamplates());
             EasyLoading.dismiss();
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const Dashboard(),
-              ),
-              (route) => false,
-            );
+          //  Navigator.of(context).pop();
+        //  Navigator.pop(context);
+            // Navigator.pushAndRemoveUntil(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => const Dashboard(),
+            //   ),
+            //   (route) => false,
+            // );
           }
 
           if (state is UploadImagesError) {

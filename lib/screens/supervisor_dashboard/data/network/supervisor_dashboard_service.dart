@@ -8,10 +8,16 @@ class SupervisorDashboardService {
   final DioClient dio;
   const SupervisorDashboardService({required this.dio});
 
-  Future<List<SupervisorModelDashboard>> getSupervisorDashboardData() async {
+  Future<List<SupervisorModelDashboard>> getSupervisorDashboardData({ String? token }) async {
     try {
       var response = await dio.get(APIConstants.GET_SUPERVISOR_DASHBOARD_DATA,
-          options: Options(
+          options: 
+           token != null ? Options(
+            headers: {
+              "x-woloo-token":  token
+            } )
+             :
+          Options(
             extra: {"auth": true},
           ));
 
@@ -26,7 +32,7 @@ class SupervisorDashboardService {
     }
   }
 
-  Future<String> updateStatus({required String id, required int status}) async {
+  Future<String> updateStatus({required String id, required int status, String? token}) async {
     try {
       var response = await dio.post(
         APIConstants.UPDATE_STATUS,
@@ -34,7 +40,13 @@ class SupervisorDashboardService {
           "id": id,
           "status": status,
         },
-        options: Options(extra: {"auth": true}),
+        options: 
+          token != null ? Options(
+            headers: {
+              "x-woloo-token":  token
+            } )
+             :
+        Options(extra: {"auth": true}),
       );
 
       return response['results']?.toString() ?? '';

@@ -1,6 +1,6 @@
 {
-    "name": "janitor",
-    "short_name": "janitor",
+    "name": "woloo_janitor_flutter",
+    "short_name": "woloo_janitor_flutter",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

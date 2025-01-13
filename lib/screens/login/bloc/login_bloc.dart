@@ -26,7 +26,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginEvent>((event, emit) {});
     on<SendOTP>(_mapSendOTPToState);
     on<VerifyOTP>(_mapVerifyOTPToState);
-    on<UpdateTokenOnVerifyOTP>(mapUpdateTokenToState);
+   // on<UpdateTokenOnVerifyOTP>(mapUpdateTokenToState);
   }
 
   FutureOr<void> _mapSendOTPToState(
@@ -75,27 +75,28 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  FutureOr<void> mapUpdateTokenToState(
-      UpdateTokenOnVerifyOTP event, Emitter<LoginState> emit) async {
-    try {
-      emit(UpdateTokenLoading());
+  // FutureOr<void> mapUpdateTokenToState(
+  //     UpdateTokenOnVerifyOTP event, Emitter<LoginState> emit) async {
+  //   try {
+  //     emit(UpdateTokenLoading());
 
-      var firebase = FirebaseMessaging.instance;
-      var token = await firebase.getToken();
-      var response = await loginService.updateFCMToken(token: token ?? '');
-      GlobalStorage globalStorage = GetIt.instance();
-      print("updateTokenResponse  --------> $response");
-      print("profile imagesssssss  --------> ${response.first.profileImage }");
-           profileList = response;
+  //     var firebase = FirebaseMessaging.instance;
+  //     var token = await firebase.getToken();
+  //     var response = await loginService.updateFCMToken(token: token ?? '');
+  //     GlobalStorage globalStorage = GetIt.instance();
+  //     print("updateTokenResponse  --------> $response");
+  //     print("profile imagesssssss  --------> ${response.first.profileImage }");
+  //          profileList = response;
 
-      globalStorage.saveProfile(profileName: response.first.name!);
+  //    // globalStorage.saveProfile(profileName: response.first.name!);
+  //     //globalStorage.saveToken(  accessToken: response.first.!);
 
-      globalStorage.saveProfileImg(profileimg: response.first.profileImage !);
-      print("profile names  -------->$profileList");
-      emit(UpdateTokenSuccess(data: response));
-    } catch (e) {
-         print("eeeee$e");
-      emit(UpdateTokenError(error: ErrorHandler.handle(e).failure ));
-    }
-  }
+  //    // globalStorage.saveProfileImg(profileimg: response.first.profileImage!);
+  //     print("profile names  -------->$profileList");
+  //     emit(UpdateTokenSuccess(data: response));
+  //   } catch (e) {
+  //        print("eeeee$e");
+  //     emit(UpdateTokenError(error: ErrorHandler.handle(e).failure ));
+  //   }
+  // }
 }

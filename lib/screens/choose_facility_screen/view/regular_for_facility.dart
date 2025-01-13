@@ -2,7 +2,6 @@
 
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -104,25 +103,27 @@ class _RegularForFacilityState extends State<RegularForFacility> {
                 ),
               ),
                            Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              // Padding(
+              //   padding: EdgeInsets.symmetric(
+              //     horizontal: 20.w,
+              //     vertical: 10.h,
+              //   ),
+              //   child: Text(
+              //     MydashboardScreenConstants.FACILITY.tr(),
+              //     style: TextStyle(
+              //       color: AppColors.titleColor,
+              //       fontSize: 16.sp,
+              //       fontWeight: FontWeight.w400,
+              //     ),
+              //   ),
+              // ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: 20.w,
-                  vertical: 10.h,
-                ),
-                child: Text(
-                  MydashboardScreenConstants.FACILITY.tr(),
-                  style: TextStyle(
-                    color: AppColors.titleColor,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                     vertical: 10.h,
+                    horizontal: 20.w),
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
@@ -154,6 +155,9 @@ class _RegularForFacilityState extends State<RegularForFacility> {
                   child: Row(
                     children: [
                       Text(MyFacilityListConstants.SELECT_ALL.tr()),
+                      SizedBox(
+                        width: 10.w,
+                      ),
                       Container(
                         width: 15.w,
                         height: 15.h,

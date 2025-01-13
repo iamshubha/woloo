@@ -1,6 +1,7 @@
 import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/view/choose_facility.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/janitor_list.dart';
@@ -10,6 +11,7 @@ import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 
 import '../../common_widgets/leading_button.dart';
+import '../bloc/janitor_list_bloc.dart';
 
 class JanitorList extends StatefulWidget {
   final bool isFromCluster;
@@ -18,10 +20,11 @@ class JanitorList extends StatefulWidget {
 
   final String? clusterId;
   final String? janitorName;
+  final bool? rejected;
   List<String>? allocationId;
   JanitorList({Key? key,
       this.janitorName,
-    required this.isFromCluster, required this.isFromDashboard, required this.isFromDashboardAssignment, this.allocationId, this.clusterId}) : super(key: key);
+    required this.isFromCluster, required this.isFromDashboard, required this.isFromDashboardAssignment, this.allocationId, this.clusterId, required this.rejected}) : super(key: key);
 
   @override
   State<JanitorList> createState() => _JanitorListState();
@@ -41,6 +44,7 @@ class _JanitorListState extends State<JanitorList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.white,
       appBar: AppBar(
 
@@ -180,39 +184,74 @@ class _JanitorListState extends State<JanitorList> {
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(
-                vertical: 7.h,
+                vertical: 0.h,
               ),
               child: JanitorListWidget(
+                isRejected: widget.rejected!,
                 key: key,
                 controller: _searchController,
                 clusterId: widget.clusterId,
                 onTapItem: (JanitorListModel data) async {
                   if (widget.isFromCluster && data.isPresent == true) {
-                    await Navigator.of(context).push(
+                    await
+
+                    Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => ChooseFacilityList(
-                          janitorId: data.id ?? '',
-                          clusterId: widget.clusterId ?? '',
-                        ),
+                        builder: (context) =>
+                            BlocProvider<JanitorListBloc>(
+                              create: (BuildContext context) => JanitorListBloc(),
+                              child: JanitorDetails(
+                                id: data.id ?? '',
+                                shift: data.shift.toString(),
+                                check_in_time: data.startTime.toString(),
+                                check_out_time: data.endTime.toString(),
+                                complete_task: data.completedTaskCount ?? "" ,
+                                pending_task: data.pendingTaskCount.toString(),
+                                total_task: data.totalTaskCount.toString(),
+                                name: data.name.toString(),
+                                mobile: data.mobile.toString(),
+                                isPresent: data.isPresent ?? false,
+                                baseUrl: data.baseUrl!,
+                                profile: data.profileImage!,
+                                clusterId: data.clusterId!,
+                                rfcTask: data.rfcTaskCount,
+                                rejectedTask: data.rejectsTaskCount,
+                                ongoingTask: data.onGoingTaskCount,
+                                accetedTask: data.acceptedTaskCount,
+                              ),
+                            ),
                       ),
                     );
                     setState(() => key = GlobalKey());
                   }
                   if (widget.isFromDashboard && context.mounted) {
-                    await Navigator.of(context).push(
+                    await
+
+                    Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => JanitorDetails(
-                          id: data.id ?? '',
-                          shift: data.shift.toString(),
-                          check_in_time: data.startTime.toString(),
-                          check_out_time: data.endTime.toString(),
-                          complete_task: data.completedTaskCount!,
-                          pending_task: data.pendingTaskCount.toString(),
-                          total_task: data.totalTaskCount.toString(),
-                          name: data.name.toString(),
-                          mobile: data.mobile.toString(),
-                          isPresent: data.isPresent ?? false,
-                        ),
+                        builder: (context) =>
+                            BlocProvider<JanitorListBloc>(
+                              create: (BuildContext context) => JanitorListBloc(),
+                              child: JanitorDetails(
+                                                        id: data.id ?? '',
+                                                        shift: data.shift.toString(),
+                                                        check_in_time: data.startTime.toString(),
+                                                        check_out_time: data.endTime.toString(),
+                                                        complete_task: data.completedTaskCount ?? "" ,
+                                                        pending_task: data.pendingTaskCount.toString(),
+                                                        total_task: data.totalTaskCount.toString(),
+                                                        name: data.name.toString(),
+                                                        mobile: data.mobile.toString(),
+                                                        isPresent: data.isPresent ?? false,
+                                                        baseUrl: data.baseUrl!,
+                                                        profile: data.profileImage!,
+                                                        clusterId: data.clusterId!,
+                                                        rfcTask: data.rfcTaskCount,
+                                                        rejectedTask: data.rejectsTaskCount,
+                                                        ongoingTask: data.onGoingTaskCount,
+                                                       accetedTask: data.acceptedTaskCount,
+                                                      ),
+                            ),
                       ),
                     );
                     setState(() => key = GlobalKey());

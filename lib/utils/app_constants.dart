@@ -10,7 +10,6 @@ class MySplashScreenConstants {
   static const String PERMISSION = 'dataUsagePermission';
   static const String ADS = 'dataCollectionText';
   static const String CONTINUE = 'continue';
-
   static const String LOADING = 'loading';
 }
 
@@ -38,7 +37,7 @@ class MyFacilityListConstants {
   static const String POPUP_TEXT = 'taskStartingPermission';
   static const String POPUP_CANCEL_BUTTON = 'cancel';
   static const String POPUP_YES_BUTTON = 'yes';
-  static const String SEARCH = 'search ';
+  static const String SEARCH = 'search';
   static const String SELECT_ALL = 'selectAll';
   static const String ASSIGN = 'assign';
   static const String MIN = 'min';
@@ -88,7 +87,10 @@ class MydashboardScreenConstants {
   static const String COMPLETE_TASK = 'completedTask';
   static const String PENDING_TASK = 'pendingTask';
   static const String Onging_TASK = 'Ongoing';
-  static const String Rquest_TASK = 'Requestforclosure';
+  static const String Rquest_TASK = 'Request for closure';
+  static const String ACCEPT_TASk =   'Accepted';
+  static const String REJECTED_TASk = 'Rejected';
+  
   static const String CLOSE = 'close';
   static const String REJECT = 'reject';
   static const String ACCEPT = 'accept';
@@ -128,7 +130,7 @@ class MyTaskDetailsScreenConstants {
 }
 
 class MyJanitorsDetailsScreenConstants {
-  static const String APP_BAR = 'janitorDetails';
+  static const String APP_BAR = 'janitorsDetails';
   static const String SHIFT = 'shift';
 
   static const String CHECK_IN = 'check-in';
@@ -191,6 +193,21 @@ class MyAccountScreenConstants {
   static const String MY_ACCOUNT = 'myAccount';
 }
 
+class AssignScreenConstants{
+  static const String  SEARCH_JANITOR = 'searchJanitor';
+  static const String  JANITOR_SCHEDULE = 'janitorSchedule';
+  static const String  AVAILABLE_TIME_SLOT =  'tasksAllocation';
+  static const String  UPDATE_TASK   = 'assignTasks';
+  static const String  TASK_NAME   = 'taskName';
+  static const String  START_TIME   = 'startTime';
+  static const String  END_TIME   = 'endTime';
+  static const String  TIME   = '--:--';
+  static const String TASK_ASSIGN  = "taskAssignSuccessfullyToJanitor";
+  static const String SEARCH_JANITOR_TO = "searchJanitorToAssignTasks";
+  static const String START_TIME_VALIDATION = "startTimeValidation";
+  static const String END_TIME_VALIDATION = "endTimeValidation";
+}
+
 class MyJanitorProfileScreenConstants {
   static const String MY_PROFILE = 'myProfile';
   static const String ATTENDANCE_HISTORY = 'attendanceHistory';
@@ -236,7 +253,6 @@ class EmptyWidgetConstants {
   static const String RFC_TASK_ERROR = "rfc_task";
   static const String ONGOING_TASK_ERROR = "ongoing_task";
   static const String COMPELTED_TASK_ERROR = "completed_task";
-
 }
 
 class DialogueReportIssueConstants {
@@ -244,7 +260,6 @@ class DialogueReportIssueConstants {
 }
 
 class AppError {
-
   static const String success = "success";
   static const String strBadRequestError = "bad_request_error";
   static const String strNoContent = "no_content";

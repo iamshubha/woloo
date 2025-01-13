@@ -18,6 +18,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../assign_screen/assign_screen.dart';
 import '../../../common_widgets/swipe_button.dart';
 
 class SupervisorDashboardListWidget extends StatefulWidget {
@@ -63,6 +64,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
 
   @override
   Widget build(BuildContext context) {
+     print(" khdjkfh ${MediaQuery.of(context).size}");
     return BlocConsumer(
       bloc: _supervisorDashboardBloc,
       listener: (context, state) {
@@ -135,21 +137,38 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
            Column(
              children: [
                Container(
-                  height: MediaQuery.of(context).size.height /3.1,
+                 // flex: 4,
+                 // flex: 2,
+                  height:
+
+                  //201.h,
+                  MediaQuery.of(context).size.height < 800 ?
+
+                  MediaQuery.of(context).size.height /3.1
+                 :
+
+
+                  MediaQuery.of(context).size.height /3.3
+                 ,
                  child: CardSwiper(
                    isLoop: false,
+                   duration: const Duration(
+                      milliseconds: 0
+                   ),
                    numberOfCardsDisplayed:
                    _data.length == 1 ?
-                   1
-                       : 2
+                   1 : 2
                    ,
 
                    // _data.length,
                    controller: controller,
                     cardsCount:
                     _data.length,
-                             // backgroundCardCount: _data.length,
-                            
+                   allowedSwipeDirection: const AllowedSwipeDirection.symmetric(
+                     horizontal:true,
+                   ),
+// backgroundCardCount: _data.length,
+
                   // physics: AlwaysScrollableScrollPhysics(),
                   // itemCount: _data.length,
                   // scrollDirection: Axis.vertical,
@@ -168,9 +187,9 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                       child: GestureDetector(
                         onTap: () {
                           widget.onTapItem(_data[index], isApproved);
-                          
+
                           //  selectedCard = index;
-                          
+
                         },
                         child: _data[index].status == "Completed"
                             ? Container(
@@ -179,12 +198,12 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                   vertical: 5.h,
                                   horizontal: 10.w,
                                 ),
-                                margin: EdgeInsets.symmetric(
+                                margin: const EdgeInsets.symmetric(
                                   // horizontal: 20.w,
                                 ),
                                 decoration: BoxDecoration(
                                    color: AppColors.completedBgColor,
-                                          
+
                                                    boxShadow: [
                                                 BoxShadow(
                                                   color: Colors.black
@@ -193,7 +212,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                       1, // How wide the shadow should spread
                                                   blurRadius:
                                                       10, // The blur effect of the shadow
-                                                  offset: Offset(0,
+                                                  offset: const Offset(0,
                                                       0), // No offset for shadow on all sides
                                                 ),
                                               ],
@@ -216,7 +235,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                   children: [
                                     Expanded(
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Row(
@@ -225,29 +244,29 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
 
 
                                             children: [
-                                              Expanded(
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                    horizontal: 5.w,
-                                                    vertical: 1.h,
-                                                  ),
-                                                  child: Text(
-                                                      "${_data[index].blockName}",
-                                                      overflow:
-                                                      TextOverflow.visible,
-                                                      style: AppTextStyle
-                                                          .font12bold
-                                                          .copyWith(
-                                                        color: AppColors.black,
-                                                      )
-                                                    // TextStyle(
-                                                    //   color: AppColors.timeSlotColor,
-                                                    //   fontSize: 12.sp,
-                                                    //   fontWeight: FontWeight.w400,
-                                                    // ),
-                                                  ),
-                                                ),
-                                              ),
+                                              // Expanded(
+                                              //   child: Padding(
+                                              //     padding: EdgeInsets.symmetric(
+                                              //       horizontal: 5.w,
+                                              //       vertical: 1.h,
+                                              //     ),
+                                              //     child: Text(
+                                              //         "${_data[index].blockName}",
+                                              //         overflow:
+                                              //         TextOverflow.visible,
+                                              //         style: AppTextStyle
+                                              //             .font12bold
+                                              //             .copyWith(
+                                              //           color: AppColors.black,
+                                              //         )
+                                              //       // TextStyle(
+                                              //       //   color: AppColors.timeSlotColor,
+                                              //       //   fontSize: 12.sp,
+                                              //       //   fontWeight: FontWeight.w400,
+                                              //       // ),
+                                              //     ),
+                                              //   ),
+                                              // ),
                                               Expanded(
                                                 child: Padding(
                                                   padding: EdgeInsets.symmetric(
@@ -256,13 +275,13 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                   ),
                                                   child: Text(
                                                       "${_data[index].facilityName}",
-                                                      textAlign: TextAlign.center,
+                                                      textAlign: TextAlign.left,
                                                       overflow:
                                                       TextOverflow.visible,
                                                       style: AppTextStyle
                                                           .font12bold
                                                           .copyWith(
-                                                        color: AppColors.black,
+                                                        color: AppColors.containerBorder,
                                                       )
                                                     // TextStyle(
                                                     //   color: AppColors.timeSlotColor,
@@ -317,15 +336,15 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                       "${
                                                           _data[index]
                                                               .date!} \n${_data[index].startTime}-${_data[index].endTime}"
-
-
-                                                      ,
+                                                     ,
                                                       overflow:
                                                       TextOverflow.visible,
                                                       textAlign: TextAlign.center,
                                                       style: AppTextStyle
                                                           .font10bold
-                                                          .copyWith()
+                                                          .copyWith(
+                                                        color:AppColors.containerBorder
+                                                      )
                                                     // TextStyle(
                                                     //   color: AppColors.timeSlotColor,
                                                     //   fontSize: 12.sp,
@@ -334,7 +353,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                   ),
                                                 ),
                                               ),
-                                             
+
                                               // Padding(
                                               //   padding: EdgeInsets.symmetric(
                                               //     // horizontal: 5.w,
@@ -374,8 +393,8 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                              // ),
                                             ],
                                           ),
-                                       
-                                     
+
+
                                           Padding(
                                             padding: EdgeInsets.symmetric(
                                               horizontal: 5.w,
@@ -385,7 +404,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                               "${MydashboardScreenConstants.DESCRIPTION.tr()} : ${_data[index].description ?? ''}",
                                               maxLines: 2,
                                               style:
-                                                 AppTextStyle.font12w5.copyWith(
+                                                 AppTextStyle.font13w6.copyWith(
                                                       color: AppColors.containerBorder,
                                                     )
                                               //  TextStyle(
@@ -402,8 +421,8 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                             ),
                                             child: Text(
                                               "${MydashboardScreenConstants.DESCRIPTION.tr()} : ${_data[index].location ?? ''}",
-                                              style: 
-                                                  AppTextStyle.font12.copyWith(
+                                              style:
+                                                  AppTextStyle.font13w6.copyWith(
                                                       color: AppColors.containerBorder,
                                                     )
                                               // TextStyle(
@@ -413,9 +432,13 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                               // ),
                                             ),
                                           ),
-                                       
-                                
-                  
+
+                                          SizedBox(
+                                            height: 10.h,
+                                          ),
+
+
+
                                           Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -458,7 +481,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                   vertical: 5.h,
                                   horizontal: 10.w,
                                 ),
-                                margin: EdgeInsets.symmetric(
+                                margin: const EdgeInsets.symmetric(
                                   // horizontal: 20.w,
                                 ),
                                 decoration: BoxDecoration(
@@ -472,16 +495,17 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                       ? Color.fromARGB(255, 232, 239, 132)
                                                       :_data[index].status ==
                                                               "Accepted"
-                                                          ? AppColors.acceptedBgColor.withOpacity(0.7)
-                                                              .withOpacity(0.8)
+                                                          ? AppColors.acceptedBgColor
+                                        //.withOpacity(0.7)
+                                                             /// .withOpacity(0.8)
                                                           :_data[index].status ==
                                                                   "Request for closure"
                                                               ? AppColors.rfcCardBgColor
-                                        .withOpacity(0.7)
+                                      //  .withOpacity(0.7)
                                                               : AppColors
-                                                                  .disabledContainerBorder
-                                                                  .withOpacity(0.3),
-                                  
+                                                                  .checkOutColor,
+                                                                  // .withOpacity(0.3),
+
                                   // AppColors.white,
                                   borderRadius: BorderRadius.circular(25.r),
                                    boxShadow: [
@@ -492,7 +516,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                       1, // How wide the shadow should spread
                                                   blurRadius:
                                                       10, // The blur effect of the shadow
-                                                  offset: Offset(0,
+                                                  offset: const Offset(0,
                                                       0), // No offset for shadow on all sides
                                                 ),
                                               ],
@@ -502,38 +526,39 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                   children: [
                                     Expanded(
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Row(
+                                // mainAxisAlignment:  MainAxisAlignment.start,
                                             crossAxisAlignment:
                                             CrossAxisAlignment.start,
 
 
                                             children: [
-                                              Expanded(
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                    horizontal: 5.w,
-                                                    vertical: 1.h,
-                                                  ),
-                                                  child: Text(
-                                                      "${_data[index].blockName}",
-                                                      overflow:
-                                                      TextOverflow.visible,
-                                                      style: AppTextStyle
-                                                          .font12bold
-                                                          .copyWith(
-                                                        color: AppColors.black,
-                                                      )
-                                                    // TextStyle(
-                                                    //   color: AppColors.timeSlotColor,
-                                                    //   fontSize: 12.sp,
-                                                    //   fontWeight: FontWeight.w400,
-                                                    // ),
-                                                  ),
-                                                ),
-                                              ),
+                                              // Expanded(
+                                              //   child: Padding(
+                                              //     padding: EdgeInsets.symmetric(
+                                              //       horizontal: 5.w,
+                                              //       vertical: 1.h,
+                                              //     ),
+                                              //     child: Text(
+                                              //         "${_data[index].blockName}",
+                                              //         overflow:
+                                              //         TextOverflow.visible,
+                                              //         style: AppTextStyle
+                                              //             .font12bold
+                                              //             .copyWith(
+                                              //           color: AppColors.black,
+                                              //         )
+                                              //       // TextStyle(
+                                              //       //   color: AppColors.timeSlotColor,
+                                              //       //   fontSize: 12.sp,
+                                              //       //   fontWeight: FontWeight.w400,
+                                              //       // ),
+                                              //     ),
+                                              //   ),
+                                              // ),
                                               Expanded(
                                                 child: Padding(
                                                   padding: EdgeInsets.symmetric(
@@ -542,13 +567,17 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                   ),
                                                   child: Text(
                                                       "${_data[index].facilityName}",
-                                                      textAlign: TextAlign.center,
+                                                      textAlign: TextAlign.left,
                                                       overflow:
                                                       TextOverflow.visible,
                                                       style: AppTextStyle
                                                           .font12bold
                                                           .copyWith(
-                                                        color: AppColors.black,
+                                                        color:
+                                                         _data[index].status == "Rejected" ?
+                                                        AppColors.white :
+                                                        AppColors.ListTitleColor,
+
                                                       )
                                                     // TextStyle(
                                                     //   color: AppColors.timeSlotColor,
@@ -571,14 +600,19 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                     horizontal: 5.w,
                                                     vertical: 0.h,
                                                   ),
-                                                  child: 
+                                                  child:
                                                   Text(
-                                                    _data[index].templateName ?? '',
-                                                    maxLines: 1,
-                                                    softWrap: false,
+                                                    "${_data[index].templateName}" ?? '',
+                                                    // maxLines: 1,
+                                                    // softWrap: false,
                                                     overflow: TextOverflow.visible,
                                                     style: AppTextStyle.font12bold.copyWith(
-                                                      color: AppColors.ListTitleColor,
+                                                      color:
+                                                      _data[index].status == "Rejected" ?
+                                                      AppColors.white :
+                                                      AppColors.ListTitleColor,
+
+
                                                     )
                                                     // TextStyle(
                                                     //   color: AppColors.ListTitleColor,
@@ -600,15 +634,17 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                       "${
                                                           _data[index]
                                                               .date!} \n${_data[index].startTime}-${_data[index].endTime}"
-
-
                                                       ,
                                                       overflow:
                                                       TextOverflow.visible,
                                                       textAlign: TextAlign.center,
                                                       style: AppTextStyle
                                                           .font10bold
-                                                          .copyWith()
+                                                          .copyWith(
+                                                       color:  _data[index].status == "Rejected" ?
+                                                          AppColors.white :
+                                                          AppColors.ListTitleColor,
+                                                      )
                                                     // TextStyle(
                                                     //   color: AppColors.timeSlotColor,
                                                     //   fontSize: 12.sp,
@@ -619,12 +655,11 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                               ),
                                             ],
                                           ),
-                 
-                                            Divider(
+
+                                            const Divider(
                                                   color: AppColors.deviderColor,
                                                 ),
-                                    
-                                        
+
                                           Padding(
                                             padding: EdgeInsets.symmetric(
                                               horizontal: 5.w,
@@ -633,9 +668,12 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                             child: Text(
                                               "${MydashboardScreenConstants.DESCRIPTION.tr()} : ${_data[index].description ?? ''}",
                                               maxLines: 2,
-                                              style: 
+                                              style:
                                                 AppTextStyle.font13w6.copyWith(
-                                                      color: AppColors.ListTitleColor,
+                                                      color:
+                                                      _data[index].status == "Rejected" ?
+                                                      AppColors.white :
+                                                      AppColors.ListTitleColor,
                                                     )
                                               // TextStyle(
                                               //   color: AppColors.ListTitleColor,
@@ -651,9 +689,13 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                             ),
                                             child: Text(
                                               "${MydashboardScreenConstants.LOCATION.tr()} : ${_data[index].location ?? ''}",
-                                              style: 
+                                              style:
                                               AppTextStyle.font13w6.copyWith(
-                                                color: AppColors.ListTitleColor, 
+                                                color:
+                                                _data[index].status == "Rejected" ?
+                                                AppColors.white :
+
+                                                AppColors.ListTitleColor,
                                               )
                                               // TextStyle(
                                               //   color: AppColors.ListTitleColor,
@@ -669,9 +711,9 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                           //   ),
                                           //   child: Text(
                                           //     "${MydashboardScreenConstants.BOOTHS.tr()}  :${_data[index].booths ?? ''}",
-                                          //     style: 
+                                          //     style:
                                           //      AppTextStyle.font12.copyWith(
-                                          //       color: AppColors.ListTitleColor, 
+                                          //       color: AppColors.ListTitleColor,
                                           //     )
                                           //     // TextStyle(
                                           //     //   color: AppColors.ListTitleColor,
@@ -709,7 +751,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                           //       ),
                                           //       child: Text(
                                           //         "${MydashboardScreenConstants.TOTAL_TASK.tr()}  : ${_data[index].totalTasks ?? ''}",
-                                          //         style: 
+                                          //         style:
                                           //         AppTextStyle.font14w6.copyWith(
                                           //           color: AppColors.greenTextColor,
                                           //         )
@@ -727,7 +769,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                           //       ),
                                           //       child: Text(
                                           //         "${MydashboardScreenConstants.PENDING_TASK.tr()}  : ${_data[index].pendingTasks ?? ''}",
-                                          //         style: 
+                                          //         style:
                                           //          AppTextStyle.font14w6.copyWith(
                                           //          color: AppColors.redTextColor,
                                           //         )
@@ -748,17 +790,25 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 crossAxisAlignment: CrossAxisAlignment.center,
                                                 children: [
-                                                  Icon(Icons.person, color: AppColors.black, size: 15.sp, weight: 0.5),
+                                                  Icon(Icons.person, color:
+                                                  _data[index].status == "Rejected" ?
+                                                  AppColors.white :
+                                                  AppColors.black, size: 15.sp, weight: 0.5),
                                                   Padding(
                                                     padding: EdgeInsets.symmetric(
                                                       horizontal: 5.w,
-                                                      vertical: 2.h,
+                                                      vertical: 0.h,
                                                     ),
                                                     child: Text(
                                                       _data[index].janitorName ?? '',
-                                                      style: 
+                                                      style:
                                                         AppTextStyle.font12bold.copyWith(
-                                                      color: AppColors.janitorNameColor,)
+                                                      color:
+                                                      _data[index].status == "Rejected" ?
+                                                         AppColors.white
+
+                                                          :
+                                                      AppColors.janitorNameColor,)
                                                       // TextStyle(
                                                       //   color: AppColors.janitorNameColor,
                                                       //   fontSize: 12.sp,
@@ -774,7 +824,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                     _supervisorDashboardBloc.add(SupervisorUpdateStatus(id: _data[index].taskAllocationId.toString() ?? '', status: 4));
                                                   },
                                                   child: Padding(
-                                                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 0.h),
                                                     child: Container(
                                                       alignment: Alignment.center,
                                                       decoration: BoxDecoration(
@@ -783,14 +833,14 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                       ),
                                                       child: Padding(
                                                         padding: EdgeInsets.symmetric(
-                                                          horizontal: 40.w,
+                                                          horizontal: 10.w,
                                                           vertical: 6.h,
                                                         ),
                                                         child: Text(
                                                           MyTaskDetailsScreenConstants.APPROVE_BUTTON.tr(),
                                                           textAlign: TextAlign.center,
                                                           style:AppTextStyle.font10w6.copyWith(
-                                                                color: AppColors.black, )
+                                                                color: AppColors.black,)
                                                           //  TextStyle(
                                                           //   fontSize: 10.sp,
                                                           //   fontWeight: FontWeight.w600,
@@ -801,23 +851,26 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                     ),
                                                   ),
                                                 ),
-                                              if (_data[index].status == "Pending" && _data[index].requestType == "IOT" && _data[index].janitorId == null || _data[index].status == "Pending" && _data[index].requestType == "Regular" && _data[index].janitorId == null)
+                                                  if ( _data[index].status == "Pending" && _data[index].requestType == "Regular" )
                                                 InkWell(
                                                   onTap: () async {
                                                     await Navigator.of(context).push(
                                                       MaterialPageRoute(
-                                                        builder: (context) => JanitorList(
-                                                          isFromCluster: false,
-                                                          isFromDashboard: false,
-                                                          allocationId: [_data[index].taskAllocationId.toString()],
-                                                          isFromDashboardAssignment: true,
+                                                        builder: (context) =>  AssignScreen(
+                                                          id: _data[index].taskAllocationId,
+                                                          taskName: _data[index].templateName,
+                                                          status: _data[index].status,
+                                                          // isFromCluster: false,
+                                                          // isFromDashboard: false,
+                                                          // allocationId: [_data[index].taskAllocationId.toString()],
+                                                          // isFromDashboardAssignment: true,
                                                         ),
                                                       ),
                                                     );
-                                                    _supervisorDashboardBloc.add(const GetSupervisorDashboardData());
+                                                   // _supervisorDashboardBloc.add(const GetSupervisorDashboardData());
                                                   },
                                                   child: Padding(
-                                                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 0.h),
                                                     child: Container(
                                                       alignment: Alignment.center,
                                                       decoration: BoxDecoration(
@@ -826,7 +879,64 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                       ),
                                                       child: Padding(
                                                         padding: EdgeInsets.symmetric(
-                                                          horizontal: 40.w,
+                                                          horizontal: 10.w,
+                                                          vertical: 6.h,
+                                                        ),
+                                                        child: Text(
+                                                          MyFacilityListConstants.ASSIGN.tr(),
+                                                          textAlign: TextAlign.center,
+                                                          style: AppTextStyle.font10w6.copyWith(
+                                                                color: AppColors.black, )
+                                                          // TextStyle(
+                                                          //   fontSize: 10.sp,
+                                                          //   fontWeight: FontWeight.w600,
+                                                          //   color: AppColors.black,
+                                                          // ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              if ( _data[index].status == "Rejected" ||   _data[index].status == "Pending" && _data[index].requestType == "IOT" && _data[index].janitorId == null || _data[index].status == "Pending" && _data[index].requestType == "Regular" && _data[index].janitorId == null)
+                                                InkWell(
+                                                  onTap: () async {
+                                                    await Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>  AssignScreen(
+                                                          id: _data[index].taskAllocationId,
+                                                          taskName: _data[index].templateName,
+                                                          status: _data[index].status,
+                                                          // isFromCluster: false,
+                                                          // isFromDashboard: false,
+                                                          // allocationId: [_data[index].taskAllocationId.toString()],
+                                                          // isFromDashboardAssignment: true,
+                                                        ),
+                                                      ),
+                                                    );
+                                                    // await Navigator.of(context).push(
+                                                    //   MaterialPageRoute(
+                                                    //     builder: (context) => JanitorList(
+                                                    //       rejected: _data[index].status == "Rejected" ? true : false ,
+                                                    //       isFromCluster: false,
+                                                    //       isFromDashboard: false,
+                                                    //       allocationId: [_data[index].taskAllocationId.toString()],
+                                                    //       isFromDashboardAssignment: true,
+                                                    //     ),
+                                                    //   ),
+                                                    // );
+                                                    _supervisorDashboardBloc.add(const GetSupervisorDashboardData());
+                                                  },
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 0.h),
+                                                    child: Container(
+                                                      alignment: Alignment.center,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(8.r),
+                                                        color: AppColors.buttonColor,
+                                                      ),
+                                                      child: Padding(
+                                                        padding: EdgeInsets.symmetric(
+                                                          horizontal: 10.w,
                                                           vertical: 6.h,
                                                         ),
                                                         child: Text(
@@ -846,6 +956,8 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                 )
                                             ],
                                           ),
+
+
                                         ],
                                       ),
                                     ),

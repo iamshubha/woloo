@@ -4,10 +4,14 @@ import 'package:Woloo_Smart_hygiene/firebase_options.dart';
 import 'package:Woloo_Smart_hygiene/injection_container.dart' as di;
 import 'package:Woloo_Smart_hygiene/messaging.dart';
 import 'package:Woloo_Smart_hygiene/screens/login/bloc/login_bloc.dart';
+import 'package:Woloo_Smart_hygiene/screens/my_account/view/bloc/profile_bloc.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_pie_chart/easy_pie_chart.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,10 +32,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_driver/driver_extension.dart';
 
- 
+
 final mediaStorePlugin = MediaStore();
 void main() async {
+ //  enableFlutterDriverExtension();
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   if (Platform.isAndroid) {
@@ -73,7 +79,7 @@ void main() async {
   // we are not checking the status as it is an example app. You should (must) check it in a production app
 
   // You have set this otherwise it throws AppFolderNotSetException
-  MediaStore.appFolder = "WolooSmartHygine"; 
+  MediaStore.appFolder = "WolooSmartHygine";
     }
 
   /// change status bar color
@@ -103,18 +109,27 @@ void main() async {
             ),
                BlocProvider<CaptureBloc>(
               create: (BuildContext context) => CaptureBloc(),),
+
               BlocProvider<DashboardBloc>(
               create: (BuildContext context) => DashboardBloc(),
             ),
+               BlocProvider<ProfileBloc>(
+              create: (BuildContext context) => ProfileBloc(),
+            ),
           ],
-          child: const
+          child:
+             // DeviceP
+         // DevicePreview(
+         //    enabled: !kReleaseMode,
+         //    builder: (context) =>
+         //        App(), // Wrap your app
+         // ),
           App(),
         ),
       )
 
-      
+
       ),
     // ),
   );
 }
-

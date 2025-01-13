@@ -6,9 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/data/model/Facility_list_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/data/model/selected_tasks.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/button_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/list_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/reassign_janitor_screen/view/reassign_janitor_screen.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 

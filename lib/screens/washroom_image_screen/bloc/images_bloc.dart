@@ -38,6 +38,7 @@ class ImagesBloc extends Bloc<ImagesEvent, ImagesState> {
 
       await submitImagesService.updateStatus(
           id: event.allocationId, status: "6");
+          
 
       print("responseeee  ------  $response");
       emit(UploadImagesSuccessful());

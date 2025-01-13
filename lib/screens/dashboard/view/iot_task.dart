@@ -32,7 +32,7 @@ class IotTask extends StatefulWidget {
 
 class _IotTaskState extends State<IotTask> with SingleTickerProviderStateMixin{
  
-  TabController? _tabController;
+  TabController? tabController;
     int _selectedIndex = 0;
       void _onItemTapped(int index) {
     setState(() {
@@ -41,7 +41,7 @@ class _IotTaskState extends State<IotTask> with SingleTickerProviderStateMixin{
   }
   @override
   void initState() {
-    _tabController = new TabController(length: 5, vsync: this);
+    tabController =  TabController(length: 6, vsync: this);
    
 
  
@@ -79,7 +79,7 @@ class _IotTaskState extends State<IotTask> with SingleTickerProviderStateMixin{
                                    // color: AppColors.buttonBgColor,
                                    ),
     // physics: NeverScrollableScrollPhysics(),
-                                     controller: _tabController,
+                                     controller: tabController,
         tabs:
       [
            Tab(icon:
@@ -87,7 +87,7 @@ class _IotTaskState extends State<IotTask> with SingleTickerProviderStateMixin{
            ),
         
            Tab(icon: 
-             TabWidget(title: MydashboardScreenConstants.ACCEPT.tr()  )
+             TabWidget(title: MydashboardScreenConstants.ACCEPT_TASk.tr()  )
             ),
            Tab(icon:
              TabWidget(title: MydashboardScreenConstants.Onging_TASK.tr()  )
@@ -99,17 +99,20 @@ class _IotTaskState extends State<IotTask> with SingleTickerProviderStateMixin{
            Tab(icon:
             TabWidget(title: MydashboardScreenConstants.COMPLETE_TASK.tr()  )
             ),
+              Tab(icon:
+          TabWidget(title: MydashboardScreenConstants.REJECTED_TASk.tr()))
         ],
       ),
                                   Expanded(
-                // height: MediaQuery.of(context).size.height/2.2,
+                                 //   height: MediaQuery.of(context).size.height/2.1,
                 child: TabBarView(
                   physics: const NeverScrollableScrollPhysics(),
-                  controller: _tabController,
+                  controller: tabController,
 
                       children: [
                          
                                                     DashboardListWidget(
+                                                       tabController: tabController,
                                                       dataforEmyptyList: EmptyWidgetConstants.PENDING_TASK_ERROR.tr(),
                                                                       current_lattitude: widget.lat,
                                                                       current_longitude: widget.long,
@@ -123,6 +126,7 @@ class _IotTaskState extends State<IotTask> with SingleTickerProviderStateMixin{
 
                                 
                                         DashboardListWidget(
+                                           tabController: tabController,
                                           dataforEmyptyList: EmptyWidgetConstants.ACCEPTED_TASK_ERROR.tr(),
                                           current_lattitude: widget.lat,
                                           current_longitude: widget.long,
@@ -135,6 +139,7 @@ class _IotTaskState extends State<IotTask> with SingleTickerProviderStateMixin{
                                     
                                 
                                         DashboardListWidget(
+                                           tabController: tabController,
                                           dataforEmyptyList: EmptyWidgetConstants.ONGOING_TASK_ERROR.tr(),
                                           current_lattitude: widget.lat,
                                           current_longitude: widget.long,
@@ -146,28 +151,36 @@ class _IotTaskState extends State<IotTask> with SingleTickerProviderStateMixin{
                                         ),
                                     
                                 
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            DashboardListWidget(
-                                              dataforEmyptyList: EmptyWidgetConstants.RFC_TASK_ERROR.tr(),
-                                           current_lattitude: widget.lat,
-                                          current_longitude: widget.long,
-                                              filter: widget.filter.where( (e)=> e.status == "Request for closure" ).toList(),
-                                              dashboardBloc:  widget.dashboardBloc,
-                                              onTapItem: () {
-                                             
-                                              },
-                                            ),
-
-                                          ],
+                                        DashboardListWidget(
+                                           tabController: tabController,
+                                          dataforEmyptyList: EmptyWidgetConstants.RFC_TASK_ERROR.tr(),
+                                                                                   current_lattitude: widget.lat,
+                                                                                  current_longitude: widget.long,
+                                          filter: widget.filter.where( (e)=> e.status == "Request for closure" ).toList(),
+                                          dashboardBloc:  widget.dashboardBloc,
+                                          onTapItem: () {
+                                         
+                                          },
                                         ),
                                     
                                 
                                         DashboardListWidget(
+                                           tabController: tabController,
                                           current_lattitude: widget.lat,
                                           current_longitude: widget.long,
                                           filter: widget.filter.where( (e)=> e.status == "Completed" ).toList(),
+                                          dashboardBloc: widget.dashboardBloc,
+                                          onTapItem: () {
+                                         
+                                          },
+                                          dataforEmyptyList: EmptyWidgetConstants.COMPELTED_TASK_ERROR.tr(),
+                                       
+                                    ),
+                                        DashboardListWidget(
+                                           tabController: tabController,
+                                          current_lattitude: widget.lat,
+                                          current_longitude: widget.long,
+                                          filter: widget.filter.where( (e)=> e.status == "Rejected" ).toList(),
                                           dashboardBloc: widget.dashboardBloc,
                                           onTapItem: () {
                                          

@@ -31,6 +31,7 @@ class JanitorListWidget extends StatefulWidget {
   List<String> allocationId;
   final String? clusterId;
   final bool isFromDashboardAssignment;
+  final bool isRejected;
 
   JanitorListWidget({
     Key? key,
@@ -40,6 +41,7 @@ class JanitorListWidget extends StatefulWidget {
     required this.isFromDashboard,
     required this.isFromFacility,
     required this.allocationId,
+    required this.isRejected,
     this.janitorId,
     this.clusterId,
     required this.isFromDashboardAssignment,
@@ -103,28 +105,52 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
     return BlocConsumer(
         bloc: _janitorListBloc,
         listener: (context, state) {
+          print(" state in the  $state");
           if (state is JanitorListSuccess) {
             EasyLoading.dismiss();
+
+
+
+            // Navigator.pop(context);
+          }
+          if(state is  ReassignTaskSuccessful ){
+            if(widget.isFromFacility){
+               Navigator.of(context).pop();
+               Navigator.of(context).pop();
+            }
+             if(widget.isFromDashboardAssignment){
+              Navigator.of(context).pop();
+             }
+          //   print("priont");
+          //   Navigator.pop(context);
+          //
+          //   Navigator.pop(context);
           }
 
+
      
-        },
+},
         builder: (context, state) {
            print(" janitorssssss $state");
+            print("ids f ${widget.isFromFacility}");
 
                if( state is  ReassignTaskSuccessful ){
-                 if (widget.isFromCluster) {
+                    print("priont");
+                 if (widget.isFromFacility) {
                    _janitorListBloc
                        .add(GetAllJanitors(cluster_id: widget.clusterId ?? "0"));
                    
                      janitorListReloading = true;
                   
 
-                   Navigator.pop(context);
-                   Navigator.pop(context);
+                   // Navigator.pop(context);
+    // if(widget.isFromFacility){
+                    // Navigator.of(context).pop();
+    //   }
+                   // Navigator.pop(context);
                  }
                  if (widget.isFromDashboardAssignment) {
-                   _supervisorDashboardBloc.add(GetSupervisorDashboardData());
+                   _supervisorDashboardBloc.add(const GetSupervisorDashboardData());
                 
                      dashboardListReloading = true;
                    
@@ -147,17 +173,16 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
             }
           }
 
-
           if (state is JanitorListLoading) {
             EasyLoading.show(
                 status: MydashboardScreenConstants.LOADING_TOAST.tr());
-            return SizedBox();
+            return const SizedBox();
           } else if (state is JanitorListError) {
             return CustomErrorWidget(error: state.error.message);
           } else if (state is ReassignTaskLoading) {
             EasyLoading.show(
                 status: MydashboardScreenConstants.LOADING_TOAST.tr());
-            return SizedBox();
+            return const SizedBox();
           } else if (state is ReassignTaskError) {
             EasyLoading.dismiss();
             return CustomErrorWidget(error: state.error.message);
@@ -165,7 +190,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
               _supervisorDashboardData.isEmpty) {
             EasyLoading.show(
                 status: MydashboardScreenConstants.LOADING_TOAST.tr());
-            return SizedBox();
+            return const SizedBox();
           } else if (state is SupervisorDashboardError) {
             EasyLoading.dismiss();
             print("SupervisorDashboardError--->$_supervisorDashboardData");
@@ -193,6 +218,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                      }
                        _janitorListBloc.add(
                            const ReassignTask(
+                                isRejected: false,
                                id:[],
                                janitor_id:
                                    '',
@@ -253,7 +279,8 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                 );
               },
               color: AppColors.buttonColor,
-              child: ListView.builder(
+              child: 
+              ListView.builder(
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemCount: _search.length,
                   scrollDirection: Axis.vertical,
@@ -289,7 +316,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                         spreadRadius: 1, // How wide the shadow should spread
                         blurRadius: 10, // The blur effect of the shadow
                         offset:
-                            Offset(0, 0), // No offset for shadow on all sides
+                            const Offset(0, 0), // No offset for shadow on all sides
                       ),
                     ],
                   
@@ -300,9 +327,9 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                           ),
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 5.h),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            child: Stack(
+                              // mainAxisAlignment: MainAxisAlignment.start,
+                              // crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                            
                                 Column(
@@ -311,7 +338,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     SizedBox(
-                                      width:  MediaQuery.of(context).size.width/1.5,
+                                      width:  MediaQuery.of(context).size.width/1.55,
                                       //ScreenUtil().screenWidth - 137.w,
                                       child: Row(
                                         mainAxisAlignment:
@@ -327,7 +354,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                               ),
                                               child: Text(
                                                   _search[index].name ?? '',
-                                                  style: AppTextStyle.font18
+                                                  style: AppTextStyle.font20
                                                       .copyWith(
                                                     color: AppColors
                                                         .janitorNameColor,
@@ -426,6 +453,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                                 onTap: () {
                                                   _janitorListBloc.add(
                                                       ReassignTask(
+                                                        isRejected: widget.isRejected,
                                                           id: widget
                                                               .allocationId,
                                                           janitor_id:
@@ -544,28 +572,28 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                         
                                             Container(
                                            padding
-                                     : EdgeInsets.symmetric(  horizontal: 13,  vertical: 5),
+                                     : const EdgeInsets.symmetric(  horizontal: 12,  vertical: 5),
                                            decoration: BoxDecoration(
                                              color: AppColors.backgroundColor,
                                              borderRadius: BorderRadius.circular(25.r),
 
                                      ),
 
-                                          child:  Text(" Gender : F"),
+                                          child:  Text(" Gender : ${_search[index].gender!.substring(0,1)}"),
                                         ),
-                                           SizedBox(
+                                           const SizedBox(
                                             width: 8,
                                            ),
                                                Container(
                                            padding
-                                     : EdgeInsets.symmetric( horizontal: 13, vertical: 5),
+                                     : const EdgeInsets.symmetric( horizontal: 12, vertical: 5),
                                            decoration: BoxDecoration(
                                              color:AppColors.backgroundColor,
                                              borderRadius: BorderRadius.circular(25.r),
 
                                      ),
 
-                                          child:  Text(" Cluter No. : ${_search[index].clusterId }"),
+                                          child:  Text(" Cluster No.: ${_search[index].clusterId }"),
                                         ),                                   
                                       ],
                                     ),
@@ -576,8 +604,23 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                             horizontal: 5.w, vertical: 5.h),
                                         child: InkWell(
                                           onTap: () {
+                                             print("iii${_search[index].id} ");
+                                             print("allocation id ${widget.isRejected} ");
+                                               widget.isRejected ?
+                                               _janitorListBloc.add(
+                                                 ReassignTask(
+                                                   isRejected:  widget.isRejected,
+                                                     id: widget.allocationId,
+                                                     janitor_id:
+                                                     _search[index].id ?? '',
+                                                     fromReassign: true
+                                                 ),
+                                               )
+
+                                                   :
                                             _janitorListBloc.add(
                                               ReassignTask(
+                                                  isRejected: widget.isRejected,
                                                   id: widget.allocationId,
                                                   janitor_id:
                                                   _search[index].id ?? '',
@@ -589,13 +632,13 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                             alignment: Alignment.centerRight,
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  BorderRadius.circular(8.r),
+                                                  BorderRadius.circular(25.r),
                                               color: AppColors.buttonColor,
                                             ),
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(
-                                                horizontal: 8.w,
-                                                vertical: 8.h,
+                                                horizontal: 19.w,
+                                                vertical: 6.h,
                                               ),
                                               child: Text(
                                                   MyClusterListScreenConstants
@@ -621,21 +664,35 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                   ],
 
                                 ),
-                                     Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 10.h, horizontal: 5.w),
-                                  child: Container(
-                                    height: 40.h,
-                                    width: 40.w,
-                                    decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: AppColors.darkGreyColor),
-                                    child: const Icon(
-                                      Icons.person_2_outlined,
-                                      color: AppColors.buttonColor,
-                                    ),
-                                  ),
-                                ),
+                                     Positioned(
+                                       right: 20.w,
+                                       child: Padding(
+                                         padding: const EdgeInsets.only(top: 12 ),
+                                         child: CircleAvatar(
+                                           radius: 23,
+                                           backgroundColor: AppColors.darkGreyColor,
+                                           // height: 40.h,
+                                           // width: 40.w,
+                                           // decoration: const BoxDecoration(
+                                           //     shape: BoxShape.circle,
+                                           //     color: AppColors.darkGreyColor),
+                                           child:
+                                           _search[index].profileImage!.isNotEmpty ?
+                                             ClipRRect(
+                                               borderRadius: BorderRadius.circular(100),
+                                               child: CustomImageProvider(
+                                                 image:"${_search[index].baseUrl}/${_search[index].profileImage!.replaceAll("[", "").replaceAll("]", "").replaceAll('"', '')}",
+                                               ),
+                                             )
+                                           :
+                                           const Icon(
+                                             Icons.person_2_outlined,
+                                       
+                                             color: AppColors.buttonColor,
+                                           ),
+                                         ),
+                                       ),
+                                     ),
                                     
                               ],
                             ),
@@ -652,7 +709,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
           } 
           else 
           {
-            return SizedBox();
+            return const SizedBox();
           }
         });
   }

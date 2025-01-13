@@ -15,6 +15,7 @@ import 'package:get_it/get_it.dart';
 
 import '../../../utils/app_textstyle.dart';
 import '../../common_widgets/image_provider.dart';
+import '../../report_issue_screen/view/report_issue_form.dart';
 
 class SupervisorDashboard extends StatefulWidget {
   const SupervisorDashboard({
@@ -67,6 +68,7 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       resizeToAvoidBottomInset: false,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: GestureDetector(
         onTap: () {
@@ -87,7 +89,7 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
               side: BorderSide(
                 width: 1.50,
                 strokeAlign: BorderSide.strokeAlignCenter,
-                color: Color(0xFFFFE22C),
+                color: AppColors.bottomNavigationColor,
               ),
             ),
           ),
@@ -124,16 +126,18 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
                       image: imageList[index],
                       height: 20.h,
                       width: 20.w,
+                      color: AppColors.white,
+
                     ),
                     Padding(
                       padding:
                           EdgeInsets.symmetric(horizontal: 5, vertical: 5.h),
                       child: Text(
-                        labelList[index],
-                        // maxLines: 1,
+                          textAlign: TextAlign.center,
+                           labelList[index],
                         style: 
                       AppTextStyle.font10.copyWith(
-                       color: AppColors.greenText,
+                       color: AppColors.white,
                             )
                         // TextStyle(
                         //     color: AppColors.greenText,
@@ -193,6 +197,7 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
           );
           // setState(() => _bottomNavIndex = index);
         },
+
       ),
       backgroundColor: AppColors.white,
       body: PageView(
@@ -208,11 +213,14 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
         children: [
           ClusterList(),
           JanitorList(
+            rejected: false,
             isFromDashboard: true,
             isFromCluster: false,
             isFromDashboardAssignment: false,
           ),
-          IssuesList(),
+          ReportIssueScreen(
+            pageController: _controller,
+          ),
           SupervisorAccountScreen(
             supervisorName: supervisorName ?? '',
             mobile_number: mobile ?? '',

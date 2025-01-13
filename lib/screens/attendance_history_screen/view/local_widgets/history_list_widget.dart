@@ -8,6 +8,9 @@ import 'package:bubble/bubble.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
+
+import '../../../../core/local/global_storage.dart';
 
 class HistoryListWidget extends StatefulWidget {
   final List<AttendanceHistoryModel> data;
@@ -26,10 +29,16 @@ class HistoryListWidget extends StatefulWidget {
 class _HistoryListWidgetState extends State<HistoryListWidget> {
   int selectedCard = -1;
   HistoryListBloc _historyListBloc = HistoryListBloc();
-
+  GlobalStorage globalStorage = GetIt.instance();
+  bool? isChecked;
+  DateTime? date;
   @override
   void initState() {
     super.initState();
+    //globalStorage.saveCheckIn(isCheckedIn: true);
+
+    isChecked =   globalStorage.isCheckedIn();
+    date =  DateTime.now();
   }
 
   @override
@@ -181,7 +190,19 @@ class _HistoryListWidgetState extends State<HistoryListWidget> {
                                   ],
                                 ),
                                 Center(
-                                  child: Text(
+                                  child:
+
+                                  date!.day ==  widget.data[index].date && isChecked! && widget.data[index].attendance == "Absent" ?
+                                       Text("Clocked IN",
+                                       style:  AppTextStyle.font13w7.copyWith(
+                                         color:
+                                         widget.data[index].attendance == "Present"
+                                             ? AppColors.greenBold
+                                             : AppColors.redBold,
+                                       ),
+                                       )
+
+                                :  Text(
                                     widget.data[index].attendance ?? '',
                                     style:
                                       AppTextStyle.font13w7.copyWith(

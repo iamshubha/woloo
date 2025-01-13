@@ -54,10 +54,12 @@ class ReportIssueService {
     }
   }
 
-  Future<List<TaskNamesModels>> getTasksDropdownData() async {
+  Future<List<TaskNamesModels>> getTasksDropdownData(
+     int clusterId
+  ) async {
     try {
       var response = await dio.get(
-        APIConstants.GET_TASKS_DROPDOWN_DATA,
+        "${APIConstants.GET_TASKS_DROPDOWN_DATA}?cluster_id=$clusterId",
         options: Options(
           extra: {"auth": true},
         ),

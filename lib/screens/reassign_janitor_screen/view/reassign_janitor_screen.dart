@@ -1,3 +1,4 @@
+import 'package:Woloo_Smart_hygiene/screens/common_widgets/leading_button.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -46,39 +47,49 @@ class _ReassignJanitorScreenState extends State<ReassignJanitorScreen> {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
+        leadingWidth: 100,
         elevation: 0,
-        backgroundColor: AppColors.appbarBgColor,
-        title: Text(
-          MyJanitorsListScreenConstants.TITLE_TEXT.tr(),
-          style:
-          AppTextStyle.font24.copyWith(
-            color: AppColors.yellowSplashColor,
-          )
+        backgroundColor: AppColors.white,
+      //  title:
           //  TextStyle(
           //   fontSize: 24.sp,
           //   fontWeight: FontWeight.w400,
           //   color: AppColors.yellowSplashColor,
           // ),
-        ),
-        leading: IconButton(
-          color: AppColors.black30,
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-            size: 30,
-          ),
-          // color: AppColors.black,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        // ),
+        leading:
+        LeadingButton()
+        //  IconButton(
+        //   color: AppColors.black30,
+        //   icon: const Icon(
+        //     Icons.arrow_back,
+        //     color: Colors.white,
+        //     size: 30,
+        //   ),
+        //   // color: AppColors.black,
+        //   onPressed: () {
+        //     Navigator.pop(context);
+        //   },
+        // ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 20.h,
+            height: 10.h,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16 ),
+            child: Text(
+            MyJanitorsListScreenConstants.TITLE_TEXT.tr(),
+            style:
+            AppTextStyle.font24bold.copyWith(
+              // color: AppColors.yellowSplashColor,
+            ),),
+          ),
+          SizedBox(
+            height: 10.h,
           ),
           Padding(
             padding: EdgeInsets.symmetric(
@@ -126,6 +137,7 @@ class _ReassignJanitorScreenState extends State<ReassignJanitorScreen> {
                 vertical: 7.h,
               ),
               child: JanitorListWidget(
+                isRejected: false,
                 controller: _searchController,
                 janitorId: widget.janitorId,
                 allocationId: widget.selectedIds,

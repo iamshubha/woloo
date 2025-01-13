@@ -95,65 +95,65 @@ class _JanitorAttendanceView extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10.h),
-              Row(
-                children: [
-                  InkWell(
-                    borderRadius: BorderRadius.circular(20.r),
-                    onTap: () {
-                      if (state.sortBy == "absent") {
-                        cubit.sort(null);
-                        return;
-                      }
-                      cubit.sort("absent");
-                    },
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-                      decoration: BoxDecoration(
-                        color: Colors.red.withOpacity(.1),
-                        borderRadius: BorderRadius.circular(20.r),
-                        border: Border.all(
-                          color: state.sortBy == "absent"
-                              ? Colors.red
-                              : Colors.transparent,
-                        ),
-                      ),
-                      child: const Text(
-                        "Absent",
-                        style: TextStyle(color: Colors.redAccent),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10.w),
-                  InkWell(
-                    onTap: () {
-                      if (state.sortBy == "present") {
-                        cubit.sort(null);
-                        return;
-                      }
-                      cubit.sort("present");
-                    },
-                    borderRadius: BorderRadius.circular(20.r),
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-                      decoration: BoxDecoration(
-                        color: Colors.greenAccent.withOpacity(.1),
-                        borderRadius: BorderRadius.circular(20.r),
-                        border: Border.all(
-                          color: state.sortBy == "present"
-                              ? Colors.green
-                              : Colors.transparent,
-                        ),
-                      ),
-                      child: const Text(
-                        "Present",
-                        style: TextStyle(color: Colors.green),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              // Row(
+              //   children: [
+              //     InkWell(
+              //       borderRadius: BorderRadius.circular(20.r),
+              //       onTap: () {
+              //         if (state.sortBy == "absent") {
+              //           cubit.sort(null);
+              //           return;
+              //         }
+              //         cubit.sort("absent");
+              //       },
+              //       child: Container(
+              //         padding:
+              //             EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+              //         decoration: BoxDecoration(
+              //           color: Colors.red.withOpacity(.1),
+              //           borderRadius: BorderRadius.circular(20.r),
+              //           border: Border.all(
+              //             color: state.sortBy == "absent"
+              //                 ? Colors.red
+              //                 : Colors.transparent,
+              //           ),
+              //         ),
+              //         child: const Text(
+              //           "Absent",
+              //           style: TextStyle(color: Colors.redAccent),
+              //         ),
+              //       ),
+              //     ),
+              //     SizedBox(width: 10.w),
+              //     InkWell(
+              //       onTap: () {
+              //         if (state.sortBy == "present") {
+              //           cubit.sort(null);
+              //           return;
+              //         }
+              //         cubit.sort("present");
+              //       },
+              //       borderRadius: BorderRadius.circular(20.r),
+              //       child: Container(
+              //         padding:
+              //             EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+              //         decoration: BoxDecoration(
+              //           color: Colors.greenAccent.withOpacity(.1),
+              //           borderRadius: BorderRadius.circular(20.r),
+              //           border: Border.all(
+              //             color: state.sortBy == "present"
+              //                 ? Colors.green
+              //                 : Colors.transparent,
+              //           ),
+              //         ),
+              //         child: const Text(
+              //           "Present",
+              //           style: TextStyle(color: Colors.green),
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
             ],
           ),
         ),

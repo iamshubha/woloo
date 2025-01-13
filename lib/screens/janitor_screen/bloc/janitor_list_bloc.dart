@@ -27,7 +27,10 @@ class JanitorListBloc extends Bloc<JanitorsListEvent, JanitorListState> {
     try {
       emit(JanitorListLoading());
       data =
-          await janitorListService.getAllJanitors(clusterId: event.cluster_id);
+          await janitorListService.getAllJanitors(clusterId: event.cluster_id,
+           endDate: event.endDate,
+           startDate: event.startDate
+          );
       clusterId = event.cluster_id;
       emit(JanitorListSuccess(data: data, fromReassign: false ));
     } catch (e) {
@@ -40,8 +43,9 @@ class JanitorListBloc extends Bloc<JanitorsListEvent, JanitorListState> {
     try {
       emit(ReassignTaskLoading(message: "Loading Please Wait..."));
             print(" reassign janitor id ${event.janitor_id}");
+                 print(" reassign ${event.id }");
       await janitorListService.reAssignTaskToJanitor(
-          id: event.id, janitor_id: event.janitor_id);
+          id: event.id, janitor_id: event.janitor_id , isRejected: event.isRejected!);
       data = await janitorListService.getAllJanitors(clusterId: clusterId);
          print(" jaintors  id ${event.janitor_id}");
 

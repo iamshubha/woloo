@@ -18,12 +18,13 @@ class GetAllFacilityDropdown extends ReportIssueEvent {
 
   const GetAllFacilityDropdown({required this.clusterId});
 
-  @override
+@override
   List<Object?> get props => [];
 }
 
 class GetAllTasksDropdown extends ReportIssueEvent {
-  const GetAllTasksDropdown();
+    final int clusterId;
+  const GetAllTasksDropdown( {required this.clusterId});
 
   @override
   List<Object?> get props => [];

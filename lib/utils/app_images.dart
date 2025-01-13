@@ -48,4 +48,11 @@ abstract class AppImages {
   static String get languageIcons => _assetImgPath + 'language.png';
   static String get profileIcons => _assetImgPath + 'proflieicon.png';
   static String get logo => _assetSvgImgPath +'woloo.svg';
+  static String get removeIcons => _assetImgPath + 'remove.png';
+  static String get checkIcons => _assetImgPath + 'check.png';
+  static String get startIcons => _assetImgPath + 'gps.png';
+  static String get directionIcons => _assetImgPath + 'direction.png';
+  static String get rfcIcons => _assetImgPath + 'rfc.png';
+  static String get iotIcons => _assetImgPath + 'iot.png';
+  static String get personIcons => _assetImgPath + 'user.png';
 }

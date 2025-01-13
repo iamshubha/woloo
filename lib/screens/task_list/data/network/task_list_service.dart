@@ -8,11 +8,18 @@ class TaskListService {
   final DioClient dio;
   const TaskListService({required this.dio});
 
-  Future<TaskListModel> getAllTasks({required int id}) async {
+  Future<TaskListModel> getAllTasks({required int id, String? token}) async {
     try {
       var response = await dio.get(
         APIConstants.GET_ALL_TASKS,
-        options: Options(extra: {"auth": true}),
+        options: 
+        token != null ? 
+        Options(
+            headers: {
+              "x-woloo-token":  token
+            },
+          ) :
+        Options(extra: {"auth": true}),
         queryParameters: {
           "id": id,
         },
@@ -27,11 +34,19 @@ class TaskListService {
     }
   }
 
-  Future<String> submitTask({required CreateTaskModel createTaskModel}) async {
+  Future<String> submitTask({required CreateTaskModel createTaskModel,  String? token}) async {
     try {
       var response = await dio.post(
         APIConstants.SUBMIT_TASKS,
-        options: Options(extra: {"auth": true}),
+        options:
+         token != null ?
+
+        Options(
+            headers: {
+              "x-woloo-token":  token
+            },
+          ) :
+         Options(extra: {"auth": true}),
         data: createTaskModel.toJson(),
       );
       return response['results']?.toString() ?? '';
@@ -40,7 +55,7 @@ class TaskListService {
     }
   }
 
-  Future<String> updateStatus({required String id, required String status}) async {
+  Future<String> updateStatus({required String id, required String status, String? token}) async {
     try {
       var response = await dio.post(
         APIConstants.UPDATE_STATUS,
@@ -48,7 +63,15 @@ class TaskListService {
           "id": id,
           "status": status,
         },
-        options: Options(extra: {"auth": true}),
+        options: 
+        token != null ?
+        Options(
+            headers: {
+              "x-woloo-token":  token
+            },
+          ) :
+        
+        Options(extra: {"auth": true}),
       );
 
       return response['results']?.toString() ?? '';

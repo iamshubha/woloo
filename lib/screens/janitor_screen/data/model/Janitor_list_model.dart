@@ -26,6 +26,12 @@ class JanitorListModel {
     this.isPresent,
     this.shift,
     this.completedTaskCount,
+    this.acceptedTaskCount,
+    this.onGoingTaskCount,
+    this.rejectsTaskCount,
+    this.rfcTaskCount,
+    this.baseUrl,
+    this.profileImage
   });
 
   JanitorListModel.fromJson(dynamic json) {
@@ -39,9 +45,17 @@ class JanitorListModel {
     endTime = json['end_time']?.toString();
     totalTaskCount = json['total']?.toString();
     pendingTaskCount = json['pending']?.toString();
+    acceptedTaskCount = json['accepted']?.toString();
+    rejectsTaskCount = json['rejects']?.toString();
+    rfcTaskCount = json['requestForClosure']?.toString();
+    onGoingTaskCount = json['ongoing']?.toString();
     isPresent = json['isPresent'];
     shift = json['shift']?.toString();
     completedTaskCount = json['completed']?.toString();
+    baseUrl = json['base_url'];
+    profileImage = json['profile_image'] ?? "";
+    gender = json['gender'];
+
   }
   String? id;
   String? name;
@@ -53,9 +67,16 @@ class JanitorListModel {
   String? endTime;
   String? totalTaskCount;
   String? pendingTaskCount;
+  String? onGoingTaskCount;
+  String? acceptedTaskCount;
+  String? rfcTaskCount;
+  String? rejectsTaskCount;
   bool? isPresent;
   String? shift;
   String? completedTaskCount;
+  String? profileImage;
+  String? baseUrl;
+  String? gender;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -72,6 +93,14 @@ class JanitorListModel {
     map['isPresent'] = isPresent;
     map['shift'] = shift;
     map['completed'] = completedTaskCount;
+    map['base_url'] = baseUrl;
+    map['profile_image'] = profileImage;
+    map['gender'] = gender;
+    map['requestForClosure'] = rfcTaskCount;
+    map['rejects'] = rejectsTaskCount;
+    map['accepted'] = acceptedTaskCount;
+    map['ongoing'] = onGoingTaskCount;
+
 
     return map;
   }
