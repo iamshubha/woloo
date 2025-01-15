@@ -189,7 +189,7 @@ class _TemplateScreenState extends State<TemplateScreen> {
 
           // ),
 
-            bottomNavigationBar: BottomNavigationBar(
+        bottomNavigationBar: BottomNavigationBar(
           backgroundColor: AppColors.white,
         elevation: 15,
         unselectedItemColor:  AppColors.black,

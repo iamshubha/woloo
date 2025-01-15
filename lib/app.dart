@@ -57,7 +57,7 @@ class _AppState extends State<App> {
             theme: ThemeData(
               disabledColor: Colors.grey,
               textTheme: GoogleFonts.poppinsTextTheme(),
-              appBarTheme: AppBarTheme(
+              appBarTheme: const AppBarTheme(
                   surfaceTintColor: Colors.transparent
               )
             ),

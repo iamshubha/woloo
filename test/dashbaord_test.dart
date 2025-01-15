@@ -91,7 +91,6 @@ late DashboardService dashboardService;
         when(client
               .post(
                 headers:{ 
-   
     "x-woloo-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDE2LCJyb2xlX2lkIjoxLCJpYXQiOjE3MzA4MDc5MzIsImV4cCI6MTczMTQxMjczMn0.cxN_JTM5VPmufui4DLFz2WcDfXmM9-HibkBgEJZpOfk"
    
 },
@@ -190,10 +189,11 @@ late DashboardService dashboardService;
             try {
 
          var response = await dashboardService.markAttendance(
-          type: "", locations: [19.0760,72.8777 ], token: mockToken
-          );
+           type: "", locations: [19.0760,72.8777 ], token: mockToken
+           );
 
-            expect(response,  throwsException );
+            
+            expect(response,  throwsException);
               
             } catch (e) {
               
@@ -274,6 +274,35 @@ late DashboardService dashboardService;
   });
 
 
+      test("test janitor list api exception ", ()async{
+          
+             final client = MockClient();
+        when(client
+              .get(
+
+
+                Uri.parse(APIConstants.BASE_URL+ APIConstants.JANITOR_LIST )))
+          .thenAnswer((_) async =>
+              http.Response('{message: Forbidden, success: false, result: []}', 200));
+     
+           
+            try {
+
+         var response = await dashboardService.getTasksByJanitorId( );
+
+       
+              
+            } catch (e) {
+                   
+          expect(e.toString(), '{message: Forbidden, success: false, result: []}');
+              
+            }
+
+
+
+  });
+
+
     test("test janitor Attendance History ", ()async{
           
              final client = MockClient();
@@ -290,6 +319,38 @@ late DashboardService dashboardService;
           expect(response, isA<List<DashboardModelClass>>());
 
   });
+
+
+      test("test janitor Attendance History exception ", ()async{
+          
+             final client = MockClient();
+        when(client
+              .get(
+                Uri.parse(APIConstants.BASE_URL+ APIConstants.ATTENDANCE_HISTORY_LIST )))
+          .thenAnswer((_) async =>
+              http.Response('{message: Forbidden, success: false, result: []}', 200));
+     
+                
+             try {
+
+                      var response = await dashboardService.getTasksByJanitorId(
+               //token: mockToken
+               
+               );
+             
+               
+             } catch (e) {
+
+                expect(e.toString(), '{message: Forbidden, success: false, result: []}');
+               
+             }
+
+   
+
+  });
+
+
+
 
      test("accept task testing  ", ()async{
           final client = MockClient();
@@ -343,6 +404,43 @@ late DashboardService dashboardService;
 
     });
 
+
+   test("start task testing exception  ", ()async{
+      final client = MockClient();
+      when(client
+          .post(
+          headers:{
+            "x-woloo-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUyLCJyb2xlX2lkIjoxLCJpYXQiOjE3MzU4OTA0ODIsImV4cCI6MTczNjQ5NTI4Mn0.Uy90XgSfIlOyaPqDrxCkdbgV2grzHHaEKiG5FVNpRXE"
+          },
+          body:
+          {
+            "id": [taskId],
+            "status": "3",
+          },
+          Uri.parse(APIConstants.BASE_URL+ APIConstants.UPDATE_STATUS )))
+          .thenAnswer((_) async =>
+          http.Response(' {"results": { "current_Task_status": 2 },"success": true}', 200)
+      );
+
+       try {
+
+         var response = await dashboardService.updateStatus(
+          id: taskId,
+          status: "",
+          token: mockToken
+      );
+    
+
+        
+         
+       } catch (e) {
+
+          expect(e.toString(), '{message: "status" must be a number, success: false, results: []}');
+         
+       }
+
+  
+    });
 
 
     test(" request for closure task testing  ", ()async{

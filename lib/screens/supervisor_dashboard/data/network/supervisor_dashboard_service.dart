@@ -32,7 +32,7 @@ class SupervisorDashboardService {
     }
   }
 
-  Future<String> updateStatus({required String id, required int status, String? token}) async {
+  Future updateStatus({required String id, required int status, String? token}) async {
     try {
       var response = await dio.post(
         APIConstants.UPDATE_STATUS,
@@ -49,7 +49,7 @@ class SupervisorDashboardService {
         Options(extra: {"auth": true}),
       );
 
-      return response['results']?.toString() ?? '';
+      return response['results'] ?? '';
     } catch (e) {
       rethrow;
     }
@@ -58,6 +58,7 @@ class SupervisorDashboardService {
   Future<ReassignJanitorModel> reAssignTaskToJanitor({
     required List<String> id,
     required String janitor_id,
+    String? token
   }) async {
     print("Data" + id.toString());
     try {
@@ -67,7 +68,13 @@ class SupervisorDashboardService {
           "id": id,
           "janitor_id": janitor_id,
         },
-        options: Options(extra: {"auth": true}),
+        options:
+          token != null ? Options(
+            headers: {
+              "x-woloo-token":  token
+            },
+          ) :
+         Options(extra: {"auth": true}),
       );
 
       return ReassignJanitorModel.fromJson(response['results']);

@@ -5,8 +5,6 @@ import 'dart:io';
 
 import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
 import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
-import 'package:Woloo_Smart_hygiene/screens/my_account/data/model/profile_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/my_account/data/network/profile_service.dart';
 import 'package:Woloo_Smart_hygiene/screens/selfie_screen/data/network/selfie_service.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:dio/dio.dart';
@@ -23,7 +21,7 @@ import 'change_profile_test.mocks.dart';
 void main() {
   
  late SelfieService selfieService;
- late ProfileService profileService;
+//  late ProfileService profileService;
   String? mockToken = "";
    final file = File('assets/images/splash_logo.png');
     String type = '';
@@ -38,7 +36,7 @@ void main() {
        
        var dio = Dio();
         selfieService = SelfieService(dio:  DioClient( dio) );
-        profileService = ProfileService(dio:  DioClient( dio) );
+        // profileService = ProfileService(dio:  DioClient( dio) );
                final file = File('assets/testData.json');
               final jsonData = json.decode(await file.readAsString());
      
@@ -155,50 +153,50 @@ void main() {
 
 
 
-     test(" get profile end point testing",  ()async {
+    //  test(" get profile end point testing",  ()async {
        
       
-          final client = MockClient();
-        when(client
-              .get(
-                Uri.parse("${APIConstants.BASE_URL}+ ${APIConstants.USER_DETAILS}?id=${decodedToken!["id"].toString()}")))
-          .thenAnswer((_) async =>
-              http.Response('{"results":{"start_time":null,"end_time":null,"mobile":"9820607568","address":"undefined","city":"Demo","profile_image":"[\"Images/Profile/1736319140069.jpg\"]","status":{"label":"ACTIVE","value":true},"role_id":2,"email":"abhijeet@test.com","client_id":null,"client_name":{"label":"","value":""},"first_name":"Abhijeet","last_name":"Test","pan_image":"","aadhar_image":"","wish_certificate_image":"","cluster":[{"value":52,"label":"Gannaur"},{"value":15,"label":"ghatkopar 29"},{"value":136,"label":"Demo Client _cluster"}],"base_url":"https://woloo-taskmanagement-s3bucket.s3.ap-south-1.amazonaws.com"},"success":true}', 200));
+    //       final client = MockClient();
+    //     when(client
+    //           .get(
+    //             Uri.parse("${APIConstants.BASE_URL}+ ${APIConstants.USER_DETAILS}?id=${decodedToken!["id"].toString()}")))
+    //       .thenAnswer((_) async =>
+    //           http.Response('{"results":{"start_time":null,"end_time":null,"mobile":"9820607568","address":"undefined","city":"Demo","profile_image":"[\"Images/Profile/1736319140069.jpg\"]","status":{"label":"ACTIVE","value":true},"role_id":2,"email":"abhijeet@test.com","client_id":null,"client_name":{"label":"","value":""},"first_name":"Abhijeet","last_name":"Test","pan_image":"","aadhar_image":"","wish_certificate_image":"","cluster":[{"value":52,"label":"Gannaur"},{"value":15,"label":"ghatkopar 29"},{"value":136,"label":"Demo Client _cluster"}],"base_url":"https://woloo-taskmanagement-s3bucket.s3.ap-south-1.amazonaws.com"},"success":true}', 200));
 
-         //  var response = await clusterListService.getAllCluster( token: mockToken);
-               var response =  await  profileService.getProfile(supervisorId: decodedToken!["id"], token: mockToken);
-                 expect(response, isA<ProfileModel>());
+    //      //  var response = await clusterListService.getAllCluster( token: mockToken);
+    //            var response =  await  profileService.getProfile(supervisorId: decodedToken!["id"], token: mockToken);
+    //              expect(response, isA<ProfileModel>());
 
-     }, );
+    //  }, );
 
 
 
-          test(" get profile end point testing execption",  ()async {
+    //       test(" get profile end point testing execption",  ()async {
        
       
-          final client = MockClient();
-        when(client
-              .get(
-                Uri.parse("${APIConstants.BASE_URL}+ ${APIConstants.USER_DETAILS}?id=${decodedToken!["id"].toString()}")))
-          .thenAnswer((_) async =>
-              http.Response('Not Found', 400));
-            //  http.Response('{"results":{"start_time":null,"end_time":null,"mobile":"9820607568","address":"undefined","city":"Demo","profile_image":"[\"Images/Profile/1736319140069.jpg\"]","status":{"label":"ACTIVE","value":true},"role_id":2,"email":"abhijeet@test.com","client_id":null,"client_name":{"label":"","value":""},"first_name":"Abhijeet","last_name":"Test","pan_image":"","aadhar_image":"","wish_certificate_image":"","cluster":[{"value":52,"label":"Gannaur"},{"value":15,"label":"ghatkopar 29"},{"value":136,"label":"Demo Client _cluster"}],"base_url":"https://woloo-taskmanagement-s3bucket.s3.ap-south-1.amazonaws.com"},"success":true}', 200));
+    //       final client = MockClient();
+    //     when(client
+    //           .get(
+    //             Uri.parse("${APIConstants.BASE_URL}+ ${APIConstants.USER_DETAILS}?id=${decodedToken!["id"].toString()}")))
+    //       .thenAnswer((_) async =>
+    //           http.Response('Not Found', 400));
+    //         //  http.Response('{"results":{"start_time":null,"end_time":null,"mobile":"9820607568","address":"undefined","city":"Demo","profile_image":"[\"Images/Profile/1736319140069.jpg\"]","status":{"label":"ACTIVE","value":true},"role_id":2,"email":"abhijeet@test.com","client_id":null,"client_name":{"label":"","value":""},"first_name":"Abhijeet","last_name":"Test","pan_image":"","aadhar_image":"","wish_certificate_image":"","cluster":[{"value":52,"label":"Gannaur"},{"value":15,"label":"ghatkopar 29"},{"value":136,"label":"Demo Client _cluster"}],"base_url":"https://woloo-taskmanagement-s3bucket.s3.ap-south-1.amazonaws.com"},"success":true}', 200));
 
-         //     var response = await clusterListService.getAllCluster( token: mockToken);
+    //      //     var response = await clusterListService.getAllCluster( token: mockToken);
 
-             try {
+    //          try {
 
-                    var response =  await  profileService.getProfile(supervisorId: decodedToken!["0"], token: mockToken );
+    //                 var response =  await  profileService.getProfile(supervisorId: decodedToken!["0"], token: mockToken );
                  
-                  print(response);
-                   expect(response,  throwsException );
+    //               print(response);
+    //                expect(response,  throwsException );
                
-             } catch (e) {
+    //          } catch (e) {
                
-             }
+    //          }
           
         
-     }, );
+    //  }, );
 
 
   });

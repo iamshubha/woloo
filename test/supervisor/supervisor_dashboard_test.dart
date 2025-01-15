@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
 import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
+import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Reassign_janitor_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/data/network/supervisor_dashboard_service.dart';
 import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
 import 'package:dio/dio.dart';
@@ -135,6 +136,28 @@ void main() {
 
   });
 
+
+
+      test("resassign task  supervisor dashboard end point testing",  ()async {
+        
+       var res =  {"task_allocation_id":2681881,"date":"07-01-2025","janitor_id":152,"updated_at":"2025-01-07T00:50:18.347Z","request_type":"Regular","start_time":"12:50 AM","end_time":"01:50 AM","facility_id":253,"template_id":267,"template_name":"Morning task template","description":"Cleaning task for janitor","facility_name":"Demo Client _facility","estimated_time":60,"total_tasks":1,"booths":1,"floor_number":0,"location":"location_1","lat":null,"lng":null,"janitor_name":"Shrirang Test","block_name":"Demo Client _block","pending_tasks":"0","status":"Pending","success":true};
+      
+          final client = MockClient();
+        when(client
+              .post(
+                 body:  {  "id": [taskId],
+                         "janitor_id": 126,},
+                Uri.parse(APIConstants.BASE_URL+ APIConstants.GET_SUPERVISOR_DASHBOARD_DATA )))
+          .thenAnswer((_) async =>
+              http.Response(  jsonEncode(res) , 200));
+     
+           var response = await supervisorDashboardService.reAssignTaskToJanitor( 
+             id: [taskId!],
+            janitor_id: "126", 
+             token: mockToken);
+          expect(response, isA<ReassignJanitorModel>());
+
+     }, );
 
 
 

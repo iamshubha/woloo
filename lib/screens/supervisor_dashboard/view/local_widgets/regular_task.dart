@@ -155,6 +155,7 @@ class _RegularTaskState extends State<RegularTask> with SingleTickerProviderStat
                 context,
                 MaterialPageRoute(
                     builder: (context) => TaskDetailsScreen(
+
                           isFromDashboard: true,
                           isFromFacility: false,
                           allocationId: "${data.taskAllocationId ?? ''}",
@@ -175,18 +176,21 @@ class _RegularTaskState extends State<RegularTask> with SingleTickerProviderStat
                             onTapItem: (SupervisorModelDashboard data, bool isApproved) async {
                               print("templates " + data.status!);
                                if( data.status == "Request for closure" ){
-                    await Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => TaskDetailsScreen(
-                          isFromDashboard: true,
-                          isFromFacility: false,
-                          allocationId: "${data.taskAllocationId ?? ''}",
-                          isApproved: isApproved,
-                        )),
-                              );
+                //     await Navigator.push(
+                // context,
+                // MaterialPageRoute(
+                //     builder: (context) => TaskDetailsScreen(
+                //           isFromDashboard: true,
+                //           isFromFacility: false,
+                //           allocationId: "${data.taskAllocationId ?? ''}",
+                //           isApproved: isApproved,
+                //           tabController: _tabController,
+                //         )),
+                //               );
                               //  key = GlobalKey();
-                               }    
+                               }   
+                       // _tabController!.animateTo(4);
+                             //  _tabController. 
                             },
                           ),
                 
@@ -197,6 +201,8 @@ class _RegularTaskState extends State<RegularTask> with SingleTickerProviderStat
                                     errorData: EmptyWidgetConstants.COMPELTED_TASK_ERROR.tr(),
                                             status: "Completed",
                                             reqType: "Regular",
+                            tabController: _tabController,
+                           // taskAllocationId:  "${data.taskAllocationId ?? ''}",
                             // key: key,
                             onTapItem: (SupervisorModelDashboard data, bool isApproved) async {
                               print("templates " + data.status!);

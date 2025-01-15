@@ -32,93 +32,93 @@ import 'LastAttendance.dart';
 //
 //     final attendance = attendanceFromJson(jsonString);
 
-import 'dart:convert';
+// import 'dart:convert';
 
-Attendance attendanceFromJson(String str) => Attendance.fromJson(json.decode(str));
+// Attendance attendanceFromJson(String str) => Attendance.fromJson(json.decode(str));
 
-String attendanceToJson(Attendance data) => json.encode(data.toJson());
+// String attendanceToJson(Attendance data) => json.encode(data.toJson());
 
-class Attendance {
-  Results? results;
-  bool? success;
+// class Attendance {
+//   Results? results;
+//   bool? success;
 
-  Attendance({
-    this.results,
-    this.success,
-  });
+//   Attendance({
+//     this.results,
+//     this.success,
+//   });
 
-  factory Attendance.fromJson(Map<String, dynamic> json) => Attendance(
-    results: Results.fromJson(json["results"]),
-    success: json["success"],
-  );
+//   factory Attendance.fromJson(Map<String, dynamic> json) => Attendance(
+//     results: Results.fromJson(json["results"]),
+//     success: json["success"],
+//   );
 
-  Map<String, dynamic> toJson() => {
-    "results": results!.toJson(),
-    "success": success,
-  };
-}
+//   Map<String, dynamic> toJson() => {
+//     "results": results!.toJson(),
+//     "success": success,
+//   };
+// }
 
-class Results {
-  String? message;
-  AttendanceClass? attendance;
+// class Results {
+//   String? message;
+//   AttendanceClass? attendance;
 
-  Results({
-    this.message,
-    this.attendance,
-  });
+//   Results({
+//     this.message,
+//     this.attendance,
+//   });
 
-  factory Results.fromJson(Map<String, dynamic> json) => Results(
-    message: json["message"],
-    attendance: AttendanceClass.fromJson(json["attendance"]),
-  );
+//   factory Results.fromJson(Map<String, dynamic> json) => Results(
+//     message: json["message"],
+//     attendance: AttendanceClass.fromJson(json["attendance"]),
+//   );
 
-  Map<String, dynamic> toJson() => {
-    "message": message,
-    "attendance": attendance!.toJson(),
-  };
-}
+//   Map<String, dynamic> toJson() => {
+//     "message": message,
+//     "attendance": attendance!.toJson(),
+//   };
+// }
 
-class AttendanceClass {
-  LastAttendance? lastAttendance;
-  DateTime? lastAttendanceDate;
+// class AttendanceClass {
+//   LastAttendance? lastAttendance;
+//   DateTime? lastAttendanceDate;
 
-  AttendanceClass({
-    this.lastAttendance,
-    this.lastAttendanceDate,
-  });
+//   AttendanceClass({
+//     this.lastAttendance,
+//     this.lastAttendanceDate,
+//   });
 
-  factory AttendanceClass.fromJson(Map<String, dynamic> json) => AttendanceClass(
-    lastAttendance: LastAttendance.fromJson(json["last_attendance"]),
-    lastAttendanceDate: DateTime.parse(json["last_attendance_date"]),
-  );
+//   factory AttendanceClass.fromJson(Map<String, dynamic> json) => AttendanceClass(
+//     lastAttendance: LastAttendance.fromJson(json["last_attendance"]),
+//     lastAttendanceDate: DateTime.parse(json["last_attendance_date"]),
+//   );
 
-  Map<String, dynamic> toJson() => {
-    "last_attendance": lastAttendance!.toJson(),
-    "last_attendance_date": lastAttendanceDate!.toIso8601String(),
-  };
-}
+//   Map<String, dynamic> toJson() => {
+//     "last_attendance": lastAttendance!.toJson(),
+//     "last_attendance_date": lastAttendanceDate!.toIso8601String(),
+//   };
+// }
 
-class LastAttendance {
-  DateTime? time;
-  String? type;
-  List<double>? location;
+// class LastAttendance {
+//   DateTime? time;
+//   String? type;
+//   List<double>? location;
 
-  LastAttendance({
-    this.time,
-    this.type,
-    this.location,
-  });
+//   LastAttendance({
+//     this.time,
+//     this.type,
+//     this.location,
+//   });
 
-  factory LastAttendance.fromJson(Map<String, dynamic> json) => LastAttendance(
-    time: DateTime.parse(json["time"]),
-    type: json["type"],
-    location: List<double>.from(json["location"].map((x) => x.toDouble())),
-  );
+//   factory LastAttendance.fromJson(Map<String, dynamic> json) => LastAttendance(
+//     time: DateTime.parse(json["time"]),
+//     type: json["type"],
+//     location: List<double>.from(json["location"].map((x) => x.toDouble())),
+//   );
 
-  Map<String, dynamic> toJson() => {
-    "time": time!.toIso8601String(),
-    "type": type,
-    "location": List<dynamic>.from(location!.map((x) => x)),
-  };
-}
+//   Map<String, dynamic> toJson() => {
+//     "time": time!.toIso8601String(),
+//     "type": type,
+//     "location": List<dynamic>.from(location!.map((x) => x)),
+//   };
+// }
 

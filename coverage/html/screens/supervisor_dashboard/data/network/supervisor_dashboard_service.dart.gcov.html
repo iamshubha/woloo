@@ -31,13 +31,13 @@
             <td class="headerValue">lcov.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryLo">60.0&nbsp;%</td>
-            <td class="headerCovTableEntry">25</td>
-            <td class="headerCovTableEntry">15</td>
+            <td class="headerCovTableEntryMed">85.2&nbsp;%</td>
+            <td class="headerCovTableEntry">27</td>
+            <td class="headerCovTableEntry">23</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-13 09:49:37</td>
+            <td class="headerValue">2025-01-14 09:57:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">-</td>
@@ -117,27 +117,34 @@
 <span id="L55"><span class="lineNum">      55</span>              :     }</span>
 <span id="L56"><span class="lineNum">      56</span>              :   }</span>
 <span id="L57"><span class="lineNum">      57</span>              : </span>
-<span id="L58"><span class="lineNum">      58</span> <span class="tlaUNC">           0 :   Future&lt;ReassignJanitorModel&gt; reAssignTaskToJanitor({</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">           1 :   Future&lt;ReassignJanitorModel&gt; reAssignTaskToJanitor({</span></span>
 <span id="L59"><span class="lineNum">      59</span>              :     required List&lt;String&gt; id,</span>
 <span id="L60"><span class="lineNum">      60</span>              :     required String janitor_id,</span>
-<span id="L61"><span class="lineNum">      61</span>              :   }) async {</span>
-<span id="L62"><span class="lineNum">      62</span> <span class="tlaUNC">           0 :     print(&quot;Data&quot; + id.toString());</span></span>
-<span id="L63"><span class="lineNum">      63</span>              :     try {</span>
-<span id="L64"><span class="lineNum">      64</span> <span class="tlaUNC">           0 :       var response = await dio.put(</span></span>
-<span id="L65"><span class="lineNum">      65</span> <span class="tlaUNC">           0 :         APIConstants.RE_ASSIGN_TASK,</span></span>
-<span id="L66"><span class="lineNum">      66</span> <span class="tlaUNC">           0 :         data: {</span></span>
-<span id="L67"><span class="lineNum">      67</span>              :           &quot;id&quot;: id,</span>
-<span id="L68"><span class="lineNum">      68</span>              :           &quot;janitor_id&quot;: janitor_id,</span>
-<span id="L69"><span class="lineNum">      69</span>              :         },</span>
-<span id="L70"><span class="lineNum">      70</span> <span class="tlaUNC">           0 :         options: Options(extra: {&quot;auth&quot;: true}),</span></span>
-<span id="L71"><span class="lineNum">      71</span>              :       );</span>
-<span id="L72"><span class="lineNum">      72</span>              : </span>
-<span id="L73"><span class="lineNum">      73</span> <span class="tlaUNC">           0 :       return ReassignJanitorModel.fromJson(response['results']);</span></span>
-<span id="L74"><span class="lineNum">      74</span>              :     } catch (e) {</span>
-<span id="L75"><span class="lineNum">      75</span>              :       rethrow;</span>
-<span id="L76"><span class="lineNum">      76</span>              :     }</span>
-<span id="L77"><span class="lineNum">      77</span>              :   }</span>
-<span id="L78"><span class="lineNum">      78</span>              : }</span>
+<span id="L61"><span class="lineNum">      61</span>              :     String? token</span>
+<span id="L62"><span class="lineNum">      62</span>              :   }) async {</span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">           3 :     print(&quot;Data&quot; + id.toString());</span></span>
+<span id="L64"><span class="lineNum">      64</span>              :     try {</span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">           2 :       var response = await dio.put(</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">           1 :         APIConstants.RE_ASSIGN_TASK,</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">           1 :         data: {</span></span>
+<span id="L68"><span class="lineNum">      68</span>              :           &quot;id&quot;: id,</span>
+<span id="L69"><span class="lineNum">      69</span>              :           &quot;janitor_id&quot;: janitor_id,</span>
+<span id="L70"><span class="lineNum">      70</span>              :         },</span>
+<span id="L71"><span class="lineNum">      71</span>              :         options:</span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">           1 :           token != null ? Options(</span></span>
+<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">           1 :             headers: {</span></span>
+<span id="L74"><span class="lineNum">      74</span>              :               &quot;x-woloo-token&quot;:  token</span>
+<span id="L75"><span class="lineNum">      75</span>              :             },</span>
+<span id="L76"><span class="lineNum">      76</span>              :           ) :</span>
+<span id="L77"><span class="lineNum">      77</span> <span class="tlaUNC">           0 :          Options(extra: {&quot;auth&quot;: true}),</span></span>
+<span id="L78"><span class="lineNum">      78</span>              :       );</span>
+<span id="L79"><span class="lineNum">      79</span>              : </span>
+<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">           2 :       return ReassignJanitorModel.fromJson(response['results']);</span></span>
+<span id="L81"><span class="lineNum">      81</span>              :     } catch (e) {</span>
+<span id="L82"><span class="lineNum">      82</span>              :       rethrow;</span>
+<span id="L83"><span class="lineNum">      83</span>              :     }</span>
+<span id="L84"><span class="lineNum">      84</span>              :   }</span>
+<span id="L85"><span class="lineNum">      85</span>              : }</span>
         </pre>
               </td>
             </tr>

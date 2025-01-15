@@ -25,6 +25,7 @@ class TaskDetailsScreen extends StatefulWidget {
   final bool isFromFacility;
   final String allocationId;
   final bool isApproved;
+   final TabController? tabController;
 
   const TaskDetailsScreen({
     Key? key,
@@ -32,6 +33,7 @@ class TaskDetailsScreen extends StatefulWidget {
     required this.isFromFacility,
     required this.allocationId,
     this.isApproved = false,
+    this.tabController
   }) : super(key: key);
 
   @override
@@ -112,11 +114,19 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                    //_supervisorDashboardBloc.add(GetSupervisorDashboardData());
             }
             if (state is UpdateStatusSuccessful) {
+              //  print(" data of state ${state.data["df"] }");
+
+          //: widget.tabController!.animateTo(0);
+                
               _supervisorDashboardBloc.add(GetSupervisorDashboardData());
+             // state.
               EasyLoading.dismiss();
              
 
               Navigator.pop(context);
+              state.data["current_Task_status"] == 7 ?
+              widget.tabController!.animateTo(3)
+                  : null;
             
             }
           },

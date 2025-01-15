@@ -20,12 +20,15 @@ import 'package:get_it/get_it.dart';
 
 import '../../../assign_screen/assign_screen.dart';
 import '../../../common_widgets/swipe_button.dart';
+import '../../../task_details_screen/view/task_details.dart';
 
 class SupervisorDashboardListWidget extends StatefulWidget {
   final Function onTapItem;
   final String? status;
    final String? reqType;
    final  String? errorData;
+    final String? taskAllocationId;
+  final TabController? tabController;
 
   const SupervisorDashboardListWidget({
     
@@ -33,7 +36,10 @@ class SupervisorDashboardListWidget extends StatefulWidget {
     required this.onTapItem,
     this.status,
     this.reqType,
+    this.taskAllocationId,
+    this.tabController,
    required this.errorData
+
   });
 
   @override
@@ -820,8 +826,19 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                               ),
                                               if (_data[index].status == "Request for closure")
                                                 InkWell(
-                                                  onTap: () {
-                                                    _supervisorDashboardBloc.add(SupervisorUpdateStatus(id: _data[index].taskAllocationId.toString() ?? '', status: 4));
+                                                  onTap: ()async {
+                                                    await Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) => TaskDetailsScreen(
+                                                                  isFromDashboard: true,
+                                                                  isFromFacility: false,
+                                                                  allocationId: _data[index].taskAllocationId.toString(),
+                                                                  isApproved: isApproved,
+                                                                  tabController: widget.tabController,
+                                                                )),
+                                                                      );
+                                                  //  _supervisorDashboardBloc.add(SupervisorUpdateStatus(id: _data[index].taskAllocationId.toString() ?? '', status: 4));
                                                   },
                                                   child: Padding(
                                                     padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 0.h),
@@ -837,7 +854,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                           vertical: 6.h,
                                                         ),
                                                         child: Text(
-                                                          MyTaskDetailsScreenConstants.APPROVE_BUTTON.tr(),
+                                                          MyTaskDetailsScreenConstants.APP_BAR.tr(),
                                                           textAlign: TextAlign.center,
                                                           style:AppTextStyle.font10w6.copyWith(
                                                                 color: AppColors.black,)

@@ -21,7 +21,7 @@ class ProfileService {
         Options(extra: {"auth": true}),
       );
 
-     print("suprer s ${response['results']} " );
+       print("suprer s ${response['results']} " );
      // ProfileModel output = [];
       // for (var item in response['results']) {
       //   output.add(ProfileModel.fromJson(item));

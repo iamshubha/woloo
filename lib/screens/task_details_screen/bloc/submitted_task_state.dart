@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
 import 'package:Woloo_Smart_hygiene/screens/task_details_screen/data/model/Submitted_tasks_model.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class SubmittedTaskState extends Equatable {
   const SubmittedTaskState();
@@ -44,8 +45,10 @@ class UpdateStatusLoading extends SubmittedTaskState {
 }
 
 class UpdateStatusSuccessful extends SubmittedTaskState {
+  dynamic data;
+  UpdateStatusSuccessful({this.data});
   @override
-  List<Object> get props => [];
+  List<Object> get props => [data!];
 }
 
 class UpdateStatusError extends SubmittedTaskState {

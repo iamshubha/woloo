@@ -41,11 +41,15 @@ class SubmittedTaskBloc extends Bloc<SubmittedTaskEvent, SubmittedTaskState> {
     try {
       emit(const UpdateStatusLoading(message: "Loading Please Wait..."));
 
-      await _supervisorDashboardService.updateStatus(
+     var res = await _supervisorDashboardService.updateStatus(
           id: event.id, status: event.status);
-     data = await _supervisorDashboardService.getSupervisorDashboardData();
+         data = await _supervisorDashboardService.getSupervisorDashboardData();
+         
+        res["current_Task_status"];
+
+      //    print("responseeee  ------>>>>>>  ${res["current_Task_status"]} ");
      
-      emit(UpdateStatusSuccessful( ));
+      emit(UpdateStatusSuccessful( data: res));
     } catch (e) {
       emit(UpdateStatusError(error: ErrorHandler.handle(e).failure  ));
     }
