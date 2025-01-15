@@ -9,6 +9,7 @@ import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -113,21 +114,14 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
   ];
 
  void  prof(id)async{
-    print("object prot");
+  
     profileBloc?.add(UpdateProfile(
         id: id
     )
     );
   }
  
-  //  @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   super.didChangeAppLifecycleState(state);
-  //   print('Current state = ${state}');
 
-    
-
-  // }
 
 
   @override
@@ -159,7 +153,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
          profileshift  =      globalStorage.getShift() ;
     });
             dashboardBloc.add(const GetTaskTamplates());
-     print("profile $profileImage");
+     
      // if(_appLaunchModel.lastAttendance == "check_in"){
      //   setUpTimedFetch();
      // }
@@ -187,18 +181,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
 
  
 
-  //  setUpTimedFetch() {
-  //   Timer.periodic(Duration(milliseconds: 5000), (timer) {
-  //     // setState(() {
-  //      print("df ${_appLaunchModel.lastAttendance}");
-  //         if( _appLaunchModel.lastAttendance == "check_in" ){
-  //           dashboardBloc.add(const GetTaskTamplates());
-  //         }
-
-  //     //  _future = getSakaryaAir();
-  //     // });
-  //   });
-  // }
+ 
 
   @override
   void dispose() {
@@ -217,7 +200,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
         
       },
       builder: (context, state){ 
-         print("print upadte token api $state");
+       
          if (state is  ProfleLoading ) {
            EasyLoading.show(status: "");
 
@@ -238,10 +221,10 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
      return  BlocConsumer(
         bloc: dashboardBloc,
         listener: (context, state) {
-          print(" dashbaordddd $state ");
+          
         },
         builder: (context, state) {
-          print("dashboard ka state $state ");
+        
           if (state is AppLaunchLoading) {
             EasyLoading.show(status: state.message);
           }
@@ -256,14 +239,14 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
             _appLaunchModel = state.data;
             type = _appLaunchModel.lastAttendance;
       
-            print("appLaunchResponse---->${_appLaunchModel.toJson()}");
+            debugPrint("appLaunchResponse---->${_appLaunchModel.toJson()}");
       
             if (_appLaunchModel.lastAttendance == "check_in") {
-               print("last attendance");
+               debugPrint("last attendance");
               checkGps();
               dashboardBloc.add(const GetTaskTamplates());
       
-              print("lastAttendance--->${_appLaunchModel.lastAttendance}");
+              debugPrint("lastAttendance--->${_appLaunchModel.lastAttendance}");
       
               onTapCheckIn = true;
               globalStorage.saveCheckIn(isCheckedIn: true);
@@ -272,7 +255,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
             }
       
             if (_appLaunchModel.lastAttendance == "check_out") {
-               print("on check out attendance");
+           
               onTapCheckIn = false;
               showList = false;
 
@@ -294,8 +277,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
             inTime = globalStorage.getTime();
          //  outTime = globalStorage.getTime();
           }
-      
-          print(state);
+     
       
           if (state is ClockInSuccessful) {
             EasyLoading.dismiss();
@@ -312,7 +294,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
 
             // Print the DateTime object
             DateTime  local =   parsedTime.toLocal();
-            print("Parsed DateTime: $parsedTime");
+            debugPrint("Parsed DateTime: $parsedTime");
             String timeOnly = "${local.hour}:${local.minute}:${local.second}";
             String dateOnly =  "${local.day}-${local.month}-${local.year}";
 
@@ -324,7 +306,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
 
 
             // Print the local time
-            print("Local Time: ${parsedTime.toLocal()}");
+            debugPrint("Local Time: ${parsedTime.toLocal()}");
             inTime = globalStorage.getTime();
             inTimeDate =  globalStorage.getDate();
 
@@ -347,7 +329,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
       
           if (state is ClockOutSuccessful) {
             EasyLoading.dismiss();
-            print(state);
+          
       
             onTapCheckIn = false;
             showList = false;
@@ -371,7 +353,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
 
             // Print the local time
            
-            print("Local Time: ${parsedTime.toLocal()}");
+            debugPrint("Local Time: ${parsedTime.toLocal()}");
             outTime =  globalStorage.getOutTime();
             outTimeDate = globalStorage.getOutDate();
 
@@ -384,7 +366,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
           }
           if (state is ClockOutError) {
             EasyLoading.dismiss();
-            print("onTapCheckIn----->$onTapCheckIn");
+            debugPrint("onTapCheckIn----->$onTapCheckIn");
             EasyLoading.showError(state.error.message);
       
             onTapCheckIn = false;
@@ -641,8 +623,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                                          //
                                          //          builder:
                                          //          (context, state) {
-                                         //            print("refresh token api call $state");
-                                         //            //   print("state $state ");
+                                         //     
                                          //             if (state is  UpdateTokenLoading ) {
                                          //               EasyLoading.show(status: "");
                                          //
@@ -836,8 +817,11 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                                               double.tryParse(lat) ?? 0;
                                           var longitude =
                                               double.tryParse(long) ?? 0;
-                                          print( "lattttt  " + latitude.toString());
-                                          print("longggg   " + longitude.toString());
+                                        
+                                            debugPrint( "lattttt  " + latitude.toString());
+                                              debugPrint("longggg   " + longitude.toString());
+                                        
+                                        
                                           dashboardBloc.add(MarkAttendance(
                                               type: 'check_in',
                                               locations: [latitude, longitude]));
@@ -1076,7 +1060,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                               //             dropdownvalue = newValue!;
                               //           });
       
-                              //           print('new $newValue ');
+                              //        
                               //           if (newValue == "All") {
                               //             dashController.filterData.value =
                               //                 dashController.data.value;
@@ -1088,8 +1072,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                               //                     .toList();
                               //           }
       
-                              //           print(
-                              //               " filter data${dashController.filterData.value}");
+                              //          
                               //         },
                               //       ),
                               //     ),
@@ -1104,14 +1087,14 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                         ? BlocConsumer(
                             bloc: dashboardBloc,
                             listener: (context, state) {
-                              print("innnner dashvaord $state ");
+                              
                               if (state is GetDashboardDataSuccess) {
                                 EasyLoading.dismiss();
                               }
       
                               if (state is UpdateStatusSuccessful) {
                                 EasyLoading.dismiss();
-                                print("status updated");
+                             
                               }
                             },
                             builder: (context, state) {
@@ -1140,7 +1123,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                                 // filter =  dashController.data.value!;
       
                                 //    if(dropdownvalue == "All"){
-                                //            print(" data from gextg ${dashController.data.value}");
+                                //      
                                 //                filter.value = dashController.data.value;
                                 //    //   filter = _data;
                                 //    }else {
@@ -1148,7 +1131,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                                 //      //  dashController.data.value.where()
                                 //     dashController.data.value.where( (e)=> e.status == dropdownvalue ).toList();
                                 //    }
-                                //    print(" Allll   ${filter.map( (e) =>  e.requestType)}");
+                               
                               }
       
                               return Container(
@@ -1251,15 +1234,17 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
     if (serviceStatus) {
       permission = await Geolocator.checkPermission();
 
-      print("permission $permission");
+  
+        debugPrint("permission $permission");
+      
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
-          print('Location permissions are denied');
+        
           // permission = await Geolocator.requestPermission();
         } else if (permission == LocationPermission.deniedForever) {
-          print('print me');
-          //  print("Location permissions are permanently denied");
+        
+         ;
           openAppSettings();
           //  permission = await Geolocator.requestPermission();
         } else if (permission == LocationPermission.always ||
@@ -1267,7 +1252,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
           haspermission = true;
         }
       } else if (permission == LocationPermission.deniedForever) {
-        print('denieddsdddd forever');
+      
         openAppSettings();
         //  permission = await Geolocator.requestPermission();
       } else if (permission == LocationPermission.always ||
@@ -1275,8 +1260,6 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
         haspermission = true;
       }
 
-      print("given the permsiion $haspermission");
-      print("permission222222 $permission");
       if (haspermission) {
         await getLocation();
       }
@@ -1291,11 +1274,13 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
   }
 
   getLocation() async {
-    print("get location");
+  
     position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    print(" posr${position.longitude}"); //Output: 80.24599079
-    print(position.latitude); //Output: 29.6593457
+    //Output: 80.24599079
+    if (kDebugMode) {
+      print(position.latitude);
+    } //Output: 29.6593457
 
     long = position.longitude.toString();
     lat = position.latitude.toString();
@@ -1308,16 +1293,23 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
     // StreamSubscription<Position> positionStream =
         Geolocator.getPositionStream(locationSettings: locationSettings)
             .listen((Position position) {
-      print(position.longitude); //Output: 80.24599079
-      print(position.latitude); //Output: 29.6593457
+      if (kDebugMode) {
+        print(position.longitude);
+          print(position.latitude); //Output: 29.6593457
+      } //Output: 80.24599079
+
+    
 
       long = position.longitude.toString();
       lat = position.latitude.toString();
       globalStorage.saveLattitude(accessLatitude: lat);
       globalStorage.saveLongitude(accessLongitude: long);
 
-      print(" lattttt---- > ${globalStorage.getLatitude()}");
-      print(" longitttt---- > ${globalStorage.getLongitude()}");
+      if (kDebugMode) {
+        print(" lattttt---- > ${globalStorage.getLatitude()}");
+         print(" longitttt---- > ${globalStorage.getLongitude()}");
+      }
+     
 
       _getAddressFromLatLng(position);
     });
@@ -1330,12 +1322,15 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
       setState(() {
         _currentAddress =
             '${place.name},${place.street}, ${place.subLocality},${place.subAdministrativeArea}, ${place.administrativeArea},${place.postalCode}';
-        print("address - $_currentAddress");
+      
+          debugPrint("address - $_currentAddress");
+        
 
         globalStorage.saveLocation(accessLocation: _currentAddress ?? '');
         location = globalStorage.getLocation();
 
-        print("locccccc --- > ${globalStorage.getLocation()}");
+          debugPrint("locccccc --- > ${globalStorage.getLocation()}");
+      
       });
     }).catchError((e) {
       debugPrint(e);

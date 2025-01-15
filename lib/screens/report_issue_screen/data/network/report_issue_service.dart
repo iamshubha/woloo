@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
 import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/Janitor_dropdown_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/janitor_dropdown_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/report_issue_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/task_names_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/facility_dropdown_model.dart';

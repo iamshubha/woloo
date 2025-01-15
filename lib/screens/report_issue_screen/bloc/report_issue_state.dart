@@ -1,5 +1,5 @@
 import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/Janitor_dropdown_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/janitor_dropdown_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/cluster_dropdown_model.dart';
 import 'package:equatable/equatable.dart';
 

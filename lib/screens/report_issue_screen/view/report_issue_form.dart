@@ -11,7 +11,7 @@ import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issu
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issue_state.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/cluster_dropdown_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/facility_dropdown_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/Janitor_dropdown_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/janitor_dropdown_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/task_names_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/widget/view_image.dart';
 import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model.dart';
