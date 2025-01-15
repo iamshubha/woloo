@@ -9,7 +9,6 @@ class GlobalStorage {
   final String _tokenKey = 'accessToken';
   final String _idKey = 'accessId';
   final String _roleIdKey = 'accessRoleId';
-  final String _fcmTokenKey = 'accessFCMToken';
   final String _supervisorNameKey = 'accessSupervisorName';
   final String _mobileNumberKey = 'accessMobileNumber';
   final String _locationKey = 'accessLocation';
@@ -36,7 +35,7 @@ class GlobalStorage {
   }
 
   void removeToken() {
-    print("removedtoken");
+   
 
     _box.remove(_tokenKey);
   }
@@ -76,17 +75,17 @@ class GlobalStorage {
   }
 
   void removeProfile() {
-    print("profile");
+  
     _box.remove(_profileKey);
   }
 
     void removeProfileImg() {
-    print("profile");
+
     _box.remove(_profileImgKey);
   }
 
     void removeShift() {
-    print("profile");
+
     _box.remove(_profileshiftKey);
   }
 

@@ -833,17 +833,17 @@ snacbar( String title, Color color){
        var chekIn =    historyData.map( (e)=>  e.checkIn ).toList();
        chekIn.insert(0,"Check In");
 
-        var checkInColumn = chekIn;
+        // var checkInColumn = chekIn;
    
        var chekOut =    historyData.map( (e)=>  e.checkOut ).toList();
        chekOut.insert(0,"Check Out");
 
-         var checkOutColumn = chekOut;
+        //  var checkOutColumn = chekOut;
 
        var  attendance  =    historyData.map( (e)=>  e.attendance ).toList();
        attendance.insert(0,"Attendance");
 
-          var attendanceColumn = attendance;
+          // var attendanceColumn = attendance;
 
         List<List<String?>> columnIterables = [
         date,

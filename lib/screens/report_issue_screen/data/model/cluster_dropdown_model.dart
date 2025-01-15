@@ -2,6 +2,8 @@
 /// cluster_name : "Wipro"
 
 class ClusterDropdownModel {
+     int? clusterId;
+     String? clusterName;
   ClusterDropdownModel({
     this.clusterId,
     this.clusterName,
@@ -11,8 +13,7 @@ class ClusterDropdownModel {
     clusterId = json['cluster_id'];
     clusterName = json['cluster_name'];
   }
-  int? clusterId;
-  String? clusterName;
+
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

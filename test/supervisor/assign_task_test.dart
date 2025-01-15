@@ -210,7 +210,7 @@ void main() {
         token: mockToken
         // status: event.status
       ) ;
-               print(throwsException);
+          
                // assignService.getTasksByJanitorId(id! ,token: mockToken );
               expect(response, throwsException);
                  

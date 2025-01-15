@@ -6,6 +6,7 @@ import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
 import 'package:Woloo_Smart_hygiene/screens/my_account/data/model/profile_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/my_account/data/network/profile_service.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:mockito/annotations.dart';
@@ -37,13 +38,14 @@ void main() {
               final jsonData = json.decode(await file.readAsString());
      
      mockToken =  jsonData["mockSupervisorToken"];
-    // print("mock$mockToken"); 
+    
      
     //  type = jsonData["profileImageType"];
     //  remarks = jsonData["remarks"];
       
        decodedToken = JwtDecoder.decode(mockToken!);
-       print("idddd${decodedToken!["id"]}");
+
+     
     });
  
 
@@ -84,7 +86,7 @@ void main() {
 
                     var response =  await  profileService.getProfile(supervisorId: decodedToken!["0"], token: mockToken );
                  
-                  print(response);
+                 
                    expect(response,  throwsException );
                
              } catch (e) {

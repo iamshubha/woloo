@@ -41,13 +41,13 @@ void main() {
               final jsonData = json.decode(await file.readAsString());
      
      mockToken =  jsonData["mockSupervisorToken"];
-    // print("mock$mockToken"); 
+  
      
      type = jsonData["profileImageType"];
      remarks = jsonData["remarks"];
       
        decodedToken = JwtDecoder.decode(mockToken!);
-       print("idddd${decodedToken!["id"]}");
+     
     });
  
 
@@ -188,7 +188,7 @@ void main() {
 
     //                 var response =  await  profileService.getProfile(supervisorId: decodedToken!["0"], token: mockToken );
                  
-    //               print(response);
+    //              
     //                expect(response,  throwsException );
                
     //          } catch (e) {

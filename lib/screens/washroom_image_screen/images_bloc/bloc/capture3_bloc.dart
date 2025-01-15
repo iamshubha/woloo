@@ -22,7 +22,7 @@ class CaptureBloc3 extends Bloc<CaptureEvent3, CaptureState3> {
     try {
       emit(AddImagesInitial3());
 
-      print("image 1 data  ${event.file} ");
+      
 
       if (event.file!.path.isNotEmpty) {
         emit(AddImagesSuccessful3(image: event.file));
@@ -36,7 +36,7 @@ class CaptureBloc3 extends Bloc<CaptureEvent3, CaptureState3> {
       RemoveImages3 event, Emitter<CaptureState3> emit) async {
     try {
       emit(const AddImagesLoading3(message: ""));
-            print("error");
+         
       event.file!.delete();
 
       emit(AddImagesInitial3());

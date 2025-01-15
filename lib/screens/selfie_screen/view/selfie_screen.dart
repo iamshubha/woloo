@@ -12,6 +12,7 @@ import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -60,7 +61,7 @@ class _SelfieScreenState extends State<SelfieScreen> {
      BlocBuilder<CaptureBloc, CaptureState> (
        bloc: _captureBloc,
       builder:  (context, state) {
-              print(" statesssss $state ");
+             
            if ( state is AddImagesInitial  ) {
              return Scaffold(
         backgroundColor: AppColors.white,
@@ -192,7 +193,10 @@ class _SelfieScreenState extends State<SelfieScreen> {
                       text: MyTaskListConstants.SUBMIT_BTN.tr(),
                       color: AppColors.buttonColor,
                       onTap: () {
-                        print("image#######" + _file!.path);
+
+                        if (kDebugMode) {
+                          print("image#######" + _file!.path);
+                        }
 
                         selfieBloc.add(UploadSelfie(
                           type: MySelfieScreenConstants.IMAGE_TYPE_SELFIE,

@@ -1,5 +1,6 @@
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/empty_list_widget.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/leading_button.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/cluster_dropdown_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +14,6 @@ import '../common_widgets/error_widget.dart';
 import '../report_issue_screen/bloc/report_issue_bloc.dart';
 import '../report_issue_screen/bloc/report_issue_event.dart';
 import '../report_issue_screen/bloc/report_issue_state.dart';
-import '../report_issue_screen/data/model/Cluster_dropdown_model.dart';
 import '../report_issue_screen/data/model/facility_dropdown_model.dart';
 import 'bloc/assign_bloc.dart';
 import 'bloc/assign_event.dart';

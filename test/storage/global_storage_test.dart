@@ -9,7 +9,7 @@ import 'dart:io';
 class MockPathProviderPlatform extends PathProviderPlatform {
   @override
   Future<String> getApplicationDocumentsPath() async {
-    // print(" getApplicationDocumentsPath  ${Directory.systemTemp.path}");
+    
     return Directory.systemTemp.path; // Use a temporary directory for testing
   }
 }
@@ -35,7 +35,7 @@ void main() {
 
   test('save and get token', () {
     globalStorage.saveToken(accessToken: 'testToken');
-     print(" token  ${globalStorage.getToken()}");
+    
     expect(globalStorage.getToken(), 'testToken');
   });
 

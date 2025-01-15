@@ -78,7 +78,7 @@ late DashboardService dashboardService;
            var response = await dashboardService.markAttendance(
           type: "check_in", locations: [19.0760,72.8777 ], token: mockToken
           );
-           // print("api reposnce  ${response.message} ");
+     
           expect(response,  isA<AttendanceModel>() );
 
   });
@@ -156,7 +156,7 @@ late DashboardService dashboardService;
            var response = await dashboardService.markAttendance(
           type: "check_out", locations: [19.0760,72.8777], token: mockToken);
 
-            // print("api reposnce  ${response.message} ");
+         
           expect(response, isA<AttendanceModel>());
 
   });

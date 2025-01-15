@@ -69,7 +69,7 @@ void main() {
            try {
                     res =    await loginService.sendOTP( phoneNumber: "");
                    reqId =     res.requestId!;
-           //  print(" res $res");
+         
     // expect(res,"{message: \"mobileNumber\" must be a number, success: false, results: []}");
                  
            } catch (e) {

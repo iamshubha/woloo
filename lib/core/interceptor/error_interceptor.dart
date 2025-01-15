@@ -1,10 +1,15 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 
 class ErrorInterceptor extends Interceptor {
   @override
   void onError( DioException err, ErrorInterceptorHandler handler) {
-    print("Error-----> $err");
+
+    if (kDebugMode) {
+      print("Error-----> $err");
+    }
+
     if (err.type ==  DioExceptionType.unknown ) {
       if (err.toString().contains('No address associated with hostname')) {
         throw "Please check your internet connection";

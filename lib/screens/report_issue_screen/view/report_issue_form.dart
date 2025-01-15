@@ -9,7 +9,7 @@ import 'package:Woloo_Smart_hygiene/screens/common_widgets/multiselect_dropdown.
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issue_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issue_event.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issue_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/Cluster_dropdown_model.dart';
+import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/cluster_dropdown_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/facility_dropdown_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/Janitor_dropdown_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/task_names_model.dart';

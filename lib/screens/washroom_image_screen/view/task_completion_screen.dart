@@ -14,6 +14,7 @@ import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -147,7 +148,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                  bloc:_captureBloc ,
                                 builder:  (context, state) {
                                    
-                                      print("print state  $state");
+                                  
                                     
                                      if (  state is AddImagesInitial ) {
                                           return 
@@ -491,7 +492,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
 
                                     child: GestureDetector(
                                       onTap: (){
-                                       //  print("object");
+                                     
                                            _captureBloc2.add(RemoveImages2(file:_file3));
                                     
 
@@ -524,7 +525,6 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                               bloc: _captureBloc3,
                               builder:  (context, state) {
 
-                                     print("bloc 2 $state ");
                                      if ( state is  AddImagesInitial3 ) {
                                      return   GestureDetector(
                                       onTap: () async {
@@ -543,7 +543,9 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                         //     null, PickSource.CAMERA);
 
 
-                                        print("fileeeee3" + _file3.toString());
+                                        if (kDebugMode) {
+                                          print("fileeeee3" + _file3.toString());
+                                        }
 
 
                                       },
@@ -612,7 +614,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
 
                                     child: GestureDetector(
                                       onTap: (){
-                                       //  print("object");
+                                      
                                            _captureBloc3.add(RemoveImages3(file:_file3));
                                     
 
