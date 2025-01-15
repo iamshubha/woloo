@@ -47,11 +47,11 @@ void main() {
     
     const remarks = 'Test remark';
 
-    final response = Response(
-      requestOptions: RequestOptions(path: APIConstants.UPLOAD_SELFIE),
-      data: {'results': 'Upload successful'},
-      statusCode: 200,
-    );
+    // final response = Response(
+    //   requestOptions: RequestOptions(path: APIConstants.UPLOAD_SELFIE),
+    //   data: {'results': 'Upload successful'},
+    //   statusCode: 200,
+    // );
 
     //  formData = FormData.fromMap({
     //     "type": type,
@@ -113,11 +113,11 @@ void main() {
     
     const remarks = 'Test remark';
 
-    final response = Response(
-      requestOptions: RequestOptions(path: APIConstants.UPLOAD_SELFIE),
-      data: {'results': 'Upload successful'},
-      statusCode: 200,
-    );
+    // final response = Response(
+    //   requestOptions: RequestOptions(path: APIConstants.UPLOAD_SELFIE),
+    //   data: {'results': 'Upload successful'},
+    //   statusCode: 200,
+    // );
 
     //  formData = FormData.fromMap({
     //     "type": type,

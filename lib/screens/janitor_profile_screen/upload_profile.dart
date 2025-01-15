@@ -1,25 +1,17 @@
-
-
-
 import 'dart:io';
-
-import 'package:Woloo_Smart_hygiene/core/bloc/core_bloc.dart';
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/white_button_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/login/bloc/login_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/my_account/view/bloc/profile_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/selfie_screen/bloc/selfie_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/selfie_screen/bloc/selfie_event.dart';
 import 'package:Woloo_Smart_hygiene/screens/selfie_screen/bloc/selfie_state.dart';
 import 'package:Woloo_Smart_hygiene/screens/selfie_screen/view/camera.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_list/view/task_list_screen.dart';
 import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/images_bloc/event/capture_event.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -33,7 +25,6 @@ import '../../../utils/app_images.dart';
 // import '../../washroom_image_screen/images_bloc/bloc/capture_bloc.dart';
 // import '../../washroom_image_screen/images_bloc/state/capture_state.dart';
 import '../common_widgets/image_provider.dart';
-import '../my_account/view/bloc/profile_event.dart';
 import '../washroom_image_screen/images_bloc/bloc/capture_bloc.dart';
 import '../washroom_image_screen/images_bloc/state/capture_state.dart';
 
@@ -195,8 +186,8 @@ class _UplopadProfileState extends State<UplopadProfile> {
                   if (state is UploadSelfieSuccessful) {
                     EasyLoading.dismiss();
                     // Navigator.pop(context);
-                      var firebase = FirebaseMessaging.instance;
-                          var token = await firebase.getToken();
+                      // var firebase = FirebaseMessaging.instance;
+                          // var token = await firebase.getToken();
                      
                   //  loginBloc.add(UpdateTokenOnVerifyOTP(token: token!));
                   //   updat( id)async{
@@ -380,8 +371,8 @@ class _UplopadProfileState extends State<UplopadProfile> {
                   if (selfiestate is UploadSelfieSuccessful) {
                     EasyLoading.dismiss();
                     // Navigator.pop(context);
-                         var firebase = FirebaseMessaging.instance;
-                          var token = await firebase.getToken();
+                         //var firebase = FirebaseMessaging.instance;
+                       //   var token = await firebase.getToken();
                     widget.capture!(true);
 
                     // profileBloc.add(

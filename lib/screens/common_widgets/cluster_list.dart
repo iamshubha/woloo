@@ -16,7 +16,7 @@ import 'error_widget.dart';
 
 class ClusterListWidget extends StatefulWidget {
   final TextEditingController controller;
-    Function searchResult;
+     Function searchResult;
   final Function onTapItem;
    ClusterListWidget({
     Key? key,

@@ -1,15 +1,12 @@
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/view/attendance_history_screen.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/leading_button.dart';
-import 'package:Woloo_Smart_hygiene/screens/login/bloc/login_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/login/view/login_screen.dart';
-import 'package:Woloo_Smart_hygiene/screens/selfie_screen/view/selfie_screen.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -19,7 +16,6 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 
 // import '../../../core/bloc/core_bloc.dart';
 import '../../common_widgets/image_provider.dart';
-import '../../login/data/model/Update_token_model.dart';
 import '../../my_account/data/model/profile_model.dart';
 import '../../my_account/view/bloc/profile_bloc.dart';
 import '../../my_account/view/bloc/profile_event.dart';
@@ -160,7 +156,7 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                                        return
 
                                        profile.results == null
-                                           || profile!.results!.profileImage ==  null
+                                           || profile.results!.profileImage ==  null
                                            ?
 
                                        Center(
@@ -182,7 +178,7 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                   borderRadius: BorderRadius.circular(100),
                    child: CustomImageProvider(  image:
                                                     // AppImages.appLogo,
-                      "${profile!.results!.baseUrl}/${profile!.results!.profileImage!.replaceAll("[", "").replaceAll("]", "").replaceAll('"', '')}",
+                      "${profile.results!.baseUrl}/${profile.results!.profileImage!.replaceAll("[", "").replaceAll("]", "").replaceAll('"', '')}",
                                                                                //   "https://woloo-taskmanagement-s3bucket.s3.ap-south-1.amazonaws.com/${profile!.results!.profileImage!.replaceAll("[", "").replaceAll("]", "").replaceAll('"', '')}",
                                                           height:
                                                           70.h,
@@ -268,7 +264,7 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                                   || profile.results!.profileImage == null ?
                               Container()
                                   :
-                              Text("${profile!.results!.firstName!} ${profile!
+                              Text("${profile.results!.firstName!} ${profile
                                   .results!.lastName!}",
                                   style: AppTextStyle.font24bold.copyWith(
                                     color: AppColors.black,
@@ -300,7 +296,7 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                            :
                        Text(
                            textAlign: TextAlign.center,
-                           " +91${profile!.results!.mobile!}",
+                           " +91${profile.results!.mobile!}",
                            style:
                            AppTextStyle.font16.copyWith(
                              color: AppColors.black,

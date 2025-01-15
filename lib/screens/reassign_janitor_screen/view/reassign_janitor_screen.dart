@@ -13,7 +13,7 @@ class ReassignJanitorScreen extends StatefulWidget {
   final bool isFromCluster;
   final String janitorId;
   final String? allocationId;
-  List<String> selectedIds;
+  final List<String> selectedIds;
   final String? clusterId;
 
   ReassignJanitorScreen(

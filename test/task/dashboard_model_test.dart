@@ -1,6 +1,5 @@
 import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'dart:convert';
 
 void main() {
   test('DashboardModelClass fromJson and toJson test', () {

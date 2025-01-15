@@ -15,7 +15,7 @@ class GetAllTask extends TaskListEvent {
 }
 
 class SubmitTasks extends TaskListEvent {
-  CreateTaskModel createTaskModel = CreateTaskModel();
+    CreateTaskModel createTaskModel = CreateTaskModel();
 
   SubmitTasks({required this.createTaskModel});
 

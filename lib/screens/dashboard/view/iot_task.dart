@@ -3,7 +3,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart' hide Trans;
 // import 'package:get/state_manager.dart';
 import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/dashboard/view/local_widgets/dashboard_list.dart';
@@ -33,12 +32,12 @@ class IotTask extends StatefulWidget {
 class _IotTaskState extends State<IotTask> with SingleTickerProviderStateMixin{
  
   TabController? tabController;
-    int _selectedIndex = 0;
-      void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  //   int _selectedIndex = 0;
+  //     void _onItemTapped(int index) {
+  //   setState(() {
+  //     _selectedIndex = index;
+  //   });
+  // }
   @override
   void initState() {
     tabController =  TabController(length: 6, vsync: this);

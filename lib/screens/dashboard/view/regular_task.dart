@@ -8,7 +8,6 @@ import 'package:Woloo_Smart_hygiene/screens/my_account/view/bloc/profile_event.d
 import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,14 +18,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' hide Trans;
 // import 'package:get/state_manager.dart';
 import 'package:get_it/get_it.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/custom_dialogue_widget.dart';
 import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_event.dart';
 import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/view/local_widgets/dashboard_list.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
@@ -34,9 +31,6 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../common_widgets/error_widget.dart';
-import '../../common_widgets/swipe_button.dart';
-import '../../login/bloc/login_bloc.dart';
-import '../../login/data/model/Update_token_model.dart';
 import '../../my_account/data/model/profile_model.dart';
 import '../../my_account/view/bloc/profile_bloc.dart';
 import '../../my_account/view/bloc/profile_state.dart';
@@ -89,8 +83,8 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
   final AppinioSwiperController completeCtrl = AppinioSwiperController();
   String dropdownvalue = 'All';
         int _selectedIndex = 0;
-   static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  //  static const TextStyle optionStyle =
+      // TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
     List<Widget> _widgetOptions = <Widget>[ ];
 
   void _onItemTapped(int index) {
@@ -233,8 +227,8 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
 
            profile =  state.data;
 
-             globalStorage.saveProfile(profileName: profile!.results!.firstName!);
-             globalStorage.saveMobileNumber(accessMobileNumber: profile!.results!.mobile!);
+             globalStorage.saveProfile(profileName: profile.results!.firstName!);
+             globalStorage.saveMobileNumber(accessMobileNumber: profile.results!.mobile!);
          }
          if(state is ProfleError ){
            EasyLoading.show(status: state.error);
@@ -397,22 +391,24 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
             showList = false;
           }
           _widgetOptions = [
-            Obx(
-              ()=> RegularTask(
+            // Obx(
+            //   ()=>
+                  RegularTask(
                   dashboardBloc: dashboardBloc,
-                  filter: dashController.filterData.value,
+                  filter: dashController.filterData,
                   lat: lat,
                   long: long
               ),
-            ),
-            Obx(
-               ()=> IotTask(
+            // ),
+            // Obx(
+            //    ()=>
+                   IotTask(
                 dashboardBloc: dashboardBloc,
-                filter: dashController.filterData.value.where( (e)=> e.requestType  == "IOT" ).toList(),
+                filter: dashController.filterData.where( (e)=> e.requestType  == "IOT" ).toList(),
                 lat: lat,
                 long: long
                 ,
-              ),
+              // ),
             )
           ];
           return Scaffold(
@@ -573,7 +569,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                             // mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              profile!.results == null ?
+                              profile.results == null ?
 
                                   Container()
                               :
@@ -583,7 +579,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                                 children: [
 
                                   profile.results == null
-                                      || profile!.results!.profileImage ==  null?
+                                      || profile.results!.profileImage ==  null?
 
 
                           Center(
@@ -626,7 +622,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                                      child: Image.network(
                                       height: 60.h,
                                          width: 60.w,
-                                         "${profile!.results!.baseUrl}/${profile!.results!.profileImage!.replaceAll("[", "").replaceAll("]", "").replaceAll('"', '')}",
+                                         "${profile.results!.baseUrl}/${profile.results!.profileImage!.replaceAll("[", "").replaceAll("]", "").replaceAll('"', '')}",
 
                                    ),
                                  ),),
@@ -637,7 +633,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                     // mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Container(
+                                      SizedBox(
                                         width: 220.w,
                                         child:
                                          //        BlocBuilder<LoginBloc, LoginState>(
@@ -670,7 +666,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                                               :
 
                                             Text(
-                                            profile!.results!.firstName!,
+                                            profile.results!.firstName!,
                                               style: AppTextStyle.font14w7,
                                             ),
                                             // SizedBox(
@@ -728,8 +724,12 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                                                                   25.r),
                                                           color: AppColors.white),
                                                       padding: EdgeInsets.all(4.w),
-                                                      child: Text(
-                                                          "$location " ?? '',
+                                                      child: 
+                                                       location == null
+                                                          ? const Text("")
+                                                          :
+                                                      Text(
+                                                          "$location",
                                                           overflow:
                                                               TextOverflow.ellipsis,
                                                           maxLines: 1,
@@ -1305,7 +1305,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
       distanceFilter: 100, //minimum distance (measured in meters) a
     );
 
-    StreamSubscription<Position> positionStream =
+    // StreamSubscription<Position> positionStream =
         Geolocator.getPositionStream(locationSettings: locationSettings)
             .listen((Position position) {
       print(position.longitude); //Output: 80.24599079

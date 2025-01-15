@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
 import 'package:equatable/equatable.dart';
 import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_list_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Reassign_janitor_model.dart';
 
 abstract class JanitorListState extends Equatable {
   const JanitorListState();

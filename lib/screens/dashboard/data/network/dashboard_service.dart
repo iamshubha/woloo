@@ -41,7 +41,7 @@ class DashboardService {
 
       return AttendanceModel.fromJson(response);
     } 
-     on  Exception catch (exception) {
+     on  Exception  {
 
       // rethrow;
         throw Exception('Failed to Mark attendace');

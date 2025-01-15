@@ -1,13 +1,10 @@
 import 'dart:core';
-import 'dart:core';
 import 'dart:io';
 
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/button_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/custom_input_field.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/dialogue_box_issue_report.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/dropdown_dialogue.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/error_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/leading_button.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/multiselect_dropdown.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issue_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issue_event.dart';
@@ -15,7 +12,6 @@ import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issu
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/Cluster_dropdown_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/facility_dropdown_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/Janitor_dropdown_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/report_issue_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/task_names_model.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/widget/view_image.dart';
 import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model.dart';
@@ -31,13 +27,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_builder_extra_fields/form_builder_extra_fields.dart';
-import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:queen_validators/queen_validators.dart';
 
-import '../../../core/local/global_storage.dart';
-import '../../common_widgets/empty_list_widget.dart';
 import '../../selfie_screen/view/camera.dart';
 import '../../washroom_image_screen/images_bloc/bloc/capture_bloc.dart';
 import '../../washroom_image_screen/images_bloc/event/capture_event.dart';
@@ -73,7 +66,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
   List<Tasks> tasks = [];
   List<String> taskIds = [];
   List<JanitorDropdownModel> janitorList = [];
-  ReportIssueModel _reportIssueModel = ReportIssueModel();
+  // ReportIssueModel _reportIssueModel = ReportIssueModel();
   List<String> selectedIds = [];
   String templateId = "";
   late int janitorId;
@@ -113,7 +106,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
         
           if (state is ReportIssueSuccess) {
             EasyLoading.dismiss();
-            _reportIssueModel = state.data;
+          //  _reportIssueModel = state.data;
             openDialog();
             // clusterNames = [];
             // facilityNames = [];
@@ -167,7 +160,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
             EasyLoading.dismiss();
              facilityNames = state.data;
             reportIssueBloc.add(GetAllTasksDropdown(
-                      clusterId: clusterId! ?? 0
+                      clusterId: clusterId 
                   ));
          //   return const EmptyListWidget();
           }
@@ -185,7 +178,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
             EasyLoading.dismiss();
               templateNames = state.data;
             reportIssueBloc.add(GetAllJanitorsDropdown(
-                       clusterId: clusterId ?? 0));
+                       clusterId: clusterId  ));
            
           }
            else

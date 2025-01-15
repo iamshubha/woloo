@@ -16,7 +16,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import '../../common_widgets/image_provider.dart';
-import '../../dashboard/view/dashboard_screen.dart';
 import '../../dashboard/view/regular_task.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -64,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen> {
   //  
   // }
 
-  late Stream<String> _tokenStream;
+  // late Stream<String> _tokenStream;
   String? deviceToken;
 
 
@@ -78,7 +77,7 @@ class _SplashScreenState extends State<SplashScreen> {
     print("refresh token ${messaging.onTokenRefresh}");
 
      deviceToken = await messaging.getToken();
-    _tokenStream = FirebaseMessaging.instance.onTokenRefresh;
+    // _tokenStream = FirebaseMessaging.instance.onTokenRefresh;
 //     _tokenStream.listen(setToken);
 
      print("device token $deviceToken");

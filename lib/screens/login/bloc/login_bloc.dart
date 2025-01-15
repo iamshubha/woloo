@@ -5,7 +5,6 @@ import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
 import 'package:Woloo_Smart_hygiene/screens/login/data/model/Update_token_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_it/get_it.dart';
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/login/data/network/login_services.dart';

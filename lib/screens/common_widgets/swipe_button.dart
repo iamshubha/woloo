@@ -1,13 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
-
 import '../../utils/app_color.dart';
-import '../dashboard/bloc/dashboard_bloc.dart';
-import '../dashboard/bloc/dashboard_event.dart';
-import '../dashboard/data/model/dashboard_model_class.dart';
+
 
 //swipe card to the right side
 Widget swipeRightButton(CardSwiperController controller,

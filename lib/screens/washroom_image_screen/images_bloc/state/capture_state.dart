@@ -28,8 +28,8 @@ const AddImagesLoading({ required this.message});
 
 
 class AddImagesSuccessful extends CaptureState {
-  File? image;
-  AddImagesSuccessful({required this.image }); 
+  final File? image;
+  const AddImagesSuccessful({required this.image }); 
   @override
   List<Object> get props => [image!];
 }

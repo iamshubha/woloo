@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/custom_dialogue_widget.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/white_button_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/view/regular_task.dart';
 import 'package:Woloo_Smart_hygiene/screens/selfie_screen/view/camera.dart';
 import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/bloc/images_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/bloc/images_event.dart';
@@ -25,7 +24,6 @@ import '../../../utils/app_textstyle.dart';
 import '../../common_widgets/leading_button.dart';
 import '../../dashboard/bloc/dashboard_bloc.dart';
 import '../../dashboard/bloc/dashboard_event.dart';
-import '../../dashboard/view/dashboard_screen.dart';
 import '../images_bloc/bloc/capture3_bloc.dart';
 import '../images_bloc/bloc/capture_bloc1.dart';
 import '../images_bloc/bloc/capture_bloc2.dart';
@@ -53,7 +51,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
   File? _file1;
   File? _file2;
   File? _file3;
-   File? _file4;
+  //  File? _file4;
   ImagesBloc _imagesBloc = ImagesBloc();
   CaptureBloc _captureBloc = CaptureBloc(); 
   CaptureBloc1 _captureBloc1 = CaptureBloc1(); 
@@ -737,7 +735,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
               type: TaskCompletionScreenConstants.IMAGE_TYPE_TASK,
               image: fileList,
               id: widget.allocationId,
-              remarks: _controller.text ?? '',
+              remarks: _controller.text,
               allocationId: widget.allocationId,
             ));
           },

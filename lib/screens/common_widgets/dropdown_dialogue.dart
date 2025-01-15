@@ -4,7 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:get_it/get_it.dart';
+
 
 class DropDownDialog<T> extends StatefulWidget {
   final List<T> items;

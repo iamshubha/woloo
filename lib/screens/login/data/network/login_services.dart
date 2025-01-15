@@ -1,5 +1,3 @@
-import 'package:Woloo_Smart_hygiene/screens/login/data/model/Update_token_model.dart';
-import 'package:dio/dio.dart';
 import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
 import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
 import 'package:Woloo_Smart_hygiene/screens/login/data/model/send_otp.dart';

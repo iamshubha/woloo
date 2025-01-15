@@ -6,9 +6,7 @@ import 'package:Woloo_Smart_hygiene/messaging.dart';
 import 'package:Woloo_Smart_hygiene/screens/login/bloc/login_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/my_account/view/bloc/profile_bloc.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:easy_pie_chart/easy_pie_chart.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 // import 'package:fl_chart/fl_chart.dart';
@@ -18,21 +16,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:media_store_plus/media_store_plus.dart';
-import 'package:calendar_date_picker2/calendar_date_picker2.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'app.dart';
 import 'screens/dashboard/bloc/dashboard_bloc.dart';
 import 'screens/washroom_image_screen/images_bloc/bloc/capture_bloc.dart';
 // import 'messaging.dart';
-import 'dart:async';
-import 'dart:convert';
 
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter_driver/driver_extension.dart';
 
 
 final mediaStorePlugin = MediaStore();

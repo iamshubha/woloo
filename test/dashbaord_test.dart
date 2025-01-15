@@ -114,9 +114,7 @@ late DashboardService dashboardService;
           );
 
             expect(response,  throwsException );
-               }on Exception catch (exception) {
-
-}
+               }
      catch ( e) {
 
                  
@@ -288,7 +286,7 @@ late DashboardService dashboardService;
            
             try {
 
-         var response = await dashboardService.getTasksByJanitorId( );
+        await dashboardService.getTasksByJanitorId( );
 
        
               
@@ -333,7 +331,7 @@ late DashboardService dashboardService;
                 
              try {
 
-                      var response = await dashboardService.getTasksByJanitorId(
+                      await dashboardService.getTasksByJanitorId(
                //token: mockToken
                
                );
@@ -424,7 +422,7 @@ late DashboardService dashboardService;
 
        try {
 
-         var response = await dashboardService.updateStatus(
+        await dashboardService.updateStatus(
           id: taskId,
           status: "",
           token: mockToken

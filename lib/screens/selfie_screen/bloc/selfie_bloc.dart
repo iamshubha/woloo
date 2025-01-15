@@ -42,11 +42,3 @@ class SelfieBloc extends Bloc<SelfieEvent, SelfieState> {
   
 }
 
-
-FutureOr<void>  _captureImage(){
-
-
-
-
-
-  }

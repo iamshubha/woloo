@@ -251,7 +251,7 @@ class LoginPageState extends State<LoginScreen> {
                         if (!isValid) return;
 
                         globalStorage.saveMobileNumber(
-                            accessMobileNumber: controller.text ?? '');
+                            accessMobileNumber: controller.text  );
                         if (loginFormKey.currentState?.validate() ?? false) {
                           loginBloc.add(SendOTP(mobileNumber: controller.text));
                         }

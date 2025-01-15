@@ -138,8 +138,8 @@ class ReportIssueLoading extends ReportIssueState {
 }
 
 class ReportIssueSuccess extends ReportIssueState {
-  ReportIssueModel data;
-  ReportIssueSuccess({required this.data});
+ final ReportIssueModel data;
+  const ReportIssueSuccess({required this.data});
   @override
   List<Object?> get props => [data];
 }

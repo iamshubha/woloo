@@ -3,7 +3,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/view/choose_facility.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/janitor_list.dart';
 import 'package:Woloo_Smart_hygiene/screens/janitor_details_screen/view/janitor_details.dart';
 import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_list_model.dart';
@@ -21,7 +20,7 @@ class JanitorList extends StatefulWidget {
   final String? clusterId;
   final String? janitorName;
   final bool? rejected;
-  List<String>? allocationId;
+  final List<String>? allocationId;
   JanitorList({Key? key,
       this.janitorName,
     required this.isFromCluster, required this.isFromDashboard, required this.isFromDashboardAssignment, this.allocationId, this.clusterId, required this.rejected}) : super(key: key);

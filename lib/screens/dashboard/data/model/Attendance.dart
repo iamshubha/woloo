@@ -1,5 +1,3 @@
-import 'LastAttendance.dart';
-
 /// last_attendance : {"type":"check_out","location":[19,20]}
 /// last_attendance_date : "2023-10-09T07:26:54.627Z"
 

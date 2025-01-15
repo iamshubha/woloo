@@ -113,7 +113,7 @@ void main() {
              http.Response(' {"message": ""request_id" is not allowed to be empty",  "success": false, "results": []}', 200));
 
            try {
-         var res =    await loginService.verifyOTP(otp: "", requestId: reqId);
+             await loginService.verifyOTP(otp: "", requestId: reqId);
 
    
              

@@ -2,9 +2,6 @@ import 'dart:async';
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/view/local_widgets/supervisor_dashboard_list.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_details_screen/view/task_details.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
@@ -60,7 +57,7 @@ class _TemplateScreenState extends State<TemplateScreen> {
 
   late StreamSubscription<Position> positionStream;
 
-  var _bottomNavIndex = 0; // efault index of first screen
+  // var _bottomNavIndex = 0; // efault index of first screen
   DashboardBloc dashboardBloc = DashboardBloc();
   GlobalKey key = GlobalKey();
 
@@ -141,7 +138,7 @@ class _TemplateScreenState extends State<TemplateScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 0.w),
                     child: Text(
                       "${MyTemplateScreenConstants.HELLO.tr()}, ${widget.supervisorName.toTitleCase()}"
-                          ?? '',
+                        ,
                       maxLines: 1,
                       softWrap: false,
                       style:

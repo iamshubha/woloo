@@ -1,5 +1,3 @@
-
-
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/empty_list_widget.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/leading_button.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -7,19 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../utils/app_color.dart';
 import '../../utils/app_constants.dart';
-import '../../utils/app_images.dart';
 import '../../utils/app_textstyle.dart';
-// import '../cluster_screen/bloc/cluster_list_bloc.dart';
-// import '../cluster_screen/bloc/cluster_list_event.dart';
-// import '../cluster_screen/bloc/cluster_list_state.dart';
 import '../common_widgets/dropdown_dialogue.dart';
 import '../common_widgets/error_widget.dart';
-import '../common_widgets/image_provider.dart';
-// import '../janitor_screen/bloc/janitor_list_state.dart';
-// import '../janitor_screen/data/model/Janitor_list_model.dart';
 import '../report_issue_screen/bloc/report_issue_bloc.dart';
 import '../report_issue_screen/bloc/report_issue_event.dart';
 import '../report_issue_screen/bloc/report_issue_state.dart';
@@ -409,7 +399,7 @@ class _AssignScreenState extends State<AssignScreen> {
                                                       vertical: 2.h,
                                                     ),
                                                     child: Text(
-                                                        "Address: ${janitorList.first.data![index].address}" ?? '',
+                                                        "Address: ${janitorList.first.data![index].address ?? ''}",
                                                         style: AppTextStyle.font14.copyWith(
                                                           color: AppColors.clusterTitleColor,
                                                         )

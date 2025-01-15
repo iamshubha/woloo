@@ -14,7 +14,6 @@ import '../../utils/app_constants.dart';
 import '../../utils/app_textstyle.dart';
 import '../common_widgets/dialogue_box_issue_report.dart';
 import '../common_widgets/error_widget.dart';
-import '../dashboard/bloc/dashboard_bloc.dart';
 import '../dashboard/data/model/dashboard_model_class.dart';
 import '../supervisor_dashboard/bloc/supervisor_dashboard_bloc.dart';
 import '../supervisor_dashboard/bloc/supervisor_dashboard_event.dart' as event;
@@ -277,12 +276,6 @@ class _JanitorSlotState extends State<JanitorSlot> {
                       textAlign: TextAlign.start,
                       enabled: false,
                       controller: controller,
-                      validator: (value) {
-                        // if (value == null || value.isEmpty) {
-                        //   return AssignScreenConstants.START_TIME_VALIDATION.tr();
-                        // }
-                        // return null;
-                      },
                       maxLength: 10,
                       decoration: InputDecoration(
                           isDense: true,
@@ -341,7 +334,7 @@ class _JanitorSlotState extends State<JanitorSlot> {
                       controller: startController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return  AssignScreenConstants.START_TIME_VALIDATION.tr();;
+                          return  AssignScreenConstants.START_TIME_VALIDATION.tr();
                         }
 
                         return null;

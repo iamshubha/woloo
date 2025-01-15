@@ -1,20 +1,13 @@
 import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/custom_dialogue_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/empty_list_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/error_widget.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/issue_list_widget.dart';
 import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/bloc/issue_list_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/bloc/issue_list_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/bloc/issue_list_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/data/model/Issue_list_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_details_screen/view/janitor_details.dart';
 import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/view/report_issue_form.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
@@ -30,7 +23,7 @@ class _IssuesListState extends State<IssuesList> {
   bool cancelButtonTap = true;
   bool yesButtonTap = false;
   late int supervisorId;
-  List<IssueListModel> _data = [];
+ 
 
   GlobalStorage globalStorage = GetIt.instance();
   IssueListBloc issueListBloc = GetIt.instance();

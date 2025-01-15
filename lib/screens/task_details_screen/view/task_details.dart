@@ -1,4 +1,3 @@
-import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/disabled_checkbox_widget.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/empty_list_widget.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/error_widget.dart';
@@ -52,7 +51,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   // CarouselController buttonCarouselController = CarouselController();
   final CarouselSliderController buttonCarouselController = CarouselSliderController();
 
-  GlobalStorage _globalStorage = GetIt.instance();
+  
   late  SupervisorDashboardBloc _supervisorDashboardBloc = SupervisorDashboardBloc();
 
   @override

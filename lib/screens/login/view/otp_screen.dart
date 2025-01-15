@@ -18,7 +18,6 @@ import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
 import '../../../core/bloc/core_bloc.dart';
 import '../../common_widgets/button_widget.dart';
 import '../../common_widgets/image_provider.dart';
-import '../../dashboard/view/dashboard_screen.dart';
 import '../../dashboard/view/regular_task.dart';
 import 'local_widgets/otp_widget.dart';
 
@@ -84,13 +83,13 @@ class _OTPScreenState extends State<OTPScreen> {
     long = position.longitude.toString();
     lat = position.latitude.toString();
 
-    LocationSettings locationSettings = LocationSettings(
+    LocationSettings locationSettings = const LocationSettings(
       accuracy: LocationAccuracy.high, //accuracy of the location data
       distanceFilter: 100, //minimum distance (measured in meters) a
       //device must move horizontally before an update event is generated;
     );
 
-    StreamSubscription<Position> positionStream =
+    // StreamSubscription<Position> positionStream =
         Geolocator.getPositionStream(locationSettings: locationSettings)
             .listen((Position position) {
       print(position.longitude); //Output: 80.24599079
@@ -120,7 +119,7 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
 
-  late Stream<String> _tokenStream;
+  // late Stream<String> _tokenStream;
   String? deviceToken;
 
   Future updateDeviceToken() async {
@@ -133,7 +132,7 @@ class _OTPScreenState extends State<OTPScreen> {
     print("refresh token ${messaging.onTokenRefresh}");
 
     deviceToken = await messaging.getToken();
-    _tokenStream = FirebaseMessaging.instance.onTokenRefresh;
+    // _tokenStream = FirebaseMessaging.instance.onTokenRefresh;
 //     _tokenStream.listen(setToken);
 
     print("device token $deviceToken");

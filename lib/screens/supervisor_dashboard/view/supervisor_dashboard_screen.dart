@@ -1,6 +1,5 @@
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/cluster_screen/view/cluster_screen.dart';
-import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/view/issue_list.dart';
 import 'package:Woloo_Smart_hygiene/screens/janitor_screen/view/janitor_screen.dart';
 import 'package:Woloo_Smart_hygiene/screens/my_account/view/my_account_screen.dart';
 import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/pages/templates_screen.dart';
@@ -27,7 +26,7 @@ class SupervisorDashboard extends StatefulWidget {
 }
 
 class _SupervisorDashboardState extends State<SupervisorDashboard> {
-  int _currentIndex = 0;
+  // int _currentIndex = 0;
   String? supervisorName;
   String? mobile;
   final _controller = PageController(

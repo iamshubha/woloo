@@ -20,10 +20,9 @@ void main() {
 
  late ProfileService profileService;
   String? mockToken = "";
-   final file = File('assets/images/splash_logo.png');
-    String type = '';
+    // String type = '';
      Map<String, dynamic>? decodedToken;
-       String remarks = '';
+      //  String remarks = '';
 
 
   group(" proflie testing", (){

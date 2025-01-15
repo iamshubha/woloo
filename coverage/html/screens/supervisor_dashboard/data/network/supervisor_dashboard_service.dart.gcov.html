@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-14 09:57:31</td>
+            <td class="headerValue">2025-01-15 12:21:50</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">-</td>
@@ -94,7 +94,7 @@
 <span id="L32"><span class="lineNum">      32</span>              :     }</span>
 <span id="L33"><span class="lineNum">      33</span>              :   }</span>
 <span id="L34"><span class="lineNum">      34</span>              : </span>
-<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">           1 :   Future&lt;String&gt; updateStatus({required String id, required int status, String? token}) async {</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">           1 :   Future updateStatus({required String id, required int status, String? token}) async {</span></span>
 <span id="L36"><span class="lineNum">      36</span>              :     try {</span>
 <span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">           2 :       var response = await dio.post(</span></span>
 <span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">           1 :         APIConstants.UPDATE_STATUS,</span></span>
@@ -111,7 +111,7 @@
 <span id="L49"><span class="lineNum">      49</span> <span class="tlaUNC">           0 :         Options(extra: {&quot;auth&quot;: true}),</span></span>
 <span id="L50"><span class="lineNum">      50</span>              :       );</span>
 <span id="L51"><span class="lineNum">      51</span>              : </span>
-<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">           2 :       return response['results']?.toString() ?? '';</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">           1 :       return response['results'] ?? '';</span></span>
 <span id="L53"><span class="lineNum">      53</span>              :     } catch (e) {</span>
 <span id="L54"><span class="lineNum">      54</span>              :       rethrow;</span>
 <span id="L55"><span class="lineNum">      55</span>              :     }</span>

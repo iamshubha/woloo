@@ -2,7 +2,6 @@ import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
 // import 'package:your_project/global_storage.dart';

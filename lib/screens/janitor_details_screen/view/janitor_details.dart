@@ -3,14 +3,12 @@ import 'package:Woloo_Smart_hygiene/screens/janitor_details_screen/view/sup_jani
 import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
 
 import '../../common_widgets/error_widget.dart';
 import '../../common_widgets/image_provider.dart';
@@ -85,7 +83,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
       _janitorListBloc.add(GetAllJanitors(
         endDate: enddayformat,
         startDate: startdayformat,
-        cluster_id: widget.clusterId ?? "0",
+        cluster_id: widget.clusterId ,
       ));
 
     }
@@ -226,7 +224,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(100),
                           child: CustomImageProvider(
-                            image:"${widget.baseUrl}/${widget.profile!.replaceAll("[", "").replaceAll("]", "").replaceAll('"', '')}",
+                            image:"${widget.baseUrl}/${widget.profile.replaceAll("[", "").replaceAll("]", "").replaceAll('"', '')}",
                           ),
                         )
                             :
@@ -618,7 +616,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                                 _janitorListBloc.add(GetAllJanitors(
                                   endDate: enddayformat,
                                   startDate: startdayformat,
-                                  cluster_id: widget.clusterId ?? "0",
+                                  cluster_id: widget.clusterId ,
                                 ));
 
                               }else
@@ -632,7 +630,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                                 _janitorListBloc.add(GetAllJanitors(
                                   endDate: enddayformat,
                                   startDate: startdayformat,
-                                  cluster_id: widget.clusterId ?? "0",
+                                  cluster_id: widget.clusterId ,
                                 ));
                               }
                              else
@@ -666,12 +664,12 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                                  ) ;
 
                                   print(" resuel ${results![1]}");
-                                 var startdayformat =    DateFormat('yyyy-MM-dd').format(results!.first!);
+                                 var startdayformat =    DateFormat('yyyy-MM-dd').format(results.first!);
                                  var enddayformat =    DateFormat('yyyy-MM-dd').format(results[1]!);
                                  _janitorListBloc.add(GetAllJanitors(
                                    endDate: enddayformat,
                                    startDate: startdayformat,
-                                   cluster_id: widget.clusterId ?? "0",
+                                   cluster_id: widget.clusterId ,
                                  ));
                                }
 

@@ -1,7 +1,6 @@
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/empty_list_widget.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/error_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/view/janitor_screen.dart';
 import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_event.dart';
 import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_state.dart';
@@ -9,7 +8,6 @@ import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Superviso
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
-import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -608,7 +606,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                   ),
                                                   child:
                                                   Text(
-                                                    "${_data[index].templateName}" ?? '',
+                                                    "${_data[index].templateName }",
                                                     // maxLines: 1,
                                                     // softWrap: false,
                                                     overflow: TextOverflow.visible,

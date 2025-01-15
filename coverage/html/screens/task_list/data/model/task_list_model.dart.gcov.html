@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-14 09:57:31</td>
+            <td class="headerValue">2025-01-15 12:21:50</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">-</td>
@@ -69,12 +69,12 @@
 <span id="L7"><span class="lineNum">       7</span>              :     this.tasks,</span>
 <span id="L8"><span class="lineNum">       8</span>              :   });</span>
 <span id="L9"><span class="lineNum">       9</span>              : </span>
-<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC">           1 :   TaskListModel.fromJson(dynamic json) {</span></span>
-<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">           3 :     templateId = json['template_id']?.toString();</span></span>
-<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">           1 :     if (json['tasks'] != null) {</span></span>
-<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">           2 :       tasks = [];</span></span>
-<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">           3 :       json['tasks'].forEach((v) {</span></span>
-<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">           3 :         tasks?.add(Tasks.fromJson(v));</span></span>
+<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC">           2 :   TaskListModel.fromJson(dynamic json) {</span></span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">           6 :     templateId = json['template_id']?.toString();</span></span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">           2 :     if (json['tasks'] != null) {</span></span>
+<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">           4 :       tasks = [];</span></span>
+<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">           6 :       json['tasks'].forEach((v) {</span></span>
+<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">           6 :         tasks?.add(Tasks.fromJson(v));</span></span>
 <span id="L16"><span class="lineNum">      16</span>              :       });</span>
 <span id="L17"><span class="lineNum">      17</span>              :     }</span>
 <span id="L18"><span class="lineNum">      18</span>              :   }</span>
@@ -97,11 +97,11 @@
 <span id="L35"><span class="lineNum">      35</span>              : class Tasks {</span>
 <span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">           1 :   Tasks({this.id, this.taskId, this.taskName, this.status});</span></span>
 <span id="L37"><span class="lineNum">      37</span>              : </span>
-<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">           1 :   Tasks.fromJson(dynamic json) {</span></span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">           3 :     id = json['id']?.toString();</span></span>
-<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">           3 :     taskId = json['task_id']?.toString();</span></span>
-<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">           3 :     taskName = json['task_name']?.toString();</span></span>
-<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">           3 :     status = json['status']?.toString();</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">           2 :   Tasks.fromJson(dynamic json) {</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">           5 :     id = json['id']?.toString();</span></span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">           6 :     taskId = json['task_id']?.toString();</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">           6 :     taskName = json['task_name']?.toString();</span></span>
+<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">           5 :     status = json['status']?.toString();</span></span>
 <span id="L43"><span class="lineNum">      43</span>              :   }</span>
 <span id="L44"><span class="lineNum">      44</span>              :   String? id;</span>
 <span id="L45"><span class="lineNum">      45</span>              :   String? taskId;</span>

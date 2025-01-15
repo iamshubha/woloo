@@ -2,31 +2,25 @@ import 'dart:async';
 
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/empty_list_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/error_widget.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/map_utils.dart';
 import 'package:Woloo_Smart_hygiene/screens/common_widgets/swipe_button.dart';
 import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_bloc.dart';
 import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_state.dart';
 import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
 import 'package:Woloo_Smart_hygiene/screens/selfie_screen/view/selfie_screen.dart';
 import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/view/task_completion_screen.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
 import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
-import 'package:appinio_swiper/appinio_swiper.dart';
 // import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:get/state_manager.dart';
 import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -61,12 +55,12 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
   int selectedCard = -1;
   // late DashboardBloc _dashboardBloc;
   List<DashboardModelClass> filter = [];
-  List<DashboardModelClass> _data = [];
+  // List<DashboardModelClass> _data = [];
   late double? facility_lattitude;
   late double? facility_longitude;
   bool servicestatus = false;
   bool haspermission = false;
-  late Uri _url;
+  // late Uri _url;
   GlobalStorage globalStorage = GetIt.instance();
   bool isSelected = false;
   late int janitorId;
@@ -480,8 +474,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                         Container(
                                                           width: 180.w,
                                                           child: Text(
-                                                              "${widget.filter[index].blockName}" ??
-                                                                  '',
+                                                              "${widget.filter[index].blockName}" 
+                                                                  ,
                                                               maxLines: 2,
                                                               softWrap: true,
                                                               overflow: TextOverflow
@@ -909,8 +903,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                       height: 10.h,
                                                     ),
                                                     Text(
-                                                        "${widget.filter[index].blockName}" ??
-                                                            '',
+                                                        "${widget.filter[index].blockName}" 
+                                                            ,
                                                         maxLines: 2,
                                                         softWrap: true,
                                                         overflow: TextOverflow
@@ -1607,11 +1601,11 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
     // );
   }
 
-  Future<void> _launchUrl() async {
-    if (!await launchUrl(_url)) {
-      throw Exception("${MydashboardScreenConstants.URL_ERR_TOAST.tr()} $_url");
-    }
-  }
+  // Future<void> _launchUrl() async {
+  //   if (!await launchUrl(_url)) {
+  //     throw Exception("${MydashboardScreenConstants.URL_ERR_TOAST.tr()} $_url");
+  //   }
+  // }
 
   checkGps() async {
     servicestatus = await Geolocator.isLocationServiceEnabled();
@@ -1659,7 +1653,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
       //device must move horizontally before an update event is generated;
     );
 
-    StreamSubscription<Position> positionStream =
+    // StreamSubscription<Position> positionStream =
         Geolocator.getPositionStream(locationSettings: locationSettings)
             .listen((Position position) {
       print(position.longitude); //Output: 80.24599079

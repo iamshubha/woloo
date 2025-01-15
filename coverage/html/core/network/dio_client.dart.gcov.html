@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-14 09:57:31</td>
+            <td class="headerValue">2025-01-15 12:21:50</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">-</td>
@@ -85,15 +85,15 @@
 <span id="L23"><span class="lineNum">      23</span>              :         cancelToken: cancelToken,</span>
 <span id="L24"><span class="lineNum">      24</span>              :         onReceiveProgress: onReceiveProgress,</span>
 <span id="L25"><span class="lineNum">      25</span>              :       );</span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">           6 :       return response.data;</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">           9 :       return response.data;</span></span>
 <span id="L27"><span class="lineNum">      27</span>              :     } catch (e) {</span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">           5 :       if (e is DioException) {</span></span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">           5 :         if (e.response == null) {</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">           3 :       if (e is DioException) {</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">           3 :         if (e.response == null) {</span></span>
 <span id="L30"><span class="lineNum">      30</span>              :           rethrow;</span>
 <span id="L31"><span class="lineNum">      31</span>              :         }</span>
 <span id="L32"><span class="lineNum">      32</span>              : </span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">           5 :         if (e.response != null) {</span></span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          10 :           throw e.response?.data;</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">           3 :         if (e.response != null) {</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">           6 :           throw e.response?.data;</span></span>
 <span id="L35"><span class="lineNum">      35</span>              :         }</span>
 <span id="L36"><span class="lineNum">      36</span>              :       }</span>
 <span id="L37"><span class="lineNum">      37</span>              :       rethrow;</span>
@@ -120,7 +120,7 @@
 <span id="L58"><span class="lineNum">      58</span>              :         onSendProgress: onSendProgress,</span>
 <span id="L59"><span class="lineNum">      59</span>              :         onReceiveProgress: onReceiveProgress,</span>
 <span id="L60"><span class="lineNum">      60</span>              :       );</span>
-<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">           4 :       return response.data;</span></span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">           8 :       return response.data;</span></span>
 <span id="L62"><span class="lineNum">      62</span>              :     } catch (e) {</span>
 <span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">           7 :       if (e is DioException) {</span></span>
 <span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">           7 :         if (e.response == null) {</span></span>

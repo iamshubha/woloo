@@ -2,9 +2,7 @@
 import 'dart:async';
 
 import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
-import 'package:Woloo_Smart_hygiene/core/service/core_service.dart';
 import 'package:Woloo_Smart_hygiene/screens/my_account/data/network/profile_service.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
