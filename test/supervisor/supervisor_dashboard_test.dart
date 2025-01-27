@@ -2,11 +2,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
-import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Reassign_janitor_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/data/network/supervisor_dashboard_service.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
+import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
+import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_screen/data/model/reassign_janitor_model.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/data/network/supervisor_dashboard_service.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/model/supervisor_model_dashboard.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -66,14 +66,14 @@ void main() {
               .get(
                 Uri.parse(APIConstants.BASE_URL+ APIConstants.GET_SUPERVISOR_DASHBOARD_DATA )))
           .thenAnswer((_) async =>
-               http.Response('Not Found', 400));
+               http.Response('{message: Forbidden, success: false, result: []}', 400));
           
           try {
-               var response = await supervisorDashboardService.getSupervisorDashboardData(token:"");
-               expect(response, throwsException );
+             await supervisorDashboardService.getSupervisorDashboardData(token:"");
+
             
           } catch (e) {
-            
+             expect( e.toString(),  '{message: Forbidden, success: false, result: []}');
           }
      }, );
 
@@ -107,7 +107,7 @@ void main() {
            var response = await supervisorDashboardService.updateStatus(
             token: mockToken,
           id: taskId!, status: 4);
-          expect(response, "{current_Task_status: 4}" ,  );
+          expect(response, {'current_Task_status': 4} ,  );
 
   });
 
@@ -132,7 +132,7 @@ void main() {
            var response = await supervisorDashboardService.updateStatus(
             token: mockToken,
           id: taskId!, status: 7);
-          expect(response, "{current_Task_status: 7}" ,  );
+          expect(response, {'current_Task_status': 7} ,  );
 
   });
 
@@ -153,7 +153,7 @@ void main() {
      
            var response = await supervisorDashboardService.reAssignTaskToJanitor( 
              id: [taskId!],
-            janitor_id: "126", 
+            janitorId: "126",
              token: mockToken);
           expect(response, isA<ReassignJanitorModel>());
 

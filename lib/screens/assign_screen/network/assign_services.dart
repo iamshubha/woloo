@@ -3,13 +3,13 @@
 
 import 'dart:developer';
 
-import 'package:Woloo_Smart_hygiene/screens/assign_screen/data/janitorListModel.dart';
+import 'package:woloo_smart_hygiene/screens/assign_screen/data/janitor_list_model.dart';
 import 'package:dio/dio.dart';
 
 import '../../../core/network/api_constant.dart';
 import '../../../core/network/dio_client.dart';
 import '../../dashboard/data/model/dashboard_model_class.dart';
-import '../../janitor_screen/data/model/Reassign_janitor_model.dart';
+import '../../janitor_screen/data/model/reassign_janitor_model.dart';
 // import '../../janitor_screen/data/model/Janitor_list_model.dart';
 
 class AssignService {
@@ -32,10 +32,6 @@ class AssignService {
         
          Options(extra: {"auth": true}),
       );
-
-    
-
-       print(" janitor task $response");
 
       for (var item in response['results']) {
         output.add(DashboardModelClass.fromJson(item));
@@ -71,7 +67,7 @@ class AssignService {
             :
          Options(extra: {"auth": true}),
       );
-         print("res$response");
+
     
 
     // List<JanitorListModel> output = [];
@@ -93,7 +89,7 @@ class AssignService {
 
   Future<ReassignJanitorModel> reAssignPendingTaskToJanitor({
     required List<String> id,
-    required int janitor_id,
+    required int janitorId,
     required bool isRejected,
     required String startTime,
     required String endTime,
@@ -117,7 +113,7 @@ class AssignService {
 
        formData = FormData.fromMap({
         "id": id.toString(),
-        "janitor_id": janitor_id,
+        "janitor_id": janitorId,
         "Reassign":isRejected,
         "start_time":startTime,
         "end_time":endTime,
@@ -125,7 +121,7 @@ class AssignService {
       :
         formData = FormData.fromMap({
         "id": id.toString(),
-        "janitor_id": janitor_id,
+        "janitor_id": janitorId,
         "start_time":startTime,
         "end_time":endTime,
         "Assign":isAssign
@@ -144,7 +140,6 @@ class AssignService {
             :
          Options(extra: {"auth": true}),
       );
-       print(response);
       return ReassignJanitorModel.fromJson(response['results']);
     } catch (e) {
       rethrow;

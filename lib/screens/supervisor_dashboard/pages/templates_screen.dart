@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_state.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/bloc/dashboard_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/bloc/dashboard_state.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,9 +22,9 @@ class TemplateScreen extends StatefulWidget {
   final String supervisorName;
 
   const TemplateScreen({
-    Key? key,
+    super.key,
     required this.supervisorName,
-  }) : super(key: key);
+  });
 
   @override
   State<TemplateScreen> createState() => _TemplateScreenState();
@@ -68,14 +68,14 @@ class _TemplateScreenState extends State<TemplateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(" template screeen");
+    debugPrint(" template screeen");
     return BlocConsumer(
       bloc: dashboardBloc,
       listener: (context, state) {
         
       },
       builder: (context, state) {
-        print(" template screeen   $state");
+        debugPrint(" template screeen   $state");
         if (state is ClockInLoading) {
           EasyLoading.show(status: state.message);
         }
@@ -98,7 +98,7 @@ class _TemplateScreenState extends State<TemplateScreen> {
 
         if (state is ClockOutSuccessful) {
           EasyLoading.dismiss();
-          print(state);
+
       
           // setState(() {
           //   showList = false;

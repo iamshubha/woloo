@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:Woloo_Smart_hygiene/core/model/App_launch_model.dart';
+import 'package:woloo_smart_hygiene/core/model/app_launch_model.dart';
 import 'package:dio/dio.dart';
-import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
-import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/Attendance_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
+import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
+import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/data/model/attendance_model.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
 
 class DashboardService {
   final DioClient dio;
@@ -15,7 +15,6 @@ class DashboardService {
   FutureOr<AttendanceModel> markAttendance({required String type, required List<double> locations, String? token}) async {
     try {
 
-       print("toke $token");
       var response = await dio.post(
         APIConstants.ATTENDANCE,
         data: {
@@ -31,9 +30,9 @@ class DashboardService {
           )
         :
        Options(
-         sendTimeout: Duration(minutes: 1 ),
+         sendTimeout: const Duration(minutes: 1 ),
        // connectTimeout: 60*1000, // 60 seconds
-          receiveTimeout: Duration(minutes: 1 ),
+          receiveTimeout: const Duration(minutes: 1 ),
           
          
         extra: {"auth": true}),
@@ -72,7 +71,7 @@ class DashboardService {
 
     
 
-       print(" janitor task $response");
+
 
       for (var item in response['results']) {
         output.add(DashboardModelClass.fromJson(item));
@@ -104,7 +103,7 @@ class DashboardService {
           ) :
          Options(extra: {"auth": true}),
       );
-       print("update task $response");
+
       return response['results']?.toString() ?? '';
     } catch (e) {
       rethrow;

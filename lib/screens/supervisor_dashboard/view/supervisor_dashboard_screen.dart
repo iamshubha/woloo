@@ -1,11 +1,11 @@
-import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
-import 'package:Woloo_Smart_hygiene/screens/cluster_screen/view/cluster_screen.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/view/janitor_screen.dart';
-import 'package:Woloo_Smart_hygiene/screens/my_account/view/my_account_screen.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/pages/templates_screen.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/screens/cluster_screen/view/cluster_screen.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_screen/view/janitor_screen.dart';
+import 'package:woloo_smart_hygiene/screens/my_account/view/my_account_screen.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/pages/templates_screen.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +18,8 @@ import '../../report_issue_screen/view/report_issue_form.dart';
 
 class SupervisorDashboard extends StatefulWidget {
   const SupervisorDashboard({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<SupervisorDashboard> createState() => _SupervisorDashboardState();
@@ -34,10 +34,10 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
   );
 
   final imageList = [
-    AppImages.cluster_icon,
-    AppImages.janitor_icon,
-    AppImages.report_issue_icon,
-    AppImages.customer_request_icon,
+    AppImages.clusterIcon,
+    AppImages.janitorIcon,
+    AppImages.reportIssueIcon,
+    AppImages.customerRequestIcon,
   ];
   final labelList = <String>[
     BottomNavigatiionBarConstants.CLUSTER.tr(),
@@ -52,8 +52,8 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
   void initState() {
     supervisorName = globalStorage.getSupervisorName();
     mobile = globalStorage.getMobileNumber();
-    print("mobile ----> $mobile");
-    print(supervisorName);
+    debugPrint("mobile ----> $mobile");
+    debugPrint(supervisorName);
     _bottomNavIndex = 4;
     super.initState();
   }
@@ -99,7 +99,7 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
             ),
             child: CustomImageProvider(
               color: Colors.white,
-              image: AppImages.fab_img,
+              image: AppImages.fabImg,
               height: 26.h,
               width: 26.w,
             ),
@@ -110,7 +110,7 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
         itemCount: imageList.length, height: 60.h,
         gapWidth: 40.h,
         tabBuilder: (int index, bool isActive) {
-               print(" isACTIVEEE  $isActive");
+          debugPrint(" isACTIVEEE  $isActive");
           // final color = isActive
           //     ? colors.activeNavigationBarColor
           //     : colors.notActiveNavigationBarColor;
@@ -205,13 +205,13 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
           setState(
             () {
               _bottomNavIndex = index;
-              print(" botttt $_bottomNavIndex");
+              debugPrint(" botttt $_bottomNavIndex");
             },
           );
         },
         children: [
-          ClusterList(),
-          JanitorList(
+          const ClusterList(),
+          const JanitorList(
             rejected: false,
             isFromDashboard: true,
             isFromCluster: false,
@@ -222,7 +222,7 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
           ),
           SupervisorAccountScreen(
             supervisorName: supervisorName ?? '',
-            mobile_number: mobile ?? '',
+            mobileNumber: mobile ?? '',
           ),
           // Container(
           //   child: Center(

@@ -1,16 +1,17 @@
-import 'TaskStatus.dart';
 
-/// id : 139
-/// facility_name : "Restroom"
-/// block_name : "CMF"
-/// location_name : "Sarjapur Road, Bengaluru"
-/// address : "Sarjapur Road, Bengaluru, Karnataka 560035"
-/// description : "Rest room"
-/// no_of_booths : 1
-/// task_status : [{"status":1,"task_id":"16","task_name":"Doors"},{"status":1,"task_id":"17","task_name":" Toilet Roll"}]
-/// estimated_time : 120
-/// total_tasks : 2
-/// pending_task : 0
+// id : 139
+// facility_name : "Restroom"
+// block_name : "CMF"
+// location_name : "Sarjapur Road, Bengaluru"
+// address : "Sarjapur Road, Bengaluru, Karnataka 560035"
+// description : "Rest room"
+// no_of_booths : 1
+// task_status : [{"status":1,"task_id":"16","task_name":"Doors"},{"status":1,"task_id":"17","task_name":" Toilet Roll"}]
+// estimated_time : 120
+// total_tasks : 2
+// pending_task : 0
+
+import 'task_status.dart';
 
 class FacilityListModel {
   FacilityListModel({

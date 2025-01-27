@@ -41,7 +41,7 @@ class _CameraPageState extends State<CameraPage> {
                    File result =   await testCompressAndGetFile(File(single.file!.path), filePath );
 
                     widget.captureImage!(File(result.path) );
-
+                    if (!context.mounted) return;
                     Navigator.of(context).pop();
                   },
                   multiple: (multiple) {
@@ -83,7 +83,7 @@ class _CameraPageState extends State<CameraPage> {
                 final String filePath =
                     '${testDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
 
-                  print("sdfsd $filePath");
+                debugPrint("sdfsd $filePath");
              //   BlocProvider.of<CaptureBloc>(context).add(CaptureSelfie(image: File(filePath )  ));
                 // widget.captureImage!( File(filePath) );
                 return SingleCaptureRequest(filePath, sensors.first);
@@ -125,7 +125,7 @@ class _CameraPageState extends State<CameraPage> {
              //   debugPrint('single: ${single.file?.path}');
               //  single.file?.open();
 
-                 print("sinfggg ${single.file!.path }");
+                debugPrint("sinfggg ${single.file!.path }");
               },
               multiple: (multiple) {
                 multiple.fileBySensor.forEach((key, value) {
@@ -137,7 +137,7 @@ class _CameraPageState extends State<CameraPage> {
           },
 
           //  defaultFilter: A,
-          availableFilters: [],
+          availableFilters: const [],
         ),
       ),
     );
@@ -151,10 +151,10 @@ class _CameraPageState extends State<CameraPage> {
       quality: 50,
     );
 
-    print(file.lengthSync());
+
       var compress =       File(result!.path);
 
-   print(compress.lengthSync());
+
 
     return compress;
   }

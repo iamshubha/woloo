@@ -1,5 +1,5 @@
-/// id : 12
-/// name : "Shreya"
+// id : 12
+// name : "Shreya"
 
 class JanitorDropdownModel {
   JanitorDropdownModel({

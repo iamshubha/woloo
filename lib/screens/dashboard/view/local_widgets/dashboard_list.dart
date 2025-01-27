@@ -1,18 +1,18 @@
 import 'dart:async';
 
-import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/empty_list_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/image_provider.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/map_utils.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/swipe_button.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
-import 'package:Woloo_Smart_hygiene/screens/selfie_screen/view/selfie_screen.dart';
-import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/view/task_completion_screen.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/empty_list_widget.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/map_utils.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/swipe_button.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/bloc/dashboard_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/bloc/dashboard_event.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
+import 'package:woloo_smart_hygiene/screens/selfie_screen/view/selfie_screen.dart';
+import 'package:woloo_smart_hygiene/screens/washroom_image_screen/view/task_completion_screen.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 // import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -23,29 +23,26 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import '../../../../utils/app_images.dart';
 
 class DashboardListWidget extends StatefulWidget {
  final TabController? tabController;
   final Function onTapItem;
-  final current_lattitude;
-  final current_longitude;
+  final String? currentLattitude;
+  final String? currentLongitude;
   final List<DashboardModelClass> filter;
   final DashboardBloc dashboardBloc;
-  final String dataforEmyptyList;
+  final String? dataforEmyptyList;
   const DashboardListWidget(
-      {Key? key,
+      {super.key,
       required  this.tabController,
       required this.onTapItem,
-      required this.current_lattitude,
-      required this.current_longitude,
+      required this.currentLattitude,
+      required this.currentLongitude,
       required this.filter,
       required this.dashboardBloc,
        required this.dataforEmyptyList
-      })
-      : super(key: key);
+      });
 
   @override
   State<DashboardListWidget> createState() => _DashboardListWidgetState();
@@ -56,8 +53,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
   // late DashboardBloc _dashboardBloc;
   List<DashboardModelClass> filter = [];
   // List<DashboardModelClass> _data = [];
-  late double? facility_lattitude;
-  late double? facility_longitude;
+  late double? facilityLattitude;
+  late double? facilityLongitude;
   bool servicestatus = false;
   bool haspermission = false;
   // late Uri _url;
@@ -149,7 +146,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
         body: Padding(
           padding: const EdgeInsets.only(top: 0, bottom: 10),
           child: widget.filter.isEmpty
-              ?  Container(
+              ?  SizedBox(
             height: 300.h,
                 child: EmptyListWidget(
                             filter: widget.dataforEmyptyList,
@@ -159,7 +156,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
               : Column(
             crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Container(
+                  SizedBox(
                     height:
                     MediaQuery.of(context).size.height < 800 ?
 
@@ -167,7 +164,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                     MediaQuery.of(context).size.height / 3.3,
                     child: CardSwiper(
                        isLoop: false,
-                        allowedSwipeDirection: AllowedSwipeDirection.symmetric(
+                        allowedSwipeDirection: const AllowedSwipeDirection.symmetric(
                           horizontal:true,
                         ),
 
@@ -220,12 +217,12 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                              boxShadow: [
                                           BoxShadow(
                                             color: Colors.black
-                                                .withOpacity(0.2), // Shadow color
+                                                .withValues(alpha:0.2), // Shadow color
                                             spreadRadius:
                                                 1, // How wide the shadow should spread
                                             blurRadius:
                                                 10, // The blur effect of the shadow
-                                            offset: Offset(0,
+                                            offset: const Offset(0,
                                                 0), // No offset for shadow on all sides
                                           ),
                                         ],
@@ -438,7 +435,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                   ],
                                                 ),
                                                 Divider(
-                                                  color: AppColors.deviderColor.withOpacity(0.4),
+                                                  color: AppColors.deviderColor.withValues(alpha: 0.4),
                                                 ),
 
 
@@ -471,7 +468,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                         SizedBox(
                                                           height: 10.h,
                                                         ),
-                                                        Container(
+                                                        SizedBox(
                                                           width: 180.w,
                                                           child: Text(
                                                               "${widget.filter[index].blockName}" 
@@ -549,7 +546,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                         style: AppTextStyle.font12
                                                             .copyWith(
                                                           color: AppColors
-                                                              .ListTitleColor,
+                                                              .listTitleColor,
                                                         )
                                                         //  TextStyle(
                                                         //   color: AppColors.ListTitleColor,
@@ -610,19 +607,19 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                         vertical: 5.h,
                                         horizontal: 10.w,
                                       ),
-                                      margin: EdgeInsets.symmetric(
+                                      margin: const EdgeInsets.symmetric(
                                         // horizontal: 15.w,
                                       ),
                                       decoration: BoxDecoration(
                                         boxShadow: [
                                           BoxShadow(
                                             color: Colors.black
-                                                .withOpacity(0.15), // Shadow color
+                                                .withValues(alpha: 0.15), // Shadow color
                                             spreadRadius:
                                                 1, // How wide the shadow should spread
                                             blurRadius:
                                                 10, // The blur effect of the shadow
-                                            offset: Offset(0,
+                                            offset: const Offset(0,
                                                 0), // No offset for shadow on all sides
                                           ),
                                         ],
@@ -633,7 +630,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                             //
                                             AppColors.pendingCardBgColor
                                             : widget.filter[index].status == "Ongoing"
-                                                ? Color.fromARGB(255, 232, 239, 132)
+                                                ? const Color.fromARGB(255, 232, 239, 132)
                                                 : widget.filter[index].status ==
                                                         "Accepted"
                                                     ? AppColors.acceptedBgColor
@@ -843,7 +840,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                               // ),
                                             ],
                                           ),
-                                          Divider(
+                                          const Divider(
                                             color: AppColors.deviderColor,
                                           ),
                                           // Row(
@@ -896,7 +893,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                           AppColors.white
                                                               :
                                                           AppColors
-                                                              .ListTitleColor,
+                                                              .listTitleColor,
                                                           letterSpacing: 0.8,
                                                         )),
                                                     SizedBox(
@@ -918,7 +915,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                           AppColors.white
                                                               :
                                                           AppColors
-                                                              .ListTitleColor,
+                                                              .listTitleColor,
                                                           letterSpacing: 0.8,
                                                         )),
 
@@ -991,7 +988,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                                 width: 19.w,
                                                                 height: 19.h,
                                                               ),
-                                                              Container(
+                                                              SizedBox(
                                                                 width :50.w,
                                                                 child: Text(
                                                                   MydashboardScreenConstants.ACCEPT.tr(),
@@ -1036,7 +1033,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                         alignment: Alignment
                                                             .centerRight,
                                                         decoration:
-                                                            BoxDecoration(
+                                                            const BoxDecoration(
                                                               shape: BoxShape.circle,
                                                           // borderRadius:
                                                           //     BorderRadius
@@ -1090,11 +1087,12 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                       onTap: () async {
                                                         checkGps();
                                                         setState(() {
-                                                          facility_lattitude =
+
+                                                          facilityLattitude =
                                                               widget
                                                                   .filter[index]
                                                                   .lat;
-                                                          facility_longitude =
+                                                          facilityLongitude =
                                                               widget
                                                                   .filter[index]
                                                                   .lng;
@@ -1170,10 +1168,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                             ),
                                                           ),
                                                         );
-                                                        print("afasdfasfsadf" +
-                                                            widget.filter[index]
-                                                                .taskAllocationId
-                                                                .toString());
+                                                        debugPrint("afasdfasfsadf${widget.filter[index]
+                                                                .taskAllocationId}");
                                                         widget.dashboardBloc.add(
                                                             const GetTaskTamplates());
                                                             widget.tabController!.animateTo(2);
@@ -1282,7 +1278,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                                    height: 19.h,
                                                                  ),
                                                                 ),
-                                                                Container(
+                                                                SizedBox(
                                                                    width: 80.w,
                                                                   child: Text(
 
@@ -1297,7 +1293,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                                           .copyWith(
                                                                         fontSize: 11,
                                                                         color: AppColors
-                                                                            .ListTitleColor,
+                                                                            .listTitleColor,
                                                                         letterSpacing: 0.8,
                                                                       )),
                                                                 ),
@@ -1460,10 +1456,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                         ),
                                                       ),
                                                     );
-                                                    print("afasdfasfsadf" +
-                                                        widget.filter[index]
-                                                            .taskAllocationId
-                                                            .toString());
+                                                    debugPrint("afasdfasfsadf${widget.filter[index]
+                                                            .taskAllocationId}");
                                                     widget.dashboardBloc.add(
                                                         const GetTaskTamplates());
                                                   },
@@ -1565,11 +1559,11 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                             boxShadow: [
                               BoxShadow(
                                 color:
-                                    Colors.black.withOpacity(0.2), // Shadow color
+                                    Colors.black.withValues( alpha:0.2), // Shadow color
                                 spreadRadius:
                                     1, // How wide the shadow should spread
                                 blurRadius: 10, // The blur effect of the shadow
-                                offset: Offset(
+                                offset: const Offset(
                                     0, 0), // No offset for shadow on all sides
                               ),
                             ],
@@ -1615,10 +1609,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
-          print('Location permissions are denied');
+          debugPrint('Location permissions are denied');
         } else if (permission == LocationPermission.deniedForever) {
-          print("Location permissions are permanently denied");
-          print(" denied");
+          debugPrint("Location permissions are permanently denied");
           openAppSettings();
         } else {
           haspermission = true;
@@ -1641,8 +1634,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
   getLocation() async {
     position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    print(position.longitude); //Output: 80.24599079
-    print(position.latitude); //Output: 29.6593457
+    debugPrint(position.longitude.toString()); //Output: 80.24599079
+    debugPrint(position.latitude.toString()); //Output: 29.6593457
 
     long = position.longitude.toString();
     lat = position.latitude.toString();
@@ -1656,8 +1649,8 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
     // StreamSubscription<Position> positionStream =
         Geolocator.getPositionStream(locationSettings: locationSettings)
             .listen((Position position) {
-      print(position.longitude); //Output: 80.24599079
-      print(position.latitude); //Output: 29.6593457
+       //Output: 80.24599079
+       //Output: 29.6593457
 
       long = position.longitude.toString();
       lat = position.latitude.toString();
@@ -1673,7 +1666,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
       setState(() {
         _currentAddress =
             '${place.name},${place.street}, ${place.subLocality},${place.subAdministrativeArea}, ${place.administrativeArea},${place.postalCode}';
-        print("address - $_currentAddress");
+        debugPrint("address $_currentAddress");
         // EasyLoading.showToast("Current Location Detected : $_currentAddress");
       });
     }).catchError((e) {

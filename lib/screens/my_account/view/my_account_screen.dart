@@ -1,10 +1,10 @@
-import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/button_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/login/view/login_screen.dart';
-import 'package:Woloo_Smart_hygiene/screens/my_account/data/model/profile_model.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/button_widget.dart';
+import 'package:woloo_smart_hygiene/screens/login/view/login_screen.dart';
+import 'package:woloo_smart_hygiene/screens/my_account/data/model/profile_model.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,13 +23,13 @@ import 'bloc/profile_state.dart';
 
 class SupervisorAccountScreen extends StatefulWidget {
   final String supervisorName;
-  final String mobile_number;
+  final String mobileNumber;
 
   const SupervisorAccountScreen({
-    Key? key,
+    super.key,
     required this.supervisorName,
-    required this.mobile_number,
-  }) : super(key: key);
+    required this.mobileNumber,
+  });
 
   @override
   State<SupervisorAccountScreen> createState() =>
@@ -51,7 +51,7 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
 
 
      updat( id)async{
-       print("idddd $id");
+       debugPrint("idddd $id");
           // var firebase = FirebaseMessaging.instance;
           //                 var token = await firebase.getToken();
     profileBloc?.add(UpdateProfile(
@@ -61,7 +61,7 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
+
 
     super.initState();
 
@@ -188,7 +188,7 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black
-                            .withOpacity(0.15), // Shadow color
+                            .withValues( alpha: 0.15), // Shadow color
                         spreadRadius:
                         1, // How wide the shadow should spread
                         blurRadius:
@@ -215,7 +215,7 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
                                                  bloc: profileBloc,
                                                 builder:
                                                 (context, state) {
-                                                     print("state $state ");
+                                                  debugPrint("state $state ");
                                                    if (state is  ProfleLoading ) {
                                                      EasyLoading.show(status: "");
                                        
@@ -291,7 +291,7 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
                             Navigator.of(context).push(  MaterialPageRoute(builder: (context) {
                                 return   UplopadProfile(
                                      capture: (v){
-                                       print("vvvvvvv $v");
+                                       debugPrint("vvvvvvv $v");
                                    if (v) {
 
                                        profileBloc?.add(UpdateProfile(
@@ -307,7 +307,7 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
                             },  )  );
                                                  },
                                                 child: CustomImageProvider(
-                                                  image: AppImages.edit_icon,
+                                                  image: AppImages.editIcon,
                                                   width: 30,
                                                   height: 30,
                                                 ),
@@ -373,7 +373,7 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
                                     ),),
                                 Text(
                                     textAlign: TextAlign.center,
-                                    " +91${widget.mobile_number}",
+                                    " +91${widget.mobileNumber}",
                                     style:
                                     AppTextStyle.font16.copyWith(
                                       color: AppColors.black,
@@ -414,9 +414,10 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
                   EasyLoading.showToast(MyJanitorProfileScreenConstants
                       .LOG_OUT_SUCCESS_TOAST
                       .tr());
+                  if (!context.mounted) return;
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                    MaterialPageRoute(builder: (context) => const LoginScreen()),
                     (route) => false,
                   );
                 },

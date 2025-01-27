@@ -1,11 +1,11 @@
-/// facility_id : 62
-/// janitor_id : 12
-/// janitor_name : "Shreya"
-/// status : "Request for closure"
-/// facility_name : "Gents Restroom"
-/// floor_number : 0
-/// description : "Restroom"
-/// cluster_name : "Wipro"
+// facility_id : 62
+// janitor_id : 12
+// janitor_name : "Shreya"
+// status : "Request for closure"
+// facility_name : "Gents Restroom"
+// floor_number : 0
+// description : "Restroom"
+// cluster_name : "Wipro"
 
 class IssueListModel {
   IssueListModel({

@@ -4,6 +4,7 @@
 
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 // import '../event/capture_event.dart';
@@ -28,7 +29,7 @@ class CaptureBloc1 extends Bloc<CaptureEvent1, CaptureState1> {
     try {
       emit(  AddImagesInitial1( ));
 
-      print("image 1 data  ${event.file} ");
+      debugPrint("image 1 data  ${event.file} ");
 
       if (event.file!.path.isNotEmpty) {
         emit(AddImagesSuccessful1(

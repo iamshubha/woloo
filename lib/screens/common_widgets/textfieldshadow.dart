@@ -57,11 +57,11 @@ class DecoratedInputBorder extends InputBorder {
     child.paint(canvas, rect, gapStart: gapStart, gapExtent: gapExtent, gapPercentage: gapPercentage, textDirection: textDirection);
   }
 
-  @override
-  bool operator ==(Object other) {
-    if (other.runtimeType != runtimeType) return false;
-    return other is DecoratedInputBorder && other.borderSide == borderSide && other.child == child && other.shadow == shadow;
-  }
+  // @override
+  // bool operator  (Object other) {
+  //   if (other.runtimeType != runtimeType) return false;
+  //   return other is DecoratedInputBorder && other.borderSide == borderSide && other.child == child && other.shadow == shadow;
+  // }
 
   // @override
   // int get hashCode => hashValues(borderSide, child, shadow);

@@ -1,4 +1,4 @@
-import 'package:Woloo_Smart_hygiene/screens/login/data/model/send_otp.dart';
+import 'package:woloo_smart_hygiene/screens/login/data/model/send_otp.dart';
 import 'package:flutter_test/flutter_test.dart';
 // import 'path_to_model/send_otp.dart'; // Update with the correct path to your model
 

@@ -1,21 +1,21 @@
 import 'dart:io';
 
-import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/bloc/history_list_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/bloc/history_list_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/bloc/history_list_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/data/model/Attendance_history_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/data/model/Month_list_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/view/local_widgets/history_list_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/error_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/image_provider.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/leading_button.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/screens/attendance_history_screen/bloc/history_list_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/attendance_history_screen/bloc/history_list_event.dart';
+import 'package:woloo_smart_hygiene/screens/attendance_history_screen/bloc/history_list_state.dart';
+import 'package:woloo_smart_hygiene/screens/attendance_history_screen/data/model/attendance_history_model.dart';
+import 'package:woloo_smart_hygiene/screens/attendance_history_screen/data/model/month_list_model.dart';
+import 'package:woloo_smart_hygiene/screens/attendance_history_screen/view/local_widgets/history_list_widget.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/error_widget.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/leading_button.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/utils/app_images.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,8 +28,8 @@ import '../../../main.dart';
 
 class AttendanceHistoryScreen extends StatefulWidget {
   const AttendanceHistoryScreen({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<AttendanceHistoryScreen> createState() =>
@@ -55,7 +55,7 @@ class AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
   List<AttendanceHistoryModel> _historyData = [];
 
   String dropdownvalue = MyAttendanceHistoryScreenConstants.SELECT.tr();
-  HistoryListBloc _historyListBloc = HistoryListBloc();
+   final HistoryListBloc _historyListBloc = HistoryListBloc();
   bool showList = false;
   String selectedMonth = "";
   String year = "";
@@ -69,7 +69,7 @@ class AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    
     _historyListBloc.add(const GetAllMonths());
     super.initState();
 
@@ -83,7 +83,7 @@ class AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
         backgroundColor: AppColors.white,
         appBar: AppBar(
           leadingWidth: 100,
-          leading: LeadingButton(),
+          leading: const LeadingButton(),
 
 
          // title:
@@ -105,7 +105,7 @@ class AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
               // }
             },
             builder: (context, state) {
-               print("  attendance history   $state ");
+
               if (state is MonthListLoading) {
                 EasyLoading.show(
                     status: MydashboardScreenConstants.LOADING_TOAST.tr());
@@ -246,7 +246,7 @@ class AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                                   height: 100.h,
                                 ),
                                 CustomImageProvider(
-                                  image: AppImages.blank_list_img,
+                                  image: AppImages.blankListImg,
                                   height: 100.h,
                                   width: 100.w,
                                 ),
@@ -433,7 +433,7 @@ class AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                              setState(() {
 
                              });
-                               print("dateas $presentDates");
+                               debugPrint("dateas $presentDates");
 
                             },
                           ),
@@ -514,7 +514,7 @@ class AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                                   height: 100.h,
                                 ),
                                 CustomImageProvider(
-                                  image: AppImages.blank_list_img,
+                                  image: AppImages.blankListImg,
                                   height: 100.h,
                                   width: 100.w,
                                 ),
@@ -546,7 +546,7 @@ class AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                
                //const EmptyListWidget();
               }
-              return  SizedBox();
+              return  const SizedBox();
     
             }
             )
@@ -576,7 +576,7 @@ class AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
     //     return Colors.orange;  // Orange for Sick Leave or Holiday (SH)
     //   }
     // }
-    data["Present" + date.day.toString()] == "Present"
+    data["Present${date.day}"] == "Present"
      ?  Colors.red
     : Colors.green;
 
@@ -722,7 +722,7 @@ class AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
       height: 286,
       decoration: BoxDecoration(
          border: Border.all(
-           color:Color(0xffC6C6C6)
+           color: const Color(0xffC6C6C6)
          ),
         borderRadius: BorderRadius.circular(25)
       ),
@@ -810,10 +810,10 @@ snacbar( String title, Color color){
   await Permission.storage.request();
 }  
   
-    print("monthhtttt  $month ");
+
 
    var status = await Permission.storage.status;
-         print("statd $status");
+         debugPrint("statd $status");
 
     final excel = ex.Excel.createExcel();
 
@@ -859,7 +859,7 @@ snacbar( String title, Color color){
       columnIterableSheet.cell(ex.CellIndex.indexByColumnRow(
         rowIndex: rowIndex, 
         columnIndex: columnIndex))
-        ..value =
+        .value =
          columnIterables[columnIndex][rowIndex] == null ?
            ex.TextCellValue("-")
 
@@ -882,12 +882,12 @@ snacbar( String title, Color color){
       : await getApplicationDocumentsDirectory();
 
 
-           print(" andr path ${directory!.path}");
+           debugPrint("andr path ${directory.path}");
 
      String path = 
       Platform.isAndroid ?
      '${directory.path}/$month-$year.xlsx'
-     : '${directory!.path}/$month-$year.xlsx';
+     : '${directory.path}/$month-$year.xlsx';
 
 
    
@@ -898,9 +898,14 @@ snacbar( String title, Color color){
         dirType:  DirType.download,
         dirName:  DirType.download.defaults,
       );
-       ScaffoldMessenger.of(context).showSnackBar(snacbar(
-           MyAttendanceHistoryScreenConstants.DOWNLOAD_SUCCESS_MESSAGE.tr(), AppColors.greenText ));
+
+      if (context.mounted){
+        ScaffoldMessenger.of(context).showSnackBar(snacbar(
+            MyAttendanceHistoryScreenConstants.DOWNLOAD_SUCCESS_MESSAGE.tr(), AppColors.greenText ));
+      }
+
        } catch (e) {
+           if (!context.mounted) return;
            ScaffoldMessenger.of(context).showSnackBar(snacbar( e.toString(), AppColors.rejectButtonColor ));
        }
 

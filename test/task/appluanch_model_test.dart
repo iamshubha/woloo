@@ -1,4 +1,4 @@
-import 'package:Woloo_Smart_hygiene/core/model/App_launch_model.dart';
+import 'package:woloo_smart_hygiene/core/model/app_launch_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 // import 'path_to_model/app_launch_model.dart'; // Update with your model's path
 

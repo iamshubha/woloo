@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
-import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
+import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 

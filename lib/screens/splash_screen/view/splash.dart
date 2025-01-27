@@ -1,13 +1,13 @@
 import 'dart:io';
 
-import 'package:Woloo_Smart_hygiene/core/bloc/core_bloc.dart';
-import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
-import 'package:Woloo_Smart_hygiene/messaging.dart';
-import 'package:Woloo_Smart_hygiene/screens/login/view/login_screen.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/view/supervisor_dashboard_screen.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
+import 'package:woloo_smart_hygiene/core/bloc/core_bloc.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/messaging.dart';
+import 'package:woloo_smart_hygiene/screens/login/view/login_screen.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/view/supervisor_dashboard_screen.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:dio_log/dio_log.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -71,16 +71,16 @@ class _SplashScreenState extends State<SplashScreen> {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
      //  await Future.delayed(Duration(seconds: 1));
     String? aspn =     await messaging.getAPNSToken();
-       print("aspn $aspn");
+    debugPrint("aspn $aspn");
      //  onNewToken
 
-    print("refresh token ${messaging.onTokenRefresh}");
+    debugPrint("refresh token ${messaging.onTokenRefresh}");
 
      deviceToken = await messaging.getToken();
     // _tokenStream = FirebaseMessaging.instance.onTokenRefresh;
 //     _tokenStream.listen(setToken);
 
-     print("device token $deviceToken");
+    debugPrint("device token $deviceToken");
     if (deviceToken != null) coreBloc.add(UpdateToken(token: deviceToken!));
          coreBloc.add(CheckUserIsLoggedInOrNot());
 
@@ -90,7 +90,7 @@ class _SplashScreenState extends State<SplashScreen> {
     try {
       final TrackingStatus status = await AppTrackingTransparency.trackingAuthorizationStatus;
       if (status == TrackingStatus.notDetermined) {
-        if (context.mounted) await showCustomTrackingDialog(context);
+         await showCustomTrackingDialog( context.mounted ?  context : context);
         await Future.delayed(const Duration(milliseconds: 200));
         await AppTrackingTransparency.requestTrackingAuthorization();
       }
@@ -154,7 +154,7 @@ class _SplashScreenState extends State<SplashScreen> {
             children: [
               LinearProgressIndicator(
                 color: AppColors.buttonColor,
-                backgroundColor: AppColors.white.withOpacity(0.1),
+                backgroundColor: AppColors.white.withValues( alpha: 0.1),
               ),
               Expanded(
                 child: Column(
@@ -163,7 +163,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 CustomImageProvider(
                   scale: 5,
                  image: 
-                  AppImages.splash_logo,
+                  AppImages.splashLogo,
                 ),  
                     // Image.asset(
                     //   AppImages.splash_logo,

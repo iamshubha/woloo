@@ -1,7 +1,7 @@
 
-import 'package:Woloo_Smart_hygiene/screens/splash_screen/view/splash.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/screens/splash_screen/view/splash.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:context_holder/context_holder.dart';
 import 'package:easy_localization/easy_localization.dart';

@@ -1,4 +1,4 @@
-import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
+import 'package:woloo_smart_hygiene/core/network/failure.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class ImagesState extends Equatable {

@@ -1,7 +1,7 @@
 
-import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
+import 'package:woloo_smart_hygiene/core/network/failure.dart';
 import 'package:equatable/equatable.dart';
-import 'package:Woloo_Smart_hygiene/screens/cluster_screen/data/model/Cluster_model.dart';
+import 'package:woloo_smart_hygiene/screens/cluster_screen/data/model/cluster_model.dart';
 
 abstract class ClusterListState extends Equatable {
   const ClusterListState();

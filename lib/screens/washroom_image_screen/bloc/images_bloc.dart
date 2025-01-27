@@ -1,10 +1,12 @@
 import 'dart:async';
 
-import 'package:Woloo_Smart_hygiene/screens/task_list/data/network/task_list_service.dart';
-import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/bloc/images_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/bloc/images_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/data/network/submit_images_service.dart';
-import 'package:bloc/bloc.dart';
+import 'package:woloo_smart_hygiene/screens/task_list/data/network/task_list_service.dart';
+import 'package:woloo_smart_hygiene/screens/washroom_image_screen/bloc/images_event.dart';
+import 'package:woloo_smart_hygiene/screens/washroom_image_screen/bloc/images_state.dart';
+import 'package:woloo_smart_hygiene/screens/washroom_image_screen/data/network/submit_images_service.dart';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../core/network/error_handler.dart';
@@ -38,9 +40,9 @@ class ImagesBloc extends Bloc<ImagesEvent, ImagesState> {
 
       await submitImagesService.updateStatus(
           id: event.allocationId, status: "6");
-          
 
-      print("responseeee  ------  $response");
+
+      debugPrint("responseeee  ------  $response");
       emit(UploadImagesSuccessful());
     } catch (e) {
 

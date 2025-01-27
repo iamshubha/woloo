@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
@@ -17,7 +18,7 @@ class AssignBloc extends Bloc<AssignEvent, AssignState> {
   // final GlobalStorage globalStorage = GetIt.instance<GlobalStorage>();
   // List<DashboardModelClass> data = [];
   late int janitorId;
-  var message;
+
 
   AssignBloc() : super( JanitorTaskInitial()) {
     // on<DashboardEvent>((event, emit) {});
@@ -45,7 +46,7 @@ class AssignBloc extends Bloc<AssignEvent, AssignState> {
     FutureOr<void> _mapGetJanitorListState(
       GetJanitorList event, Emitter<AssignState> emit) async {
     try {
-       print(event.facilityId);
+       debugPrint(event.facilityId.toString());
       emit(JanitorListLoading());
      // dashController.mapGetDashboardToState();
          var data =    await  assignService.getanitorListByFacilityId(event.facilityId);
@@ -61,7 +62,9 @@ class AssignBloc extends Bloc<AssignEvent, AssignState> {
   FutureOr<void> _mapAssignTaskToJanitorState(
       AssignTask event, Emitter<AssignState> emit) async {
     try {
-      print(event.facilityId);
+      if (kDebugMode) {
+        print(event.facilityId);
+      }
       emit(AssignTaskLoading());
       // dashController.mapGetDashboardToState();
       var data =    await  assignService.reAssignPendingTaskToJanitor(
@@ -69,7 +72,7 @@ class AssignBloc extends Bloc<AssignEvent, AssignState> {
         endTime: event.endTime,
         startTime: event.startTime,
         isAssign: event.isAssing,
-        janitor_id: event.janitorId,
+        janitorId: event.janitorId,
         isRejected:  event.status == "Rejected" ?  true :false,
         // status: event.status
 

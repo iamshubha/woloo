@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
-import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
-import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/data/model/Attendance_history_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/data/model/Month_list_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/data/network/attendance_history_service.dart';
+import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
+import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/screens/attendance_history_screen/data/model/attendance_history_model.dart';
+import 'package:woloo_smart_hygiene/screens/attendance_history_screen/data/model/month_list_model.dart';
+import 'package:woloo_smart_hygiene/screens/attendance_history_screen/data/network/attendance_history_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -90,10 +90,12 @@ void main() {
            //   http.Response(' {"results":[{"month":"11","year":"2024","attendance_count":"2"},{"month":"12","year":"2024","attendance_count":"8"},{"month":"1","year":"2025","attendance_count":"7"}],"success":true}', 200));
      
              try {
-                          var response = await attendanceHistoryService.getAllMonths( token: mockToken);
+                          var response = await attendanceHistoryService.getAllMonths( token: "");
+
                           expect(response, throwsException );
-             } catch (e) {
-               
+             }
+             catch (e) {
+               expect( e.toString(),  'Exception: Failed to Mark attendace');
              }
 
 
@@ -119,7 +121,7 @@ void main() {
           expect(response, throwsException );
             
           } catch (e) {
-            
+            expect( e.toString(),  'Exception: Failed to Mark attendace');
           }
         
 

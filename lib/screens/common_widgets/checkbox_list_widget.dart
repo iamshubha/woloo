@@ -1,4 +1,4 @@
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -12,13 +12,13 @@ class CheckboxListWidget extends StatefulWidget {
   final Function onChecked;
 
   const CheckboxListWidget({
-    Key? key,
+    super.key,
     required this.name,
     required this.onChecked,
     this.showCheckbox = true,
     this.isChecked = false,
     this.viewOnly = false,
-  }) : super(key: key);
+  });
 
   @override
   State<CheckboxListWidget> createState() => _CheckboxListWidgetState();

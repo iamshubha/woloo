@@ -4,13 +4,13 @@ import 'dart:convert';
 import 'dart:io';
 
 
-import 'package:Woloo_Smart_hygiene/core/model/App_launch_model.dart';
+import 'package:woloo_smart_hygiene/core/model/app_launch_model.dart';
 
-import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
-import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/Attendance_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/data/network/dashboard_service.dart';
+import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
+import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/data/model/attendance_model.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/data/network/dashboard_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -108,16 +108,16 @@ late DashboardService dashboardService;
      
                try {
 
-            var response = await dashboardService.markAttendance(
+          await dashboardService.markAttendance(
           type: "", locations: [19.0760,72.8777 ]
           , token: mockToken
           );
 
-            expect(response,  throwsException );
+          //  expect(response,  throwsException );
                }
      catch ( e) {
 
-                 
+               expect( e.toString(),  'Exception: Failed to Mark attendace');   
                }
  
 
@@ -193,8 +193,9 @@ late DashboardService dashboardService;
             
             expect(response,  throwsException);
               
-            } catch (e) {
-              
+            }
+             catch (e) {
+               expect( e.toString(),  'Exception: Failed to Mark attendace');
             }
 
 
@@ -232,13 +233,13 @@ late DashboardService dashboardService;
               );
       
            try {
-                  var response = await dashboardService.appLaunch(
-                    token: mockToken
+               await dashboardService.appLaunch(
+                    token: ""
                   );
-          expect(response, throwsException );
+         
              
            } catch (e) {
-             
+                                   expect( e.toString(),  'Exception: Failed to Mark attendace');
            }
 
      

@@ -1,5 +1,5 @@
-/// allocation_id : 94
-/// data : [{"task_id":1,"task_name":"task_1","status":1}]
+// allocation_id : 94
+// data : [{"task_id":1,"task_name":"task_1","status":1}]
 
 class SelectTaskModel {
   SelectTaskModel({

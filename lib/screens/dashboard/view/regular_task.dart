@@ -1,14 +1,13 @@
 import 'dart:async';
-import 'package:Woloo_Smart_hygiene/core/model/App_launch_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/image_provider.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/controller/dash_controller.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/view/dashboard_screen.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_profile_screen/view/janitor_profile_screen.dart';
-import 'package:Woloo_Smart_hygiene/screens/my_account/view/bloc/profile_event.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/core/model/app_launch_model.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/controller/dash_controller.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/view/dashboard_screen.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_profile_screen/view/janitor_profile_screen.dart';
+import 'package:woloo_smart_hygiene/screens/my_account/view/bloc/profile_event.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,15 +18,14 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' hide Trans;
 // import 'package:get/state_manager.dart';
 import 'package:get_it/get_it.dart';
-import 'package:intl/intl.dart';
-import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/custom_dialogue_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_state.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/custom_dialogue_widget.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/bloc/dashboard_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/bloc/dashboard_event.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/bloc/dashboard_state.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -40,8 +38,8 @@ import 'iot_task.dart';
 
 class Dashboard extends StatefulWidget {
 const Dashboard({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -57,8 +55,8 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
   String profileName = "";
   String profileImage = "";
   String profileshift = "";
-  String check_in_time = "";
-  String check_out_time = "";
+  String checkInTime = "";
+  String checkOutTime = "";
   String inTime = "";
   String inTimeDate = "";
   String outTime = "";
@@ -73,7 +71,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
   DashboardBloc dashboardBloc = DashboardBloc();
   AppLaunchModel _appLaunchModel = AppLaunchModel();
   String? type;
-  List<DashboardModelClass> _data = [];
+  final List<DashboardModelClass> _data = [];
   List<DashboardModelClass> filter = [];
   bool isInt = false;
   DashController dashController = Get.put(DashController());
@@ -186,7 +184,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
   @override
   void dispose() {
      WidgetsBinding.instance.removeObserver(this);
-    // TODO: implement dispose
+ 
     super.dispose();
   }
  
@@ -287,7 +285,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
             showList = true;
       
             String formattedDate = DateFormat('hh:mm:ss  a').format(currentTime);
-            check_in_time = formattedDate;
+            checkInTime = formattedDate;
       
           
             DateTime parsedTime = DateTime.parse(state.attendanceModel.results!.attendance!.lastAttendance!.time!.toString());
@@ -335,7 +333,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
             showList = false;
       
             String formattedDate = DateFormat('hh:mm:ss  a').format(currentTime);
-            check_out_time = formattedDate;
+            checkOutTime = formattedDate;
             
 
             DateTime parsedTime = DateTime.parse(state.attendanceModel.results!.attendance!.lastAttendance!.time!.toString());
@@ -343,7 +341,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
             // Print the DateTime object
 
            DateTime  local =   parsedTime.toLocal();
-            print("Parsed DateTime: $parsedTime");
+            debugPrint("Parsed DateTime: $parsedTime");
             String timeOnly = "${local.hour}:${local.minute}:${local.second}";
              String dateOnly =  "${local.day}-${local.month}-${local.year}";
 
@@ -427,7 +425,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                           boxShadow: [
                             BoxShadow(
                               color:
-                              Colors.black.withOpacity(0.2), // Shadow color
+                              Colors.black.withValues(alpha: 0.2), // Shadow color
                               spreadRadius:
                               1, // How wide the shadow should spread
                               blurRadius: 10, // The blur effect of the shadow
@@ -454,7 +452,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                   ),
                   InkWell(
@@ -474,7 +472,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                           boxShadow: [
                             BoxShadow(
                               color:
-                              Colors.black.withOpacity(0.2), // Shadow color
+                              Colors.black.withValues(alpha:0.2), // Shadow color
                               spreadRadius:
                               1, // How wide the shadow should spread
                               blurRadius: 10, // The blur effect of the shadow
@@ -497,7 +495,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                 ],
@@ -528,7 +526,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                             boxShadow: [
                               BoxShadow(
                                 color:
-                                    Colors.black.withOpacity(0.2), // Shadow color
+                                    Colors.black.withValues( alpha: 0.2), // Shadow color
                                 spreadRadius:
                                     1, // How wide the shadow should spread
                                 blurRadius: 10, // The blur effect of the shadow
@@ -643,7 +641,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                                            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                           children: [
                                             profile.results == null ?
-                                               Text("")
+                                               const Text("")
                                               :
 
                                             Text(
@@ -678,7 +676,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                                       ),
                                       const Divider(),
                                       if (location != null && location != "") ...[
-                                        Container(
+                                        SizedBox(
                                           width: 220.w,
                                           child: Column(
                                             children: [
@@ -690,8 +688,8 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                                                           boxShadow: [
                                                             BoxShadow(
                                                               color: Colors.black
-                                                                  .withOpacity(
-                                                                      0.2), // Shadow color
+                                                                  .withValues(
+                                                                      alpha:0.2), // Shadow color
                                                               spreadRadius:
                                                                   1, // How wide the shadow should spread
                                                               blurRadius:
@@ -757,7 +755,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                                       boxShadow: [
                                         BoxShadow(
                                           color: Colors.black
-                                              .withOpacity(0.2), // Shadow color
+                                              .withValues(  alpha: 0.2), // Shadow color
                                           spreadRadius:
                                               1, // How wide the shadow should spread
                                           blurRadius:
@@ -818,8 +816,8 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                                           var longitude =
                                               double.tryParse(long) ?? 0;
                                         
-                                            debugPrint( "lattttt  " + latitude.toString());
-                                              debugPrint("longggg   " + longitude.toString());
+                                            debugPrint( "lattttt  $latitude");
+                                              debugPrint("longggg   $longitude");
                                         
                                         
                                           dashboardBloc.add(MarkAttendance(
@@ -1134,7 +1132,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                                
                               }
       
-                              return Container(
+                              return SizedBox(
                                 height: 425.h,
                                   child: _widgetOptions.elementAt(_selectedIndex));
                             })
@@ -1150,7 +1148,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                                     height: 100.h,
                                   ),
                                   CustomImageProvider(
-                                    image: AppImages.blank_list_img,
+                                    image: AppImages.blankListImg,
                                     height: 100.h,
                                     width: 100.w,
                                   ),
@@ -1244,7 +1242,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
           // permission = await Geolocator.requestPermission();
         } else if (permission == LocationPermission.deniedForever) {
         
-         ;
+
           openAppSettings();
           //  permission = await Geolocator.requestPermission();
         } else if (permission == LocationPermission.always ||

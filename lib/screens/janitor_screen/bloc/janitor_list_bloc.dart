@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/bloc/janitor_list_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/bloc/janitor_list_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_list_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/netwrok/janitor_list_service.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_screen/bloc/janitor_list_event.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_screen/bloc/janitor_list_state.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_screen/data/model/janitor_list_model.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_screen/data/netwrok/janitor_list_service.dart';
 
 import '../../../core/network/error_handler.dart';
 
@@ -13,7 +14,7 @@ class JanitorListBloc extends Bloc<JanitorsListEvent, JanitorListState> {
   final JanitorListService janitorListService =
       JanitorListService(dio: GetIt.instance());
   List<JanitorListModel> data = [];
-  var clusterId;
+  String? clusterId;
   bool isJanitorRemoved = false;
 
   JanitorListBloc() : super(JanitorListInitial()) {
@@ -27,11 +28,11 @@ class JanitorListBloc extends Bloc<JanitorsListEvent, JanitorListState> {
     try {
       emit(JanitorListLoading());
       data =
-          await janitorListService.getAllJanitors(clusterId: event.cluster_id,
+          await janitorListService.getAllJanitors(clusterId: event.clusterId,
            endDate: event.endDate,
            startDate: event.startDate
           );
-      clusterId = event.cluster_id;
+      clusterId = event.clusterId!;
       emit(JanitorListSuccess(data: data, fromReassign: false ));
     } catch (e) {
       emit(JanitorListError(error: ErrorHandler.handle(e).failure ));
@@ -41,17 +42,16 @@ class JanitorListBloc extends Bloc<JanitorsListEvent, JanitorListState> {
   FutureOr<void> _mapGetReAssignTaskToState(
       ReassignTask event, Emitter<JanitorListState> emit) async {
     try {
-      emit(ReassignTaskLoading(message: "Loading Please Wait..."));
-            print(" reassign janitor id ${event.janitor_id}");
-                 print(" reassign ${event.id }");
+      emit(const ReassignTaskLoading(message: "Loading Please Wait..."));
+            debugPrint(" reassign janitor id ${event.janitorId}");
+      debugPrint(" reassign ${event.id }");
       await janitorListService.reAssignTaskToJanitor(
-          id: event.id, janitor_id: event.janitor_id , isRejected: event.isRejected!);
+          id: event.id, janitorId: event.janitorId , isRejected: event.isRejected!);
       data = await janitorListService.getAllJanitors(clusterId: clusterId);
-         print(" jaintors  id ${event.janitor_id}");
 
-      data.removeWhere((janitor) => janitor.id == event.janitor_id);
+      data.removeWhere((janitor) => janitor.id == event.janitorId);
 
-      emit(ReassignTaskSuccessful());
+      emit( const ReassignTaskSuccessful());
       emit(JanitorListSuccess(data: data, fromReassign: event.fromReassign!));
      
     

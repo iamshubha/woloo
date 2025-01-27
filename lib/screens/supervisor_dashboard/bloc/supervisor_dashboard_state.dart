@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_list_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
+import 'package:woloo_smart_hygiene/core/network/failure.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_screen/data/model/janitor_list_model.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/model/supervisor_model_dashboard.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class SupervisorDashboardState extends Equatable {
@@ -67,7 +67,7 @@ class AssignTaskLoading extends SupervisorDashboardState {
 
 class AssignTaskSuccessful extends SupervisorDashboardState {
   final List<JanitorListModel> data;
-  AssignTaskSuccessful({required this.data});
+  const AssignTaskSuccessful({required this.data});
   @override
   List<Object> get props => [data];
 }

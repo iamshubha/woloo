@@ -1,14 +1,14 @@
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/disabled_checkbox_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/empty_list_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/error_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_details_screen/bloc/submitted_task_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_details_screen/bloc/submitted_task_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_details_screen/bloc/submitted_task_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_details_screen/data/model/Submitted_tasks_model.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/disabled_checkbox_widget.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/empty_list_widget.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/error_widget.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/task_details_screen/bloc/submitted_task_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/task_details_screen/bloc/submitted_task_event.dart';
+import 'package:woloo_smart_hygiene/screens/task_details_screen/bloc/submitted_task_state.dart';
+import 'package:woloo_smart_hygiene/screens/task_details_screen/data/model/submitted_tasks_model.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -27,13 +27,13 @@ class TaskDetailsScreen extends StatefulWidget {
    final TabController? tabController;
 
   const TaskDetailsScreen({
-    Key? key,
+    super.key,
     required this.isFromDashboard,
     required this.isFromFacility,
     required this.allocationId,
     this.isApproved = false,
     this.tabController
-  }) : super(key: key);
+  });
 
   @override
   State<TaskDetailsScreen> createState() => _TaskDetailsScreenState();
@@ -56,8 +56,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
 
   @override
   void initState() {
-   
-    print("isApproved --- >" + widget.isApproved.toString());
+
+    debugPrint("isApproved --- >${widget.isApproved}");
     submittedTaskBloc
         .add(GetAllSubmittedTasks(allocationId: widget.allocationId));
         _supervisorDashboardBloc = GetIt.instance<SupervisorDashboardBloc>();
@@ -106,10 +106,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
         body: BlocConsumer(
           bloc: submittedTaskBloc,
           listener: (context, state) {
-             print(" details  $state");
+            debugPrint(" details  $state");
             if (state is GetSubmittedTasksSuccess) {
               EasyLoading.dismiss();
-                print("images ---- ${submittedTaskModel.taskImages}");
+              debugPrint("images ---- ${submittedTaskModel.taskImages}");
                    //_supervisorDashboardBloc.add(GetSupervisorDashboardData());
             }
             if (state is UpdateStatusSuccessful) {
@@ -117,7 +117,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
 
           //: widget.tabController!.animateTo(0);
                 
-              _supervisorDashboardBloc.add(GetSupervisorDashboardData());
+              _supervisorDashboardBloc.add(const GetSupervisorDashboardData());
              // state.
               EasyLoading.dismiss();
              
@@ -244,7 +244,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                              children: [
                                GestureDetector(
                                  onTap: () {
-                                   print(widget.allocationId);
+                                   debugPrint(widget.allocationId);
                                    submittedTaskBloc.add(UpdateStatus(
                                        id: widget.allocationId, status: 7));
                                  },
@@ -320,13 +320,13 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
             if 
             (state is UpdateStatusSuccessful ){
 
-               _supervisorDashboardBloc.add(GetSupervisorDashboardData());
+               _supervisorDashboardBloc.add(const GetSupervisorDashboardData());
             }
             if (state is UpdateStatusError) {
               EasyLoading.dismiss();
               return CustomErrorWidget(error: state.error.message);
             }
-            return  SizedBox();
+            return  const SizedBox();
 
           }),
       );

@@ -1,5 +1,5 @@
-/// label : "Nigeria"
-/// value : 1
+// label : "Nigeria"
+// value : 1
 
 class ItemModel {
   ItemModel({

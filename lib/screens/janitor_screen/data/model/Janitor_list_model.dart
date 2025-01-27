@@ -1,15 +1,16 @@
-/// id : 12
-/// name : "Snehal"
-/// mobile : "9284102357"
-/// cluster_id : 20
-/// cluster_name : "Accenture"
-/// pincode : 454565
-/// start_time : "7th Aug, 11:00 AM"
-/// end_time : "7th Aug, 12:00 PM"
-/// janitor_id : 12
-/// total_task_count : "1"
-/// pending_task_count : "0"
-/// isPresent : true
+// id : 12
+// name : "Snehal"
+// mobile : "9284102357"
+// cluster_id : 20
+// cluster_name : "Accenture"
+// pincode : 454565
+// start_time : "7th Aug, 11:00 AM"
+// end_time : "7th Aug, 12:00 PM"
+// janitor_id : 12
+// total_task_count : "1"
+// pending_task_count : "0"
+// isPresent : true
+
 
 class JanitorListModel {
   JanitorListModel({
@@ -100,8 +101,6 @@ class JanitorListModel {
     map['rejects'] = rejectsTaskCount;
     map['accepted'] = acceptedTaskCount;
     map['ongoing'] = onGoingTaskCount;
-
-
     return map;
   }
 }

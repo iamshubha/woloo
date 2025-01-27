@@ -1,8 +1,9 @@
-import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
-import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/create_task_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model.dart';
+import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
+import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/screens/task_list/data/model/create_task_model.dart';
+import 'package:woloo_smart_hygiene/screens/task_list/data/model/task_list_model.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 class TaskListService {
   final DioClient dio;
@@ -24,7 +25,9 @@ class TaskListService {
           "id": id,
         },
       );
-      print(response['results']?.toString() == '[]');
+      if (kDebugMode) {
+        print(response['results']?.toString() == '[]');
+      }
       if (response['results']?.toString() == '[]') {
         return TaskListModel(templateId: id.toString(), tasks: []);
       }

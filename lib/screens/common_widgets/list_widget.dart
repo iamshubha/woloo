@@ -1,11 +1,11 @@
-import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
-import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/bloc/facility_list_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/bloc/facility_list_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/bloc/facility_list_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/data/model/Facility_list_model.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
-import 'package:Woloo_Smart_hygiene/utils/date_utils.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/screens/choose_facility_screen/bloc/facility_list_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/choose_facility_screen/bloc/facility_list_event.dart';
+import 'package:woloo_smart_hygiene/screens/choose_facility_screen/bloc/facility_list_state.dart';
+import 'package:woloo_smart_hygiene/screens/choose_facility_screen/data/model/facility_list_model.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/utils/date_utils.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,12 +52,11 @@ class _ListWidgetState extends State<ListWidget> {
   List<FacilityListModel> _data = [];
   List<FacilityListModel> _search = [];
   GlobalStorage globalStorage = GetIt.instance();
-  FacilityListBloc _facilityListBloc = FacilityListBloc();
+  final FacilityListBloc _facilityListBloc = FacilityListBloc();
   bool isSelected = false;
-  var _task;
   @override
   void initState() {
-    _facilityListBloc.add(GetAllFacility(janitorId: widget.janitorId ?? ''));
+    _facilityListBloc.add(GetAllFacility(janitorId: widget.janitorId  ));
     widget.controller.addListener(() {
       setState(() {
         if (widget.controller.text.isEmpty) {
@@ -88,7 +87,7 @@ class _ListWidgetState extends State<ListWidget> {
 
           setState(() {
             _data = state.data.where( (e) => e.requestType ==   widget.type).toList();
-             print("sdfsfsdfs ${ widget.type} ");
+            debugPrint("sdfsfsdfs ${ widget.type} ");
             _search = _data;
             widget.onSetData(_data);
             widget.onSetData(_search);
@@ -116,10 +115,10 @@ class _ListWidgetState extends State<ListWidget> {
         return RefreshIndicator(
           onRefresh: () {
             return Future.delayed(
-              Duration(seconds: 1),
+              const Duration(seconds: 1),
               () {
                 _facilityListBloc
-                    .add(GetAllFacility(janitorId: widget.janitorId ?? ''));
+                    .add(GetAllFacility(janitorId: widget.janitorId  ));
               },
             );
           },
@@ -146,7 +145,7 @@ class _ListWidgetState extends State<ListWidget> {
                             widget.checkList[index], _search[index], _data);
                       });
                     } catch (e) {
-                      print("onTapppppp" + e.toString());
+                      debugPrint("onTapppppp$e");
                     }
                   },
                   child: Container(
@@ -163,12 +162,12 @@ class _ListWidgetState extends State<ListWidget> {
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black
-                              .withOpacity(0.2), // Shadow color
+                              .withValues( alpha: 0.2), // Shadow color
                           spreadRadius:
                           1, // How wide the shadow should spread
                           blurRadius:
                           10, // The blur effect of the shadow
-                          offset: Offset(0,
+                          offset: const Offset(0,
                               0), // No offset for shadow on all sides
                         ),
                       ],
@@ -205,7 +204,7 @@ class _ListWidgetState extends State<ListWidget> {
                                           overflow: TextOverflow.ellipsis,
                                           style:
                                           AppTextStyle.font12bold.copyWith(
-                                            color: AppColors.ListTitleColor,
+                                            color: AppColors.listTitleColor,
                                           )
                                         //  TextStyle(
                                         //   color: AppColors.ListTitleColor,
@@ -255,7 +254,7 @@ class _ListWidgetState extends State<ListWidget> {
                                   "${MydashboardScreenConstants.DESCRIPTION.tr()}: ${_search[index].description ?? ''}",
                                   style: 
                                   AppTextStyle.font12w5.copyWith(
-                                    color: AppColors.ListTitleColor,
+                                    color: AppColors.listTitleColor,
                                   )
                                   // TextStyle(
                                   //   color: AppColors.ListTitleColor,
@@ -273,7 +272,7 @@ class _ListWidgetState extends State<ListWidget> {
                                   "${MydashboardScreenConstants.LOCATION.tr()}: ${_search[index].locationName ?? ''}",
                                   style:
                                   AppTextStyle.font12.copyWith(
-                                     color: AppColors.ListTitleColor,
+                                     color: AppColors.listTitleColor,
                                   )
                                   //  TextStyle(
                                   //   color: AppColors.ListTitleColor,
@@ -341,7 +340,7 @@ class _ListWidgetState extends State<ListWidget> {
 
   String looping(FacilityListModel taskObject) {
     String tastName = '';
-    print("task------->  ${taskObject.toJson()}");
+    debugPrint("task------->  ${taskObject.toJson()}");
     if (taskObject.taskStatus != null) {
       for (var i = 0; i < taskObject.taskStatus!.length; i++) {
         tastName += taskObject.taskStatus![i].taskName!;

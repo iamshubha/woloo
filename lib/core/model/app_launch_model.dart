@@ -1,5 +1,5 @@
-/// last_attendance : "check_in"
-/// last_attendance_date : "2023-10-09T07:26:54.627Z"
+// last_attendance : "check_in"
+// last_attendance_date : "2023-10-09T07:26:54.627Z"
 
 class AppLaunchModel {
   AppLaunchModel({

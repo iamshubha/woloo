@@ -1,7 +1,7 @@
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
+import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:lottie/lottie.dart';
 
 
@@ -10,7 +10,7 @@ import 'package:lottie/lottie.dart';
 class EmptyListWidget extends StatelessWidget {
  final String? filter;
 
-  const EmptyListWidget({Key? key,  required this.filter}) : super(key: key);
+  const EmptyListWidget({super.key,  required this.filter});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class EmptyListWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Lottie.asset(
-          AppImages.empty_list_animation,
+          AppImages.emptyListAnimation,
           width: 200.w,
           height: 100.h,
           repeat: false,

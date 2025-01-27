@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
-import 'package:Woloo_Smart_hygiene/core/service/core_service.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/core/service/core_service.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
@@ -43,7 +44,7 @@ CoreBloc() : super(CoreInitial()) {
    //   if (token.isNotEmpty) {
        var response =  await coreService.updateFCMToken(token: event.token.toString());
    //   }
-           print("prooooooooo${response.first.profileImage}");
+           debugPrint("prooooooooo${response.first.profileImage}");
         globalStorage.saveProfile(profileName: response.first.name!);
 
         globalStorage.saveProfileImg(profileimg: response.first.profileImage!);

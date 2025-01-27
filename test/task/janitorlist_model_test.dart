@@ -1,4 +1,4 @@
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_list_model.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_screen/data/model/janitor_list_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

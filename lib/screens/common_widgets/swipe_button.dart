@@ -25,7 +25,7 @@ Widget swipeRightButton(CardSwiperController controller,
       // Lets animate the button according to the
       // progress. Here we'll color the button more grey as we swipe away from
       // it.
-      final Color color =    const Color(0xFFD9D9D9);
+      const Color color =    Color(0xFFD9D9D9);
 
 
       return GestureDetector(
@@ -47,7 +47,7 @@ Widget swipeRightButton(CardSwiperController controller,
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: color.withOpacity(0.9),
+                color: color.withValues(alpha: 0.9),
                 spreadRadius: -10,
                 blurRadius: 20,
                 offset: const Offset(0, 20), // changes position of shadow
@@ -82,7 +82,7 @@ Widget swipeLeftButton(CardSwiperController controller, int length ) {
     //               position.offset.toAxisDirection().isHorizontal
     //           ? -1 * position.progressRelativeToThreshold.clamp(-1, 1)
     //           : 0;
-      final Color color =     const Color(0xFFD9D9D9);
+      const Color color =     Color(0xFFD9D9D9);
 
       return GestureDetector(
         onTap:
@@ -115,7 +115,7 @@ Widget swipeLeftButton(CardSwiperController controller, int length ) {
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: color.withOpacity(0.9),
+                color: color.withValues(alpha:0.9),
                 spreadRadius: -10,
                 blurRadius: 20,
                 offset: const Offset(0, 20), // changes position of shadow
@@ -143,8 +143,8 @@ Widget unswipeButton(CardSwiperController controller) {
     
     //controller.unswipe(),
     child: Container(
-      decoration: BoxDecoration(
-        color:   const Color(0xFFD9D9D9),
+      decoration: const BoxDecoration(
+        color:   Color(0xFFD9D9D9),
         shape: BoxShape.circle,
 
       ),

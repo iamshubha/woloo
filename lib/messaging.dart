@@ -1,18 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:ui';
-import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
-import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/bloc/issue_list_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/bloc/issue_list_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_event.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/screens/issue_list_screen/bloc/issue_list_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/issue_list_screen/bloc/issue_list_event.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_event.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
-import 'package:get/utils.dart';
 import 'package:get_it/get_it.dart';
-
 import 'screens/dashboard/bloc/dashboard_bloc.dart';
 import 'screens/dashboard/bloc/dashboard_event.dart';
 import 'screens/dashboard/controller/dash_controller.dart';
@@ -51,14 +49,16 @@ class Messaging {
         if(role == 1){
 
                // dashController.mapGetDashboardToState();
-          print("iin roll calll");
-          dashboardBloc.add(GetTaskTamplates());
+
+          dashboardBloc.add( const GetTaskTamplates());
       //  GetIt.instance<DashboardBloc>().add(GetTaskTamplates());
 
            
         }
       //
-      } catch (e) {}
+      } catch (e) {
+         debugPrint(e.toString());
+      }
 
     });
 
@@ -71,7 +71,7 @@ class Messaging {
       notificationSettings,
 
       onDidReceiveNotificationResponse: (details) {
-          print("notificatiss recived on local $details ");
+
       },
     );
   }
@@ -135,7 +135,7 @@ class Messaging {
 Future<void> backgroundNotificationHandler(RemoteMessage message) async {
   Messaging messaging = Messaging();
  
-    print("backgroun  notitficationssssssss");
+
   var flNotificationsPlugin = FlutterLocalNotificationsPlugin();
   var notificationSettings = InitializationSettings(
     android: messaging.androidNotificationSettings(),

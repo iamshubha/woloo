@@ -1,12 +1,11 @@
-/// cluster_id : 20
-/// cluster_name : "Accenture"
-/// pincode : 454565
-/// janitor_id : 12
-/// janitor_name : "Snehal"
-/// completed_task : 2
-/// pending_task : 0
-/// total_task : 2
-
+// cluster_id : 20
+// cluster_name : "Accenture"
+// pincode : 454565
+// janitor_id : 12
+// janitor_name : "Snehal"
+// completed_task : 2
+// pending_task : 0
+// total_task : 2
 // To parse this JSON data, do
 //
 //     final clusterModel = clusterModelFromJson(jsonString);

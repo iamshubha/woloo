@@ -1,4 +1,4 @@
-import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/create_task_model.dart';
+import 'package:woloo_smart_hygiene/screens/task_list/data/model/create_task_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class TaskListEvent extends Equatable {

@@ -1,7 +1,7 @@
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
 
 class PopUpButtonWidget extends StatefulWidget {
   final String text;
@@ -9,8 +9,7 @@ class PopUpButtonWidget extends StatefulWidget {
   final Function onTap;
 
   const PopUpButtonWidget(
-      {Key? key, required this.text, required this.color, required this.onTap})
-      : super(key: key);
+      {super.key, required this.text, required this.color, required this.onTap});
 
   @override
   State<PopUpButtonWidget> createState() => _PopUpButtonWidgetState();
@@ -31,7 +30,7 @@ class _PopUpButtonWidgetState extends State<PopUpButtonWidget> {
         decoration: BoxDecoration(
                boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2), // Shadow color
+                          color: Colors.black.withValues(alpha: 0.2), // Shadow color
                           spreadRadius: 1, // How wide the shadow should spread
                           blurRadius: 10, // The blur effect of the shadow
                           offset: const Offset(0,

@@ -1,9 +1,10 @@
 import 'dart:async';
-import 'package:bloc/bloc.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issue_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issue_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/network/report_issue_service.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/bloc/report_issue_event.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/bloc/report_issue_state.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/data/network/report_issue_service.dart';
 
 import '../../../core/network/error_handler.dart';
 
@@ -92,12 +93,12 @@ class ReportIssueBloc extends Bloc<ReportIssueEvent, ReportIssueState> {
     try {
       emit(ReportIssueLoading());
       var data = await reportIssueService.reportIssue(
-          template_id: event.template_id,
-          facility_id: event.facility_id,
+          templateId: event.templateId,
+          facilityId: event.facilityId,
           description: event.description,
-          task_images: event.task_images,
-          janitor_id: event.janitor_id,
-          task_list: event.taskList);
+          taskImages: event.taskImages,
+          janitorId: event.janitorId,
+          taskList : event.taskList);
 
       emit(ReportIssueSuccess(data: data));
     } catch (e) {

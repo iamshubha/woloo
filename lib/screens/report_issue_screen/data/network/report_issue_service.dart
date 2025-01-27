@@ -1,15 +1,15 @@
 import 'dart:io';
 
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/cluster_dropdown_model.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/data/model/cluster_dropdown_model.dart';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
-import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/janitor_dropdown_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/report_issue_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/task_names_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/facility_dropdown_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model.dart';
+import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
+import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/data/model/janitor_dropdown_model.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/data/model/report_issue_model.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/data/model/task_names_model.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/data/model/facility_dropdown_model.dart';
+import 'package:woloo_smart_hygiene/screens/task_list/data/model/task_list_model.dart';
 
 class ReportIssueService {
   final DioClient dio;
@@ -104,7 +104,7 @@ class ReportIssueService {
           "id": id,
         },
       );
-      print(response['results']?.toString() == '[]');
+
       if (response['results']?.toString() == '[]') {
         return TaskListModel(templateId: id.toString(), tasks: []);
       }
@@ -115,32 +115,32 @@ class ReportIssueService {
   }
 
   Future<ReportIssueModel> reportIssue({
-    required String template_id,
-    required int facility_id,
+    required String templateId,
+    required int facilityId,
     required String description,
-    required File task_images,
-    required int janitor_id,
-    required List<String> task_list,
+    required File taskImages,
+    required int janitorId,
+    required List<String> taskList,
   }) async {
     try {
       FormData formData = FormData();
 
       /// Add image
       formData = FormData.fromMap({
-        "template_id": template_id,
-        "facility_id": facility_id,
+        "template_id": templateId,
+        "facility_id": facilityId,
         "description": description,
-        "janitor_id": janitor_id,
-        "task_list": task_list.toString(),
+        "janitor_id": janitorId,
+        "task_list": taskList.toString(),
       });
 
       formData.files.addAll([
         MapEntry(
           "task_images",
           await MultipartFile.fromFile(
-            task_images.path,
-            filename: getFileName(task_images.path),
-            contentType: MediaType(getType(task_images.path), getFileExtension(task_images.path)),
+            taskImages.path,
+            filename: getFileName(taskImages.path),
+            contentType: MediaType(getType(taskImages.path), getFileExtension(taskImages.path)),
           ),
         ),
       ]);

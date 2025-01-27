@@ -1,21 +1,21 @@
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/leading_button.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_details_screen/view/sup_jani_attendance_screen.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/leading_button.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_details_screen/view/sup_jani_attendance_screen.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 
 import '../../common_widgets/error_widget.dart';
 import '../../common_widgets/image_provider.dart';
 import '../../janitor_screen/bloc/janitor_list_bloc.dart';
 import '../../janitor_screen/bloc/janitor_list_event.dart';
 import '../../janitor_screen/bloc/janitor_list_state.dart';
-import '../../janitor_screen/data/model/Janitor_list_model.dart';
+import '../../janitor_screen/data/model/janitor_list_model.dart';
 import 'chart.dart';
 
 class JanitorDetails extends StatefulWidget {
@@ -23,11 +23,11 @@ class JanitorDetails extends StatefulWidget {
   final String shift;
   final String name;
   final String mobile;
-  final String check_in_time;
-  final String check_out_time;
-  final String complete_task;
-  final String pending_task;
-  final String total_task;
+  final String checkInTime;
+  final String checkOutTime;
+  final String completeTask;
+  final String pendingTask;
+  final String totalTask;
   final String profile;
   final String baseUrl;
   final String clusterId;
@@ -43,11 +43,11 @@ class JanitorDetails extends StatefulWidget {
     required this.shift,
     required this.name,
     required this.mobile,
-    required this.check_in_time,
-    required this.check_out_time,
-    required this.complete_task,
-    required this.pending_task,
-    required this.total_task,
+    required this.checkInTime,
+    required this.checkOutTime,
+    required this.completeTask,
+    required this.pendingTask,
+    required this.totalTask,
     required this.isPresent,
     required this.profile,
     required this.clusterId,
@@ -64,14 +64,14 @@ class JanitorDetails extends StatefulWidget {
 
 class _JanitorDetailsState extends State<JanitorDetails> {
    List chipLabels = ['Today', '7 days', 'Custom'];
-   JanitorListBloc _janitorListBloc = JanitorListBloc();
+   final JanitorListBloc _janitorListBloc = JanitorListBloc();
     int? _selectedChipIndex;
    List<JanitorListModel> janitorData = [];
 
 
      @override
   void initState() {
-    // TODO: implement initState
+   
     super.initState();
     _selectedChipIndex = 0;
     if( _selectedChipIndex ==0 ){
@@ -83,7 +83,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
       _janitorListBloc.add(GetAllJanitors(
         endDate: enddayformat,
         startDate: startdayformat,
-        cluster_id: widget.clusterId ,
+        clusterId: widget.clusterId ,
       ));
 
     }
@@ -100,7 +100,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
       
       appBar: AppBar(
         leadingWidth: 100,
-        leading:LeadingButton(),
+        leading:const LeadingButton(),
         
         //  IconButton(
         //   icon: const Icon(
@@ -267,8 +267,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                           ),
                           SizedBox(height: 5.h),
                           Text(
-                            "Mob :" +
-                            widget.mobile,
+                            "Mob :${widget.mobile}",
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style:
@@ -350,14 +349,14 @@ class _JanitorDetailsState extends State<JanitorDetails> {
               Container(
                 height: 90.h,
                 decoration: BoxDecoration(
-                  color: Color(0xff7AE9F9),
+                  color: const Color(0xff7AE9F9),
                   borderRadius: BorderRadius.circular(25.r)
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
 
-                    CustomImageProvider( image: "assets/sunny 1.png",
+                    const CustomImageProvider( image: "assets/sunny 1.png",
                     width: 70,
                     height: 70,
                     ),
@@ -410,7 +409,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                     child: Container(
                       // width: MediaQuery.of(context).size.width/1.8,
                       decoration: BoxDecoration(
-                        color: Color(0xff76E16D),
+                        color: const Color(0xff76E16D),
                         borderRadius: BorderRadius.circular(25.r)
                       ),
                       child: Padding(
@@ -424,7 +423,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                             Text(
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.visible,
-                                "${MyJanitorsDetailsScreenConstants.CHECK_IN.tr()}",
+                                MyJanitorsDetailsScreenConstants.CHECK_IN.tr(),
                                 style:
                                 AppTextStyle.font20bold.copyWith(
                                   color: AppColors.black,
@@ -438,7 +437,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                             SizedBox(
                               height: 8.h,
                             ),
-                            widget.check_in_time == "Invalid date" ?
+                            widget.checkInTime == "Invalid date" ?
                             Center(
                               child: Text(
                                   "_",
@@ -449,7 +448,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                             )
                                 :
                             Text(
-                                widget.check_in_time.split(",").last,
+                                widget.checkInTime.split(",").last,
                                 style:
                                 AppTextStyle.font20bold.copyWith(
                                   color: AppColors.black,
@@ -481,7 +480,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                     flex: 4,
                     child: Container(
                       decoration: BoxDecoration(
-                          color: Color(0xffE9AAAA),
+                          color: const Color(0xffE9AAAA),
                           borderRadius: BorderRadius.circular(25.r)
                       ),
                       child: Padding(
@@ -495,7 +494,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                             Text(
                                 overflow: TextOverflow.visible,
                                 textAlign: TextAlign.center,
-                                "${MyJanitorsDetailsScreenConstants.CHECK_OUT.tr()}",
+                                MyJanitorsDetailsScreenConstants.CHECK_OUT.tr(),
                                 style:
                                 AppTextStyle.font20bold.copyWith(
                                   color: AppColors.black,
@@ -509,7 +508,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                             SizedBox(
                               height: 8.h,
                             ),
-                            widget.check_in_time == "Invalid date" ?
+                            widget.checkInTime == "Invalid date" ?
                             Center(
                               child: Text(
                                   "_",
@@ -520,7 +519,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                             )
                                 :
                             Text(
-                                widget.check_out_time.split(",").last,
+                                widget.checkOutTime.split(",").last,
                               textAlign: TextAlign.center,
                                 style:
                                 AppTextStyle.font20bold.copyWith(
@@ -547,7 +546,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                height: 12.h,
              ),
              //_buildSingleDatePickerWithValue(),
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: 50,
                 // flex: 6,
@@ -562,7 +561,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                         InkWell(
                           onTap: ()async{
 
-                              print("ddd");
+
                               // var results = await showCalendarDatePicker2Dialog(
                               //   context: context,
                               //   config: CalendarDatePicker2WithActionButtonsConfig(),
@@ -616,13 +615,13 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                                 _janitorListBloc.add(GetAllJanitors(
                                   endDate: enddayformat,
                                   startDate: startdayformat,
-                                  cluster_id: widget.clusterId ,
+                                  clusterId: widget.clusterId ,
                                 ));
 
                               }else
 
                               if(_selectedChipIndex == 1){
-                                var startdate =    DateTime.now().subtract( Duration( days: 7) );
+                                var startdate =    DateTime.now().subtract( const Duration( days: 7) );
                                 var endDate =  DateTime.now();
 
                                 var startdayformat =    DateFormat('yyyy-MM-dd').format(startdate);
@@ -630,7 +629,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                                 _janitorListBloc.add(GetAllJanitors(
                                   endDate: enddayformat,
                                   startDate: startdayformat,
-                                  cluster_id: widget.clusterId ,
+                                  clusterId: widget.clusterId ,
                                 ));
                               }
                              else
@@ -646,7 +645,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                                        disabledDayTextStyle:
 
 
-                                       TextStyle(
+                                       const TextStyle(
                                            color: AppColors.greyBorder
                                        )
 
@@ -663,13 +662,13 @@ class _JanitorDetailsState extends State<JanitorDetails> {
 
                                  ) ;
 
-                                  print(" resuel ${results![1]}");
+                                  debugPrint(" resuel ${results![1]}");
                                  var startdayformat =    DateFormat('yyyy-MM-dd').format(results.first!);
                                  var enddayformat =    DateFormat('yyyy-MM-dd').format(results[1]!);
                                  _janitorListBloc.add(GetAllJanitors(
                                    endDate: enddayformat,
                                    startDate: startdayformat,
-                                   cluster_id: widget.clusterId ,
+                                   clusterId: widget.clusterId ,
                                  ));
                                }
 
@@ -711,7 +710,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
      else if ( state is JanitorListSuccess ){
         EasyLoading.dismiss();
       janitorData  =   state.data;
-        print("date ${widget.id}");
+        debugPrint("date ${widget.id}");
 
      var   temp = janitorData.where((e) =>  e.id == widget.id).toList();
 
@@ -736,9 +735,9 @@ class _JanitorDetailsState extends State<JanitorDetails> {
                         :
 
                     Chart(
-                    complatedTask: widget.complete_task,
-                    pendingTask: widget.pending_task,
-                    totalTask: widget.total_task,
+                    complatedTask: widget.completeTask,
+                    pendingTask: widget.pendingTask,
+                    totalTask: widget.totalTask,
                       accetedTask: widget.accetedTask,
                       ongoingTask:widget.ongoingTask,
                       rejectedTask:widget.rejectedTask,
@@ -754,7 +753,7 @@ class _JanitorDetailsState extends State<JanitorDetails> {
     );
   }
 
- List<DateTime?> _singleDatePickerValueWithDefaultValue = [
+ final List<DateTime?> _singleDatePickerValueWithDefaultValue = [
     DateTime.now()
   ];
 

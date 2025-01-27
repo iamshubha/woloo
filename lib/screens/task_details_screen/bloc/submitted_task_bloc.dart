@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/data/network/supervisor_dashboard_service.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_details_screen/bloc/submitted_task_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_details_screen/bloc/submitted_task_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_details_screen/data/network/submitted_task_service.dart';
-import 'package:bloc/bloc.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/data/network/supervisor_dashboard_service.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/model/supervisor_model_dashboard.dart';
+import 'package:woloo_smart_hygiene/screens/task_details_screen/bloc/submitted_task_event.dart';
+import 'package:woloo_smart_hygiene/screens/task_details_screen/bloc/submitted_task_state.dart';
+import 'package:woloo_smart_hygiene/screens/task_details_screen/data/network/submitted_task_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:get_it/get_it.dart';
 
 import '../../../core/network/error_handler.dart';

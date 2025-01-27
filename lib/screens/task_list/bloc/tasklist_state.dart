@@ -1,5 +1,5 @@
-import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model.dart';
+import 'package:woloo_smart_hygiene/core/network/failure.dart';
+import 'package:woloo_smart_hygiene/screens/task_list/data/model/task_list_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class TaskListState extends Equatable {

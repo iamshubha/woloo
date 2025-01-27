@@ -1,8 +1,8 @@
-/// check_in : "-"
-/// check_out : "-"
-/// day_of_week : "Sun"
-/// date : "01"
-/// attendance : "Absent"
+// check_in : "-"
+// check_out : "-"
+// day_of_week : "Sun"
+// date : "01"
+// attendance : "Absent"
 
 class AttendanceHistoryModel {
   AttendanceHistoryModel({

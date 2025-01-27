@@ -1,5 +1,5 @@
-/// id : "57"
-/// template_name : "Washroom Cleaning"
+// id : "57"
+// template_name : "Washroom Cleaning"
 
 class TaskNamesModels {
   TaskNamesModels({

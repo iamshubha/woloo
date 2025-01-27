@@ -1,5 +1,5 @@
-/// id : 62
-/// facility_name : "Gents Restroom"
+// id : 62
+// facility_name : "Gents Restroom"
 
 class FacilityDropdownModel {
   FacilityDropdownModel({

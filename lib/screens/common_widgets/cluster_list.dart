@@ -1,13 +1,13 @@
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Woloo_Smart_hygiene/screens/cluster_screen/bloc/cluster_list_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/cluster_screen/bloc/cluster_list_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/cluster_screen/data/model/Cluster_model.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/screens/cluster_screen/bloc/cluster_list_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/cluster_screen/bloc/cluster_list_event.dart';
+import 'package:woloo_smart_hygiene/screens/cluster_screen/data/model/cluster_model.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 
 import '../../utils/app_color.dart';
 import '../cluster_screen/bloc/cluster_list_state.dart';
@@ -19,11 +19,11 @@ class ClusterListWidget extends StatefulWidget {
      Function searchResult;
   final Function onTapItem;
    ClusterListWidget({
-    Key? key,
+    super.key,
     required this.controller,
     required this.onTapItem,
     required this.searchResult
-  }) : super(key: key);
+  });
 
   @override
   State<ClusterListWidget> createState() => _ClusterListWidgetState();
@@ -31,13 +31,13 @@ class ClusterListWidget extends StatefulWidget {
 
 class _ClusterListWidgetState extends State<ClusterListWidget> {
   int selectedCard = -1;
-  ClusterListBloc _clusterListBloc = ClusterListBloc();
+  final ClusterListBloc _clusterListBloc = ClusterListBloc();
   List<ClusterModel> _search = [];
   List<ClusterModel> _data = [];
 
   @override
   void initState() {
-    _clusterListBloc.add(GetAllClusters());
+    _clusterListBloc.add(const GetAllClusters());
     widget.controller.addListener(() {
        
 
@@ -53,10 +53,8 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
                     .contains(widget.controller.text.toLowerCase()) ??
                 false)
             .toList();
-        print("print me  searc cluster ");
            widget.searchResult(_search);
       });
-
     
     super.initState();
   }
@@ -94,9 +92,9 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
               RefreshIndicator(
             onRefresh: () {
               return Future.delayed(
-                Duration(seconds: 1),
+                const Duration(seconds: 1),
                 () {
-                  _clusterListBloc.add(GetAllClusters());
+                  _clusterListBloc.add(const GetAllClusters());
                 },
               );
             },
@@ -136,11 +134,11 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
                           borderRadius: BorderRadius.circular(25.r),
                                  boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2), // Shadow color
+                        color: Colors.black.withValues( alpha: 0.2), // Shadow color
                         spreadRadius: 1, // How wide the shadow should spread
                         blurRadius: 10, // The blur effect of the shadow
                         offset:
-                            Offset(0, 0), // No offset for shadow on all sides
+                            const Offset(0, 0), // No offset for shadow on all sides
                       ),
                     ],
                   
@@ -186,7 +184,7 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
                                           Text(
                                               _search[index].pincode  == null ? "-" :
                                       
-                                              _search[index].pincode.toString() ?? '',
+                                              _search[index].pincode.toString(),
                                               style:
                                               AppTextStyle.font14.copyWith(
                                                 color: AppColors.clusterTitleColor,
@@ -224,9 +222,9 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
 
                                               Container(
                                                  padding
-                                           : EdgeInsets.symmetric( horizontal: 8, vertical: 5),
+                                           : const EdgeInsets.symmetric( horizontal: 8, vertical: 5),
                                                  decoration: BoxDecoration(
-                                                   color: Color(0xff76E16D),
+                                                   color: const Color(0xff76E16D),
                                                    borderRadius: BorderRadius.circular(25.r),
 
                                            ),
@@ -238,9 +236,9 @@ class _ClusterListWidgetState extends State<ClusterListWidget> {
                                               ),
                                               Container(
                                                 padding
-                                                    : EdgeInsets.symmetric( horizontal: 8, vertical: 5),
+                                                    : const EdgeInsets.symmetric( horizontal: 8, vertical: 5),
                                                 decoration: BoxDecoration(
-                                                  color: Color(0xffE9AAAA),
+                                                  color: const Color(0xffE9AAAA),
                                                   borderRadius: BorderRadius.circular(25.r),
                                                 ),
 

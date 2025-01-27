@@ -1,13 +1,13 @@
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/janitor_list.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_details_screen/view/janitor_details.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_list_model.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/janitor_list.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_details_screen/view/janitor_details.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_screen/data/model/janitor_list_model.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 
 import '../../common_widgets/leading_button.dart';
 import '../bloc/janitor_list_bloc.dart';
@@ -21,9 +21,9 @@ class JanitorList extends StatefulWidget {
   final String? janitorName;
   final bool? rejected;
   final List<String>? allocationId;
-  JanitorList({Key? key,
+  const JanitorList({super.key,
       this.janitorName,
-    required this.isFromCluster, required this.isFromDashboard, required this.isFromDashboardAssignment, this.allocationId, this.clusterId, required this.rejected}) : super(key: key);
+    required this.isFromCluster, required this.isFromDashboard, required this.isFromDashboardAssignment, this.allocationId, this.clusterId, required this.rejected});
 
   @override
   State<JanitorList> createState() => _JanitorListState();
@@ -71,7 +71,7 @@ class _JanitorListState extends State<JanitorList> {
         leading: widget.isFromCluster || widget.isFromDashboardAssignment
             ?
 
-             LeadingButton()
+             const LeadingButton()
             
             //  IconButton(
             //     color: AppColors.black30,
@@ -127,11 +127,11 @@ class _JanitorListState extends State<JanitorList> {
                     borderRadius: BorderRadius.circular(25.r),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2), // Shadow color
+                        color: Colors.black.withValues( alpha: 0.2), // Shadow color
                         spreadRadius: 1, // How wide the shadow should spread
                         blurRadius: 10, // The blur effect of the shadow
                         offset:
-                            Offset(0, 0), // No offset for shadow on all sides
+                            const Offset(0, 0), // No offset for shadow on all sides
                       ),
                     ],
 
@@ -144,13 +144,13 @@ class _JanitorListState extends State<JanitorList> {
                   decoration: InputDecoration(
                     hintText: MyFacilityListConstants.SEARCH.tr(),
                     prefixIcon: IconButton(
-                      icon: Icon(Icons.search),
+                      icon: const Icon(Icons.search),
                       onPressed: () {
                         
                       },
 
                     ),
-                   contentPadding:EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 10.0),
+                   contentPadding:const EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 10.0),
                     border: InputBorder.none,
                     ),
                   ),
@@ -202,11 +202,11 @@ class _JanitorListState extends State<JanitorList> {
                               child: JanitorDetails(
                                 id: data.id ?? '',
                                 shift: data.shift.toString(),
-                                check_in_time: data.startTime.toString(),
-                                check_out_time: data.endTime.toString(),
-                                complete_task: data.completedTaskCount ?? "" ,
-                                pending_task: data.pendingTaskCount.toString(),
-                                total_task: data.totalTaskCount.toString(),
+                                checkInTime: data.startTime.toString(),
+                                checkOutTime: data.endTime.toString(),
+                                completeTask: data.completedTaskCount ?? "" ,
+                                pendingTask: data.pendingTaskCount.toString(),
+                                totalTask: data.totalTaskCount.toString(),
                                 name: data.name.toString(),
                                 mobile: data.mobile.toString(),
                                 isPresent: data.isPresent ?? false,
@@ -234,11 +234,11 @@ class _JanitorListState extends State<JanitorList> {
                               child: JanitorDetails(
                                                         id: data.id ?? '',
                                                         shift: data.shift.toString(),
-                                                        check_in_time: data.startTime.toString(),
-                                                        check_out_time: data.endTime.toString(),
-                                                        complete_task: data.completedTaskCount ?? "" ,
-                                                        pending_task: data.pendingTaskCount.toString(),
-                                                        total_task: data.totalTaskCount.toString(),
+                                                        checkInTime: data.startTime.toString(),
+                                                        checkOutTime: data.endTime.toString(),
+                                                        completeTask: data.completedTaskCount ?? "" ,
+                                                        pendingTask: data.pendingTaskCount.toString(),
+                                                        totalTask: data.totalTaskCount.toString(),
                                                         name: data.name.toString(),
                                                         mobile: data.mobile.toString(),
                                                         isPresent: data.isPresent ?? false,

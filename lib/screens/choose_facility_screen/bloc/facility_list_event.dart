@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:equatable/equatable.dart';
 
-import '../data/model/Facility_list_model.dart';
+import '../data/model/facility_list_model.dart';
 
 abstract class FacilityListEvent extends Equatable {
   const FacilityListEvent();

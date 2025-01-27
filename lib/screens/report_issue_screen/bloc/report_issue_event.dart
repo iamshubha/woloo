@@ -49,28 +49,28 @@ class GetAllTaskList extends ReportIssueEvent {
 }
 
 class ReportIssue extends ReportIssueEvent {
-  final String template_id;
-  final File task_images;
-  final int facility_id;
-  final int janitor_id;
+  final String templateId;
+  final File taskImages;
+  final int facilityId;
+  final int janitorId;
   final String description;
   final List<String> taskList;
 
   const ReportIssue(
-      {required this.template_id,
-      required this.facility_id,
-      required this.janitor_id,
+      {required this.templateId,
+      required this.facilityId,
+      required this.janitorId,
       required this.description,
-      required this.task_images,
+      required this.taskImages,
       required this.taskList});
 
   @override
   List<Object?> get props => [
-        template_id,
-        facility_id,
-        janitor_id,
+        templateId,
+        facilityId,
+        janitorId,
         description,
-        task_images,
+        taskImages,
         taskList
       ];
 }

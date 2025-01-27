@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/network/error_handler.dart';
 import '../event/capture_event2.dart';
@@ -22,7 +23,7 @@ class CaptureBloc2 extends Bloc<CaptureEvent2, CaptureState2> {
     try {
       emit(AddImagesInitial2());
 
-      print("image 1 data  ${event.file} ");
+      debugPrint("image 1 data  ${event.file} ");
 
       if (event.file!.path.isNotEmpty) {
         emit(AddImagesSuccessful2(image: event.file));
@@ -36,7 +37,7 @@ class CaptureBloc2 extends Bloc<CaptureEvent2, CaptureState2> {
       RemoveImages2 event, Emitter<CaptureState2> emit) async {
     try {
       emit(const AddImagesLoading2(message: ""));
-            print("error");
+
       event.file!.delete();
 
       emit(AddImagesInitial2());

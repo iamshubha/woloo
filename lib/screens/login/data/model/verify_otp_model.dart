@@ -1,9 +1,9 @@
 
-/// name : "Adelina"
-/// mobile : "8149155402"
-/// id : 4
-/// role_id : 1
-/// token : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjkwNDQxMDM2LCJleHAiOjE2OTA1Mjc0MzZ9.69tyLwx9rdVk73w7GrVlKgNniGftaG1lYO2yzHqBuEs"
+// name : "Adelina"
+// mobile : "8149155402"
+// id : 4
+// role_id : 1
+// token : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjkwNDQxMDM2LCJleHAiOjE2OTA1Mjc0MzZ9.69tyLwx9rdVk73w7GrVlKgNniGftaG1lYO2yzHqBuEs"
 
 class VerifyOtpModel {
   VerifyOtpModel({

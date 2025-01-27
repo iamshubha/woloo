@@ -1,10 +1,11 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/bloc/issue_list_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/bloc/issue_list_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/data/network/issue_list_service.dart';
+import 'package:woloo_smart_hygiene/screens/issue_list_screen/bloc/issue_list_event.dart';
+import 'package:woloo_smart_hygiene/screens/issue_list_screen/bloc/issue_list_state.dart';
+import 'package:woloo_smart_hygiene/screens/issue_list_screen/data/network/issue_list_service.dart';
 
 import '../../../core/network/error_handler.dart';
 

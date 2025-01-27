@@ -1,10 +1,10 @@
 
 
-import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
-import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
-import 'package:Woloo_Smart_hygiene/screens/login/data/model/send_otp.dart';
-import 'package:Woloo_Smart_hygiene/screens/login/data/model/verify_otp_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/login/data/network/login_services.dart';
+import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
+import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/screens/login/data/model/send_otp.dart';
+import 'package:woloo_smart_hygiene/screens/login/data/model/verify_otp_model.dart';
+import 'package:woloo_smart_hygiene/screens/login/data/network/login_services.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -98,7 +98,7 @@ void main() {
  
     });
 
-          test('testing otp  api endpoints exception ', () async {
+          test('testing otp verify  api endpoints exception ', () async {
       // dioClient.httpClientAdapter = _createMockAdapterForSearchRequest(
       //   200,
       //   [],
@@ -110,7 +110,7 @@ void main() {
                 Uri.parse(APIConstants.BASE_URL+ APIConstants.VERIFY_OTP )))
           .thenAnswer((_) async =>
            // http.Response('Not Found', 400));
-             http.Response(' {"message": ""request_id" is not allowed to be empty",  "success": false, "results": []}', 200));
+             http.Response('{message: "otp" is not allowed to be empty, success: false, results: []}', 200));
 
            try {
              await loginService.verifyOTP(otp: "", requestId: reqId);
@@ -119,7 +119,7 @@ void main() {
              
            } catch (e) {
             
-                      expect( e.toString(),  '{message: "request_id" is not allowed to be empty, success: false, results: []}');
+                      expect( e.toString(),  '{message: "otp" is not allowed to be empty, success: false, results: []}');
            }
       
   

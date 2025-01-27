@@ -1,8 +1,9 @@
-import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
-import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Reassign_janitor_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
+import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
+import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_screen/data/model/reassign_janitor_model.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/model/supervisor_model_dashboard.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 class SupervisorDashboardService {
   final DioClient dio;
@@ -57,16 +58,18 @@ class SupervisorDashboardService {
 
   Future<ReassignJanitorModel> reAssignTaskToJanitor({
     required List<String> id,
-    required String janitor_id,
+    required String janitorId,
     String? token
   }) async {
-    print("Data" + id.toString());
+    if (kDebugMode) {
+      print("Data$id");
+    }
     try {
       var response = await dio.put(
         APIConstants.RE_ASSIGN_TASK,
         data: {
           "id": id,
-          "janitor_id": janitor_id,
+          "janitor_id": janitorId,
         },
         options:
           token != null ? Options(

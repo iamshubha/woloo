@@ -1,4 +1,4 @@
-import 'TaskStatus.dart';
+import 'task_status.dart';
 
 /// task_status : [{"status":1,"task_id":"16","task_name":"Doors"},{"status":1,"task_id":"17","task_name":" Toilet Roll"}]
 /// task_images : ["Images/Tasks/scaled_f6150d17-0b92-4759-9a44-abad439011aa4996797350491502834.jpg"]

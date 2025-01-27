@@ -1,18 +1,19 @@
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 // import 'package:http_parser/http_parser.dart';
-import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
-import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
+import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
 
-import '../../screens/login/data/model/Update_token_model.dart';
+import '../../screens/login/data/model/update_token_model.dart';
 
 class CoreService {
   final DioClient dio = GetIt.instance<DioClient>();
 
   Future<List<UpdateTokenModel>>  updateFCMToken({required String token}) async {
     try {
-       print("api call $token");
+       debugPrint("api call $token");
       var response = await dio.put(
         APIConstants.UPDATE_TOKEN_FCM,
         data: {
@@ -28,7 +29,7 @@ class CoreService {
         output.add(UpdateTokenModel.fromJson(item));
       }
 
-       print("token update notitification $output");
+       debugPrint("token update notitification $output");
 
       return output;
     } catch (e) {

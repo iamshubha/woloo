@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
-import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_list_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Reassign_janitor_model.dart';
+import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
+import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_screen/data/model/janitor_list_model.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_screen/data/model/reassign_janitor_model.dart';
+import 'package:flutter/foundation.dart';
 
 class JanitorListService {
   final DioClient dio;
@@ -37,7 +38,9 @@ class JanitorListService {
       for (var item in response['results']) {
         output.add(JanitorListModel.fromJson(item));
       }
-       print(output);  
+       if (kDebugMode) {
+         print(output);
+       }
       return output;
     } catch (e) {
       rethrow;
@@ -46,20 +49,23 @@ class JanitorListService {
 
   Future<ReassignJanitorModel> reAssignTaskToJanitor({
     required List<String> id,
-    required String janitor_id,
+    required String janitorId,
     required bool isRejected,
      String? token
   }) async {
-    print("Data" + id.toString());
-       print(" reassign janitor id ${janitor_id}");
-                 print(" reassign ${id }");
+    if (kDebugMode) {
+      print("Data$id");
+      print(" reassign janitor id $janitorId");
+      print(" reassign $id ");
+    }
+
     try {
       FormData formData = FormData();
 
       /// Add image
       formData = FormData.fromMap({
         "id": id.toString(),
-        "janitor_id": janitor_id,
+        "janitor_id": janitorId,
         "Reassign":isRejected
       }
       );

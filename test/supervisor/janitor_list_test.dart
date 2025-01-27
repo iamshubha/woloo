@@ -4,10 +4,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_list_model.dart';
-import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
-import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/netwrok/janitor_list_service.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_screen/data/model/janitor_list_model.dart';
+import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
+import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_screen/data/model/reassign_janitor_model.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_screen/data/netwrok/janitor_list_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -57,7 +58,8 @@ void main() {
              
 
           var response = await clusterListService.getAllJanitors( clusterId: "0",  token: mockToken);
-         expect(response, isA<List<JanitorListModel>>());
+
+           expect(response, isA<List<JanitorListModel>>());
                
            
 
@@ -82,11 +84,11 @@ void main() {
               http.Response('Not Found', 400));
             //  http.Response(' {"results":[{"check_in":null,"check_out":null,"day_of_week":"Tue","date":"01","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Wed","date":"02","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Thu","date":"03","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Fri","date":"04","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Sat","date":"05","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Sun","date":"06","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Mon","date":"07","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Tue","date":"08","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Wed","date":"09","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Thu","date":"10","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Fri","date":"11","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Sat","date":"12","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Sun","date":"13","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Mon","date":"14","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Tue","date":"15","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Wed","date":"16","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Thu","date":"17","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Fri","date":"18","attendance":"Absent"},{"check_in":"05:15 PM","check_out":"04:40 PM","day_of_week":"Sat","date":"19","attendance":"Present"},{"check_in":null,"check_out":null,"day_of_week":"Sun","date":"20","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Mon","date":"21","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Tue","date":"22","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Wed","date":"23","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Thu","date":"24","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Fri","date":"25","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Sat","date":"26","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Sun","date":"27","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Mon","date":"28","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Tue","date":"29","attendance":"Absent"},{"check_in":null,"check_out":null,"day_of_week":"Wed","date":"30","attendance":"Absent"},{"check_in":"09:42 AM","check_out":"04:40 PM","day_of_week":"Thu","date":"31","attendance":"Present"}],"success":true}', 200));
           try {
-              var response = await clusterListService.getAllJanitors( clusterId: "0", token: mockToken);
+              var response = await clusterListService.getAllJanitors( clusterId: "0", token: "");
                  expect(response, throwsException);
             
           } catch (e) {
-            
+                expect( e.toString(),  '{message: Forbidden, success: false, result: []}'); 
           }
         
      }, );
@@ -108,8 +110,8 @@ void main() {
           .thenAnswer((_) async =>
               http.Response(' {"id":52,"name":"sakshi sakshi","mobile":"9702102791","cluster_id":52,"cluster_name":"Gannaur","profile_image":null,"gender":"Female","base_url":"https://woloo-taskmanagement-s3bucket.s3.ap-south-1.amazonaws.com","pincode":null,"start_time":"29th Nov, 12:55 PM","end_time":"29th Nov, 01:10 PM","shift":"Evening","isPresent":true,"total":"25318","completed":"8","pending":"25289","ongoing":"1","accepted":"11","reopen":"0","requestForClosure":"6","rejects":"3","success":true} ', 200));
 
-          var response = await clusterListService.reAssignTaskToJanitor(  id: [], isRejected: false, janitor_id: "",   token: mockToken);
-         expect(response, isA<List<JanitorListModel>>());
+          var response = await clusterListService.reAssignTaskToJanitor(  id: [], isRejected: false, janitorId: "",   token: mockToken);
+         expect(response, isA<ReassignJanitorModel>());
                
      }, );
 

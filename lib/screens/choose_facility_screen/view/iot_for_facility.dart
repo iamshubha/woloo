@@ -10,7 +10,7 @@ import '../../../utils/app_constants.dart';
 import '../../common_widgets/button_widget.dart';
 import '../../common_widgets/list_widget.dart';
 import '../../reassign_janitor_screen/view/reassign_janitor_screen.dart';
-import '../data/model/Facility_list_model.dart';
+import '../data/model/facility_list_model.dart';
 
 class IotForFacility extends StatefulWidget {
     final TextEditingController controller;
@@ -44,14 +44,13 @@ class IotForFacility extends StatefulWidget {
 class _IotForFacilityState extends State<IotForFacility> {
    List<String> selectedIds = [];
   String allocationId = "";
-  int _selectedIndex = 0;
   List<FacilityListModel> _facilityListModel = [];
     final TextEditingController _searchController = TextEditingController();
   bool cancelButtonTap = true;
   bool yesButtonTap = false;
   bool selectAll = false;
   bool isDisabled = false;
-  List<bool> _checkList = [];
+  final List<bool> _checkList = [];
     var key = GlobalKey();
   @override
   Widget build(BuildContext context) {
@@ -69,10 +68,10 @@ class _IotForFacilityState extends State<IotForFacility> {
                 borderRadius: BorderRadius.circular(25.r),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2), // Shadow color
+                    color: Colors.black.withValues( alpha: 0.2), // Shadow color
                     spreadRadius: 1, // How wide the shadow should spread
                     blurRadius: 10, // The blur effect of the shadow
-                    offset: Offset(0, 0), // No offset for shadow on all sides
+                    offset: const Offset(0, 0), // No offset for shadow on all sides
                   ),
                 ],
               ),
@@ -82,10 +81,10 @@ class _IotForFacilityState extends State<IotForFacility> {
                   textAlign: TextAlign.start,
                   decoration: InputDecoration(
                       contentPadding:
-                      EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 10.0),
+                      const EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 10.0),
                       hintText: MyFacilityListConstants.SEARCH.tr(),
                       prefixIcon: IconButton(
-                        icon: Icon(Icons.search),
+                        icon: const Icon(Icons.search),
                         onPressed: () {
                           // Perform the search here
                         },
@@ -126,7 +125,7 @@ class _IotForFacilityState extends State<IotForFacility> {
                     onTap: () {
                       setState(() {
                         selectAll = !selectAll;
-                        print(
+                        debugPrint(
                             "_facilityListModel---->${_facilityListModel.length}");
                         if (selectAll) {
                           for (var i = 0; i < _facilityListModel.length; i++) {
@@ -137,14 +136,14 @@ class _IotForFacilityState extends State<IotForFacility> {
                             }
                             _checkList[i] = true;
                           }
-                          print("add---->$selectedIds");
+                          debugPrint("add---->$selectedIds");
                         } else {
                           for (int i = 0; i < _facilityListModel.length; i++) {
                             _checkList[i] = false;
                           }
                           //_selectedProductIds.removeWhere((element) => element == data.tasks?[index].taskId);
                           selectedIds = [];
-                          print("remove---->$selectedIds");
+                          debugPrint("remove---->$selectedIds");
                         }
       
                         setState(() {});
@@ -186,7 +185,7 @@ class _IotForFacilityState extends State<IotForFacility> {
               child: ListWidget(
                   key: key,
                   controller: _searchController,
-                  janitorId: widget.janitorId ?? '',
+                  janitorId: widget.janitorId,
                   clusterId: widget.clusterId ?? '',
                   type: "IOT",
                   onTapItem: () {},
@@ -203,13 +202,13 @@ class _IotForFacilityState extends State<IotForFacility> {
                         if (!selectedIds.contains(listObject.id)) {
                           selectedIds.add(listObject.id.toString());
                         }
-                        print("add---->$selectedIds");
+                        debugPrint("add---->$selectedIds");
                       } else {
                         //_selectedProductIds.removeWhere((element) => element == data.tasks?[index].taskId);
                         selectedIds.removeWhere(
                           (element) => element == listObject.id,
                         );
-                        print("remove---->$selectedIds");
+                        debugPrint("remove---->$selectedIds");
                       }
                       bool flag = true;
                       for (var i = 0; i < _facilityListModel.length; i++) {
@@ -250,7 +249,7 @@ class _IotForFacilityState extends State<IotForFacility> {
                         builder: (context) => ReassignJanitorScreen(
                           isFromCluster: true,
                           clusterId: widget.clusterId,
-                          janitorId: widget.janitorId ?? '',
+                          janitorId: widget.janitorId,
                           allocationId: allocationId,
                           selectedIds: selectedIds,
                         ),

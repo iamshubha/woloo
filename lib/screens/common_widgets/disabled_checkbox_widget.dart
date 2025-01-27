@@ -1,4 +1,4 @@
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -11,12 +11,12 @@ class DisabledCheckboxListWidget extends StatefulWidget {
   final bool viewOnly;
 
   const DisabledCheckboxListWidget({
-    Key? key,
+    super.key,
     required this.name,
     this.showCheckbox = true,
     this.isChecked = false,
     this.viewOnly = false,
-  }) : super(key: key);
+  });
 
   @override
   State<DisabledCheckboxListWidget> createState() =>
@@ -30,7 +30,7 @@ class _DisabledCheckboxListWidgetState
   @override
   void initState() {
     check = widget.isChecked;
-    print("isChecked ---> " + widget.isChecked.toString());
+    debugPrint("isChecked ---> ${widget.isChecked}");
     super.initState();
   }
 
@@ -62,7 +62,7 @@ class _DisabledCheckboxListWidgetState
                           : AppColors.disabledContainerBorder),
                 ),
                 child: check
-                    ? Center(
+                    ? const Center(
                         child: Icon(
                           Icons.check,
                           size: 15,

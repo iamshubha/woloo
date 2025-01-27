@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
+import 'package:woloo_smart_hygiene/core/network/failure.dart';
 import 'package:equatable/equatable.dart';
-import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/data/model/Facility_list_model.dart';
+import 'package:woloo_smart_hygiene/screens/choose_facility_screen/data/model/facility_list_model.dart';
 
 abstract class FacilityListState extends Equatable {
   const FacilityListState();

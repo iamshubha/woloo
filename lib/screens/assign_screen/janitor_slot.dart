@@ -1,7 +1,7 @@
 
 
 
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/leading_button.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/leading_button.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,7 +44,7 @@ class _JanitorSlotState extends State<JanitorSlot> {
 
   @override
   void initState() {
-    // TODO: implement initState
+   
     super.initState();
     controller.text = widget.taskName!;
     _supervisorDashboardBloc = GetIt.instance<SupervisorDashboardBloc>();
@@ -110,7 +110,7 @@ class _JanitorSlotState extends State<JanitorSlot> {
                       ));
                      // Navigator.of(context).pop();
                     //  Navigator.of(context).pop();
-                     _supervisorDashboardBloc.add(event.GetSupervisorDashboardData());
+                     _supervisorDashboardBloc.add( const event.GetSupervisorDashboardData());
                     }
 
                   },
@@ -153,10 +153,9 @@ class _JanitorSlotState extends State<JanitorSlot> {
                       Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Container(
+                          SizedBox(
                             height:260,
                             // flex:2,
-
                             child: ListView.builder(
 
                               itemCount: janitorTask.length,
@@ -171,7 +170,7 @@ class _JanitorSlotState extends State<JanitorSlot> {
                                       boxShadow: [
                                         BoxShadow(
                                           color: Colors.black
-                                              .withOpacity(0.2), // Shadow color
+                                              .withValues( alpha: 0.2), // Shadow color
                                           spreadRadius:
                                           1, // How wide the shadow should spread
                                           blurRadius:
@@ -188,7 +187,7 @@ class _JanitorSlotState extends State<JanitorSlot> {
                                         padding: const EdgeInsets.only(
                                           bottom: 10
                                         ),
-                                        child: Text("${janitorTask[index].description!}",
+                                        child: Text(janitorTask[index].description!,
                                           style: AppTextStyle.font14bold,
                                         ),
                                       ),
@@ -229,7 +228,7 @@ class _JanitorSlotState extends State<JanitorSlot> {
       bottomNavigationBar:
       Form(
         key:formKey,
-        child: Container(
+        child: SizedBox(
           height: 450,
           child: Center(
             child: Padding(
@@ -238,7 +237,7 @@ class _JanitorSlotState extends State<JanitorSlot> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 // mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Divider(
+                  const Divider(
                     thickness: 2,
                   ),
                   SizedBox(
@@ -262,7 +261,7 @@ class _JanitorSlotState extends State<JanitorSlot> {
                     decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2), // Shadow color
+                          color: Colors.black.withValues( alpha:0.2), // Shadow color
                           spreadRadius: 1, // How wide the shadow should spread
                           blurRadius: 10, // The blur effect of the shadow
                           offset: const Offset(0,
@@ -313,7 +312,7 @@ class _JanitorSlotState extends State<JanitorSlot> {
                     decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2), // Shadow color
+                          color: Colors.black.withValues( alpha:0.2), // Shadow color
                           spreadRadius: 1, // How wide the shadow should spread
                           blurRadius: 10, // The blur effect of the shadow
                           offset: const Offset(0,
@@ -324,7 +323,6 @@ class _JanitorSlotState extends State<JanitorSlot> {
                     child: TextFormField(
                       onTap: ()async{
                         TimeOfDay? pickedTime =  await showTime();
-                         print(' someeeee $pickedTime');
                          startController.text = _formatTime(pickedTime!);
                          //" ${pickedTime!.hour}:${pickedTime.minute}";
                       },
@@ -377,7 +375,7 @@ class _JanitorSlotState extends State<JanitorSlot> {
                     decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2), // Shadow color
+                          color: Colors.black.withValues( alpha: 0.2), // Shadow color
                           spreadRadius: 1, // How wide the shadow should spread
                           blurRadius: 10, // The blur effect of the shadow
                           offset: const Offset(0,
@@ -389,7 +387,7 @@ class _JanitorSlotState extends State<JanitorSlot> {
                       onTap: ()async{
                         // showTime();
                         TimeOfDay? pickedTime =  await showTime();
-                        print(' someeeee $pickedTime');
+
                         endController.text = _formatTime(pickedTime!);
 
                         //" ${pickedTime!.hour}:${pickedTime.minute}";
@@ -437,8 +435,6 @@ class _JanitorSlotState extends State<JanitorSlot> {
                     onTap: (){
                        // Navigator.of(context).pop();
                        // Navigator.of(context).pop();
-                           print(startController.text);
-                           print(endController.text);
                             if(formKey.currentState!.validate()){
                               assignBloc.add(AssignTask(
                                   isAssing: true,
@@ -447,7 +443,6 @@ class _JanitorSlotState extends State<JanitorSlot> {
                                   startTime: startController.text,
                                   endTime: endController.text,
                                   status:  widget.status!
-
                               ));
                             }
 
@@ -460,7 +455,7 @@ class _JanitorSlotState extends State<JanitorSlot> {
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black
-                                .withOpacity(0.2), // Shadow color
+                                .withValues( alpha: 0.2), // Shadow color
                             spreadRadius:
                             1, // How wide the shadow should spread
                             blurRadius:
@@ -512,7 +507,6 @@ class _JanitorSlotState extends State<JanitorSlot> {
       final formattedTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(
         DateTime(now.year, now.month, now.day, time.hour, time.minute),
       );
-       print("format$formattedTime");
       return formattedTime;
     }
 

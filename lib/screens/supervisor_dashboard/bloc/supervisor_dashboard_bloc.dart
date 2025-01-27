@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/data/network/supervisor_dashboard_service.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
-import 'package:bloc/bloc.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_event.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_state.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/data/network/supervisor_dashboard_service.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/model/supervisor_model_dashboard.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:get_it/get_it.dart';
 
 import '../../../core/network/error_handler.dart';
@@ -57,9 +58,9 @@ class SupervisorDashboardBloc
   FutureOr<void> _mapGetReAssignTaskToState(
       AssignTask event, Emitter<SupervisorDashboardState> emit) async {
     try {
-      emit(AssignTaskLoading(message: "Loading Please Wait..."));
+      emit(const AssignTaskLoading(message: "Loading Please Wait..."));
       await _supervisorDashboardService.reAssignTaskToJanitor(
-          id: event.id, janitor_id: event.janitor_id);
+          id: event.id, janitorId: event.janitorId);
       data = await _supervisorDashboardService.getSupervisorDashboardData();
       emit(GetSupervisorDashboardDataSuccess(data: data));
     } catch (e) {

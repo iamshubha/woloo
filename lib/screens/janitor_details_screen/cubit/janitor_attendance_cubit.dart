@@ -1,13 +1,13 @@
 import 'dart:math';
 
-import 'package:Woloo_Smart_hygiene/screens/janitor_details_screen/network/janitor_attendance_service.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_details_screen/network/janitor_attendance_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
-import '../../attendance_history_screen/data/model/Attendance_history_model.dart';
-import '../../attendance_history_screen/data/model/Month_list_model.dart';
+import '../../attendance_history_screen/data/model/attendance_history_model.dart';
+import '../../attendance_history_screen/data/model/month_list_model.dart';
 
 part 'janitor_attendance_state.dart';
 

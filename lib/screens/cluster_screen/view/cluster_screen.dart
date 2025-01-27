@@ -1,15 +1,15 @@
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Woloo_Smart_hygiene/screens/cluster_screen/data/model/Cluster_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/cluster_list.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/view/janitor_screen.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/screens/cluster_screen/data/model/cluster_model.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/cluster_list.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_screen/view/janitor_screen.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 
 class ClusterList extends StatefulWidget {
-  const ClusterList({Key? key}) : super(key: key);
+  const ClusterList({super.key});
 
   @override
   State<ClusterList> createState() => _ClusterListState();
@@ -20,7 +20,6 @@ class _ClusterListState extends State<ClusterList> {
   bool yesButtonTap = false;
   int selectedCard = -1;
   final TextEditingController _searchController = TextEditingController();
-  ClusterModel _clusterModel = ClusterModel();
   var key = GlobalKey();
   List<ClusterModel> search = [];
   
@@ -77,11 +76,11 @@ class _ClusterListState extends State<ClusterList> {
                     borderRadius: BorderRadius.circular(25.r),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2), // S hadow color
+                        color: Colors.black.withValues( alpha: 0.2), // S hadow color
                         spreadRadius: 1, // How wide the shadow should spread
                         blurRadius: 10, // The blur effect of the shadow
                         offset:
-                            Offset(0, 0), // No offset for shadow on all sides
+                            const Offset(0, 0), // No offset for shadow on all sides
                       ),
                     ],
                   ),
@@ -113,7 +112,7 @@ class _ClusterListState extends State<ClusterList> {
                   controller: _searchController,
                    textAlign: TextAlign.start,
                   decoration: InputDecoration(
-                     contentPadding: EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 10.0),
+                     contentPadding: const EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 10.0),
                     hintText: MyFacilityListConstants.SEARCH.tr(),
                     hintStyle: AppTextStyle.font14.copyWith(
                       color: AppColors.searchText
@@ -122,8 +121,7 @@ class _ClusterListState extends State<ClusterList> {
                     prefixIcon: IconButton(
                       icon: const Icon(Icons.search),
                       onPressed: () {
-                
-                        print("result $search");
+
                       },
                     ),
                     border:  InputBorder.none
@@ -153,7 +151,7 @@ class _ClusterListState extends State<ClusterList> {
                        // ClusterModel list
               },
               onTapItem: (ClusterModel list) async {
-                    print("janitor naem  ${list}");
+
                 _searchController.clear();
                 await
                 Navigator.of(context).push(

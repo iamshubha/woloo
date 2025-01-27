@@ -1,11 +1,11 @@
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/leading_button.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/leading_button.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/janitor_list.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_list_model.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/janitor_list.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_screen/data/model/janitor_list_model.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 
 import '../../../utils/app_textstyle.dart';
 
@@ -16,14 +16,13 @@ class ReassignJanitorScreen extends StatefulWidget {
   final List<String> selectedIds;
   final String? clusterId;
 
-  ReassignJanitorScreen(
-      {Key? key,
+  const ReassignJanitorScreen(
+      {super.key,
       required this.isFromCluster,
       required this.janitorId,
       this.allocationId,
       this.clusterId,
-      required this.selectedIds})
-      : super(key: key);
+      required this.selectedIds});
 
   @override
   State<ReassignJanitorScreen> createState() => _ReassignJanitorScreenState();
@@ -37,8 +36,8 @@ class _ReassignJanitorScreenState extends State<ReassignJanitorScreen> {
   @override
   void initState() {
     super.initState();
-    print("clusterId---->>>>${widget.clusterId}");
-    print(widget.isFromCluster);
+    debugPrint("clusterId---->>>>${widget.clusterId}");
+    debugPrint(widget.isFromCluster.toString());
     // print(widget.isFromFacility);
   }
 
@@ -58,7 +57,7 @@ class _ReassignJanitorScreenState extends State<ReassignJanitorScreen> {
           // ),
         // ),
         leading:
-        LeadingButton()
+        const LeadingButton()
         //  IconButton(
         //   color: AppColors.black30,
         //   icon: const Icon(
@@ -100,7 +99,7 @@ class _ReassignJanitorScreenState extends State<ReassignJanitorScreen> {
               decoration: InputDecoration(
                 hintText: MyFacilityListConstants.SEARCH.tr(),
                 prefixIcon: IconButton(
-                  icon: Icon(Icons.search),
+                  icon: const Icon(Icons.search),
                   onPressed: () {
                     // Perform the search here
                   },

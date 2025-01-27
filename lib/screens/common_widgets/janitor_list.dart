@@ -1,20 +1,19 @@
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/empty_list_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/bloc/janitor_list_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/bloc/janitor_list_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/bloc/janitor_list_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Janitor_list_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_screen/data/model/Reassign_janitor_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/empty_list_widget.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_screen/bloc/janitor_list_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_screen/bloc/janitor_list_event.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_screen/bloc/janitor_list_state.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_screen/data/model/janitor_list_model.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_event.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_state.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/model/supervisor_model_dashboard.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/utils/app_images.dart';
 
 import '../../utils/app_color.dart';
 import '../supervisor_dashboard/bloc/supervisor_dashboard_bloc.dart';
@@ -34,7 +33,7 @@ class JanitorListWidget extends StatefulWidget {
   final bool isRejected;
 
   JanitorListWidget({
-    Key? key,
+    super.key,
     required this.controller,
     required this.onTapItem,
     required this.isFromCluster,
@@ -45,7 +44,7 @@ class JanitorListWidget extends StatefulWidget {
     this.janitorId,
     this.clusterId,
     required this.isFromDashboardAssignment,
-  }) : super(key: key);
+  });
 
   @override
   State<JanitorListWidget> createState() => _JanitorListWidgetState();
@@ -54,15 +53,13 @@ class JanitorListWidget extends StatefulWidget {
 class _JanitorListWidgetState extends State<JanitorListWidget> {
   int selectedCard = -1;
 
-  JanitorListBloc _janitorListBloc = JanitorListBloc();
+  final JanitorListBloc _janitorListBloc = JanitorListBloc();
 
   List<JanitorListModel> _data = [];
   List<JanitorListModel> _search = [];
   List<SupervisorModelDashboard> _supervisorDashboardData = [];
 
   late SupervisorDashboardBloc _supervisorDashboardBloc;
-
-  ReassignJanitorModel _reassignJanitorModel = ReassignJanitorModel();
   bool janitorListReloading = false;
   bool dashboardListReloading = false;
   bool isAssigned = false;
@@ -71,8 +68,8 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
   void initState() {
     _supervisorDashboardBloc = SupervisorDashboardBloc();
 
-    _janitorListBloc.add(GetAllJanitors(cluster_id: widget.clusterId ?? "0"));
-    print("janitor_list_clusterId ====> ${widget.clusterId}");
+    _janitorListBloc.add(GetAllJanitors(clusterId: widget.clusterId ?? "0"));
+    debugPrint("janitor_list_clusterId ====> ${widget.clusterId}");
     widget.controller.addListener(() {
 
       setState(() {
@@ -88,15 +85,15 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                     .contains(widget.controller.text.toLowerCase()) ??
                 false)
             .toList();
-      print("some $_search");
-      _search.map( (e)=> print(" sdds${e.id}")  );
+        debugPrint("some $_search");
+      _search.map( (e)=>  debugPrint(" sdds${e.id}")  );
       });
     });
-    print(" is dash  ${widget.isFromDashboard}");
-    print(" from dash boardassign ment ${widget.isFromDashboardAssignment}");
-    print("cluster---->${widget.isFromCluster}");
-    print(widget.isFromFacility);
-    print("assignment ---->${widget.isFromDashboardAssignment}");
+    debugPrint(" is dash  ${widget.isFromDashboard}");
+    debugPrint(" from dash boardassign ment ${widget.isFromDashboardAssignment}");
+    debugPrint("cluster---->${widget.isFromCluster}");
+    debugPrint(widget.isFromFacility.toString());
+    debugPrint("assignment ---->${widget.isFromDashboardAssignment}");
     super.initState();
   }
 
@@ -105,7 +102,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
     return BlocConsumer(
         bloc: _janitorListBloc,
         listener: (context, state) {
-          print(" state in the  $state");
+          debugPrint(" state in the  $state");
           if (state is JanitorListSuccess) {
             EasyLoading.dismiss();
 
@@ -131,14 +128,14 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
      
 },
         builder: (context, state) {
-           print(" janitorssssss $state");
-            print("ids f ${widget.isFromFacility}");
+          debugPrint(" janitorssssss $state");
+          debugPrint("ids f ${widget.isFromFacility}");
 
                if( state is  ReassignTaskSuccessful ){
-                    print("priont");
+
                  if (widget.isFromFacility) {
                    _janitorListBloc
-                       .add(GetAllJanitors(cluster_id: widget.clusterId ?? "0"));
+                       .add(GetAllJanitors(clusterId: widget.clusterId ?? "0"));
                    
                      janitorListReloading = true;
                   
@@ -162,8 +159,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
             EasyLoading.dismiss();
             
               _supervisorDashboardData = state.data;
-              print("GetSupervisorDashboardDataSuccess--->" +
-                  _supervisorDashboardData.toString());
+            debugPrint("GetSupervisorDashboardDataSuccess--->$_supervisorDashboardData");
           
 
             if (dashboardListReloading) {
@@ -193,13 +189,13 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
             return const SizedBox();
           } else if (state is SupervisorDashboardError) {
             EasyLoading.dismiss();
-            print("SupervisorDashboardError--->$_supervisorDashboardData");
+            debugPrint("SupervisorDashboardError--->$_supervisorDashboardData");
 
             return CustomErrorWidget(error: state.error.message);
           } else if (state is GetSupervisorDashboardDataSuccess &&
               _supervisorDashboardData.isEmpty) {
             EasyLoading.dismiss();
-            print(
+            debugPrint(
                 "GetSupervisorDashboardDataSuccess--->$_supervisorDashboardData");
 
             return  EmptyListWidget(
@@ -220,7 +216,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                            const ReassignTask(
                                 isRejected: false,
                                id:[],
-                               janitor_id:
+                               janitorId:
                                    '',
                                fromReassign: false
                            ));
@@ -253,7 +249,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
               _search = _data;
             }
             if (widget.isFromFacility) {
-              print("object reassgin   $_search");
+              debugPrint("object reassgin   $_search");
               _data.removeWhere((element) {
                 return element.id == widget.janitorId;
               });
@@ -262,7 +258,6 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
               // }
             }
 
-             print("ssssssss $_search ");
             return 
                 _search.isEmpty ? 
              EmptyListWidget(
@@ -274,7 +269,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                   const Duration(seconds: 1),
                   () {
                     _janitorListBloc.add(
-                        GetAllJanitors(cluster_id: widget.clusterId ?? "0"));
+                        GetAllJanitors(clusterId: widget.clusterId ?? "0"));
                   },
                 );
               },
@@ -312,7 +307,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                     borderRadius: BorderRadius.circular(25.r),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2), // Shadow color
+                        color: Colors.black.withValues( alpha: 0.2), // Shadow color
                         spreadRadius: 1, // How wide the shadow should spread
                         blurRadius: 10, // The blur effect of the shadow
                         offset:
@@ -387,7 +382,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                                       children: [
                                                         CustomImageProvider(
                                                           image: AppImages
-                                                              .janitor_present,
+                                                              .janitorPresent,
                                                           height: 20.h,
                                                           width: 20.w,
                                                         ),
@@ -421,7 +416,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                                     children: [
                                                       CustomImageProvider(
                                                         image: AppImages
-                                                            .janitor_absent,
+                                                            .janitorAbsent,
                                                         height: 20.h,
                                                         width: 20.w,
                                                       ),
@@ -456,7 +451,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                                         isRejected: widget.isRejected,
                                                           id: widget
                                                               .allocationId,
-                                                          janitor_id:
+                                                          janitorId:
                                                               _data[index].id ??
                                                                   '',
                                                            fromReassign: true
@@ -604,14 +599,12 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                             horizontal: 5.w, vertical: 5.h),
                                         child: InkWell(
                                           onTap: () {
-                                             print("iii${_search[index].id} ");
-                                             print("allocation id ${widget.isRejected} ");
                                                widget.isRejected ?
                                                _janitorListBloc.add(
                                                  ReassignTask(
                                                    isRejected:  widget.isRejected,
                                                      id: widget.allocationId,
-                                                     janitor_id:
+                                                     janitorId:
                                                      _search[index].id ?? '',
                                                      fromReassign: true
                                                  ),
@@ -622,7 +615,7 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
                                               ReassignTask(
                                                   isRejected: widget.isRejected,
                                                   id: widget.allocationId,
-                                                  janitor_id:
+                                                  janitorId:
                                                   _search[index].id ?? '',
                                                     fromReassign: true
                                                   ),

@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
-import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
-import 'package:Woloo_Smart_hygiene/screens/cluster_screen/data/model/Cluster_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/cluster_screen/data/network/cluster_list_service.dart';
+import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
+import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/screens/cluster_screen/data/model/cluster_model.dart';
+import 'package:woloo_smart_hygiene/screens/cluster_screen/data/network/cluster_list_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -76,6 +76,7 @@ void main() {
             
           } catch (e) {
             
+              expect( e.toString(),  '{message: Forbidden, success: false, result: []}'); 
 
           }
         

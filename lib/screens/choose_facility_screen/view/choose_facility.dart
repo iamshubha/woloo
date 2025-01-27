@@ -1,13 +1,13 @@
-import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/view/iot_for_facility.dart';
-import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/view/regular_for_facility.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/leading_button.dart';
+import 'package:woloo_smart_hygiene/screens/choose_facility_screen/view/iot_for_facility.dart';
+import 'package:woloo_smart_hygiene/screens/choose_facility_screen/view/regular_for_facility.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/leading_button.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/data/model/Facility_list_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/choose_facility_screen/data/model/selected_tasks.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/screens/choose_facility_screen/data/model/facility_list_model.dart';
+import 'package:woloo_smart_hygiene/screens/choose_facility_screen/data/model/selected_tasks.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 
 import '../../../utils/app_textstyle.dart';
 
@@ -16,10 +16,10 @@ class ChooseFacilityList extends StatefulWidget {
   final String? clusterId;
 
   const ChooseFacilityList({
-    Key? key,
+    super.key,
     required this.janitorId,
     this.clusterId,
-  }) : super(key: key);
+  });
 
   @override
   State<ChooseFacilityList> createState() => _ChooseFacilityListState();
@@ -35,7 +35,7 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
   String allocationId = "";
   int _selectedIndex = 0;
   List<FacilityListModel> _facilityListModel = [];
-  List<bool> _checkList = [];
+  final List<bool> _checkList = [];
   SelectTaskModel selectTaskModel = SelectTaskModel();
   var key = GlobalKey(); // using this to refresh the list widget
 
@@ -51,7 +51,7 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
   void initState() {
     super.initState();
 
-    print("facility_clusterId---->>>>${widget.clusterId}");
+    debugPrint("facility_clusterId---->>>>${widget.clusterId}");
   }
 
   @override
@@ -78,13 +78,13 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
                   if (!selectedIds.contains(listObject.id)) {
                     selectedIds.add(listObject.id.toString());
                   }
-                  print("add---->$selectedIds");
+                  debugPrint("add---->$selectedIds");
                 } else {
                   //_selectedProductIds.removeWhere((element) => element == data.tasks?[index].taskId);
                   selectedIds.removeWhere(
                     (element) => element == listObject.id,
                   );
-                  print("remove---->$selectedIds");
+                  debugPrint("remove---->$selectedIds");
                 }
                 bool flag = true;
                 for (var i = 0; i < _facilityListModel.length; i++) {
@@ -133,13 +133,13 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
                   if (!selectedIds.contains(listObject.id)) {
                     selectedIds.add(listObject.id.toString());
                   }
-                  print("add---->$selectedIds");
+                  debugPrint("add---->$selectedIds");
                 } else {
                   //_selectedProductIds.removeWhere((element) => element == data.tasks?[index].taskId);
                   selectedIds.removeWhere(
                     (element) => element == listObject.id,
                   );
-                  print("remove---->$selectedIds");
+                  debugPrint("remove---->$selectedIds");
                 }
                 bool flag = true;
                 for (var i = 0; i < _facilityListModel.length; i++) {
@@ -176,7 +176,7 @@ class _ChooseFacilityListState extends State<ChooseFacilityList> {
           backgroundColor: AppColors.white,
           //title:
 
-          leading: LeadingButton()
+          leading: const LeadingButton()
           // IconButton(
           //   color: AppColors.black30,
           //   icon: const Icon(

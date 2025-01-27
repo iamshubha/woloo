@@ -1,5 +1,5 @@
-/// id : 95
-/// status : 3
+// id : 95
+// status : 3
 
 class UpdateStatusModel {
   UpdateStatusModel({

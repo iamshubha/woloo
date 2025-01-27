@@ -1,4 +1,4 @@
-import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

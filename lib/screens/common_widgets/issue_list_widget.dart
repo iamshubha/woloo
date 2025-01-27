@@ -1,11 +1,11 @@
-import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/image_provider.dart';
-import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/bloc/issue_list_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/bloc/issue_list_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/bloc/issue_list_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/data/model/Issue_list_model.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
+import 'package:woloo_smart_hygiene/screens/issue_list_screen/bloc/issue_list_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/issue_list_screen/bloc/issue_list_event.dart';
+import 'package:woloo_smart_hygiene/screens/issue_list_screen/bloc/issue_list_state.dart';
+import 'package:woloo_smart_hygiene/screens/issue_list_screen/data/model/issue_list_model.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -83,7 +83,7 @@ class _IssueListWidgetState extends State<IssueListWidget> {
            RefreshIndicator(
           onRefresh: () {
             return Future.delayed(
-              Duration(seconds: 1),
+              const Duration(seconds: 1),
               () {
                 _issueListBloc.add(GetAllIssues(supervisorId: supervisorId));
               },
@@ -121,11 +121,11 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                       borderRadius: BorderRadius.circular(25.r),
                         boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2), // Shadow color
+                        color: Colors.black.withValues( alpha:0.2), // Shadow color
                         spreadRadius: 1, // How wide the shadow should spread
                         blurRadius: 10, // The blur effect of the shadow
                         offset:
-                            Offset(0, 0), // No offset for shadow on all sides
+                            const Offset(0, 0), // No offset for shadow on all sides
                       ),
                     ],
                       // border: Border.all(
@@ -177,17 +177,17 @@ class _IssueListWidgetState extends State<IssueListWidget> {
                                   ),
                             
                                     Container(
-                                      padding: EdgeInsets.symmetric(horizontal: 15 , vertical: 5 ),
+                                      padding: const EdgeInsets.symmetric(horizontal: 15 , vertical: 5 ),
                                       decoration: BoxDecoration(                     
                                         color: AppColors.white,
                                         borderRadius: BorderRadius.circular(25.r),
                                            boxShadow: [
                                                   BoxShadow(
-                                                    color: Colors.black.withOpacity(0.2), // Shadow color
+                                                    color: Colors.black.withValues( alpha: 0.2), // Shadow color
                                                     spreadRadius: 1, // How wide the shadow should spread
                                                     blurRadius: 10, // The blur effect of the shadow
                                                     offset:
-                              Offset(0, 0), // No offset for shadow on all sides
+                              const Offset(0, 0), // No offset for shadow on all sides
                                                   ),
                                                 ],
                                       ),
@@ -240,11 +240,11 @@ class _IssueListWidgetState extends State<IssueListWidget> {
 
                                    boxShadow: [
                                               BoxShadow(
-                                                color: Colors.black.withOpacity(0.2), // Shadow color
+                                                color: Colors.black.withValues(alpha: 0.2), // Shadow color
                                                 spreadRadius: 1, // How wide the shadow should spread
                                                 blurRadius: 10, // The blur effect of the shadow
                                                 offset:
-                          Offset(0, 0), // No offset for shadow on all sides
+                          const Offset(0, 0), // No offset for shadow on all sides
                                               ),
                                             ],
                             ),
@@ -311,7 +311,7 @@ class _IssueListWidgetState extends State<IssueListWidget> {
         );
           // const EmptyListWidget();
         }
-        return  SizedBox();
+        return  const SizedBox();
        
       },
     );

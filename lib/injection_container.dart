@@ -1,5 +1,5 @@
-import 'package:Woloo_Smart_hygiene/screens/issue_list_screen/bloc/issue_list_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/issue_list_screen/bloc/issue_list_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_log/interceptor/dio_log_interceptor.dart';
 import 'package:flutter/widgets.dart';

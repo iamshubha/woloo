@@ -1,5 +1,5 @@
-/// template_id : "18"
-/// tasks : [{"task_id":"16","task_name":"Doors"},{"task_id":"17","task_name":" Toilet Roll"}]
+// template_id : "18"
+// tasks : [{"task_id":"16","task_name":"Doors"},{"task_id":"17","task_name":" Toilet Roll"}]
 
 class TaskListModel {
   TaskListModel({

@@ -1,21 +1,20 @@
 import 'dart:async';
 
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 import 'package:pinput/pinput.dart';
 
 class OTPWidget extends StatefulWidget {
   final Function onComplete;
 
   const OTPWidget({
-    Key? key,
+    super.key,
     required this.onComplete,
-  }) : super(key: key);
+  });
 
   @override
   State<OTPWidget> createState() => _OTPWidgetState();
@@ -52,7 +51,7 @@ class _OTPWidgetState extends State<OTPWidget> {
       children: <Widget>[
         Center(
           child: Pinput(
-           key:ValueKey("otptextfield"),
+           key:const ValueKey("otptextfield"),
            
             controller: _pinController,
             hapticFeedbackType: HapticFeedbackType.lightImpact,
@@ -67,7 +66,7 @@ class _OTPWidgetState extends State<OTPWidget> {
                  
                 boxShadow: [
                     BoxShadow(
-                          color: Colors.black.withOpacity(0.2), // Shadow color
+                          color: Colors.black.withValues( alpha: 0.2), // Shadow color
                           spreadRadius: 1, // How wide the shadow should spread
                           blurRadius: 10, // The blur effect of the shadow
                           offset: const Offset(0,
@@ -84,7 +83,7 @@ class _OTPWidgetState extends State<OTPWidget> {
             ),
              
             onCompleted: (pin) {
-              print(pin);
+              debugPrint(pin);
               widget.onComplete(pin);
             },
           ),

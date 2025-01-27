@@ -1,18 +1,19 @@
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/checkbox_list_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/empty_list_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/error_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/white_button_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_list/bloc/tasklist_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_list/bloc/tasklist_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_list/bloc/tasklist_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/create_task_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/submit_task_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/checkbox_list_widget.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/empty_list_widget.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/error_widget.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/white_button_widget.dart';
+import 'package:woloo_smart_hygiene/screens/task_list/bloc/tasklist_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/task_list/bloc/tasklist_event.dart';
+import 'package:woloo_smart_hygiene/screens/task_list/bloc/tasklist_state.dart';
+import 'package:woloo_smart_hygiene/screens/task_list/data/model/create_task_model.dart';
+import 'package:woloo_smart_hygiene/screens/task_list/data/model/submit_task_model.dart';
+import 'package:woloo_smart_hygiene/screens/task_list/data/model/task_list_model.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -25,10 +26,10 @@ class TaskList extends StatefulWidget {
   final String allocationId;
 
   const TaskList({
-    Key? key,
+    super.key,
     required this.templateId,
     required this.allocationId,
-  }) : super(key: key);
+  });
 
   @override
   State<TaskList> createState() => _TaskListState();
@@ -45,7 +46,7 @@ class _TaskListState extends State<TaskList> {
   @override
   void initState() {
     createTaskModel.data = [];
-    print("allocationIddddd " + widget.templateId.toString());
+    debugPrint("allocationIddddd ${widget.templateId}");
     createTaskModel.allocationId = widget.allocationId;
     taskListBloc.add(GetAllTask(id: widget.templateId ?? 0));
     super.initState();
@@ -89,7 +90,7 @@ class _TaskListState extends State<TaskList> {
               backgroundColor: AppColors.white,
               leadingWidth: 100.w,
               leading:
-              LeadingButton(),
+              const LeadingButton(),
 
               // IconButton(
               //   icon:
@@ -159,7 +160,7 @@ class _TaskListState extends State<TaskList> {
                     child: RefreshIndicator(
                       onRefresh: () {
                         return Future.delayed(
-                          Duration(seconds: 1),
+                          const Duration(seconds: 1),
                           () {
                             taskListBloc
                                 .add(GetAllTask(id: widget.templateId ?? 0));
@@ -197,7 +198,9 @@ class _TaskListState extends State<TaskList> {
                                       status: 1,
                                     ),
                                   );
-                                  print(createTaskModel.toJson());
+                                  if (kDebugMode) {
+                                    print(createTaskModel.toJson());
+                                  }
                                 } else {
                                   //_selectedProductIds.removeWhere((element) => element == data.tasks?[index].taskId);
                                   createTaskModel.data!.removeWhere(
@@ -205,7 +208,9 @@ class _TaskListState extends State<TaskList> {
                                         element.taskId ==
                                         data.tasks?[index].taskId,
                                   );
-                                  print(createTaskModel.toJson());
+                                  if (kDebugMode) {
+                                    print(createTaskModel.toJson());
+                                  }
                                 }
                                 setState(() {});
                               },
@@ -231,10 +236,12 @@ class _TaskListState extends State<TaskList> {
                             if (createTaskModel.data!.isNotEmpty) {
                               taskListBloc.add(SubmitTasks(
                                   createTaskModel: createTaskModel));
-                              print(state);
+
                             }
 
-                            print(createTaskModel.toJson());
+                            if (kDebugMode) {
+                              print(createTaskModel.toJson());
+                            }
                           },
                         ),
                       )
@@ -262,7 +269,9 @@ class _TaskListState extends State<TaskList> {
           }
            else
           if (state is SubmitTasksError) {
-            print(state);
+            if (kDebugMode) {
+              print(state);
+            }
 
             return CustomErrorWidget(error: state.error.message);
           }
@@ -276,7 +285,7 @@ class _TaskListState extends State<TaskList> {
             );
           }
 
-          return SizedBox();
+          return const SizedBox();
           
         });
   }

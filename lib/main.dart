@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:Woloo_Smart_hygiene/firebase_options.dart';
-import 'package:Woloo_Smart_hygiene/injection_container.dart' as di;
-import 'package:Woloo_Smart_hygiene/messaging.dart';
-import 'package:Woloo_Smart_hygiene/screens/login/bloc/login_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/my_account/view/bloc/profile_bloc.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/firebase_options.dart';
+import 'package:woloo_smart_hygiene/injection_container.dart' as di;
+import 'package:woloo_smart_hygiene/messaging.dart';
+import 'package:woloo_smart_hygiene/screens/login/bloc/login_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/my_account/view/bloc/profile_bloc.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -113,7 +113,7 @@ void main() async {
          //    builder: (context) =>
          //        App(), // Wrap your app
          // ),
-          App(),
+         const  App(),
         ),
       )
 

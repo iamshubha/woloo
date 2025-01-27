@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 class AppColors {
@@ -21,14 +19,14 @@ class AppColors {
   static const Color alertBoxColor = Color(0xFFF9F9F9);
   static const Color alertTitleColor = Color(0xFF6F6868);
 
-  static const Color disabledCheckBoxColor = Color(0xFF7AFFF035);
+  static const Color disabledCheckBoxColor = Color(0x7AFFF035);
   static const Color rejectButtonColor = Color(0xFF6B766A);
 
   static const Color buttonColor = Color(0xFF00C3DE);
   static const Color buttonYellowColor = Color(0xFFFFEB00);// FFEB00
   static const Color camColor = Color(0xFFFFF035);
   static const Color yellowSplashColor = Color(0xFFFFF035);
-  static const Color alertShadowColor = Color(0xff26000000);
+  static const Color alertShadowColor = Color(0x26000000);
   static const Color greenCardColor = Color(0xFFDDFDEC);
   static const Color yellowCardColor = Color(0xFFf5f1bc);
 
@@ -38,23 +36,23 @@ class AppColors {
   static const Color greyContainer = Color(0xFFE9E6E6);
   static const Color greyColorFields = Color(0xffC4C6AA);
   static const Color greyText = Color(0xFF595959);
-  static const Color greyShadowColor = Color(0xFF14000000);
+  static const Color greyShadowColor = Color(0x14000000);
   static const Color statusbarColor = Color(0xFF00803A);
   static const Color greyIcon = Color(0xFFD9D9D9);
   static const Color clickContainer = Color(0xFFDDFDEC);
-  static const Color disabledContainerBorder = Color(0xFF992D2C29);
-  static const Color disabledCheckColor = Color(0xFF63000000);
+  static const Color disabledContainerBorder = Color(0x992D2C29);
+  static const Color disabledCheckColor = Color(0x63000000);
   static const Color disabledTextColor = Color(0xFF959595);
-  static const Color boxShadowColor = Color(0xFF33000000);
+  static const Color boxShadowColor = Color(0x33000000);
   static const Color timeSlotColor = Color(0xFF444242);
 
-  static const Color ListTitleColor = Color(0xFF2E2E2E);
+  static const Color listTitleColor = Color(0xFF2E2E2E);
   static const Color titleColor = Color(0xFF393838);
   static const Color iotBackgroundColor = Color(0xFFFF9D43);
 
   static const Color appBarTitleColor = Color(0xFF302E2A);
   static const Color appBarIconColor = Color(0xFF807964);
-  static const Color listTileShadow = Color(0xFF1A00803A);
+  static const Color listTileShadow = Color(0x1A00803A);
   static const Color contryNameColor = Color(0xFF807964);
   static const Color greenTextColor = Color(0xFF2A9D0E);
   static const Color yellowIcon = Color(0xFFFBB932);
@@ -134,7 +132,7 @@ class AppColors {
   static const Color regularButtonColor = Color(0xffFBF06D);
   static const Color disabledRegularButtonColor = Color(0xffFBF06D);
   static const Color issueButtonColor = Color(0xffFB6D6D);
-  static const Color disabledContainerColor = Color(0xffC9FBFBFB);
+  static const Color disabledContainerColor = Color(0xC9FBFBFB);
   static const Color disabledbuttonColor = Color(0xffdff5de);
   static const Color disabledGreyColor = Color(0xffe7e7e7);
   static const Color imageScreenGreyColor = Color(0xff878781);
@@ -160,7 +158,7 @@ class AppColors {
   static const Color greyIconColor = Color(0xFF676767);
   static const Color darkGreyText = Color(0xFF404040);
   static const Color greyBorderColor = Color(0xFFDDDDDD);
-  static const Color greyShadow = Color(0xff33555555);
+  static const Color greyShadow = Color(0x33555555);
   static const Color historyText = Color(0xFF3A3A3A);
   static const Color lightGreyText = Color(0xFF988B8B);
   static const Color greenBold = Color(0xFF78DB5F);

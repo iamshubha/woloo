@@ -1,11 +1,11 @@
-import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
-import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/view/attendance_history_screen.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/leading_button.dart';
-import 'package:Woloo_Smart_hygiene/screens/login/view/login_screen.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/screens/attendance_history_screen/view/attendance_history_screen.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/leading_button.dart';
+import 'package:woloo_smart_hygiene/screens/login/view/login_screen.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/utils/app_images.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,8 +24,8 @@ import '../upload_profile.dart';
 
 class JanitorProfileScreen extends StatefulWidget {
   const JanitorProfileScreen({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<JanitorProfileScreen> createState() => JanitorProfileScreenState();
@@ -37,11 +37,11 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
   //ProfileBloc();
   ProfileModel profile = ProfileModel();
     // CoreBloc coreBloc = CoreBloc();
-  var name;
+
    Map<String, dynamic>? decodedToken;
   @override
   void initState() {
-    // TODO: implement initState
+  
     super.initState();
     // print("sdf");
     // print(" sadas ${loginBloc.profileList}");
@@ -54,7 +54,7 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
      decodedToken = JwtDecoder.decode(some);
    updat(decodedToken!["id"]);
     // BlocProvider.of<LoginBloc>(context);
-    name = globalStorage.getProfileName();
+
 
 
 
@@ -80,7 +80,7 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
            leadingWidth: 100,
           backgroundColor: AppColors.white,
           leading:
-              LeadingButton()
+              const LeadingButton()
 
           // IconButton(
           //   icon: const Icon(
@@ -135,7 +135,7 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                                                  bloc: profileBloc,
                                                 builder:
                                                 (context, state) {
-                                                     print("state $state ");
+                                                  debugPrint("state $state ");
                                                    if (state is  ProfleLoading ) {
                                                      EasyLoading.show(status: "");
                                        
@@ -161,7 +161,7 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
 
                                        Center(
                                          child: CustomImageProvider(
-                                           image: AppImages.profile_img,
+                                           image: AppImages.profileImg,
                                            height: 70.h,
                                            width: 70.w,
                                            alignment: Alignment.center,
@@ -213,7 +213,7 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                           },  )  );
                      },
                     child: CustomImageProvider(
-                      image: AppImages.edit_icon,
+                      image: AppImages.editIcon,
                       width: 30,
                       height: 30,
                     ),
@@ -226,7 +226,7 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
               BlocBuilder(
                   bloc: profileBloc,
                 builder:  (context, state) {
-                  print("state $state ");
+                  debugPrint("state $state ");
                   if (state is  ProfleLoading ) {
                     EasyLoading.show(status: "");
 
@@ -341,7 +341,7 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                     child: Row(
                       children: [
                         CustomImageProvider(
-                          image: AppImages.history_img,
+                          image: AppImages.historyImg,
                           height: 25.h,
                           width: 25.w,
                         ),
@@ -395,6 +395,7 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                   EasyLoading.showToast(MyJanitorProfileScreenConstants
                       .LOG_OUT_SUCCESS_TOAST
                       .tr());
+                  if (!context.mounted) return;
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
@@ -418,7 +419,7 @@ class JanitorProfileScreenState extends State<JanitorProfileScreen> {
                     child: Row(
                       children: [
                         CustomImageProvider(
-                          image: AppImages.logout_img,
+                          image: AppImages.logoutImg,
                           height: 25.h,
                           width: 25.w,
                         ),

@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
-import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
-import 'package:Woloo_Smart_hygiene/screens/my_account/data/model/profile_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/my_account/data/network/profile_service.dart';
+import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
+import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/screens/my_account/data/model/profile_model.dart';
+import 'package:woloo_smart_hygiene/screens/my_account/data/network/profile_service.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:mockito/annotations.dart';
@@ -26,7 +25,7 @@ void main() {
       //  String remarks = '';
 
 
-  group(" proflie testing", (){
+  group("get proflie api testing ", (){
 
        
     setUp(()async{
@@ -59,7 +58,7 @@ void main() {
               .get(
                 Uri.parse("${APIConstants.BASE_URL}+ ${APIConstants.USER_DETAILS}?id=${decodedToken!["id"].toString()}")))
           .thenAnswer((_) async =>
-              http.Response('{"results":{"start_time":null,"end_time":null,"mobile":"9820607568","address":"undefined","city":"Demo","profile_image":"[\"Images/Profile/1736319140069.jpg\"]","status":{"label":"ACTIVE","value":true},"role_id":2,"email":"abhijeet@test.com","client_id":null,"client_name":{"label":"","value":""},"first_name":"Abhijeet","last_name":"Test","pan_image":"","aadhar_image":"","wish_certificate_image":"","cluster":[{"value":52,"label":"Gannaur"},{"value":15,"label":"ghatkopar 29"},{"value":136,"label":"Demo Client _cluster"}],"base_url":"https://woloo-taskmanagement-s3bucket.s3.ap-south-1.amazonaws.com"},"success":true}', 200));
+              http.Response('{"results":{"start_time":null,"end_time":null,"mobile":"9820607568","address":"undefined","city":"Demo","profile_image":"["Images/Profile/1736319140069.jpg"]","status":{"label":"ACTIVE","value":true},"role_id":2,"email":"abhijeet@test.com","client_id":null,"client_name":{"label":"","value":""},"first_name":"Abhijeet","last_name":"Test","pan_image":"","aadhar_image":"","wish_certificate_image":"","cluster":[{"value":52,"label":"Gannaur"},{"value":15,"label":"ghatkopar 29"},{"value":136,"label":"Demo Client _cluster"}],"base_url":"https://woloo-taskmanagement-s3bucket.s3.ap-south-1.amazonaws.com"},"success":true}', 200));
 
          //  var response = await clusterListService.getAllCluster( token: mockToken);
                var response =  await  profileService.getProfile(supervisorId: decodedToken!["id"], token: mockToken);
@@ -90,7 +89,7 @@ void main() {
                    expect(response,  throwsException );
                
              } catch (e) {
-               
+                 expect( e.toString(),  'type \'Null\' is not a subtype of type \'int\''); 
              }
           
         

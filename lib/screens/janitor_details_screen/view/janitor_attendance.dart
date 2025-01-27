@@ -1,13 +1,11 @@
-import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/data/model/Month_list_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_details_screen/cubit/janitor_attendance_cubit.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/screens/attendance_history_screen/data/model/month_list_model.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_details_screen/cubit/janitor_attendance_cubit.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:bubble/bubble.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -55,11 +53,11 @@ class _JanitorAttendanceView extends StatelessWidget {
                     color: AppColors.white,
                       boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2), // Shadow color
+                        color: Colors.black.withValues( alpha:0.2), // Shadow color
                         spreadRadius: 1, // How wide the shadow should spread
                         blurRadius: 10, // The blur effect of the shadow
                         offset:
-                            Offset(0, 0), // No offset for shadow on all sides
+                            const Offset(0, 0), // No offset for shadow on all sides
                       ),
                     ],
                 ),
@@ -67,7 +65,7 @@ class _JanitorAttendanceView extends StatelessWidget {
                   child: DropdownButtonFormField<MonthListModel>(
                     value: state.selected,
                     decoration: InputDecoration(
-                          contentPadding:EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 10.0),
+                          contentPadding:const EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 10.0),
                       border: InputBorder.none,
                       //  const OutlineInputBorder(
                       //   borderRadius: BorderRadius.all(
@@ -160,7 +158,7 @@ class _JanitorAttendanceView extends StatelessWidget {
         SizedBox(height: 15.h),
         Divider(
           height: 0,
-          color: Colors.grey.withOpacity(.2),
+          color: Colors.grey.withValues( alpha:.2),
           thickness: 1.5,
         ),
         Expanded(
@@ -181,7 +179,7 @@ class _JanitorAttendanceView extends StatelessWidget {
                           height: 46.w,
                           padding: EdgeInsets.symmetric(horizontal: 5.w),
                           decoration: BoxDecoration(
-                             boxShadow: [
+                             boxShadow: const [
                                 BoxShadow(
                                   blurRadius: 11.0,
                                   spreadRadius: 0,
@@ -224,7 +222,7 @@ class _JanitorAttendanceView extends StatelessWidget {
                           ),
                         ),
                       Bubble(
-                         radius:Radius.circular(25.0),
+                         radius:const Radius.circular(25.0),
                         elevation: 5,
                         nipWidth: 14,
                         // margin: BubbleEdges.only(top: 10),
@@ -233,7 +231,7 @@ class _JanitorAttendanceView extends StatelessWidget {
                         alignment: Alignment.topCenter,
                     
                           child: 
-                          Container(
+                          SizedBox(
                             width: 200.w,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -307,8 +305,8 @@ class _JanitorAttendanceView extends StatelessWidget {
                                         ?.toLowerCase()
                                         .contains("present") ==
                                     true
-                                ? Colors.green.withOpacity(.1)
-                                : Colors.red.withOpacity(.1),
+                                ? Colors.green.withValues( alpha:.1)
+                                : Colors.red.withValues( alpha:.1),
                             child: Text(
                               state.attendance[index].attendance ?? '',
                               style:

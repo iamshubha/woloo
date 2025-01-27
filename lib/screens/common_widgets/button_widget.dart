@@ -1,7 +1,7 @@
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
 
 class ButtonWidget extends StatelessWidget {
   final String text;
@@ -9,11 +9,11 @@ class ButtonWidget extends StatelessWidget {
   final bool enabled;
 
   const ButtonWidget({
-    Key? key,
+    super.key,
     required this.text,
     this.enabled = true,
     this.color
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +23,10 @@ class ButtonWidget extends StatelessWidget {
       decoration: BoxDecoration(
       boxShadow: [
       BoxShadow(
-        color: Colors.black.withOpacity(0.2), // Shadow color
+        color: Colors.black.withValues( alpha: 0.2), // Shadow color
         spreadRadius: 1, // How wide the shadow should spread
         blurRadius: 10, // The blur effect of the shadow
-        offset: Offset(0, 5), // Shadow offset, with y-offset for bottom shadow
+        offset: const Offset(0, 5), // Shadow offset, with y-offset for bottom shadow
       ),
     ],
         color: enabled ? color ??  AppColors.buttonColor : AppColors.disabledButtonColor,

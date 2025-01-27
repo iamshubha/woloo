@@ -1,8 +1,9 @@
 import 'dart:io';
 
-import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
-import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
+import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http_parser/http_parser.dart';
 
 class SelfieService {
@@ -20,10 +21,10 @@ class SelfieService {
         "id": id,
         "remarks": remarks,
       });
-       print("image.path ${image.path}");
-       print("dfs $id");
-       print("dsds ${getFileName(image.path)}");
-       print("exr ${getFileExtension(image.path)}");
+      debugPrint("image.path ${image.path}");
+      debugPrint("dfs $id");
+      debugPrint("dsds ${getFileName(image.path)}");
+      debugPrint("exr ${getFileExtension(image.path)}");
 
       formData.files.addAll([
         MapEntry(
@@ -50,7 +51,7 @@ class SelfieService {
          :
          Options(extra: {"auth": true}),
       );
-       print(response);
+      debugPrint("response $response");
 
       return response['results']?.toString() ?? '';
     } catch (e) {

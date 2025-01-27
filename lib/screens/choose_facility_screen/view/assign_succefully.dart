@@ -1,7 +1,7 @@
 
 
 
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/image_provider.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,7 +27,7 @@ class _AssignSuccefullyState extends State<AssignSuccefully> {
       Scaffold(
       appBar: AppBar(),
       body: Padding(
-        padding:  EdgeInsets.all(16.0),
+        padding:  const EdgeInsets.all(16.0),
         child: Column(
            children: [
                SizedBox(

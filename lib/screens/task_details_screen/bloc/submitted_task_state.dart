@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_details_screen/data/model/Submitted_tasks_model.dart';
+import 'package:woloo_smart_hygiene/core/network/failure.dart';
+import 'package:woloo_smart_hygiene/screens/task_details_screen/data/model/submitted_tasks_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class SubmittedTaskState extends Equatable {

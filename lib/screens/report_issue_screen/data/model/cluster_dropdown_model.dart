@@ -1,5 +1,5 @@
-/// cluster_id : 16
-/// cluster_name : "Wipro"
+// cluster_id : 16
+// cluster_name : "Wipro"
 
 class ClusterDropdownModel {
      int? clusterId;

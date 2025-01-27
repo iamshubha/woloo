@@ -1,15 +1,15 @@
 import 'dart:io';
 
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/white_button_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/selfie_screen/bloc/selfie_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/selfie_screen/bloc/selfie_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/selfie_screen/bloc/selfie_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/selfie_screen/view/camera.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_list/view/task_list_screen.dart';
-import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/images_bloc/event/capture_event.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/white_button_widget.dart';
+import 'package:woloo_smart_hygiene/screens/selfie_screen/bloc/selfie_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/selfie_screen/bloc/selfie_event.dart';
+import 'package:woloo_smart_hygiene/screens/selfie_screen/bloc/selfie_state.dart';
+import 'package:woloo_smart_hygiene/screens/selfie_screen/view/camera.dart';
+import 'package:woloo_smart_hygiene/screens/task_list/view/task_list_screen.dart';
+import 'package:woloo_smart_hygiene/screens/washroom_image_screen/images_bloc/event/capture_event.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -25,7 +25,7 @@ import '../../washroom_image_screen/images_bloc/bloc/capture_bloc.dart';
 import '../../washroom_image_screen/images_bloc/state/capture_state.dart';
 
 
-enum PickSource { CAMERA }
+enum PickSource { camera }
 
 class SelfieScreen extends StatefulWidget {
   final bool isFromChooseFacility;
@@ -34,12 +34,12 @@ class SelfieScreen extends StatefulWidget {
   final String allocationId;
 
   const SelfieScreen({
-    Key? key,
+    super.key,
     this.isFromChooseFacility = false,
     this.isFromTask = false,
     required this.templateId,
     required this.allocationId,
-  }) : super(key: key);
+  });
 
   @override
   State<SelfieScreen> createState() => _SelfieScreenState();
@@ -48,7 +48,7 @@ class SelfieScreen extends StatefulWidget {
 class _SelfieScreenState extends State<SelfieScreen> {
   File? _file;
   SelfieBloc selfieBloc = SelfieBloc();
-  CaptureBloc _captureBloc = CaptureBloc(); 
+  final CaptureBloc _captureBloc = CaptureBloc();
 
   @override
   void initState() {
@@ -195,7 +195,7 @@ class _SelfieScreenState extends State<SelfieScreen> {
                       onTap: () {
 
                         if (kDebugMode) {
-                          print("image#######" + _file!.path);
+                          print("image#######${_file!.path}");
                         }
 
                         selfieBloc.add(UploadSelfie(
@@ -216,7 +216,7 @@ class _SelfieScreenState extends State<SelfieScreen> {
               ),
               child: WhiteButtonWidget(
                 text: MyTaskListConstants.SUBMIT_BTN.tr(),
-                color: AppColors.disabledCamButtonColor.withOpacity(0.6),
+                color: AppColors.disabledCamButtonColor.withValues( alpha:  0.6),
                 onTap: () {},
               ),
             ),
@@ -226,8 +226,8 @@ class _SelfieScreenState extends State<SelfieScreen> {
            } else if (
              state is AddImagesSuccessful
            ){
-             
-              print(" omf ${state.image} ");
+
+             debugPrint(" omf ${state.image} ");
 
               File? image = state.image;
             return 
@@ -264,7 +264,7 @@ class _SelfieScreenState extends State<SelfieScreen> {
                 child: 
                   CustomImageProvider(
                  image: 
-                 AppImages.repeat_icon,
+                 AppImages.repeatIcon,
                   //"assets/images/irepeat.png",
                   width: 40.h,
                   alignment: Alignment.center,
@@ -282,7 +282,7 @@ class _SelfieScreenState extends State<SelfieScreen> {
                 child:
                      CustomImageProvider(
                  image: 
-                AppImages.delete_icon,
+                AppImages.deleteIcon,
                   //"assets/images/irepeat.png",
                   width: 40.h,
                 ),   
@@ -361,7 +361,7 @@ class _SelfieScreenState extends State<SelfieScreen> {
                       text: MyTaskListConstants.SUBMIT_BTN.tr(),
                       color: AppColors.buttonColor,
                       onTap: () {
-                        print("image#######" + _file!.path);
+                        debugPrint("image#######${_file!.path}");
 
                         selfieBloc.add(UploadSelfie(
                           type: MySelfieScreenConstants.IMAGE_TYPE_SELFIE,
@@ -381,7 +381,7 @@ class _SelfieScreenState extends State<SelfieScreen> {
               ),
               child: WhiteButtonWidget(
                 text: MyTaskListConstants.SUBMIT_BTN.tr(),
-                color: AppColors.disabledCamButtonColor.withOpacity(0.3),
+                color: AppColors.disabledCamButtonColor. withValues( alpha: 0.3),
                 onTap: () {},
               ),
             ),
@@ -403,11 +403,11 @@ class _SelfieScreenState extends State<SelfieScreen> {
     try {
       File? file;
 
-      if (source == PickSource.CAMERA) {
-        final ImagePicker _picker = ImagePicker();
+      if (source == PickSource.camera) {
+        final ImagePicker picker = ImagePicker();
 
 
-        final XFile? photo = await _picker.pickImage(
+        final XFile? photo = await picker.pickImage(
           source: ImageSource.camera,
           imageQuality: 50,
           preferredCameraDevice: CameraDevice.front

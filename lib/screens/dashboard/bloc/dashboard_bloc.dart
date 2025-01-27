@@ -1,14 +1,13 @@
 import 'dart:async';
-import 'dart:math';
-
-import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
-import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/bloc/dashboard_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/data/network/dashboard_service.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/bloc/dashboard_event.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/bloc/dashboard_state.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/data/network/dashboard_service.dart';
 
 import '../../../core/network/error_handler.dart';
 import '../controller/dash_controller.dart';
@@ -20,7 +19,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final GlobalStorage globalStorage = GetIt.instance<GlobalStorage>();
   List<DashboardModelClass> data = [];
   late int janitorId;
-  var message;
+  String? message;
 
   DashboardBloc() : super(ClockInInitial()) {
     on<DashboardEvent>((event, emit) {});
@@ -50,7 +49,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         return;
       }
       message = response.results!.message;
-      print("responseeee  ------>>>>>>  " + response.toString());
+      debugPrint("responseeee  ------>>>>>>  $response");
     } catch (e) {
       if (event.type == "check_in") {
         emit(ClockInError(error: ErrorHandler.handle(e).failure , message: message));
@@ -91,7 +90,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   FutureOr<void> _mapAppLaunchToState(
       CheckAttendance event, Emitter<DashboardState> emit) async {
     try {
-      emit(AppLaunchLoading(message: "Launching App.."));
+      emit(const AppLaunchLoading(message: "Launching App.."));
 
       var response = await dashboardService.appLaunch();
       if (response.lastAttendance == "check_in") {
@@ -100,7 +99,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       if (response.lastAttendance == "check_out") {
         globalStorage.saveCheckIn(isCheckedIn: false);
       }
-      print("appLaunchResponse  ------  " + response.toJson().toString());
+      debugPrint("appLaunchResponse  ------  ${response.toJson()}");
       emit(AppLaunchSuccess(data: response));
     } catch (e) {
       emit(AppLaunchError(error: ErrorHandler.handle(e).failure  ));

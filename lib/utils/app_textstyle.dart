@@ -59,7 +59,7 @@ class AppTextStyle {
   );
 
   static TextStyle font10 = TextStyle(
-    color: AppColors.ListTitleColor,
+    color: AppColors.listTitleColor,
     fontSize: 10.sp,
     fontWeight: FontWeight.w400,
   );
@@ -111,7 +111,7 @@ class AppTextStyle {
   );
 
   static TextStyle font13w6 = TextStyle(
-    color: AppColors.ListTitleColor,
+    color: AppColors.listTitleColor,
     fontSize: 13.sp,
     fontWeight: FontWeight.w600,
     letterSpacing: 0.8,

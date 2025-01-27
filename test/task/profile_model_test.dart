@@ -1,4 +1,4 @@
-import 'package:Woloo_Smart_hygiene/screens/my_account/data/model/profile_model.dart';
+import 'package:woloo_smart_hygiene/screens/my_account/data/model/profile_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 // For json.decode and json.encode
 

@@ -1,6 +1,6 @@
-/// status : 1
-/// task_id : "16"
-/// task_name : "Doors"
+// status : 1
+// task_id : "16"
+// task_name : "Doors"
 
 class TaskStatus {
   TaskStatus({

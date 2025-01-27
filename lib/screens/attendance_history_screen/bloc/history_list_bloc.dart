@@ -1,11 +1,10 @@
 import 'dart:async';
 
-import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/bloc/history_list_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/bloc/history_list_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/attendance_history_screen/data/network/attendance_history_service.dart';
-import 'package:bloc/bloc.dart';
+import 'package:woloo_smart_hygiene/screens/attendance_history_screen/bloc/history_list_event.dart';
+import 'package:woloo_smart_hygiene/screens/attendance_history_screen/bloc/history_list_state.dart';
+import 'package:woloo_smart_hygiene/screens/attendance_history_screen/data/network/attendance_history_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-
 import '../../../core/network/error_handler.dart';
 
 class HistoryListBloc extends Bloc<HistoryListEvent, HistoryListState> {

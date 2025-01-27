@@ -1,23 +1,23 @@
 import 'dart:core';
 import 'dart:io';
 
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/button_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/dialogue_box_issue_report.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/dropdown_dialogue.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/error_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/multiselect_dropdown.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issue_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issue_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/bloc/report_issue_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/cluster_dropdown_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/facility_dropdown_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/janitor_dropdown_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/task_names_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/widget/view_image.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/button_widget.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/dialogue_box_issue_report.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/dropdown_dialogue.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/error_widget.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/multiselect_dropdown.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/bloc/report_issue_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/bloc/report_issue_event.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/bloc/report_issue_state.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/data/model/cluster_dropdown_model.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/data/model/facility_dropdown_model.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/data/model/janitor_dropdown_model.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/data/model/task_names_model.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/widget/view_image.dart';
+import 'package:woloo_smart_hygiene/screens/task_list/data/model/task_list_model.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -37,16 +37,16 @@ import '../../washroom_image_screen/images_bloc/event/capture_event.dart';
 import '../../washroom_image_screen/images_bloc/state/capture_state.dart';
 
 enum PickSource {
-  CAMERA,
-  GALLERY,
+  camera,
+  gallery,
 }
 
 class ReportIssueScreen extends StatefulWidget {
   final PageController? pageController;
   const ReportIssueScreen({
-    Key? key,
+    super.key,
     this.pageController
-  }) : super(key: key);
+  });
 
   @override
   State<ReportIssueScreen> createState() => _ReportIssueScreenState();
@@ -78,13 +78,13 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
   final ReportIssueBloc bloc1 = ReportIssueBloc();
   final ReportIssueBloc bloc2 = ReportIssueBloc();
   final ReportIssueBloc bloc3 = ReportIssueBloc();
-   CaptureBloc _captureBloc = CaptureBloc();
+   final CaptureBloc _captureBloc = CaptureBloc();
   final GlobalKey<DropdownSearchState> _clusterNameKey = GlobalKey<DropdownSearchState>();
   final GlobalKey<DropdownSearchState> _facilityKey = GlobalKey<DropdownSearchState>();
   final GlobalKey<DropdownSearchState> _templateKey = GlobalKey<DropdownSearchState>();
   final GlobalKey<DropdownSearchState> _taskNameKey = GlobalKey<DropdownSearchState>();
   final GlobalKey<DropdownSearchState> _assignKey = GlobalKey<DropdownSearchState>();
-  AutovalidateMode _autoValidate = AutovalidateMode.disabled;
+  final AutovalidateMode _autoValidate = AutovalidateMode.disabled;
   // final GlobalKey<DropdownSearchState> _dropDownKey = GlobalKey<DropdownSearchState>();
   // final GlobalKey<DropdownSearchState> _dropDownKey = GlobalKey<DropdownSearchState>();
   // final GlobalKey<DropdownSearchState> _dropDownKey = GlobalKey<DropdownSearchState>();
@@ -92,7 +92,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
   // GlobalKey<DropdownSearchState> dropDownKey = GlobalKey<DropdownSearchState>();
   @override
   void initState() {
-    reportIssueBloc.add(GetAllClustersDropdown());
+    reportIssueBloc.add(const GetAllClustersDropdown());
    
     super.initState();
   }
@@ -129,7 +129,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
         },
         builder: (context, state) {
 
-              print("report issue  $state");
+             debugPrint("report issue  $state");
           if (state is GetClustersDropdownLoading) {
             EasyLoading.show(
                 status: MydashboardScreenConstants.LOADING_TOAST.tr());
@@ -298,7 +298,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           itemAsString: (ClusterDropdownModel item) =>
                               item.clusterName,
                           onChanged: (ClusterDropdownModel item) {
-                                 print("in drop down $state");
+                            debugPrint("in drop down $state");
                             try {
                               clusterId = item.clusterId!;
                               reportIssueBloc.add(GetAllFacilityDropdown(
@@ -316,7 +316,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
 
 
                             } catch (e) {
-                              print("dropppppp" + e.toString());
+                              debugPrint("dropppppp$e");
                             }
                           },
                           validator: (value) => value == null
@@ -348,7 +348,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           onChanged: (FacilityDropdownModel item) {
 
                               facilityId = item.id!;
-                              print("facilityId --->" + facilityId.toString());
+                              debugPrint("facilityId --->$facilityId");
 
                           },
 
@@ -384,7 +384,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                                 .add(GetAllTaskList(id: item.id ?? '0'));
 
                               templateId = item.id!;
-                              print("templateId --->" + templateId.toString());
+                            debugPrint("templateId --->$templateId");
 
                           },
                         ),
@@ -418,7 +418,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
         borderRadius: BorderRadius.circular(25.r),
           boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2), // Shadow color
+                          color: Colors.black.withValues(alpha: 0.2), // Shadow color
                           spreadRadius: 1, // How wide the shadow should spread
                           blurRadius: 10, // The blur effect of the shadow
                           offset: const Offset(0,
@@ -447,7 +447,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                             onChanged: (List<Tasks> i) {
                               selectedIds =
                                   i.map((e) => e.taskId.toString()).toList();
-                              print(selectedIds);
+                              debugPrint(selectedIds.toString());
                             },
                             // label: 'Template Name',
                           ),
@@ -465,7 +465,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
         borderRadius: BorderRadius.circular(25.r),
           boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2), // Shadow color
+                          color: Colors.black.withValues( alpha: 0.2), // Shadow color
                           spreadRadius: 1, // How wide the shadow should spread
                           blurRadius: 10, // The blur effect of the shadow
                           offset: const Offset(0,
@@ -477,7 +477,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                               autovalidateMode: AutovalidateMode.disabled,
                              decoration: InputDecoration(
                                hintText:  MyReportIssueScreenConstants.DESCRIPTION.tr(),
-                               contentPadding: EdgeInsets.only( left: 12 ),
+                               contentPadding: const EdgeInsets.only( left: 12 ),
                                border: InputBorder.none
 
                              ),
@@ -532,9 +532,9 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
 
                              FocusScope.of(context).requestFocus(FocusNode());
                               janitorId = item.id!;
-                              print("selectedTasks---->${selectedIds}");
+                              debugPrint("selectedTasks---->$selectedIds");
 
-                              print("janitorId --->" + janitorId.toString());
+                             debugPrint("janitorId --->$janitorId");
 
                           },
                         ),
@@ -548,7 +548,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           horizontal: 20.w,
                         ),
                         child: DottedBorder(
-                          dashPattern: [4, 4, 4, 4],
+                          dashPattern: const [4, 4, 4, 4],
                           color: Colors.black,
                           borderType: BorderType.RRect,
                           radius: Radius.circular(25.r),
@@ -564,7 +564,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                              BlocBuilder(
                                bloc: _captureBloc,
                               builder: (context, state) {
-                                   print("  reposrt issue $state");
+                                   debugPrint("  reposrt issue $state");
                                  if ( state  is AddImagesInitial ) {
 
                                       return       GestureDetector(
@@ -597,21 +597,15 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                              AppTextStyle.font16bold.copyWith(
                            color: AppColors.disabledButtonTextColor,
                              )
-                          // TextStyle(
-                          //   color: AppColors.clusterTitleColor,
-                          //   fontSize: 16.sp,
-                          //   fontWeight: FontWeight.w400,
-                          // ),
+
                         ),
                       ),
                       SizedBox(
                         height: 80.h,
-                        child: VerticalDivider(
+                        child: const VerticalDivider(
                           color: AppColors.black,
                         ),
                       ),
- 
-
                                   Center(
                                           child: Container(
                                             height: 70.h,
@@ -656,7 +650,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                                                   padding: EdgeInsets.symmetric(
                                                     horizontal: 5.w,
                                                   ),
-                                                  child: Icon(
+                                                  child: const Icon(
                                                     Icons.file_open_outlined,
                                                     size: 23,
                                                   ),
@@ -668,12 +662,10 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                                 ],
                               ),
                             );
-                                   
                                  }
                                  else if (
                                   state  is AddImagesSuccessful 
                                  ){
-
                               return 
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -759,7 +751,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
 
                                  }
                                  else {
-                                   return SizedBox();
+                                   return const SizedBox();
                                  }
                              },)
                                
@@ -809,11 +801,11 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                           if (_file != null) {
 
                             reportIssueBloc.add(ReportIssue(
-                                template_id: templateId,
-                                facility_id: facilityId,
-                                janitor_id: janitorId,
+                                templateId: templateId,
+                                facilityId: facilityId,
+                                janitorId: janitorId,
                                 description: _controller.text,
-                                task_images: _file!,
+                                taskImages: _file!,
                                 taskList: selectedIds
                             )
                             );
@@ -850,9 +842,9 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
   Future<File?> pickFile(File? old, PickSource source) async {
     try {
       File? file;
-      final List<String> allowedFileTypes = const ['jpg', 'png', 'jpeg'];
+      const List<String> allowedFileTypes = ['jpg', 'png', 'jpeg'];
 
-      if (source == PickSource.GALLERY) {
+      if (source == PickSource.gallery) {
         FilePickerResult? result = await FilePicker.platform.pickFiles(
           type: FileType.custom,
           allowedExtensions: allowedFileTypes,
@@ -862,9 +854,9 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
         }
       }
 
-      if (source == PickSource.CAMERA) {
-        final ImagePicker _picker = ImagePicker();
-        final XFile? photo = await _picker.pickImage(
+      if (source == PickSource.camera) {
+        final ImagePicker picker = ImagePicker();
+        final XFile? photo = await picker.pickImage(
           source: ImageSource.camera,
           imageQuality: 50,
         );

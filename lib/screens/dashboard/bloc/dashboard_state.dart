@@ -1,10 +1,10 @@
 import 'dart:math';
 
-import 'package:Woloo_Smart_hygiene/core/model/App_launch_model.dart';
-import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
+import 'package:woloo_smart_hygiene/core/model/app_launch_model.dart';
+import 'package:woloo_smart_hygiene/core/network/failure.dart';
 import 'package:equatable/equatable.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/Attendance_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/data/model/attendance_model.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/data/model/dashboard_model_class.dart';
 
 abstract class DashboardState extends Equatable {
   const DashboardState();

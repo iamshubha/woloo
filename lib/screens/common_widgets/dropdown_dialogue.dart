@@ -1,9 +1,10 @@
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:dropdown_search/dropdown_search.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
+// import 'package:dropdown_search/dropdown_search.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:form_builder_extra_fields/form_builder_extra_fields.dart';
 
 
 class DropDownDialog<T> extends StatefulWidget {
@@ -18,7 +19,7 @@ class DropDownDialog<T> extends StatefulWidget {
   final T? selected;
 
   const DropDownDialog({
-    Key? key,
+    super.key,
     required this.items,
     this.enabled,
     this.selected,
@@ -28,14 +29,14 @@ class DropDownDialog<T> extends StatefulWidget {
     this.validator,
     this.widgetKey,
    required this.hint
-  }) : super(key: key);
+  });
 
   @override
   State<DropDownDialog<T>> createState() => _DropDownDialogState<T>();
 }
 
 class _DropDownDialogState<T> extends State<DropDownDialog<T>> {
-  bool _startValidation = false;
+
   // dropDownKey
   // GlobalKey<DropdownSearchState> dropDownKey = GetIt.instance();
 
@@ -43,7 +44,7 @@ class _DropDownDialogState<T> extends State<DropDownDialog<T>> {
 
   @override
   Widget build(BuildContext context) {
-     print("TEST ${widget.selected}");
+     debugPrint("TEST ${widget.selected}");
     return 
     Container(
       decoration: BoxDecoration(
@@ -52,7 +53,7 @@ class _DropDownDialogState<T> extends State<DropDownDialog<T>> {
         borderRadius: BorderRadius.circular(25.r),
           boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2), // Shadow color
+                          color: Colors.black.withValues(alpha: 0.2), // Shadow color
                           spreadRadius: 1, // How wide the shadow should spread
                           blurRadius: 10, // The blur effect of the shadow
                           offset: const Offset(0,
@@ -99,7 +100,7 @@ class _DropDownDialogState<T> extends State<DropDownDialog<T>> {
             hintText: widget.hint,
 
               suffixIcon: IconButton(
-                              icon: Icon(Icons.clear),
+                              icon: const Icon(Icons.clear),
                               onPressed: (){}
                             ),
 
@@ -163,9 +164,6 @@ class _DropDownDialogState<T> extends State<DropDownDialog<T>> {
 
         },
         onBeforePopupOpening: (a) async {
-          setState(() {
-            _startValidation = true;
-          });
           return true;
         },
       ),

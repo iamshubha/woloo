@@ -1,4 +1,4 @@
-import 'package:Woloo_Smart_hygiene/screens/dashboard/data/model/Attendance_model.dart';
+import 'package:woloo_smart_hygiene/screens/dashboard/data/model/attendance_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 // import 'path_to_model/attendance_model.dart'; // Update with your model's path
 

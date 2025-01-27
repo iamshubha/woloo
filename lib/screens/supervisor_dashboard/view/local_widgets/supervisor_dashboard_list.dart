@@ -1,13 +1,13 @@
-import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/empty_list_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/error_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/empty_list_widget.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/error_widget.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_event.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/bloc/supervisor_dashboard_state.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/model/supervisor_model_dashboard.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -61,30 +61,30 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
 
     _supervisorDashboardBloc = GetIt.instance<SupervisorDashboardBloc>();
     supervisorId = globalStorage.getId();
-    _supervisorDashboardBloc.add(GetSupervisorDashboardData());
+    _supervisorDashboardBloc.add(const GetSupervisorDashboardData());
     // controller.setCardIndex(5);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-     print(" khdjkfh ${MediaQuery.of(context).size}");
+    debugPrint(" khdjkfh ${MediaQuery.of(context).size}");
     return BlocConsumer(
       bloc: _supervisorDashboardBloc,
       listener: (context, state) {
         if (state is GetSupervisorDashboardDataSuccess) {
           EasyLoading.dismiss();
-     
-         
-            print("GetSupervisorDashboardDataSuccess--->" + _data.toString());
+
+
+          debugPrint("GetSupervisorDashboardDataSuccess--->$_data");
          
         }
         if (state is SupervisorUpdateStatusSuccessful) {
           EasyLoading.dismiss();
           
           //  isApproved = true;
-         
-          print("SupervisorUpdateStatusSuccessful " + isApproved.toString());
+
+          debugPrint("SupervisorUpdateStatusSuccessful $isApproved");
         }
 
         // if (state is AssignTaskSuccessful) {
@@ -103,7 +103,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
 
         if (state is SupervisorDashboardError) {
           EasyLoading.dismiss();
-          print("SupervisorDashboardError--->" + _data.toString());
+          debugPrint("SupervisorDashboardError--->$_data");
 
           return CustomErrorWidget(error: state.error.message);
         } 
@@ -130,9 +130,9 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
            RefreshIndicator(
           onRefresh: () {
             return Future.delayed(
-              Duration(seconds: 1),
+              const Duration(seconds: 1),
               () {
-                _supervisorDashboardBloc.add(GetSupervisorDashboardData());
+                _supervisorDashboardBloc.add(const GetSupervisorDashboardData());
               },
             );
           },
@@ -140,7 +140,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
           child:
            Column(
              children: [
-               Container(
+               SizedBox(
                  // flex: 4,
                  // flex: 2,
                   height:
@@ -211,7 +211,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                    boxShadow: [
                                                 BoxShadow(
                                                   color: Colors.black
-                                                      .withOpacity(0.2), // Shadow color
+                                                      .withValues( alpha: 0.2), // Shadow color
                                                   spreadRadius:
                                                       1, // How wide the shadow should spread
                                                   blurRadius:
@@ -496,7 +496,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                   //
                                                   AppColors.pendingCardBgColor
                                                   :_data[index].status == "Ongoing"
-                                                      ? Color.fromARGB(255, 232, 239, 132)
+                                                      ? const Color.fromARGB(255, 232, 239, 132)
                                                       :_data[index].status ==
                                                               "Accepted"
                                                           ? AppColors.acceptedBgColor
@@ -515,7 +515,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                    boxShadow: [
                                                 BoxShadow(
                                                   color: Colors.black
-                                                      .withOpacity(0.15), // Shadow color
+                                                      .withValues( alpha: 0.15), // Shadow color
                                                   spreadRadius:
                                                       1, // How wide the shadow should spread
                                                   blurRadius:
@@ -580,7 +580,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                         color:
                                                          _data[index].status == "Rejected" ?
                                                         AppColors.white :
-                                                        AppColors.ListTitleColor,
+                                                        AppColors.listTitleColor,
 
                                                       )
                                                     // TextStyle(
@@ -614,7 +614,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                       color:
                                                       _data[index].status == "Rejected" ?
                                                       AppColors.white :
-                                                      AppColors.ListTitleColor,
+                                                      AppColors.listTitleColor,
 
 
                                                     )
@@ -647,7 +647,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                           .copyWith(
                                                        color:  _data[index].status == "Rejected" ?
                                                           AppColors.white :
-                                                          AppColors.ListTitleColor,
+                                                          AppColors.listTitleColor,
                                                       )
                                                     // TextStyle(
                                                     //   color: AppColors.timeSlotColor,
@@ -677,7 +677,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                       color:
                                                       _data[index].status == "Rejected" ?
                                                       AppColors.white :
-                                                      AppColors.ListTitleColor,
+                                                      AppColors.listTitleColor,
                                                     )
                                               // TextStyle(
                                               //   color: AppColors.ListTitleColor,
@@ -699,7 +699,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                 _data[index].status == "Rejected" ?
                                                 AppColors.white :
 
-                                                AppColors.ListTitleColor,
+                                                AppColors.listTitleColor,
                                               )
                                               // TextStyle(
                                               //   color: AppColors.ListTitleColor,
@@ -1017,8 +1017,8 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
           EasyLoading.dismiss();
        
             isApproved = true;
-        
-          print("SupervisorUpdateStatusSuccessful " + isApproved.toString());
+
+          debugPrint("SupervisorUpdateStatusSuccessful $isApproved");
         }
         else
         if (state is SupervisorUpdateStatusError) {
@@ -1035,7 +1035,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
         //   return CustomErrorWidget(error: state.error);
         // }
 
-        return SizedBox();
+        return const SizedBox();
         
       },
     );

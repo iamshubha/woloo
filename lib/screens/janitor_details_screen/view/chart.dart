@@ -48,7 +48,7 @@ class _ChartState extends State<Chart> {
 
   @override
   void initState() {
-    // TODO: implement initState
+  
     super.initState();
 
     // widget.complatedTask;
@@ -82,12 +82,12 @@ class _ChartState extends State<Chart> {
 
 
     pies =    [
-      PieData(value: compaltedPer == 0 ? 0.01 :compaltedPer!, color: Color(0xff006C7B), ),
+      PieData(value: compaltedPer == 0 ? 0.01 :compaltedPer!, color: const Color(0xff006C7B), ),
       PieData(value:  pendingPer == 0 ? 0.01 :pendingPer! , color: Colors.cyan),
       PieData(value:  acceptedPer  == 0 ? 0.01 :acceptedPer! , color: AppColors.acceptedBgColor),
       PieData(value:  rejectedPer  == 0 ? 0.01 :rejectedPer! , color: AppColors.rejectButtonColor ),
       PieData(value:  rfcPer  == 0 ? 0.01 :rfcPer! , color: AppColors.rfcCardBgColor ),
-      PieData(value:  onGoingPer  == 0 ? 0.01 :onGoingPer! , color: Color.fromARGB(255, 232, 239, 132) ),
+      PieData(value:  onGoingPer  == 0 ? 0.01 :onGoingPer! , color: const Color.fromARGB(255, 232, 239, 132) ),
 
       // PieData(value: 0.45, color: Colors.lightGreen),
     ];
@@ -96,7 +96,7 @@ class _ChartState extends State<Chart> {
 
   @override
   Widget build(BuildContext context) {
-           print( " sime ${MediaQuery.of(context).size.height}");
+           debugPrint( " sime ${MediaQuery.of(context).size.height}");
     return  
       Column(
         // mainAxisAlignment: MainAxisAlignment.center,
@@ -114,7 +114,7 @@ class _ChartState extends State<Chart> {
       //       height: 18,
       //     ),
 
-          Container(
+          SizedBox(
             height: 200,
             width: 160,
             child:
@@ -222,7 +222,7 @@ class _ChartState extends State<Chart> {
                mainAxisAlignment: MainAxisAlignment.start,
                // crossAxisAlignment: CrossAxisAlignment.start,
                children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Column(
@@ -257,7 +257,7 @@ class _ChartState extends State<Chart> {
                         height: 20,
                       ),
                       Indicator(
-                        color:  Color.fromARGB(255, 232, 239, 132) ,
+                        color:  const Color.fromARGB(255, 232, 239, 132) ,
                         text: 'Onging Task',
                         taskCount: widget.ongoingTask,
 
@@ -270,7 +270,7 @@ class _ChartState extends State<Chart> {
 
                     ],
                   ),
-                 SizedBox(
+                 const SizedBox(
                    width: 20,
                  ),
                  Column(
@@ -335,7 +335,7 @@ class _ChartState extends State<Chart> {
           return PieChartSectionData(
             color:  const Color(0xff006C7B),
             value: compaltedPer,
-            title: '${compaltedPer}%',
+            title: '$compaltedPer%',
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
@@ -350,7 +350,7 @@ class _ChartState extends State<Chart> {
           return PieChartSectionData(
             color: const Color(0xff00C3DE),
             value: pendingPer,
-            title: '${pendingPer}%',
+            title: '$pendingPer%',
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
@@ -413,7 +413,7 @@ class _ChartState extends State<Chart> {
 
 //   @override
 //   void initState() {
-//     // TODO: implement initState
+//     
 //     super.initState();
 //   widget.;
     

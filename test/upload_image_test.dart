@@ -1,8 +1,9 @@
 import 'dart:convert';
 
-import 'package:Woloo_Smart_hygiene/core/network/api_constant.dart';
-import 'package:Woloo_Smart_hygiene/core/network/dio_client.dart';
-import 'package:Woloo_Smart_hygiene/screens/selfie_screen/data/network/selfie_service.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
+import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/screens/selfie_screen/data/network/selfie_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -23,6 +24,7 @@ void main() {
      String mockToken = "";
   late SelfieService service;
    final client = MockClient();
+    Map<String, dynamic>? decodedToken;
   setUp(() async{
 
          final file = File('assets/testData.json');
@@ -32,6 +34,9 @@ void main() {
       
       // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUyLCJyb2xlX2lkIjoxLCJpYXQiOjE3MzU5MTUyOTEsImV4cCI6MTczNjUyMDA5MX0.GWrrMseWa1lsvr5FUjudP8jWiiEVCt-U7_jlPrde2tw";
      var dio = Dio();
+
+
+       decodedToken = JwtDecoder.decode(mockToken);
 
       reqId =  jsonData["allocationId"];
       
@@ -68,7 +73,7 @@ void main() {
 },
                 body: {            
           "type": type,
-          "id":reqId,
+          "id":decodedToken!["id"].toString(),
           "remarks": remarks,
           "image": file,
         },
@@ -163,7 +168,7 @@ void main() {
     expect(result, throwsException);
        
      } catch (e) {
-       
+           expect( e.toString(),  '{message: "id" must be a number, success: false, results: []}');  
      }
 
 

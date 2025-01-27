@@ -22,7 +22,7 @@ class LeadingButton extends StatelessWidget {
                   },
                   child: Row(
                     children: [
-                  Icon(
+                  const Icon(
                       Icons.arrow_back_ios_new,
                       color: Colors.black,
                       size: 12,

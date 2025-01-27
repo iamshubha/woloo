@@ -1,5 +1,5 @@
-/// type : "check_out"
-/// location : [19,20]
+// type : "check_out"
+// location : [19,20]
 
 // class LastAttendance {
 //   LastAttendance({

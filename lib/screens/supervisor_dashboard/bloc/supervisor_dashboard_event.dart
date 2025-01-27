@@ -24,13 +24,13 @@ class SupervisorUpdateStatus extends SupervisorDashboardEvent {
 
 class AssignTask extends SupervisorDashboardEvent {
   final List<String> id;
-  final String janitor_id;
+  final String janitorId;
 
   const AssignTask({
     required this.id,
-    required this.janitor_id,
+    required this.janitorId,
   });
 
   @override
-  List<Object?> get props => [id, janitor_id, Random().nextInt(100)];
+  List<Object?> get props => [id, janitorId, Random().nextInt(100)];
 }

@@ -13,7 +13,7 @@ class UploadImages extends ImagesEvent {
   final String allocationId;
 
   final String remarks;
-  UploadImages(
+  const UploadImages(
       {required this.type,
       required this.image,
       required this.id,

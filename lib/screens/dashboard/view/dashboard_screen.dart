@@ -1,5 +1,5 @@
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/tab_widget.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/tab_widget.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,8 +13,8 @@ import 'local_widgets/dashboard_list.dart';
 
 class RegularTask extends StatefulWidget {
  
-  final lat;
-  final long;
+  final String? lat;
+  final String? long;
   final List<DashboardModelClass> filter;
   final DashboardBloc dashboardBloc;
   const RegularTask({
@@ -57,7 +57,7 @@ class _RegularTaskState extends State<RegularTask> with SingleTickerProviderStat
 
    @override
   void initState() {
-    // TODO: implement initState
+  
     super.initState();
       _tabController =  TabController(length: 6, vsync: this);
   }
@@ -84,7 +84,7 @@ class _RegularTaskState extends State<RegularTask> with SingleTickerProviderStat
                                      padding: EdgeInsets.zero,
                                    indicatorPadding: EdgeInsets.zero,
                                    indicatorSize: TabBarIndicatorSize.label,
-                                   labelPadding: EdgeInsets.only(right: 0, left: 8 ),
+                                   labelPadding: const EdgeInsets.only(right: 0, left: 8 ),
 
                                    //  labelColor:AppColors.buttonBgColor ,
                                      tabAlignment: TabAlignment.start,
@@ -122,7 +122,7 @@ class _RegularTaskState extends State<RegularTask> with SingleTickerProviderStat
                 child: RefreshIndicator(
                   onRefresh: () {
                     return Future.delayed(
-                      Duration(seconds: 1),
+                      const Duration(seconds: 1),
                           () {
                         dashboardBloc.add(const GetTaskTamplates());
                       },
@@ -137,8 +137,8 @@ class _RegularTaskState extends State<RegularTask> with SingleTickerProviderStat
 
                                          DashboardListWidget(
                                           tabController: _tabController,
-                                                                        current_lattitude: widget.lat,
-                                                                        current_longitude: widget.long,
+                                           currentLattitude: widget.lat,
+                                           currentLongitude: widget.long,
                                                                         filter: widget.filter.where( (e)=> e.status == "Pending" ).toList(),
                                                                         dashboardBloc:  widget.dashboardBloc,
                                                                         onTapItem: () {
@@ -151,8 +151,8 @@ class _RegularTaskState extends State<RegularTask> with SingleTickerProviderStat
 
                                           DashboardListWidget(
                                              tabController: _tabController,
-                                            current_lattitude: widget.lat,
-                                            current_longitude: widget.long,
+                                            currentLattitude: widget.lat,
+                                            currentLongitude: widget.long,
                                             filter: widget.filter.where( (e)=> e.status == "Accepted" ).toList(),
                                             dashboardBloc:  widget.dashboardBloc,
                                             onTapItem: () {
@@ -164,8 +164,8 @@ class _RegularTaskState extends State<RegularTask> with SingleTickerProviderStat
 
                                           DashboardListWidget(
                                              tabController: _tabController,
-                                            current_lattitude: widget.lat,
-                                            current_longitude: widget.long,
+                                            currentLattitude: widget.lat,
+                                            currentLongitude: widget.long,
                                             filter: widget.filter.where( (e)=> e.status == "Ongoing" ).toList(),
                                             dashboardBloc:  widget.dashboardBloc,
                                             onTapItem: () {
@@ -177,8 +177,8 @@ class _RegularTaskState extends State<RegularTask> with SingleTickerProviderStat
 
                                           DashboardListWidget(
                                              tabController: _tabController,
-                                                                                       current_lattitude: widget.lat,
-                                                                                      current_longitude: widget.long,
+                                            currentLattitude: widget.lat,
+                                            currentLongitude: widget.long,
                                             filter: widget.filter.where( (e)=> e.status == "Request for closure" ).toList(),
                                             dashboardBloc:  widget.dashboardBloc,
                                             onTapItem: () {
@@ -190,8 +190,8 @@ class _RegularTaskState extends State<RegularTask> with SingleTickerProviderStat
 
                                           DashboardListWidget(
                                              tabController: _tabController,
-                                            current_lattitude: widget.lat,
-                                            current_longitude: widget.long,
+                                            currentLattitude: widget.lat,
+                                            currentLongitude: widget.long,
                                             filter: widget.filter.where( (e)=> e.status == "Completed" ).toList(),
                                             dashboardBloc: widget.dashboardBloc,
                                             onTapItem: () {
@@ -201,8 +201,8 @@ class _RegularTaskState extends State<RegularTask> with SingleTickerProviderStat
                                           ),
                                                     DashboardListWidget(
                                              tabController: _tabController,
-                                            current_lattitude: widget.lat,
-                                            current_longitude: widget.long,
+                                                      currentLattitude: widget.lat,
+                                                      currentLongitude: widget.long,
                                             filter: widget.filter.where( (e)=> e.status == "Rejected" ).toList(),
                                             dashboardBloc: widget.dashboardBloc,
                                             onTapItem: () {

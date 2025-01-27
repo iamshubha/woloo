@@ -1,7 +1,7 @@
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
 
 class WhiteButtonWidget extends StatefulWidget {
   final String text;
@@ -9,11 +9,11 @@ class WhiteButtonWidget extends StatefulWidget {
   final Function onTap;
 
   const WhiteButtonWidget({
-    Key? key,
+    super.key,
     required this.text,
     required this.color,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   State<WhiteButtonWidget> createState() => _WhiteButtonWidgetState();
@@ -33,10 +33,10 @@ class _WhiteButtonWidgetState extends State<WhiteButtonWidget> {
           color: widget.color,
           borderRadius: BorderRadius.circular(25.r),
           boxShadow:   [  BoxShadow(
-            color: Colors.black.withOpacity(0.2), // Shadow color
+            color: Colors.black.withValues(alpha:0.2), // Shadow color
             spreadRadius: 1, // How wide the shadow should spread
             blurRadius: 10, // The blur effect of the shadow
-            offset: Offset(0, 5), // Shadow offset, with y-offset for bottom shadow
+            offset: const Offset(0, 5), // Shadow offset, with y-offset for bottom shadow
           ),
           ],
         ),

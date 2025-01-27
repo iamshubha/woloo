@@ -1,9 +1,9 @@
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/pop_up_buttons.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/pop_up_buttons.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
 
 import '../../utils/app_constants.dart';
 
@@ -13,11 +13,11 @@ class CustomDialogueWidget extends StatefulWidget {
   final Function onTapCancel;
 
   const CustomDialogueWidget({
-    Key? key,
+    super.key,
     required this.text,
     required this.onTapSubmit,
     required this.onTapCancel,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomDialogueWidget> createState() => _CustomDialogueWidgetState();

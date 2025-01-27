@@ -1,4 +1,4 @@
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/model/Supervisor_model_dashboard.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/model/supervisor_model_dashboard.dart';
 import 'package:flutter_test/flutter_test.dart';
 // import 'package:your_project_name/supervisor_model_dashboard.dart'; // Adjust the import path
 

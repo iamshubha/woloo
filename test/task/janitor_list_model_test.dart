@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'package:Woloo_Smart_hygiene/screens/assign_screen/data/janitorListModel.dart';
+import 'package:woloo_smart_hygiene/screens/assign_screen/data/janitor_list_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('JanitorListModel Tests', () {
     test('fromJson and toJson work correctly', () {
-      final jsonData = '''
+      const jsonData = '''
       {
         "data": [
           {
@@ -63,7 +63,7 @@ void main() {
 
   group('Datum Tests', () {
     test('fromJson and toJson work correctly', () {
-      final datumJson = '''
+      const datumJson = '''
       {
         "id": 1,
         "name": "John Doe",

@@ -1,5 +1,5 @@
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/tab_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/view/local_widgets/supervisor_dashboard_list.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/tab_widget.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/view/local_widgets/supervisor_dashboard_list.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,7 +10,7 @@ import '../../../../utils/app_textstyle.dart';
 import '../../../task_details_screen/view/task_details.dart';
 // import '../../../utils/app_color.dart';
 // import '../../../utils/app_textstyle.dart';
-import '../../model/Supervisor_model_dashboard.dart';
+import '../../model/supervisor_model_dashboard.dart';
 // import '../bloc/dashboard_bloc.dart';
 // import '../bloc/dashboard_event.dart';
 // import '../data/model/dashboard_model_class.dart';
@@ -18,8 +18,8 @@ import '../../model/Supervisor_model_dashboard.dart';
 
 class IotTask extends StatefulWidget {
  
-  final lat;
-  final long;
+  final String? lat;
+  final String? long;
   // final List<DashboardModelClass> filter;
   // final DashboardBloc dashboardBloc;
   const IotTask({
@@ -63,7 +63,7 @@ class _IotTaskState extends State<IotTask> with SingleTickerProviderStateMixin {
 
    @override
   void initState() {
-    // TODO: implement initState
+    
     super.initState();
       _tabController =  TabController(length: 4, vsync: this);
   }
@@ -90,7 +90,7 @@ class _IotTaskState extends State<IotTask> with SingleTickerProviderStateMixin {
                                      padding: EdgeInsets.zero,
                                    indicatorPadding: EdgeInsets.zero,
                                    indicatorSize: TabBarIndicatorSize.label,
-                                   labelPadding: EdgeInsets.only(right: 0, left: 8 ),
+                                   labelPadding: const EdgeInsets.only(right: 0, left: 8 ),
 
                                    //  labelColor:AppColors.buttonBgColor ,
                                      tabAlignment: TabAlignment.start,
@@ -129,7 +129,7 @@ class _IotTaskState extends State<IotTask> with SingleTickerProviderStateMixin {
                 child: RefreshIndicator(
                   onRefresh: () {
                     return Future.delayed(
-                      Duration(seconds: 1),
+                      const Duration(seconds: 1),
                           () {
                      //   dashboardBloc.add(const GetTaskTamplates());
                       },
@@ -147,7 +147,7 @@ class _IotTaskState extends State<IotTask> with SingleTickerProviderStateMixin {
                                 reqType: "IOT",
                             // key: key,
                             onTapItem: (SupervisorModelDashboard data, bool isApproved) async {
-                              print("templates " + data.status!);
+                              debugPrint("templates ${data.status!}");
                                if( data.status == "Request for closure" ){
                     await Navigator.push(
                 context,
@@ -171,7 +171,7 @@ class _IotTaskState extends State<IotTask> with SingleTickerProviderStateMixin {
                                              reqType: "IOT",
                             // key: key,
                             onTapItem: (SupervisorModelDashboard data, bool isApproved) async {
-                              print("templates " + data.status!);
+                              debugPrint("templates ${data.status!}");
                                if( data.status == "Request for closure" ){
                     await Navigator.push(
                 context,
@@ -197,7 +197,7 @@ class _IotTaskState extends State<IotTask> with SingleTickerProviderStateMixin {
                                             reqType: "IOT",
                             // key: key,
                             onTapItem: (SupervisorModelDashboard data, bool isApproved) async {
-                              print("templates " + data.status!);
+                              debugPrint("templates ${data.status!}");
                                if( data.status == "Request for closure" ){
                     await Navigator.push(
                 context,
@@ -220,7 +220,7 @@ class _IotTaskState extends State<IotTask> with SingleTickerProviderStateMixin {
                             reqType: "IOT",
                             // key: key,
                             onTapItem: (SupervisorModelDashboard data, bool isApproved) async {
-                              print("templates " + data.status!);
+                              debugPrint("templates ${data.status!}");
                               if( data.status == "Request for closure" ){
                                 await Navigator.push(
                                   context,

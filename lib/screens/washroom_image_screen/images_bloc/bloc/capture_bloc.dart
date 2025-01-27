@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/network/error_handler.dart';
@@ -21,7 +22,7 @@ class CaptureBloc extends Bloc<CaptureEvent, CaptureState> {
     try {
       emit(AddImagesInitial());
 
-      print("file capture imagdsfsfs  ${event.file} ");
+      debugPrint("file capture imagdsfsfs  ${event.file} ");
 
       if (event.file!.path.isNotEmpty) {
         emit(AddImagesSuccessful(image: event.file));

@@ -1,19 +1,18 @@
 import 'dart:io';
 
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/custom_dialogue_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/white_button_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/selfie_screen/view/camera.dart';
-import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/bloc/images_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/bloc/images_event.dart';
-import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/bloc/images_state.dart';
-import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/images_bloc/bloc/capture_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/washroom_image_screen/images_bloc/event/capture_event.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/custom_dialogue_widget.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/white_button_widget.dart';
+import 'package:woloo_smart_hygiene/screens/selfie_screen/view/camera.dart';
+import 'package:woloo_smart_hygiene/screens/washroom_image_screen/bloc/images_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/washroom_image_screen/bloc/images_event.dart';
+import 'package:woloo_smart_hygiene/screens/washroom_image_screen/bloc/images_state.dart';
+import 'package:woloo_smart_hygiene/screens/washroom_image_screen/images_bloc/bloc/capture_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/washroom_image_screen/images_bloc/event/capture_event.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,13 +35,12 @@ import '../images_bloc/state/capture_state1.dart';
 import '../images_bloc/state/capture_state2.dart';
 import '../images_bloc/state/capture_state3.dart';
 
-enum PickSource { CAMERA }
+enum PickSource { camera }
 
 class TaskCompletionScreen extends StatefulWidget {
   final String allocationId;
 
-  const TaskCompletionScreen({Key? key, required this.allocationId})
-      : super(key: key);
+  const TaskCompletionScreen({super.key, required this.allocationId});
 
   @override
   State<TaskCompletionScreen> createState() => _TaskCompletionScreenState();
@@ -53,11 +51,11 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
   File? _file2;
   File? _file3;
   //  File? _file4;
-  ImagesBloc _imagesBloc = ImagesBloc();
-  CaptureBloc _captureBloc = CaptureBloc(); 
-  CaptureBloc1 _captureBloc1 = CaptureBloc1(); 
-     CaptureBloc2 _captureBloc2 = CaptureBloc2(); 
-     CaptureBloc3 _captureBloc3 = CaptureBloc3(); 
+  final ImagesBloc _imagesBloc = ImagesBloc();
+  final CaptureBloc _captureBloc = CaptureBloc();
+  final CaptureBloc1 _captureBloc1 = CaptureBloc1();
+     final CaptureBloc2 _captureBloc2 = CaptureBloc2();
+     final CaptureBloc3 _captureBloc3 = CaptureBloc3();
   List<File> fileList = [];
   final TextEditingController _controller = TextEditingController();
   DashboardBloc dashboardBloc = DashboardBloc();
@@ -103,7 +101,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
             appBar: AppBar(
               backgroundColor: AppColors.white,
                leadingWidth: 100.w,
-              leading: LeadingButton(),
+              leading: const LeadingButton(),
             ),
             backgroundColor: AppColors.white,
             body: SafeArea(
@@ -164,9 +162,9 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                               
                                              },
                                           ),  ) );
-                                  
 
-                                        print("fileeeee1" + _file1.toString());
+
+                                          debugPrint("fileeeee1$_file1");
 
                                       },
                                       child: DottedBorder(
@@ -216,7 +214,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                       else if( state  is AddImagesSuccessful   ){
                                   return  Stack(
                                 children: [
-                                  Container(
+                                  SizedBox(
                                           height: 135.h,
                                           width: 150.w,
                                           child: ClipRRect(
@@ -251,7 +249,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                       }
                                       else{
 
-                                        return SizedBox();
+                                        return const SizedBox();
                                       }
 
                                     
@@ -263,7 +261,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                   
                                   bloc:  _captureBloc1,
                                   builder: (context, state) {
-                                           print(" object  $state ");
+                                    debugPrint(" object  $state ");
                                      if ( state is AddImagesInitial1) {
                                         
                                          return 
@@ -282,7 +280,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                         //     null, PickSource.CAMERA);
 
 
-                                        print("fileeeee2" + _file2.toString());
+                                        debugPrint("fileeeee2$_file2");
 
 
                                       },
@@ -339,7 +337,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                      return
                                         Stack(
                                 children: [
-                                  Container(
+                                  SizedBox(
                                           height: 135.h,
                                           width: 150.w,
                                           child: ClipRRect(
@@ -375,7 +373,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                       
                                      } 
                                       else {    
-                                         return SizedBox();
+                                         return const SizedBox();
                                       }
 
                                  }, ),
@@ -404,7 +402,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                               bloc: _captureBloc2,
                               builder:  (context, state) {
 
-                                     print("bloc 2 $state ");
+                                debugPrint("bloc 2 $state ");
                                      if ( state is  AddImagesInitial2 ) {
                                      return   GestureDetector(
                                       onTap: () async {
@@ -423,7 +421,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                         //     null, PickSource.CAMERA);
 
 
-                                        print("fileeeee3" + _file3.toString());
+                                        debugPrint("fileeeee3$_file3");
 
 
                                       },
@@ -474,7 +472,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                      else if ( state is AddImagesSuccessful2 ) {
                                    return Stack(
                                 children: [
-                                  Container(
+                                  SizedBox(
                                           height: 135.h,
                                           width: 150.w,
                                           child: ClipRRect(
@@ -511,7 +509,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                               );
                                      }
                                       else {
-                                         return SizedBox();
+                                         return const SizedBox();
                                       }
                                   
                               }, ),
@@ -544,7 +542,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
 
 
                                         if (kDebugMode) {
-                                          print("fileeeee3" + _file3.toString());
+                                          debugPrint("fileeeee3$_file3");
                                         }
 
 
@@ -596,7 +594,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                      else if ( state is AddImagesSuccessful3 ) {
                                    return Stack(
                                 children: [
-                                  Container(
+                                  SizedBox(
                                           height: 135.h,
                                           width: 150.w,
                                           child: ClipRRect(
@@ -614,10 +612,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
 
                                     child: GestureDetector(
                                       onTap: (){
-                                      
                                            _captureBloc3.add(RemoveImages3(file:_file3));
-                                    
-
                                       },
                                       child: const CircleAvatar(
                                         backgroundColor: AppColors.black,
@@ -633,7 +628,7 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                               );
                                      }
                                       else {
-                                         return SizedBox();
+                                         return const SizedBox();
                                       }
                                   
                               }, )
@@ -753,9 +748,9 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
     try {
       File? file;
 
-      if (source == PickSource.CAMERA) {
-        final ImagePicker _picker = ImagePicker();
-        final XFile? photo = await _picker.pickImage(
+      if (source == PickSource.camera) {
+        final ImagePicker picker = ImagePicker();
+        final XFile? photo = await picker.pickImage(
           source: ImageSource.camera,
           imageQuality: 50,
         );

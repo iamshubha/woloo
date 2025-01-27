@@ -1,6 +1,6 @@
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/empty_list_widget.dart';
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/leading_button.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/cluster_dropdown_model.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/empty_list_widget.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/leading_button.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/data/model/cluster_dropdown_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +18,7 @@ import '../report_issue_screen/data/model/facility_dropdown_model.dart';
 import 'bloc/assign_bloc.dart';
 import 'bloc/assign_event.dart';
 import 'bloc/assign_state.dart';
-import 'data/janitorListModel.dart';
+import 'data/janitor_list_model.dart';
 import 'janitor_slot.dart';
 
 class AssignScreen extends StatefulWidget {
@@ -41,9 +41,9 @@ class _AssignScreenState extends State<AssignScreen> {
 
  @override
   void initState() {
-    // TODO: implement initState
+   
     super.initState();
-     reportIssueBloc.add(GetAllClustersDropdown());
+     reportIssueBloc.add( const GetAllClustersDropdown());
   }
 
   @override
@@ -54,7 +54,7 @@ class _AssignScreenState extends State<AssignScreen> {
         backgroundColor: AppColors.white,
 
         leadingWidth: 100,
-        leading: LeadingButton(),
+        leading:  const LeadingButton(),
       ),
       body: 
       BlocBuilder(
@@ -99,7 +99,7 @@ class _AssignScreenState extends State<AssignScreen> {
           return  Padding(
             padding:  EdgeInsets.symmetric( horizontal: 20.w ),
             child: SingleChildScrollView(
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 // mainAxisAlignment: MainAxisAlignment.s,
@@ -131,7 +131,7 @@ class _AssignScreenState extends State<AssignScreen> {
                                   //  reportIssueBloc.add(GetAllJanitorsDropdown(
                                   //      clusterId: item.clusterId ?? 0));
                                  } catch (e) {
-                                   print("dropppppp" + e.toString());
+                                   debugPrint("dropppppp$e");
                                  }
                                },
                                validator: (value) => value == null
@@ -219,11 +219,11 @@ class _AssignScreenState extends State<AssignScreen> {
                          if ( state is GetJanitorListDataSuccess ) {
                            EasyLoading.dismiss();
                                janitorList =    state.data;
-                                print("janitor listtttt $janitorList");
+                                debugPrint("janitor listtttt $janitorList");
                          }
 
                           if(janitorList.isEmpty){
-                           return Center(child: Container(
+                           return Center(child: SizedBox(
                                height: 400.h,
                                child: EmptyListWidget(filter: AssignScreenConstants.SEARCH_JANITOR_TO.tr() )));
 
@@ -262,7 +262,7 @@ class _AssignScreenState extends State<AssignScreen> {
                                           borderRadius: BorderRadius.circular(25.r),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.black.withOpacity(0.2), // Shadow color
+                                              color: Colors.black.withValues( alpha: 0.2), // Shadow color
                                               spreadRadius: 1, // How wide the shadow should spread
                                               blurRadius: 10, // The blur effect of the shadow
                                               offset:

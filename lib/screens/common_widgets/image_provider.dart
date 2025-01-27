@@ -4,7 +4,8 @@
 
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
+
 
 class CustomImageProvider extends StatelessWidget {
  final String? image;
@@ -27,7 +28,7 @@ class CustomImageProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     print("image $image");
+     debugPrint("image $image");
     return image!.startsWith("https:") ?
            Image.network(image!,
             width: width,

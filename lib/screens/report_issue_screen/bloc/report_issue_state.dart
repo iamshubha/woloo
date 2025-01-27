@@ -1,12 +1,12 @@
-import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/janitor_dropdown_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/cluster_dropdown_model.dart';
+import 'package:woloo_smart_hygiene/core/network/failure.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/data/model/janitor_dropdown_model.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/data/model/cluster_dropdown_model.dart';
 import 'package:equatable/equatable.dart';
 
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/report_issue_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/task_names_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/report_issue_screen/data/model/facility_dropdown_model.dart';
-import 'package:Woloo_Smart_hygiene/screens/task_list/data/model/task_list_model.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/data/model/report_issue_model.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/data/model/task_names_model.dart';
+import 'package:woloo_smart_hygiene/screens/report_issue_screen/data/model/facility_dropdown_model.dart';
+import 'package:woloo_smart_hygiene/screens/task_list/data/model/task_list_model.dart';
 
 abstract class ReportIssueState extends Equatable {
   const ReportIssueState();

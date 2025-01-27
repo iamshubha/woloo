@@ -1,4 +1,4 @@
-import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
+import 'package:woloo_smart_hygiene/core/network/failure.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -132,6 +132,6 @@ class ResponseMessage {
 }
 
 class ApiInternalStatus {
-  static const int SUCCESS = 200;
-  static const int FAILURE = 400;
+  static const int success = 200;
+  static const int failure = 400;
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
 
 class CustomInputField extends StatefulWidget {
   final bool? enabled;
@@ -16,7 +16,7 @@ class CustomInputField extends StatefulWidget {
   final String? hint;
 
   const CustomInputField({
-    Key? key,
+    super.key,
     this.initialValue,
     this.suffixIcon,
     this.enabled,
@@ -27,7 +27,7 @@ class CustomInputField extends StatefulWidget {
     this.onSaved,
     required this.hint,
     this.inputFormatter,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomInputField> createState() => _CustomInputFieldState();

@@ -1,4 +1,4 @@
-/// message : "Issue has been successfully created."
+// message : "Issue has been successfully created."
 
 class ReportIssueModel {
   ReportIssueModel({

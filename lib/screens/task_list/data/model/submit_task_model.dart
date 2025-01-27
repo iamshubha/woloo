@@ -1,5 +1,5 @@
-/// allocation_id : 94
-/// data : [{"task_id":1,"task_name":"task_1","status":1},{"task_id":2,"task_name":"task_2","status":0},{"task_id":9,"task_name":"task_8","status":1}]
+// allocation_id : 94
+// data : [{"task_id":1,"task_name":"task_1","status":1},{"task_id":2,"task_name":"task_2","status":0},{"task_id":9,"task_name":"task_8","status":1}]
 
 class SubmitTaskModel {
   SubmitTaskModel({

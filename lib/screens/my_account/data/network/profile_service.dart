@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import '../../../../core/network/api_constant.dart';
 import '../../../../core/network/dio_client.dart';
 import '../model/profile_model.dart';
@@ -21,7 +22,7 @@ class ProfileService {
         Options(extra: {"auth": true}),
       );
 
-       print("suprer s ${response['results']} " );
+      debugPrint("suprer s ${response['results']} " );
      // ProfileModel output = [];
       // for (var item in response['results']) {
       //   output.add(ProfileModel.fromJson(item));

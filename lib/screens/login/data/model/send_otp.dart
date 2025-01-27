@@ -1,4 +1,4 @@
-/// request_id : "6578b3fa-e484-4cb6-909d-9afb5cbc3521"
+// request_id : "6578b3fa-e484-4cb6-909d-9afb5cbc3521"
 
 class SendOtp {
   SendOtp({

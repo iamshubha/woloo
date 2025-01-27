@@ -1,6 +1,6 @@
-import 'package:Woloo_Smart_hygiene/screens/common_widgets/leading_button.dart';
-import 'package:Woloo_Smart_hygiene/screens/janitor_details_screen/view/janitor_attendance.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/leading_button.dart';
+import 'package:woloo_smart_hygiene/screens/janitor_details_screen/view/janitor_attendance.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -15,7 +15,7 @@ class SupJaniAttendanceScreen extends StatelessWidget {
          appBar: AppBar(
           backgroundColor: AppColors.white,
         leadingWidth: 100.w,
-        leading: LeadingButton(),
+        leading: const LeadingButton(),
         scrolledUnderElevation: 0,
         elevation: 0,
         // title: 

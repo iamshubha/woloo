@@ -1,4 +1,4 @@
-import 'package:Woloo_Smart_hygiene/screens/login/data/model/Update_token_model.dart';
+import 'package:woloo_smart_hygiene/screens/login/data/model/update_token_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 // import 'path_to_model/update_token_model.dart'; // Update with the correct path to your model
 

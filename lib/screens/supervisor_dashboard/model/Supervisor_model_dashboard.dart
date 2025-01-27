@@ -1,25 +1,25 @@
-/// task_allocation_id : 131
-/// date : "07-08-2023"
-/// janitor_id : 4
-/// request_type : "Regular"
-/// start_time : "10:00 AM"
-/// end_time : "11:00 AM"
-/// facility_id : 62
-/// template_id : 47
-/// template_name : "Toilet Cleaning"
-/// description : "Cleaning"
-/// facility_name : "Gents Restroom"
-/// estimated_time : 60
-/// total_tasks : 2
-/// booths : 3
-/// floor_number : 0
-/// location : "Sarjapur Road, Bengaluru"
-/// lat : 12.91527
-/// lng : 77.684956
-/// janitor_name : "Adelina"
-/// block_name : "CMF"
-/// pending_tasks : "0"
-/// status : "Request for closure"
+// task_allocation_id : 131
+// date : "07-08-2023"
+// janitor_id : 4
+// request_type : "Regular"
+// start_time : "10:00 AM"
+// end_time : "11:00 AM"
+// facility_id : 62
+// template_id : 47
+// template_name : "Toilet Cleaning"
+// description : "Cleaning"
+// facility_name : "Gents Restroom"
+// estimated_time : 60
+// total_tasks : 2
+// booths : 3
+// floor_number : 0
+// location : "Sarjapur Road, Bengaluru"
+// lat : 12.91527
+// lng : 77.684956
+// janitor_name : "Adelina"
+// block_name : "CMF"
+// pending_tasks : "0"
+// status : "Request for closure"
 
 class SupervisorModelDashboard {
   SupervisorModelDashboard({

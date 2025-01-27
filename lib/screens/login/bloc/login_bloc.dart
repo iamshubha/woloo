@@ -1,13 +1,15 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:Woloo_Smart_hygiene/core/network/failure.dart';
-import 'package:Woloo_Smart_hygiene/screens/login/data/model/Update_token_model.dart';
-import 'package:bloc/bloc.dart';
+import 'package:woloo_smart_hygiene/core/network/failure.dart';
+import 'package:woloo_smart_hygiene/screens/login/data/model/update_token_model.dart';
+
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
-import 'package:Woloo_Smart_hygiene/screens/login/data/network/login_services.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/screens/login/data/network/login_services.dart';
 
 import '../../../core/network/error_handler.dart';
 
@@ -38,7 +40,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       requestId = response.requestId.toString();
 
-      print("requestId $requestId");
+      debugPrint("requestId $requestId");
       emit(LoginOTPSent());
     } catch (e) {
       emit(LoginError(error:  ErrorHandler.handle(e).failure ));
@@ -49,13 +51,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       VerifyOTP event, Emitter<LoginState> emit) async {
     try {
       emit(const LoginLoading(message: "Validating OTP...."));
-      print("requestId" + requestId);
+      debugPrint("requestId$requestId");
 
       var response =
           await loginService.verifyOTP(otp: event.otp, requestId: requestId);
       GlobalStorage globalStorage = GetIt.instance();
 
-      print("tokennnnnn" + response.token.toString());
+      debugPrint("tokennnnnn${response.token}");
       globalStorage.saveToken(accessToken: response.token ?? '');
       globalStorage.saveJanitorId(accessId: response.id!);
       roleId = response.roleId!;
@@ -63,13 +65,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       globalStorage.saveSupervisorName(
           accessSupervisorName: response.name ?? '');
 
-      print("Namee--------- " + response.roleId.toString());
+      debugPrint("Namee--------- ${response.roleId}");
 
-      print("iddddd" + response.id.toString());
+      debugPrint("iddddd${response.id}");
 
       emit(LoginOTPVerified());
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
       emit(LoginError(error: ErrorHandler.handle(e).failure ));
     }
   }

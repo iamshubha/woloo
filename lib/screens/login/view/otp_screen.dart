@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:Woloo_Smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -9,12 +9,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
-import 'package:Woloo_Smart_hygiene/core/local/global_storage.dart';
-import 'package:Woloo_Smart_hygiene/screens/login/bloc/login_bloc.dart';
-import 'package:Woloo_Smart_hygiene/screens/supervisor_dashboard/view/supervisor_dashboard_screen.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_images.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/screens/login/bloc/login_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/view/supervisor_dashboard_screen.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import '../../../core/bloc/core_bloc.dart';
 import '../../common_widgets/button_widget.dart';
 import '../../common_widgets/image_provider.dart';
@@ -27,8 +27,7 @@ class OTPScreen extends StatefulWidget {
 
   final LoginBloc loginBloc;
   const OTPScreen(
-      {Key? key, required this.phoneNumber, required this.loginBloc, this.type})
-      : super(key: key);
+      {super.key, required this.phoneNumber, required this.loginBloc, this.type});
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
@@ -56,9 +55,9 @@ class _OTPScreenState extends State<OTPScreen> {
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
-          print('Location permissions are denied');
+          debugPrint('Location permissions are denied');
         } else if (permission == LocationPermission.deniedForever) {
-          print("'Location permissions are permanently denied");
+          debugPrint("'Location permissions are permanently denied");
         } else {
           haspermission = true;
         }
@@ -70,15 +69,19 @@ class _OTPScreenState extends State<OTPScreen> {
         getLocation();
       }
     } else {
-      print("GPS Service is not enabled, turn on GPS location");
+      debugPrint("GPS Service is not enabled, turn on GPS location");
     }
   }
 
   getLocation() async {
     position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    print(position.longitude); //Output: 80.24599079
-    print(position.latitude); //Output: 29.6593457
+
+      debugPrint(position.longitude.toString());
+      debugPrint(position.latitude.toString()); //Output: 29.6593457
+    //Output: 80.24599079
+
+
 
     long = position.longitude.toString();
     lat = position.latitude.toString();
@@ -92,8 +95,8 @@ class _OTPScreenState extends State<OTPScreen> {
     // StreamSubscription<Position> positionStream =
         Geolocator.getPositionStream(locationSettings: locationSettings)
             .listen((Position position) {
-      print(position.longitude); //Output: 80.24599079
-      print(position.latitude); //Output: 29.6593457
+          debugPrint(position.longitude.toString()); //Output: 80.24599079
+          debugPrint(position.latitude.toString()); //Output: 29.6593457
 
       long = position.longitude.toString();
       lat = position.latitude.toString();
@@ -109,7 +112,7 @@ class _OTPScreenState extends State<OTPScreen> {
      
         _currentAddress =
             '${place.name},${place.street}, ${place.subLocality},${place.subAdministrativeArea}, ${place.administrativeArea},${place.postalCode}';
-        print("address - $_currentAddress");
+      debugPrint("address - $_currentAddress");
         EasyLoading.showToast(
             "${MyLoginConstants.LOCATION_DETECTED_TOAST.tr()} : $_currentAddress");
       
@@ -126,16 +129,16 @@ class _OTPScreenState extends State<OTPScreen> {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     //  await Future.delayed(Duration(seconds: 1));
     String? aspn =     await messaging.getAPNSToken();
-    print("aspn $aspn");
+    debugPrint("aspn $aspn");
     //  onNewToken
 
-    print("refresh token ${messaging.onTokenRefresh}");
+    debugPrint("refresh token ${messaging.onTokenRefresh}");
 
     deviceToken = await messaging.getToken();
     // _tokenStream = FirebaseMessaging.instance.onTokenRefresh;
 //     _tokenStream.listen(setToken);
 
-    print("device token $deviceToken");
+    debugPrint("device token $deviceToken");
     if (deviceToken != null) coreBloc.add(UpdateToken(token: deviceToken!));
    /// coreBloc.add(CheckUserIsLoggedInOrNot());
 
@@ -164,20 +167,13 @@ class _OTPScreenState extends State<OTPScreen> {
                   height: 100.h,
                 ),
                 Center(
-                  child: Container(
-                    // height: 120.h,
-                    // width: 120.w,
-                    // decoration: BoxDecoration(
-                    //     color: AppColors.greyContainer,
-                    //     borderRadius: BorderRadius.circular(100)),
-                    child: Center(
-                      child: CustomImageProvider(
-                        image: AppImages.woloologo,
-                        // height: 78.h,
-                        height: 135.h,
-                        width: 135.h,
-                        alignment: Alignment.center,
-                      ),
+                  child: Center(
+                    child: CustomImageProvider(
+                      image: AppImages.woloologo,
+                      // height: 78.h,
+                      height: 135.h,
+                      width: 135.h,
+                      alignment: Alignment.center,
                     ),
                   ),
                 ),
@@ -209,7 +205,7 @@ class _OTPScreenState extends State<OTPScreen> {
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.visible,
                           text: TextSpan(
-                            text: "${MyLoginConstants.ENTER_OTP.tr()}",
+                            text: MyLoginConstants.ENTER_OTP.tr(),
                             style: AppTextStyle.font14bold.copyWith(
                               color: AppColors.boldTextColor,
                             ),
@@ -241,7 +237,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                     Navigator.pop(context);
                                   },
                                   child: CustomImageProvider(
-                                    image: AppImages.edit_icon_img,
+                                    image: AppImages.editIconImg,
                                     height: 12.h,
                                     width: 11.h,
                                   ),
@@ -276,8 +272,8 @@ class _OTPScreenState extends State<OTPScreen> {
                     if (state is LoginOTPVerified) {
                      
                         roleId = globalStorage.getRoleId();
-                        print("screen role id ----- " + roleId.toString());
-                        print("fcm token id ----- " + fcmToken.toString());
+                        debugPrint("screen role id ----- $roleId");
+                        debugPrint("fcm token id ----- $fcmToken");
                         updateDeviceToken();
                       // widget.loginBloc.add(
                       //     UpdateTokenOnVerifyOTP(token: fcmToken.toString()));
@@ -287,7 +283,7 @@ class _OTPScreenState extends State<OTPScreen> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Dashboard(),
+                            builder: (context) => const Dashboard(),
                           ),
                           (route) => false,
                         );
@@ -296,7 +292,7 @@ class _OTPScreenState extends State<OTPScreen> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => SupervisorDashboard(),
+                            builder: (context) => const SupervisorDashboard(),
                           ),
                           (route) => false,
                         );
@@ -323,7 +319,7 @@ class _OTPScreenState extends State<OTPScreen> {
                             MyLoginConstants.ENTER_OTP_TOAST.tr());
                       }
 
-                      print("button pressed");
+                      debugPrint("button pressed");
                     },
                     child: Padding(
                       padding: EdgeInsets.symmetric(

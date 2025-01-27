@@ -1,9 +1,9 @@
-import 'package:Woloo_Smart_hygiene/utils/app_constants.dart';
-import 'package:dropdown_search/dropdown_search.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Woloo_Smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:form_builder_extra_fields/form_builder_extra_fields.dart';
 
 class MultiselectDropDownDialog<T> extends StatefulWidget {
   final List<T> items;
@@ -17,7 +17,7 @@ class MultiselectDropDownDialog<T> extends StatefulWidget {
   final String? hint;
 
   const MultiselectDropDownDialog({
-    Key? key,
+    super.key,
     required this.items,
     this.enabled,
     this.selected,
@@ -27,7 +27,7 @@ class MultiselectDropDownDialog<T> extends StatefulWidget {
     this.validator,
     this.widgetKey,
     this.hint
-  }) : super(key: key);
+  });
 
   @override
   State<MultiselectDropDownDialog<T>> createState() =>
