@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:woloo_smart_hygiene/client_flow/screens/login/bloc/signup_bloc.dart';
 import 'package:woloo_smart_hygiene/firebase_options.dart';
 import 'package:woloo_smart_hygiene/injection_container.dart' as di;
 import 'package:woloo_smart_hygiene/messaging.dart';
@@ -18,6 +19,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:media_store_plus/media_store_plus.dart';
 import 'app.dart';
+import 'client_flow/screens/dashbaord/bloc/dashboard_bloc.dart';
 import 'screens/dashboard/bloc/dashboard_bloc.dart';
 import 'screens/washroom_image_screen/images_bloc/bloc/capture_bloc.dart';
 // import 'messaging.dart';
@@ -93,6 +95,9 @@ void main() async {
         child:
         MultiBlocProvider(
           providers: [
+              BlocProvider<SignupBloc>(
+              create: (BuildContext context) => SignupBloc(),
+            ),
             BlocProvider<LoginBloc>(
               create: (BuildContext context) => LoginBloc(),
             ),
@@ -101,6 +106,9 @@ void main() async {
 
               BlocProvider<DashboardBloc>(
               create: (BuildContext context) => DashboardBloc(),
+            ),
+            BlocProvider<ClientDashBoardBloc>(
+              create: (BuildContext context) => ClientDashBoardBloc(),
             ),
                BlocProvider<ProfileBloc>(
               create: (BuildContext context) => ProfileBloc(),

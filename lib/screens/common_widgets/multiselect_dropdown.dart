@@ -39,16 +39,21 @@ class _DropDownDialogState<T> extends State<MultiselectDropDownDialog<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownSearch<T>.multiSelection(
+    return
+      DropdownSearch<T>.multiSelection(
       selectedItems: widget.selected ?? [],
+
+
       key: widget.widgetKey,
       enabled: widget.enabled ?? true,
       autoValidateMode: _startValidation
           ? AutovalidateMode.always
           : AutovalidateMode.disabled,
       items: widget.items,
-      popupProps: PopupPropsMultiSelection.dialog(
-          showSearchBox: true,
+      popupProps: PopupPropsMultiSelection.menu(
+          // showSearchBox: true,
+
+
           searchFieldProps: TextFieldProps(
             decoration: InputDecoration(
               border: const OutlineInputBorder(),
@@ -62,9 +67,16 @@ class _DropDownDialogState<T> extends State<MultiselectDropDownDialog<T>> {
               child: child,
             );
           }),
+      // dropdownBuilder: (context, selectedItems) {
+      //   return Container(
+      //     child:  Text(selectedItems.first.toString() ),
+      //   );
+      // },
       dropdownDecoratorProps: DropDownDecoratorProps(
+
         dropdownSearchDecoration: InputDecoration(
           hintText: widget.hint,
+
           floatingLabelBehavior: FloatingLabelBehavior.always,
           labelStyle: const TextStyle(
             color: AppColors.black,
@@ -87,7 +99,7 @@ class _DropDownDialogState<T> extends State<MultiselectDropDownDialog<T>> {
           ),
           border: InputBorder.none
           // OutlineInputBorder(
-            
+          //
           //   borderRadius: BorderRadius.circular(
           //     5.r,
           //   ),

@@ -21,6 +21,12 @@ class GlobalStorage {
   final String _profileKey = 'profileKey';
   final String _profileImgKey = 'profileImgKey';
   final String _profileshiftKey = 'profileShiftKey';
+  final String _cityKey = 'cityKey';
+  final String _addressKey = 'addressKey';
+  final String _pincodeKey = 'pincodeKey';
+   final String _clientIdKey = 'clientIdKey';
+
+  
   /// Save Token
   void saveToken({required String accessToken}) {
     if (accessToken.isEmpty) {
@@ -279,5 +285,77 @@ class GlobalStorage {
   void removeOutDate() {
     _box.remove(_currentoutDateKey);
   }
+
+
+
+  void saveCity({required String accessCity}) {
+    if (accessCity.isEmpty) {
+      throw 'City is empty';
+    }
+    _box.write(_cityKey, accessCity);
+  }
+  String getCity() {
+    String? city = _box.read(_cityKey);
+    return city ?? '';
+  }
+  void removeCity() {
+    _box.remove(_cityKey);
+  }
+  void saveAddress({required String accessAddress}) {
+    if (accessAddress.isEmpty) {
+      throw 'Address is empty';
+    }
+    _box.write(_addressKey, accessAddress);
+  }
+  String getAddress() {
+    String? address = _box.read(_addressKey);
+    return address ?? '';
+  }
+  void removeAddress() {
+    _box.remove(_addressKey);
+  }
+  void savePincode({required String accessPincode}) {
+    if (accessPincode.isEmpty) {
+      throw 'Pincode is empty';
+    }
+    _box.write(_pincodeKey, accessPincode);
+  }
+  String getPincode() {
+    String? pincode = _box.read(_pincodeKey);
+    return pincode ?? '';
+  }
+  void removePincode() {
+    _box.remove(_pincodeKey);
+  } 
+  
+void saveClientId({required String accessClientId}) {
+    if (accessClientId.isEmpty) {
+      throw 'Client Id is empty';
+    }
+    _box.write(_clientIdKey, accessClientId);
+  }
+  String getClientId() {
+    String? clientId = _box.read(_clientIdKey);
+    return clientId ?? '';
+  }
+  void removeClientId() {
+    _box.remove(_clientIdKey);
+  }
+   
+  void removeAll() {
+    _box.remove(_tokenKey);
+    _box.remove(_idKey);
+    _box.remove(_roleIdKey);
+    _box.remove(_supervisorNameKey);
+    _box.remove(_mobileNumberKey);
+    _box.remove(_locationKey);
+    _box.remove(_latitudeKey);
+    _box.remove(_longitudeKey);
+    _box.remove(_currentTimeKey);
+    _box.remove(_currentDateKey);
+    _box.remove(_currentoutTimeKey);
+    _box.remove(_currentoutDateKey);
+  }
+ 
 
 }

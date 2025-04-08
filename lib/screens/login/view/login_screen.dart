@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:woloo_smart_hygiene/client_flow/utils/client_images.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/screens/common_widgets/button_widget.dart';
 import 'package:woloo_smart_hygiene/screens/login/bloc/login_bloc.dart';
@@ -17,6 +18,7 @@ import 'package:get/get.dart' hide Trans;
 import 'package:get_it/get_it.dart';
 import 'package:pinput/pinput.dart';
 
+import '../../../client_flow/widgets/CustomButton.dart';
 import '../../common_widgets/image_provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -67,35 +69,36 @@ class LoginPageState extends State<LoginScreen> {
           Form(
             key: loginFormKey,
             child: Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: 140.h,
+                  height: 190.h,
                 ),
                 Center(
                   child: CustomImageProvider(
-                    image: AppImages.woloologo,
-                    height: 135.h,
-                    width: 135.h,
+                    image: ClientImages.taskMaster,
+                    height: 130.h,
+                    width: 250.h,
                     alignment: Alignment.center,
                   ),
                 ),
-                Center(
-                  child: Text(
-                    textAlign: TextAlign.center,
-                    MyLoginConstants.WELCOME_TEXT.tr(),
-                    style:
-                    AppTextStyle.font24bold.copyWith(
-                    color: AppColors.black,
-                    )
-                    //  TextStyle(
-                    //   fontWeight: FontWeight.w400,
-                    //   fontSize: 24.sp,
-                    //   color: AppColors.black,
-                    // ),
-                  ),
-                ),
+                // Center(
+                //   child: Text(
+                //     textAlign: TextAlign.center,
+                //     MyLoginConstants.WELCOME_TEXT.tr(),
+                //     style:
+                //     AppTextStyle.font24bold.copyWith(
+                //     color: AppColors.black,
+                //     )
+                //     //  TextStyle(
+                //     //   fontWeight: FontWeight.w400,
+                //     //   fontSize: 24.sp,
+                //     //   color: AppColors.black,
+                //     // ),
+                //   ),
+                // ),
                 SizedBox(
-                  height: 10.h,
+                  height: 40.h,
                 ),
                 // Padding(
                 //   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
@@ -154,7 +157,7 @@ class LoginPageState extends State<LoginScreen> {
                 //   height: 10.h,
                 // ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
+                  padding: EdgeInsets.symmetric(horizontal: 19.w, vertical: 5.h),
                   child: Container(
                                 decoration: BoxDecoration(
                       boxShadow: [
@@ -167,7 +170,8 @@ class LoginPageState extends State<LoginScreen> {
                         ),
                       ],
                     ),
-                    child: TextFormField(
+                    child:
+                    TextFormField(
                       keyboardType: TextInputType.number,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       textAlign: TextAlign.center,
@@ -185,7 +189,7 @@ class LoginPageState extends State<LoginScreen> {
                           fillColor: AppColors.white,
                           filled: true,
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.r),
+                              borderRadius: BorderRadius.circular(8.r),
                               borderSide: BorderSide.none
                               //  const BorderSide(color: AppColors.greyBoxBorder),
                               ),
@@ -261,10 +265,14 @@ class LoginPageState extends State<LoginScreen> {
                           vertical: 10.h,
                           horizontal: 20.w,
                         ),
-                        child: ButtonWidget(
-                          color:AppColors.buttonYellowColor,
-                          text: MyLoginConstants.LOGIN_WITH_OTP.tr(),
-                        ),
+                        child:
+                        Custombutton(
+                            color: AppColors.buttonYellowColor,
+                            text:  MyLoginConstants.LOGIN_WITH_OTP.tr(), width: 320.w),
+                        // ButtonWidget(
+                        //   color:AppColors.buttonYellowColor,
+                        //   text: MyLoginConstants.LOGIN_WITH_OTP.tr(),
+                        // ),
                       ),
                     );
                   },

@@ -13,8 +13,7 @@ final   String? title;
   @override
   Widget build(BuildContext context) {
     return 
-
-     Container(
+       Container(
             //  width: 100.w,
              height: 27.h,
              alignment:

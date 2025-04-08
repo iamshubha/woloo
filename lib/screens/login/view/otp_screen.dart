@@ -15,6 +15,8 @@ import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/view/supervisor
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
+import '../../../client_flow/utils/client_images.dart';
+import '../../../client_flow/widgets/CustomButton.dart';
 import '../../../core/bloc/core_bloc.dart';
 import '../../common_widgets/button_widget.dart';
 import '../../common_widgets/image_provider.dart';
@@ -169,10 +171,10 @@ class _OTPScreenState extends State<OTPScreen> {
                 Center(
                   child: Center(
                     child: CustomImageProvider(
-                      image: AppImages.woloologo,
+                      image: ClientImages.taskMaster,
                       // height: 78.h,
-                      height: 135.h,
-                      width: 135.h,
+                      height: 130.h,
+                      width: 250.h,
                       alignment: Alignment.center,
                     ),
                   ),
@@ -324,10 +326,14 @@ class _OTPScreenState extends State<OTPScreen> {
                     child: Padding(
                       padding: EdgeInsets.symmetric(
                           vertical: 10.h, horizontal: 10.w),
-                      child: ButtonWidget(
-                        color: AppColors.buttonYellowColor,
-                        text: MyLoginConstants.VERIFY_OTP_BTN.tr(),
-                      ),
+                      child:
+                      Custombutton(
+                          color: AppColors.buttonYellowColor,
+                          text:  MyLoginConstants.VERIFY_OTP_BTN.tr(), width: 320.w),
+                      // ButtonWidget(
+                      //   color: AppColors.buttonYellowColor,
+                      //   text: MyLoginConstants.VERIFY_OTP_BTN.tr(),
+                      // ),
                     ),
                   ),
                 ),

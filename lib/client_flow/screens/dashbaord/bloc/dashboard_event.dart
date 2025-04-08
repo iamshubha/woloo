@@ -1,0 +1,279 @@
+
+import 'package:equatable/equatable.dart';
+
+abstract class DashboardEvent extends Equatable {
+  const DashboardEvent();
+}
+
+
+
+
+class ClientSetUpEvent extends DashboardEvent {
+  final String orgName;
+  final String? unitNo;
+  final String locality;
+  final String? building;
+  final String? floor;
+  final String? landmark;
+  final String? pincode;
+  final String? locationId;
+  final String? clusterId;
+  final String? clientId;
+  final String? address;
+  final String? city;
+  // final String? clientId;
+
+const ClientSetUpEvent({
+   
+    required this.orgName,
+     this.unitNo,
+    required this.locality,
+     this.building,
+     this.floor,
+     this.landmark,
+     this.pincode,
+    //  this.clientId,
+    this.locationId,
+    this.clusterId,
+    required this.address,
+    required this.city,
+    required this.clientId,
+  });
+
+  @override
+  List<Object?> get props => [
+    orgName,
+    unitNo,
+    locality,
+    building,
+    floor,
+    landmark,
+    pincode,
+    locationId,
+    clusterId,
+    address,
+    city,
+    clientId,
+  ];
+}
+
+
+class AddUserEvent extends DashboardEvent {
+ final  String roleId;
+ final  String name;
+ final  String mobile;
+ final  String? clientId;
+ final String? gender;
+ final  List<int>? clusterId;
+ 
+
+  const AddUserEvent({
+   
+             this.clientId,
+             this.gender,
+    required this.mobile,
+    required this.roleId,
+    required this.name,
+    required this.clusterId,
+
+ 
+  });
+
+  @override
+  List<Object?> get props => [
+    clientId,
+    gender,
+    mobile,
+    roleId,
+    name
+
+  ];
+}
+
+class AddJanitorEvent extends DashboardEvent {
+ final  String roleId;
+ final  String name;
+ final  String mobile;
+ final  String? clientId;
+ final String? gender;
+ final  List<int>? clusterId;
+ 
+
+  const AddJanitorEvent({
+   
+             this.clientId,
+             this.gender,
+    required this.mobile,
+    required this.roleId,
+    required this.name,
+    required this.clusterId,
+
+ 
+  });
+
+  @override
+  List<Object?> get props => [
+    clientId,
+    gender,
+    mobile,
+    roleId,
+    name
+
+  ];
+}
+
+
+
+class GetTaskEvent extends DashboardEvent {
+ final String? category;
+  const GetTaskEvent({
+             this.category,
+  });
+
+  @override
+  List<Object?> get props => [
+    category,
+  
+  ];
+}
+
+
+class GetDashbaordEvent extends DashboardEvent {
+
+ final int locationId;
+ final  String type;
+ final  String clientId;
+ final int janitorId;
+
+
+  const GetDashbaordEvent({
+           required  this.clientId,
+           required  this.locationId,
+           required  this.type,
+           required this.janitorId
+
+  });
+
+  @override
+  List<Object?> get props => [
+    clientId,
+    locationId,
+    type
+  ];
+}
+
+
+
+class AssignTaskEvent extends DashboardEvent {
+   
+   final int janitorId;
+   final int clientId;
+   final String shiftTime;
+   final List<int?> taskIds;
+   final String estimatedTime;
+   final List<Map<String, String>> taskTimes;
+
+
+  const AssignTaskEvent({
+    required  this.clientId,
+    required  this.shiftTime,
+    required  this.taskIds,
+    required  this.estimatedTime,
+    required  this.taskTimes,
+    required   this.janitorId
+
+  });
+
+  @override
+  List<Object?> get props => [
+    clientId,
+    shiftTime,
+    taskIds,
+    estimatedTime,
+    taskTimes,
+    janitorId
+  ];
+}
+
+
+
+class SubcriptionEvent extends DashboardEvent {
+ final int id;
+  const SubcriptionEvent({
+           required  this.id,     
+  });
+
+  @override
+  List<Object?> get props => [
+    id,
+  ];
+}
+
+
+
+class GetAllJanitorEvent extends DashboardEvent {
+ final int clientId;
+  const GetAllJanitorEvent({
+           required  this.clientId,     
+  });
+
+
+  @override
+  List<Object?> get props => [
+    clientId,
+  ];
+}
+
+
+
+
+
+class GetAllFacilityEvent extends DashboardEvent {
+ final int clientId;
+  const GetAllFacilityEvent({
+           required  this.clientId,     
+  });
+
+
+  @override
+  List<Object?> get props => [
+    clientId,
+  ];
+}
+
+
+
+
+
+class ClientEvent extends DashboardEvent {
+ final int id;
+  const ClientEvent({
+      required  this.id,     
+  });
+
+  @override
+  List<Object?> get props => [
+    id,
+  ];
+}
+
+
+
+class CheckTaskEvent extends DashboardEvent {
+ final int janitorId;
+ final String  startTime;
+  final String  endTime;
+  const CheckTaskEvent({
+      required  this.janitorId,   
+      required this.endTime,
+      required this.startTime  
+  });
+
+
+  @override
+  List<Object?> get props => [
+    janitorId,
+    startTime,
+    endTime 
+  ];
+}

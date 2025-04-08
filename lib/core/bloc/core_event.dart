@@ -16,3 +16,12 @@ class UpdateToken extends CoreEvent {
   @override
   List<Object?> get props => [];
 }
+
+
+class ClientEvent extends CoreEvent {
+  final int id;
+  const ClientEvent({required this.id});
+
+  @override
+  List<Object?> get props => [];
+}

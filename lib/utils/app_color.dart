@@ -10,7 +10,7 @@ class AppColors {
   static const Color dashboardContainerColor = Color(0xffFDFDFD);
   static const Color filterBorder = Color(0xffC0BCBC);
   static const Color filterContainer = Color(0xffF5F5F5);
-  static const Color backgroundColor = Color(0xff00C3DE);
+  static const Color backgroundColor = Color(0xff8BDFFB);
 
   static const Color acceptButtonColor = Color(0xFF76E16D);
   static const Color rejectGreyTextColor = Color(0xff6A6161);
@@ -182,5 +182,5 @@ class AppColors {
   static const Color completedBorderBgColor =    Color(0xff3597DB);
   static const Color acceptedBgColor = Color(0xFF76E16D);
 
-
+  static const Color textgreyColor = Color(0xFF828282);
 }

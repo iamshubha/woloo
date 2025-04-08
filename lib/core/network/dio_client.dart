@@ -39,7 +39,7 @@ class DioClient {
   }
 
   /// Post:----------------------------------------------------------------------
-  Future<dynamic> post(
+Future<dynamic> post(
     String uri, {
     data,
     Map<String, dynamic>? queryParameters,
@@ -58,9 +58,15 @@ class DioClient {
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
+       
+        print("hwy sdlkajsdflaks ${response.data}");
       return response.data;
-    } catch (e) {
+    } catch (e  ) {
+       print("error in post methode ${e.toString()}");
+       
       if (e is DioException) {
+          // print("error in post methode ${e.type}");
+               print("error in post methode ${e.response!.data}");
         if (e.response == null) {
           rethrow;
         }

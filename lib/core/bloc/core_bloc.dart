@@ -1,11 +1,15 @@
 import 'dart:async';
 
+import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/data/model/client_model.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/core/network/error_handler.dart';
 import 'package:woloo_smart_hygiene/core/service/core_service.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+
+import '../network/failure.dart';
 
 part 'core_event.dart';
 part 'core_state.dart';
@@ -18,6 +22,7 @@ CoreBloc() : super(CoreInitial()) {
     on<CoreEvent>((event, emit) {});
     on<CheckUserIsLoggedInOrNot>(_mapCheckUserState);
     on<UpdateToken>(_mapUpdateTokenToState);
+    on<ClientEvent>(_mapGetClientState);
   }
 
   FutureOr<void> _mapCheckUserState(CheckUserIsLoggedInOrNot event, Emitter<CoreState> emit) async {
@@ -53,7 +58,43 @@ CoreBloc() : super(CoreInitial()) {
 
       emit(UpdateTokenSuccess());
     } catch (e) {
-      emit(UpdateTokenError(error: e.toString()));
+      emit(UpdateTokenError(error: ErrorHandler.handle(e).failure  ));
     }
   }
+
+
+      FutureOr<void> _mapGetClientState(
+      ClientEvent event, Emitter<CoreState> emit) async {
+    try {
+      emit( UpdateTokenLoading());
+
+      var response =
+      await coreService.getClient(
+         id: event.id
+      );
+
+
+          GlobalStorage globalStorage  = GetIt.instance();
+      globalStorage.saveClientId( accessClientId: response.results!.client!.value!.toString() );
+          
+   
+
+      debugPrint("requestId $response");
+      //  = response;
+
+
+      emit(ClientSuccess(
+        model: response
+        // subscriptionModel:  response,
+      ));
+
+    } catch (e) {
+
+      emit(UpdateTokenError(error:  ErrorHandler.handle(e).failure ));
+    }
+  }
+
+
+
+
 }

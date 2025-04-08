@@ -7,6 +7,8 @@ import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
 import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
 import 'package:woloo_smart_hygiene/screens/login/data/model/update_token_model.dart';
 
+import '../../client_flow/screens/dashbaord/data/model/client_model.dart';
+
 
 
 class CoreService {
@@ -37,6 +39,33 @@ class CoreService {
       rethrow;
     }
   }
+
+
+ 
+ Future<ClientModel> getClient({
+ 
+  required int id,
+
+}) async {
+  try {
+      
+     ClientModel clientModel;
+    // Data payload with all parameters
+ 
+
+    var response = await dio.get(
+     "${APIConstants.GET_CLIENT_ID}?user_id=$id",
+      options:  Options(extra: {"auth": true}),
+    );
+
+     clientModel =  ClientModel.fromJson(response);
+
+    return clientModel;
+  } catch (e) {
+    rethrow;
+  }
+}
+ 
 
   getFileName(String path) {
     return path.split('/').last;

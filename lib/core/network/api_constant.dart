@@ -6,7 +6,7 @@ class APIConstants {
 //
 // = "https://53f2-2409-4062-2097-da56-25a7-ecec-f87a-6912.ngrok-free.app";
 
-  static var BASE_URL   = 'https://staging-api.woloo.in'; // QA
+static var BASE_URL   = 'https://staging-api.woloo.in'; // QA
  // static var BASE_URL = 'https://api.woloo.in'; // Production
 //  static var BASE_URL = 'http://192.168.1.103:5000'; // P
   static var SEND_OTP = '$BASE_URL/api/whms/users/sendOTP';
@@ -86,7 +86,53 @@ static var  JANITOR_LIST = '$BASE_URL/api/whms/users/janitorsList';
   //  janitor list by facility id 
    static var JANITOR_LIST_FACILITY = '$BASE_URL/api/whms/users/getAllUser';
 
+ 
+    static var CREATE_CLIENT =  
+   '$BASE_URL/api/wolooGuest/createClient';
+
+    static var CLIENT_SIGNUP = 
+'$BASE_URL/api/whms/clients/clientSignUp';
 
 
+    static var CLIENT_LOGIN = 
+    '$BASE_URL/api/wolooGuest/login';  
+
+    static var DELETE_USER = 
+    '$BASE_URL/api/wolooGuest/login';  
+  
+    static var CLIENT_SETUP = 
+     '$BASE_URL/api/whms/clients/clientSetUp';
+
+    static var  ADD_USER = 
+    '$BASE_URL/api/whms/users/addUser';
+
+
+    static var  GET_TASK = 
+    '$BASE_URL/api/whms/task/byCategory'; 
+
+
+     static var  GET_TASK_DASHBOARD = 
+    '$BASE_URL/api/whms/taskAllocation/getTaskDashboard'; 
+
+     static var  SubscriptionExpiry = 
+    '$BASE_URL/api/whms/plans/getSubscriptionExpiry';
+
+     static var  CREATE_OREDER = 
+    '$BASE_URL/api/whms/payment/createOrder';
+
+     static var ASSIGN_TASK =  '$BASE_URL/api/whms/template/add';
+
+     static var GET_CLIENT_ID =  '$BASE_URL/api/whms/users/client';
+       
+     static var GET_ALL_USER =    "$BASE_URL/api/whms/users/getAllUser";
+
+    static var GET_USER_COINS =   "$BASE_URL/api/wolooHost/user_coins";
+
+    static var GET_ALL_FACILITY =    "$BASE_URL/api/whms/facilities/getFacilities";
+          
+    static var CHECK_TASK_TIME =   '$BASE_URL/api/whms/autoTaskMapping/checkJanitorTasktime';
+
+    //  https://staging-api.woloo.in/api/whms/users/client?user_id=62447
 
 }
+ 

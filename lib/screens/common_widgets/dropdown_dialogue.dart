@@ -17,6 +17,9 @@ class DropDownDialog<T> extends StatefulWidget {
   final GlobalKey<DropdownSearchState>? widgetKey;
   final String? hint;
   final T? selected;
+  final bool? isprop;
+  final TextStyle? hintTextStyle;
+  final EdgeInsetsGeometry? padding;
 
   const DropDownDialog({
     super.key,
@@ -28,6 +31,9 @@ class DropDownDialog<T> extends StatefulWidget {
     this.onChanged,
     this.validator,
     this.widgetKey,
+    this.isprop,
+    this.hintTextStyle,
+    this.padding,
    required this.hint
   });
 
@@ -70,13 +76,34 @@ class _DropDownDialogState<T> extends State<DropDownDialog<T>> {
         enabled: widget.enabled ?? true,
         
         autoValidateMode:
+
         // _startValidation
         //     ? AutovalidateMode.always
         //    :
         AutovalidateMode.disabled,
         items: widget.items,
         
-        popupProps: PopupProps.dialog(
+        popupProps:
+
+            widget.isprop != null ?
+            PopupProps.menu(
+                showSearchBox: false,
+                searchFieldProps: TextFieldProps(
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 10.w),
+                    hintText: MyFacilityListConstants.SEARCH.tr(),
+                  ),
+                ),
+                containerBuilder: (context, child) {
+                  return SizedBox(
+                    height: 350.h,
+                    child: child,
+                  );
+                })
+            :
+
+        PopupProps.dialog(
             showSearchBox: true,
             searchFieldProps: TextFieldProps(
               decoration: InputDecoration(
@@ -97,7 +124,9 @@ class _DropDownDialogState<T> extends State<DropDownDialog<T>> {
         dropdownDecoratorProps: DropDownDecoratorProps(
           
           dropdownSearchDecoration: InputDecoration(
+
             hintText: widget.hint,
+            hintStyle: widget.hintTextStyle,
 
               suffixIcon: IconButton(
                               icon: const Icon(Icons.clear),
@@ -129,10 +158,16 @@ class _DropDownDialogState<T> extends State<DropDownDialog<T>> {
             //   ),
             // ),
             
-            contentPadding: EdgeInsets.symmetric(
+            contentPadding:
+            widget.padding != null ?
+                 widget.padding
+
+                :
+            EdgeInsets.symmetric(
               horizontal: 10.w,
               vertical: 10.h,
             ),
+
             border:  InputBorder.none
             // OutlineInputBorder(
             //   borderRadius: BorderRadius.circular(

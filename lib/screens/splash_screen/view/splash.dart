@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:woloo_smart_hygiene/core/bloc/core_bloc.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/janitorial_services/screens/home_screen.dart';
 import 'package:woloo_smart_hygiene/messaging.dart';
-import 'package:woloo_smart_hygiene/screens/login/view/login_screen.dart';
+// import 'package:woloo_smart_hygiene/screens/login/view/login_screen.dart';
 import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/view/supervisor_dashboard_screen.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_constants.dart';
@@ -15,6 +17,16 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import '../../../client_flow/screens/dashbaord/bloc/dashboard_bloc.dart';
+// import '../../../client_flow/screens/dashbaord/bloc/dashboard_event.dart';
+import '../../../client_flow/screens/dashbaord/view/dashboard.dart';
+import '../../../client_flow/screens/dashbaord/view/home.dart';
+import '../../../client_flow/screens/dashbaord/view/onboarding_screen.dart';
+import '../../../client_flow/screens/login/bloc/signup_bloc.dart';
+import '../../../client_flow/screens/login/view/choose_service.dart';
+import '../../../client_flow/screens/login/view/login.dart';
+import '../../../client_flow/screens/login/view/login_as.dart';
+import '../../../client_flow/screens/login/view/term_screen.dart';
 import '../../common_widgets/image_provider.dart';
 import '../../dashboard/view/regular_task.dart';
 
@@ -28,6 +40,9 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   CoreBloc coreBloc = CoreBloc();
   GlobalStorage globalStorage = GetIt.instance();
+     SignupBloc loginBloc = SignupBloc();
+        Map<String, dynamic>? decodedToken;
+        
 
 
   @override
@@ -49,6 +64,9 @@ class _SplashScreenState extends State<SplashScreen> {
     await messaging.initialize();
    // updateDeviceToken();
     coreBloc.add(CheckUserIsLoggedInOrNot());
+    
+
+    
   }
 
    apiCall(){
@@ -65,6 +83,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   // late Stream<String> _tokenStream;
   String? deviceToken;
+  bool isLoggedIn = false;
 
 
   Future updateDeviceToken() async {
@@ -120,32 +139,164 @@ class _SplashScreenState extends State<SplashScreen> {
     return BlocListener<CoreBloc, CoreState>(
       bloc: coreBloc,
       listener: (context, state) {
-        if (state is CoreSuccess) {
-          try {
-            if (!state.isLoggedIn) throw "Not logged in";
+         print("asdas$state");
+        if (state is CoreSuccess   ) {
 
-            int roleId = globalStorage.getRoleId();
 
-            Navigator.pushAndRemoveUntil(
+          isLoggedIn =   state.isLoggedIn; 
+        
+          // setState(() {
+            
+          // });
+
+           try {
+               if (!isLoggedIn ) throw "Not logged in";
+
+
+                  var some =   globalStorage.getToken();
+
+                   decodedToken = JwtDecoder.decode(some);
+
+
+                    coreBloc.add(ClientEvent(
+                    id: decodedToken!["id"]
+                    ));
+                  int roleId = globalStorage.getRoleId();
+                    String clientId = globalStorage.getClientId();
+
+                      Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
                 builder: (context) => 
-                
+
+                clientId.isNotEmpty ? 
+                  const ClientDashboard() :
                 roleId == 1 ? const Dashboard() : const
                 SupervisorDashboard(),
               ),
               (route) => false,
             );
-          } catch (e) {
-            Navigator.pushAndRemoveUntil(
+
+
+             
+           } catch (e) {
+               Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) => const LoginScreen(),
+                builder: (context) => const LoginAs(),
               ),
               (route) => false,
             );
-          }
+             
+           }
+
+
+          //  print("object $isLoggedIn");
+
+
+        //    if (state.isLoggedIn) {
+        //     var some =   globalStorage.getToken();
+    
+        //    decodedToken = JwtDecoder.decode(some);
+        //     // updateDeviceToken();
+
+                    
+   
+        //    //  coreBloc.add(GetClientEvent(            
+            // }
+
+          // try {
+          //   if (!state.isLoggedIn) throw "Not logged in";
+
+          //   int roleId = globalStorage.getRoleId();
+          //   String clientId = globalStorage.getClientId();
+
+          //   Navigator.pushAndRemoveUntil(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => 
+
+          //       clientId.isNotEmpty ? 
+          //         const ClientDashboard() :
+          //       roleId == 1 ? const Dashboard() : const
+          //       SupervisorDashboard(),
+          //     ),
+          //     (route) => false,
+          //   );
+          // } catch (e) {
+
+          //   Navigator.pushAndRemoveUntil(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => const LoginAs(),
+          //     ),
+          //     (route) => false,
+          //   );
+          // }
         }
+        
+        //  if (state is  ClientSuccess ) {
+
+        //     try {
+        //       //   print("objectttt $isLoggedIn");
+        //       //  if (!isLoggedIn ) throw "Not logged in";
+
+        //           int roleId = globalStorage.getRoleId();
+
+        //      String clientId = globalStorage.getClientId();
+
+
+        //     //        Navigator.pushAndRemoveUntil(
+        //     //   context,
+        //     //   MaterialPageRoute(
+        //     //     builder: (context) => 
+
+        //     //     clientId.isNotEmpty ? 
+        //     //       const ClientDashboard() :
+        //     //     roleId == 1 ? const Dashboard() : const
+        //     //     SupervisorDashboard(),
+        //     //   ),
+        //     //   (route) => false,
+        //     // );
+
+          
+
+        //     Navigator.pushAndRemoveUntil(
+        //       context,
+        //       MaterialPageRoute(
+        //         builder: (context) =>
+        //         clientId.isNotEmpty ?
+        //            state.model.results!.isOnboardComplete! ?
+        //          const ClientDashboard()
+        //           :  Home()
+        //            :  roleId == 1 ? const Dashboard() : const
+        //         SupervisorDashboard() ,
+        //       ),
+        //       (route) => false,
+        //     );
+               
+              
+        //     } catch (e) {
+
+        //      Navigator.pushAndRemoveUntil(
+        //       context,
+        //       MaterialPageRoute(
+        //         builder: (context) => const LoginAs(),
+        //       ),
+        //       (route) => false,
+        //     );
+
+
+              
+        //     }
+
+
+            
+
+         
+       
+        //  }
+
       },
       child: Scaffold(
         body: SafeArea(

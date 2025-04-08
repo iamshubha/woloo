@@ -42,8 +42,15 @@ class UpdateTokenSuccess extends CoreState {
   List<Object?> get props => [];
 }
 
+class ClientSuccess extends CoreState {
+  final ClientModel model;
+  const ClientSuccess({required this.model});
+  @override
+  List<Object?> get props => [model];
+}
+
 class UpdateTokenError extends CoreState {
-  final String error;
+   final Failure error;
   const UpdateTokenError({required this.error});
 
   @override

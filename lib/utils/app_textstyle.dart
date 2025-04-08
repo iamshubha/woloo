@@ -162,6 +162,13 @@ class AppTextStyle {
     fontWeight: FontWeight.bold,
     // color: AppColors.yellowSplashColor,
   );
+
+   static TextStyle font32bold = TextStyle(
+    fontSize: 29.sp,
+    fontWeight: FontWeight.bold,
+    // color: AppColors.yellowSplashColor,
+  );
+
   static TextStyle font16bold = TextStyle(
     // color: AppColors.historyText,
     fontSize: 18.sp,
@@ -179,6 +186,12 @@ class AppTextStyle {
 
   static TextStyle font10bold = TextStyle(
       color: AppColors.black, fontSize: 10.sp, fontWeight: FontWeight.bold );
+
+  static TextStyle font18bold = TextStyle(
+    // color: AppColors.historyText,
+    fontSize: 18.sp,
+    fontWeight: FontWeight.bold,
+  );
 
   static TextStyle font20bold = TextStyle(
     overflow: TextOverflow.visible,

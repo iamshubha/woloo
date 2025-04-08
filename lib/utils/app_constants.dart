@@ -31,7 +31,11 @@ class MyLoginConstants {
   static const String LOCATION_DETECTED_TOAST = 'locationDetected';
   static const String ENTER_OTP_TOAST = 'enterOTP';
   static const String SEC = 'sec';
+  static const String NEXT = "Next";
+  
 }
+
+
 
 class MyFacilityListConstants {
   static const String POPUP_TEXT = 'taskStartingPermission';
@@ -273,4 +277,220 @@ class AppError {
   static const String strDefaultError = "default_error";
   static const String strCacheError = "cache_error";
   static const String strNoInternetError = "no_internet_error";
+}
+
+
+class LoginConstant {
+  static const String newUserRegister = "New User?";
+  static const String registration = "Register Now";
+  static const String forgotPassword = "Forgot Password?";
+  static const String loginAsSupervisor = "Login as a Supervisor/Janitor";
+
+}
+
+class SignUpConstant {
+
+  static const String name = "Name";
+  static const String email = "Email";
+  static const String mobileNo = "Mobile No.";
+  static const String address = "Address";
+  static const String city = "City";
+  static const String pinCode = "Pin Code";
+  static const String password = "Password";
+  static const String confirmPassword = "Confirm Password";
+}
+
+class TermsOfUse {
+
+  static const String title = "Terms of Use";
+
+  static const String subTitle  =  "Terms and Conditions related to using the Woloo App and Website";
+  
+  static const String accept = "Accept";
+
+  static const String deny = "Deny";
+
+  static const String content = '''
+  (Version 1)
+
+  1. Your Agreement  
+     1.1 This website [www.woloo.in](http://www.woloo.in) and/or the Woloo App (together, ‘Woloo Platform’) is operated by Loom and Weaver Retail Private Limited, a Company incorporated in India under the Companies Act 2013. Please read these Terms and Conditions (“this Terms of Use”) carefully before using the Woloo Platform and the services offered by Loom and Weaver Retail Private Limited, its affiliated companies (together, “Woloo”) or the third-party operators (the “Operator”) through the Woloo Platform (the “Services”). “You” and “your” when used in this Terms and Conditions includes (1) any person who accesses the Woloo Platform and (2) persons for whom you make a purchase of the Services.
+
+  2. Change of Terms of Use  
+     2.1 Woloo’s Modifications  
+     2.1.1 Woloo reserves the right, at its sole discretion, to change or modify any part of this Terms of Use at any time without prior notice. You should visit this page periodically to review the current Terms of Use to which you are bound. If Woloo changes or modifies this Terms of Use, Woloo will post the changes on this page and will indicate the date on which this Terms of Use was last revised.  
+
+     2.1.2 Your continued use of the Woloo Platform after any such changes or modifications constitutes your acceptance of the revised Terms of Use. If you do not agree to abide by the revised Terms of Use, do not use or access the Woloo Platform and/or the Services.  
+
+     2.1.3 When using the Services, you shall be subject to any additional terms applicable to such Services that may be posted on the page relating to such Services from time to time and the privacy policy adopted by Woloo from time to time (“the Privacy Policy”).  
+
+  3. Access and Use of the Services  
+     3.1 Ownership of Content  
+     3.1.1 The Woloo Platform, its domain name ([www.woloo.in](http://www.woloo.in)), features, contents, and application services are owned and operated by Woloo.  
+
+     3.2 Provision and Accessibility of Services  
+     3.2.1 Subject to this Terms of Use, Woloo may either provide the Services by itself or on behalf of the Operators. These Services are solely for your own use and not for any third party. Woloo may change, suspend, or discontinue any Services at any time without notice or liability.  
+
+     3.2.2 Woloo does not guarantee that the Services will always be available or uninterrupted. Woloo will not be liable for any unavailability of Services.  
+
+  4. Woloo Platform and Content  
+     4.1 Use of the Content  
+     4.1.1 All materials displayed on the Woloo Platform, including text, graphics, images, and other materials, are protected by copyright and/or other intellectual property rights.  
+
+     4.1.2 If Woloo grants you access to the Woloo Platform and/or the Content, such access shall be non-exclusive, non-transferable, and limited.  
+
+     4.1.3 You shall not copy, modify, publish, distribute, or otherwise exploit any Content without prior written consent from Woloo.  
+
+     4.2 Woloo’s Liability for the Woloo Platform and Content  
+     4.2.1 Woloo does not guarantee the authenticity and accuracy of any content posted by other users. Your use of the Woloo Platform is at your own risk.  
+
+     4.2.2 Woloo is not liable for any content errors, omissions, or any damage resulting from the use of content on the platform.  
+
+  5. Intellectual Property Rights  
+     5.1 Intellectual Property  
+     5.1.1 All intellectual property rights related to the Woloo Platform belong to Woloo or its licensors.  
+
+     5.1.2 You shall not reproduce, distribute, or commercially exploit any part of the Woloo Platform and Content without permission.  
+
+  6. User Submissions  
+     6.1 Uploading of Information  
+     6.1.1 By posting content on the Woloo Platform, you grant Woloo a worldwide, royalty-free, perpetual license to use your content.  
+
+     6.1.2 You agree that all posted content complies with applicable laws and does not infringe third-party rights.  
+
+  7. User Representations and Conduct  
+     7.1 Use of the Woloo Platform  
+     7.1.1 You agree not to use the Woloo Platform for any unlawful activities, including but not limited to infringement of intellectual property rights, harassment, fraud, or spreading harmful content.  
+
+     7.2 Removal of User Submissions  
+     7.2.1 Woloo reserves the right to remove any content that violates these terms.  
+
+  8. Account Security  
+     8.1 Opening an Account  
+     8.1.1 You may be required to create an account with Woloo to use certain services. You must provide accurate information and keep your account secure.  
+
+     8.2 Provision of Personal Information  
+     8.2.1 You shall provide accurate and updated personal information for account registration.  
+
+     8.3 Security of Your Account  
+     8.3.1 You shall not share your login credentials with third parties.  
+
+     8.3.2 If you suspect unauthorized access, notify Woloo immediately.  
+
+     8.3.3 Woloo reserves the right to terminate accounts involved in fraudulent activities.  
+
+  For further details, contact [support@woloo.in](mailto:support@woloo.in).  
+
+  Thank you for using the Woloo Platform!  
+  ''';
+}
+
+
+
+class DashboardConst {
+  // Dashboard Welcome
+  static const String welcomeMessage = "Welcome to your";
+  static const String dashboardTitle = "Woloo Smart Hygiene Dashboard";
+  static const String onboardingMessage = 
+      "You’re there! Just a few more steps to get you started with your Smart Hygiene Journey.";
+  static const String getStarted = "Get Started";
+  static const String listYourFacility = "List Your Facility";
+  static const String organizationName = "Your Facility Name *";
+   static const String addNewFacility = 'Add a New Facility';
+  static const String addNewTask = 'Add a New Task';
+
+  static const String ifOthersMentionFacility = "If Others, Please mention the type of Facility";
+  static const String typeOfFacility = "Type of Facility *";
+  static const String home = "Home";
+  static const String office = "Office";
+  static const String restraunt = "Restraunt";
+  static const String other = "Other";
+  static const String next = "Next";
+  static const String chooseAdmin = "Choose Admin";
+  static const String monitorYourself = "Monitor \nYourself";
+  static const String assignSupervisor = "Assign a \nSupervisor";
+  static const String assignsupervisor = "Assign Supervisor";
+  static const String fullName = "Full Name *";
+  static const String number = "Number *";
+  static const String assignJanitor = "Assign Janitor";
+  static const String assignFacility = "Assign Facility *";
+  static const String gender = "Gender *";
+  static const String assignTasks = "Assign Tasks";
+  static const String selectCleaningTasks = "Select Cleaning Tasks *";
+  static const String estimatedTaskCompletionTime = "Estimated Task Completion Time";
+  static const String cleaningCycle = "Cleaning Cycle *";
+    static const String taskTimeRestriction = 
+      "Tasks can only be created between 9 AM and 9 PM.";
+  static const String taskScheduledNextDay = 
+      "Tasks exceeding this timeframe will be scheduled for the next day.";
+
+  // Facility Management
+  static const String addAnotherFacility = "Add another Facility";
+  static const String helloSuperAdmin = "Hello Cult-Fit (Super-Admin)";
+  static const String currentDateTime = "4.45 pm 19 Jan 2024";
+
+  // Subscription Notice
+    static const String subscriptionExpiryNotice =
+      "Your Free Subscription shall end in 3 Days.";
+  static const String renew = "Renew it Now";
+  // Dashboard
+  static const String dashboardOverview = "Dashboard Overview";
+  static const String taskAudit = "Task Audit";
+  static const String janitorPerformance = "Janitor Performance";
+  static const String facility = "Facility";
+   static const String totalTasks = "Total Tasks";
+  static const String tasksCompleted = "Tasks Completed";
+  static const String location = "Location";
+  static const String shiftStartTime = "Shift Start Time *";
+  static const String time = "Time";
+  static const String shiftStartDescription = "The shift shall start from DD/MM/YYYY";
+  // static const String estimatedTaskCompletionTime = "Estimated Task Completion Time";
+
+  static const String scheduleShift = "Shift Start:";
+  static const String scheduleTask = "Schedule Task *";
+  static const String save = "Add";
+  static const String addMoreTimings = "Add More Timings";
+  static const String addTimings = "Add Timings";
+  static const String shiftStart = "The shift shall start from DD/MM/YYYY at 00:00";
+  static const String shiftEnd = "Shift shall complete at 00:00";
+  static const String congratulations = "Congratulations!";
+  static const String addAnotherTask = "Add Another Task";
+  static const String noThanks = "No Thanks. Start Monitoring";
+    static const String taskBuddyPrompt = 
+      "Do you want to assign a new Task Buddy or utilise your existing Task Buddy?";
+  static const String assignNewTaskBuddy = "Assign New Task Buddy";
+  static const String assignExistingTaskBuddy = "Assign Existing Task Buddy";
+
+}
+
+
+
+
+
+class SubcriptionConstant{
+
+  static const String upgradeToPremium = "Upgrade to Premium";
+  static const String upgradeDescription = "Upgrade to a premium plan to explore more benefits";
+
+  // Free Plan
+  static const String freePlan = "Free Plan";
+  static const String freeFeature = "This is a Free Feature";
+  static const String freeTotalLogins = "Total of 5 Logins";
+  static const String freeSupervisorLogin = "1 Supervisor Login";
+  static const String freeJanitorLogins = "4 Janitor Logins";
+  static const String freeLocation = "1 location";
+  static const String freeFacilities = "10 Facilities";
+
+  // Premium Plan
+  static const String premiumPlan = "Premium Plan";
+  static const String premiumFeature = "This is a Paid Feature";
+  static const String premiumTotalLogins = "Total of 5 Logins";
+  static const String premiumSupervisorLogin = "1 Supervisor Login";
+  static const String premiumJanitorLogins = "4 Janitor Logins";
+  static const String premiumLocation = "1 location";
+  static const String premiumFacilities = "10 Facilities";
+
+
+
+
 }

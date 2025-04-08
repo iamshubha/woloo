@@ -1,7 +1,7 @@
 abstract class AppImages {
   AppImages._();
 
-  static const String _assetImgPath = "assets/images/";
+static const String _assetImgPath = "assets/images/";
   static const String _assetSvgImgPath = "assets/images/svg/";
   static const String _assetLottiePath = "assets/lottie/";
 
@@ -55,4 +55,13 @@ abstract class AppImages {
   static String get rfcIcons => '${_assetImgPath}rfc.png';
   static String get iotIcons => '${_assetImgPath}iot.png';
   static String get personIcons => '${_assetImgPath}user.png';
+  static String get termIcons => '${_assetImgPath}terms.png';
+  static String get whiteLogo => '${_assetImgPath}whitelogo.png';
+  static String get dashboard => '${_assetImgPath}dashboard.png';
+  static String get welcome => '${_assetImgPath}welcome.png';
+  static String get house => '${_assetImgPath}house.png';
+  static String get office => '${_assetImgPath}apartment.png';
+  static String get dashlogo => '${_assetImgPath}dashlogo.png';
+  static String get changeArrow => '${_assetImgPath}changearrow.png';
+  static String get premiumImage => '${_assetImgPath}subscription.png';
 }

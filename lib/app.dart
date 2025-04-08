@@ -36,7 +36,6 @@ class _AppState extends State<App> {
         return 
         ConnectivityAppWrapper(
           app: 
-          
           GetMaterialApp(
             navigatorKey: ContextHolder.key,
             debugShowCheckedModeBanner: false,
