@@ -43,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
      SignupBloc loginBloc = SignupBloc();
         Map<String, dynamic>? decodedToken;
         
-
+    // ClientDashBoardBloc dashBoardBloc  = ClientDashBoardBloc();
 
   @override
   void initState() {
@@ -145,15 +145,17 @@ class _SplashScreenState extends State<SplashScreen> {
 
           isLoggedIn =   state.isLoggedIn; 
         
+
+          print("is logg ing$isLoggedIn");
           // setState(() {
             
-          // });
+          // })
 
            try {
                if (!isLoggedIn ) throw "Not logged in";
 
 
-                  var some =   globalStorage.getToken();
+                  var some =  globalStorage.getClientToken();
 
                    decodedToken = JwtDecoder.decode(some);
 
@@ -161,21 +163,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     coreBloc.add(ClientEvent(
                     id: decodedToken!["id"]
                     ));
-                  int roleId = globalStorage.getRoleId();
-                    String clientId = globalStorage.getClientId();
-
-                      Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => 
-
-                clientId.isNotEmpty ? 
-                  const ClientDashboard() :
-                roleId == 1 ? const Dashboard() : const
-                SupervisorDashboard(),
-              ),
-              (route) => false,
-            );
+            
 
 
              
@@ -234,6 +222,41 @@ class _SplashScreenState extends State<SplashScreen> {
           //   );
           // }
         }
+
+
+         if ( state is ClientSuccess) {
+           
+         bool isComplete =    state.model.results!.isOnboardComplete!;
+
+          // state.
+
+
+                int roleId = globalStorage.getRoleId();
+                    String clientId = globalStorage.getClientId();
+                     print("roleId $roleId");
+                       print("roleId $clientId");
+
+                      Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => 
+
+                clientId.isNotEmpty ? 
+                  
+                  isComplete ?
+                   ClientDashboard() :Home(isFromDashboard: false,) : 
+
+                roleId == 1 ? const Dashboard() : const
+                SupervisorDashboard(
+                  isFromSupervisor: false,
+                ),
+              ),
+              (route) => false,
+            );
+
+          
+           
+         }
         
         //  if (state is  ClientSuccess ) {
 

@@ -19,6 +19,13 @@ abstract class ClientImages {
   static String get mail => '${_assetImgPath}mailsend.png';
   static String get term => '${_assetImgPath}terms.png';
   static String get celebration => '${_assetImgPath}celebration.png';
+  static String get taskMasterblack => '${_assetImgPath}taskmasterblack.png';
+  static String get warning => '${_assetImgPath}warning.png';
+  static String get  verify  => '${_assetImgPath}verify.png';
+  static String get  more  => '${_assetImgPath}more.png';
+  static String get  line  => '${_assetImgPath}line.png';
+  static String get  setting  => '${_assetImgPath}setting.png';
+  static String get  avatar  => '${_assetImgPath}usersavatar.png';
   
 
 }

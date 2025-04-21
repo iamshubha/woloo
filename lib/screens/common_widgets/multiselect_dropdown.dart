@@ -61,21 +61,93 @@ class _DropDownDialogState<T> extends State<MultiselectDropDownDialog<T>> {
               hintText: MyFacilityListConstants.SEARCH.tr(),
             ),
           ),
+  //       itemBuilder: (context, item, isSelected) {
+  //   return ListTile(
+  //     leading: Checkbox(
+  //       value: isSelected,
+  //       onChanged: (_) {},
+  //     ),
+  //     title: Text(
+  //       widget.itemAsString != null ? widget.itemAsString!(item) : item.toString(),
+  //     ),
+  //   );
+  // },   
+
           containerBuilder: (context, child) {
-            return SizedBox(
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20)
+              ),
               height: 350.h,
               child: child,
             );
-          }),
+          }
+          
+          ),
       // dropdownBuilder: (context, selectedItems) {
       //   return Container(
       //     child:  Text(selectedItems.first.toString() ),
       //   );
       // },
+    dropdownBuilder: (context, selectedItems) {
+  if (selectedItems == null || selectedItems.isEmpty) {
+    return Text(
+      widget.hint ?? '',
+      style: TextStyle(color: Colors.grey),
+    );
+  }
+
+  List<Widget> displayChips = [];
+
+  for (var i = 0; i < selectedItems.length && i < 2; i++) {
+    final itemText = widget.itemAsString != null
+        ? widget.itemAsString!(selectedItems[i])
+        : selectedItems[i].toString();
+
+    displayChips.add(
+      Padding(
+        padding: const EdgeInsets.all(2.0),
+        child: Container(
+          margin: EdgeInsets.only(right: 5.w),
+          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+          decoration: BoxDecoration(
+            color: AppColors.backgroundColor,
+            borderRadius: BorderRadius.circular(15.r),
+          ),
+          child: Text(
+            itemText,
+            style: TextStyle(
+              color: AppColors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 13.sp,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  if (selectedItems.length > 2) {
+    displayChips.add(
+      Text(
+        "+${selectedItems.length - 2} more",
+        style: TextStyle(color: Colors.grey, fontSize: 13.sp),
+      ),
+    );
+  }
+
+  return Wrap(
+    children: displayChips,
+  );
+},
+
       dropdownDecoratorProps: DropDownDecoratorProps(
+
 
         dropdownSearchDecoration: InputDecoration(
           hintText: widget.hint,
+          
 
           floatingLabelBehavior: FloatingLabelBehavior.always,
           labelStyle: const TextStyle(

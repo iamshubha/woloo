@@ -75,6 +75,7 @@ class _DropDownDialogState<T> extends State<DropDownDialog<T>> {
         key: widget.widgetKey,
         enabled: widget.enabled ?? true,
         
+        
         autoValidateMode:
 
         // _startValidation

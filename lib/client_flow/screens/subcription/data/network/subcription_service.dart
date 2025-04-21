@@ -17,7 +17,7 @@ class SubcriptionService {
     try {
 
       var response = await dio.post(
-          options:  Options(extra: {"auth": true}),
+          options:  Options(extra: {"auth": true, "isSupervisor": true }),
         APIConstants.CREATE_OREDER,
         data:
       {
@@ -59,7 +59,7 @@ class SubcriptionService {
     var response = await dio.get(
       '${APIConstants.GET_USER_COINS}',
       
-      options:  Options(extra: {"auth": true}),
+      options:  Options(extra: {"auth": true, "isSupervisor": true}),
     );
 
 

@@ -81,7 +81,6 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
     return Scaffold(
         backgroundColor: AppColors.white,
         appBar: AppBar(
-
           elevation: 0,
           backgroundColor: AppColors.white,
           title: Text(

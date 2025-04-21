@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/data/model/dashboard_task_model.dart';
@@ -37,18 +38,18 @@ class _ChartsState extends State<Charts> {
   List<Datum> janitorName = [] ;
 
         List<FacilityDropdownModel> facilitydropdownNames = [];
+        FacilityDropdownModel? selectItem;
 
   String clientId = "";
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    var some = globalStorage.getToken();
+    var some = globalStorage.getClientToken();
      clientId = globalStorage.getClientId();
 
     decodedToken = JwtDecoder.decode(some);
-    dashBoardBloc.add( GetAllJanitorEvent(clientId: int.parse(clientId)  ));
-
+    dashBoardBloc.add( GetAllJanitorEvent(clientId: int.parse(clientId)));
   }
 
   @override
@@ -60,237 +61,248 @@ class _ChartsState extends State<Charts> {
           height: 20,
         ),
 
-        Container(
-          width: MediaQuery.of(context).size.width / 1.1,
-          decoration: BoxDecoration(
-              boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2), // Shadow color
-              spreadRadius: 1, // How wide the shadow should spread
-              blurRadius: 10, // The blur effect of the shadow
-              offset: const Offset(0, 0), // No offset for shadow on all sides
-            ),
-          ],
-              color: AppColors.white, borderRadius: BorderRadius.circular(40)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 10,
-              ),
-
-              BlocConsumer(
-                  bloc: dashBoardBloc,
-                  listener: (context, state) {
-                    print("statesss  $state ");
-                    if (state is DashboarLoading) {
-                      EasyLoading.show(status: state.message);
-                    }
-
-                    if (state is DashbaordTask) {
-                      EasyLoading.dismiss();
-
-                      // dashbaordModel = state.dashbaordModel;
-                      // setState(() {
-
-                      // });
-                    // ;
-
-                      // print("$dashbaordModel objectttttttttttt");
-                      // print("rasd ${ dashbaordModel!.results!.taskStatusDistribution!
-                      //     .completedCount}");
-                    }
-
-                     if(state is  GetAllJanitor  ){
-                       EasyLoading.dismiss();
-
-                       janitorName =  state.taskModel!.results.data;
-                          for (var janitor in janitorName) {
-                       facilitydropdownNames.add( FacilityDropdownModel(
-                        facilityName: janitor.name,
-                        id: janitor.id,
-
-                       ));
-
-                          }
-
-
-                       dashBoardBloc.add(GetDashbaordEvent(
-                           type: "today",
-                           clientId: clientId,
-                           janitorId: facilitydropdownNames.first.id!,
-                           locationId: widget.facilityId!   ));
-                        //  facilitydropdown = dashbaordModel.results.
-
-                     }
-
-                    if (state is DashboarError) {
-                      EasyLoading.dismiss();
-                      EasyLoading.showError(state.error.message);
-                    }
-                  },
-                  builder: (context, state) {
-
-                     if( state is DashbaordTask ){
-
-                       dashboardModel =    state.dashbaordModel;
-
-                        print("sdfkhjslkdfjsd ${dashboardModel!.results!.taskStatusDistribution!.ongoingCount} ");
-
-                     }
-                    // print("statesss  $state ");
-
-                    return Column(
-                      children: [
-                        Row(
-                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 20),
-                              child: Text(
-                                DashboardConst.taskAudit,
-                                style: AppTextStyle.font20bold,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(right : 20),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 0.0),
-                                child:
-                                  SizedBox(
-                                    width:180,
-                                    child: DropDownDialog(
-                                      isprop: true,
-
-                                      hintTextStyle: AppTextStyle.font10,
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 10,
-                                        horizontal: 4
-                                      ),
-
-                                      // selected: clusterNames.first,
-                                      // key: _dropDownKey,
-                                      // widgetKey: _clusterNameKey,
-                                      hint:"Select Task Buddy",
-
-                                      items: facilitydropdownNames,
-
-                                      itemAsString: (FacilityDropdownModel item) =>
-                                      item.facilityName,
-                                      onChanged: (FacilityDropdownModel item) {
-                                        debugPrint("in drop down ${item.locationName}");
-                                        try {
-
-                                          dashBoardBloc.add(GetDashbaordEvent(
-                                              type: "today",
-                                              clientId: clientId,
-                                              janitorId: item.id!,
-
-
-                                              locationId: widget.facilityId!   ));
-
-                                          // locationController.text =   item.locationName!;
-                                          // facilityController.text = item.facilityName!;
-                                          setState(() {});
-
-                                          // clusterId = item..id!;
-                                          // reportIssueBloc.add(GetAllFacilityDropdown(
-                                          //     clusterId: item.clusterId ?? 0));
-                                          //
-                                          //   // if(state is GetFacilityDropdownSuccess ){
-                                          //     reportIssueBloc.add(GetAllTasksDropdown(
-                                          //         clusterId: item.clusterId! ?? 0
-                                          //     ));
-                                          //   // }else
-                                          //    // if( state is  GetTasksDropdownSuccess ){
-                                          //      reportIssueBloc.add(GetAllJanitorsDropdown(
-                                          //          clusterId: item.clusterId ?? 0));
-                                          // }
-
-
-                                        } catch (e) {
-                                          debugPrint("dropppppp$e");
-                                        }
-                                      },
-                                      validator: (value) =>
-                                      value == null
-                                          ?
-                                          "Please select facility"
-                                          : null,
-                                    ),
-                                  )
-                                // DropdownButton<String>(
-                                //   value: dropdownValue,
-                                //   icon: const Icon( Icons.keyboard_arrow_down,
-                                //    size: 30,
-                                //   ),
-                                //   elevation: 16,
-                                //   onChanged: (newValue) {
-                                //     setState(() {
-                                //       dropdownValue = newValue;
-                                //     });
-                                //   },
-                                //   hint: Text("Select Task Buddy",
-                                //    style: AppTextStyle.font10bold,
-                                //   ),
-                                //   underline: SizedBox(),
-
-                                //   items: <String>['City', 'Country', 'State']
-                                //       .map<DropdownMenuItem<String>>((String value) {
-                                //     return DropdownMenuItem<String>(
-                                //       value: value,
-                                //       child: Text(value),
-                                //     );
-                                //   }).toList(),
-                                // ),
-                              ),
-                            )
-                          ],
-                        ),
-                        Center(
-                          child: ChartPie(
-                            complatedTask:
-                            dashboardModel == null
-                                ? "10"
-                                :
-                            dashboardModel!.results!.taskStatusDistribution!
-                                        .completedCount ??
-                                    "0",
-                            pendingTask: dashboardModel == null
-                                ? "10"
-                                :
-                            dashboardModel!.results!.taskStatusDistribution!
-                                        .pendingCount ??
-                                    "0",
-                            totalTask: dashboardModel == null
-                                ? "10"
-                                :
-                            dashboardModel!.results!.taskStatusDistribution!
-                                .pendingCount ??
-                                "0",
-                            accetedTask: dashboardModel == null
-                                ? "10"
-                                : dashboardModel!.results!.taskStatusDistribution!
-                                        .acceptedCount ??
-                                    "0",
-                            ongoingTask: dashboardModel == null
-                                ? "10"
-                                : dashboardModel!.results!.taskStatusDistribution!
-                                        .ongoingCount ??
-                                    "0",
-                            rejectedTask: "10",
-                            rfcTask: "10",
-                            complatedPercentage:  dashboardModel == null ? "0"  : dashboardModel!.results!.taskStatusDistribution!.completedPercentage,
-                          ),
-                        ),
-                      ],
-                    );
-                  }),
-              const SizedBox(
-                height: 40,
+        SingleChildScrollView(
+          child: Container(
+            // height: 580.h,
+            width: MediaQuery.of(context).size.width / 1.1,
+            decoration: BoxDecoration(
+                boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.2), // Shadow color
+                spreadRadius: 1, // How wide the shadow should spread
+                blurRadius: 10, // The blur effect of the shadow
+                offset: const Offset(0, 0), // No offset for shadow on all sides
               ),
             ],
+                color: AppColors.white, borderRadius: BorderRadius.circular(40)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+          
+                BlocConsumer(
+                    bloc: dashBoardBloc,
+                    listener: (context, state) {
+                      print("statesss  $state ");
+                      if (state is DashboarLoading) {
+                        EasyLoading.show(status: state.message);
+                      }
+          
+                      if (state is DashbaordTask) {
+                        EasyLoading.dismiss();
+          
+                        // dashbaordModel = state.dashbaordModel;
+                        // setState(() {
+          
+                        // });
+                      // ;
+          
+                        // print("$dashbaordModel objectttttttttttt");
+                        // print("rasd ${ dashbaordModel!.results!.taskStatusDistribution!
+                        //     .completedCount}");
+                      }
+          
+                       if(state is  GetAllJanitor  ){
+                         EasyLoading.dismiss();
+          
+                         janitorName =  state.taskModel!.results.data;
+                            for (var janitor in janitorName) {
+                         facilitydropdownNames.add( FacilityDropdownModel(
+                          facilityName: janitor.name,
+                          id: janitor.id,
+          
+                         ));
+          
+                            }
+
+
+                         selectItem =   facilitydropdownNames.first;
+          
+          
+                         dashBoardBloc.add(GetDashbaordEvent(
+                             type: "today",
+                             clientId: clientId,
+                             janitorId: facilitydropdownNames.first.id!,
+                             locationId: widget.facilityId!   ));
+                          //  facilitydropdown = dashbaordModel.results.
+          
+                       }
+          
+                      if (state is DashboarError) {
+                        EasyLoading.dismiss();
+                        EasyLoading.showError(state.error);
+                      }
+                    },
+                    builder: (context, state) {
+          
+                       if( state is DashbaordTask ){
+          
+                         dashboardModel =    state.dashbaordModel;
+          
+                          print("sdfkhjslkdfjsd ${dashboardModel!.results!.taskStatusDistribution!.ongoingCount} ");
+          
+                       }
+                      // print("statesss  $state ");
+          
+                      return Column(
+                        children: [
+                          Row(
+                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Text(
+                                  DashboardConst.taskAudit,
+                                  style: AppTextStyle.font20bold,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right : 20),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 0.0),
+                                  child:
+                                    SizedBox(
+                                      width:170.w,
+                                      // height: 100,
+                                      child: DropDownDialog(
+                                        isprop: true,
+          
+                                        hintTextStyle: AppTextStyle.font10,
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 10,
+                                          horizontal: 4
+                                        ),
+          
+                                        selected: selectItem,
+                                        // "its me",
+                                        
+                                        //  facilitydropdownNames.first.facilityName,
+                                        // selected: clusterNames.first,
+                                        // key: _dropDownKey,
+                                        // widgetKey: _clusterNameKey,
+                                        hint:"Select Task Buddy",
+          
+                                        items: facilitydropdownNames,
+          
+                                        itemAsString: (FacilityDropdownModel item) =>
+                                        item.facilityName,
+                                        onChanged: (FacilityDropdownModel item) {
+                                          debugPrint("in drop down ${item.locationName}");
+                                          try {
+          
+                                            dashBoardBloc.add(GetDashbaordEvent(
+                                                type: "today",
+                                                clientId: clientId,
+                                                janitorId: item.id!,
+          
+          
+                                                locationId: widget.facilityId!   ));
+          
+                                            // locationController.text =   item.locationName!;
+                                            // facilityController.text = item.facilityName!;
+                                            setState(() {});
+          
+                                            // clusterId = item..id!;
+                                            // reportIssueBloc.add(GetAllFacilityDropdown(
+                                            //     clusterId: item.clusterId ?? 0));
+                                            //
+                                            //   // if(state is GetFacilityDropdownSuccess ){
+                                            //     reportIssueBloc.add(GetAllTasksDropdown(
+                                            //         clusterId: item.clusterId! ?? 0
+                                            //     ));
+                                            //   // }else
+                                            //    // if( state is  GetTasksDropdownSuccess ){
+                                            //      reportIssueBloc.add(GetAllJanitorsDropdown(
+                                            //          clusterId: item.clusterId ?? 0));
+                                            // }
+          
+          
+                                          } catch (e) {
+                                            debugPrint("dropppppp$e");
+                                          }
+                                        },
+                                        validator: (value) =>
+                                        value == null
+                                            ?
+                                            "Please select facility"
+                                            : null,
+                                      ),
+                                    )
+                                  // DropdownButton<String>(
+                                  //   value: dropdownValue,
+                                  //   icon: const Icon( Icons.keyboard_arrow_down,
+                                  //    size: 30,
+                                  //   ),
+                                  //   elevation: 16,
+                                  //   onChanged: (newValue) {
+                                  //     setState(() {
+                                  //       dropdownValue = newValue;
+                                  //     });
+                                  //   },
+                                  //   hint: Text("Select Task Buddy",
+                                  //    style: AppTextStyle.font10bold,
+                                  //   ),
+                                  //   underline: SizedBox(),
+          
+                                  //   items: <String>['City', 'Country', 'State']
+                                  //       .map<DropdownMenuItem<String>>((String value) {
+                                  //     return DropdownMenuItem<String>(
+                                  //       value: value,
+                                  //       child: Text(value),
+                                  //     );
+                                  //   }).toList(),
+                                  // ),
+                                ),
+                              )
+                            ],
+                          ),
+                          Center(
+                            child: ChartPie(
+                              complatedTask:
+                              dashboardModel == null
+                                  ? "0"
+                                  :
+                              dashboardModel!.results!.taskStatusDistribution!
+                                          .completedCount ??
+                                      "0",
+                              pendingTask: dashboardModel == null
+                                  ? "0"
+                                  :
+                              dashboardModel!.results!.taskStatusDistribution!
+                                          .pendingCount ??
+                                      "0",
+                              totalTask: dashboardModel == null
+                                  ? "0"
+                                  :
+                              dashboardModel!.results!.taskStatusDistribution!
+                                  .pendingCount ??
+                                  "0",
+                              accetedTask: dashboardModel == null
+                                  ? "0"
+                                  : dashboardModel!.results!.taskStatusDistribution!
+                                          .acceptedCount ??
+                                      "0",
+                              ongoingTask: dashboardModel == null
+                                  ? "0"
+                                  : dashboardModel!.results!.taskStatusDistribution!
+                                          .ongoingCount ??
+                                      "0",
+                              rejectedTask: "0",
+                              rfcTask: "0",
+                              complatedPercentage:  dashboardModel == null ? "0"  : dashboardModel!.results!.taskStatusDistribution!.completedPercentage,
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
+                const SizedBox(
+                  height: 40,
+                ),
+              ],
+            ),
           ),
         ),
 

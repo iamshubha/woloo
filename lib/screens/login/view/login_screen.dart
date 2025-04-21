@@ -233,7 +233,7 @@ class LoginPageState extends State<LoginScreen> {
 
                     if (state is LoginError) {
                       EasyLoading.dismiss();
-                      EasyLoading.showError(state.error.message);
+                      EasyLoading.showError(state.error);
                     }
 
                     if (state is LoginGetDataSuccess) {

@@ -25,7 +25,10 @@ class GlobalStorage {
   final String _addressKey = 'addressKey';
   final String _pincodeKey = 'pincodeKey';
    final String _clientIdKey = 'clientIdKey';
-
+   final String _clientmobileNo = 'clientmobileNo';
+   final String _planId = 'planId';
+   final String _clientToken = 'clientToken';
+   final String _paymentId = 'paymentId';
   
   /// Save Token
   void saveToken({required String accessToken}) {
@@ -45,6 +48,22 @@ class GlobalStorage {
 
     _box.remove(_tokenKey);
   }
+
+  void saveClientToken({required String accessToken}) {
+    if (accessToken.isEmpty) {
+      throw 'Access Token is empty';
+    }
+    _box.write(_clientToken, accessToken);
+  }
+  String getClientToken() {
+    String? token = _box.read(_clientToken);
+    return token ?? '';
+  }
+  
+  void removeClientToken() {
+    _box.remove(_clientToken);
+  }
+
 
   void saveProfile({required String profileName }) {
     if (profileName.isEmpty) {
@@ -149,6 +168,8 @@ class GlobalStorage {
     }
     _box.write(_supervisorNameKey, accessSupervisorName);
   }
+
+
 
   String getSupervisorName() {
     String? supervisorName = _box.read(_supervisorNameKey);
@@ -271,6 +292,9 @@ class GlobalStorage {
     return time ?? '';
   }
 
+
+
+
   void removeTime() {
     _box.remove(_currentTimeKey);
   }
@@ -341,6 +365,57 @@ void saveClientId({required String accessClientId}) {
   void removeClientId() {
     _box.remove(_clientIdKey);
   }
+
+  void saveClientMobileNo({required String accessClientMobileNo}) {
+    if (accessClientMobileNo.isEmpty) {
+      throw 'Client Mobile No is empty';
+    }
+    _box.write(_clientmobileNo, accessClientMobileNo);
+  }
+  String getClientMobileNo() {
+    String? clientMobileNo = _box.read(_clientmobileNo);
+    return clientMobileNo ?? '';
+  }
+  void removeClientMobileNo() {
+    _box.remove(_clientmobileNo);
+  }
+
+  void savePlanId({required String accessPlanId}) {
+      print("accessPlanId ${accessPlanId.isEmpty}");
+    if (accessPlanId.isEmpty) {
+      throw 'Client Mobile No is empty';
+    }
+    _box.write(_planId, accessPlanId);
+  }
+  String getPlanId() {
+    String? planId = _box.read(_planId);
+    return planId ?? '';
+  }
+  void removePlanId() {
+    _box.remove(_planId);
+  }
+
+  void savePaymentId({required String accessPayemntId}) {
+      print("accessPlanId ${accessPayemntId.isEmpty}");
+    if (accessPayemntId.isEmpty) {
+      throw 'Client Mobile No is empty';
+    }
+    _box.write(_paymentId, accessPayemntId);
+  }
+
+  String getPaymentId() {
+    String? paymentId = _box.read(_paymentId);
+    return paymentId ?? '';
+  }
+
+  void removePaymentId() {
+    _box.remove(_paymentId);
+  }
+
+ 
+
+
+
    
   void removeAll() {
     _box.remove(_tokenKey);

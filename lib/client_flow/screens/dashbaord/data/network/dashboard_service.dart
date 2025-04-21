@@ -4,6 +4,7 @@
 import 'dart:math';
 
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/data/model/check_task_model.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/data/model/client_model.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/data/model/facility_model.dart';
@@ -13,8 +14,11 @@ import 'package:woloo_smart_hygiene/screens/task_list/data/model/task_list_model
 import '../../../../../core/network/api_constant.dart';
 import '../../../../../core/network/dio_client.dart';
 import '../../../../../screens/report_issue_screen/data/model/facility_dropdown_model.dart';
+import '../model/check_supervisor.dart';
 import '../model/client_setup_model.dart';
 import '../model/dashboard_task_model.dart';
+import '../model/delete_facility.dart';
+import '../model/delete_model.dart';
 import '../model/subscription_model.dart';
 import '../model/task_model.dart';
 import '../model/tasklist_model.dart';
@@ -79,7 +83,7 @@ Future<ClientSetupModel> clientSetup({
     var response = await dio.post(
       APIConstants.CLIENT_SETUP,
       data: data,
-      options:  Options(extra: {"auth": true}),
+      options:  Options(extra: {"auth": true, "isSupervisor": true}),
     );
 
     clientSetupModel =  ClientSetupModel.fromJson(response);
@@ -114,14 +118,14 @@ Future<ClientSetupModel> clientSetup({
         "cluster_ids":clusterId.toString(),
         // "last_name": locality,
         "mobile": mobile,
-        "gender": "male"
+        "gender": gender
       });
 
 
     var response = await dio.post(
       APIConstants.ADD_USER,
       data: formData,
-      options:  Options(extra: {"auth": true}),
+      options:  Options(extra: {"auth": true, "isSupervisor": true}),
     );
 
     superVisorModel =  SuperVisorModel.fromJson(response);
@@ -148,7 +152,7 @@ Future<ClientSetupModel> clientSetup({
     var response = await dio.get(
       '${APIConstants.GET_TASK}?category=$category',
       
-      options:  Options(extra: {"auth": true}),
+      options:  Options(extra: {"auth": true, "isSupervisor": true}),
     );
 
 
@@ -192,7 +196,7 @@ Future<DashbaordModel> getTaskDashboard({
     var response = await dio.post(
       APIConstants.GET_TASK_DASHBOARD,
       data: data,
-      options:  Options(extra: {"auth": true}),
+      options:  Options(extra: {"auth": true, "isSupervisor": true}),
     );
 
   dashbaordModel =  DashbaordModel.fromJson(response);
@@ -247,7 +251,7 @@ Future<TaskModel> getAllJanitor({
     var response = await dio.post(
       APIConstants.GET_ALL_USER,
       data: data,
-      options:  Options(extra: {"auth": true}),
+      options:  Options(extra: {"auth": true, "isSupervisor": true}),
     );
 
   dashbaordModel =  TaskModel.fromJson(response);
@@ -275,7 +279,7 @@ Future<TaskModel> getAllJanitor({
 
     var response = await dio.get(
      "${APIConstants.SubscriptionExpiry}?id=$id",
-      options:  Options(extra: {"auth": true}),
+      options:  Options(extra: {"auth": true, "isSupervisor": true }),
     );
 
      subscriptionModel =  SubscriptionModel.fromJson(response);
@@ -314,7 +318,7 @@ Future<TaskModel> getAllJanitor({
       var response = await dio.post(
         APIConstants.ASSIGN_TASK,
         data: data,
-        options:  Options(extra: {"auth": true}),
+        options:  Options(extra: {"auth": true, "isSupervisor": true}),
       );
 
       // dashbaordModel =  DashbaordModel.fromJson(response);
@@ -341,7 +345,7 @@ Future<TaskModel> getAllJanitor({
 
     var response = await dio.get(
      "${APIConstants.GET_CLIENT_ID}?user_id=$id",
-      options:  Options(extra: {"auth": true}),
+      options:  Options(extra: {"auth": true, "isSupervisor": true }),
     );
 
      clientModel =  ClientModel.fromJson(response);
@@ -351,6 +355,32 @@ Future<TaskModel> getAllJanitor({
     rethrow;
   }
 }
+
+
+ Future<CheckSupervisorModel> checkSuperVisor({
+ 
+  required int id,
+
+}) async {
+  try {
+      
+     CheckSupervisorModel checkSupervisor;
+    // Data payload with all parameters
+ 
+
+    var response = await dio.get(
+     "${APIConstants.SUPERVISOR_CHECK}?client_id=$id",
+      options:  Options(extra: {"auth": true, "isSupervisor": true}),
+    );
+
+     checkSupervisor =  CheckSupervisorModel.fromJson(response);
+
+    return checkSupervisor;
+  } catch (e) {
+    rethrow;
+  }
+}
+
 
 
 
@@ -371,7 +401,7 @@ Future<TaskModel> getAllJanitor({
       var response = await dio.post(
         APIConstants.GET_ALL_FACILITY,
         data: data,
-        options:  Options(extra: {"auth": true}),
+        options:  Options(extra: {"auth": true, "isSupervisor": true}),
       );
 
       facilityModel = FacilityModel.fromJson(response);
@@ -404,7 +434,7 @@ Future<TaskModel> getAllJanitor({
       var response = await dio.post(
         APIConstants.CHECK_TASK_TIME,
         data: data,
-        options:  Options(extra: {"auth": true}),
+        options:  Options(extra: {"auth": true, "isSupervisor": true}),
       );
 
 
@@ -428,6 +458,70 @@ Future<TaskModel> getAllJanitor({
 //     "type": "today",
 //     "client_id": "62578"
 // 	}
+
+
+ Future<DeleteModel> deleteTask({
+ 
+  required int taskId,
+
+}) async {
+  try {
+      
+     DeleteModel checkSupervisor;
+    // Data payload with all parameters
+ 
+
+    var response = await dio.delete(
+     "${APIConstants.DELETE_TASK}?task_id=$taskId",
+      options:  Options(extra: {"auth": true, "isSupervisor": true}),
+    );
+
+     checkSupervisor =  DeleteModel.fromJson(response);
+
+    return checkSupervisor;
+  } catch (e) {
+    rethrow;
+  }
+}
+
+
+
+ Future<DeleteFacilityModel> deleteFacility({
+ 
+  required  int? locationId,
+  required  int? clusterId,
+  required int? facilityId,
+
+}) async {
+  try {
+      
+     DeleteFacilityModel checkSupervisor;
+    // Data payload with all parameters
+
+         Map<String, dynamic> data =
+     {
+    "location_id": locationId,
+    "cluster_id": clusterId,
+    "facility_id": facilityId
+      };
+ 
+
+    var response = await dio.delete(
+     "${APIConstants.DELETE_FACILITY}",
+      options:  Options(extra: {"auth": true, "isSupervisor": true}),
+      data: data
+    );
+
+     checkSupervisor =  DeleteFacilityModel.fromJson(response);
+
+    return checkSupervisor;
+  } catch (e) {
+    rethrow;
+  }
+}
+
+
+
 
 
 

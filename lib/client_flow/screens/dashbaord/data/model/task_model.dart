@@ -52,8 +52,8 @@ class Datum {
     int id;
     String name;
     String mobile;
-    Address city;
-    Address address;
+    String city;
+    String address;
     bool status;
     dynamic email;
     List<TaskTime> taskTimes;
@@ -75,8 +75,8 @@ class Datum {
         id: json["id"],
         name: json["name"],
         mobile: json["mobile"],
-        city: addressValues.map[json["city"]]!,
-        address: addressValues.map[json["address"]]!,
+        city: json["city"],
+        address: json["address"],
         status: json["status"],
         email: json["email"],
         taskTimes: List<TaskTime>.from(json["task_times"].map((x) => TaskTime.fromJson(x))),
@@ -87,8 +87,8 @@ class Datum {
         "id": id,
         "name": name,
         "mobile": mobile,
-        "city": addressValues.reverse[city],
-        "address": addressValues.reverse[address],
+        "city": city,
+        "address": address,
         "status": status,
         "email": email,
         "task_times": List<dynamic>.from(taskTimes.map((x) => x.toJson())),
@@ -96,42 +96,34 @@ class Datum {
     };
 }
 
-enum Address {
-    UNDEFINED
-}
-
-final addressValues = EnumValues({
-    "undefined": Address.UNDEFINED
-});
-
 class TaskTime {
+    int taskId;
     DateTime endTime;
     DateTime startTime;
+    String facilityName;
+    String facilityType;
 
     TaskTime({
+        required this.taskId,
         required this.endTime,
         required this.startTime,
+        required this.facilityName,
+        required this.facilityType,
     });
 
     factory TaskTime.fromJson(Map<String, dynamic> json) => TaskTime(
+        taskId: json["task_id"],
         endTime: DateTime.parse(json["end_time"]),
         startTime: DateTime.parse(json["start_time"]),
+        facilityName: json["facility_name"],
+        facilityType: json["facility_type"],
     );
 
     Map<String, dynamic> toJson() => {
+        "task_id": taskId,
         "end_time": endTime.toIso8601String(),
         "start_time": startTime.toIso8601String(),
+        "facility_name": facilityName,
+        "facility_type": facilityType,
     };
-}
-
-class EnumValues<T> {
-    Map<String, T> map;
-    late Map<T, String> reverseMap;
-
-    EnumValues(this.map);
-
-    Map<T, String> get reverse {
-            reverseMap = map.map((k, v) => MapEntry(v, k));
-            return reverseMap;
-    }
 }

@@ -47,7 +47,7 @@ class _HomeTabbarState extends State<HomeTabbar> with SingleTickerProviderStateM
   void initState() {
     // TODO: implement initState
     super.initState();
-    var some =   globalStorage.getToken();
+    var some =   globalStorage.getClientToken();
     // tabController =  TabController(length: widget.facility.length, vsync: this);
 
     String clintId = globalStorage.getClientId();
@@ -105,14 +105,19 @@ class _HomeTabbarState extends State<HomeTabbar> with SingleTickerProviderStateM
 
 
                  facility = state.facilityModel!.results!.facilities!;
-                  facility.add(
-                    Facility(
-                      facilityName: "Add Facility",
-                      id: 0,
-                    )
-                  );
+
+                 facility.insert(0,  Facility(
+                   facilityName: "Add Facility/Task",
+                   id: 0,));
+                  // facility.add(
+                  //   Facility(
+                  //     facilityName: "Add Facility",
+                  //     id: 0,
+                  //   )
+                  // );
                  tabController =  TabController(length: facility.length, vsync: this);
                  // setState(() {
+                 tabController!.animateTo(1);
                  //
                  // });
 
@@ -120,13 +125,15 @@ class _HomeTabbarState extends State<HomeTabbar> with SingleTickerProviderStateM
                      if(state is Subcription ){
                                   EasyLoading.dismiss();
  
-                             planId =   state.subscriptionModel!.results!.planId;
+                             planId =   globalStorage.getPlanId();
+                             
+                              // state.subscriptionModel!.results!.planId;
                         // taskModel =  state.taskModel;
                                   }
 
                if(state is DashboarError  ){
                  EasyLoading.dismiss();
-                 EasyLoading.showError( state.error.message);
+                 EasyLoading.showError( state.error);
 
                }
 
@@ -167,6 +174,8 @@ class _HomeTabbarState extends State<HomeTabbar> with SingleTickerProviderStateM
                                            controller: tabController,
                                                  tabs:
                                                   facility.map((e) => Tab(
+                                                    // child: Icon( Icons.add),
+                                                    
                                                     // icon: Icon(Icons.home),
 
 
@@ -176,10 +185,23 @@ class _HomeTabbarState extends State<HomeTabbar> with SingleTickerProviderStateM
                                                         if(e.id == 0){
                                                           print("object");
                                                             if( planId == null ){
+                                                               showModalBottomSheet(
+                                                                backgroundColor: Colors.transparent,
+                                                                // isScrollControlled: true,
+                                                                context: context, 
+                                                               
+                                                               builder:(context) {
+                                                                  return  SubcriptionScreen(
+                                                                    dashBoardBloc: dashBoardBloc,
+                                                                    isfromFacility: false,
+                                                                  );
+                                                               },
+                                                               
+                                                               );
 
-                                                    Navigator.of(context).push( MaterialPageRoute(builder: (context) {
-                                                   return const SubcriptionScreen();
-                                                      }, ) );
+                                                  //   Navigator.of(context).push( MaterialPageRoute(builder: (context) {
+                                                  //  return const SubcriptionScreen();
+                                                  //     }, ) );
 
                                                   }else{
 
@@ -199,33 +221,13 @@ class _HomeTabbarState extends State<HomeTabbar> with SingleTickerProviderStateM
                                                         }
                                                       },
                                                       child: TabbarWidget(
-                                                      
+                                                        id: e.id,
                                                         title: e.facilityName,
-                                                      
-                                                        
-                                                      
+
                                                       ),
                                                     ),
                                                   )).toList(),
-                                                 // [
-                                                 //    Tab(icon:
-                                                 //       TabbarWidget(title: '${DashboardConst.facility} 1' )
-                                                 //    ),
-                                                 //    Tab(icon:
-                                                 //      TabbarWidget(title: '${DashboardConst.facility} 2'  )
-                                                 //     ),
-                                                 //    Tab(icon:
-                                                 //      TabbarWidget(title: DashboardConst.facility.tr()  )
-                                                 //   ),
-                                                 //    Tab(icon:
-                                                 //     TabbarWidget(title: DashboardConst.facility.tr() )
-                                                 //      ),
-                                                 //    Tab(icon:
-                                                 //     TabbarWidget(title: DashboardConst.facility  )
-                                                 //     ),
-                                                 //       Tab(icon:
-                                                 //   TabbarWidget(title: DashboardConst.facility.tr()))
-                                                 // ],
+                                         
                                                ),
                                        ),
                                       Expanded(

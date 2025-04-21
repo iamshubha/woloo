@@ -14,7 +14,9 @@ import 'package:google_places_flutter/model/prediction.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:time_picker_spinner/time_picker_spinner.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/bloc/dashboard_state.dart';
+import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/data/model/tasktime_model.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/view/widget/congrats_dailog.dart';
+import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/view/widget/dailog.dart';
 import 'package:woloo_smart_hygiene/client_flow/widgets/CustomButton.dart';
 import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
 
@@ -74,10 +76,12 @@ class _HomeState extends State<Home> {
      final  facilityKey = GlobalKey<FormState>();
           Map<String, dynamic>? decodedToken;
           TextEditingController controller = TextEditingController();
-   int selectedIndex = 0;
+     int selectedIndex = 0;
      int selectedAdmin = 0;
      int selectedGender = 0;
-    String? janitorGender;
+     String? janitorGender;
+     bool isClientSupervisor = false;
+     bool canPop = true;
 
   List<Facility> facilityList = [];
 
@@ -99,6 +103,12 @@ class _HomeState extends State<Home> {
      )
    ];
    int? clusterId;
+   int? locationId;
+   int? facilityId;
+
+
+    // Str planId;
+    FocusNode addressFocusNode = FocusNode();
 
 
 
@@ -107,13 +117,20 @@ class _HomeState extends State<Home> {
     // TODO: implement initState
     super.initState();
 
-        var some =   globalStorage.getToken();
+        var some =   globalStorage.getClientToken();
+         
+        facilityFocusNode = FocusNode();
+        //  planId = globalStorage.getPlanId();
+
+       
+     
 
 
      decodedToken = JwtDecoder.decode(some);
          dashBoardBloc.add( ClientEvent(
       id: decodedToken!["id"]
     ) );
+
 
      
     debugPrint(" toeknm ${decodedToken!["id"]}");
@@ -122,419 +139,538 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return   Padding(
-      padding: const EdgeInsets.symmetric( horizontal: 10),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-          const  SizedBox(
-                height: 100,
+    return  
+    Scaffold(
+       resizeToAvoidBottomInset: true, 
+      backgroundColor: AppColors.white,
+      body: Padding(
+        padding: const EdgeInsets.symmetric( horizontal: 20),
+        child: SingleChildScrollView(
+          
+          
+          
+          child: Column(
+            
+            children: [
+            const  SizedBox(
+                  height: 100,
+                 ),
+          
+              Text(DashboardConst.welcomeMessage,
+                style: AppTextStyle.font32bold,
+              ),
+                const  SizedBox(
+                  height: 20,
+                   ),
+          
+               CustomImageProvider(
+                image:  ClientImages.taskMasterblack,
+                width: 161.h,
+                height: 83.h,
+                //  color: AppColors.black,
                ),
-        
-            Text(DashboardConst.welcomeMessage,
-              style: AppTextStyle.font32bold,
-            ),
-        
-             CustomImageProvider(
-              image:  ClientImages.taskMaster,
-              width: 139,
-              height: 119,
-               color: AppColors.black,
-             ),
-        
-               const  SizedBox(
-                height: 30,
-                 ),
-        
-                 CustomImageProvider(
-              image:  AppImages.welcome,
-              width: 332,
-               height: 223,
-             ),
-        
-                SizedBox(
-                height: 30.h,
-                 ),
-        
-        
-                      //  const  SizedBox(
-                      // height: 10,
-                      //   ),
-                     //
-                     //  Text(DashboardConst.dashboardTitle,
-                     //   style: AppTextStyle.font18bold,
-                     // ),
-                        const  SizedBox(
-                        height: 20,
+          
+                 const  SizedBox(
+                  height: 30,
+                   ),
+          
+                   CustomImageProvider(
+                image:  AppImages.welcome,
+                width: 332,
+                 height: 223,
+               ),
+          
+                  SizedBox(
+                  height: 30.h,
+                   ),
+          
+          
+                        //  const  SizedBox(
+                        // height: 10,
+                        //   ),
+                       //
+                       //  Text(DashboardConst.dashboardTitle,
+                       //   style: AppTextStyle.font18bold,
+                       // ),
+                          const  SizedBox(
+                          height: 20,
+                          ),
+          
+                         Text(DashboardConst.onboardingMessage,
+                          textAlign: TextAlign.center,
+                          style: AppTextStyle.font14,
                         ),
-        
-                       Text(DashboardConst.onboardingMessage,
-                        textAlign: TextAlign.center,
-                        style: AppTextStyle.font14,
-                      ),
-        
-                            const  SizedBox(
-                           height: 30,
-                             ),
-                          BlocConsumer(
-                             bloc: dashBoardBloc,
-                             listener: (context, state) {
-        
-                                   print("dashboar $state ");
-        
-                                  if ( state is DashboarLoading  ){
-        
-                                         EasyLoading.show(status: state.message);
-                                   }
-        
-                                  if (state is ClientSetUp  ) {
-                                       EasyLoading.dismiss();
-                                          String clientId =   globalStorage.getClientId();
-                                      clusterId =     state.clientSetupModel.results.data.clusterId;
-                                      
-                                       dashBoardBloc.add(
-                                             AddUserEvent(
-                                              mobile: mobileController.text,
-                                              name: nameController.text,
-                                              roleId: "2",
-                                              clientId: clientId,
-                                              clusterId: [state.clientSetupModel.results.data.clusterId]
-                                         )  );
-                                        // adminBottomSheet();
-        
-                                  }
-                                 if(state is AddUser ){
-                                      String clientId =   globalStorage.getClientId();
-        
-                                   print("add user succcesfull");
-                                    dashBoardBloc.add(
-                                         AddJanitorEvent(
-                                           mobile: janMobileController.text,
-                                           name: janNameController.text,
-                                           gender: janitorGender,
-                                           roleId: "1",
-                                           clientId: clientId,
-                                           clusterId: [clusterId!]
-                                         ));
-        
-                                   EasyLoading.dismiss();
-                                 }
-        
-                                  if( state is Addjanitor ){
-                                      print("add jantor succcesfull");
-                                        String clientId =   globalStorage.getClientId();
-                                      dashBoardBloc.add(
-                                         AssignTaskEvent(clientId: int.parse(clientId),
-                                             shiftTime: "${shiftTime!.hour}:${shiftTime!.minute}:00",
-                                             taskIds: taksIds,
-                                             estimatedTime: estimatedTime.toString(),
-                                             taskTimes: dashController.taskTimes,
-                                             janitorId: state.superVisorModel!.results!.data!.value!,
-        
-                                         ));
-        
-                                  }
-        
-                                  if( state is GetTask ){
-                                    EasyLoading.dismiss();
-                                    // gender = state.tasklist;
-        
-                                  }
-        
-                                  if( state is GetClient){
-                                    EasyLoading.dismiss();
-        
-                                  }
-        
-        
-                                   if( state is  AssignTask ){
-                                     EasyLoading.dismiss();
-        
-                                    
-        
-        
-        
-        
-                                      congratDailog();
-                                    //  showDialog(context: context, builder:
-                                    //   (context) {
-                                    //      return CongratsDailog(buddyName: "dskjdfkj");
-                                    //   },
-                                    //  ).then((v){
-                                    //    Navigator.of(context, rootNavigator: true).pop();
-                                    //    Navigator.of(context, rootNavigator: true).pop();
-                                    //    Navigator.of(context, rootNavigator: true).pop();
-                                    //    Navigator.of(context, rootNavigator: true).pop();
-                                    //    Navigator.of(context, rootNavigator: true).pop();
-                                    //  } );
-                                     
-        
-                                   }
-        
-        
-                                  if(state is GetAllJanitor ){
-        
-                                    EasyLoading.dismiss();
-        
-                                     // state.taskModel.
-        
-                                    // facilityNames
-        
-                                    // showDialog(context: context, builder:
-                                    //     (context) {
-                                    //   return BuddyListDailog( taskModel: state.taskModel, );
-                                    // },
-                                    // );
-                                    // taskModel =  state.taskModel;
-        
-                                  }
-        
-                                   if(state is GetAllFacility ){
-        
-                                     EasyLoading.dismiss();
-                                     facilityList = state.facilityModel!.results!.facilities!;
-        
-                                     // facilityNames.
-        
-                                      // facilityList.map( ( e)=>  facilityList.add(  e.facilityName! )   );
-        
-                                     for (var item in facilityList ) {
-                                        print(" fasfkljfas list ${item.id}");
-                                       // print( "testing ${item["required_time"] = 15 }");
-                                       // item["required_time"] = 15;
-                                       facilitydropdownNames.add(FacilityDropdownModel(
-        
-                                         id: item.id,
-                                         facilityName: item.facilityName,
-                                         locationName: item.locationName
-        
-        
-        
-                                       ) );
-        
+          
+                              const  SizedBox(
+                             height: 30,
+                               ),
+                            BlocConsumer(
+                               bloc: dashBoardBloc,
+                               listener: (context, state) {
+          
+                                     print("dashboar $state ");
+          
+                                    if ( state is DashboarLoading  ){
+          
+                                           EasyLoading.show(status: state.message);
                                      }
-        
-                                      print("falicit namessss $facilitydropdownNames ");
-        
-                                       // for( var facilit from facilityList ){
-                                       //
-                                       // }
-        
-                                   }
-
-                                
-        
-        
-        
-        
-                                   if(state is DashboarError  ){
+          
+                                    if (state is ClientSetUp  ) {
+                                         EasyLoading.dismiss();
+                                         print("client setup ${isClientSupervisor}");
+                                                 String clintId = globalStorage.getClientId();
+      
+                                            dashBoardBloc.add(CheckSupvisorEvent(id: int.parse(clintId)));
+    
+                                             locationId =   state.clientSetupModel.results.data.locationId;
+                                             facilityId =   state.clientSetupModel.results.data.facilityId;
+      
+                                          if(isClientSupervisor){
+      
+                                              String clientId =   globalStorage.getClientId();
+                                                   clusterId =     state.clientSetupModel.results.data.clusterId;
+      
+                                               dashBoardBloc.add(
+                                           AddJanitorEvent(
+                                             mobile: janMobileController.text,
+                                             name: janNameController.text,
+                                             gender: janitorGender,
+                                             roleId: "1",
+                                             clientId: clientId,
+                                             clusterId: [clusterId!]
+                                           ));
+          
+                                        //                String clientId =   globalStorage.getClientId();
+                                        //                String mobile = globalStorage.getClientMobileNo();
+                                        //                String name = globalStorage.getSupervisorName();
+                                        // clusterId =     state.clientSetupModel.results.data.clusterId;
+                                        
+                                        //  dashBoardBloc.add(
+                                        //        AddUserEvent(
+                                        //         mobile: mobile,
+                                        //         name: name,
+                                        //         roleId: "2",
+                                        //         clientId: clientId,
+                                        //         clusterId: [state.clientSetupModel.results.data.clusterId]
+                                        //    )  );
+      
+                                          } else{
+                                                  String clientId =   globalStorage.getClientId();
+                                        clusterId =     state.clientSetupModel.results.data.clusterId;
+                                        
+                                         dashBoardBloc.add(
+                                               AddUserEvent(
+                                                mobile: mobileController.text,
+                                                name: nameController.text,
+                                                roleId: "2",
+                                                clientId: clientId,
+                                                // gender: janitorGender,
+                                                clusterId: [state.clientSetupModel.results.data.clusterId]
+                                           )  );
+      
+                                          }
+                                      
+                                          // adminBottomSheet();
+          
+                                    }
+                                   if(state is AddUser ){
+                                        String clientId =   globalStorage.getClientId();
+          
+                                     print("add user succcesfull");
+                                      dashBoardBloc.add(
+                                           AddJanitorEvent(
+                                             mobile: janMobileController.text,
+                                             name: janNameController.text,
+                                             gender: janitorGender,
+                                             roleId: "1",
+                                             clientId: clientId,
+                                             clusterId: [clusterId!]
+                                           ));
+          
                                      EasyLoading.dismiss();
-                                     EasyLoading.showError( state.error.message);
-        
                                    }
-                                
-                             },
-                            builder:  (context, state) {
-                                  print(" state $state");
-                                  if( state is GetTask ){
+          
+                                    if( state is Addjanitor ){
+                                        print("add jantor succcesfull");
+                                          String clientId =   globalStorage.getClientId();
+                                        dashBoardBloc.add(
+                                           AssignTaskEvent(clientId: int.parse(clientId),
+                                               shiftTime: "${shiftTime!.hour}:${shiftTime!.minute}:00",
+                                               taskIds: taksIds,
+                                               estimatedTime: estimatedTime.toString(),
+                                               taskTimes: dashController.taskTimes,
+                                               janitorId: state.superVisorModel!.results!.data!.value!,
+          
+                                           ));
+          
+                                    }
+      
+                                           if ( state is CheckSupervisor ){
+         
+                                              EasyLoading.dismiss();
+                                       isClientSupervisor =  state.checkSupervisorModel!.results!.isClientSupervisor!;
+                     
+                    }
+          
+                                    if( state is GetTask ){
+                                      EasyLoading.dismiss();
+                                      // gender = state.tasklist;
+          
+                                    }
+          
+                                    if( state is GetClient){
+                                      EasyLoading.dismiss();
+          
+                                    }
+          
+          
+                                     if( state is  AssignTask ){
+                                       EasyLoading.dismiss();
+    
+                                        canPop = false;
         
-                                    facilityNames = state.tasklist;
-        
-                                  }
-        
-                          return  
-                           // Builder(
-                             // builder: ( BuildContext builderContext) {
-                                    
-                                    widget.isFromDashboard == true ?
-                          Column(children: [
-        
-                                    ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                     minimumSize:  const Size(190, 59),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12), // <-- Radius
-                                    ),
-                                  backgroundColor: AppColors.backgroundColor
-        
-                                ),
-                                onPressed: (){
-
-                                 
-                                  //  else{
-                                   dashBoardBloc.add( const GetTaskEvent(
-                                      category: "Home"
-                                  ) );
-                                  // //
-                                  facilityBottomSheet();
-
-                                  //  }
-                                  //  print("object ${ globalStorage.getClientId()}" );
-                                  // janitorBottomSheet();
-                          
+                                        congratDailog();
+                                      //  showDialog(context: context, builder:
+                                      //   (context) {
+                                      //      return CongratsDailog(buddyName: "dskjdfkj");
+                                      //   },
+                                      //  ).then((v){
+                                      //    Navigator.of(context, rootNavigator: true).pop();
+                                      //    Navigator.of(context, rootNavigator: true).pop();
+                                      //    Navigator.of(context, rootNavigator: true).pop();
+                                      //    Navigator.of(context, rootNavigator: true).pop();
+                                      //    Navigator.of(context, rootNavigator: true).pop();
+                                      //  } );
+                                       
+          
+                                     }
+          
+          
+                                    if(state is GetAllJanitor ){
+          
+                                      EasyLoading.dismiss();
+          
+                                       // state.taskModel.
+          
+                                      // facilityNames
+          
+                                      // showDialog(context: context, builder:
+                                      //     (context) {
+                                      //   return BuddyListDailog( taskModel: state.taskModel, );
+                                      // },
+                                      // );
+                                      // taskModel =  state.taskModel;
+          
+                                    }
+          
+                                     if(state is GetAllFacility ){
+          
+                                       EasyLoading.dismiss();
+                                       facilityList = state.facilityModel!.results!.facilities!;
+          
+                                       // facilityNames.
+          
+                                        // facilityList.map( ( e)=>  facilityList.add(  e.facilityName! )   );
+          
+                                       for (var item in facilityList ) {
+                                          print(" fasfkljfas list ${item.id}");
+                                         // print( "testing ${item["required_time"] = 15 }");
+                                         // item["required_time"] = 15;
+                                         facilitydropdownNames.add(FacilityDropdownModel(
+          
+                                           id: item.id,
+                                           facilityName: item.facilityName,
+                                           locationName: item.locationName
+          
+          
+          
+                                         ) );
+          
+                                       }
+          
+                                        print("falicit namessss $facilitydropdownNames ");
+          
+                                         // for( var facilit from facilityList ){
+                                         //
+                                         // }
+          
+                                     }
+    
+    
+                                     if(state is DeltetFacility ){
+                                        EasyLoading.dismiss();
+    
+    
+    
+    
+                                     }
+      
+                                  
+          
+          
+          
+          
+                                     if(state is DashboarError  ){
+                                       EasyLoading.dismiss();
+                                       EasyLoading.showError( state.error);
+                                       Future.delayed( const Duration(seconds: 1 ), () {
+                                          if(state.error == "Mobile number is already registered."){
+                                        dashBoardBloc.add(
+                                          FacilityDeleteEvent(locationId: locationId!, clusterId: clusterId!, facilityId: facilityId!)
+                                        );
+                                        }
+                                         
+                                       }, );
+                                      
+          
+                                     }
+                                  
+                               },
+                              builder:  (context, state) {
+                                    print(" state $state");
+                                    if( state is GetTask ){
+          
+                                      facilityNames = state.tasklist;
+          
+                                    }
+          
+                            return  
+                             // Builder(
+                               // builder: ( BuildContext builderContext) {
+                                      
+                                      widget.isFromDashboard == true ?
+                            Column(children: [
+          
+                                      ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                       minimumSize:  const Size(double.infinity , 59),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12), // <-- Radius
+                                      ),
+                                    backgroundColor: AppColors.backgroundColor
+          
+                                  ),
+                                  onPressed: (){
+      
+                                     String planId = globalStorage.getPlanId();
+                                       String paymentId = globalStorage.getPaymentId();
+      
+      
+                                        print("object ${planId} ");
+      
+                                        print("object ${paymentId} ");
+      
+                                         if (planId.isEmpty && paymentId.isEmpty) {
+                                               showDialog(context: context, builder: 
+                                     (context) {
+                                        return const Dailog(
+                                          title: "First you need to renew your subscription from dashbaord.",
+                                        );
+                                     },
+                                    );
+                                           
+                                         } else {
+                                           if (paymentId.isNotEmpty) {
+      
+                                                 dashBoardBloc.add( const GetTaskEvent(
+                                        category: "Home"
+                                    ) );
+                              
+                                    facilityBottomSheet();
+                                             
+                                           }
+                                           else{
+                                                    showModalBottomSheet(
+                                            backgroundColor: Colors.transparent,
+                                            context: context, builder:
+                                               (context) {
+                                                  return SubcriptionScreen(
+                                                    dashBoardBloc: dashBoardBloc,
+                                                    isfromFacility: true,
+                                                  );
+                                               },
+                                              );
+      
+                                           }
+      
+                                        
+                                           
+                                         }
+      
+                                        //  ?
+      
                                
-        
-        
-                                }, child: Text(DashboardConst.addNewFacility,
-                                                      style: AppTextStyle.font20bold.copyWith(
-                               color: AppColors.black
-                                                      ),
-                                                     ) ),
-                                                     SizedBox(
-                                                        height: 20.h,
-                                                     ),
-                                                             ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                     minimumSize:  const Size(190, 59),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12), // <-- Radius
-                                    ),
-                                  backgroundColor: AppColors.backgroundColor
-        
-                                ),
-                                onPressed: (){
-                                  //  print("object ${ globalStorage.getClientId()}" );
-                                  // janitorBottomSheet();
-                                  dashBoardBloc.add( const GetTaskEvent(
-                                      category: "Home"
-                                  ) );
-                                  // //
-                                  // facilityBottomSheet();
-                                       selectBuddyDailog();
-                           
-        
-        
-                                }, child: Text(DashboardConst.addNewTask,
-                                                      style: AppTextStyle.font20bold.copyWith(
-                               color: AppColors.black
-                                                      ),
-                                                     ) )
-        
-                          ],)
-        
-        
-                                    :              
-                                ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                     minimumSize:  const Size(190, 59),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12), // <-- Radius
-                                    ),
-                                  backgroundColor: AppColors.buttonBgColor
-        
-                                ),
-                                onPressed: (){
-                                  //  print("object ${ globalStorage.getClientId()}" );
-                                  // janitorBottomSheet();
-                                  dashBoardBloc.add( const GetTaskEvent(
-                                      category: "Home"
-                                  ) );
-                                  // //
-                                  facilityBottomSheet();
-                                  // adminBottomSheet();
-                                  // taskBottomSheet();
-                                  //    print(  globalStorage.getClientId());
-        
-                                  // dashBoardBloc.add(GetAllJanitorEvent(
-                                  //   clientId: 340,
-                                  // ) );
-                                  // showDailog(context);
-                                  // selectBuddyDailog();
-                                  //  congratDailog();
-        
-        
-                                }, child: Text(DashboardConst.getStarted,
-                                                      style: AppTextStyle.font20bold.copyWith(
-                               color: AppColors.black
-                                                      ),
-                                                     ) );
-                             }
-                           ),
-                            // },
-        
-        
-        
-                            SizedBox(
-                              height: 20.h,
-                            ),
-            // GestureDetector(
-            //     onTap: ()async {
-            //       // status: MyJanitorProfileScreenConstants.LOGGING_OUT_TOAST
-            //       //     .tr());
-            //       var storage = GetIt.instance<GlobalStorage>();
-            //       storage.removeToken();
-            //       storage.removeLocation();
-            //       storage.removeTime();
-            //       storage.removeClientId();
-            //       await Future.delayed(const Duration(seconds: 3));
-            //       EasyLoading.dismiss();
-            //       EasyLoading.showToast(MyJanitorProfileScreenConstants
-            //           .LOG_OUT_SUCCESS_TOAST );
-            //       if (!context.mounted) return;
-            //       Navigator.pushAndRemoveUntil(
-            //         context,
-            //         MaterialPageRoute(
-            //             builder: (context) => const LoginAs()),
-            //             (route) => false,
-            //       );
-            //     },
-            //     child: const Custombutton(text: "Log out", width: 360)),
-        
-        
-            SizedBox(
-              height: 20.h,
-            ),
-        
-        
-        
-                             Text(
-                                 textAlign: TextAlign.center,
-                                 "The Task Master service of Woloo Smart Hygiene is a paid service. You are eligible for a 7-day free trial, during which you can add only one facility. After the trial period ends, you must pay ₹499 + GST to continue using the Task Master service.",
-                              style: AppTextStyle.font8,
-        
-                             )
-        
-        
-            // Padding(
-            //   padding: EdgeInsets.symmetric(
-            //     horizontal: 14.w,
-            //     vertical: 10.h,
-            //   ),
-            //   child: CustomDropDownDialog(
-            //     // key: dropDownKey,
-            //     // selected: null,
-            //     widgetKey:_clusterNameKey,
-            //     hint:  DashboardConst.selectCleaningTasks,
-            //     // key: Key('${_editMarketModel.city?.label}T4'),
-            //     // selected: cities.firstWhereOrNull((element) => element.value == _editMarketModel.city?.value),
-            //     // widgetKey: _keys[2],xx
-            //     items: gender,
-            //     itemAsString: (TaskDropdownModel item) =>
-            //     item.facilityName,
-            //
-            //     onChanged: (TaskDropdownModel item) {
-            //       print("click on the page $item");
-            //       // facilityId = item.id!;
-            //       // debugPrint("facilityId --->$facilityId");
-            //       // dashBoardBloc.add(const GetTaskEvent(
-            //       //     category: "Home"
-            //       // ) );
-            //
-            //     },
-            //
-            //     validator: (value) => value == null
-            //         ? MyReportIssueScreenConstants.FACILITY_VALIDATION
-            //         .tr()
-            //         : null,
-            //   ),
-            // ),
-        
-        
-            // )
-        
-        
-        
-            ],
+                                    // : 
+                                    
+                                    
+                
+                                
+                            
+                                 
+          
+          
+                                  }, child: Text(DashboardConst.addNewFacility,
+                                                        style: AppTextStyle.font20bold.copyWith(
+                                 color: AppColors.black
+                                                        ),
+                                                       ) ),
+                                                       SizedBox(
+                                                          height: 20.h,
+                                                       ),
+                                                               ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                       minimumSize:  const Size(double.infinity, 59),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12), // <-- Radius
+                                      ),
+                                    backgroundColor: AppColors.backgroundColor
+          
+                                  ),
+                                  onPressed: (){
+                                    //  print("object ${ globalStorage.getClientId()}" );
+                                    // janitorBottomSheet();
+                                    dashBoardBloc.add( const GetTaskEvent(
+                                        category: "Home"
+                                    ) );
+                                    // //
+                                    // facilityBottomSheet();
+                                         selectBuddyDailog();
+                             
+          
+          
+                                  }, child: Text(DashboardConst.addNewTask,
+                                                        style: AppTextStyle.font20bold.copyWith(
+                                 color: AppColors.black
+                                                        ),
+                                                       ) )
+          
+                            ],)
+          
+          
+                                      :              
+                                  ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                       minimumSize:  const Size(190, 59),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12), // <-- Radius
+                                      ),
+                                    backgroundColor: AppColors.backgroundColor
+          
+                                  ),
+                                  onPressed: (){
+                                    //  print("object ${ globalStorage.getClientId()}" );
+                                    // janitorBottomSheet();
+                                    dashBoardBloc.add( const GetTaskEvent(
+                                        category: "Home"
+                                    ) );
+                                    // //
+                                    facilityBottomSheet();
+       
+                                    // adminBottomSheet();
+                                    // taskBottomSheet();
+                                    //    print(  globalStorage.getClientId());
+          
+                                    // dashBoardBloc.add(GetAllJanitorEvent(
+                                    //   clientId: 340,
+                                    // ) );
+                                    // showDailog(context);
+                                    // selectBuddyDailog();
+                                    //  congratDailog();
+          
+          
+                                  }, child: Text(DashboardConst.getStarted,
+                                                        style: AppTextStyle.font20bold.copyWith(
+                                 color: AppColors.black
+                                                        ),
+                                                       ) );
+                               }
+                             ),
+                              // },
+          
+          
+          
+                              SizedBox(
+                                height: 20.h,
+                              ),
+              // GestureDetector(
+              //     onTap: ()async {
+              //       // status: MyJanitorProfileScreenConstants.LOGGING_OUT_TOAST
+              //       //     .tr());
+              //       var storage = GetIt.instance<GlobalStorage>();
+              //       storage.removeToken();
+              //       storage.removeLocation();
+              //       storage.removeTime();
+              //       storage.removeClientId();
+              //       await Future.delayed(const Duration(seconds: 3));
+              //       EasyLoading.dismiss();
+              //       EasyLoading.showToast(MyJanitorProfileScreenConstants
+              //           .LOG_OUT_SUCCESS_TOAST );
+              //       if (!context.mounted) return;
+              //       Navigator.pushAndRemoveUntil(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => const LoginAs()),
+              //             (route) => false,
+              //       );
+              //     },
+              //     child: const Custombutton(text: "Log out", width: 360)),
+          
+          
+              SizedBox(
+                height: 20.h,
+              ),
+          
+          
+          
+                               Text(
+                                   textAlign: TextAlign.center,
+                                   "The Task Master service of Woloo Smart Hygiene is a paid service. You are eligible for a 7-day free trial, during which you can add only one facility. After the trial period ends, you must pay ₹499 + GST to continue using the Task Master service.",
+                                style: AppTextStyle.font8,
+          
+                               )
+          
+          
+              // Padding(
+              //   padding: EdgeInsets.symmetric(
+              //     horizontal: 14.w,
+              //     vertical: 10.h,
+              //   ),
+              //   child: CustomDropDownDialog(
+              //     // key: dropDownKey,
+              //     // selected: null,
+              //     widgetKey:_clusterNameKey,
+              //     hint:  DashboardConst.selectCleaningTasks,
+              //     // key: Key('${_editMarketModel.city?.label}T4'),
+              //     // selected: cities.firstWhereOrNull((element) => element.value == _editMarketModel.city?.value),
+              //     // widgetKey: _keys[2],xx
+              //     items: gender,
+              //     itemAsString: (TaskDropdownModel item) =>
+              //     item.facilityName,
+              //
+              //     onChanged: (TaskDropdownModel item) {
+              //       print("click on the page $item");
+              //       // facilityId = item.id!;
+              //       // debugPrint("facilityId --->$facilityId");
+              //       // dashBoardBloc.add(const GetTaskEvent(
+              //       //     category: "Home"
+              //       // ) );
+              //
+              //     },
+              //
+              //     validator: (value) => value == null
+              //         ? MyReportIssueScreenConstants.FACILITY_VALIDATION
+              //         .tr()
+              //         : null,
+              //   ),
+              // ),
+          
+          
+              // )
+          
+          
+          
+              ],
+          ),
         ),
       ),
     ) ;
@@ -550,7 +686,7 @@ class _HomeState extends State<Home> {
           // BlocProvider.value(
           //   value: builderContext.read<ClientDashBoardBloc>(),
           //   child: const
-          SelectBuddyDailog();
+          const SelectBuddyDailog();
         // );
 
       },
@@ -662,7 +798,7 @@ class _HomeState extends State<Home> {
 
   Widget card( String image, String title, int index){
     return   Container(
-                   width: 110,
+                   width: 96,
                   height: 96,
                   decoration: BoxDecoration(
                       boxShadow: [
@@ -687,8 +823,8 @@ class _HomeState extends State<Home> {
                    ),
                   CustomImageProvider(
                     image: image ,
-                    width: 46,
-                    height: 46,
+                    width: 43,
+                    height: 43,
                   ),
                   const SizedBox(
                     height: 10,
@@ -707,10 +843,13 @@ class _HomeState extends State<Home> {
      bool isSelected = false;
      DateTime dateTime = DateTime.now();
      TimeOfDay? shiftTime;
-        DashBoardController dashController = Get.put(DashBoardController());
-    facilityBottomSheet(){
-        locationController.clear();
-        facilityController.clear();
+     bool isAdminSelected = false;
+     DashBoardController dashController = Get.put(DashBoardController());
+        FocusNode? facilityFocusNode;
+
+     facilityBottomSheet(){
+        // locationController.clear();
+        // facilityController.clear();
       showModalBottomSheet<void>(
          backgroundColor: Colors.transparent,
 
@@ -726,271 +865,355 @@ class _HomeState extends State<Home> {
 
           // Returning SizedBox instead of a Container
           return  StatefulBuilder(
-
+          
             builder: (context, StateSetter setState) {
-
-              return Form(
-                key: facilityKey,
-
-                child: Container(
-
-                  decoration: const BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(80.0),
-                      topRight: Radius.circular(80.0),
-                    ),
-                  ),
-                  height: 650,
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric( horizontal: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                           const SizedBox(
-                             height: 20,
-                           ),
-                          Center(
-                            child: Text(DashboardConst.listYourFacility,
-                             style: AppTextStyle.font18bold,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-
-                          facilitydropdownNames.isNotEmpty ?
-
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20.w, vertical: 10.h),
-                            child: DropDownDialog(
-                              isprop: true,
-
-                              // selected: clusterNames.first,
-                              // key: _dropDownKey,
-                              widgetKey: _clusterNameKey,
-                              hint:DashboardConst.organizationName,
-
-                              items: facilitydropdownNames,
-
-                              itemAsString: (FacilityDropdownModel item) =>
-                              item.facilityName,
-                              onChanged: (FacilityDropdownModel item) {
-                                debugPrint("in drop down ${item.locationName}");
-                                try {
-
-                                  locationController.text =   item.locationName!;
-                                  facilityController.text = item.facilityName!;
-                                  setState(() {});
-
-                                  // clusterId = item..id!;
-                                  // reportIssueBloc.add(GetAllFacilityDropdown(
-                                  //     clusterId: item.clusterId ?? 0));
-                                  //
-                                  //   // if(state is GetFacilityDropdownSuccess ){
-                                  //     reportIssueBloc.add(GetAllTasksDropdown(
-                                  //         clusterId: item.clusterId! ?? 0
-                                  //     ));
-                                  //   // }else
-                                  //    // if( state is  GetTasksDropdownSuccess ){
-                                  //      reportIssueBloc.add(GetAllJanitorsDropdown(
-                                  //          clusterId: item.clusterId ?? 0));
-                                  // }
-
-
-                                } catch (e) {
-                                  debugPrint("dropppppp$e");
-                                }
-                              },
-                              validator: (value) =>
-                              value == null
-                                  ?
-                                  "Please select facility"
-                                  : null,
-                            ),
-                          )
-                          :
-
-                           CustomTextField(
-                            hintText:DashboardConst.organizationName,
-                            controller: facilityController,
-
-                             validator: (valu) {
-                               if (valu == null || valu.isEmpty) {
-                                 return "Facility Name is required";
-                               }
-                             },
-                           ),
+          
+              return Padding(
+                padding:  EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom
+                ),
+                child: Form(
+                  key: facilityKey,
+                            
+                  child: SingleChildScrollView(
+                    child: Container(
+                               
+                    
+                      decoration: const BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(80.0),
+                          topRight: Radius.circular(80.0),
+                        ),
+                      ),
+                      height: 700,
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric( horizontal: 15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                               const SizedBox(
+                                 height: 20,
+                               ),
+                              Center(
+                                child: Text(DashboardConst.listYourFacility,
+                                 style: AppTextStyle.font18bold,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                                            
+                              facilitydropdownNames.isNotEmpty ?
+                                            
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20.w, vertical: 10.h),
+                                child: DropDownDialog(
+                                  isprop: true,
+                                            
+                                  // selected: clusterNames.first,
+                                  // key: _dropDownKey,
+                                  widgetKey: _clusterNameKey,
+                                  hint:DashboardConst.organizationName,
+                                            
+                                  items: facilitydropdownNames,
+                                            
+                                  itemAsString: (FacilityDropdownModel item) =>
+                                  item.facilityName,
+                                  onChanged: (FacilityDropdownModel item) {
+                                    debugPrint("in drop down ${item.locationName}");
+                                    try {
+                                            
+                                      locationController.text =   item.locationName!;
+                                      facilityController.text = item.facilityName!;
+                                      setState(() {});
+                                            
+                                      // clusterId = item..id!;
+                                      // reportIssueBloc.add(GetAllFacilityDropdown(
+                                      //     clusterId: item.clusterId ?? 0));
+                                      //
+                                      //   // if(state is GetFacilityDropdownSuccess ){
+                                      //     reportIssueBloc.add(GetAllTasksDropdown(
+                                      //         clusterId: item.clusterId! ?? 0
+                                      //     ));
+                                      //   // }else
+                                      //    // if( state is  GetTasksDropdownSuccess ){
+                                      //      reportIssueBloc.add(GetAllJanitorsDropdown(
+                                      //          clusterId: item.clusterId ?? 0));
+                                      // }
+                                            
+                                            
+                                    } catch (e) {
+                                      debugPrint("dropppppp$e");
+                                    }
+                                  },
+                                  validator: (value) =>
+                                  value == null
+                                      ?
+                                      "Please select facility"
+                                      : null,
+                                ),
+                              )
+                              :
+                                            
+                               CustomTextField(
+                                focusNode: facilityFocusNode,
+                                hintText:DashboardConst.organizationName,
+                                controller: facilityController,
+                                            
+                                 validator: (valu) {
+                                   if (valu == null || valu.isEmpty) {
+                                     return "Facility Name is required";
+                                   }
+                                 },
+                               ),
                          
-                           const SizedBox(
-                            height: 10,
-                           ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
-                            child: Container(
-                              height: 36.h,
-                              decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2), // Shadow color
-                                  spreadRadius: 1, // Spread effect
-                                  blurRadius: 10, // Blur effect
-                                  offset: const Offset(0, 5), // Bottom shadow
+                               const SizedBox(
+                                height: 10,
+                               ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
+                                child: Container(
+                                  // height: 36.h,
+                                  decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2), // Shadow color
+                                      spreadRadius: 1, // Spread effect
+                                      blurRadius: 10, // Blur effect
+                                      offset: const Offset(0, 5), // Bottom shadow
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                              child: GooglePlaceAutoCompleteTextField(
-                                textEditingController:locationController,
-                                googleAPIKey:"AIzaSyCkPmUz4UlRdzcKG9gniW9Qfrgzsjhnb_4",
-                                inputDecoration:  InputDecoration(
-                                  hintText: DashboardConst.location,
-                                    hintStyle: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 16.sp,
-                                      ),
-                                   border: OutlineInputBorder(
-                                   borderRadius: BorderRadius.circular(12),
-                                   borderSide: BorderSide.none,
-                                   ),
-                                   fillColor: AppColors.white,
-                                   filled: true
-                                  // enabledBorder: InputBorder.none,
+                                  child: GooglePlaceAutoCompleteTextField(
+                                    focusNode: addressFocusNode,
+                                    textEditingController:locationController,
+                                    googleAPIKey:"AIzaSyCkPmUz4UlRdzcKG9gniW9Qfrgzsjhnb_4",
+                                    inputDecoration:  InputDecoration(
+                                  contentPadding:  const EdgeInsets.symmetric(vertical: 12.0),
+                                      hintText: DashboardConst.location,
+                                        hintStyle: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 16.sp,
+                                          ),
+                                       border: OutlineInputBorder(
+                                       borderRadius: BorderRadius.circular(12),
+                                       borderSide: BorderSide.none,
+                                       ),
+                                       fillColor: AppColors.white,
+                                       filled: true
+                                      // enabledBorder: InputBorder.none,
+                                    ),
+                                    
+                                                                  
+                                    validator: (valu, p1) {
+                                    
+                                         setState((){});
+                                         print("val $valu");
+                                          
+                                          // FocusManager.instance.primaryFocus?.unfocus();
+                                      if (valu == null || valu.isEmpty) {
+                                        return "Location is required";
+                                      }
+                                    },
+                                            
+                                    // debounceTime: 400,
+                                    countries: ["in", "fr"],
+                                    isLatLngRequired: true,
+                                    getPlaceDetailWithLatLng: (Prediction prediction) {
+                                      
+                                  
+                                      print("placeDetails" + prediction.lat.toString());
+                                    },
+                                            
+                                    itemClick: (Prediction prediction) {
+                                  
+                                                                  
+                                      locationController.text = prediction.description ?? "";
+                                      locationController.selection = TextSelection.fromPosition(
+                                          TextPosition(offset: prediction.description?.length ?? 0));
+                                    },
+                                            
+                                    seperatedBuilder: const Divider(),
+                                    containerHorizontalPadding: 10,
+                                    // OPTIONAL// If you want to customize list view item builder
+                                    itemBuilder: (context, index, Prediction prediction) {
+                                      // prediction.id!.isNotEmpty ?
+
+                                        //  facilityFocusNode!.unfocus();
+                                      
+                                    
+                                      return Container(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Row(
+                                          children: [
+                                            const Icon(Icons.location_on),
+                                            const SizedBox(
+                                              width: 7,
+                                            ),
+                                            Expanded(child: Text("${prediction.description ?? ""}"))
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                            
+                                    isCrossBtnShown: true,
+                                    
+                                                                  
+                                   formSubmitCallback: () {
+                                      print("dgd");
+                                   },
+                                            
+                                    // default 600 ms ,
+                                  ),
                                 ),
-                                validator: (valu, p1) {
-                                      FocusManager.instance.primaryFocus?.unfocus();
+                              ),
+                               //  CustomTextField(
+                               //  hintText:DashboardConst.location,
+                               //  controller:  locationController,
+                               // ),
+                               const SizedBox(
+                                height: 10,
+                               ),
+                              Text(DashboardConst.typeOfFacility,
+                               style: AppTextStyle.font14bold,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                               ),
+                                            
+                                                      Container(
+                                                          width: MediaQuery.of(context).size.width,
+                                                          // height: 120,
+                                                          child:
+                                                          GridView.builder(
+                                            
+                                                            itemCount: facility.length,
+                                                            shrinkWrap: true,
+                                                            physics: const NeverScrollableScrollPhysics(),
+                                                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,
+                                                           childAspectRatio: 1,
+                                                           crossAxisSpacing: 10,
+                                                           mainAxisSpacing: 10
+                                                           
+                                                          ) , itemBuilder: (context, index) {
+                                                            return 
+                                                                     GestureDetector(
+                                                                onTap: () {
+                                                                  setState(() {
+                                                                    selectedIndex = index;
+                                                                    print("title ${facility[selectedIndex].title!}");
+                                            
+                                                                  });
+                                                                  facility[selectedIndex].title == "Other"   ? isSelected = true
+                                            
+                                                                      : isSelected = false;
+                                                                     print("is slec $isSelected");
+                                                                  dashBoardBloc.add( GetTaskEvent(
+                                                                      category:  facility[selectedIndex].title!
+                                                                  ) );
+                                                                  setState((){});
+                                            
+                                                                },
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets.all(8.0),
+                                                                  child: card(facility[index].image!, facility[index].title!, index),
+                                                                ),
+                                                              );
+                                                          },  )
+                                                        //   Wrap(
+                                                        //     spacing: 1.0, // Adjust spacing between items
+                                                        //     children: 
+                                                        //     List.generate(facility.length, (index) {
+                                                        //       return
+                                                        // GestureDetector(
+                                                        //         onTap: () {
+                                                        //           setState(() {
+                                                        //             selectedIndex = index;
+                                                        //             print("title ${facility[selectedIndex].title!}");
+                                            
+                                                        //           });
+                                                        //           facility[selectedIndex].title == "Other"   ? isSelected = true
+                                            
+                                                        //               : isSelected = false;
+                                                        //              print("is slec $isSelected");
+                                                        //           dashBoardBloc.add( GetTaskEvent(
+                                                        //               category:  facility[selectedIndex].title!
+                                                        //           ) );
+                                                        //           setState((){});
+                                            
+                                                        //         },
+                                                        //         child: Padding(
+                                                        //           padding: const EdgeInsets.all(8.0),
+                                                        //           child: card(facility[index].image!, facility[index].title!, index),
+                                                        //         ),
+                                                        //       );
+                                                        //     }),
+                                                        // ),
+                                                        ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              isSelected ?
+                              CustomTextField(
+                                hintText:DashboardConst.ifOthersMentionFacility,
+                                controller: typeController,
+                                validator: (valu) {
                                   if (valu == null || valu.isEmpty) {
-                                    return "Location is required";
+                                    return "Please mention other type";
                                   }
                                 },
-
-                                // debounceTime: 400,
-                                countries: ["in", "fr"],
-                                isLatLngRequired: true,
-                                getPlaceDetailWithLatLng: (Prediction prediction) {
-                                  print("placeDetails" + prediction.lat.toString());
-                                },
-
-                                itemClick: (Prediction prediction) {
+                              )
+                               : const SizedBox()
+                              ,
+                                            
                               
-                                  // facilityController.dispose();
-                                  locationController.text = prediction.description ?? "";
-                                  locationController.selection = TextSelection.fromPosition(
-                                      TextPosition(offset: prediction.description?.length ?? 0));
-                                },
-
-                                seperatedBuilder: const Divider(),
-                                containerHorizontalPadding: 10,
-                                // OPTIONAL// If you want to customize list view item builder
-                                itemBuilder: (context, index, Prediction prediction) {
-                                  return Container(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Row(
-                                      children: [
-                                        const Icon(Icons.location_on),
-                                        const SizedBox(
-                                          width: 7,
-                                        ),
-                                        Expanded(child: Text("${prediction.description ?? ""}"))
-                                      ],
-                                    ),
-                                  );
-                                },
-
-                                isCrossBtnShown: true,
-
-                                // default 600 ms ,
-                              ),
-                            ),
+                              const Spacer(),
+                                            
+                               GestureDetector(
+                                 onTap: () {
+                                            
+                                    if(facilityKey.currentState!.validate()){
+                                            
+                                      //  if( facilitydropdownNames.isNotEmpty){
+                                      //       taskBottomSheet();
+                                      //       if(selectedbuddy ){
+                                            
+                                      //       }
+                                            
+                                            
+                                      //  }else{
+                                            
+                                      //  }
+                                            
+                                      // ?
+                                       facilitydropdownNames.isNotEmpty ?
+                                            
+                                      // selectedbuddy == null ?
+                                      // taskBottomSheet() :
+                                          selectedbuddy != null ?
+                                      taskExistingBottomSheet(selectedbuddy!)
+                                            
+                                      
+                                      : taskBottomSheet()
+                                      : taskBottomSheet();
+                                            
+                                    }
+                                            
+                                            
+                                 },
+                                child: Custombutton(text: "Next", width: 328.w)),
+                          
+                               const SizedBox(
+                                height: 30,
+                               )
+                                             
+                            ],
                           ),
-                           //  CustomTextField(
-                           //  hintText:DashboardConst.location,
-                           //  controller:  locationController,
-                           // ),
-                           const SizedBox(
-                            height: 10,
-                           ),
-                          Text(DashboardConst.typeOfFacility,
-                           style: AppTextStyle.font14bold,
-                          ),
-                          const SizedBox(
-                            height: 10,
-                           ),
-
-                                                  Container(
-                                                      width: MediaQuery.of(context).size.width,
-                                                      // height: 120,
-                                                      child:
-                                                      Wrap(
-                                                        spacing: 1.0, // Adjust spacing between items
-                                                        children: List.generate(facility.length, (index) {
-                                                          return GestureDetector(
-                                                            onTap: () {
-                                                              setState(() {
-                                                                selectedIndex = index;
-                                                                print("title ${facility[selectedIndex].title!}");
-
-                                                              });
-                                                              facility[selectedIndex].title == "Other"   ? isSelected = true
-
-                                                                  : isSelected = false;
-                                                                 print("is slec $isSelected");
-                                                              dashBoardBloc.add( GetTaskEvent(
-                                                                  category:  facility[selectedIndex].title!
-                                                              ) );
-                                                              setState((){});
-
-                                                            },
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.all(8.0),
-                                                              child: card(facility[index].image!, facility[index].title!, index),
-                                                            ),
-                                                          );
-                                                        }),
-                                                    ),),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          isSelected ?
-                          CustomTextField(
-                            hintText:DashboardConst.ifOthersMentionFacility,
-                            controller: typeController,
-                            validator: (valu) {
-                              if (valu == null || valu.isEmpty) {
-                                return "Please mention other type";
-                              }
-                            },
-                          )
-                           : const SizedBox()
-                          ,
-
-                          const SizedBox(
-                            height: 10,
-                          ),
-
-                           GestureDetector(
-                             onTap: () {
-
-                                if(facilityKey.currentState!.validate()){
-
-                                  facilitydropdownNames.isNotEmpty ?
-
-                                  selectedbuddy == null ?
-                                  taskBottomSheet() :
-
-                                  taskExistingBottomSheet(selectedbuddy!)
-                                  : taskBottomSheet()
-                                  ;
-
-                                }
-
-
-                             },
-                            child: Custombutton(text: "Next", width: 328.w))
-
-                        ],
+                        ),
                       ),
                     ),
                   ),
@@ -1003,6 +1226,9 @@ class _HomeState extends State<Home> {
         facilitydropdownNames.clear();
       } );
     }
+
+
+
 
    adminBottomSheet(){
      showModalBottomSheet<void>(
@@ -1027,17 +1253,12 @@ class _HomeState extends State<Home> {
                    child: Padding(
                      padding: const EdgeInsets.symmetric( horizontal: 15),
                      child: Column(
-                       crossAxisAlignment: CrossAxisAlignment.start,
-                       mainAxisAlignment: MainAxisAlignment.start,
+                      //  crossAxisAlignment: CrossAxisAlignment.start,
+                      //  mainAxisAlignment: MainAxisAlignment.start,
                        children: <Widget>[
-                         const SizedBox(
-                           height: 20,
-                         ),
-                         Center(
-                           child: Text(DashboardConst.chooseAdmin,
-                             style: AppTextStyle.font18bold,
-                           ),
-                         ),
+
+                        header("Choose ", "Admin", ClientImages.setting ),
+              
                          const SizedBox(
                            height: 20,
                          ),
@@ -1051,20 +1272,41 @@ class _HomeState extends State<Home> {
                                 GestureDetector(
                                     onTap: (){
                                       selectedAdmin =index;
-                                      setState((){});
+                                  
+                                       if(admin[index].title == "Monitor \nYourself" ){
+                                        isAdminSelected = true;
+
+                                            nameController.text =   globalStorage.getSupervisorName();
+                                              mobileController.text =   globalStorage.getClientMobileNo();
+                                        //  janitorBottomSheet();
+                                         
+                                         }
+                                         else{
+
+                                             isAdminSelected = false;
+                                         }
+                                             setState((){});
                                     },
                                     child: adminCard( admin[index].image!, admin[index].title!, index));
                            },
                           ),
 
-                          const SizedBox(height: 680/3.3 ),
+                          // const SizedBox(height: 680/3.3 ),
+
+                          const Spacer(),
 
                          GestureDetector(
                              onTap: (){
+
                                superVisorBottomSheet();
 
+
                              },
-                             child: Custombutton(text: "Next", width: 328.w))
+                             child: Custombutton(text: "Next", width: 328.w)),
+
+                              const SizedBox(
+                              height: 30,
+                             ),
 
                        ],
                      ),
@@ -1074,7 +1316,9 @@ class _HomeState extends State<Home> {
              }
          );
        },
-     );
+     ).then((value) {
+       isAdminSelected =false;
+     }, );
    }
 
 
@@ -1095,7 +1339,7 @@ class _HomeState extends State<Home> {
                      topRight: Radius.circular(80.0),
                    ),
                  ),
-                 height: 680,
+                 height: MediaQuery.of(context).size.height/1.4,
                  child: Form(
                      key: addSuperVisorKey,
                    child: Center(
@@ -1105,18 +1349,18 @@ class _HomeState extends State<Home> {
                          crossAxisAlignment: CrossAxisAlignment.start,
                          mainAxisAlignment: MainAxisAlignment.start,
                          children: <Widget>[
-                           const SizedBox(
-                             height: 20,
-                           ),
-                           Center(
-                             child: Text(DashboardConst.assignsupervisor,
-                               style: AppTextStyle.font18bold,
-                             ),
-                           ),
+                       
+                           header("Assign", DashboardConst.assignsupervisor, ClientImages.avatar ),
+                          //  Center(
+                          //    child: Text(DashboardConst.assignsupervisor,
+                          //      style: AppTextStyle.font18bold,
+                          //    ),
+                          //  ),
                            const SizedBox(
                              height: 20,
                            ),
                            CustomTextField(
+                            readOnly: isAdminSelected,
                              controller: nameController,
                              hintText:  DashboardConst.fullName,
                              keyboardType: TextInputType.text,
@@ -1129,6 +1373,7 @@ class _HomeState extends State<Home> {
                            const SizedBox(height: 20),
 
                            CustomTextField(
+                            readOnly: isAdminSelected,
                              controller: mobileController,
                              hintText:  DashboardConst.number,
                              keyboardType: TextInputType.number,
@@ -1136,28 +1381,23 @@ class _HomeState extends State<Home> {
                              validator: validateMobile
                              // prefixIcon: Icons.phone,
                            ),
+                           Spacer(),
 
-                           const SizedBox(height: 290),
+                          //  const SizedBox(height: 290),
 
                            GestureDetector(
                                onTap: (){
                                     if(addSuperVisorKey.currentState!.validate()){
 
-                                      // dashBoardBloc.add(
-                                      //     AddUserEvent(
-                                      //      mobile: mobileController.text,
-                                      //      name: nameController.text,
-                                      //      roleId: "2",
-                                      //      clientId: decodedToken!["id"].toString(),
-                                      // )  );
+                             
+                                         janitorBottomSheet();
 
-                                      // taskBottomSheet();
-                                 janitorBottomSheet();
                                     }
 
                                },
-                               child: Custombutton(text: "Next", width: 328.w))
+                               child: Custombutton(text: "Next", width: 328.w)),
 
+                                 const SizedBox(height: 40),
                          ],
                        ),
                      ),
@@ -1167,17 +1407,25 @@ class _HomeState extends State<Home> {
              }
          );
        },
-     );
+     ).then((v){
+      mobileController.clear();
+      nameController.clear();
+
+
+     } );
    }
 
-     int? estimatedTime = 0;
+     int? estimatedTime;
      int? len;
      List<int?> taksIds = [];
      bool isNext = false;
      String?  use12hour;
+     bool isTaskSelected = false;
 
 
      taskBottomSheet(){
+
+      dashController.taskTimeModel.clear();
 
      showModalBottomSheet<void>(
        context: context,
@@ -1197,9 +1445,9 @@ class _HomeState extends State<Home> {
                        topLeft: Radius.circular(80.0),
                        topRight: Radius.circular(80.0),
                      ),
-
+          
                    ),
-                   height: 780,
+                   height: MediaQuery.of(context).size.height/1.15,
                    child: Center(
                      child: Padding(
                        padding: const EdgeInsets.symmetric( horizontal: 15),
@@ -1207,6 +1455,15 @@ class _HomeState extends State<Home> {
                          crossAxisAlignment: CrossAxisAlignment.start,
                          mainAxisAlignment: MainAxisAlignment.start,
                          children: <Widget>[
+                               const SizedBox(
+                                height: 9,
+                               ),
+                               Center(
+                                 child: CustomImageProvider(
+                                  image: ClientImages.line,
+                                  width: 70,
+                                 ),
+                               ),
                            const SizedBox(
                              height: 20,
                            ),
@@ -1218,8 +1475,7 @@ class _HomeState extends State<Home> {
                            const SizedBox(
                              height: 20,
                            ),
-
-
+          
                            Padding(
                              padding: EdgeInsets.symmetric(
                                horizontal: 20.w,
@@ -1228,7 +1484,7 @@ class _HomeState extends State<Home> {
                              child: Container(
                                decoration: BoxDecoration(
                                  color: Colors.white,
-
+          
                                  borderRadius: BorderRadius.circular(25.r),
                                  boxShadow: [
                                    BoxShadow(
@@ -1254,10 +1510,10 @@ class _HomeState extends State<Home> {
                                     print("slecrte $value");
                                    value == []
                                      ? "Please select tasks"
-
+          
                                      : null;
                                  },
-
+          
                                  onSaved: (List<TaskDropdownModel> i) {
                                    // selectedIds.add(i[1].taskId!);
                                    // selectedIds =
@@ -1266,11 +1522,11 @@ class _HomeState extends State<Home> {
                                  onChanged: (List<TaskDropdownModel> i) {
                                     // print(" car $i ");
                                    List<int?> listTime = [];
-
+          
                                    len =  i.length;
-
+          
                                    listTime =  i.map( (e) =>  e.requiredTime).toList();
-
+          
                                     print("total time $estimatedTime");
                                      if(i.isEmpty){
                                        estimatedTime = null;
@@ -1284,15 +1540,15 @@ class _HomeState extends State<Home> {
                                      listTime =  i.map( (e) =>  e.requiredTime).toList();
                                      estimatedTime = listTime.reduce((a, b) => a! - b!);
                                    }
-
+          
                                     print("estimagte $estimatedTime ");
-
+          
                                    // if(i.isEmpty ){
                                    //    estimatedTime = 0;
                                    // }
                                     setState( (){});
-
-
+          
+          
                                    // selectedIds =
                                    //     i.map((e) => e.taskId.toString()).toList();
                                    // debugPrint(selectedIds.toString());
@@ -1301,16 +1557,36 @@ class _HomeState extends State<Home> {
                                ),
                              ),
                            ),
-
-
+                            
+                            estimatedTime == null && isTaskSelected ?
+                                Padding(
+                                  padding: const EdgeInsets.symmetric( horizontal: 30),
+                                  child: Column(
+                                    children: [
+                                      // const SizedBox(
+                                      //   height: 10,
+                                      // ),
+                                      Text("Please select Tasks",
+                                       style: AppTextStyle.font12.copyWith(color: AppColors.red ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                            : const SizedBox(
+                             // height: ,
+                            ),
+          
+          
                            const SizedBox(
                              height: 10,
                            ),
-
-                            Text( DashboardConst.estimatedTaskCompletionTime,
-                             style: AppTextStyle.font20bold.copyWith(
-                               color: const Color(0xff8F8F8F)
-                             ),
+          
+                            Center(
+                              child: Text( DashboardConst.estimatedTaskCompletionTime,
+                               style: AppTextStyle.font20.copyWith(
+                                 color: const Color(0xff8F8F8F)
+                               ),
+                              ),
                             ),
                             const SizedBox(
                               height: 10,
@@ -1324,7 +1600,7 @@ class _HomeState extends State<Home> {
                                   : Text("$estimatedTime min",
                                 style: AppTextStyle.font24bold,
                               )
-
+          
                               ,
                             ),
                            const SizedBox(
@@ -1336,14 +1612,15 @@ class _HomeState extends State<Home> {
                                Text(DashboardConst.scheduleShift,
                                  style: AppTextStyle.font14w7,
                                ),
-
+          
                                InkWell(
                                  onTap: ()async{
-
+          
                                     // if(  estimatedTime ==  null ) return;
-
-
+          
+          
                                    shiftTime = await    showTimePicker(
+
                                      context: context,
                                      initialTime: TimeOfDay.now(),
                                      // builder: (BuildContext context, Widget? child) {
@@ -1356,7 +1633,7 @@ class _HomeState extends State<Home> {
                                    DateTime date = DateTime.now();
                                    // date.add( Duration( hours: shiftTime!.hour, minutes: shiftTime!.minute  ) );
                                     // print("duration ${}");
-
+          
                                    DateTime dateTime = DateTime(date.year, date.month, date.day, shiftTime!.hour, shiftTime!.minute);
                                    DateTime newDateTime = dateTime.add(const Duration(hours: 12));
                                    TimeOfDay newShiftTime = TimeOfDay.fromDateTime(newDateTime);
@@ -1374,7 +1651,7 @@ class _HomeState extends State<Home> {
                                      color: AppColors.white,
                                      borderRadius: BorderRadius.circular(8),
                                      boxShadow: [
-
+          
                                        BoxShadow(
                                          color: Colors.black
                                              .withValues(alpha:0.2), // Shadow color
@@ -1390,21 +1667,21 @@ class _HomeState extends State<Home> {
                                    ),
                                    child: Center(child:
                                    shiftTime != null ?
-
+          
                                      Text(shiftTime!.format(context),
                                        style: AppTextStyle.font14w7,
                                      ) :
-
+          
                                    Text("Start Time *",
                                     style: AppTextStyle.font14w7,
                                    )),
-
+          
                                  ),
                                )
-
+          
                              ],
                            ),
-
+          
                            shiftTime == null && isNext ?
                                 Column(
                                   children: [
@@ -1419,17 +1696,17 @@ class _HomeState extends State<Home> {
                             : const SizedBox(
                              // height: ,
                             ),
-
+          
                            const SizedBox(
                              height: 20,
                            ),
-
+          
                            Container(
                              // height:
                             // 70 ,
                              decoration: BoxDecoration(
                                color: AppColors.white,
-
+          
                                borderRadius: BorderRadius.circular(16),
                                boxShadow: [
                                  BoxShadow(
@@ -1462,20 +1739,30 @@ class _HomeState extends State<Home> {
                                        Text(DashboardConst.scheduleTask,
                                          style: AppTextStyle.font14w7,
                                        ),
+                                    
                                        GestureDetector(
                                            onTap:(){
                                               Datum? buddy;
-
-                                             _showMyDialog(false,  );
-
+                                                print("is$isTaskSelected");
+                                                 print("ese $estimatedTime");
+                                                  isTaskSelected = true;
+                                                setState((){});
+          
+                                                   estimatedTime  != null ?
+                                                    _showMyDialog(false,  )
+                                                        : null;
+                                            //  ;
+          
                                              // janitorBottomSheet()
                                            } ,
                                            child: Custombutton(text: DashboardConst.addTimings, width: 164.w))
-
+          
+                                          //  : 
+          
                                      ],
                                    ),
-
-                                   dashController.taskStartTime.isEmpty && isNext ?
+          
+                                   dashController.taskTimeModel.isEmpty && isNext ?
                                    Column(
                                      crossAxisAlignment: CrossAxisAlignment.start,
                                      mainAxisAlignment: MainAxisAlignment.start,
@@ -1495,35 +1782,36 @@ class _HomeState extends State<Home> {
                                      height: 15,
                                    ),
                                    Obx(
-
-
+          
+          
                                       ()=>
                                         SizedBox(
-                                          height:dashController.taskStartTime.isEmpty ? 0:200,
+                                          height:dashController.taskTimeModel.isEmpty ? 0:MediaQuery.of(context).size.height/5,
                                           child:                    ListView.builder(
+                                                                        //  physics: NeverScrollableScrollPhysics(),
                                                                                shrinkWrap: true,
-                                                                               itemCount: dashController.taskStartTime.length ,
+                                                                               itemCount: dashController.taskTimeModel.length ,
                                                                                itemBuilder: (context, index) {
                                                                                  return ListTile(
                                             trailing: IconButton(
                                                onPressed: () {
-                                                 dashController.taskStartTime.removeAt(index);
-                                                 dashController.taskEndTime.removeAt(index);
-                                                  dashController.taskTimes.removeAt(index);
+                                                 dashController.taskTimeModel.removeAt(index);
+                                                //  dashController.taskEndTime.removeAt(index);
+                                                  // dashController.taskTimes.removeAt(index);
                                                 //  setState((){});
                                                } ,
-
+          
                                               icon:  const Icon(  Icons.delete,),
                                              color: AppColors.red,
                                             ),
                                            title:  Row(
                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                              children: [
-                                               Text( dashController.taskStartTime[index].format(context) ,
+                                               Text( dashController.taskTimeModel[index].startTime.format(context) ,
                                                 style: AppTextStyle.font14bold,
                                                ),
                                                // taskEndTime
-                                               Text( dashController.taskEndTime[index].format(context) ,
+                                               Text( dashController.taskTimeModel[index].endTime.format(context) ,
                                                  style: AppTextStyle.font14bold,
                                                ),
                                              ],
@@ -1536,17 +1824,17 @@ class _HomeState extends State<Home> {
                                ),
                              ),
                            ),
-
-
-
+          
+          
+          
                            const SizedBox(height: 10),
                              Center(child: Text("The shift shall start at ${ shiftTime == null ? '00:00' : shiftTime!.format(context)}")),
                            const SizedBox(height: 5),
                             Center(child: Text(
                                textAlign: TextAlign.center,
                                "Shift shall complete at ${use12hour}" )),
-
-                           const SizedBox(height: 10),
+          
+                          //  const SizedBox(height: 10),
                            // GestureDetector(
                            //   onTap: (){},
                            //   child: Center(child: Text(
@@ -1558,26 +1846,37 @@ class _HomeState extends State<Home> {
                            //   )
                            //   ),
                            // ),
-
-                           const SizedBox(height: 10),
-
-
+          
+                           const Spacer(),
+                  
+          
+          
                            GestureDetector(
                                onTap:(){
                                  isNext = true;
                                  setState((){});
                                   print("curtne ${_formKey.currentState!.validate()}");
-                                  if( shiftTime != null && dashController.taskStartTime.isNotEmpty && estimatedTime != null ){
+                                  if( shiftTime != null && dashController.taskTimeModel.isNotEmpty && estimatedTime != null ){
                                  // && shiftTime != null && taskStartTime.isNotEmpty && estimatedTime != null
-                                 adminBottomSheet();
-
+                                   if(isClientSupervisor){
+                                      janitorBottomSheet();
+          
+                                   }else{
+                                        adminBottomSheet();
+          
+                                   }
+                                
+                             
+          
                                   }
-
-
+          
+          
                                  // janitorBottomSheet()
                  ;                             } ,
-                               child: Custombutton(text: "Next", width: 328.w))
-
+                               child: Custombutton(text: "Next", width: 328.w)),
+          
+                                        const SizedBox(height: 30),
+          
                          ],
                        ),
                      ),
@@ -1585,16 +1884,22 @@ class _HomeState extends State<Home> {
                  ),
                );
              }
-         );
+                   );
        },
      )
      .then( (value) {
+     
+        isTaskSelected = false;
        dashController.taskStartTime.clear();
        dashController.taskEndTime.clear();
        dashController.taskTimes.clear();
        estimatedTime = null;
        shiftTime = null;
        isNext = false;
+        setState(() {
+        
+      });
+     
      }, ) ;
    }
 
@@ -1664,7 +1969,7 @@ class _HomeState extends State<Home> {
                        topRight: Radius.circular(80.0),
                      ),
                    ),
-                   height: 680,
+                   height: MediaQuery.of(context).size.height/1.4,
                    child: Center(
                      child: Padding(
                        padding: const EdgeInsets.symmetric( horizontal: 15),
@@ -1672,20 +1977,14 @@ class _HomeState extends State<Home> {
                          crossAxisAlignment: CrossAxisAlignment.start,
                          mainAxisAlignment: MainAxisAlignment.start,
                          children: <Widget>[
-                           const SizedBox(
-                             height: 20,
-                           ),
-                           Center(
-                             child: Text(DashboardConst.assignJanitor,
-                               style: AppTextStyle.font18bold,
-                             ),
-                           ),
+                          header("Assign", "Task Buddy", ClientImages.avatar),
+                  
                            const SizedBox(
                              height: 20,
                            ),
                            CustomTextField(
                              controller: janNameController,
-                             hintText:  DashboardConst.fullName,
+                             hintText:  DashboardConst.taskBuddyName,
                              keyboardType: TextInputType.text,
                             //  maxLength: 10,
 
@@ -1739,6 +2038,8 @@ class _HomeState extends State<Home> {
                                            setState((){
                                               selectedGender = index;
                                            });
+                                           janitorGender = genderList[selectedGender].title;
+                                           print("gender $janitorGender");
                                         },
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
@@ -1748,26 +2049,17 @@ class _HomeState extends State<Home> {
                              ),
                            ),
 
-                           const SizedBox(height: 680/3.8),
+                          //  const SizedBox(height: 680/3.8),
+                           const Spacer(),
 
                            GestureDetector(
                                onTap: () {
                                  if(addJanitorKey.currentState!.validate()){
-                                          print("facility ${facilityController.text} ");
-                                          print("location ${locationController.text} ");
-                                          print("type ${typeController.text} ");
-                                          print("sup ${nameController.text} ");
-                                          print("sup mo ${mobileController.text} ");
-                                          print("jan naem ${janNameController.text} ");
-                                          print("jan mo ${janMobileController.text} ");
-                                          print("gender  ${janitorGender} ");
-                                          print("shift time ${shiftTime.toString()} ");
-                                          print("task id ${taksIds} ");
-                                          print("estimated time ${estimatedTime} ");
+                                    
                                           // print("task timing id ${taskTimes} ");
 
-                                         String city =    globalStorage.getCity();
-                                        String address =   globalStorage.getAddress();
+                                       String city =    globalStorage.getCity();
+                                       String address =   globalStorage.getAddress();
                                        String pincode =     globalStorage.getPincode();
                                        String clientId =   globalStorage.getClientId();
 
@@ -1808,7 +2100,11 @@ class _HomeState extends State<Home> {
                                    // taskBottomSheet();
                                  }
                                },
-                               child: Custombutton(text: "Submit", width: 328.w))
+                               child: Custombutton(text: "Submit", width: 328.w)),
+                            
+                             const SizedBox(
+                              height: 30,
+                             ),
 
                          ],
                        ),
@@ -1859,20 +2155,20 @@ class _HomeState extends State<Home> {
                          width: 300,
                          child: ListView.builder(
                            shrinkWrap: true,
-                           itemCount: taskModel!.results.data.length,
+                           itemCount: taskModel!.results!.data!.length,
                            itemBuilder: (context, index) {
-                             final janitor = taskModel!.results.data[index].name;
+                             final janitor = taskModel!.results!.data![index].name;
                              return RadioListTile<String>(
-                               title: Text(janitor),
+                               title: Text(janitor!),
                                value: "$janitor + $index ",
                                groupValue: selectedJanitor,
                                onChanged: (value) {
 
                                  setState(() {
                                    selectedJanitor = value;
-                                    print("selected ${taskModel!.results.data[index]} ");
+                                    print("selected ${taskModel.results!.data![index]} ");
 
-                                   selectedbuddy = taskModel!.results.data[index];
+                                   selectedbuddy = taskModel.results!.data![index];
 
                                  });
                                },
@@ -1898,7 +2194,7 @@ class _HomeState extends State<Home> {
                                     clientId: int.parse(clintId)
                                 ) );
 
-                                facilityBottomSheet();
+                                // facilityBottomSheet();
 
 
 
@@ -1923,6 +2219,9 @@ class _HomeState extends State<Home> {
     
     
     );
+    // .then((v){
+    //   //  selectedbuddy = null;
+    // } );
 
 
   
@@ -1933,124 +2232,139 @@ class _HomeState extends State<Home> {
 
     congratDailog(){
        
-    showDialog(context: context, builder:
+    showDialog(
+      barrierDismissible: false,
+      context: context, builder:
      (context) {
-        return     AlertDialog(
-                 backgroundColor: AppColors.white,
-
-                 title:  Center(
-                   child: Text(DashboardConst.congratulations,
-                    style: AppTextStyle.font20bold,
+        return     PopScope(
+          canPop: canPop,
+          child: AlertDialog(
+            
+                   backgroundColor: AppColors.white,
+          
+                   title:  Center(
+                     child: Text(DashboardConst.congratulations,
+                      style: AppTextStyle.font20bold,
+                     ),
                    ),
-                 ),
-                 content: 
-                   BlocBuilder(
-                    bloc: dashBoardBloc,
-                     
-                   builder: (context, state) {
-                      if ( state is DashboarLoading  ){
-  
-                         EasyLoading.show(status: state.message);
-                      } 
-                      if(state is Subcription ){
-                        EasyLoading.dismiss();
-
-                         planId =   state.subscriptionModel!.results!.planId;
-                        // taskModel =  state.taskModel;
-                      }
-                       if(state is DashboarError  ){
-                         EasyLoading.dismiss();
-                         EasyLoading.showError( state.error.message);
-  
-                       }  
-                     return
-                      SingleChildScrollView(
-                       child: ListBody(
-                         children: <Widget>[
-                           
-                            CustomImageProvider(
-                              image: ClientImages.celebration,
-                              width: 145,
-                              height: 145,
-                            ),
-                           // Text(DashboardConst.scheduleTask,
-                           //   style: AppTextStyle.font14w7,
-                           // ),
+                   content: 
+                     BlocBuilder(
+                      bloc: dashBoardBloc,
+                       
+                     builder: (context, state) {
+                        if ( state is DashboarLoading  ){
+            
+                           EasyLoading.show(status: state.message);
+                        } 
+                        if(state is Subcription ){
+                          EasyLoading.dismiss();
+          
+                           planId =   state.subscriptionModel!.results!.planId;
+                          // taskModel =  state.taskModel;
+                        }
+                         if(state is DashboarError  ){
+                           EasyLoading.dismiss();
+                           EasyLoading.showError( state.error);
+            
+                         }  
+                       return
+                        SingleChildScrollView(
+                         child: ListBody(
+                           children: <Widget>[
+                             
+                              CustomImageProvider(
+                                image: ClientImages.celebration,
+                                width: 145,
+                                height: 145,
+                              ),
+                             // Text(DashboardConst.scheduleTask,
+                             //   style: AppTextStyle.font14w7,
+                             // ),
+                             SizedBox(
+                               height: 20.h,
+                             ),
+                            
+                             Text(
+                                textAlign: TextAlign.center,
+                               "You have assigned the Task to ${janNameController.text}",
+                              style: AppTextStyle.font14w7,
+                             ),
+                       
                            SizedBox(
                              height: 20.h,
                            ),
-                          
-                           Text(
-                              textAlign: TextAlign.center,
-                             "You have assigned the Task to [Task Buddy Name]",
-                            style: AppTextStyle.font14w7,
-                           ),
-                     
-                         SizedBox(
-                           height: 20.h,
-                         ),
-                     
-                        //  GestureDetector(
-                        //    onTap: () {
-                        //       selectBuddyDailog();
-                        //       // showDialog(context: context, builder: (context) =>  SelectBuddyDailog(), );
-                        //    },
-                        //    child: Custombutton(
-                        //         height: 30.h,
-                        //        text:DashboardConst.addAnotherTask , width: 320.w ),
-                        //  ),
-                          
-                          // SizedBox(
-                          //   height: 20.h,
-                          // ),
-                     
-                        //    GestureDetector(
-                        //    onTap: () {
-                        //      if ( planId == null) {
-                        //       Navigator.of(context).push( MaterialPageRoute(builder: (context) {
-                        //          return const SubcriptionScreen();
-                        //        }, ) );
+                       
+                          //  GestureDetector(
+                          //    onTap: () {
+                          //       selectBuddyDailog();
+                          //       // showDialog(context: context, builder: (context) =>  SelectBuddyDailog(), );
+                          //    },
+                          //    child: Custombutton(
+                          //         height: 30.h,
+                          //        text:DashboardConst.addAnotherTask , width: 320.w ),
+                          //  ),
+                            
+                            // SizedBox(
+                            //   height: 20.h,
+                            // ),
+                       
+                          //    GestureDetector(
+                          //    onTap: () {
+                          //      if ( planId == null) {
+                          //       Navigator.of(context).push( MaterialPageRoute(builder: (context) {
+                          //          return const SubcriptionScreen();
+                          //        }, ) );
+                                 
+                          //      } else {
+                                 
+                          //      }
                                
-                        //      } else {
-                               
-                        //      }
-                             
-                        //      facilityBottomSheet();
-                          
-                        //    },
-                        //    child: Custombutton(
-                        //         height: 30.h,
-                        //        text:DashboardConst.addAnotherFacility , width: 320.w ),
-                        //  ),
-                     
-                     
-                          SizedBox(
-                            height: 20.h,
-                          ),
-                         
-                     
-                            GestureDetector(
-                              onTap: (){
-                                Navigator.of(context).push( MaterialPageRoute(builder: (context) {
-                                   return ClientDashboard();
-                                }, ) );
-                              },
-                              child: Custombutton(
-                                  height: 30.h,
-                                  text:DashboardConst.noThanks , width: 320.w ),
+                          //      facilityBottomSheet();
+                            
+                          //    },
+                          //    child: Custombutton(
+                          //         height: 30.h,
+                          //        text:DashboardConst.addAnotherFacility , width: 320.w ),
+                          //  ),
+                       
+                       
+                            SizedBox(
+                              height: 20.h,
                             ),
-                           SizedBox(
-                             height: 10.h,
-                           ),
-                      
-                     
-                         ],
-                       ),
-                     );
-                   }
+                           
+                       
+                              GestureDetector(
+                                onTap: (){
+                                          String payementId = globalStorage.getPaymentId();
+          
+                                          if (payementId.isNotEmpty) {
+          
+                                            globalStorage.removePaymentId();
+                                            
+                                            
+                                          }
+                                           
+                                  Navigator.of(context).push( MaterialPageRoute(builder: (context) {
+                                     return const ClientDashboard();
+                                  }, ) );
+                                },
+                                child: Custombutton(
+                                    height: 30.h,
+                                    text:DashboardConst.noThanks , width: 320.w ),
+                              ),
+                             SizedBox(
+                               height: 10.h,
+                             ),
+                        
+                       
+                           ],
+                         ),
+                       );
+                     }
+                   ),
+                  
                  ),
-                
-               );
+        );
      },
     ).then((v){
 
@@ -2099,7 +2413,7 @@ class _HomeState extends State<Home> {
 
                      if(state is DashboarError  ){
                        EasyLoading.dismiss();
-                       EasyLoading.showError( state.error.message);
+                       EasyLoading.showError( state.error);
 
                      }
                    },
@@ -2139,11 +2453,16 @@ class _HomeState extends State<Home> {
                            dashBoardBloc.add( GetAllFacilityEvent(
                                clientId: int.parse(clintId)
                            ) );
+                          // //  facilityBottomSheet();
 
 
                          },
                          child: Custombutton(
                               height: 30.h,
+                              textColor: AppColors.black
+                              ,
+                              // color: AppColors.greyBgColor,
+                              // color: ,
                              text:DashboardConst.assignNewTaskBuddy , width: 320.w ),
                        ),
 
@@ -2220,32 +2539,50 @@ class _HomeState extends State<Home> {
   }
 
 
+ int? deleteIndex;
+
 
   taskExistingBottomSheet( Datum buddy ){
+       
+        dashController.taskTimeModel.clear();
 
 
          if(mounted){
             dashController.taskTimes.clear();
-             for( var item in buddy.taskTimes ) {
+             janNameController.text = buddy.name!;
+             for( var item in buddy.taskTimes! ) {
                  print("start time ${item.startTime}");
                   print("end time ${item.endTime}");
                String formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss')
-                   .format(item.startTime);
+                   .format(item.startTime!);
                String formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss')
-                   .format(item.endTime);
+                   .format(item.endTime!);
 
                TimeOfDay startTime = convertToTimeOfDay(formattedStartDate);
                TimeOfDay endTime = convertToTimeOfDay(formattedEndDate);
 
                    print("start time ${startTime}");
                     print("end time ${endTime}");
-               dashController.taskTimes.add({
-                 "start_time": formattedStartDate!,
-                 "end_time": formattedEndDate
-               });
+              //  dashController.taskTimes.add({
+              //    "start_time": formattedStartDate!,
+              //    "end_time": formattedEndDate,
+              //   //  "facility_name": item.facilityName,
+              //     // "facility_type": item.facilityType,
+              //  });
+               dashController.taskTimeModel.add(TaskTimeModel(
+              taskId: item.taskId, 
+               endTime: endTime, 
+               startTime: startTime,
+                facilityName: item.facilityName,
+                 facilityType: item.facilityType));
 
-               dashController.taskStartTime.add(startTime);
-               dashController.taskEndTime.add(endTime);
+                 print("lenght ${dashController.taskTimeModel.length}");
+                
+              //    dashController.facalityType.add(item.facilityType);
+              //    dashController.facalityName.add(item.facilityName);
+
+              //  dashController.taskStartTime.add(startTime);
+              //  dashController.taskEndTime.add(endTime);
                
              }
 
@@ -2276,469 +2613,664 @@ class _HomeState extends State<Home> {
 
 
         return
-          StatefulBuilder(
-              builder: (context, StateSetter setState) {
-                return Form(
-                  key: _formKey,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(80.0),
-                        topRight: Radius.circular(80.0),
-                      ),
+          
+          BlocConsumer(
+            bloc: dashBoardBloc,
+            listener: (context, state) {
 
-                    ),
-                    height: 800,
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric( horizontal: 15),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Center(
-                              child: Text(DashboardConst.assignTasks,
-                                style: AppTextStyle.font18bold,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            selectedbuddy != null ?
+                 if (state is DashboarLoading) {
+                  EasyLoading.show(status: state.message);
+                } 
+             
+               if( state is DeltetTaskTime ){
+                  EasyLoading.dismiss();
+                    dashController.taskTimeModel.removeAt(deleteIndex!);
 
-                            Padding(
-                              padding: EdgeInsets.only(left: 8.h ),
-                              child: Text( "Buddy Name : ${selectedbuddy!.name}",
-                                style: AppTextStyle.font14bold,
-                              ),
-                            ) :
+                        showDialog(
+                              // barrierDismissible: false,
+                              context: context, builder:
+                              (context) {
+                                return 
+                                 AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(60),
+                                  ),
+                                  
+                                  backgroundColor: AppColors.white,
+                                  // title:  Center(
+                                  //   child: Text("Your Free Subscription has expired",
+                                  //    style: AppTextStyle.font20bold,
+                                  //    textAlign: TextAlign.center,
+                                  //   ),
+                                  // ),
+                                  content:
+                                  SingleChildScrollView(
+                                    child: ListBody(
+                                      children: <Widget>[
+                                         CustomImageProvider(
+                                          image: ClientImages.verify,
+                                          width: 86.w,
+                                          height: 86.h,
+                                         ),
+                                        SizedBox(
+                                          height: 10.h,
+                                        ),
+                                      Text(
+                                        textAlign: TextAlign.center,
+                                        '${state.deleteModel!.results.message}',
+                                         style: AppTextStyle.font18bold,
+                                        ),
+                                        SizedBox(
+                                          height: 20.h,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                               Navigator.of(context).pop();
+                                              //  Navigator.of(context).pop();
 
-                            SizedBox(),
+                                          },
+                                          child: const Custombutton(
+                                            width: 300,
+                                            text: "Go Back",
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                             );
+                   
 
-                            selectedbuddy != null ?
-                            const SizedBox(
-                              height: 10,
-                            ) : SizedBox(),
+                       ;
+                  // EasyLoading.showSuccess(state.message);
+                }
+                // if (state is TaskTimeModel) {
+                //   EasyLoading.dismiss();
+                //   // taskModel = state.taskModel;
+                // }
 
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 20.w,
-                                vertical: 10.h,
-                              ),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
+               
 
-                                  borderRadius: BorderRadius.circular(25.r),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withValues(alpha: 0.2), // Shadow color
-                                      spreadRadius: 1, // How wide the shadow should spread
-                                      blurRadius: 10, // The blur effect of the shadow
-                                      offset: const Offset(0,
-                                          5), // Shadow offset, with y-offset for bottom shadow
+               if ( state is DashboarError) {
+                  EasyLoading.dismiss();
+                  EasyLoading.showError(state.error);
+                }
+            },
+            builder: (context, state) {
+              return StatefulBuilder(
+                  builder: (context, StateSetter setState) {
+                    return Form(
+                      key: _formKey,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(80.0),
+                            topRight: Radius.circular(80.0),
+                          ),
+              
+                        ),
+                        height: 800,
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric( horizontal: 15),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Center(
+                                  child: Text(DashboardConst.assignTasks,
+                                    style: AppTextStyle.font18bold,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                selectedbuddy != null ?
+              
+                                Padding(
+                                  padding: EdgeInsets.only(left: 8.h ),
+                                  child: Text( "Buddy Name : ${selectedbuddy!.name}",
+                                    style: AppTextStyle.font14bold,
+                                  ),
+                                ) :
+              
+                                const SizedBox(),
+              
+                                selectedbuddy != null ?
+                                const SizedBox(
+                                  height: 10,
+                                ) : const SizedBox(),
+              
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 20.w,
+                                    vertical: 10.h,
+                                  ),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+              
+                                      borderRadius: BorderRadius.circular(25.r),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withValues(alpha: 0.2), // Shadow color
+                                          spreadRadius: 1, // How wide the shadow should spread
+                                          blurRadius: 10, // The blur effect of the shadow
+                                          offset: const Offset(0,
+                                              5), // Shadow offset, with y-offset for bottom shadow
+                                        ),
+                                      ],
+                                    ),
+                                    child: MultiselectDropDownDialog(
+                                      widgetKey: _facilityKey,
+                                      hint: DashboardConst.selectCleaningTasks,
+                                      
+                                      // key: Key(
+                                      //     '${_editProductModel.paymentMethodId?.firstOrNull?.label}T5'),
+                                      // selected: _editProductModel.paymentMethodId,
+                                      items: facilityNames,
+                                      itemAsString: (TaskDropdownModel item) {
+                                        return
+                                          "${item.facilityName}   ${item.requiredTime} min" ;  },
+                                      validator: (value) {
+                                        print("slecrte $value");
+                                        value == []
+                                            ? "Please select tasks"
+              
+                                            : null;
+                                      },
+              
+                                      onSaved: (List<TaskDropdownModel> i) {
+                                        // selectedIds.add(i[1].taskId!);
+                                        // selectedIds =
+                                        //     i.map((e) => e.taskId.toString()).toList();
+                                      },
+                                      onChanged: (List<TaskDropdownModel> i) {
+                                        // print(" car $i ");
+                                        List<int?> listTime = [];
+              
+                                        len =  i.length;
+              
+                                        listTime =  i.map( (e) =>  e.requiredTime).toList();
+              
+                                        print("total time $estimatedTime");
+                                        if(i.isEmpty){
+                                          estimatedTime = null;
+                                        }else
+                                        if( i.isNotEmpty){
+                                          estimatedTime = listTime.reduce((a, b) => a! + b!);
+                                          taksIds =  i.map( (e) => e.id ).toList();
+                                        }
+                                        else
+                                        if( i.isNotEmpty && len! < i.length    ){
+                                          listTime =  i.map( (e) =>  e.requiredTime).toList();
+                                          estimatedTime = listTime.reduce((a, b) => a! - b!);
+                                        }
+              
+                                        print("estimagte $estimatedTime ");
+              
+                                        // if(i.isEmpty ){
+                                        //    estimatedTime = 0;
+                                        // }
+                                        setState( (){});
+              
+              
+                                        // selectedIds =
+                                        //     i.map((e) => e.taskId.toString()).toList();
+                                        // debugPrint(selectedIds.toString());
+                                      },
+                                      // label: 'Template Name',
+                                    ),
+                                  ),
+                                ),
+              
+                                     estimatedTime == null  && isTaskSelected ?
+                              Padding(
+                                padding: const EdgeInsets.symmetric( horizontal: 30),
+                                child: Column(
+                                  children: [
+                                    // const SizedBox(
+                                    //   height: 10,
+                                    // ),
+                                    Text("Please select Tasks",
+                                     style: AppTextStyle.font12.copyWith(color: AppColors.red ),
                                     ),
                                   ],
                                 ),
-                                child: MultiselectDropDownDialog(
-                                  widgetKey: _facilityKey,
-                                  hint: DashboardConst.selectCleaningTasks,
-                                  // key: Key(
-                                  //     '${_editProductModel.paymentMethodId?.firstOrNull?.label}T5'),
-                                  // selected: _editProductModel.paymentMethodId,
-                                  items: facilityNames,
-                                  itemAsString: (TaskDropdownModel item) {
-                                    return
-                                      "${item.facilityName}   ${item.requiredTime} min" ;  },
-                                  validator: (value) {
-                                    print("slecrte $value");
-                                    value == []
-                                        ? "Please select tasks"
-
-                                        : null;
-                                  },
-
-                                  onSaved: (List<TaskDropdownModel> i) {
-                                    // selectedIds.add(i[1].taskId!);
-                                    // selectedIds =
-                                    //     i.map((e) => e.taskId.toString()).toList();
-                                  },
-                                  onChanged: (List<TaskDropdownModel> i) {
-                                    // print(" car $i ");
-                                    List<int?> listTime = [];
-
-                                    len =  i.length;
-
-                                    listTime =  i.map( (e) =>  e.requiredTime).toList();
-
-                                    print("total time $estimatedTime");
-                                    if(i.isEmpty){
-                                      estimatedTime = null;
-                                    }else
-                                    if( i.isNotEmpty){
-                                      estimatedTime = listTime.reduce((a, b) => a! + b!);
-                                      taksIds =  i.map( (e) => e.id ).toList();
-                                    }
-                                    else
-                                    if( i.isNotEmpty && len! < i.length    ){
-                                      listTime =  i.map( (e) =>  e.requiredTime).toList();
-                                      estimatedTime = listTime.reduce((a, b) => a! - b!);
-                                    }
-
-                                    print("estimagte $estimatedTime ");
-
-                                    // if(i.isEmpty ){
-                                    //    estimatedTime = 0;
-                                    // }
-                                    setState( (){});
-
-
-                                    // selectedIds =
-                                    //     i.map((e) => e.taskId.toString()).toList();
-                                    // debugPrint(selectedIds.toString());
-                                  },
-                                  // label: 'Template Name',
-                                ),
-                              ),
-                            ),
-
-
-                            const SizedBox(
-                              height: 10,
-                            ),
-
-                            Text( DashboardConst.estimatedTaskCompletionTime,
-                              style: AppTextStyle.font20bold.copyWith(
-                                  color: const Color(0xff8F8F8F)
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Center(
-                              child:
-                              estimatedTime == null ?
-                              Text('00:00',
-                                style: AppTextStyle.font24bold,
                               )
-                                  : Text("$estimatedTime min",
-                                style: AppTextStyle.font24bold,
-                              )
-
-                              ,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(DashboardConst.scheduleShift,
-                                  style: AppTextStyle.font14w7,
-                                ),
-
-                                InkWell(
-                                  onTap: ()async{
-                                    shiftTime = await    showTimePicker(
-                                      context: context,
-                                      initialTime: TimeOfDay.now(),
-                                      // builder: (BuildContext context, Widget? child) {
-                                      //   // return Directionality(
-                                      //   //   // textDirection: TextDirection.rtl,
-                                      //   //   child: child!,
-                                      //   // );
-                                      // },
-                                    );
-                                    DateTime date = DateTime.now();
-                                    // date.add( Duration( hours: shiftTime!.hour, minutes: shiftTime!.minute  ) );
-                                    // print("duration ${}");
-
-                                    DateTime dateTime = DateTime(date.year, date.month, date.day, shiftTime!.hour, shiftTime!.minute);
-                                    DateTime newDateTime = dateTime.add(const Duration(hours: 12));
-                                    TimeOfDay newShiftTime = TimeOfDay.fromDateTime(newDateTime);
-                                    final localizations = MaterialLocalizations.of(context);
-                                    use12hour =   localizations.formatTimeOfDay(newShiftTime, alwaysUse24HourFormat: false);
-                                    // DateTime  hour =   date.add( Duration(hours: 12, minutes: 0 ));
-                                    print("timen $newDateTime ");
-                                    print("hour $use12hour ");
-                                    setState((){});
-                                  },
-                                  child: Container(
-                                    width: 110,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.white,
-                                      borderRadius: BorderRadius.circular(8),
-                                      boxShadow: [
-
-                                        BoxShadow(
-                                          color: Colors.black
-                                              .withValues(alpha:0.2), // Shadow color
-                                          spreadRadius:
-                                          1, // How wide the shadow should spread
-                                          blurRadius:
-                                          10, // The blur effect of the shadow
-                                          offset: const Offset(0,
-                                              0), // No offset for shadow on all sides
-                                        ),
-                                      ],
-                                      // ),
-                                    ),
-                                    child: Center(child:
-                                    shiftTime != null ?
-
-                                    Text(shiftTime!.format(context),
-                                      style: AppTextStyle.font14w7,
-                                    ) :
-
-                                    Text("Start Time *",
-                                      style: AppTextStyle.font14w7,
-                                    )),
-
-                                  ),
-                                )
-
-                              ],
-                            ),
-
-                            shiftTime == null && isNext ?
-                            Column(
-                              children: [
+                          : const SizedBox(
+                           // height: ,
+                          ),
+                        
+              
+              
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                Text("Please select shift Timing",
-                                  style: AppTextStyle.font12.copyWith(color: AppColors.red ),
-                                ),
-                              ],
-                            )
-                                : const SizedBox(
-                              // height: ,
-                            ),
-
-                            const SizedBox(
-                              height: 20,
-                            ),
-
-                            Container(
-                              // height:
-                              // 70 ,
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-
-                                borderRadius: BorderRadius.circular(16),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black
-                                        .withValues(alpha:0.2), // Shadow color
-                                    spreadRadius:
-                                    1, // How wide the shadow should spread
-                                    blurRadius:
-                                    10, // The blur effect of the shadow
-                                    offset: const Offset(0,
-                                        0), // No offset for shadow on all sides
+              
+                                Center(
+                                  child: Text( DashboardConst.estimatedTaskCompletionTime,
+                                    style: AppTextStyle.font20.copyWith(
+                                        color: const Color(0xff8F8F8F)
+                                    ),
                                   ),
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric( horizontal: 15),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Center(
+                                  child:
+                                  estimatedTime == null ?
+                                  Text('00:00',
+                                    style: AppTextStyle.font24bold,
+                                  )
+                                      : Text("$estimatedTime min",
+                                    style: AppTextStyle.font24bold,
+                                  )
+              
+                                  ,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const SizedBox(
-                                      height: 15,
+                                    Text(DashboardConst.scheduleShift,
+                                      style: AppTextStyle.font14w7,
                                     ),
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        const SizedBox(
-                                          height: 10,
+              
+                                    InkWell(
+                                      onTap: ()async{
+                                        shiftTime = await    showTimePicker(
+                                          context: context,
+                                          initialTime: TimeOfDay.now(),
+                                          // builder: (BuildContext context, Widget? child) {
+                                          //   // return Directionality(
+                                          //   //   // textDirection: TextDirection.rtl,
+                                          //   //   child: child!,
+                                          //   // );
+                                          // },
+                                        );
+                                        DateTime date = DateTime.now();
+                                        // date.add( Duration( hours: shiftTime!.hour, minutes: shiftTime!.minute  ) );
+                                        // print("duration ${}");
+              
+                                        DateTime dateTime = DateTime(date.year, date.month, date.day, shiftTime!.hour, shiftTime!.minute);
+                                        DateTime newDateTime = dateTime.add(const Duration(hours: 12));
+                                        TimeOfDay newShiftTime = TimeOfDay.fromDateTime(newDateTime);
+                                        final localizations = MaterialLocalizations.of(context);
+                                        use12hour =   localizations.formatTimeOfDay(newShiftTime, alwaysUse24HourFormat: false);
+                                        // DateTime  hour =   date.add( Duration(hours: 12, minutes: 0 ));
+                                        print("timen $newDateTime ");
+                                        print("hour $use12hour ");
+                                        setState((){});
+                                      },
+                                      child: Container(
+                                        width: 110,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.white,
+                                          borderRadius: BorderRadius.circular(8),
+                                          boxShadow: [
+              
+                                            BoxShadow(
+                                              color: Colors.black
+                                                  .withValues(alpha:0.2), // Shadow color
+                                              spreadRadius:
+                                              1, // How wide the shadow should spread
+                                              blurRadius:
+                                              10, // The blur effect of the shadow
+                                              offset: const Offset(0,
+                                                  0), // No offset for shadow on all sides
+                                            ),
+                                          ],
+                                          // ),
                                         ),
-                                        Text(DashboardConst.scheduleTask,
+                                        child: Center(child:
+                                        shiftTime != null ?
+              
+                                        Text(shiftTime!.format(context),
                                           style: AppTextStyle.font14w7,
-                                        ),
-                                        GestureDetector(
-                                            onTap:(){
-                                              _showMyDialog(true,janitor: selectedbuddy );
-
-                                              // janitorBottomSheet()
-                                            } ,
-                                            child: Custombutton(text: DashboardConst.addTimings, width: 164.w))
-
-                                      ],
-                                    ),
-
-                                    dashController.taskStartTime.isEmpty && isNext ?
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text("Please add Timing for tasks",
-                                          style: AppTextStyle.font12.copyWith(color: AppColors.red ),
-                                        ),
-                                      ],
+                                        ) :
+              
+                                        Text("Start Time *",
+                                          style: AppTextStyle.font14w7,
+                                        )),
+              
+                                      ),
                                     )
-                                        : const SizedBox(
-                                      // height: ,
-                                    ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    Obx(
-                                          ()=>
-                                          SizedBox(
-                                            height: dashController.taskStartTime.isEmpty ? 0:200,
-                                            child:                    ListView.builder(
-                                              shrinkWrap: true,
-                                              itemCount: dashController.taskStartTime.length ,
-                                              itemBuilder: (context, index) {
-
-                                           //    TimeOfDay startTime =
-                                           //    convertToTimeOfDay(buddy.taskTimes[index].startTime.toString());
-                                           //    TimeOfDay endTime =    convertToTimeOfDay(buddy.taskTimes[index].endTime.toString());
-                                           // String   formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(buddy.taskTimes[index].startTime);
-                                           // String   formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(buddy.taskTimes[index].endTime);
-                                           //    dashController.taskTimes.add(    {
-                                           //      "start_time" : formattedStartDate! ,
-                                           //      "end_time" : formattedEndDate
-                                           //    });
-
-                                                return ListTile(
-                                                  trailing:
-
-                                                  IconButton(
-                                                    onPressed: () {
-                                                      dashController.taskStartTime.removeAt(index);
-                                                      dashController.taskEndTime.removeAt(index);
-                                                      //  setState((){});
-                                                    } ,
-
-                                                    icon:  const Icon(  Icons.delete,),
-                                                    color: AppColors.red,
-                                                  ),
-                                                  title:  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-
-                                                      Text( dashController.taskStartTime[index].format(context) ,
-                                                        style: AppTextStyle.font14bold,
-                                                      ),
-                                                      // taskEndTime
-                                                      Text(dashController.taskEndTime[index].format(context),
-                                                        style: AppTextStyle.font14bold,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                );
-                                              }, ),
-                                          ),
-                                    )
+              
                                   ],
                                 ),
-                              ),
+              
+                                shiftTime == null && isNext ?
+                                Column(
+                                  children: [
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text("Please select shift Timing",
+                                      style: AppTextStyle.font12.copyWith(color: AppColors.red ),
+                                    ),
+                                  ],
+                                )
+                                    : const SizedBox(
+                                  // height: ,
+                                ),
+              
+                                const SizedBox(
+                                  height: 20,
+                                ),
+              
+                                Container(
+                                  // height:
+                                  // 70 ,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.white,
+              
+                                    borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black
+                                            .withValues(alpha:0.2), // Shadow color
+                                        spreadRadius:
+                                        1, // How wide the shadow should spread
+                                        blurRadius:
+                                        10, // The blur effect of the shadow
+                                        offset: const Offset(0,
+                                            0), // No offset for shadow on all sides
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric( horizontal: 15),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(DashboardConst.scheduleTask,
+                                              style: AppTextStyle.font14w7,
+                                            ),
+                                            GestureDetector(
+                                                onTap:(){
+                                                   print("erstimage $estimatedTime");
+                                                    print("is slecrete $isTaskSelected");
+                                                      isTaskSelected = true;
+                                                      setState((){});
+                                                         estimatedTime  != null  ?
+                                                  _showMyDialog(true,janitor: selectedbuddy )
+                                                   : null
+                                                  ;
+              
+                                                  // janitorBottomSheet()
+                                                } ,
+                                                child: Custombutton(text: DashboardConst.addTimings, width: 164.w))
+              
+                                          ],
+                                        ),
+              
+                                        dashController.taskStartTime.isEmpty && isNext ?
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text("Please add Timing for tasks",
+                                              style: AppTextStyle.font12.copyWith(color: AppColors.red ),
+                                            ),
+                                          ],
+                                        )
+                                            : const SizedBox(
+                                          // height: ,
+                                        ),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        Obx(
+                                              ()=>
+                                              SizedBox(
+                                                height: dashController.taskTimeModel.isEmpty ? 0:180,
+                                                child:                    ListView.builder(
+                                                  shrinkWrap: true,
+                                                  // physics: NeverScrollableScrollPhysics(),
+                                                  itemCount: dashController.taskTimeModel.length ,
+                                                  itemBuilder: (context, index) {
+              
+                                               //    TimeOfDay startTime =
+                                               //    convertToTimeOfDay(buddy.taskTimes[index].startTime.toString());
+                                               //    TimeOfDay endTime =    convertToTimeOfDay(buddy.taskTimes[index].endTime.toString());
+                                               // String   formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(buddy.taskTimes[index].startTime);
+                                               // String   formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(buddy.taskTimes[index].endTime);
+                                               //    dashController.taskTimes.add(    {
+                                               //      "start_time" : formattedStartDate! ,
+                                               //      "end_time" : formattedEndDate
+                                               //    });
+              
+                                                    return ListTile(
+                                                      trailing:
+              
+                                                      IconButton(
+                                                        onPressed: () {
+                                                           
+                                                            deleteIndex = index;
+                                                            setState((){});
+              
+                                                           if ( dashController.taskTimeModel[index].taskId != 0) {
+                                                                                  dashBoardBloc.add(DeleteEvent(taskId: dashController.taskTimeModel[index].taskId ));                                             
+                                                                            
+                                                             
+                                                           }else{
+                                                              dashController.taskTimeModel.removeAt(index);
+                                                           }
+              
+              
+                                     
+              
+                                                          // dashController.taskEndTime.removeAt(index);
+                                                          //  setState((){});
+                                                        } ,
+              
+                                                        icon:  const Icon(  Icons.delete,),
+                                                        color: AppColors.red,
+                                                      ),
+                                                      title:  Column(
+                                                        children: [
+                                                          Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Text( dashController.taskTimeModel[index].facilityName,
+                                                                style: AppTextStyle.font14bold,
+                                                              ),
+                                                              // taskEndTime
+                                                              Text( dashController.taskTimeModel[index].facilityType,
+                                                                style: AppTextStyle.font14bold,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                          
+                                                    
+                                                              Text(dashController.taskTimeModel[index].startTime.format(context) ,
+                                                                style: AppTextStyle.font14bold,
+                                                              ),
+                                                              // taskEndTime
+                                                              Text(dashController.taskTimeModel[index].endTime.format(context),
+                                                                style: AppTextStyle.font14bold,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    );
+                                                  }, ),
+                                              ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+              
+              
+              
+                                const SizedBox(height: 10),
+                                Center(child: Text("The shift shall start at ${ shiftTime == null ? '00:00' : shiftTime!.format(context)}")),
+                                const SizedBox(height: 5),
+                                Center(child: Text(
+                                    textAlign: TextAlign.center,
+                                    "Shift shall complete at ${use12hour}" )),
+              
+                                const SizedBox(height: 10),
+                                // GestureDetector(
+                                //   onTap: (){},
+                                //   child: Center(child: Text(
+                                //       style: AppTextStyle.font18bold.copyWith(
+                                //         color: AppColors.backgroundColor
+                                //       ),
+                                //       DashboardConst.addAnotherFacility,
+                                //
+                                //   )
+                                //   ),
+                                // ),
+              
+                                const SizedBox(height: 10),
+              
+              
+                                GestureDetector(
+                                    onTap:(){
+                                      isNext = true;
+                                      setState((){});
+                                      print("curtne ${_formKey.currentState!.validate()}");
+                                      print("org ${facilityController.text}");
+                                      print("org ${locationController.text}");
+                                      print("org ${dashController.taskTimes}");
+              
+                                      String city =    globalStorage.getCity();
+                                      String address =   globalStorage.getAddress();
+                                      String pincode =     globalStorage.getPincode();
+                                      String clientId =   globalStorage.getClientId();
+              
+              
+                                 
+                                      if( shiftTime != null && dashController.taskStartTime.isNotEmpty && estimatedTime != null ){
+                                        // && shiftTime != null && taskStartTime.isNotEmpty && estimatedTime != null
+                                        // adminBottomSheet();
+              
+                                             dashBoardBloc.add(
+                                          AssignTaskEvent(clientId: int.parse(clientId),
+                                            shiftTime: "${shiftTime!.hour}:${shiftTime!.minute}:00",
+                                            taskIds: taksIds,
+                                            estimatedTime: estimatedTime.toString(),
+                                            taskTimes: dashController.taskTimes,
+                                            janitorId: buddy.id!,
+                                          ));
+              
+                                         // print("org ${facilityController.text}");
+                                         // print("org ${locationController.text}");
+              
+                                        // dashBoardBloc.add( ClientSetUpEvent(
+                                        //   clientId: clientId,
+                                        //   orgName: facilityController.text,
+                                        //   locality: locationController.text,
+                                        //   pincode: pincode,
+                                        //   address: address,
+                                        //   city: city,
+                                        //   //  unitNo: "sd"
+                                        // )  );
+                                      }
+              
+              
+                                      // janitorBottomSheet()
+                                              } ,
+                                    child: Custombutton(text: "Submit", width: 328.w))
+              
+                              ],
                             ),
-
-
-
-                            const SizedBox(height: 10),
-                            Center(child: Text("The shift shall start at ${ shiftTime == null ? '00:00' : shiftTime!.format(context)}")),
-                            const SizedBox(height: 5),
-                            Center(child: Text(
-                                textAlign: TextAlign.center,
-                                "Shift shall complete at ${use12hour}" )),
-
-                            const SizedBox(height: 10),
-                            // GestureDetector(
-                            //   onTap: (){},
-                            //   child: Center(child: Text(
-                            //       style: AppTextStyle.font18bold.copyWith(
-                            //         color: AppColors.backgroundColor
-                            //       ),
-                            //       DashboardConst.addAnotherFacility,
-                            //
-                            //   )
-                            //   ),
-                            // ),
-
-                            const SizedBox(height: 10),
-
-
-                            GestureDetector(
-                                onTap:(){
-                                  // isNext = true;
-                                  setState((){});
-                                  print("curtne ${_formKey.currentState!.validate()}");
-                                  print("org ${facilityController.text}");
-                                  print("org ${locationController.text}");
-                                  print("org ${dashController.taskTimes}");
-
-                                  String city =    globalStorage.getCity();
-                                  String address =   globalStorage.getAddress();
-                                  String pincode =     globalStorage.getPincode();
-                                  String clientId =   globalStorage.getClientId();
-
-
-                                  dashBoardBloc.add(
-                                      AssignTaskEvent(clientId: int.parse(clientId),
-                                        shiftTime: "${shiftTime!.hour}:${shiftTime!.minute}:00",
-                                        taskIds: taksIds,
-                                        estimatedTime: estimatedTime.toString(),
-                                        taskTimes: dashController.taskTimes,
-                                        janitorId: buddy.id!,
-
-                                      ));
-                                  if( shiftTime != null && dashController.taskStartTime.isNotEmpty && estimatedTime != null ){
-                                    // && shiftTime != null && taskStartTime.isNotEmpty && estimatedTime != null
-                                    // adminBottomSheet();
-
-
-
-                                     // print("org ${facilityController.text}");
-                                     // print("org ${locationController.text}");
-
-                                    // dashBoardBloc.add( ClientSetUpEvent(
-                                    //   clientId: clientId,
-                                    //   orgName: facilityController.text,
-                                    //   locality: locationController.text,
-                                    //   pincode: pincode,
-                                    //   address: address,
-                                    //   city: city,
-                                    //   //  unitNo: "sd"
-                                    // )  );
-                                  }
-
-
-                                  // janitorBottomSheet()
-                                      ;                             } ,
-                                child: Custombutton(text: "Submit", width: 328.w))
-
-                          ],
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                );
-              }
+                    );
+                  }
+              );
+            }
           );
       },
     )
         .then( (value) {
+       selectedbuddy = null;
       dashController.taskStartTime.clear();
       dashController.taskEndTime.clear();
       dashController.taskTimes.clear();
       estimatedTime = null;
+      isTaskSelected =false;
       shiftTime = null;
       isNext = false;
     }, ) ;
   }
+
+
+
+  Widget  header( String title, String subTitle, String image   ){
+    return Column(
+      children: [
+             const SizedBox(
+                                height: 9,
+                               ),
+                               Center(
+                                 child: CustomImageProvider(
+                                  image: ClientImages.line,
+                                  width: 70,
+                                 ),
+                               ),
+                         const SizedBox(
+                           height: 20,
+                         ),
+                         Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                           children: [
+                             CustomImageProvider(
+                              image: image,
+                              width: 24,
+                              height: 24,
+                             ),
+                             const SizedBox(
+                              width: 6,
+                             ),
+                             Text(title,
+                               style: AppTextStyle.font18bold,
+                             ),
+                               const SizedBox(
+                              width: 4,
+                             ),
+                              Text(subTitle,
+                               style: AppTextStyle.font18bold.copyWith(
+                                color: AppColors.backgroundColor
+                               ),
+                             ),
+                           ],
+                         ),
+      ],
+    );
+
+   }
 
 
 

@@ -73,6 +73,10 @@
 //
 //     final loginModel = loginModelFromJson(jsonString);
 
+// To parse this JSON data, do
+//
+//     final loginModel = loginModelFromJson(jsonString);
+
 import 'dart:convert';
 
 LoginModel loginModelFromJson(String str) => LoginModel.fromJson(json.decode(str));
@@ -80,12 +84,12 @@ LoginModel loginModelFromJson(String str) => LoginModel.fromJson(json.decode(str
 String loginModelToJson(LoginModel data) => json.encode(data.toJson());
 
 class LoginModel {
-    bool success;
-    Results results;
+    bool? success;
+    Results? results;
 
     LoginModel({
-        required this.success,
-        required this.results,
+         this.success,
+         this.results,
     });
 
     factory LoginModel.fromJson(Map<String, dynamic> json) => LoginModel(
@@ -95,7 +99,7 @@ class LoginModel {
 
     Map<String, dynamic> toJson() => {
         "success": success,
-        "results": results.toJson(),
+        "results": results!.toJson(),
     };
 }
 
@@ -104,6 +108,7 @@ class Results {
     String? name;
     int? roleId;
     String? email;
+    String? mobile;
     String? pincode;
     String? city;
     String? address;
@@ -116,6 +121,7 @@ class Results {
          this.name,
          this.roleId,
          this.email,
+         this.mobile,
          this.pincode,
          this.city,
          this.address,
@@ -129,6 +135,7 @@ class Results {
         name: json["name"],
         roleId: json["role_id"],
         email: json["email"],
+        mobile: json["mobile"],
         pincode: json["pincode"],
         city: json["city"],
         address: json["address"],
@@ -142,6 +149,7 @@ class Results {
         "name": name,
         "role_id": roleId,
         "email": email,
+        "mobile": mobile,
         "pincode": pincode,
         "city": city,
         "address": address,

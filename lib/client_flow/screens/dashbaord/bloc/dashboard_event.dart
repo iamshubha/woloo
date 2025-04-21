@@ -1,5 +1,6 @@
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 abstract class DashboardEvent extends Equatable {
   const DashboardEvent();
@@ -256,6 +257,54 @@ class ClientEvent extends DashboardEvent {
     id,
   ];
 }
+
+
+class DeleteEvent extends DashboardEvent {
+ final int taskId;
+  const DeleteEvent({
+      required  this.taskId,     
+  });
+
+  @override
+  List<Object?> get props => [
+    taskId,
+  ];
+}
+
+
+
+class CheckSupvisorEvent extends DashboardEvent {
+ final int id;
+  const CheckSupvisorEvent({
+      required  this.id,     
+  });
+
+  @override
+  List<Object?> get props => [
+    id,
+  ];
+}
+
+
+
+class FacilityDeleteEvent extends DashboardEvent {
+ final int locationId;
+  final int clusterId;
+   final int facilityId;
+  const FacilityDeleteEvent({
+      required  this.locationId,
+      required this.clusterId,
+      required this.facilityId     
+  });
+
+  @override
+  List<Object?> get props => [
+    locationId,
+    clusterId,
+    facilityId
+  ];
+}
+
 
 
 

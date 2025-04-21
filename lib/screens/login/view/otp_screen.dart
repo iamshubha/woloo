@@ -294,7 +294,9 @@ class _OTPScreenState extends State<OTPScreen> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const SupervisorDashboard(),
+                            builder: (context) => const SupervisorDashboard(
+                               isFromSupervisor: false,
+                            ),
                           ),
                           (route) => false,
                         );
@@ -303,7 +305,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
                     if (state is LoginError) {
                       EasyLoading.dismiss();
-                      EasyLoading.showError(state.error.message);
+                      EasyLoading.showError(state.error);
                     }
 
                     if (state is LoginGetDataSuccess) {

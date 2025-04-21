@@ -25,7 +25,10 @@ class DioClient {
       );
       return response.data;
     } catch (e) {
+
+   
       if (e is DioException) {
+            print( "error in get methode ${e.response}");
         if (e.response == null) {
           rethrow;
         }
@@ -59,20 +62,30 @@ Future<dynamic> post(
         onReceiveProgress: onReceiveProgress,
       );
        
-        print("hwy sdlkajsdflaks ${response.data}");
+       
       return response.data;
-    } catch (e  ) {
-       print("error in post methode ${e.toString()}");
+    }      catch (e  ) {
+      //  print("error in post methode ${e.toString()}");
+
+
        
       if (e is DioException) {
-          // print("error in post methode ${e.type}");
-               print("error in post methode ${e.response!.data}");
+        
+        //  print("error in post type ${e.error}");
+          // print("error in post type ${e.message}");
+            // print("error in post methode ${e.response!.statusMessage}");
+            print("error in post methode ${e.response!.data}");
+            //  print("erro response ${e.response!}");
+
+              // print("error in post methode ${e.response == null }");
+              //  print("error in post methode ${e.response!.data['error']}");
+                  //  print("error in post methode responr  ${e.response!}");
         if (e.response == null) {
           rethrow;
         }
 
         if (e.response != null) {
-          throw e.response?.data;
+          throw e.response!.data;
         }
       }
       rethrow;

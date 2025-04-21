@@ -28,7 +28,7 @@ class LoginOTPVerified extends LoginState {
 }
 
 class LoginError extends LoginState {
-  final Failure error;
+  final String error;
   const LoginError({required this.error});
 
   @override

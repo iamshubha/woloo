@@ -56,7 +56,7 @@ class _SelectBuddyDailogState extends State<SelectBuddyDailog> {
                      }
                      if(state is DashboarError  ){
                        EasyLoading.dismiss();
-                       EasyLoading.showError( state.error.message);
+                       EasyLoading.showError( state.error);
 
                      }
                    },
@@ -115,9 +115,9 @@ class _SelectBuddyDailogState extends State<SelectBuddyDailog> {
                                // );
                                dashBoardBloc.add(
                                GetAllJanitorEvent(clientId: int.parse(clientId),
-                                                                 )
+                              )
                                );
-
+                               
                             },
                             child: Custombutton(
                                 height: 30.h,

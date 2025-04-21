@@ -91,7 +91,7 @@ static var  JANITOR_LIST = '$BASE_URL/api/whms/users/janitorsList';
    '$BASE_URL/api/wolooGuest/createClient';
 
     static var CLIENT_SIGNUP = 
-'$BASE_URL/api/whms/clients/clientSignUp';
+     '$BASE_URL/api/whms/clients/clientSignUp';
 
 
     static var CLIENT_LOGIN = 
@@ -131,6 +131,15 @@ static var  JANITOR_LIST = '$BASE_URL/api/whms/users/janitorsList';
     static var GET_ALL_FACILITY =    "$BASE_URL/api/whms/facilities/getFacilities";
           
     static var CHECK_TASK_TIME =   '$BASE_URL/api/whms/autoTaskMapping/checkJanitorTasktime';
+
+    static var  SUPERVISOR_CHECK =     '$BASE_URL/api/whms/clients/supervisorCheck';
+
+    static var  DELETE_TASK =  "$BASE_URL/api/whms/autoTaskMapping/deleteTasktiming";
+                       
+    static var  DELETE_FACILITY =   '$BASE_URL/api/whms/clients/facilityrollback';
+     
+  
+
 
     //  https://staging-api.woloo.in/api/whms/users/client?user_id=62447
 

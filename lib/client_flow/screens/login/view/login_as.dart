@@ -61,54 +61,67 @@ class _LoginAsState extends State<LoginAs> {
                           ],
 
                           // color: Colors.cyan,
-                          shape: const RoundedRectangleBorder(
+                          shape:  RoundedRectangleBorder(
                             // side: BorderSide(
                             //     width: 1.0,
                             //     style: BorderStyle.solid,
                             //     color: Colors.cyan),
-                            borderRadius: BorderRadius.all(Radius.circular(5.0)
+                            borderRadius: BorderRadius.all(Radius.circular(6.r)
 
                             ),
                           ),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 0.0),
-                          child: DropdownButton<String>(
-                            value: dropdownValue,
-                            icon: const Icon( Icons.keyboard_arrow_down,
-                             size: 30,
-                            ),
-                            elevation: 16,
-                            onChanged: (newValue) {
-                              setState(() {
-                                dropdownValue = newValue;
-                                 // print("new $newValue ");
-                              });
-                               //
-                               if(dropdownValue == "Admin" ){
-                                 Navigator.of(context).push( MaterialPageRoute(builder: (context) {
-                                    return ClientLogin();
-                                 },  ) );
-                               } 
-                               else{
+                        child: Container(
+                          width: 200.w,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 4.0),
+                            child: DropdownButton<String>(
+                              isExpanded: true,
+                              
+                              value: dropdownValue,
+                              icon: const Icon( Icons.keyboard_arrow_down,
+                               size: 30,
+                              ),
+                              elevation: 16,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  dropdownValue = newValue;
+                                   // print("new $newValue ");
+                                });
+                                 //
+                                 if(dropdownValue == "Admin" ){
                                    Navigator.of(context).push( MaterialPageRoute(builder: (context) {
-                                    return LoginScreen();
-                                 },  ) );
-                               }
-
-                            },
-                            hint: Text("Login as",
-                             style: AppTextStyle.font10bold,
+                                      return ClientLogin();
+                                   },  ) );
+                                 } 
+                                 else{
+                                     Navigator.of(context).push( MaterialPageRoute(builder: (context) {
+                                      return LoginScreen();
+                                   },  ) );
+                                 }
+                          
+                              },
+                              hint: Padding(
+                                padding: const EdgeInsets.only(left: 30,),
+                                child: Text("Login as",
+                                 style: AppTextStyle.font10bold.copyWith(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xff8F8F8F)
+                                 ),
+                                ),
+                              ),
+                              underline: const SizedBox(),
+                              
+                              items: <String>['Admin', 'Task Buddy', 'Supervisor']
+                                  .map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
                             ),
-                            underline: const SizedBox(),
-                            items: <String>['Admin', 'Task Buddy', 'Supervisor']
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
                           ),
                         ),
                       ),

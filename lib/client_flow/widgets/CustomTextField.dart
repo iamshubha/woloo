@@ -10,6 +10,8 @@ class CustomTextField extends StatelessWidget {
   final FormFieldValidator<String>? validator;
   final IconData? prefixIcon;
   final Color fillColor;
+  final FocusNode? focusNode;
+  final bool? readOnly;
 
   const CustomTextField({
     Key? key,
@@ -21,6 +23,9 @@ class CustomTextField extends StatelessWidget {
     this.validator,
     this.prefixIcon,
     this.fillColor = Colors.white,
+    this.focusNode,
+    this.readOnly =false
+
   }) : super(key: key);
 
   @override
@@ -41,9 +46,11 @@ class CustomTextField extends StatelessWidget {
         ),
         child:
         TextFormField(
-          onTapOutside: (event) {
-            FocusScope.of(context).unfocus();
-          },
+          readOnly:readOnly!,
+          focusNode: focusNode,
+          // onTapOutside: (event) {
+          //   FocusScope.of(context).unfocus();
+          // },
           controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,

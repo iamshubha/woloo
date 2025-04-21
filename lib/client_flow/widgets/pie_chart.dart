@@ -65,6 +65,8 @@ class _ChartPieState extends State<ChartPie> {
 
   @override
   Widget build(BuildContext context) {
+        
+        //  print("siizeeeee ${MediaQuery.of(context).size.width }");
 
     // widget.complatedTask;
     var temp =    double.parse(widget.complatedTask!)/ double.parse(widget.totalTask!)*100;
@@ -98,7 +100,7 @@ class _ChartPieState extends State<ChartPie> {
 
     pies =    [
       // PieData(value:  compaltedPer!, color: const Color(0xff8BDFFB), ),
-      PieData(value:  pendingPer! , color: Color(0xff231F20)),
+      PieData(value:  pendingPer! , color: const Color(0xff231F20)),
       // PieData(value:  acceptedPer! , color: Color(0xffB8B8B8) ),
       // PieData(value:  rejectedPer  == 0 ? 0.01 :rejectedPer! , color: AppColors.rejectButtonColor ),
       // PieData(value:  rfcPer  == 0 ? 0.01 :rfcPer! , color: AppColors.rfcCardBgColor ),
@@ -148,7 +150,7 @@ class _ChartPieState extends State<ChartPie> {
                       start: 0,
                       animateFromEnd: true,
 
-                      size: 110,
+                      size: 100,
                       child: Center(child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -159,8 +161,8 @@ class _ChartPieState extends State<ChartPie> {
 
 
                              Text(widget.complatedPercentage!,
-                             style:  const TextStyle(
-                               fontSize: 100,
+                             style:   TextStyle(
+                               fontSize:  MediaQuery.of(context).size.width < 370 ? 80.sp :100,
                                fontWeight: FontWeight.bold
                              ),
                                textAlign: TextAlign.center,
@@ -169,7 +171,7 @@ class _ChartPieState extends State<ChartPie> {
                           
                            Text("Task Buddy",
                             style: AppTextStyle.font20bold.copyWith(
-                              color: Color(0xff8BDFFB)
+                              color: const Color(0xff8BDFFB)
                             ) ,
                            ),
 
@@ -192,65 +194,89 @@ class _ChartPieState extends State<ChartPie> {
            const SizedBox(
              width: 10,
            ),
-           Padding(
-             padding: const EdgeInsets.symmetric( horizontal: 0),
-             child: Wrap(
 
-                spacing: 10,
-                runSpacing:20,
-
-               children: [
-                 // const SizedBox(
-                 //   height: 10,
-                 // ),
-                 Indicator(
-                   color:  const Color(0xff8BDFFB),
-                   text: ' Completed Task',
-                   taskCount: widget.complatedTask,
-                   isSquare: true,
-                   size: 24,
-                 ),
-                 Indicator(
-                   color: Color(0xffB8B8B8),
-                   // AppColors.acceptedBgColor,
-                   text: 'Accpeted Task',
-                   isSquare: true,
-                   size: 24,
-                   taskCount: widget.accetedTask,
-                 ),
-                 Indicator(
-                   color:  const Color(0xff717171) ,
-                   text: 'Onging Task',
-                   taskCount: widget.ongoingTask,
-
-                   isSquare: true,
-                   size: 24,
-                 ),
-                 Indicator(
-                   color:  const Color(0xff231F20),
-                   text: 'Pending Task',
-                   isSquare: true,
-                   size: 24,
-                   taskCount:widget.pendingTask ,
-                 ),
-
-
-                 // const SizedBox(
-                 //   height: 20,
-                 // ),
-
-                 // const SizedBox(
-                 //   height: 20,
-                 // ),
-
-                 // const SizedBox(
-                 //   height: 20,
-                 // ),
-
-
-               ],
-             ),
+          //  Container(
+          //   height: 300,
+          //    child: GridView.builder(
+          //     physics: NeverScrollableScrollPhysics(),
+              
+          //     gridDelegate:  const SliverGridDelegateWithFixedCrossAxisCount(
+          //     childAspectRatio: 3,
+          //     crossAxisSpacing: 10,
+          //     mainAxisSpacing: 10,
+                
+          //       crossAxisCount: 2) ,
+          //       shrinkWrap: true,
+          //       itemCount: 4,
+          //      itemBuilder: (context, index) {
+          //        return     Indicator(
+          //          color:  const Color(0xff8BDFFB),
+          //          text: ' Completed Task',
+          //          taskCount: widget.complatedTask,
+          //          isSquare: true,
+          //          size: 24,
+          //        );
+          //      },  ),
+          //  ),
+           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+           
+              // spacing: 6.w,
+              // runSpacing:10,
+           
+             children: [
+               // const SizedBox(
+               //   height: 10,
+               // ),
+               Indicator(
+                 color:  const Color(0xff8BDFFB),
+                 text: ' Completed Task',
+                 taskCount: widget.complatedTask,
+                 isSquare: true,
+                 size: 20.r,
+               ),
+               Indicator(
+                 color: const Color(0xffB8B8B8),
+                 // AppColors.acceptedBgColor,
+                 text: 'Accpeted Task',
+                 isSquare: true,
+                 size: 20.r,
+                 taskCount: widget.accetedTask,
+               ),
+        
+           
+           
+           
+           
+             ],
            ),
+
+           const SizedBox(
+            height: 10,
+           ),
+
+           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+                     Indicator(
+                 color:  const Color(0xff717171) ,
+                 text: 'Onging Task',
+                 taskCount: widget.ongoingTask,
+           
+                 isSquare: true,
+                 size: 20.r,
+               ),
+               Indicator(
+                 color:  const Color(0xff231F20),
+                 text: 'Pending Task',
+                 isSquare: true,
+                 size: 20.r,
+                 taskCount:widget.pendingTask ,
+               ),
+
+            ],
+           )
+
           //                 const SizedBox(
           //   width: 20,
           //                 ),
@@ -355,8 +381,8 @@ class Indicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 175,
-      padding: EdgeInsets.all(8),
+      // width: 175,
+      padding: const EdgeInsets.symmetric( vertical: 8, horizontal: 8),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(8),
@@ -375,7 +401,7 @@ class Indicator extends StatelessWidget {
       ),
       child: Row(
         // crossAxisAlignment: CrossAxisAlignment.start,
-        // mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           // SizedBox(
           //   width: 100.w,
@@ -390,8 +416,8 @@ class Indicator extends StatelessWidget {
 
             ),
           ),
-          const SizedBox(
-            width: 6,
+           SizedBox(
+            width: 4.w,
           ),
           Row(
             // crossAxisAlignment: CrossAxisAlignment.center,
@@ -402,20 +428,20 @@ class Indicator extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
 
-                    fontSize: 12,
+                    fontSize: 10.sp,
                     fontWeight: FontWeight.bold,
                     color: textColor,
                     overflow: TextOverflow.visible
                 ),
               ),
               SizedBox(
-                width: 2,
+                width: 1.w,
               ),
               Text(
                 taskCount!,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 10.sp,
                     fontWeight: FontWeight.bold,
                     color: textColor,
                     overflow: TextOverflow.visible

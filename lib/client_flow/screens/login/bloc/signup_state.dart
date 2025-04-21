@@ -37,7 +37,7 @@ class LoginUser extends SignUpState {
 
 
 class SignUpError extends SignUpState {
-  final Failure error;
+  final String error;
   const SignUpError({required this.error});
 
   @override

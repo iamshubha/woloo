@@ -43,9 +43,7 @@ class CoreService {
 
  
  Future<ClientModel> getClient({
- 
   required int id,
-
 }) async {
   try {
       
@@ -55,7 +53,7 @@ class CoreService {
 
     var response = await dio.get(
      "${APIConstants.GET_CLIENT_ID}?user_id=$id",
-      options:  Options(extra: {"auth": true}),
+      options:  Options(extra: {"auth": true, "isSupervisor": true }),
     );
 
      clientModel =  ClientModel.fromJson(response);

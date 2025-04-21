@@ -4,6 +4,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -53,7 +54,7 @@ class SignupBloc extends Bloc<SignupEvent, SignUpState> {
 
       ));
     } catch (e) {
-      emit(SignUpError(error:  ErrorHandler.handle(e).failure ));
+      emit(SignUpError(error: e.toString() ));
     }
   }
 
@@ -91,8 +92,8 @@ class SignupBloc extends Bloc<SignupEvent, SignUpState> {
 
       emit(RegisterUser());
     } catch (e) {
-      debugPrint(e.toString());
-      emit(SignUpError(error: ErrorHandler.handle(e).failure ));
+      // debugPrint(e.toString());
+      emit(SignUpError(error: e.toString() ));
     }
   }
 
@@ -112,13 +113,14 @@ class SignupBloc extends Bloc<SignupEvent, SignUpState> {
       GlobalStorage globalStorage = GetIt.instance();
 
       debugPrint("tokennnnnn${response.results}");
-       globalStorage.saveToken(accessToken: response.results!.token ?? '');
+       globalStorage.saveClientToken(accessToken: response.results!.token ?? '');
       // globalStorage.saveToken(accessToken: response.token ?? '');
       globalStorage.saveJanitorId(accessId: response.results!.id!);
       // roleId = response.results.roleId!;
       globalStorage.saveRoleId(accessRoleId: response.results!.roleId!);
       globalStorage.saveSupervisorName(
           accessSupervisorName: response.results!.name ?? '');
+          globalStorage.saveClientMobileNo( accessClientMobileNo: response.results!.mobile ?? '');
       globalStorage.saveCity(accessCity:  response.results!.city ?? '');
       globalStorage.saveAddress(accessAddress: response.results!.address ?? '');
       globalStorage.savePincode(accessPincode: response.results!.pincode ?? '');
@@ -131,8 +133,9 @@ class SignupBloc extends Bloc<SignupEvent, SignUpState> {
 
       emit(LoginUser());
     } catch (e) {
-      debugPrint(e.toString());
-      emit(SignUpError(error: ErrorHandler.handle(e).failure ));
+             print("is dio bloc  exception ${e is DioException}");
+      debugPrint("debug print $e" );
+      emit(SignUpError(error: e.toString()));
     }
   }
 

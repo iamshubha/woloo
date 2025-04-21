@@ -3,13 +3,17 @@
 import 'package:equatable/equatable.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/data/model/check_task_model.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/data/model/dashboard_task_model.dart';
+import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/data/model/delete_model.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/data/model/facility_model.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/data/model/task_model.dart';
 import 'package:woloo_smart_hygiene/screens/task_list/data/model/task_list_model.dart';
 
 import '../../../../core/network/failure.dart';
 import '../../../../screens/report_issue_screen/data/model/facility_dropdown_model.dart';
+import '../data/model/check_supervisor.dart';
+import '../data/model/client_model.dart';
 import '../data/model/client_setup_model.dart';
+import '../data/model/delete_facility.dart';
 import '../data/model/subscription_model.dart';
 import '../data/model/supervisor_model.dart';
 import '../data/model/tasklist_model.dart';
@@ -81,6 +85,8 @@ class AssignTask extends DashboardState {
 }
 
 class GetClient extends DashboardState {
+  ClientModel client;
+  GetClient({required this.client});
   @override
   List<Object> get props => [];
 }
@@ -110,8 +116,38 @@ class CheckTaskTime extends DashboardState {
 }
 
 
+class DeltetTaskTime extends DashboardState {
+  DeleteModel? deleteModel;
+  DeltetTaskTime({this.deleteModel});
+  // DeltetTaskTime({
+  //   // this.checkTaskModel
+  //   });
+  @override
+  List<Object> get props => [deleteModel!];
+}
+
+class CheckSupervisor extends DashboardState {
+  CheckSupervisorModel?  checkSupervisorModel;
+  CheckSupervisor({this.checkSupervisorModel});
+  @override
+  List<Object> get props => [checkSupervisorModel!];
+}
+
+
+class DeltetFacility extends DashboardState {
+  DeleteFacilityModel? deleteModel;
+  DeltetFacility({this.deleteModel});
+  // DeltetTaskTime({
+  //   // this.checkTaskModel
+  //   });
+  @override
+  List<Object> get props => [deleteModel!];
+}
+
+
+
 class DashboarError extends DashboardState {
-  final Failure error;
+  final String error;
   const DashboarError({required this.error});
 
   @override

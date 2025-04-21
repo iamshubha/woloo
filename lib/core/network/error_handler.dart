@@ -9,30 +9,38 @@ class ErrorHandler implements Exception {
   late Failure failure;
 
   ErrorHandler.handle(dynamic error) {
-    print("error handleeeeeeeee ${error is DioException}");
+           
+            
+     
+             print("is dio exception ${error is DioException}");
+
     if (error is DioException) {
+          // print("int the exception ${error is DioException}");
+
       // dio error so its an error from response of the API or from dio itself
       failure = _handleError(error);
     } else {
 
-       print("error handleeeeeeeee ${error.toString()}");
+       print("elssssss");
        
       //  error.toString();
       // default error
-      failure = DataSource.defaultError.getFailure();
+      failure = 
+      //  _handleError(error);
+       DataSource.defaultError.getFailure();
     }
   }
 }
 
 Failure _handleError(DioException error) {
     print("error handleeeeeeeee ${error.type}");
-  switch (error.type) {
-    case DioExceptionType.connectionTimeout:
-      return DataSource.connectTimeout.getFailure();
-    case DioExceptionType.sendTimeout:
-      return DataSource.sendTimeout.getFailure();
-    case DioExceptionType.receiveTimeout:
-      return DataSource.receiveTimeout.getFailure();
+    switch (error.type) {
+      case DioExceptionType.connectionTimeout:
+        return DataSource.connectTimeout.getFailure();
+      case DioExceptionType.sendTimeout:
+        return DataSource.sendTimeout.getFailure();
+      case DioExceptionType.receiveTimeout:
+        return DataSource.receiveTimeout.getFailure();
     case DioExceptionType.badResponse:
       // if (error.response != null && error.response?.statusCode != null && error.response?.statusMessage != null) {
         return Failure(error.response?.statusCode ?? 0, error.response?.data["message"] ?? "");
@@ -40,12 +48,12 @@ Failure _handleError(DioException error) {
       //  else {
         // return DataSource.defaultError.getFailure();
       // }
-    case DioExceptionType.cancel:
-      return DataSource.cancel.getFailure();
-    default:
-      return DataSource.defaultError.getFailure();
+      case DioExceptionType.cancel:
+        return DataSource.cancel.getFailure();
+      default:
+        return DataSource.defaultError.getFailure();
+    }
   }
-}
 
 enum DataSource {
   success,
@@ -142,3 +150,5 @@ class ApiInternalStatus {
   static const int success = 200;
   static const int failure = 400;
 }
+
+

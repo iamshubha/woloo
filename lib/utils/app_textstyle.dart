@@ -13,7 +13,7 @@ class AppTextStyle {
   static TextStyle font20 = TextStyle(
     overflow: TextOverflow.visible,
     color: AppColors.appBarTitleColor,
-    fontSize: 20.sp,
+    fontSize: 19.sp,
     fontWeight: FontWeight.w400,
   );
 

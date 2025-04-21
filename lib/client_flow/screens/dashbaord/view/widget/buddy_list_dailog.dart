@@ -75,10 +75,6 @@ class _BuddyListDailogState extends State<BuddyListDailog> {
                    ),
 
 
-
-
-
-
                       SizedBox(
                         height: 20.h,
                       ),

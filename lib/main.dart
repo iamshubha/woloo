@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:device_preview/device_preview.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/login/bloc/signup_bloc.dart';
 import 'package:woloo_smart_hygiene/firebase_options.dart';
 import 'package:woloo_smart_hygiene/injection_container.dart' as di;
@@ -88,7 +89,7 @@ void main() async {
         supportedLocales: const [
           Locale('en', 'US'),
           Locale('hi', 'IN'),
-          Locale('mr', 'IN'),
+          Locale('mr', 'IN'), 
         ],
         path: 'assets/translations',
         fallbackLocale: const Locale('en', 'US'),
@@ -116,11 +117,11 @@ void main() async {
           ],
           child:
              // DeviceP
-         // DevicePreview(
-         //    enabled: !kReleaseMode,
-         //    builder: (context) =>
-         //        App(), // Wrap your app
-         // ),
+        //  DevicePreview(
+        //     enabled: !kReleaseMode,
+        //     builder: (context) =>
+        //         App(), // Wrap your app
+        //  ),
          const  App(),
         ),
       )

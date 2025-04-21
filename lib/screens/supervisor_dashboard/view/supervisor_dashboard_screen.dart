@@ -17,8 +17,10 @@ import '../../common_widgets/image_provider.dart';
 import '../../report_issue_screen/view/report_issue_form.dart';
 
 class SupervisorDashboard extends StatefulWidget {
+  final  bool? isFromSupervisor;
   const SupervisorDashboard({
     super.key,
+    required this.isFromSupervisor
   });
 
   @override
@@ -230,6 +232,7 @@ class _SupervisorDashboardState extends State<SupervisorDashboard> {
           //   ),
           // ),
           TemplateScreen(
+            isFromSupervisor: widget.isFromSupervisor!,
             supervisorName: supervisorName ?? '',
           ),
         ],

@@ -30,7 +30,8 @@ CoreBloc() : super(CoreInitial()) {
       emit(CoreLoading());
     //  await Future.delayed(const Duration(seconds: 2));
       var token = globalStorage.getToken();
-      if (token.isNotEmpty) {
+      var cilentToken = globalStorage.getClientToken();
+      if (token.isNotEmpty || cilentToken.isNotEmpty  ) {
         emit(const CoreSuccess(isLoggedIn: true));
       } else {
         emit(const CoreSuccess(isLoggedIn: false));

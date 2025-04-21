@@ -2,11 +2,17 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 
+import '../../../../core/local/global_storage.dart';
 import '../../../../utils/app_color.dart';
 import '../../../../utils/app_images.dart';
+import '../../dashbaord/bloc/dashboard_bloc.dart';
+import '../../dashbaord/bloc/dashboard_event.dart';
 import '../../dashbaord/view/dashboard.dart';
 import '../../dashbaord/view/home.dart';
 
@@ -18,6 +24,30 @@ class ChooseService extends StatefulWidget {
 }
 
 class _ChooseServiceState extends State<ChooseService> {
+
+
+  ClientDashBoardBloc dashBoardBloc  = ClientDashBoardBloc();
+    GlobalStorage globalStorage = GetIt.instance();
+    Map<String, dynamic>? decodedToken;
+ 
+
+   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    //      var some =   globalStorage.getClientToken();
+
+    //   decodedToken = JwtDecoder.decode(some);
+
+    //  dashBoardBloc.add( ClientEvent(
+    //   id: decodedToken!["id"]
+    //  ) );
+     
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return   Scaffold(
@@ -30,28 +60,30 @@ class _ChooseServiceState extends State<ChooseService> {
         child: Column(
           children: [
              const SizedBox(
-               height: 200,
+               height: 190,
              ),
               CustomImageProvider(
                 image: AppImages.whiteLogo,
-                width: 178,
-                height: 127,
+                width: 178.w,
+                height: 127.h,
               ),
              const  SizedBox(
-                height: 20,
+                height: 50,
                ),
         
                Container(
-                 padding: EdgeInsets.all(10),
-                height: 171,
+                 padding: EdgeInsets.symmetric(vertical: 25 , horizontal: 25),
+                // height: 165.h,
                 decoration: BoxDecoration(
                   color: AppColors.white,
                   
                   borderRadius:  BorderRadius.circular(30)
         
                 ),
+
                 child:  Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
 
                   children: [
         

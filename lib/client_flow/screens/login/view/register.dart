@@ -105,7 +105,7 @@ final TextEditingController confirmPasswordController = TextEditingController();
                 CustomTextField(
                   controller: mobileController,
                   hintText:SignUpConstant.mobileNo,
-                  keyboardType: TextInputType.text,
+                  keyboardType: TextInputType.number,
                   maxLength: 10,
                   validator: validateMobile
                 
@@ -119,7 +119,7 @@ final TextEditingController confirmPasswordController = TextEditingController();
                   controller: addressController,
                   hintText: SignUpConstant.address,
                   keyboardType: TextInputType.text,
-                  maxLength: 10,
+                  // maxLength: 10,
                   validator: 
                   validateAddress
                   // prefixIcon: Icons.phone,
@@ -132,7 +132,7 @@ final TextEditingController confirmPasswordController = TextEditingController();
                   controller: cityController,
                   hintText: SignUpConstant.city,
                   keyboardType: TextInputType.text,
-                  maxLength: 10,
+                  // maxLength: 10,
                   validator:
                  validateCity
                   // prefixIcon: Icons.phone,
@@ -158,6 +158,7 @@ final TextEditingController confirmPasswordController = TextEditingController();
                   controller: passwordController,
                   hintText: SignUpConstant.password,
                   keyboardType: TextInputType.text,
+                  obscureText: true,
                   maxLength: 10,
                   validator: 
                   validatePassword
@@ -172,6 +173,7 @@ final TextEditingController confirmPasswordController = TextEditingController();
                   hintText: SignUpConstant.confirmPassword,
                   keyboardType: TextInputType.text,
                   maxLength: 10,
+                  obscureText: true,
                   validator: 
                  validateConfirmPassword
                   // prefixIcon: Icons.phone,
@@ -227,7 +229,7 @@ final TextEditingController confirmPasswordController = TextEditingController();
           
                       if (state is SignUpError) {
                         EasyLoading.dismiss();
-                        EasyLoading.showError(state.error.message);
+                        EasyLoading.showError(state.error);
                       }
           
                       // if (state is LoginGetDataSuccess) {
@@ -296,7 +298,7 @@ final TextEditingController confirmPasswordController = TextEditingController();
                           child:
                      Custombutton(
                       color: AppColors.buttonYellowColor,
-                      text: "Registor", width: 300.w),
+                      text: "Register", width: 300.w),
                         ),
                       );
                     },
@@ -309,14 +311,20 @@ final TextEditingController confirmPasswordController = TextEditingController();
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(LoginConstant.newUserRegister,
+                              Text("Already a user?",
                                style: AppTextStyle.font14bold,
                               ),
-                              Text(LoginConstant.registration,
-                              style: AppTextStyle.font14bold.copyWith(
-                             decoration: TextDecoration.underline,
-                           ),
-                               )
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text("Login Now",
+                                  
+                                style: AppTextStyle.font14bold.copyWith(
+                                                             decoration: TextDecoration.underline,
+                                                           ),
+                                 ),
+                              )
                             ],
                           ),
                                const SizedBox(

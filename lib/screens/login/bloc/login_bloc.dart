@@ -43,7 +43,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       debugPrint("requestId $requestId");
       emit(LoginOTPSent());
     } catch (e) {
-      emit(LoginError(error:  ErrorHandler.handle(e).failure ));
+      emit(LoginError(error:  e.toString() ));
     }
   }
 
@@ -72,7 +72,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(LoginOTPVerified());
     } catch (e) {
       debugPrint(e.toString());
-      emit(LoginError(error: ErrorHandler.handle(e).failure ));
+      emit(LoginError(error: e.toString() ));
     }
   }
 

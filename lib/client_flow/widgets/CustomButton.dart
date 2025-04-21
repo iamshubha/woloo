@@ -13,6 +13,7 @@ class Custombutton extends StatelessWidget {
   final bool enabled;
   final double? width;
   final double? height;
+  final Color? textColor;
 
   const Custombutton({
     super.key,
@@ -20,7 +21,7 @@ class Custombutton extends StatelessWidget {
     this.enabled = true,
     this.color,
    required this.width,
-    this.height
+    this.height, this.textColor,
   });
 
   @override
@@ -47,7 +48,7 @@ class Custombutton extends StatelessWidget {
           textAlign: TextAlign.center,
           style: 
           AppTextStyle.font14w7.copyWith(
-            color: AppColors.black, 
+            color: textColor ?? AppColors.black, 
           )
           // TextStyle(
           //   fontWeight: FontWeight.w700,

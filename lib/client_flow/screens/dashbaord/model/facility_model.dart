@@ -52,11 +52,29 @@ List<ChooseFacilityModel> admin = [
 List<ChooseFacilityModel> genderList = [
   ChooseFacilityModel(
       image:  ClientImages.woman,
-      title: "Woman"
+      title: "Female"
   ),
   ChooseFacilityModel(
       image:   ClientImages.man,
-      title: "man"
+      title: "Male"
   ),
 
 ];
+
+List<ChooseFacilityModel> cardList = [
+  ChooseFacilityModel(
+      image: ClientImages.mail,
+      title:  "Contact Us"
+  ),
+  ChooseFacilityModel(
+      image:  ClientImages.about,
+      title:  "About"
+  ),
+ ChooseFacilityModel(
+      image: ClientImages.term,
+      title: "Terms of Use"
+  ),
+];
+
+
+

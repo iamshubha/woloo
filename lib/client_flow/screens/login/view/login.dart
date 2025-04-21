@@ -19,6 +19,7 @@ import '../../../../utils/app_images.dart';
 import '../../../widgets/CustomTextField.dart';
 import '../bloc/signup_bloc.dart';
 import '../bloc/signup_event.dart';
+import 'check_screen.dart';
 
 class ClientLogin extends StatefulWidget {
   const ClientLogin({super.key});
@@ -82,6 +83,7 @@ class _ClientLoginState extends State<ClientLogin> {
                                 CustomTextField(
                 controller: passwordController,
                 hintText: "Enter your Password",
+                obscureText: true,
                 keyboardType: TextInputType.text,
                 // maxLength: 10,
                 validator: validatePassword
@@ -102,18 +104,18 @@ class _ClientLoginState extends State<ClientLogin> {
         
                               if (state is LoginUser  ) {
                                    EasyLoading.dismiss();
-                                   Navigator.pushAndRemoveUntil(
+                                   Navigator.push(
                                      context,
                                      MaterialPageRoute(
-                                       builder: (context) => const ChooseService(),
+                                       builder: (context) => const CheckScreen(),
                                      ),
-                                         (route) => false,
+                                        //  (route) => false,
                                    );
                               }
         
                                if(state is SignUpError  ){
                                  EasyLoading.dismiss();
-                                 EasyLoading.showError( state.error.message);
+                                 EasyLoading.showError( state.error);
         
                                }
         

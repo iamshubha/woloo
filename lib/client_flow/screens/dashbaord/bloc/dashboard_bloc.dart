@@ -39,6 +39,9 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<GetAllJanitorEvent>(_mapAllJanitorState);
     on<GetAllFacilityEvent>(_mapAllFacilityState);
     on<CheckTaskEvent>(_mapCheckTaskTimeState);
+    on<CheckSupvisorEvent>(_mapCheckSupervisorState);
+    on<DeleteEvent>(_mapDeleteState);
+    on<FacilityDeleteEvent>(_mapDeleteFacilityState);
 
    // on<UpdateTokenOnVerifyOTP>(mapUpdateTokenToState);
   }
@@ -71,7 +74,7 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
       // debugPrint("requestId $requestId");
       emit(ClientSetUp(clientSetupModel: response ));
     } catch (e) {
-      emit(DashboarError(error:  ErrorHandler.handle(e).failure ));
+      emit(DashboarError(error:  e.toString() ));
     }
   }
 
@@ -99,7 +102,7 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
       // debugPrint("requestId $requestId");
       emit(AddUser());
     } catch (e) {
-      emit(DashboarError(error:  ErrorHandler.handle(e).failure ));
+      emit(DashboarError(error:    e.toString()));
     }
   }
 
@@ -110,7 +113,6 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
 
       var response =
       await dashboardService.addUser(
-
           name: event.name,
           mobile: event.mobile,
           roleId: event.roleId,
@@ -128,7 +130,7 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
         superVisorModel: response
       ));
     } catch (e) {
-      emit(DashboarError(error:  ErrorHandler.handle(e).failure ));
+      emit(DashboarError(error:   e.toString() ));
     }
   }
 
@@ -148,7 +150,7 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
          tasklist: response
       ));
     } catch (e) {
-      emit(DashboarError(error:  ErrorHandler.handle(e).failure ));
+      emit(DashboarError(error:  e.toString() ));
     }
   }
 
@@ -179,7 +181,7 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
       ));
 
     } catch (e) {
-      emit(DashboarError(error:  ErrorHandler.handle(e).failure ));
+      emit(DashboarError(error:    e.toString()));
     }
   }
 
@@ -195,6 +197,13 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
          id: event.id
       );
 
+
+      GlobalStorage globalStorage  = GetIt.instance();
+
+       print("in plamn inr ${  response.results!.planId}");
+       
+      globalStorage.savePlanId(  accessPlanId: response.results!.planId == null ?  "0" : response.results!.planId!.toString() );
+
       debugPrint("requestId $response");
       //  = response;
 
@@ -204,7 +213,7 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
       ));
 
     } catch (e) {
-      emit(DashboarError(error:  ErrorHandler.handle(e).failure ));
+      emit(DashboarError(error:    e.toString() ));
     }
   }
 
@@ -234,7 +243,7 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
       // debugPrint("requestId $requestId");
       emit(AssignTask());
     } catch (e) {
-      emit(DashboarError(error:  ErrorHandler.handle(e).failure ));
+      emit(DashboarError(error:   e.toString() ));
     }
   }
 
@@ -260,7 +269,7 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
       ));
 
     } catch (e) {
-      emit(DashboarError(error:  ErrorHandler.handle(e).failure ));
+      emit(DashboarError(error:    e.toString() ));
     }
   }
 
@@ -283,7 +292,7 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
       ));
 
     } catch (e) {
-      emit(DashboarError(error:  ErrorHandler.handle(e).failure ));
+      emit(DashboarError(error:   e.toString() ));
     }
   }
 
@@ -311,11 +320,12 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
 
 
       emit(GetClient(
+        client: response
         // subscriptionModel:  response,
       ));
 
     } catch (e) {
-      emit(DashboarError(error:  ErrorHandler.handle(e).failure ));
+      emit(DashboarError(error:  e.toString() ));
     }
   }
 
@@ -348,7 +358,94 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
       ));
 
     } catch (e) {
-      emit(DashboarError(error:  ErrorHandler.handle(e).failure ));
+      emit(DashboarError(error:    e.toString() ));
+    }
+  }
+
+
+
+   FutureOr<void> _mapCheckSupervisorState(
+      CheckSupvisorEvent event, Emitter<DashboardState> emit) async {
+    try {
+      emit(const DashboarLoading(message: "Loading..."));
+
+      var response =
+      await
+      dashboardService.checkSuperVisor(
+         id: event.id,
+        // janitorId: event.janitorId
+      );
+
+       print("in bloac inr $response");
+     
+      emit(
+        CheckSupervisor(
+          checkSupervisorModel: response
+          // deleteModel: response
+        // taskModel: response
+      )
+      );
+
+    } catch (e) {
+      emit(DashboarError(error:   e.toString() ));
+    }
+  }
+
+
+
+
+     FutureOr<void> _mapDeleteState(
+      DeleteEvent event, Emitter<DashboardState> emit) async {
+    try {
+      emit(const DashboarLoading(message: "Loading..."));
+
+      var response =
+      await
+      dashboardService.deleteTask(
+         taskId: event.taskId,
+        // janitorId: event.janitorId
+      );
+
+       print("in bloac inr $response");
+     
+      emit(
+        DeltetTaskTime(
+          deleteModel: response
+          // checkSupervisorModel: response
+        // taskModel: response
+      )
+      );
+
+    } catch (e) {
+      emit(DashboarError(error:   e.toString() ));
+    }
+  }
+
+
+       FutureOr<void> _mapDeleteFacilityState(
+      FacilityDeleteEvent event, Emitter<DashboardState> emit) async {
+    try {
+      emit(const DashboarLoading(message: "Loading..."));
+
+      var response =
+      await
+      dashboardService.deleteFacility(
+          clusterId: event.clusterId,
+          facilityId: event.facilityId,
+          locationId: event.locationId
+        // janitorId: event.janitorId
+      );
+
+       print("in bloac inr $response");
+     
+      emit(
+        DeltetFacility(
+          deleteModel: response
+      )
+      );
+
+    } catch (e) {
+      emit(DashboarError(error:   e.toString() ));
     }
   }
 

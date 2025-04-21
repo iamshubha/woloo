@@ -21,14 +21,15 @@ class AuthInterceptor extends Interceptor {
     }
     super.onError(err, handler);
   }
-
+  
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     GlobalStorage globalStorage = GetIt.instance();
     bool isAuth = options.extra['auth'] ?? false;
+    bool isSuperVisor = options.extra['isSupervisor'] ?? false;
     if (isAuth) {
-       debugPrint("is auth");
-         options.headers.addAll({"x-woloo-token": globalStorage.getToken()});
+       debugPrint("is auth"); 
+       options.headers.addAll({"x-woloo-token":  isSuperVisor ? globalStorage.getClientToken() : globalStorage.getToken()});
     }
     super.onRequest(options, handler);
   }

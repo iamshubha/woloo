@@ -6,14 +6,18 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:woloo_smart_hygiene/client_flow/utils/client_images.dart';
 import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 
 import '../../../../core/local/global_storage.dart';
+import '../../../../screens/dashboard/view/regular_task.dart';
 import '../../../../screens/login/view/login_screen.dart';
+import '../../../../screens/supervisor_dashboard/view/supervisor_dashboard_screen.dart';
 import '../../../../utils/app_images.dart';
+import '../../../widgets/CustomButton.dart';
 import '../../subcription/view/subcription.dart';
 import '../bloc/dashboard_bloc.dart';
 import '../bloc/dashboard_event.dart';
@@ -35,12 +39,27 @@ class _HomeDashboardState extends State<HomeDashboard> {
   List<Facility> facility = [];
   Duration difference = const Duration();
 
+  bool isClientSupervisor = false;
+  String? clientName;
+   String? planId;
+  //  String supervisorToken = "";
+
    @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    var some =   globalStorage.getToken();
+    var some =   globalStorage.getClientToken();
+    //  supervisorToken   =  globalStorage.getClientToken();
     String clintId = globalStorage.getClientId();
+
+                 
+   clientName =  globalStorage.getSupervisorName();
+
+
+  
+
+
+      print("plamn  $planId");
 
      // dashBoardBloc.add( GetAllFacilityEvent(
      // clientId: int.parse(clintId)
@@ -49,6 +68,8 @@ class _HomeDashboardState extends State<HomeDashboard> {
      dashBoardBloc.add( SubcriptionEvent(
          id: int.parse(clintId)
      ) );
+
+     dashBoardBloc.add(CheckSupvisorEvent(id: int.parse(clintId)));
 
     decodedToken = JwtDecoder.decode(some);
 
@@ -73,7 +94,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
           ,
           // mainAxisAlignment: MainAxisAlignment.start,
           children: [
-             Text(DashboardConst.helloSuperAdmin,
+             Text("Hello $clientName",
               style: AppTextStyle.font14bold,
              ),
             Text(DashboardConst.currentDateTime,
@@ -101,6 +122,12 @@ class _HomeDashboardState extends State<HomeDashboard> {
                  }
        
                  if( state is Subcription ){
+                     planId =
+                     
+                      // "0";
+                     
+                     globalStorage.getPlanId();
+                      print("plan id $planId");
 
        
 
@@ -109,55 +136,131 @@ class _HomeDashboardState extends State<HomeDashboard> {
                              // DateTime dateTime = DateTime.parse(dateString);
                              DateTime futureDate =   state.subscriptionModel!.results!.expiryDate!; // Example future date
        
-                              difference = futureDate.difference(currentDate);
+                               print('Difference: ${futureDate} days');
+                              difference = 
+                              
+                              //  Duration(days: 0 ) ;
+                              
+                              futureDate.difference(currentDate);
        
                              print('Difference: ${difference.inDays} days');
        
                            EasyLoading.dismiss();
+
+                           if (difference.inDays == 0 && planId == "0") {
+                            
+                             showDialog(
+                              barrierDismissible: false,
+                              context: context, builder:
+                              (context) {
+                                return 
+                                 AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(60),
+                                  ),
+                                  
+                                  backgroundColor: AppColors.white,
+                                  // title:  Center(
+                                  //   child: Text("Your Free Subscription has expired",
+                                  //    style: AppTextStyle.font20bold,
+                                  //    textAlign: TextAlign.center,
+                                  //   ),
+                                  // ),
+                                  content:
+                                  SingleChildScrollView(
+                                    child: ListBody(
+                                      children: <Widget>[
+                                         CustomImageProvider(
+                                          image: ClientImages.warning,
+                                          width: 86.w,
+                                          height: 86.h,
+                                         ),
+                                        SizedBox(
+                                          height: 10.h,
+                                        ),
+                                        Text(
+                                          textAlign: TextAlign.center,
+                                          "Your TASKMASTER Trial Period has expired. Kindly pay to Continue",
+                                         style: AppTextStyle.font18bold,
+                                        ),
+                                        SizedBox(
+                                          height: 20.h,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            showModalBottomSheet(
+                                              backgroundColor: Colors.transparent,
+                                              context: context, builder:
+                                             (context) {
+                                                return   SubcriptionScreen(
+                                                  dashBoardBloc: dashBoardBloc,
+                                                  isfromFacility: false,
+                                                );                                             
+                                             },
+                                             );
+                                          },
+                                          child: const Custombutton(
+                                            width: 300,
+                                            text: "Pay Now",
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                             );
+                       
+                           }
+                            
                    // gender = state.tasklist;
 
 
 
                  }
 
-                  // if( state is GetAllFacility ){
-                  //
-                  //   EasyLoading.dismiss();
-                  //   dashBoardBloc.add( SubcriptionEvent(
-                  //       id: decodedToken!["id"]
-                  //   ) );
-                  //
-                  //
-                  //   facility = state.facilityModel!.results!.facilities!;
-                  //   // setState(() {
-                  //   //
-                  //   // });
-                  //
-                  // }
-
+           
                  if(state is DashboarError  ){
                    EasyLoading.dismiss();
-                   EasyLoading.showError( state.error.message);
+                   EasyLoading.showError( state.error);
        
                  }
                },
                builder: (context, state) {
+    
                  return
+                   difference.inDays != 0 &&  planId != "0" ?
+                           const SizedBox()
+                          :
                    Column(
                      children: [
 
+                    
                        Text(
                          textAlign: TextAlign.center,
                          "Your Free Subscription shall end in ${difference.inDays} Days.",
                          style: AppTextStyle.font13.copyWith(
                              color: AppColors.textgreyColor
                          ),
-                       ),
+                       )
+                    
+                       ,
                        GestureDetector(
                          onTap:(){
-                             Navigator.of(context).push( MaterialPageRoute(builder: (context) {
-                               return const SubcriptionScreen();
-                             }, ) );
+                             showModalBottomSheet(context: context, 
+                              backgroundColor: Colors.transparent,
+                             builder: 
+                              (context) {
+                                return   SubcriptionScreen(
+                                  dashBoardBloc: dashBoardBloc,
+                                  isfromFacility: false,
+
+                                );
+                              },
+                             );
+                            //  Navigator.of(context).push( MaterialPageRoute(builder: (context) {
+                            //    return const SubcriptionScreen();
+                            //  }, ) );
                          },
                          child: Text(
                            textAlign: TextAlign.center,
@@ -175,63 +278,112 @@ class _HomeDashboardState extends State<HomeDashboard> {
        
        
        
-             Row(
-               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-               children: [
-                 Text(DashboardConst.dashboardOverview,
-                  style: AppTextStyle.font20bold,
-                 ),
+             BlocConsumer(
+              listener: (context, state){
+
+                 if ( state is DashboarLoading  ){
+      
+                   EasyLoading.show(status: state.message);
+                 }
        
-                 GestureDetector(
-                  onTap: () {
-                      Navigator.of(context).push( MaterialPageRoute(builder: (context) {
-                        return const LoginScreen();
-                      }, ) );
-                    //  Navigator.pushNamed(context, AppRoutes.clientDashboard);
-        
-                    },
                  
-                   child: Container(
-                     width: 40,
-                     height: 40,
-                     decoration: BoxDecoration(
-                       color: AppColors.white,
-                       borderRadius: BorderRadius.circular(12),
-                       boxShadow: [
-                         BoxShadow(
-                           color: Colors.black
-                               .withValues(alpha:0.2), // Shadow color
-                           spreadRadius:
-                           1, // How wide the shadow should spread
-                           blurRadius:
-                           10, // The blur effect of the shadow
-                           offset: const Offset(0,
-                               0), // No offset for shadow on all sides
+                     if ( state is CheckSupervisor ){
+       
+                   EasyLoading.dismiss();
+                  
+  
+                     isClientSupervisor =  state.checkSupervisorModel!.results!.isClientSupervisor!;
+                   
+                
+                    
+                  }
+
+           
+                 if(state is DashboarError  ){
+                   EasyLoading.dismiss();
+                   EasyLoading.showError( state.error);
+       
+                 }
+
+              },
+              bloc: dashBoardBloc,
+
+
+               builder: (context, state) {
+                 return Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     Text(DashboardConst.dashboardOverview,
+                      style: AppTextStyle.font20bold,
+                     ),
+                 
+                 
+                     isClientSupervisor ?
+                        
+                     GestureDetector(
+                      onTap: () {
+
+                         String supervisorToken =   globalStorage.getToken();
+
+                          Navigator.of(context).push( MaterialPageRoute(builder: (context) {
+                            return 
+                            supervisorToken == "" ?
+                            const LoginScreen(
+                              // isFromSupervisor: true,
+                            )
+                            :
+                             const SupervisorDashboard(isFromSupervisor: true)
+                            ;
+                          }, ) );
+                        //  Navigator.pushNamed(context, AppRoutes.clientDashboard);
+                         
+                        },
+                     
+                       child: Container(
+                         width: 40,
+                         height: 40,
+                         decoration: BoxDecoration(
+                           color: AppColors.white,
+                           borderRadius: BorderRadius.circular(12),
+                           boxShadow: [
+                             BoxShadow(
+                               color: Colors.black
+                                   .withValues(alpha:0.2), // Shadow color
+                               spreadRadius:
+                               1, // How wide the shadow should spread
+                               blurRadius:
+                               10, // The blur effect of the shadow
+                               offset: const Offset(0,
+                                   0), // No offset for shadow on all sides
+                             ),
+                           ],
                          ),
-                       ],
-                     ),
-                     child: Padding(
-                       padding: const EdgeInsets.all(8.0),
-                       child: CustomImageProvider(
-                         // width: 22,
-                         // height: 22,
-                         image: AppImages.changeArrow,
-                         fit: BoxFit.cover,
+                         child: Padding(
+                           padding: const EdgeInsets.all(8.0),
+                           child: CustomImageProvider(
+                             // width: 22,
+                             // height: 22,
+                             image: AppImages.changeArrow,
+                             fit: BoxFit.cover,
+                           ),
+                         ),
                        ),
-                     ),
-                   ),
-                 )
-       
-                 // Icon(
-                 //   Icons.ß
-                 // )
-       
-               ],
+                     )
+                 
+                     :  const SizedBox()
+                        
+                     // Icon(
+                     //   Icons.ß
+                     // )
+                        
+                   ],
+                 );
+               }
              ),
                Container(
                  // width: MediaQuery.of(context).size.width/1,
                 // flex: 2,
-                 height: 700.w,
+                 height: 700.h,
                  child:  HomeTabbar(
                   // facility: facility,
                  ))

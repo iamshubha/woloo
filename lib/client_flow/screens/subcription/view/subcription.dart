@@ -7,6 +7,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:woloo_smart_hygiene/app.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/bloc/dashboard_event.dart';
+import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/bloc/dashboard_state.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/subcription/bloc/subscription_event.dart';
 import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:woloo_smart_hygiene/utils/app_constants.dart';
@@ -15,12 +16,19 @@ import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import '../../../../core/local/global_storage.dart';
 import '../../../../utils/app_color.dart';
 import '../../../../utils/app_images.dart';
+import '../../../utils/client_images.dart';
+import '../../../widgets/CustomButton.dart';
+import '../../dashbaord/bloc/dashboard_bloc.dart';
+import '../../dashbaord/view/dashboard.dart';
 import '../../login/bloc/signup_bloc.dart';
 import '../bloc/subscription_bloc.dart';
 import '../bloc/subscription_state.dart';
 
 class SubcriptionScreen extends StatefulWidget {
-  const SubcriptionScreen({super.key});
+  ClientDashBoardBloc?  dashBoardBloc; 
+   bool? isfromFacility;
+  // = ClientDashBoardBloc();
+   SubcriptionScreen({super.key, this.dashBoardBloc, required this.isfromFacility});
 
   @override
   State<SubcriptionScreen> createState() => _SubcriptionScreenState();
@@ -29,20 +37,23 @@ class SubcriptionScreen extends StatefulWidget {
 class _SubcriptionScreenState extends State<SubcriptionScreen> {
   late Razorpay razorpay;
   String merchantKeyValue = "rzp_test_ZIlhyKgx2C38vT";
-  String amountValue = "100";
+  String amountValue = "";
   String orderIdValue = "";
   String mobileNumberValue = "8888888888";
     SubcriptionBloc subcriptionBloc = SubcriptionBloc();
       Map<String, dynamic>? decodedToken;
   GlobalStorage globalStorage = GetIt.instance();
   String orderId = "" ;
+  // ClientDashBoardBloc  dashBoardBloc = ClientDashBoardBloc();
    @override
   void initState() {
     // TODO: implement initState
     super.initState();
      razorpay = Razorpay();
        var some =   globalStorage.getClientId();
+        mobileNumberValue      =   globalStorage.getClientMobileNo();
     // decodedToken = JwtDecoder.decode(some);
+
      subcriptionBloc.add( CreateOrderEvent(clientId: some));
 
      // razorpay.
@@ -52,99 +63,94 @@ class _SubcriptionScreenState extends State<SubcriptionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: AppBar(
-        backgroundColor: AppColors.white,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric( horizontal: 16 ),
-          child: Column(
-            children: [
-              ListTile(
-                leading: CustomImageProvider(
-                  image: AppImages.premiumImage,
-                ),
-                title: Text(
-                  SubcriptionConstant.upgradeToPremium,
-                  style: AppTextStyle.font18bold,
-                ),
-                subtitle: Text(
-                  SubcriptionConstant.upgradeDescription,
-                  style: AppTextStyle.font12bold,
-                ),
-              ),
-              const SizedBox(
-              height: 10,
-            ),
-        
-              subCard(SubcriptionConstant.freePlan, SubcriptionConstant.freeFeature),
-                const SizedBox(
-                 height: 30,
-                  ),
-               subCard(SubcriptionConstant.premiumPlan, SubcriptionConstant.premiumFeature),
-        
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-  Widget subCard(String title, String description) {
-  return Container(
-    decoration: BoxDecoration(
-        color: AppColors.white, // Background color of the container
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2), // Shadow color
-            spreadRadius: 1, // How wide the shadow should spread
-            blurRadius: 10, // The blur effect of the shadow
-            offset: const Offset(0, 0), // No offset for shadow on all sides
-          ),
-        ],
-        borderRadius: BorderRadius.circular(36.r)),
-    child: Column(
-      children: [
-         const SizedBox(
-           height: 15,
+    return 
+    // Scaffold(
+    //   backgroundColor: AppColors.white,
+    //   appBar: AppBar(
+    //     backgroundColor: AppColors.white,
+    //   ),
+    //   body: 
+      Container(
+        height: 600,
+         
+         decoration: const BoxDecoration(
+          color: AppColors.white,
+              borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(80.0),
+                      topRight: Radius.circular(80.0),
+                    ),
          ),
-        Text(
-          title,
-          style: AppTextStyle.font18bold,
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Text(
-          description,
-          style: AppTextStyle.font14bold,
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        row(SubcriptionConstant.freeTotalLogins),
-        const SizedBox(
-          height: 10,
-        ),
-        row(SubcriptionConstant.freeSupervisorLogin),
-        const SizedBox(
-          height: 10,
-        ),
-        row(SubcriptionConstant.freeJanitorLogins),
-        const SizedBox(
-          height: 10,
-        ),
-        row(SubcriptionConstant.freeLocation),
-        const SizedBox(
-          height: 10,
-        ),
-        row(SubcriptionConstant.freeFacilities),
-         const SizedBox(
-          height: 15,
-        ),
 
-               BlocConsumer(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric( horizontal: 16 ),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 30,
+                ),
+                ListTile(
+                  leading: CustomImageProvider(
+                    image: AppImages.premiumImage,
+                    width: 60,
+                    height: 60,
+                  ),
+                  title: const Text(
+                    textAlign: TextAlign.center,  
+                    SubcriptionConstant.upgradeToPremium,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
+                  // subtitle: Text(
+                  //   SubcriptionConstant.upgradeDescription,
+                  //   style: AppTextStyle.font12bold,
+                  // ),
+                ),
+                const SizedBox(
+                height: 10,
+              ),
+          
+                // subCard(SubcriptionConstant.freePlan, SubcriptionConstant.freeFeature),
+                  const SizedBox(
+                   height: 30,
+                    ),
+                 BlocConsumer(
+                  bloc: widget.dashBoardBloc,
+                  listener: (context, state) {
+                     print("dssa $state");
+                    if ( state is SubscriptionLoading  ){
+
+                      EasyLoading.show(status: state.message);
+                    }
+
+                    if( state is Subcription ){
+
+                      // YYYY-MM-DD format
+                      // DateTime dateTime = DateTime.parse(dateString);
+                      // amountValue  =     state.orderModel.results.amount.toString(); // Example future date
+                      // orderId =   state.orderModel.results.id.toString();
+                      // print("amount $amountValue");
+                      // print("order $orderId");
+                      EasyLoading.dismiss();
+                    }
+                    if(state is SubscriptionError  ){
+
+                      EasyLoading.dismiss();
+                      EasyLoading.showError( state.error.message);
+
+                    }
+                  },
+                   builder: (context, state) {
+                     return subCard(SubcriptionConstant.premiumPlan, SubcriptionConstant.premiumFeature);
+                   }
+                 ),
+                   const SizedBox(
+                   height: 30,
+                    ),
+
+                                BlocConsumer(
                 bloc: subcriptionBloc,
                  listener: (context, state) {
                        if ( state is SubscriptionLoading  ){
@@ -177,7 +183,7 @@ class _SubcriptionScreenState extends State<SubcriptionScreen> {
                  builder: (context, state) {
                    return ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                   minimumSize:  const Size(306, 59),
+                                   minimumSize:   Size( MediaQuery.of(context).size.width/1.1 , 59),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12), // <-- Radius
                                   ),
@@ -192,13 +198,91 @@ class _SubcriptionScreenState extends State<SubcriptionScreen> {
                             razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWalletSelected);
                             razorpay.open(getPaymentOptions());
                    
-                              }, child: Text(DashboardConst.getStarted,
+                              }, child: Text("Pay Now",
                            style: AppTextStyle.font20bold.copyWith(
                              // color: AppColors.white
                            ),
                           ) );
                  }
                ),
+          
+              ],
+            ),
+          ),
+        ),
+      // ),
+    );
+  }
+  Widget subCard(String title, String description) {
+  return Container(
+    padding: const EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 20,
+      ),
+    decoration: BoxDecoration(
+        color: AppColors.white, // Background color of the container
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2), // Shadow color
+            spreadRadius: 1, // How wide the shadow should spread
+            blurRadius: 10, // The blur effect of the shadow
+            offset: const Offset(0, 0), // No offset for shadow on all sides
+          ),
+        ],
+        borderRadius: BorderRadius.circular(36.r)),
+    child: Column(
+      children: [
+
+         const SizedBox(
+           height: 15,
+         ),          
+           CustomImageProvider(
+            image: ClientImages.taskMasterblack,
+            width: 170.w,
+            height: 71.h,
+           ),
+         
+         const SizedBox(
+           height: 15,
+         ),
+        // Text(
+        //   title,
+        //   style: AppTextStyle.font18bold,
+        // ),
+        const SizedBox(
+          height: 10,
+        ),
+        Text(
+          
+          "Continue your services at Rs. 499 per\n Facility",
+          style: AppTextStyle.font14bold,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        // row(SubcriptionConstant.freeTotalLogins),
+        // const SizedBox(
+        //   height: 10,
+        // ),
+        // row(SubcriptionConstant.freeSupervisorLogin),
+        // const SizedBox(
+        //   height: 10,
+        // ),
+        // row(SubcriptionConstant.freeJanitorLogins),
+        // const SizedBox(
+        //   height: 10,
+        // ),
+        // row(SubcriptionConstant.freeLocation),
+        // const SizedBox(
+        //   height: 10,
+        // ),
+        // row(SubcriptionConstant.freeFacilities),
+        //  const SizedBox(
+        //   height: 15,
+        // ),
+
+
 
         const SizedBox(
           height: 20,
@@ -259,7 +343,54 @@ Widget row(
     * 2. Error Description
     * 3. Metadata
     **/
-    showAlertDialog(context, "Payment Failed", "Code: ${response.code}\nDescription: ${response.message}\nMetadata:${response.error.toString()}");
+              showDialog(
+                              // barrierDismissible: false,
+                              context: context, builder:
+                              (context) {
+                                return 
+                                 AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(60),
+                                  ),
+                                  
+                                  backgroundColor: AppColors.white,
+                                  // title:  Center(
+                                  //   child: Text("Your Free Subscription has expired",
+                                  //    style: AppTextStyle.font20bold,
+                                  //    textAlign: TextAlign.center,
+                                  //   ),
+                                  // ),
+                                  content:
+                                  SingleChildScrollView(
+                                    child: ListBody(
+                                      children: <Widget>[
+                                         CustomImageProvider(
+                                          image: ClientImages.warning,
+                                          width: 86.w,
+                                          height: 86.h,
+                                         ),
+                                        SizedBox(
+                                          height: 10.h,
+                                        ),
+                                        Text(
+                                           textAlign: TextAlign.center,
+                                          "Oops! Your payment has not gone through",
+                                         style: AppTextStyle.font18bold,
+                                        ),
+                                        SizedBox(
+                                          height: 20.h,
+                                        ),
+                                        // const Custombutton(
+                                        //   width: 300,
+                                        //   text: "Pay Now",
+                                        // )
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                             );
+    // showAlertDialog(context, "Payment Failed", "Code: ${response.code}\nDescription: ${response.message}\nMetadata:${response.error.toString()}");
   }
 
   void handlePaymentSuccessResponse(PaymentSuccessResponse response){
@@ -269,7 +400,75 @@ Widget row(
     * 2. Payment ID
     * 3. Signature
     **/
-    showAlertDialog(context, "Payment Successful", "Payment ID: ${response.paymentId}");
+      globalStorage.getClientId();
+      String clintId = globalStorage.getClientId();
+       widget.dashBoardBloc!.add( SubcriptionEvent(
+         id: int.parse(clintId)
+     ) );
+                if(widget.isfromFacility!){
+                       print("is from facility");
+
+                      globalStorage.savePaymentId(accessPayemntId: response.paymentId! );
+
+                }
+        
+      showDialog(
+                              // barrierDismissible: false,
+                              context: context, builder:
+                              (context) {
+                                return 
+                                 AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  
+                                  backgroundColor: AppColors.white,
+                                  // title:  Center(
+                                  //   child: Text("Your Free Subscription has expired",
+                                  //    style: AppTextStyle.font20bold,
+                                  //    textAlign: TextAlign.center,
+                                  //   ),
+                                  // ),
+                                  content:
+                                  SingleChildScrollView(
+                                    child: ListBody(
+                                      children: <Widget>[
+                                         CustomImageProvider(
+                                          image: ClientImages.verify,
+                                          width: 86.w,
+                                          height: 86.h,
+                                         ),
+                                        SizedBox(
+                                          height: 10.h,
+                                        ),
+                                        Text(
+                                             textAlign: TextAlign.center,
+                                          "Your TASKMASTER Premium is now active",
+                                         style: AppTextStyle.font18bold,
+                                        ),
+                                        SizedBox(
+                                          height: 20.h,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                               Navigator.of(context).pop();
+                                               Navigator.of(context).pop();
+
+                                          },
+                                          child: const Custombutton(
+                                            width: 300,
+                                            text: "Go to Home",
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                             );
+
+    // showAlertDialog(context, "Payment Successful", "Payment ID: ${response.paymentId}");
+      
   }
 
   void handleExternalWalletSelected(ExternalWalletResponse response){

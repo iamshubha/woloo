@@ -7,6 +7,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:time_picker_spinner/time_picker_spinner.dart';
+import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/data/model/tasktime_model.dart';
+import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/view/widget/dailog.dart';
+import 'package:woloo_smart_hygiene/client_flow/utils/client_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 
 import '../../../../../screens/dashboard/controller/dash_controller.dart';
@@ -45,6 +48,7 @@ class AddTimeDailog extends StatefulWidget {
 
 class _AddTimeDailogState extends State<AddTimeDailog> {
   DateTime dateTime = DateTime.now();
+  bool? isSafeToAdd = true ; 
 
    DashBoardController dashController = Get.put(DashBoardController());
      ClientDashBoardBloc dashBoardBloc  = ClientDashBoardBloc();
@@ -93,6 +97,32 @@ class _AddTimeDailogState extends State<AddTimeDailog> {
                      dashController.taskEndTime.add(endTimeofDay);
                      formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
                      formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(endTime);
+
+                                      // dashController.taskTimeModel.( 
+                                      //         TaskTimeModel(taskId: 0, endTime: endTimeofDay, startTime: timeOfDay!, facilityName:"" , facilityType: "")
+
+                                      //     );
+                                           isSafeToAdd = !dashController.taskTimeModel.any((e) {
+                                           return timeOfDay!.isBefore(e.endTime) && endTimeofDay.isAfter(e.startTime);
+                                                    });    
+                                           if(isSafeToAdd!){
+                                             showDialog(context: context, builder: (context) {
+                                                 return  Dailog(
+                                                  image: ClientImages.verify,
+                                                  title: "Task timing has been saved successfully",
+                                                  subTitle: "Okay, Thanks!",
+                                                 );
+                                               }, ).then((value) {
+                                                 Navigator.of(context).pop();
+                                               }, );
+                                              // Navigator.of(context).pop();
+                                              dashController.taskTimeModel.insert(0, TaskTimeModel(taskId: 0, endTime: endTimeofDay, startTime: timeOfDay!, facilityName:"" , facilityType: ""));
+
+                                           }
+                                          //  else{
+                                             
+                                          //  }
+          
                      dashController.taskTimes.add(
                          {
                            "start_time" : formattedStartDate ,
@@ -101,210 +131,253 @@ class _AddTimeDailogState extends State<AddTimeDailog> {
 
                      );
 
-                     Navigator.of(context).pop();
+                  
 
                    }
              
                  }
                 if (state is DashboarError) {
                     EasyLoading.dismiss();
-                    EasyLoading.showError(state.error.message);
-                  }
-               
-                  
+                    EasyLoading.showError(state.error);
+                  }   
                 },
                  builder: (context, state) {
                    return AlertDialog(
                      backgroundColor: AppColors.white,
                      title: const Text(DashboardConst.scheduleTask,),
-                     content:  SingleChildScrollView(
-                       child: ListBody(
-                         children: <Widget>[
-                           // Text(DashboardConst.scheduleTask,
-                           //   style: AppTextStyle.font14w7,
-                           // ),
-                           const SizedBox(
-                             height: 10,
-                           ),
-                           TimePickerSpinner(
-                             locale: const Locale('en', ''),
-                             time: dateTime,
-                             is24HourMode: false,
-                             isShowSeconds: false,
-                             spacing: 70,
-                             itemHeight: 50,
-                             normalTextStyle: const TextStyle(
-                               fontSize: 15,
-                               color: AppColors.greyIcon,
-                               fontWeight: FontWeight.bold,
-                   
+                     content:  Container(
+                      width: double.infinity,
+                       child: SingleChildScrollView(
+                         child: ListBody(
+                           children: <Widget>[
+                             // Text(DashboardConst.scheduleTask,
+                             //   style: AppTextStyle.font14w7,
+                             // ),
+                             const SizedBox(
+                               height: 10,
                              ),
-                             // isShowSeconds: false,
-                             highlightedTextStyle:
-                             const TextStyle(
+                             TimePickerSpinner(
+                               locale: const Locale('en', ''),
+                               time: dateTime,
+                               is24HourMode: false,
+                               isShowSeconds: false,
+                               spacing: 60,
+                               itemWidth: 25,
+                               itemHeight: 50,
+                               normalTextStyle: const TextStyle(
+                                 fontSize: 13,
+                                 color: AppColors.greyIcon,
                                  fontWeight: FontWeight.bold,
-                                 fontSize: 15, color: Colors.black),
-                             isForce2Digits: true,
-                             onTimeChange: (time) {
-                               setState(() {
-                                 dateTime = time;
-                   
-                   
-                   
-                                //  taskTimes.add( { });
-                         
-                                //  timevar =
-                                //  {
-                                //    "taskStartTime": taskStartTime!,
-                                //    "taskEndTime": taskEndTime!,
-                                //  };
+                                          
+                               ),
+                               // isShowSeconds: false,
+                               highlightedTextStyle:
+                               const TextStyle(
+                                   fontWeight: FontWeight.bold,
+                                   fontSize: 13, color: Colors.black),
+                               isForce2Digits: true,
+                               onTimeChange: (time) {
                                  setState(() {
-                   
+                                   dateTime = time;
+                                          
+                                          
+                                          
+                                  //  taskTimes.add( { });
+                           
+                                  //  timevar =
+                                  //  {
+                                  //    "taskStartTime": taskStartTime!,
+                                  //    "taskEndTime": taskEndTime!,
+                                  //  };
+                               
+                                          
+                                  //  print("to send in api ${widget.taskTimes}");
+                                   // final localizations = MaterialLocalizations.of(context);
+                                   // final formattedTimeOfDay = localizations.;
+                                   print("time $time");
                                  });
-                   
-                                //  print("to send in api ${widget.taskTimes}");
-                                 // final localizations = MaterialLocalizations.of(context);
-                                 // final formattedTimeOfDay = localizations.;
-                                 print("time $time");
-                               });
-                             },
-                           ),
-                           Row(
-                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                             children: [
-                               GestureDetector(
-                                   onTap:(){
+                               },
+                             ),
+                             Row(
+                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                               children: [
+                                 GestureDetector(
+                                     onTap:(){
+                       
+                                       String? formattedStartDate = "";
+                                       String? formattedEndDate = "" ;
+                                       var endTime =  dateTime.add(Duration(minutes: widget.estimatedTime!));
+                                       print("end timessss $endTime");
+                                       print("estiamged ${widget.estimatedTime}");
+                                       // estimatedTime;
+                                       // taskTimes.add({"end_time" :  });
+                                          
+                                          
+                                       timeOfDay = TimeOfDay.fromDateTime(dateTime);
+                                       TimeOfDay endTimeofDay = TimeOfDay.fromDateTime(endTime);
+                                          
+                                       print("end fo time $endTimeofDay");
+                                          
+                                       timeOfDay;
+                                       print("is befro ${isAfter(timeOfDay!, widget.startTime! )}");
+                                       print("is befro ${isAfter(widget.startTime!, timeOfDay!  )}");
+                                       if( isAfter(timeOfDay!, widget.startTime! ) ){
+                                         isAfterDate = false;
+                                         setState(() {
+                                          
+                                          
+                                         });
+                       
+                                         if(widget.isFromExisting! ){
+                                           formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
+                                           formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(endTime);
+                       
+                       
+                                           dashBoardBloc.add(CheckTaskEvent(
+                                               janitorId: widget.janitorId!,
+                                               endTime: formattedEndDate,
+                                               startTime: formattedStartDate
+                       
+                                           ) );
+                       
+                       
+                       
+                       
+                                         }else {
+                                          //  dashController.taskStartTime.add(timeOfDay!);
+                                          //  dashController.taskEndTime.add(endTimeofDay);
+                                          // GetAllJanito 
+                                            // print("check timeeeeeee ${  dashController.taskTimeModel.where((e){
+                                            //     return timeOfDay!.isBefore(e.startTime) || endTimeofDay.isAfter(e.endTime);
+                                            // } ).toList()}");
+                                             isSafeToAdd = !dashController.taskTimeModel.any((e) {
+                                           return timeOfDay!.isBefore(e.endTime) && endTimeofDay.isAfter(e.startTime);
+                                                    });      
+                       
+                                                    print(" safe to add $isSafeToAdd");
+                       
+                                                     if (isSafeToAdd!) {
+                       
+                                                         dashController.taskTimeModel.add( 
+                                                TaskTimeModel(taskId: 0, endTime: endTimeofDay, startTime: timeOfDay!, facilityName:"" , facilityType: "")
+                       
+                                                   );
+                       
+                                                         formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
+                                                  formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(endTime);
+                                           dashController.taskTimes.add(
+                                               {
+                                                 "start_time" : formattedStartDate ,
+                                                 "end_time" : formattedEndDate
+                                               }
+                                           );
+                       
+                                           }
+      
+                                         }
+                                         print("timessss ${dashController.taskTimeModel}");
+                       
+                       
+                                         print("end fo time ${ dashController.taskTimes}");
+                       
+                                           if(widget.isFromExisting!){
+                       
+                                           }
+                                           else{
+                                             if (isSafeToAdd!) {
 
-                                     String? formattedStartDate = "";
-                                     String? formattedEndDate = "" ;
-                                     var endTime =  dateTime.add(Duration(minutes: widget.estimatedTime!));
-                                     print("end timessss $endTime");
-                                     print("estiamged ${widget.estimatedTime}");
-                                     // estimatedTime;
-                                     // taskTimes.add({"end_time" :  });
-                   
-                   
-                                     timeOfDay = TimeOfDay.fromDateTime(dateTime);
-                                     TimeOfDay endTimeofDay = TimeOfDay.fromDateTime(endTime);
-                   
-                                     print("end fo time $endTimeofDay");
-                   
-                                     timeOfDay;
-                                     print("is befro ${isAfter(timeOfDay!, widget.startTime! )}");
-                                     print("is befro ${isAfter(widget.startTime!, timeOfDay!  )}");
-                                     if( isAfter(timeOfDay!, widget.startTime! ) ){
-                                       isAfterDate = false;
-                                       setState(() {
-                   
-                   
-                                       });
-
-                                       if(widget.isFromExisting! ){
-                                         formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
-                                         formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(endTime);
-
-
-                                         dashBoardBloc.add(CheckTaskEvent(
-                                             janitorId: widget.janitorId!,
-                                             endTime: formattedEndDate,
-                                             startTime: formattedStartDate
-
-                                         ) );
-
-
-
-
-                                       }else {
-                                         dashController.taskStartTime.add(timeOfDay!);
-                                         dashController.taskEndTime.add(endTimeofDay);
-                                         formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
-                                         formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(endTime);
-                                         dashController.taskTimes.add(
-                                             {
-                                               "start_time" : formattedStartDate ,
-                                               "end_time" : formattedEndDate
+                                               showDialog(context: context, builder: (context) {
+                                                 return  Dailog(
+                                                  image: ClientImages.verify,
+                                                  title: "Task timing has been saved successfully",
+                                                  subTitle: "Okay, Thanks!",
+                                                 );
+                                               }, ).then((value) {
+                                                 Navigator.of(context).pop();
+                                               }, );
+                                                // Navigator.of(context).pop();
+                                               
                                              }
-                                         );
-
+                                           
+                       
+                                           }
+                                          
+                       
                                        }
-
-
-                                       print("end fo time ${ dashController.taskTimes}");
-
-                                         if(widget.isFromExisting!){
-
-                                         }
-                                         else{
-                                           Navigator.of(context).pop();
-
-                                         }
-                   
-
-                                     }
-                                     else {
-                                       isAfterDate = true;
-                                       setState(() {
-                   
-                                       });
-                   
-                                     }
-                   
-                                   TimeOfDay endtimeTask =  stringToTimeOfDay12Hour( widget.endTime!);
-                   
-                                      print("is after ${isAfter(endTimeofDay!,endtimeTask )} ");
-                   
-
-                   
-                   
-                                     // Navigator.of(context).pop();
-                                    //  Navigator.of(context).pop(taskTimes);
-                                      //  print("timeing ${dateTime. }");
-                                     // janitorBottomSheet()
-                                      // Navigator.pop(context,t;
-                   
-                                                                } ,
-                                   child: Custombutton(text: DashboardConst.save, width: 137.w)),
-                               // GestureDetector(
-                               //     onTap:(){
-                               //       // janitorBottomSheet()
-                               //       ;                             } ,
-                               //     child: Custombutton(text: DashboardConst.addMoreTi
-                               //     mings, width: 164.w))
-                             ],
-                           ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                   
-                           timeOfDay == null ?
-                                SizedBox() :
-                   
-                           isAfterDate ?
-                   
-                            Text("Select Time when shift start ",
-                            style: AppTextStyle.font12.copyWith(
-                              color: AppColors.red
-                            ),
-                            )
-                               : SizedBox(),
-
-                           checkModel != null ?
-
-
-                           checkModel!.results!.message == "Task time Added" ?
-                                SizedBox() :
-
-                                Text(" ${checkModel!.results!.message}",
-                                 style: AppTextStyle.font12.copyWith(
-                              color: AppColors.red
-                            ),
-                                )
-                         : SizedBox()
-
-
-                   
-                   
-                         ],
+                                       else {
+                                         isAfterDate = true;
+                                         setState(() {
+                                          
+                                         });
+                                          
+                                       }
+                                          
+                                     TimeOfDay endtimeTask =  stringToTimeOfDay12Hour( widget.endTime!);
+                                          
+                                        print("is after ${isAfter(endTimeofDay!,endtimeTask )} ");
+                                          
+                       
+                                          
+                                          
+                                       // Navigator.of(context).pop();
+                                      //  Navigator.of(context).pop(taskTimes);
+                                        //  print("timeing ${dateTime. }");
+                                       // janitorBottomSheet()
+                                        // Navigator.pop(context,t;
+                                          
+                                                                  } ,
+                                     child: Custombutton(text: DashboardConst.save, width: 137.w)),
+                                 // GestureDetector(
+                                 //     onTap:(){
+                                 //       // janitorBottomSheet()
+                                 //       ;                             } ,
+                                 //     child: Custombutton(text: DashboardConst.addMoreTi
+                                 //     mings, width: 164.w))
+                               ],
+                             ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                                          
+                             timeOfDay == null ?
+                                  SizedBox() :
+                                          
+                             isAfterDate ?
+                                          
+                              Text("Select Time when shift start ",
+                              style: AppTextStyle.font12.copyWith(
+                                color: AppColors.red
+                              ),
+                              )
+                                 :
+                                 isSafeToAdd! ? 
+                                 SizedBox() :
+                                 Text("Task already assigned for this time slot",
+                                  style: AppTextStyle.font12.copyWith(
+                                    color: AppColors.red
+                                  ),
+                                 ),
+                                 
+                                   SizedBox(),
+                       
+                             checkModel != null ?
+                       
+                       
+                             checkModel!.results!.message == "Task time Added" ?
+                                  SizedBox() :
+                       
+                                  Text(" ${checkModel!.results!.message}",
+                                   style: AppTextStyle.font12.copyWith(
+                                color: AppColors.red
+                              ),
+                                  )
+                           : SizedBox()
+                       
+                       
+                                          
+                                          
+                           ],
+                         ),
                        ),
                      ),
                    
@@ -323,11 +396,11 @@ class _AddTimeDailogState extends State<AddTimeDailog> {
              }
           //  );
   bool isBefore(TimeOfDay time1, TimeOfDay time2) {
-    return time1.hour * 60 + time1.minute < time2.hour * 60 + time2.minute;
+    return time1.hour * 60 + time1.minute <= time2.hour * 60 + time2.minute;
   }
 
   bool isAfter(TimeOfDay time1, TimeOfDay time2) {
-    return time1.hour * 60 + time1.minute > time2.hour * 60 + time2.minute;
+    return time1.hour * 60 + time1.minute >= time2.hour * 60 + time2.minute;
   }
 
 

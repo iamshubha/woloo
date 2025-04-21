@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/bloc/dashboard_bloc.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/screens/dashboard/bloc/dashboard_bloc.dart';
 import 'package:woloo_smart_hygiene/screens/dashboard/bloc/dashboard_state.dart';
@@ -13,17 +14,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../client_flow/screens/dashbaord/view/dashboard.dart';
 import '../../../utils/app_images.dart';
 import '../../common_widgets/image_provider.dart';
 import '../view/local_widgets/iot_task.dart';
 import '../view/local_widgets/regular_task.dart';
 
 class TemplateScreen extends StatefulWidget {
+  final bool isFromSupervisor;
   final String supervisorName;
 
   const TemplateScreen({
     super.key,
     required this.supervisorName,
+    required this.isFromSupervisor,
   });
 
   @override
@@ -61,9 +65,14 @@ class _TemplateScreenState extends State<TemplateScreen> {
   DashboardBloc dashboardBloc = DashboardBloc();
   GlobalKey key = GlobalKey();
 
+  //  GlobalStorage z/ = GetIt.instance();
+
+ String  clientToken = "";
   @override
   void initState() {
     super.initState();
+    clientToken =    globalStorage.getClientToken();
+     print("client token $clientToken");
   }
 
   @override
@@ -128,19 +137,20 @@ class _TemplateScreenState extends State<TemplateScreen> {
           appBar: AppBar(
             elevation: 0,
             backgroundColor: AppColors.white,
+            automaticallyImplyLeading: false,
             title: Padding(
               padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 0.w),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width/1.35 ,
                     child: Text(
                       "${MyTemplateScreenConstants.HELLO.tr()}, ${widget.supervisorName.toTitleCase()}"
                         ,
                       maxLines: 1,
-                      softWrap: false,
+                      // softWrap: true,
                       style:
                       AppTextStyle.font24bold.copyWith(
                         overflow: TextOverflow.ellipsis,
@@ -154,6 +164,57 @@ class _TemplateScreenState extends State<TemplateScreen> {
                       // ),
                     ),
                   ),
+                    // widget.isFromSupervisor ?
+                widget.isFromSupervisor ||    clientToken.isNotEmpty  ?
+                    GestureDetector(
+                      onTap: () {
+                        
+                        //  Navigator.of(context).pop();
+                         Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ClientDashboard(),
+                          ),
+                          (route) => false,
+                        );
+                        //  Navigator.pushNamed(context, AppRoutes.clientDashboard);
+                         
+                        },
+                     
+                       child: Container(
+                         width: 40,
+                         height: 40,
+                         decoration: BoxDecoration(
+                           color: AppColors.white,
+                           borderRadius: BorderRadius.circular(12),
+                           boxShadow: [
+                             BoxShadow(
+                               color: Colors.black
+                                   .withValues(alpha:0.2), // Shadow color
+                               spreadRadius:
+                               1, // How wide the shadow should spread
+                               blurRadius:
+                               10, // The blur effect of the shadow
+                               offset: const Offset(0,
+                                   0), // No offset for shadow on all sides
+                             ),
+                           ],
+                         ),
+                         child: Padding(
+                           padding: const EdgeInsets.all(8.0),
+                           child: CustomImageProvider(
+                             // width: 22,
+                             // height: 22,
+                             image: AppImages.changeArrow,
+                             fit: BoxFit.cover,
+                           ),
+                         ),
+                       ),
+                     )
+
+                     : const SizedBox()
+
+                    //  : const SizedBox()
                 ],
               ),
             ),

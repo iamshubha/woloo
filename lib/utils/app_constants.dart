@@ -389,7 +389,7 @@ class TermsOfUse {
 
 class DashboardConst {
   // Dashboard Welcome
-  static const String welcomeMessage = "Welcome to your";
+  static const String welcomeMessage = "Welcome to";
   static const String dashboardTitle = "Woloo Smart Hygiene Dashboard";
   static const String onboardingMessage = 
       "You’re there! Just a few more steps to get you started with your Smart Hygiene Journey.";
@@ -406,13 +406,14 @@ class DashboardConst {
   static const String restraunt = "Restraunt";
   static const String other = "Other";
   static const String next = "Next";
-  static const String chooseAdmin = "Choose Admin";
+  static const String chooseAdmin = "Choose";
   static const String monitorYourself = "Monitor \nYourself";
   static const String assignSupervisor = "Assign a \nSupervisor";
-  static const String assignsupervisor = "Assign Supervisor";
-  static const String fullName = "Full Name *";
-  static const String number = "Number *";
-  static const String assignJanitor = "Assign Janitor";
+  static const String assignsupervisor = "Supervisor";
+  static const String fullName = "Supervisor Name *";
+  static const String number = "Mobile Number *";
+   static const String taskBuddyName = "Name of the Task Buddy *";
+  static const String assignJanitor = "Janitor";
   static const String assignFacility = "Assign Facility *";
   static const String gender = "Gender *";
   static const String assignTasks = "Assign Tasks";
@@ -455,7 +456,7 @@ class DashboardConst {
   static const String shiftEnd = "Shift shall complete at 00:00";
   static const String congratulations = "Congratulations!";
   static const String addAnotherTask = "Add Another Task";
-  static const String noThanks = "No Thanks. Start Monitoring";
+  static const String noThanks = "Thanks. Start Monitoring";
     static const String taskBuddyPrompt = 
       "Do you want to assign a new Task Buddy or utilise your existing Task Buddy?";
   static const String assignNewTaskBuddy = "Assign New Task Buddy";
@@ -469,7 +470,7 @@ class DashboardConst {
 
 class SubcriptionConstant{
 
-  static const String upgradeToPremium = "Upgrade to Premium";
+  static const String upgradeToPremium = " Upgrade your task master service";
   static const String upgradeDescription = "Upgrade to a premium plan to explore more benefits";
 
   // Free Plan

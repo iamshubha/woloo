@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/subcription/bloc/subscription_state.dart';
@@ -17,6 +18,7 @@ import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 
 import '../../../../core/local/global_storage.dart';
 import '../../../../utils/app_constants.dart';
+import '../../dashbaord/model/facility_model.dart';
 import '../../login/view/login_as.dart';
 import '../bloc/subscription_bloc.dart';
 import '../bloc/subscription_event.dart';
@@ -48,7 +50,7 @@ class _ClientprofileState extends State<Clientprofile> {
     super.initState();
    clientName =  globalStorage.getSupervisorName();
 
-   subcriptionBloc.add( UserCoinsEvent());
+   subcriptionBloc.add( const UserCoinsEvent());
 
   }
     
@@ -121,8 +123,8 @@ class _ClientprofileState extends State<Clientprofile> {
                          Text(clientName,
                          style: AppTextStyle.font16bold,
                          ),
-                          Container(
-                              width: MediaQuery.of(context).size.width/1.6,
+                          SizedBox(
+                              width: MediaQuery.of(context).size.width/1.7,
                               child: const Divider()),
                            Text("${coinsModel == null ? "00" : coinsModel!.results!.totalCoins} woloo points",
                             style: AppTextStyle.font16bold,
@@ -157,15 +159,27 @@ class _ClientprofileState extends State<Clientprofile> {
             const SizedBox(
               height: 20,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                card(ClientImages.mail, "Contact Us"),
-                card(ClientImages.about, "About"),
-                card(ClientImages.term, "Terms of Use"),
+
+
+            GridView.builder(
+              shrinkWrap: true,
+             itemCount: cardList.length,  
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(   
+               crossAxisSpacing: 10,
+              crossAxisCount: 3), 
+            itemBuilder: (context, index) {
+              return  card(cardList[index].image!, cardList[index].title! );
               
-              ],
-            ),
+            }, ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+               
+                // card(ClientImages.about, "About"),
+                // card(ClientImages.term, "Terms of Use"),
+              
+            //   ],
+            // ),
              const SizedBox(
                height: 40,
              ),
@@ -174,23 +188,8 @@ class _ClientprofileState extends State<Clientprofile> {
                 onTap: ()async {
                   // status: MyJanitorProfileScreenConstants.LOGGING_OUT_TOAST
                   //     .tr());
-                  var storage = GetIt.instance<GlobalStorage>();
-                  storage.removeToken();
-                  storage.removeLocation();
-                  storage.removeTime();
-                  storage.removeClientId();
-                  await Future.delayed(const Duration(seconds: 3));
-                  EasyLoading.dismiss();
-                  EasyLoading.showToast(MyJanitorProfileScreenConstants
-                      .LOG_OUT_SUCCESS_TOAST
-                      .tr());
-                  if (!context.mounted) return;
-                  Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                  builder: (context) => const LoginAs()),
-                  (route) => false,
-                  );
+                  showLogoutDialog(context);
+                
                 },
                 child: const Custombutton(text: "Log out", width: 360)),
           ],
@@ -201,8 +200,8 @@ class _ClientprofileState extends State<Clientprofile> {
 
    card( String image, String title ){
       return Container(
-        width: 120,
-        height: 120,
+        width: 100.h,
+        height: 100.w,
 
         decoration: BoxDecoration(
           color: AppColors.white,
@@ -219,29 +218,105 @@ class _ClientprofileState extends State<Clientprofile> {
           borderRadius: BorderRadius.circular(19),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CustomImageProvider(
-                  image: image,
-                  width: 46,
-                  height: 46,
-                ),
-
-                 Text(title,
-                 style: AppTextStyle.font13w7,
-                 )
-
-              ],
-            ),
+          padding:  REdgeInsets.all(8),
+        child: Center(
+          child: Column(
+            // crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CustomImageProvider(
+                image: image,
+                width: 46,
+                height: 46,
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+        
+               Text(
+                textAlign: TextAlign.center,
+                title,
+               style: AppTextStyle.font13w7,
+               )
+        
+            ],
           ),
         ),
-      );
+      ));
+
+
+
 
    }
 
 
+   void showLogoutDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      
+      // contentPadding: EdgeInsets.all(30),
+          shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(60),
+       ),
+      backgroundColor: AppColors.white,
+      // title: const Text("Logout"),
+      content:  SizedBox(
+        height: 80,
+        child: Center(
+          child: Text("Are you sure you want to log out?",
+          style: AppTextStyle.font15.copyWith(
+            color: AppColors.black,
+            fontWeight: FontWeight.bold
+          ),
+          ),
+        ),
+      ),
+      actionsAlignment: MainAxisAlignment.spaceEvenly,
+      actions: [
+         GestureDetector(
+           onTap: ()async {
+                 
+                 Navigator.of(context).pop();
+           
+             
+           },
+          child: Custombutton(
+            color: AppColors.white,
+            text: "No", width: 100.w)),
+    
+    
+        GestureDetector(
+           onTap: ()async {
+                    var storage = GetIt.instance<GlobalStorage>();
+                  storage.removeToken();
+                  storage.removeLocation();
+                  storage.removeTime();
+                  storage.removeClientId();
+                  storage.removeClientToken();
+                  await Future.delayed(const Duration(seconds: 3));
+                  EasyLoading.dismiss();
+                  EasyLoading.showToast(MyJanitorProfileScreenConstants
+                      .LOG_OUT_SUCCESS_TOAST
+                      .tr());
+                  if (!context.mounted) return;
+                  Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                  builder: (context) => const LoginAs()),
+                  (route) => false,
+                  );
+             
+           },
+          child: Custombutton(text: "Yes", width: 100.w))
+       
+      ],
+    ),
+  );
 }
+
+
+
+}
+
+
