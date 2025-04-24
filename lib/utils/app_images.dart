@@ -1,10 +1,11 @@
 abstract class AppImages {
   AppImages._();
 
-static const String _assetImgPath = "assets/images/";
+  static const String _assetImgPath = "assets/images/";
   static const String _assetSvgImgPath = "assets/images/svg/";
   static const String _assetLottiePath = "assets/lottie/";
-
+  static String get tuneLogo => "${_assetImgPath}filter_yellow.png";
+  static String get twinkleLogo => "${_assetImgPath}twinkleLogo.png";
   static String get appLogo => '${_assetImgPath}logo_woloo.png';
   static String get otpImg => '${_assetImgPath}otp 2otp_img_inner.png';
   static String get clusterImg => '${_assetImgPath}cluster.png';
@@ -23,13 +24,11 @@ static const String _assetImgPath = "assets/images/";
   static String get loaderLottie => '${_assetLottiePath}loader2.json';
   static String get editIconImg => '${_assetImgPath}edit.png';
   static String get locationIconImg => '${_assetImgPath}location.png';
-  static String get emptyListAnimation =>
-      '${_assetLottiePath}empty_list.json';
+  static String get emptyListAnimation => '${_assetLottiePath}empty_list.json';
   static String get clusterIcon => '${_assetImgPath}cluster.png';
   static String get janitorIcon => '${_assetImgPath}janitor.png';
   static String get reportIssueIcon => '${_assetImgPath}danger.png';
-  static String get customerRequestIcon =>
-      '${_assetImgPath}custom_request.png';
+  static String get customerRequestIcon => '${_assetImgPath}custom_request.png';
   static String get janitorPresent => '${_assetImgPath}present.png';
   static String get janitorAbsent => '${_assetImgPath}absent.png';
   static String get submittedIcon => '${_assetImgPath}verify_Green 1.png';
