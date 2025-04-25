@@ -18,6 +18,8 @@ import 'screens/dashboard/controller/dash_controller.dart';
 class Messaging {
   DashboardBloc dashboardBloc = DashboardBloc();
   DashController dashController = Get.put(DashController());
+
+  
   Future initialize() async {
     var flNotificationsPlugin = FlutterLocalNotificationsPlugin();
     if (Platform.isAndroid) await createNotificationChannel();
