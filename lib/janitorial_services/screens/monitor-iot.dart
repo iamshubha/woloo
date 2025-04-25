@@ -13,90 +13,10 @@ import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 
-// import '../models/air_quality_data.dart';
-// lib/widgets/ai_summary_card.dart
-
-// lib/models/air_quality_data.dart
-class AirQualityData {
-  final DateTime timestamp;
-  final double airQuality;
-  final double usage;
-  final double threshold;
-
-  AirQualityData({
-    required this.timestamp,
-    required this.airQuality,
-    required this.usage,
-    this.threshold = 50.0,
-  });
-
-  factory AirQualityData.fromJson(Map<String, dynamic> json) {
-    return AirQualityData(
-      timestamp: DateTime.parse(json['timestamp']),
-      airQuality: json['air_quality'].toDouble(),
-      usage: json['usage'].toDouble(),
-      threshold: json['threshold']?.toDouble() ?? 50.0,
-    );
-  }
-}
-
-// lib/models/alert.dart
-class Alert {
-  final DateTime timestamp;
-  final String condition;
-  final String building;
-
-  Alert({
-    required this.timestamp,
-    required this.condition,
-    required this.building,
-  });
-
-  factory Alert.fromJson(Map<String, dynamic> json) {
-    return Alert(
-      timestamp: DateTime.parse(json['timestamp']),
-      condition: json['condition'],
-      building: json['building'],
-    );
-  }
-}
-
-// lib/models/dashboard_data.dart
-class DashboardData {
-  final String username;
-  final String userRole;
-  final DateTime lastUpdated;
-  final int trialDaysLeft;
-  final List<AirQualityData> airQualityData;
-  final String aiSummary;
-  final List<Alert> alerts;
-
-  DashboardData({
-    required this.username,
-    required this.userRole,
-    required this.lastUpdated,
-    required this.trialDaysLeft,
-    required this.airQualityData,
-    required this.aiSummary,
-    required this.alerts,
-  });
-
-  factory DashboardData.fromJson(Map<String, dynamic> json) {
-    return DashboardData(
-      username: json['username'],
-      userRole: json['user_role'],
-      lastUpdated: DateTime.parse(json['last_updated']),
-      trialDaysLeft: json['trial_days_left'],
-      airQualityData: (json['air_quality_data'] as List)
-          .map((data) => AirQualityData.fromJson(data))
-          .toList(),
-      aiSummary: json['ai_summary'],
-      alerts: (json['alerts'] as List)
-          .map((alert) => Alert.fromJson(alert))
-          .toList(),
-    );
-  }
-}
+import '../model/iotdata_model.dart';
+import '../widgets/ai_summary.dart';
+import '../widgets/air_quality_chart.dart';
+import '../widgets/alert_notification.dart';
 
 // Mock API Service
 class ApiService {
@@ -104,42 +24,546 @@ class ApiService {
     // Simulate network delay
     await Future.delayed(const Duration(seconds: 1));
 
-    // Generate sample air quality data points for the last 24 hours
-    final now = DateTime.now();
-    final List<AirQualityData> airQualityData = List.generate(12, (index) {
-      final time = now.subtract(Duration(hours: 2 * (11 - index)));
-      return AirQualityData(
-        timestamp: time,
-        airQuality: 30 + (index * 3) + (Random().nextDouble() * 10),
-        usage: 100 + (Random().nextDouble() * 150),
-        threshold: 50.0,
-      );
+    // Return the actual data
+    return DashboardData.fromJson({
+      "results": {
+        "gauge_graph_data": {
+          "avg_amonia": "482.26",
+          "pcd_max": "190.44",
+          "ppm": {},
+          "condition": "Moderate"
+        },
+        "ammonia_level_across_washroom_result": {
+          "distinct_data_modified": {
+            "data": [
+              {"color": "#000000", "y": 394},
+              {"color": "#EF4444", "y": 753}
+            ],
+            "category": ["Gannaur HRF022", "Meerut Road HRF078"]
+          },
+          "distinct_people_data_modified": {
+            "data": [
+              {"color": "#000000", "y": 223},
+              {"color": "#000000", "y": 36}
+            ],
+            "category": ["Gannaur HRF022", "Meerut Road HRF078"]
+          },
+          "distinct_people_data_unit": "Building"
+        },
+        "alerts_notification": [
+          {
+            "ppm_time": "2025-04-17 02:15:26",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-17 00:01:07",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-17 09:15:30",
+            "condition": "good",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-17 06:30:30",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-17 06:44:34",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-17 07:16:59",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-17 09:45:38",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-17 07:45:06",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-17 12:45:35",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-17 11:03:07",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-17 18:47:53",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-17 18:47:53",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-17 18:47:53",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-17 19:42:07",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-17 19:42:07",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-17 19:46:08",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-18 05:15:06",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-18 05:29:09",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-18 07:30:40",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-18 07:00:32",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-18 10:44:32",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-18 17:30:55",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-18 18:32:04",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-18 18:48:48",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-18 20:40:38",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-18 22:59:49",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-19 02:44:45",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-19 06:59:22",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-19 06:01:07",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-19 05:31:47",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-19 19:03:18",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-19 16:30:50",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-19 14:46:11",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-19 22:45:01",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-20 05:58:58",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-20 19:46:07",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-19 05:45:03",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-19 05:15:42",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-19 08:00:11",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-19 21:34:09",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-19 21:00:00",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-19 20:16:23",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-19 21:46:12",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-20 03:59:25",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-20 03:59:25",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-20 06:30:33",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-20 07:00:24",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-20 14:16:40",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-20 18:31:46",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-20 18:35:48",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-20 21:16:29",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-20 21:00:25",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-20 21:20:32",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-21 03:14:30",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-21 00:43:51",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-21 03:44:38",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-21 06:42:53",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-21 07:00:04",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-21 10:46:20",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-21 06:30:49",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-21 06:45:24",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-21 17:00:28",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-21 17:14:31",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-21 18:44:23",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-21 21:58:49",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-21 19:30:35",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-22 05:43:55",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-22 05:59:33",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-22 11:29:25",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-22 09:30:53",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-22 14:06:08",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-22 12:45:45",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-23 09:11:36",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-23 18:35:50",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-20 19:14:26",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-20 19:15:59",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-23 06:59:12",
+            "condition": "bad",
+            "data_unit": "Meerut Road HRF078"
+          },
+          {
+            "ppm_time": "2025-04-23 08:45:29",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-23 16:15:11",
+            "condition": "good",
+            "data_unit": "Gannaur HRF022"
+          },
+          {
+            "ppm_time": "2025-04-23 18:43:52",
+            "condition": "bad",
+            "data_unit": "Gannaur HRF022"
+          }
+        ],
+        "amonia_table_data": [
+          {
+            "pcd_max": "223.0000000000000000",
+            "ppm_avg": "394.0000000000000000",
+            "heading": "Gannaur HRF022",
+            // "ppm_diff": -356,
+            "value": [
+              396.0921052631579,
+              471.38961038961037,
+              436.7926829268293,
+              245.87368421052631,
+              628.6559139784946,
+              324.9894736842105,
+              431.1645569620253,
+              0.98
+            ]
+          },
+          {
+            "pcd_max": "36.5000000000000000",
+            "ppm_avg": "753.0000000000000000",
+            "heading": "Meerut Road HRF078",
+            // "ppm_diff": 3,
+            "value": [
+              406.7736842105263,
+              353.4935897435897,
+              450.5217391304348,
+              488.0851063829787,
+              358.0520833333333,
+              230.53157894736842,
+              253.56716417910448,
+              0
+            ]
+          }
+        ],
+        "ammonia_unit": "ppb",
+        "range_of_ppm": {
+          "unhealthy_max": "6000.0000000000000000",
+          "unhealthy_min": "750.0000000000000000",
+          "healthy_min": "0.00000000000000000000",
+          "healthy_max": "225.0000000000000000",
+          "moderate_max": "750.0000000000000000",
+          "moderate_min": "225.0000000000000000"
+        },
+        "avgppm_time_range": [
+          {
+            "time_range": "12-3 AM",
+            "avg_ppm_avg": "333.2083333333333333",
+            "avg_ppm_max": "563.2083333333333333",
+            "avg_pcd_max": "5.6958333333333333",
+            "avg_pch_max": "1.8083333333333333"
+          },
+          {
+            "time_range": "3-6 AM",
+            "avg_ppm_avg": "387.5299145299145299",
+            "avg_ppm_max": "807.7435897435897436",
+            "avg_pcd_max": "14.5299145299145299",
+            "avg_pch_max": "2.1709401709401709"
+          },
+          {
+            "time_range": "6-9 AM",
+            "avg_ppm_avg": "467.0675675675675676",
+            "avg_ppm_max": "1070.1216216216216216",
+            "avg_pcd_max": "33.9189189189189189",
+            "avg_pch_max": "4.3198198198198198"
+          },
+          {
+            "time_range": "9-12 AM",
+            "avg_ppm_avg": "457.9689119170984456",
+            "avg_ppm_max": "926.9378238341968912",
+            "avg_pcd_max": "66.5388601036269430",
+            "avg_pch_max": "5.8756476683937824"
+          },
+          {
+            "time_range": "12-3 PM",
+            "avg_ppm_avg": "358.8324873096446701",
+            "avg_ppm_max": "836.9847715736040609",
+            "avg_pcd_max": "101.8680203045685279",
+            "avg_pch_max": "7.4467005076142132"
+          },
+          {
+            "time_range": "3-6 PM",
+            "avg_ppm_avg": "276.9238578680203046",
+            "avg_ppm_max": "662.9390862944162437",
+            "avg_pcd_max": "135.8629441624365482",
+            "avg_pch_max": "6.3705583756345178"
+          },
+          {
+            "time_range": "6-9 PM",
+            "avg_ppm_avg": "470.1538461538461538",
+            "avg_ppm_max": "1270.7067307692307692",
+            "avg_pcd_max": "168.0673076923076923",
+            "avg_pch_max": "7.2211538461538462"
+          },
+          {
+            "time_range": "9-12 PM",
+            "avg_ppm_avg": "387.1212121212121212",
+            "avg_ppm_max": "723.5353535353535354",
+            "avg_pcd_max": "195.3787878787878788",
+            "avg_pch_max": "3.4343434343434343"
+          }
+        ],
+        "summary": {
+          "alerts_notification_summary":
+              "Alerts notification data for location wise for the last 7 days. This graph shows the number of alerts for bad ammonia level triggered during the specified period.",
+          "avgppm_over_location":
+              "Average air quality data for location wise for the last 7 days. This graph illustrates the average air quality across location.",
+          "avgppm_time_range_insights":
+              "Average PPM time range insights for location wise for the last 7 days. Air quality vs usage graph shares the insights for location wise air quality and usage data for the current day"
+        }
+      },
+      "success": true
     });
-
-    // Generate sample alerts
-    final List<Alert> alerts = [
-      Alert(
-        timestamp: now.subtract(const Duration(hours: 2)),
-        condition: "High Air Quality Alert",
-        building: "Building A",
-      ),
-      Alert(
-        timestamp: now.subtract(const Duration(hours: 5)),
-        condition: "Usage Threshold Exceeded",
-        building: "Building B",
-      ),
-    ];
-
-    return DashboardData(
-      username: "John Doe",
-      userRole: "Facility Manager",
-      lastUpdated: now,
-      trialDaysLeft: 15,
-      airQualityData: airQualityData,
-      aiSummary:
-          "Air quality has been maintaining optimal levels throughout the day. There was a slight increase in usage during peak hours (2-4 PM). Recommended to monitor Building B's ventilation system.",
-      alerts: alerts,
-    );
   }
 }
 
@@ -244,7 +668,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   RichText(
-                    text: TextSpan(
+                    text: const TextSpan(
                       style: const TextStyle(
                           color: AppColors.textgreyColor,
                           fontSize: 14,
@@ -254,7 +678,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           text: 'Your Trial shall end in ',
                         ),
                         TextSpan(
-                          text: '${data.trialDaysLeft} Days. ',
+                          text: '3 Days. ',
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         const TextSpan(
@@ -300,13 +724,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   const SizedBox(height: 16),
                   AirQualityChart(
-                    airQualityData: data.airQualityData,
+                    airQualityData: data.avgppmTimeRange.map((e) {
+                      // var d = (e.avgPcdMax.runtimeType);
+
+                      return GraphData(
+                        airQuality: double.parse(e.avgPpmAvg),
+                        usage: double.parse(e.avgPcdMax),
+                        timeRange: e.timeRange,
+                      );
+                    }).toList(),
                     isLoading: _isLoading,
                     timeFilter: _timeFilter,
                     onFilterChanged: _setTimeFilter,
                   ),
                   const SizedBox(height: 16),
-                  AiSummaryCard(summary: data.aiSummary),
+                  AiSummaryCard(summary: data.summary.avgppmTimeRangeInsights),
                   const SizedBox(height: 16),
                   AlertAndNotificationWidget(data: data)
                 ],
@@ -331,584 +763,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class AiSummaryCard extends StatelessWidget {
-  final String summary;
-
-  const AiSummaryCard({
-    super.key,
-    required this.summary,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(35),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Text(
-                'AI Summary ',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              SizedBox(
-                height: 24,
-                width: 24,
-                child: Image.asset(AppImages.twinkleLogo),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          summary.isEmpty
-              ? const Text('[Summary here]',
-                  style: TextStyle(color: Colors.grey))
-              : Text(
-                  summary,
-                  style: const TextStyle(fontSize: 14),
-                ),
-        ],
-      ),
-    );
-  }
-}
-
-class AirQualityChart extends StatelessWidget {
-  final List<AirQualityData> airQualityData;
-  final bool isLoading;
-  final String timeFilter;
-  final Function(String) onFilterChanged;
-
-  const AirQualityChart({
-    super.key,
-    required this.airQualityData,
-    required this.isLoading,
-    required this.timeFilter,
-    required this.onFilterChanged,
-  });
-
-  String _formatTimeRange(DateTime time) {
-    final hour = time.hour;
-
-    if (hour >= 8 && hour < 10) return '8-10';
-    if (hour >= 10 && hour < 12) return '10-12';
-    if (hour >= 12 && hour < 14) return '12-2';
-    if (hour >= 14 && hour < 16) return '2-4';
-    if (hour >= 16 && hour < 18) return '4-6';
-    if (hour >= 18 && hour < 20) return '6-8';
-
-    return '${hour % 12}-${(hour + 2) % 12}';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    final chartHeight = screenSize.height * 0.3; // 30% of screen height
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Air Quality vs Usage',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              Flexible(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      _buildFilterButton('ALL', timeFilter),
-                      _buildFilterButton('1M', timeFilter),
-                      _buildFilterButton('6M', timeFilter),
-                      Container(
-                        width: 20,
-                        height: 20,
-                        margin: const EdgeInsets.only(left: 8),
-                        decoration: BoxDecoration(
-                          color: AppColors.yellowIcon,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.black,
-                          size: 8,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          SizedBox(
-            height: chartHeight,
-            child: isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : LineChart(
-                    _buildLineChartData(screenSize),
-                  ),
-          ),
-          const SizedBox(height: 16),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildLegendItem('Air Quality', Colors.blue),
-                const SizedBox(width: 24),
-                _buildLegendItem('Usage', Colors.amber),
-                const SizedBox(width: 24),
-                Row(
-                  children: [
-                    Container(
-                      width: 16,
-                      height: 2,
-                      color: Colors.red,
-                      margin: const EdgeInsets.only(right: 8),
-                    ),
-                    const Text(
-                      'Threshold (50 ppm)',
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFilterButton(String filter, String currentFilter) {
-    final isSelected = filter == currentFilter;
-
-    return GestureDetector(
-      onTap: () => onFilterChanged(filter),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 5),
-        margin: const EdgeInsets.only(right: 8),
-        decoration: BoxDecoration(
-            color: isSelected ? Colors.grey[300] : Colors.transparent,
-            borderRadius: BorderRadius.circular(5),
-            border: Border.all(color: Colors.grey.shade300)),
-        child: Text(
-          filter,
-          style: TextStyle(
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLegendItem(String label, Color color) {
-    return Row(
-      children: [
-        Container(
-          width: 16,
-          height: 16,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(4),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 12),
-        ),
-      ],
-    );
-  }
-
-  LineChartData _buildLineChartData(Size screenSize) {
-    // Create spots for the two lines
-    final List<FlSpot> airQualitySpots = [];
-    final List<FlSpot> usageSpots = [];
-
-    for (int i = 0; i < airQualityData.length; i++) {
-      final data = airQualityData[i];
-      airQualitySpots.add(FlSpot(i.toDouble(), data.airQuality));
-      usageSpots.add(FlSpot(i.toDouble(), data.usage / 5));
-    }
-
-    final isSmallScreen = screenSize.width < 360;
-    final fontSize = isSmallScreen ? 10.0 : 12.0;
-
-    return LineChartData(
-      gridData: FlGridData(
-        show: true,
-        drawVerticalLine: true,
-        horizontalInterval: 15,
-        verticalInterval: 1,
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: Colors.grey[300],
-            strokeWidth: 0.5,
-            // dashArray: [5, 5],
-          );
-        },
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: Colors.grey[400],
-            strokeWidth: 1,
-            dashArray: [5, 5],
-          );
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        rightTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: false,
-            interval: 50,
-            getTitlesWidget: (value, meta) {
-              return Text(
-                value.toInt().toString(),
-                style: TextStyle(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w600,
-                  fontSize: fontSize,
-                ),
-                textAlign: TextAlign.left,
-              );
-            },
-            // reservedSize: 35,
-          ),
-        ),
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 40,
-            interval: isSmallScreen ? 2 : 1,
-            getTitlesWidget: (value, meta) {
-              if (value.toInt() >= airQualityData.length) {
-                return const Text('');
-              }
-
-              final time = airQualityData[value.toInt()].timestamp;
-              return Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: RotatedBox(
-                  quarterTurns: isSmallScreen ? 1 : 0,
-                  child: Text(
-                    _formatTimeRange(time),
-                    style: TextStyle(
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w600,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            interval: 15,
-            getTitlesWidget: (value, meta) {
-              return Text(
-                value.toInt().toString(),
-                style: TextStyle(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w600,
-                  fontSize: fontSize,
-                ),
-                textAlign: TextAlign.left,
-              );
-            },
-            // reservedSize: 35,
-          ),
-        ),
-      ),
-      borderData: FlBorderData(
-        show: true,
-        border: Border.all(color: Colors.grey[300]!, width: 1),
-      ),
-      minX: 0,
-      maxX: (airQualityData.length - 1).toDouble(),
-      minY: 0,
-      maxY: 75,
-      lineTouchData: LineTouchData(
-        enabled: true,
-        touchTooltipData: LineTouchTooltipData(
-          // tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
-          tooltipRoundedRadius: 8,
-          tooltipPadding: const EdgeInsets.all(8),
-          getTooltipItems: (List<LineBarSpot> touchedSpots) {
-            return touchedSpots.map((spot) {
-              final data = airQualityData[spot.x.toInt()];
-              final isAirQuality = spot.barIndex == 0;
-              final value = isAirQuality ? spot.y : (spot.y * 5);
-
-              return LineTooltipItem(
-                '${isAirQuality ? "Air Quality" : "Usage"}\n${value.toStringAsFixed(1)} ${isAirQuality ? "ppm" : "units"}',
-                TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: fontSize,
-                ),
-              );
-            }).toList();
-          },
-        ),
-        handleBuiltInTouches: true,
-        touchSpotThreshold: 20,
-      ),
-      lineBarsData: [
-        LineChartBarData(
-          spots: airQualitySpots,
-          isCurved: true,
-          color: Colors.blue,
-          barWidth: 1,
-          isStrokeCapRound: true,
-          dotData: FlDotData(
-            show: true,
-            getDotPainter: (spot, percent, barData, index) {
-              return FlDotCirclePainter(
-                radius: 0.5,
-                color: Colors.blue.shade600,
-                strokeWidth: 0,
-                strokeColor: Colors.white,
-              );
-            },
-          ),
-          belowBarData: BarAreaData(
-            show: true,
-            color: Colors.blue.withOpacity(0.2),
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.blue.withOpacity(0.2),
-                Colors.blue.withOpacity(0.0),
-              ],
-            ),
-          ),
-        ),
-        LineChartBarData(
-          spots: usageSpots,
-          isCurved: true,
-          color: Colors.amber,
-          barWidth: 1,
-          isStrokeCapRound: true,
-          dotData: FlDotData(
-            show: true,
-            getDotPainter: (spot, percent, barData, index) {
-              return FlDotCirclePainter(
-                radius: 0.5,
-                color: Colors.amber,
-                strokeWidth: 0,
-                strokeColor: Colors.amber,
-              );
-            },
-          ),
-          belowBarData: BarAreaData(
-            show: true,
-            color: Colors.amber.withOpacity(0.2),
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.amber.withOpacity(0.5),
-                Colors.amber.withOpacity(0.0),
-              ],
-            ),
-          ),
-        ),
-        LineChartBarData(
-          spots: [
-            FlSpot(0, 50),
-            FlSpot((airQualityData.length - 1).toDouble(), 50),
-          ],
-          isCurved: false,
-          color: Colors.red.shade400,
-          barWidth: 2,
-          isStrokeCapRound: true,
-          dotData: const FlDotData(show: false),
-          dashArray: [5, 5],
-        ),
-      ],
-    );
-  }
-}
-
-class AlertAndNotificationWidget extends StatelessWidget {
-  const AlertAndNotificationWidget({
-    super.key,
-    required this.data,
-  });
-
-  final DashboardData? data;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(47),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          const Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'Alerts & Notifications',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: AppColors.backgroundColor,
-              borderRadius: BorderRadius.circular(25),
-            ),
-            child: const Row(
-              children: [
-                Expanded(
-                  flex: 6,
-                  child: Text(
-                    "Date & Time",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 10),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Expanded(
-                  flex: 6,
-                  child: Text(
-                    "Condition",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 10),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Expanded(
-                  flex: 4,
-                  child: Text(
-                    "Building",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 10),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          ...List.generate(data!.airQualityData.length, (index) {
-            final airDta = data!.airQualityData[index];
-            return Container(
-              padding: EdgeInsets.only(
-                  bottom: index == data!.airQualityData.length - 1 ? 0 : 30),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 6,
-                    child: Text(
-                      DateFormat('yyyy-MM-dd  HH:mm:ss')
-                          .format(airDta.timestamp),
-                      style: const TextStyle(fontSize: 10),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 6,
-                    child: Text(
-                      airDta.airQuality > airDta.threshold
-                          ? "High Air Quality Alert"
-                          : "Normal",
-                      style: const TextStyle(fontSize: 10),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 4,
-                    child: Text(
-                      airDta.usage > airDta.threshold
-                          ? "Building A"
-                          : "Building B",
-                      style: const TextStyle(fontSize: 10),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          })
         ],
       ),
     );

@@ -25,18 +25,16 @@ import 'screens/dashboard/bloc/dashboard_bloc.dart';
 import 'screens/washroom_image_screen/images_bloc/bloc/capture_bloc.dart';
 // import 'messaging.dart';
 
-
-
 final mediaStorePlugin = MediaStore();
 void main() async {
- //  enableFlutterDriverExtension();
+  //  enableFlutterDriverExtension();
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   if (Platform.isAndroid) {
     await MediaStore.ensureInitialized();
   }
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
- // await Future.delayed(const Duration(seconds: 1));
+  // await Future.delayed(const Duration(seconds: 1));
   FirebaseMessaging.onBackgroundMessage(backgroundNotificationHandler);
   await GetStorage.init();
   await di.init();
@@ -56,23 +54,23 @@ void main() async {
     // };
   }
 
-    if ( Platform.isAndroid) {
-        List<Permission> permissions = [
-    Permission.storage,
-  ];
+  if (Platform.isAndroid) {
+    List<Permission> permissions = [
+      Permission.storage,
+    ];
 
-  if ((await mediaStorePlugin.getPlatformSDKInt()) >= 33) {
-    permissions.add(Permission.photos);
-    permissions.add(Permission.audio);
-    permissions.add(Permission.storage);
-  }
-
-  await permissions.request();
-  // we are not checking the status as it is an example app. You should (must) check it in a production app
-
-  // You have set this otherwise it throws AppFolderNotSetException
-  MediaStore.appFolder = "WolooSmartHygine";
+    if ((await mediaStorePlugin.getPlatformSDKInt()) >= 33) {
+      permissions.add(Permission.photos);
+      permissions.add(Permission.audio);
+      permissions.add(Permission.storage);
     }
+
+    await permissions.request();
+    // we are not checking the status as it is an example app. You should (must) check it in a production app
+
+    // You have set this otherwise it throws AppFolderNotSetException
+    MediaStore.appFolder = "WolooSmartHygine";
+  }
 
   /// change status bar color
   SystemChrome.setSystemUIOverlayStyle(
@@ -84,50 +82,45 @@ void main() async {
   );
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
-    (value) => runApp(
-      EasyLocalization(
-        supportedLocales: const [
-          Locale('en', 'US'),
-          Locale('hi', 'IN'),
-          Locale('mr', 'IN'), 
+    (value) => runApp(EasyLocalization(
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('hi', 'IN'),
+        Locale('mr', 'IN'),
+      ],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en', 'US'),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<SignupBloc>(
+            create: (BuildContext context) => SignupBloc(),
+          ),
+          BlocProvider<LoginBloc>(
+            create: (BuildContext context) => LoginBloc(),
+          ),
+          BlocProvider<CaptureBloc>(
+            create: (BuildContext context) => CaptureBloc(),
+          ),
+          BlocProvider<DashboardBloc>(
+            create: (BuildContext context) => DashboardBloc(),
+          ),
+          BlocProvider<ClientDashBoardBloc>(
+            create: (BuildContext context) => ClientDashBoardBloc(),
+          ),
+          BlocProvider<ProfileBloc>(
+            create: (BuildContext context) => ProfileBloc(),
+          ),
         ],
-        path: 'assets/translations',
-        fallbackLocale: const Locale('en', 'US'),
         child:
-        MultiBlocProvider(
-          providers: [
-              BlocProvider<SignupBloc>(
-              create: (BuildContext context) => SignupBloc(),
-            ),
-            BlocProvider<LoginBloc>(
-              create: (BuildContext context) => LoginBloc(),
-            ),
-               BlocProvider<CaptureBloc>(
-              create: (BuildContext context) => CaptureBloc(),),
-
-              BlocProvider<DashboardBloc>(
-              create: (BuildContext context) => DashboardBloc(),
-            ),
-            BlocProvider<ClientDashBoardBloc>(
-              create: (BuildContext context) => ClientDashBoardBloc(),
-            ),
-               BlocProvider<ProfileBloc>(
-              create: (BuildContext context) => ProfileBloc(),
-            ),
-          ],
-          child:
-             // DeviceP
-        //  DevicePreview(
-        //     enabled: !kReleaseMode,
-        //     builder: (context) =>
-        //         App(), // Wrap your app
-        //  ),
-         const  App(),
-        ),
-      )
-
-
+            // DeviceP
+            //  DevicePreview(
+            //     enabled: !kReleaseMode,
+            //     builder: (context) =>
+            //         App(), // Wrap your app
+            //  ),
+            const App(),
       ),
+    )),
     // ),
   );
 }

@@ -89,7 +89,7 @@ class AlertAndNotificationWidget extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           ...List.generate(data!.alertsNotification.length, (index) {
-            final alert = data!.alertsNotification[index];
+            final alert = data!.alertsNotification[index]['condition'];
             return Container(
               padding: EdgeInsets.only(
                   bottom:

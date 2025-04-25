@@ -1,4 +1,4 @@
-
+import 'package:woloo_smart_hygiene/janitorial_services/screens/home_screen.dart';
 import 'package:woloo_smart_hygiene/screens/splash_screen/view/splash.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_constants.dart';
@@ -11,6 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'janitorial_services/screens/monitor-iot.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -22,7 +23,7 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   void initState() {
-   configLoading();
+    configLoading();
     super.initState();
   }
 
@@ -30,45 +31,37 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
         useInheritedMediaQuery: true,
-      designSize: const Size(360, 690),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, child) {
-        return 
-        ConnectivityAppWrapper(
-          app: 
-          GetMaterialApp(
-            navigatorKey: ContextHolder.key,
-            debugShowCheckedModeBanner: false,
-            title: AppName.APP_NAME,
-            locale: context.locale,
-            supportedLocales: context.supportedLocales,
-            localizationsDelegates: context.localizationDelegates,
-            builder: EasyLoading.init(
-              builder: (context, child) {
-                return 
-                ConnectivityWidgetWrapper(
-                  disableInteraction: true,
-                  child:
-                   child!
-                );
-              },
+        designSize: const Size(360, 690),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) {
+          return ConnectivityAppWrapper(
+            app: GetMaterialApp(
+              navigatorKey: ContextHolder.key,
+              debugShowCheckedModeBanner: false,
+              title: AppName.APP_NAME,
+              locale: context.locale,
+              supportedLocales: context.supportedLocales,
+              localizationsDelegates: context.localizationDelegates,
+              builder: EasyLoading.init(
+                builder: (context, child) {
+                  return ConnectivityWidgetWrapper(
+                      disableInteraction: true, child: child!);
+                },
+              ),
+              theme: ThemeData(
+                  disabledColor: Colors.grey,
+                  textTheme: GoogleFonts.poppinsTextTheme(),
+                  appBarTheme:
+                      const AppBarTheme(surfaceTintColor: Colors.transparent)),
+              home: GestureDetector(
+                child: child,
+              ),
             ),
-            theme: ThemeData(
-              disabledColor: Colors.grey,
-              textTheme: GoogleFonts.poppinsTextTheme(),
-              appBarTheme: const AppBarTheme(
-                  surfaceTintColor: Colors.transparent
-              )
-            ),
-            home: GestureDetector(
-              child: child,
-            ),
-          ),
+          );
+        },
+        child: DashboardScreen() //const SplashScreen(),
         );
-      },
-      child: const SplashScreen(),
-    );
   }
 
   void configLoading() {

@@ -102,7 +102,7 @@ dependencies:
   table_calendar: ^3.1.2
   appinio_swiper: ^2.1.1
   build_runner: ^2.4.5
-  fl_chart: ^0.69.0
+  fl_chart: ^0.71.0
   flutter_card_swiper: ^7.0.2
   easy_pie_chart: ^1.0.1
   flutter_colorpicker: ^1.1.0
@@ -113,6 +113,7 @@ dependencies:
   time_picker_spinner: ^1.0.2
   flutter_rating_bar: ^4.0.1
   icon_decoration: ^2.1.0
+  provider: ^6.1.4
 
 dependency_overrides:
   rxdart: ^0.27.2
