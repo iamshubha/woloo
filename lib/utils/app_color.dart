@@ -23,7 +23,7 @@ class AppColors {
   static const Color rejectButtonColor = Color(0xFF6B766A);
 
   static const Color buttonColor = Color(0xFF00C3DE);
-  static const Color buttonYellowColor = Color(0xFFFFEB00);// FFEB00
+  static const Color buttonYellowColor = Color(0xFFFFEB00); // FFEB00
   static const Color camColor = Color(0xFFFFF035);
   static const Color yellowSplashColor = Color(0xFFFFF035);
   static const Color alertShadowColor = Color(0x26000000);
@@ -97,8 +97,7 @@ class AppColors {
   static const Color otherLightRed = Color(0xffaf5252);
   static const Color otherGray1 = Color(0xffE3E0E0);
 
-
-   static const Color searchText = Color(0xffAEB6CF);
+  static const Color searchText = Color(0xffAEB6CF);
   static const Color offWhite = Color(0xffF4F4F6);
   static const Color black10 = Color(0xff464356);
   static const Color tomato = Color(0xffF1592A);
@@ -169,18 +168,19 @@ class AppColors {
 
   static const Color deviderColor = Color(0xff00C3DE);
   static const Color buttonBgColor = Color(0xff00C3DE);
-  static const Color pendingCardBgColor =  Color(0xffFFFFFF);  // 00C3DE
-  static const Color acceptedCardBgColor =  Color(0xffF9FFF9);
-  static const Color accepCardBgColor =  Color(0xffF9FFF9);
-  static const Color onGoingCardBgColor =  Color(0xffFDFAF2);// ffFDFAF2
-  static const Color rfcCardBgColor =  Color(0xffFF7777);
-  static const Color completedBgColor =    Color(0xffFFFFFF);
+  static const Color pendingCardBgColor = Color(0xffFFFFFF); // 00C3DE
+  static const Color acceptedCardBgColor = Color(0xffF9FFF9);
+  static const Color accepCardBgColor = Color(0xffF9FFF9);
+  static const Color onGoingCardBgColor = Color(0xffFDFAF2); // ffFDFAF2
+  static const Color rfcCardBgColor = Color(0xffFF7777);
+  static const Color completedBgColor = Color(0xffFFFFFF);
 
-  static const Color pendingBorderBgColor =    Color(0xffFFFFFF);
-  static const Color rfcBorderBgColor =    Color(0xffFF7777);
-  static const Color onGoingBorderBgColor =    Color(0xff76E16D);
-  static const Color completedBorderBgColor =    Color(0xff3597DB);
+  static const Color pendingBorderBgColor = Color(0xffFFFFFF);
+  static const Color rfcBorderBgColor = Color(0xffFF7777);
+  static const Color onGoingBorderBgColor = Color(0xff76E16D);
+  static const Color completedBorderBgColor = Color(0xff3597DB);
   static const Color acceptedBgColor = Color(0xFF76E16D);
 
   static const Color textgreyColor = Color(0xFF828282);
+  static const Color textgreyColor1 = Color(0xff767676);
 }

@@ -63,4 +63,7 @@ abstract class AppImages {
   static String get dashlogo => '${_assetImgPath}dashlogo.png';
   static String get changeArrow => '${_assetImgPath}changearrow.png';
   static String get premiumImage => '${_assetImgPath}subscription.png';
+  static String get transparentLogo => '${_assetImgPath}transparent_logo.png';
+  static String get wahScore => '${_assetImgPath}wah_score.png';
+  static String get greenSmily => '${_assetImgPath}bxs_smile.png';
 }
