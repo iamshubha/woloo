@@ -67,4 +67,25 @@ abstract class AppImages {
   static String get wahScore => '${_assetImgPath}wah_score.png';
   static String get greenSmily => '${_assetImgPath}bxs_smile.png';
   static String get money => '${_assetImgPath}money.png';
+  static String get bag => '${_assetImgPath}bag.png';
+  static String get cleaning => '${_assetImgPath}cleaning.png';
+  static String get dusting => '${_assetImgPath}dusting.png';
+  static String get general => '${_assetImgPath}general.png';
+  static String get kitchen => '${_assetImgPath}kitchen.png';
+  static String get toileries => '${_assetImgPath}toilet_gadgets.png';
+  static String get uniforms => '${_assetImgPath}uniforms.png';
+  static String get fenyl1 => '${_assetImgPath}fenyl1.jpg';
+  static String get fenyl2 => '${_assetImgPath}fenyl2.jpg';
+  static String get fenyl3 => '${_assetImgPath}fenyl3.jpg';
+  static String get fenyl4 => '${_assetImgPath}fenyl4.jpg';
+  static String get fenyl5 => '${_assetImgPath}fenyl5.jpg';
+  static String get fenyl6 => '${_assetImgPath}fenyl6.jpg';
+  static String get fenyl7 => '${_assetImgPath}fenyl7.jpg';
+  static String get stars => '${_assetImgPath}star_rating.png';
+  static String get bTemplate => '${_assetImgPath}brand_template.png';
+  static String get homeIcon => '${_assetImgPath}home_icon.png';
+  static String get monitoring => '${_assetImgPath}monitoring.png';
+  static String get products => '${_assetImgPath}products.png';
+  static String get profileIcon => '${_assetImgPath}profile_icon.png';
+  static String get services => '${_assetImgPath}services.png';
 }
