@@ -114,6 +114,7 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   icon_decoration: ^2.1.0
   provider: ^6.1.4
+  gauge_chart: ^1.0.4
 
 dependency_overrides:
   rxdart: ^0.27.2
