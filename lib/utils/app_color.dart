@@ -183,4 +183,8 @@ class AppColors {
 
   static const Color textgreyColor = Color(0xFF828282);
   static const Color textgreyColor1 = Color(0xff767676);
+  static const Color pieDataColor4 = Color(0xff231F20);
+  static const Color pieDataColor2 = Color(0xff8BDFFB);
+  static const Color pieDataColor3 = Color(0xff717171);
+  static const Color pieDataColor1 = Color(0xffB8B8B8);
 }

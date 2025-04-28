@@ -66,4 +66,5 @@ abstract class AppImages {
   static String get transparentLogo => '${_assetImgPath}transparent_logo.png';
   static String get wahScore => '${_assetImgPath}wah_score.png';
   static String get greenSmily => '${_assetImgPath}bxs_smile.png';
+  static String get money => '${_assetImgPath}money.png';
 }
