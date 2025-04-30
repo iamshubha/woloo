@@ -1,7 +1,15 @@
+import 'dart:ffi';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gauge_chart/gauge_chart.dart';
+import 'package:woloo_smart_hygiene/janitorial_services/model/host_dashboard_screen.dart';
+import 'package:woloo_smart_hygiene/janitorial_services/screens/bloc/iot_bloc.dart';
+import 'package:woloo_smart_hygiene/janitorial_services/screens/bloc/iot_event.dart';
+import 'package:woloo_smart_hygiene/janitorial_services/screens/bloc/iot_state.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/screens/monitor-iot.dart';
 import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
@@ -11,16 +19,17 @@ import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import '../../utils/app_images.dart';
 import '../model/iotdata_model.dart';
 
-class WalkChartScreen extends StatefulWidget {
-  const WalkChartScreen({super.key});
+class HostDashboard extends StatefulWidget {
+  const HostDashboard({super.key});
 
   @override
-  State<WalkChartScreen> createState() => _WalkChartScreenState();
+  State<HostDashboard> createState() => _HostDashboardState();
 }
 
-class _WalkChartScreenState extends State<WalkChartScreen> {
-  DashboardData? _dashboardData;
-  bool _isLoading = false;
+class _HostDashboardState extends State<HostDashboard> {
+  IotBloc iotBloc = IotBloc();
+  HostDashboardData? _hostDashboardData;
+  // bool _isLoading = false;
   String _error = '';
   final String _timeFilter = 'ALL';
 
@@ -29,7 +38,8 @@ class _WalkChartScreenState extends State<WalkChartScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchDashboardData();
+    iotBloc.add(const GetHostDashboardData(woloo_id: "woloo_id"));
+    // _fetchDashboardData();
   }
 
   @override
@@ -54,119 +64,139 @@ class _WalkChartScreenState extends State<WalkChartScreen> {
           ],
         ),
       ),
-      body: SafeArea(child: Builder(builder: (context) {
-        if (_isLoading && _dashboardData == null) {
-          return const Center(child: CircularProgressIndicator());
-        }
+      body: SafeArea(
+        child: BlocConsumer(
+          bloc: iotBloc,
+          listener: (context, state) {
+            print("dssa $state");
+            if (state is IotLoading) {
+              EasyLoading.show(status: state.message);
+            }
+            if (state is HostDashboardSuccess) {
+              EasyLoading.dismiss();
+              setState(() {
+                _hostDashboardData = state.dashboardData;
+              });
+            }
 
-        if (_error.isNotEmpty && _dashboardData == null) {
-          return Center(
-            child: Text('Error: $_error'),
-          );
-        }
-
-        final data = _dashboardData;
-        if (data == null) {
-          return const Center(child: Text('No data available'));
-        }
-
-        return SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 23.w),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // HeaderSection(
-              //   username: data.username,
-              //   userRole: data.userRole,
-              //   lastUpdated: data.lastUpdated,
-              //   trialDaysLeft: data.trialDaysLeft,
-              // ),
-              const SizedBox(height: 16),
-              RichText(
-                text: const TextSpan(
-                  style: TextStyle(
-                      color: AppColors.textgreyColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700),
-                  children: [
-                    TextSpan(
-                      text: 'Your Trial shall end in ',
-                    ),
-                    TextSpan(
-                      text: '3 Days. ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    TextSpan(
-                      text: 'Renew it Now',
+            if (state is IotError) {
+              EasyLoading.dismiss();
+              EasyLoading.showError(state.error);
+            }
+          },
+          builder: (context, state) {
+            return SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 23.w),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // HeaderSection(
+                  //   username: data.username,
+                  //   userRole: data.userRole,
+                  //   lastUpdated: data.lastUpdated,
+                  //   trialDaysLeft: data.trialDaysLeft,
+                  // ),
+                  const SizedBox(height: 16),
+                  RichText(
+                    text: const TextSpan(
                       style: TextStyle(
-                        color: AppColors.textgreyColor,
-                        fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.underline,
-                      ),
+                          color: AppColors.textgreyColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700),
+                      children: [
+                        TextSpan(
+                          text: 'Your Trial shall end in ',
+                        ),
+                        TextSpan(
+                          text: '3 Days. ',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: 'Renew it Now',
+                          style: TextStyle(
+                            color: AppColors.textgreyColor,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: 16.h),
+                  WahScore(
+                      imgUrl: _hostDashboardData?.results?.wahScoreImage ??
+                          'https://woloo-prod.s3.ap-south-1.amazonaws.com/Cibil_Images/excellent.png'),
+                  SizedBox(height: 16.h),
+                  if (_hostDashboardData?.results != null)
+                    WalkIn(
+                      walk_ins_last_1Hr_list: [
+                        WalkInsLast1Hr(
+                          currentCount: _hostDashboardData
+                                  ?.results?.walkInsLast1Hr?.currentCount ??
+                              0,
+                          previousCount: _hostDashboardData
+                                  ?.results?.walkInsLast1Hr?.previousCount ??
+                              0,
+                          percentageChange: _hostDashboardData
+                                  ?.results?.walkInsLast1Hr?.percentageChange ??
+                              0,
+                        ),
+                        WalkInsLast1Hr(
+                          currentCount: _hostDashboardData
+                                  ?.results?.walkInsLast3Hr?.currentCount ??
+                              0,
+                          previousCount: _hostDashboardData
+                                  ?.results?.walkInsLast3Hr?.previousCount ??
+                              0,
+                          percentageChange: _hostDashboardData
+                                  ?.results?.walkInsLast3Hr?.percentageChange ??
+                              0,
+                        ),
+                        WalkInsLast1Hr(
+                          currentCount: _hostDashboardData
+                                  ?.results?.walkInsLast6Hr?.currentCount ??
+                              0,
+                          previousCount: _hostDashboardData
+                                  ?.results?.walkInsLast6Hr?.previousCount ??
+                              0,
+                          percentageChange: _hostDashboardData
+                                  ?.results?.walkInsLast6Hr?.percentageChange ??
+                              0,
+                        )
+                      ],
+                    ),
+                  SizedBox(height: 16.h),
+                  // const ShopWidget(),
+                  SizedBox(height: 16.h),
+                  const RedeemPoints(),
+                  // SizedBox(height: 16.h),
+                  // const DashboardOverview(),
+                  // SizedBox(height: 16.h),
+                  // SizedBox(
+                  //   height: 27.h,
+                  //   child: ListView(
+                  //     scrollDirection: Axis.horizontal,
+                  //     children: [
+                  //       ...List.generate(4, (index) {
+                  //         return FacilityButton(label: "Facility ${index + 1}");
+                  //       }),
+                  //       const FacilityButton(label: "Request"),
+                  //       const FacilityButton(label: "Completed"),
+                  //     ],
+                  //   ),
+                  // ),
+                  // SizedBox(height: 16.h),
+                  // const TaskAudit(),
+                  // SizedBox(height: 16.h),
+                  // JanitorPerformance(i: i),
+                  // SizedBox(height: 16.h),
+                ],
               ),
-              SizedBox(height: 16.h),
-              const WahScore(),
-              SizedBox(height: 16.h),
-              const WalkIn(),
-              SizedBox(height: 16.h),
-              const ShopWidget(),
-              SizedBox(height: 16.h),
-              const RedeemPoints(),
-              SizedBox(height: 16.h),
-              const DashboardOverview(),
-              SizedBox(height: 16.h),
-              SizedBox(
-                height: 27.h,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    ...List.generate(4, (index) {
-                      return FacilityButton(label: "Facility ${index + 1}");
-                    }),
-                    const FacilityButton(label: "Request"),
-                    const FacilityButton(label: "Completed"),
-                  ],
-                ),
-              ),
-              SizedBox(height: 16.h),
-              const TaskAudit(),
-              SizedBox(height: 16.h),
-              JanitorPerformance(i: i),
-              SizedBox(height: 16.h),
-            ],
-          ),
-        );
-      })),
+            );
+          },
+        ),
+      ),
     );
-  }
-
-  Future<void> _fetchDashboardData() async {
-    setState(() {
-      _isLoading = true;
-      _error = '';
-    });
-
-    try {
-      // Simulate API call for now
-      await Future.delayed(const Duration(seconds: 1));
-      final data = await ApiService()
-          .fetchDashboardData(timeFilter: _timeFilter.toLowerCase());
-      setState(() {
-        _dashboardData = data;
-        _error = '';
-      });
-    } catch (e) {
-      setState(() {
-        _error = e.toString();
-      });
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
   }
 }
 
@@ -747,7 +777,11 @@ class ShopWidget extends StatelessWidget {
 }
 
 class WalkIn extends StatelessWidget {
+  // ignore: non_constant_identifier_names
+  final List<WalkInsLast1Hr> walk_ins_last_1Hr_list;
+  // final WalkInsLast1Hr walk_ins_last_1Hr, walk_ins_last_3Hr, walk_ins_last_6Hr;
   const WalkIn({
+    required this.walk_ins_last_1Hr_list,
     super.key,
   });
 
@@ -797,9 +831,9 @@ class WalkIn extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    const Text(
-                      "last 6 hrs",
-                      style: TextStyle(
+                    Text(
+                      "last ${walk_ins_last_1Hr_list[index].currentCount}6 hrs",
+                      style: const TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
                       ),
@@ -831,7 +865,9 @@ class WalkIn extends StatelessWidget {
 }
 
 class WahScore extends StatelessWidget {
+  final String imgUrl;
   const WahScore({
+    required this.imgUrl,
     super.key,
   });
 
@@ -851,7 +887,11 @@ class WahScore extends StatelessWidget {
           ]),
       child: Column(
         children: [
-          Image.asset(AppImages.wahScore),
+          Image.network(
+            imgUrl,
+            height: 220.h,
+            width: 220.h,
+          ),
           const SizedBox(height: 16),
           const Divider(color: AppColors.textgreyColor),
           const SizedBox(height: 16),

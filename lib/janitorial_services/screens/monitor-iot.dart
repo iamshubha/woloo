@@ -1,12 +1,7 @@
-import 'dart:math';
-
+// Mock API Service
 import 'package:flutter/material.dart';
-// lib/widgets/header_section.dart
-
-import 'package:intl/intl.dart';
-// lib/widgets/air_quality_chart.dart
-
-import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_constants.dart';
@@ -17,8 +12,10 @@ import '../model/iotdata_model.dart';
 import '../widgets/ai_summary.dart';
 import '../widgets/air_quality_chart.dart';
 import '../widgets/alert_notification.dart';
+import 'bloc/iot_bloc.dart';
+import 'bloc/iot_event.dart';
+import 'bloc/iot_state.dart';
 
-// Mock API Service
 class ApiService {
   Future<DashboardData> fetchDashboardData({required String timeFilter}) async {
     // Simulate network delay
@@ -575,42 +572,21 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  IotBloc iotBloc = IotBloc();
   int _selectedIndex = 0;
   DashboardData? _dashboardData;
-  bool _isLoading = false;
+  // bool _isLoading = false;
   String _error = '';
   String _timeFilter = 'ALL';
 
   @override
   void initState() {
     super.initState();
-    _fetchDashboardData();
-  }
-
-  Future<void> _fetchDashboardData() async {
-    setState(() {
-      _isLoading = true;
-      _error = '';
-    });
-
-    try {
-      // Simulate API call for now
-      await Future.delayed(const Duration(seconds: 1));
-      final data = await ApiService()
-          .fetchDashboardData(timeFilter: _timeFilter.toLowerCase());
-      setState(() {
-        _dashboardData = data;
-        _error = '';
-      });
-    } catch (e) {
-      setState(() {
-        _error = e.toString();
-      });
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+    // _fetchDashboardData();
+    iotBloc.add(const GetIot(
+      deviceId: 'deviceId',
+      type: 'type',
+    )); // Replace with actual device ID and type
   }
 
   void _setTimeFilter(String filter) {
@@ -618,7 +594,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       setState(() {
         _timeFilter = filter;
       });
-      _fetchDashboardData();
+      // _fetchDashboardData();
     }
   }
 
@@ -645,11 +621,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
       body: SafeArea(
-        child: Builder(
-          builder: (context) {
-            if (_isLoading && _dashboardData == null) {
-              return const Center(child: CircularProgressIndicator());
+        child: BlocConsumer(
+          bloc: iotBloc,
+          listener: (context, state) {
+            print("dssa $state");
+            if (state is IotLoading) {
+              EasyLoading.show(status: state.message);
             }
+            if (state is IotSuccess) {
+              EasyLoading.dismiss();
+              setState(() {
+                _dashboardData = state.dashboardData;
+                // _isLoading = false;
+              });
+            }
+
+            if (state is IotError) {
+              EasyLoading.dismiss();
+              EasyLoading.showError(state.error);
+            }
+          },
+          builder: (context, state) {
+            // if (_isLoading && _dashboardData == null) {
+            //   return const Center(child: CircularProgressIndicator());
+            // }
 
             if (_error.isNotEmpty && _dashboardData == null) {
               return Center(
@@ -733,7 +728,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         timeRange: e.timeRange,
                       );
                     }).toList(),
-                    isLoading: _isLoading,
+                    isLoading: false,
                     timeFilter: _timeFilter,
                     onFilterChanged: _setTimeFilter,
                   ),

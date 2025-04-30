@@ -201,7 +201,7 @@ class GaugeGraphData {
 
 class ChartDataPoint {
   final String color;
-  final int y;
+  var y;
 
   ChartDataPoint({
     required this.color,

@@ -310,15 +310,15 @@ class LandingProducts extends StatelessWidget {
               );
             },
           ),
+          SizedBox(
+            height: 5.h,
+          ),
           Text(
             "New in Store",
             style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
           ),
           SizedBox(
-            height: 10.h,
-          ),
-          SizedBox(
-            height: 163.h,
+            height: 130.h,
             child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (c, i) => ClipRRect(
