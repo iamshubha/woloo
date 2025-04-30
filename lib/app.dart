@@ -6,13 +6,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
-import 'package:woloo_smart_hygiene/enums/product_details.dart';
+import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_constants.dart';
-
-import 'janitorial_services/screens/monitor-iot.dart';
-import 'screens/splash_screen/view/splash.dart';
 
 class App extends StatefulWidget {
   const App({super.key});

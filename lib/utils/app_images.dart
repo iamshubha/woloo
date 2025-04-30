@@ -88,4 +88,9 @@ abstract class AppImages {
   static String get products => '${_assetImgPath}products.png';
   static String get profileIcon => '${_assetImgPath}profile_icon.png';
   static String get services => '${_assetImgPath}services.png';
+  static String get cart => '${_assetImgPath}cart.png';
+  static String get item => '${_assetImgPath}items.png';
+  static String get deleteLogo => "${_assetImgPath}delete (2).png";
+  static String get salePercentage => "${_assetImgPath}sale.png";
+  static String get list => "${_assetImgPath}list.png";
 }

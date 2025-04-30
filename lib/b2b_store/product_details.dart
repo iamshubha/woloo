@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
@@ -12,6 +13,25 @@ class ProductDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final sizeList = ["S", "M", "L", "XL"];
     return Scaffold(
+      bottomSheet: const XDecoratedBox(
+        child: Row(
+          children: [
+            Expanded(
+              child: LongLabeledButton(
+                label: "Buy Now",
+              ),
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            Expanded(
+              child: LongLabeledButton(
+                label: "Add to Cart",
+              ),
+            ),
+          ],
+        ),
+      ),
       appBar: const BackAppBar(),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
@@ -25,68 +45,7 @@ class ProductDetailsScreen extends StatelessWidget {
             const Divider(
               thickness: 2,
             ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-              decoration: BoxDecoration(
-                color: AppColors.themeBackground,
-                borderRadius: BorderRadius.circular(25.r),
-                boxShadow: const [
-                  BoxShadow(
-                    color: AppColors.greyShadowColor,
-                    blurRadius: 5.0,
-                    spreadRadius: 0.5,
-                    offset: Offset(0, 2),
-                  ),
-                  BoxShadow(
-                    color: AppColors.greyShadowColor,
-                    blurRadius: 5.0,
-                    spreadRadius: 0.5,
-                    offset: Offset(0, -1),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        "Address - Home",
-                        style: TextStyle(
-                            fontSize: 15.sp, fontWeight: FontWeight.bold),
-                      ),
-                      const Spacer(),
-                      Text(
-                        "Change",
-                        style: TextStyle(
-                            color: AppColors.textgreyColor,
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  ),
-                  const Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Divider(
-                          thickness: 2,
-                        ),
-                      ),
-                      Spacer(
-                        flex: 4,
-                      )
-                    ],
-                  ),
-                  Text(
-                    "1234 Lane road, Area, Location, Landmark",
-                    style: TextStyle(
-                        fontSize: 14.sp, color: AppColors.textgreyColor),
-                  )
-                ],
-              ),
-            ),
+            const HomeAddress(),
             const Divider(
               thickness: 2,
             ),
@@ -103,20 +62,7 @@ class ProductDetailsScreen extends StatelessWidget {
                 )
               ],
             ),
-            SizedBox(
-              height: 230.h,
-              width: double.infinity,
-              child: ListView.separated(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (c, i) => HorizontalListTile(
-                        imgURL: topBrands[i].imageUrl,
-                      ),
-                  separatorBuilder: (c, i) => const SizedBox(
-                        width: 10,
-                      ),
-                  itemCount: topBrands.length),
-            ),
+            const RecentSearches(),
             Row(
               children: [
                 Text(
@@ -149,6 +95,100 @@ class ProductDetailsScreen extends StatelessWidget {
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class RecentSearches extends StatelessWidget {
+  const RecentSearches({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 230.h,
+      width: double.infinity,
+      child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (c, i) => HorizontalListTile(
+                imgURL: topBrands[i].imageUrl,
+              ),
+          separatorBuilder: (c, i) => const SizedBox(
+                width: 10,
+              ),
+          itemCount: topBrands.length),
+    );
+  }
+}
+
+class HomeAddress extends StatelessWidget {
+  const HomeAddress({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+      decoration: BoxDecoration(
+        color: AppColors.themeBackground,
+        borderRadius: BorderRadius.circular(25.r),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.greyShadowColor,
+            blurRadius: 5.0,
+            spreadRadius: 0.5,
+            offset: Offset(0, 2),
+          ),
+          BoxShadow(
+            color: AppColors.greyShadowColor,
+            blurRadius: 5.0,
+            spreadRadius: 0.5,
+            offset: Offset(0, -1),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              Text(
+                "Address - Home",
+                style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
+              ),
+              const Spacer(),
+              Text(
+                "Change",
+                style: TextStyle(
+                    color: AppColors.textgreyColor,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+          const Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Divider(
+                  thickness: 2,
+                ),
+              ),
+              Spacer(
+                flex: 4,
+              )
+            ],
+          ),
+          Text(
+            "1234 Lane road, Area, Location, Landmark",
+            style: TextStyle(fontSize: 14.sp, color: AppColors.textgreyColor),
+          )
+        ],
       ),
     );
   }
@@ -580,37 +620,7 @@ class ProductTitleDesc extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                  color: AppColors.lightCyanColor,
-                  borderRadius: BorderRadius.circular(4)),
-              child: const Row(
-                spacing: 7,
-                children: [
-                  XAddRemove(
-                    icon: Icons.remove,
-                  ),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  Icon(
-                    Icons.shopping_cart,
-                    size: 22,
-                  ),
-                  Text(
-                    "1",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  XAddRemove(
-                    icon: Icons.add,
-                  ),
-                ],
-              ),
-            )
+            const CartAddRemove()
           ],
         ),
         Text(
@@ -667,6 +677,47 @@ class ProductTitleDesc extends StatelessWidget {
           thickness: 2,
         ),
       ],
+    );
+  }
+}
+
+class CartAddRemove extends StatelessWidget {
+  const CartAddRemove({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+          color: AppColors.lightCyanColor,
+          borderRadius: BorderRadius.circular(4)),
+      child: const Row(
+        spacing: 7,
+        children: [
+          XAddRemove(
+            icon: Icons.remove,
+          ),
+          SizedBox(
+            width: 15,
+          ),
+          Icon(
+            Icons.shopping_cart,
+            size: 22,
+          ),
+          Text(
+            "1",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            width: 15,
+          ),
+          XAddRemove(
+            icon: Icons.add,
+          ),
+        ],
+      ),
     );
   }
 }
