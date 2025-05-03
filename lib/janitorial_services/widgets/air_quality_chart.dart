@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 
 import '../model/iotdata_model.dart';
-import '../screens/monitor-iot.dart';
 
 class AirQualityChart extends StatelessWidget {
   final List<GraphData> airQualityData;
@@ -202,7 +201,7 @@ class AirQualityChart extends StatelessWidget {
         topTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-        rightTitles: AxisTitles(
+        rightTitles: const AxisTitles(
           sideTitles: SideTitles(
             showTitles: false,
           ),
@@ -349,7 +348,7 @@ class AirQualityChart extends StatelessWidget {
         ),
         LineChartBarData(
           spots: [
-            FlSpot(0, 500),
+            const FlSpot(0, 500),
             FlSpot((airQualityData.length - 1).toDouble(), 500),
           ],
           isCurved: false,

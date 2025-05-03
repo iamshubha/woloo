@@ -1,5 +1,6 @@
 // Mock API Service
 import 'package:dashed_circular_progress_bar/dashed_circular_progress_bar.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -192,65 +193,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   const SizedBox(height: 16),
                   AlertAndNotificationWidget(data: data),
                   const SizedBox(height: 16),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: XDecoratedBox(
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    "Air Quality Level",
-                                    style: TextStyle(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const Spacer(),
-                                  Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                        color: AppColors.buttonYellowColor,
-                                        borderRadius: BorderRadius.circular(8)),
-                                    child: const Icon(
-                                      Icons.arrow_forward_ios_rounded,
-                                      size: 12,
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Text(
-                                "Overall performance",
-                                style: TextStyle(
-                                    color: AppColors.pieDataColor3,
-                                    fontSize: 10.sp),
-                              ),
-                              const SizedBox(
-                                  height: 120,
-                                  width: 120,
-                                  child: ComplexCircularBar(
-                                    percentageValue: 65,
-                                    performance: 1.5,
-                                  )),
-                              Text(
-                                "Average AQL across all facilities",
-                                style: TextStyle(fontSize: 8.sp),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      Expanded(
-                        child: AiSummaryCard(
-                            fontSize: 14,
-                            summary: data.summary.avgppmTimeRangeInsights),
-                      )
-                    ],
-                  )
+                  AirQuality(data: data),
+                  const SizedBox(height: 16),
+                  const Facilities(),
+                  const SizedBox(height: 16),
+                  AiSummaryCard(summary: data.summary.avgppmTimeRangeInsights),
                 ],
               ),
             );
@@ -274,6 +221,255 @@ class _DashboardScreenState extends State<DashboardScreen> {
             label: 'Profile',
           ),
         ],
+      ),
+    );
+  }
+}
+
+class AirQuality extends StatelessWidget {
+  const AirQuality({
+    super.key,
+    required this.data,
+  });
+
+  final DashboardData? data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: XDecoratedBox(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      "Air Quality Level",
+                      style: TextStyle(
+                          fontSize: 14.sp, fontWeight: FontWeight.bold),
+                    ),
+                    const Spacer(),
+                    const ForwardButton()
+                  ],
+                ),
+                Text(
+                  "Overall performance",
+                  style: TextStyle(
+                      color: AppColors.pieDataColor3, fontSize: 10.sp),
+                ),
+                const SizedBox(
+                    height: 120,
+                    width: 120,
+                    child: ComplexCircularBar(
+                      percentageValue: 65,
+                      performance: 1.5,
+                    )),
+                Text(
+                  "Average AQL across all facilities",
+                  style: TextStyle(fontSize: 8.sp),
+                )
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        Expanded(
+          child: AiSummaryCard(
+              fontSize: 14,
+              summary: data?.summary.avgppmTimeRangeInsights ?? ""),
+        )
+      ],
+    );
+  }
+}
+
+class Facilities extends StatelessWidget {
+  const Facilities({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return XDecoratedBox(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Text(
+                "Facilities",
+                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
+              ),
+              const Spacer(),
+              const ForwardButton(),
+            ],
+          ),
+          const Row(
+            spacing: 15,
+            children: [
+              Spacer(),
+              Column(
+                children: [
+                  Icon(
+                    Icons.home,
+                    color: AppColors.lightCyanColor,
+                    size: 35,
+                  ),
+                  Text(
+                    "Home",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  Text(
+                    "Watchlist",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text("Daily Average"),
+                ],
+              ),
+              Column(
+                children: [
+                  Icon(
+                    Icons.person,
+                    color: AppColors.lightCyanColor,
+                    size: 35,
+                  ),
+                  Text(
+                    "Profile",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+              Spacer(),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+            height: 200,
+            child: ListView.separated(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                separatorBuilder: (context, index) {
+                  return const Divider();
+                },
+                itemCount: 3,
+                itemBuilder: (c, i) {
+                  return Container(
+                    child: Row(
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              "Facility ${i + 1}",
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const Text(
+                              "Know More",
+                              style: TextStyle(
+                                  decoration: TextDecoration.underline),
+                            )
+                          ],
+                        ),
+                        const Spacer(
+                          flex: 1,
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: SizedBox(
+                            height: 60, // Specific height
+                            child: LineChart(
+                              LineChartData(
+                                gridData: const FlGridData(show: false),
+                                titlesData: const FlTitlesData(
+                                  leftTitles: AxisTitles(
+                                      sideTitles:
+                                          SideTitles(showTitles: false)),
+                                  rightTitles: AxisTitles(
+                                      sideTitles:
+                                          SideTitles(showTitles: false)),
+                                  topTitles: AxisTitles(
+                                      sideTitles:
+                                          SideTitles(showTitles: false)),
+                                  bottomTitles: AxisTitles(
+                                      sideTitles:
+                                          SideTitles(showTitles: false)),
+                                ),
+                                borderData: FlBorderData(show: false),
+                                lineBarsData: [
+                                  LineChartBarData(
+                                    isCurved: false,
+                                    spots: [
+                                      const FlSpot(0, 1),
+                                      const FlSpot(1, 3),
+                                      const FlSpot(2, 1.5),
+                                      const FlSpot(3, 4),
+                                      const FlSpot(4, 3),
+                                      const FlSpot(5, 4.5),
+                                      const FlSpot(6, 3.5),
+                                    ],
+                                    color: Colors.blue,
+                                    belowBarData: BarAreaData(
+                                      show: true,
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          AppColors.lightCyanColor,
+                                          AppColors.lightCyanColor
+                                              .withValues(alpha: 0.0)
+                                        ],
+                                        // stops: const [0.1, 0.5],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                      ),
+                                    ),
+                                    dotData: const FlDotData(show: false),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        const Text("0.8"),
+                        const Spacer(
+                          flex: 1,
+                        ),
+                        const Icon(Icons.arrow_upward_rounded)
+                      ],
+                    ),
+                  );
+                }),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class ForwardButton extends StatelessWidget {
+  const ForwardButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+          color: AppColors.buttonYellowColor,
+          borderRadius: BorderRadius.circular(8)),
+      child: const Icon(
+        Icons.arrow_forward_ios_rounded,
+        size: 12,
       ),
     );
   }
@@ -334,6 +530,47 @@ class _ComplexCircularBarState extends State<ComplexCircularBar> {
               )
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomLineChart extends StatelessWidget {
+  const CustomLineChart({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 150, // Adjust height as needed
+      child: LineChart(
+        LineChartData(
+          gridData: const FlGridData(show: false), // Hide grid lines
+          titlesData: const FlTitlesData(show: false), // Hide axis titles
+          borderData: FlBorderData(show: false), // Hide borders
+          lineBarsData: [
+            LineChartBarData(
+              spots: [
+                const FlSpot(0, 1),
+                const FlSpot(1, 1.5),
+                const FlSpot(2, 1.2),
+                const FlSpot(3, 1.8),
+                const FlSpot(4, 1.5),
+                const FlSpot(5, 2),
+              ], // Data points for the graph
+              isCurved: true, // Smooth curve
+              // colors: [Colors.lightBlue], // Line color
+              barWidth: 3, // Line thickness
+              isStrokeCapRound: true, // Rounded line ends
+              belowBarData: BarAreaData(
+                show: true,
+              ),
+            ),
+          ],
+          minX: 0,
+          maxX: 5,
+          minY: 0,
+          maxY: 2.5,
         ),
       ),
     );
