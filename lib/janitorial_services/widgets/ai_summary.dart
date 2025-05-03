@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 
 class AiSummaryCard extends StatelessWidget {
@@ -7,7 +8,9 @@ class AiSummaryCard extends StatelessWidget {
   const AiSummaryCard({
     super.key,
     required this.summary,
+    this.fontSize = 20,
   });
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +33,10 @@ class AiSummaryCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Text(
+              Text(
                 'AI Summary ',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: fontSize.sp,
                   fontWeight: FontWeight.w700,
                 ),
               ),

@@ -1,7 +1,10 @@
 // Mock API Service
+import 'package:dashed_circular_progress_bar/dashed_circular_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_constants.dart';
@@ -28,7 +31,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
   DashboardData? _dashboardData;
   // bool _isLoading = false;
-  String _error = '';
+  final String _error = '';
   String _timeFilter = 'ALL';
 
   @override
@@ -116,19 +119,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 children: [
                   RichText(
                     text: const TextSpan(
-                      style: const TextStyle(
+                      style: TextStyle(
                           color: AppColors.textgreyColor,
                           fontSize: 14,
                           fontWeight: FontWeight.w700),
                       children: [
-                        const TextSpan(
+                        TextSpan(
                           text: 'Your Trial shall end in ',
                         ),
                         TextSpan(
                           text: '3 Days. ',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        const TextSpan(
+                        TextSpan(
                           text: 'Renew it Now',
                           style: TextStyle(
                             color: AppColors.textgreyColor,
@@ -187,7 +190,67 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   const SizedBox(height: 16),
                   AiSummaryCard(summary: data.summary.avgppmTimeRangeInsights),
                   const SizedBox(height: 16),
-                  AlertAndNotificationWidget(data: data)
+                  AlertAndNotificationWidget(data: data),
+                  const SizedBox(height: 16),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: XDecoratedBox(
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    "Air Quality Level",
+                                    style: TextStyle(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const Spacer(),
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                        color: AppColors.buttonYellowColor,
+                                        borderRadius: BorderRadius.circular(8)),
+                                    child: const Icon(
+                                      Icons.arrow_forward_ios_rounded,
+                                      size: 12,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Text(
+                                "Overall performance",
+                                style: TextStyle(
+                                    color: AppColors.pieDataColor3,
+                                    fontSize: 10.sp),
+                              ),
+                              const SizedBox(
+                                  height: 120,
+                                  width: 120,
+                                  child: ComplexCircularBar(
+                                    percentageValue: 65,
+                                    performance: 1.5,
+                                  )),
+                              Text(
+                                "Average AQL across all facilities",
+                                style: TextStyle(fontSize: 8.sp),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: AiSummaryCard(
+                            fontSize: 14,
+                            summary: data.summary.avgppmTimeRangeInsights),
+                      )
+                    ],
+                  )
                 ],
               ),
             );
@@ -211,6 +274,67 @@ class _DashboardScreenState extends State<DashboardScreen> {
             label: 'Profile',
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ComplexCircularBar extends StatefulWidget {
+  const ComplexCircularBar(
+      {super.key, required this.percentageValue, required this.performance});
+  final double percentageValue;
+  final double performance;
+  @override
+  State<ComplexCircularBar> createState() => _ComplexCircularBarState();
+}
+
+class _ComplexCircularBarState extends State<ComplexCircularBar> {
+  final ValueNotifier<double> _valueNotifier = ValueNotifier<double>(37.0);
+  @override
+  void initState() {
+    super.initState();
+    _valueNotifier.value = widget.percentageValue;
+  } // Initial progress value
+
+  @override
+  Widget build(BuildContext context) {
+    return DashedCircularProgressBar.aspectRatio(
+      aspectRatio: 1, // width ÷ height
+      valueNotifier: _valueNotifier,
+      progress: _valueNotifier.value,
+      startAngle: 225,
+      sweepAngle: 270,
+      foregroundColor: AppColors.pieDataColor3,
+      backgroundColor: AppColors.lightCyanColor,
+      foregroundStrokeWidth: 16,
+      backgroundStrokeWidth: 8,
+      animation: true,
+      seekSize: 6,
+      seekColor: Colors.transparent,
+      child: Center(
+        child: ValueListenableBuilder(
+          valueListenable: _valueNotifier,
+          builder: (_, double value, __) => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircleAvatar(
+                radius: 10.r,
+                child: const Icon(
+                  Icons.person,
+                  size: 15,
+                  color: AppColors.pieDataColor3,
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Text(
+                widget.performance.toStringAsFixed(1),
+                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

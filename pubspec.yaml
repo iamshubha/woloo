@@ -117,6 +117,8 @@ dependencies:
   gauge_chart: ^1.0.4
   simple_floating_bottom_nav_bar: ^0.0.3
   timelines_plus: ^1.0.6
+  percent_indicator: ^4.2.5
+  dashed_circular_progress_bar: ^0.0.6
 
 dependency_overrides:
   rxdart: ^0.27.2
