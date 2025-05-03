@@ -14,7 +14,7 @@ class CustomTextField extends StatelessWidget {
   final bool? readOnly;
 
   const CustomTextField({
-    Key? key,
+    super.key,
     this.controller,
     required this.hintText,
     this.keyboardType = TextInputType.text,
@@ -26,7 +26,7 @@ class CustomTextField extends StatelessWidget {
     this.focusNode,
     this.readOnly =false
 
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

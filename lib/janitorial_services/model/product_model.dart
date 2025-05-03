@@ -1,6 +1,5 @@
 
 
-import '../../utils/app_images.dart';
 import '../utils/app_strings.dart';
 
 // class Product {

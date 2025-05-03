@@ -11,7 +11,6 @@ import 'package:get_it/get_it.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/screens/login/data/network/login_services.dart';
 
-import '../../../core/network/error_handler.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';

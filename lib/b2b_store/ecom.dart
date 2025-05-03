@@ -155,54 +155,66 @@ class _EcomScreenState extends State<EcomScreen> {
                   right: 0,
                   left: 0,
                   // alignment: Alignment.bottomCenter,
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 12.w),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20.w,
-                      vertical: 10.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.themeBackground,
-                      borderRadius: BorderRadius.circular(12.r),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: AppColors.greyShadowColor,
-                          blurRadius: 5.0,
-                          spreadRadius: 0.5,
-                          offset: Offset(0, -1),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        XNavBarItems(
-                          imageUrl: AppImages.homeIcon,
-                          title: "Home",
-                        ),
-                        XNavBarItems(
-                          imageUrl: AppImages.products,
-                          title: "Products",
-                        ),
-                        XNavBarItems(
-                          imageUrl: AppImages.monitoring,
-                          title: "Monitoring",
-                        ),
-                        XNavBarItems(
-                          imageUrl: AppImages.services,
-                          title: "Services",
-                        ),
-                        XNavBarItems(
-                          imageUrl: AppImages.profileIcon,
-                          title: "Profile",
-                        ),
-                      ],
-                    ),
-                  ),
+                  child: XBottomBar(),
+                
                 )
              
               ],
             ),
+    );
+  }
+}
+
+class XBottomBar extends StatelessWidget {
+  const XBottomBar({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 12.w),
+      padding: EdgeInsets.symmetric(
+        horizontal: 20.w,
+        vertical: 10.h,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.themeBackground,
+        borderRadius: BorderRadius.circular(12.r),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.greyShadowColor,
+            blurRadius: 5.0,
+            spreadRadius: 0.5,
+            offset: Offset(0, -1),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          XNavBarItems(
+            imageUrl: AppImages.homeIcon,
+            title: "Home",
+          ),
+          XNavBarItems(
+            imageUrl: AppImages.products,
+            title: "Products",
+          ),
+          XNavBarItems(
+            imageUrl: AppImages.monitoring,
+            title: "Monitoring",
+          ),
+          XNavBarItems(
+            imageUrl: AppImages.services,
+            title: "Services",
+          ),
+          XNavBarItems(
+            imageUrl: AppImages.profileIcon,
+            title: "Profile",
+          ),
+        ],
+      ),
     );
   }
 }
@@ -605,8 +617,9 @@ class CategoriesSection extends StatelessWidget {
 class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
   const EComAppbar({
     super.key,
-    this.isAll = false,
+    this.isAll = false,this.textFieldHintText='Search Products',
   });
+  final String textFieldHintText;
   final bool isAll;
   @override
   Size get preferredSize => const Size.fromHeight(130);
@@ -690,7 +703,7 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: AppColors.themeBackground,
-                      hintText: 'Search Products',
+                      hintText: textFieldHintText,
                       prefixIcon: const Icon(Icons.search),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.r),

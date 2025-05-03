@@ -93,4 +93,18 @@ abstract class AppImages {
   static String get deleteLogo => "${_assetImgPath}delete (2).png";
   static String get salePercentage => "${_assetImgPath}sale.png";
   static String get list => "${_assetImgPath}list.png";
+  static String get chefLogo => "${_assetImgPath}chef.png";
+  static String get electric => "${_assetImgPath}electric.png";
+  static String get acService => "${_assetImgPath}ac_service.png";
+  static String get sofa => "${_assetImgPath}sofa.png";
+  static String get pest => "${_assetImgPath}pest.png";
+  static String get houseKeeping => "${_assetImgPath}housekeeping.png";
+  static String get deepCleaning => "${_assetImgPath}deep_cleaning.png";
+  static String get chimney => "${_assetImgPath}chimney.png";
+  static String get bathroom => "${_assetImgPath}bathroom.png";
+  static String get banner1 => "${_assetImgPath}banner1.png";
+  static String get banner2 => "${_assetImgPath}banner2.png";
+  static String get banner3 => "${_assetImgPath}banner3.png";
+  static String get pestControlImage => "${_assetImgPath}pest-control-img.jpg";
+  static String get redeem => "${_assetImgPath}redeem.png";
 }

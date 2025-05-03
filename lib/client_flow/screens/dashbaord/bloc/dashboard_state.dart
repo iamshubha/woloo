@@ -52,7 +52,7 @@ class AddUser extends DashboardState {
 
 class Addjanitor extends DashboardState {
   final SuperVisorModel? superVisorModel;
-  Addjanitor({ required this.superVisorModel});
+  const Addjanitor({ required this.superVisorModel});
   @override
   List<Object> get props => [superVisorModel!];
 }

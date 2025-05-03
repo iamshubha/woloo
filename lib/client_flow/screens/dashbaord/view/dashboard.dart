@@ -26,9 +26,9 @@ class _ClientDashboardState extends State<ClientDashboard> {
     });
   }
 
-      List<Widget> _widgetOptions = <Widget>[
-        HomeDashboard(),
-         Clientprofile()
+      final List<Widget> _widgetOptions = <Widget>[
+        const HomeDashboard(),
+         const Clientprofile()
 
        ];
 

@@ -172,7 +172,7 @@ class _ClientLoginState extends State<ClientLogin> {
                              GestureDetector(
                               onTap: (){
                                    Navigator.of(context).push( MaterialPageRoute(builder: (context) {
-                               return Register();
+                               return const Register();
                                   },));
                               },
                                child: Text(LoginConstant.registration,

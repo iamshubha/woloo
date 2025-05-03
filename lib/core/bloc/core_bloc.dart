@@ -76,7 +76,7 @@ CoreBloc() : super(CoreInitial()) {
 
 
           GlobalStorage globalStorage  = GetIt.instance();
-      globalStorage.saveClientId( accessClientId: response.results!.client!.value!.toString() );
+      globalStorage.saveClientId( accessClientId: response.results!.client!.value.toString() );
           
    
 

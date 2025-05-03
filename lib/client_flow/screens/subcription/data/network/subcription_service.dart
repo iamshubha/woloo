@@ -57,7 +57,7 @@ class SubcriptionService {
 
  
     var response = await dio.get(
-      '${APIConstants.GET_USER_COINS}',
+      APIConstants.GET_USER_COINS,
       
       options:  Options(extra: {"auth": true, "isSupervisor": true}),
     );

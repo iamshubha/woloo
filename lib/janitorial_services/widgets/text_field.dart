@@ -8,18 +8,18 @@ class CustomTextFormField extends StatelessWidget {
   final int maxLength;
 
   const CustomTextFormField({
-    Key? key,
+    super.key,
     required this.controller,
     required this.validator,
     required this.hintText,
     this.keyboardType = TextInputType.text,
     this.maxLength = 10,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
       child: Container(
         decoration: BoxDecoration(
           boxShadow: [
@@ -50,7 +50,7 @@ class CustomTextFormField extends StatelessWidget {
               borderSide: BorderSide.none,
             ),
             hintText: hintText,
-            hintStyle: TextStyle(
+            hintStyle: const TextStyle(
               color: Colors.grey, // Adjust if using custom colors
               fontSize: 16.0,
               fontWeight: FontWeight.w400,

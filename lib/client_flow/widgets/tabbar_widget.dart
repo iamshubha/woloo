@@ -43,10 +43,10 @@ class TabbarWidget extends StatelessWidget {
                        Text(title!,),
 
                           id == 0 ?
-                       SizedBox(
+                       const SizedBox(
                         width: 20,
                        )
-                        : SizedBox()
+                        : const SizedBox()
                        ,
 
                         id == 0 ?
@@ -57,13 +57,12 @@ class TabbarWidget extends StatelessWidget {
                         height: 16,
                        )
 
-                       : SizedBox()
+                       : const SizedBox()
                       //  Icon(Icons.add),
 
                     ],
                   )
              ),
            );
-     ;
   }
 }

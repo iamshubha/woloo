@@ -214,8 +214,8 @@ class _SplashScreenState extends State<SplashScreen> {
             MaterialPageRoute(
               builder: (context) => clientId.isNotEmpty
                   ? isComplete
-                      ? ClientDashboard()
-                      : Home(
+                      ? const ClientDashboard()
+                      : const Home(
                           isFromDashboard: false,
                         )
                   : roleId == 1

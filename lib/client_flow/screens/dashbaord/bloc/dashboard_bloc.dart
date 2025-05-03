@@ -311,7 +311,7 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
 
 
           GlobalStorage globalStorage  = GetIt.instance();
-      globalStorage.saveClientId( accessClientId: response.results!.client!.value!.toString() );
+      globalStorage.saveClientId( accessClientId: response.results!.client!.value.toString() );
           
    
 

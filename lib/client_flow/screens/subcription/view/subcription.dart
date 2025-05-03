@@ -319,7 +319,7 @@ Widget row(
 
   Map<String, Object> getPaymentOptions() {
     return {
-      'key': '$merchantKeyValue',
+      'key': merchantKeyValue,
       'amount': int.parse(amountValue),
       'name': 'Woloo',
       'description': 'Premium Plan',
@@ -327,7 +327,7 @@ Widget row(
       'send_sms_hash': true,
       'order_id': orderId,
       'prefill': {
-        'contact': '$mobileNumberValue',
+        'contact': mobileNumberValue,
         'email': 'test@razorpay.com'
       },
       'external': {

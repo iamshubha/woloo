@@ -30,7 +30,7 @@ class _HostDashboardState extends State<HostDashboard> {
   IotBloc iotBloc = IotBloc();
   HostDashboardData? _hostDashboardData;
   // bool _isLoading = false;
-  String _error = '';
+  final String _error = '';
   final String _timeFilter = 'ALL';
 
   var i = 0;

@@ -23,7 +23,7 @@ class TaskBottomsheet extends StatefulWidget {
 
   
      
-   TaskBottomsheet({super.key, 
+   const TaskBottomsheet({super.key, 
    
   });
 
@@ -63,7 +63,7 @@ class _TaskBottomsheetState extends State<TaskBottomsheet> {
            if ( state is GetTask ) {
              facilityNames = state.tasklist;
             // facilityNames!.addAll(state.taskListModel!.data!);
-            print("task in the  ${facilityNames}");
+            print("task in the  $facilityNames");
           }
         if (state is DashboardError  ) {
           EasyLoading.dismiss();
@@ -74,7 +74,7 @@ class _TaskBottomsheetState extends State<TaskBottomsheet> {
             if ( state is GetTask ) {
              facilityNames = state.tasklist;
             // facilityNames!.addAll(state.taskListModel!.data!);
-            print("task in the  ${facilityNames}");
+            print("task in the  $facilityNames");
           }
         return StatefulBuilder(
                  builder: (context, StateSetter setState) {
@@ -161,7 +161,7 @@ class _TaskBottomsheetState extends State<TaskBottomsheet> {
         
                                        listTime =  i.map( (e) =>  e.requiredTime).toList();
         
-                                        print("total time ${estimatedTime}");
+                                        print("total time $estimatedTime");
                                          if(i.isEmpty){
                                            estimatedTime = null;
                                          }else
@@ -175,7 +175,7 @@ class _TaskBottomsheetState extends State<TaskBottomsheet> {
                                          estimatedTime = listTime.reduce((a, b) => a! - b!);
                                        }
         
-                                        print("estimagte ${estimatedTime} ");
+                                        print("estimagte $estimatedTime ");
         
                                        // if(i.isEmpty ){
                                        //    estimatedTime = 0;
@@ -211,7 +211,7 @@ class _TaskBottomsheetState extends State<TaskBottomsheet> {
                                   Text('00:00',
                                     style: AppTextStyle.font24bold,
                                   )
-                                      : Text("${estimatedTime} min",
+                                      : Text("$estimatedTime min",
                                     style: AppTextStyle.font24bold,
                                   )
         
@@ -254,7 +254,7 @@ class _TaskBottomsheetState extends State<TaskBottomsheet> {
                                           use12hour =   localizations.formatTimeOfDay(newShiftTime, alwaysUse24HourFormat: false);
                                         // DateTime  hour =   date.add( Duration(hours: 12, minutes: 0 ));
                                        print("timen $newDateTime ");
-                                         print("hour ${use12hour} ");
+                                         print("hour $use12hour ");
                                        setState((){});
                                      },
                                      child: Container(
@@ -434,7 +434,7 @@ class _TaskBottomsheetState extends State<TaskBottomsheet> {
                                const SizedBox(height: 5),
                                 Center(child: Text(
                                    textAlign: TextAlign.center,
-                                   "Shift shall complete at ${use12hour}" )),
+                                   "Shift shall complete at $use12hour" )),
         
                                const SizedBox(height: 10),
                                // GestureDetector(
@@ -465,7 +465,7 @@ class _TaskBottomsheetState extends State<TaskBottomsheet> {
         
         
                                      // janitorBottomSheet()
-                     ;                             } ,
+} ,
                                    child: Custombutton(text: "Next", width: 328.w))
         
                              ],
@@ -497,7 +497,7 @@ class _TaskBottomsheetState extends State<TaskBottomsheet> {
               startTime:shiftTime,
               endTime: use12hour,
               isFromExisting: isFromExiting,
-              janitorId: janitor == null ? null : janitor.id,
+              janitorId: janitor?.id,
 
               // taskStartTime: taskStartTime,
               // taskEndTime: taskEndTime,

@@ -52,7 +52,7 @@ class _BuddyListDailogState extends State<BuddyListDailog> {
                          height: 20.h,
                        ),
 
-                   Container(
+                   SizedBox(
                      height: 300,
                      width: 300,
                      child: ListView.builder(
