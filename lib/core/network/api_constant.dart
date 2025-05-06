@@ -141,6 +141,26 @@ class APIConstants {
 
   static var GET_IOT_DASHBOARD_DATA =
       '$BASE_URL/api/whms/iot/getIotDashboardData';
+  static var AUTH_BASE_URL = "https://staging-store.woloo.in";
+  static var EMAIL_PASS_REGISTER =
+      '$AUTH_BASE_URL/auth/customer/emailpass/register';
 
-  //  https://staging-api.woloo.in/api/whms/users/client?user_id=62447
+  static var STORE_CUSTOMER_REGISTER =
+      'https://staging-store.woloo.in/store/customers';
+
+  static var STORE_CUSTOMER_LOGIN = '$AUTH_BASE_URL/auth/customer/emailpass';
+
+  //Product
+//'https://staging-store.woloo.in/store/regions'
+  static var GET_REGIONS = '$AUTH_BASE_URL/store/regions';
+  static var CREATE_CART = '$AUTH_BASE_URL/store/carts';
+  // store/product-categories
+  static var GET_PRODUCT_CATEGORIES = '$AUTH_BASE_URL/store/product-categories';
+  //  https://staging-store.woloo.in/store/collections?fields=id,title,metadata
+  static var TOP_BRANDS =
+      '$AUTH_BASE_URL/store/collections?fields=id,title,metadata';
+
+  // https://staging-store.woloo.in/store/
+  static var PRODUCT_COLLECTIONS =
+      '$AUTH_BASE_URL/store/products?fields=*variants.calculated_price';
 }

@@ -1,1 +1,1 @@
-enum EcomTab { seeLess, seeAll }
+//

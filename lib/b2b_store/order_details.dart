@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timelines_plus/timelines_plus.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
-import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
+import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
 
 class OrderScreen extends StatelessWidget {
   const OrderScreen({super.key});
@@ -20,75 +20,23 @@ class OrderScreen extends StatelessWidget {
     ];
     return Scaffold(
       appBar: const BackAppBar(),
-      body: Stack(
-        children: [
-          Padding(
-            // padding: const EdgeInsets.all(8.0),
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
-            child: Column(
-              spacing: 16.h,
-              children: [
-                CartHeader(
-                    imgPath: AppImages.list,
-                    title: "Order Details ",
-                    subtitle: "Check or modify the details of your order here"),
-                OrderStatusCard(
-                  timeLineList: timeLineList,
-                ),
-                // const Spacer()
-              ],
+      bottomNavigationBar: const XBottomBar(),
+      body: Padding(
+        // padding: const EdgeInsets.all(8.0),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+        child: Column(
+          spacing: 16.h,
+          children: [
+            CartHeader(
+                imgPath: AppImages.list,
+                title: "Order Details ",
+                subtitle: "Check or modify the details of your order here"),
+            OrderStatusCard(
+              timeLineList: timeLineList,
             ),
-          ),
-          Positioned(
-            bottom: 20,
-            right: 0,
-            left: 00,
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 12.w),
-              padding: EdgeInsets.symmetric(
-                horizontal: 20.w,
-                vertical: 10.h,
-              ),
-              decoration: BoxDecoration(
-                color: AppColors.themeBackground,
-                borderRadius: BorderRadius.circular(12.r),
-                boxShadow: const [
-                  BoxShadow(
-                    color: AppColors.greyShadowColor,
-                    blurRadius: 5.0,
-                    spreadRadius: 0.5,
-                    offset: Offset(0, -1),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  XNavBarItems(
-                    imageUrl: AppImages.homeIcon,
-                    title: "Home",
-                  ),
-                  XNavBarItems(
-                    imageUrl: AppImages.products,
-                    title: "Products",
-                  ),
-                  XNavBarItems(
-                    imageUrl: AppImages.monitoring,
-                    title: "Monitoring",
-                  ),
-                  XNavBarItems(
-                    imageUrl: AppImages.services,
-                    title: "Services",
-                  ),
-                  XNavBarItems(
-                    imageUrl: AppImages.profileIcon,
-                    title: "Profile",
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
+            // const Spacer()
+          ],
+        ),
       ),
     );
   }

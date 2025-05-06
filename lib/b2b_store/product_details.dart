@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
-  const ProductDetailsScreen({super.key});
+  final Product? productData;
+  const ProductDetailsScreen({super.key, this.productData});
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +40,117 @@ class ProductDetailsScreen extends StatelessWidget {
         child: Column(
           spacing: 16.h,
           children: [
-            const ImageView(),
-            const ProductTitleDesc(),
+            ImageView(
+              imageUrl: productData?.thumbnail ?? '',
+            ),
+            Column(
+              spacing: 10.h,
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Row(
+                      children: List.generate(
+                        5,
+                        (index) => Container(
+                          margin: const EdgeInsets.only(left: 2),
+                          height: 15,
+                          child: Image.asset(
+                            AppImages.stars,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      "(5)",
+                      style: TextStyle(
+                          fontSize: 20.sp, fontWeight: FontWeight.bold),
+                    ),
+                    Container(
+                      height: 20,
+                      width: 20,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: AppColors.alertShadowColor),
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          Icons.arrow_forward_ios_outlined,
+                          size: 15,
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
+                    const CartAddRemove()
+                  ],
+                ),
+                Text(
+                  productData?.title ?? "",
+                  style:
+                      TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "Rs. ${productData?.variants![0].calculatedPrice!.calculatedAmount.toString()}",
+                      // "Rs. ${productData.variants!.last.calculatedPrice!.calculatedAmount.toString()}",
+
+                      // "Rs. 799",
+                      style: TextStyle(
+                          fontSize: 36.sp, fontWeight: FontWeight.bold),
+                    ),
+                    const Spacer(),
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
+                      decoration: BoxDecoration(
+                          color: AppColors.lightCyanColor,
+                          borderRadius: BorderRadius.circular(8)),
+                      child: Center(
+                        child: Text(
+                          "Buy Now",
+                          style: TextStyle(
+                              fontSize: 20.sp, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Text(
+                  productData?.subtitle ?? "",
+                  style: TextStyle(
+                      color: AppColors.textgreyColor,
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold),
+                ),
+                const Divider(
+                  thickness: 2,
+                ),
+                Text(
+                  "Description",
+                  style: TextStyle(
+                      // color: AppColors.textgreyColor,
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  productData?.description ?? "",
+                  style: TextStyle(
+                      // color: AppColors.textgreyColor,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold),
+                ),
+                const Divider(
+                  thickness: 2,
+                ),
+              ],
+            ),
+
+            // const ProductTitleDesc(),
             const XColorsSelection(),
             SizeWidget(sizeList: sizeList),
             const Divider(
@@ -572,115 +683,6 @@ class XColorsSelection extends StatelessWidget {
   }
 }
 
-class ProductTitleDesc extends StatelessWidget {
-  const ProductTitleDesc({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      spacing: 10.h,
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Row(
-              children: List.generate(
-                5,
-                (index) => Container(
-                  margin: const EdgeInsets.only(left: 2),
-                  height: 15,
-                  child: Image.asset(
-                    AppImages.stars,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-            Text(
-              "(5)",
-              style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
-            ),
-            Container(
-              height: 20,
-              width: 20,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: AppColors.alertShadowColor),
-              ),
-              child: const Center(
-                child: Icon(
-                  Icons.arrow_forward_ios_outlined,
-                  size: 15,
-                ),
-              ),
-            ),
-            const Spacer(),
-            const CartAddRemove()
-          ],
-        ),
-        Text(
-          "[Product Name]",
-          style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
-        ),
-        Row(
-          children: [
-            Text(
-              "Rs. 799",
-              style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.bold),
-            ),
-            const Spacer(),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
-              decoration: BoxDecoration(
-                  color: AppColors.lightCyanColor,
-                  borderRadius: BorderRadius.circular(8)),
-              child: Center(
-                child: Text(
-                  "Buy Now",
-                  style:
-                      TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
-                ),
-              ),
-            )
-          ],
-        ),
-        Text(
-          "[Seller Name]",
-          style: TextStyle(
-              color: AppColors.textgreyColor,
-              fontSize: 20.sp,
-              fontWeight: FontWeight.bold),
-        ),
-        const Divider(
-          thickness: 2,
-        ),
-        Text(
-          "Description",
-          style: TextStyle(
-              // color: AppColors.textgreyColor,
-              fontSize: 20.sp,
-              fontWeight: FontWeight.bold),
-        ),
-        Text(
-          "[Product Description]",
-          style: TextStyle(
-              // color: AppColors.textgreyColor,
-              fontSize: 14.sp,
-              fontWeight: FontWeight.bold),
-        ),
-        const Divider(
-          thickness: 2,
-        ),
-      ],
-    );
-  }
-}
-
 class CartAddRemove extends StatelessWidget {
   const CartAddRemove({
     super.key,
@@ -749,8 +751,10 @@ class XAddRemove extends StatelessWidget {
 }
 
 class ImageView extends StatelessWidget {
+  final String imageUrl;
   const ImageView({
     super.key,
+    required this.imageUrl,
   });
 
   @override
@@ -775,8 +779,8 @@ class ImageView extends StatelessWidget {
             BorderRadius.circular(47), // Match the container's border radius
         child: Stack(
           children: [
-            Image.asset(
-              AppImages.fenyl4,
+            Image.network(
+              imageUrl,
               fit: BoxFit.cover, // Ensures the image fills the container
               height: 382, // Match the container's height
               width: 382, // Match the container's width
