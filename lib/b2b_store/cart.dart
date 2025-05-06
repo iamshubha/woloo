@@ -60,9 +60,11 @@ class LongLabeledButton extends StatelessWidget {
     super.key,
     this.onTap,
     required this.label,
+    this.color = AppColors.lightCyanColor,
   });
   final VoidCallback? onTap;
   final String label;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +75,7 @@ class LongLabeledButton extends StatelessWidget {
         height: 30.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6),
-          color: AppColors.lightCyanColor,
+          color: color,
         ),
         child: Center(
             child: Text(
@@ -155,13 +157,15 @@ class XDecoratedBox extends StatelessWidget {
   const XDecoratedBox({
     super.key,
     this.child,
+    this.padding = 12,
   });
   final Widget? child;
+  final double padding;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(12.w),
+      padding: EdgeInsets.all(padding.w),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
