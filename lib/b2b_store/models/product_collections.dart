@@ -1,36 +1,34 @@
 class ProductCollections {
-  List<Products>? products;
+  List<Product> products;
   int? count;
   int? offset;
   int? limit;
 
-  ProductCollections({this.products, this.count, this.offset, this.limit});
+  ProductCollections(
+      {this.products = const [], this.count, this.offset, this.limit});
 
-  ProductCollections.fromJson(Map<String, dynamic> json) {
-    if (json['products'] != null) {
-      products = <Products>[];
-      json['products'].forEach((v) {
-        products!.add(new Products.fromJson(v));
-      });
-    }
-    count = json['count'];
-    offset = json['offset'];
-    limit = json['limit'];
+  factory ProductCollections.fromJson(Map<String, dynamic> json) {
+    return ProductCollections(
+      products: json['products'] == null
+          ? []
+          : (json['products'] as List).map((e) => Product.fromJson(e)).toList(),
+      count: json['count'],
+      offset: json['offset'],
+      limit: json['limit'],
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.products != null) {
-      data['products'] = this.products!.map((v) => v.toJson()).toList();
-    }
-    data['count'] = this.count;
-    data['offset'] = this.offset;
-    data['limit'] = this.limit;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['products'] = products.map((v) => v.toJson()).toList();
+    data['count'] = count;
+    data['offset'] = offset;
+    data['limit'] = limit;
     return data;
   }
 }
 
-class Products {
+class Product {
   String? id;
   String? title;
   String? subtitle;
@@ -40,25 +38,25 @@ class Products {
   bool? discountable;
   String? thumbnail;
   String? collectionId;
-  Null? typeId;
-  Null? weight;
-  Null? length;
-  Null? height;
-  Null? width;
-  Null? hsCode;
-  Null? originCountry;
-  Null? midCode;
-  Null? material;
+  Null typeId;
+  Null weight;
+  Null length;
+  Null height;
+  Null width;
+  Null hsCode;
+  Null originCountry;
+  Null midCode;
+  Null material;
   String? createdAt;
   String? updatedAt;
-  Null? type;
+  Null type;
   Collection? collection;
   List<ProductsOptions>? options;
   List<Null>? tags;
   List<Images>? images;
   List<Variants>? variants;
 
-  Products(
+  Product(
       {this.id,
       this.title,
       this.subtitle,
@@ -86,7 +84,7 @@ class Products {
       this.images,
       this.variants});
 
-  Products.fromJson(Map<String, dynamic> json) {
+  Product.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     subtitle = json['subtitle'];
@@ -109,12 +107,12 @@ class Products {
     updatedAt = json['updated_at'];
     type = json['type'];
     collection = json['collection'] != null
-        ? new Collection.fromJson(json['collection'])
+        ? Collection.fromJson(json['collection'])
         : null;
     if (json['options'] != null) {
       options = <ProductsOptions>[];
       json['options'].forEach((v) {
-        options!.add(new ProductsOptions.fromJson(v));
+        options!.add(ProductsOptions.fromJson(v));
       });
     }
     // if (json['tags'] != null) {
@@ -126,54 +124,54 @@ class Products {
     if (json['images'] != null) {
       images = <Images>[];
       json['images'].forEach((v) {
-        images!.add(new Images.fromJson(v));
+        images!.add(Images.fromJson(v));
       });
     }
     if (json['variants'] != null) {
       variants = <Variants>[];
       json['variants'].forEach((v) {
-        variants!.add(new Variants.fromJson(v));
+        variants!.add(Variants.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['subtitle'] = this.subtitle;
-    data['description'] = this.description;
-    data['handle'] = this.handle;
-    data['is_giftcard'] = this.isGiftcard;
-    data['discountable'] = this.discountable;
-    data['thumbnail'] = this.thumbnail;
-    data['collection_id'] = this.collectionId;
-    data['type_id'] = this.typeId;
-    data['weight'] = this.weight;
-    data['length'] = this.length;
-    data['height'] = this.height;
-    data['width'] = this.width;
-    data['hs_code'] = this.hsCode;
-    data['origin_country'] = this.originCountry;
-    data['mid_code'] = this.midCode;
-    data['material'] = this.material;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['type'] = this.type;
-    if (this.collection != null) {
-      data['collection'] = this.collection!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['title'] = title;
+    data['subtitle'] = subtitle;
+    data['description'] = description;
+    data['handle'] = handle;
+    data['is_giftcard'] = isGiftcard;
+    data['discountable'] = discountable;
+    data['thumbnail'] = thumbnail;
+    data['collection_id'] = collectionId;
+    data['type_id'] = typeId;
+    data['weight'] = weight;
+    data['length'] = length;
+    data['height'] = height;
+    data['width'] = width;
+    data['hs_code'] = hsCode;
+    data['origin_country'] = originCountry;
+    data['mid_code'] = midCode;
+    data['material'] = material;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['type'] = type;
+    if (collection != null) {
+      data['collection'] = collection!.toJson();
     }
-    if (this.options != null) {
-      data['options'] = this.options!.map((v) => v.toJson()).toList();
+    if (options != null) {
+      data['options'] = options!.map((v) => v.toJson()).toList();
     }
     // if (this.tags != null) {
     //   data['tags'] = this.tags!.map((v) => v.toJson()).toList();
     // }
-    if (this.images != null) {
-      data['images'] = this.images!.map((v) => v.toJson()).toList();
+    if (images != null) {
+      data['images'] = images!.map((v) => v.toJson()).toList();
     }
-    if (this.variants != null) {
-      data['variants'] = this.variants!.map((v) => v.toJson()).toList();
+    if (variants != null) {
+      data['variants'] = variants!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -186,7 +184,7 @@ class Collection {
   Metadata? metadata;
   String? createdAt;
   String? updatedAt;
-  Null? deletedAt;
+  Null deletedAt;
 
   Collection(
       {this.id,
@@ -201,25 +199,24 @@ class Collection {
     id = json['id'];
     title = json['title'];
     handle = json['handle'];
-    metadata = json['metadata'] != null
-        ? new Metadata.fromJson(json['metadata'])
-        : null;
+    metadata =
+        json['metadata'] != null ? Metadata.fromJson(json['metadata']) : null;
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     deletedAt = json['deleted_at'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['handle'] = this.handle;
-    if (this.metadata != null) {
-      data['metadata'] = this.metadata!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['title'] = title;
+    data['handle'] = handle;
+    if (metadata != null) {
+      data['metadata'] = metadata!.toJson();
     }
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['deleted_at'] = this.deletedAt;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['deleted_at'] = deletedAt;
     return data;
   }
 }
@@ -234,8 +231,8 @@ class Metadata {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['image'] = this.image;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['image'] = image;
     return data;
   }
 }
@@ -243,11 +240,11 @@ class Metadata {
 class ProductsOptions {
   String? id;
   String? title;
-  Null? metadata;
+  Null metadata;
   String? productId;
   String? createdAt;
   String? updatedAt;
-  Null? deletedAt;
+  Null deletedAt;
   List<Values>? values;
 
   ProductsOptions(
@@ -271,22 +268,22 @@ class ProductsOptions {
     if (json['values'] != null) {
       values = <Values>[];
       json['values'].forEach((v) {
-        values!.add(new Values.fromJson(v));
+        values!.add(Values.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['metadata'] = this.metadata;
-    data['product_id'] = this.productId;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['deleted_at'] = this.deletedAt;
-    if (this.values != null) {
-      data['values'] = this.values!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['title'] = title;
+    data['metadata'] = metadata;
+    data['product_id'] = productId;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['deleted_at'] = deletedAt;
+    if (values != null) {
+      data['values'] = values!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -295,11 +292,11 @@ class ProductsOptions {
 class Values {
   String? id;
   String? value;
-  Null? metadata;
+  Null metadata;
   String? optionId;
   String? createdAt;
   String? updatedAt;
-  Null? deletedAt;
+  Null deletedAt;
 
   Values(
       {this.id,
@@ -321,14 +318,14 @@ class Values {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['value'] = this.value;
-    data['metadata'] = this.metadata;
-    data['option_id'] = this.optionId;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['deleted_at'] = this.deletedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['value'] = value;
+    data['metadata'] = metadata;
+    data['option_id'] = optionId;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['deleted_at'] = deletedAt;
     return data;
   }
 }
@@ -336,12 +333,12 @@ class Values {
 class Images {
   String? id;
   String? url;
-  Null? metadata;
+  Null metadata;
   int? rank;
   String? productId;
   String? createdAt;
   String? updatedAt;
-  Null? deletedAt;
+  Null deletedAt;
 
   Images(
       {this.id,
@@ -365,15 +362,15 @@ class Images {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['url'] = this.url;
-    data['metadata'] = this.metadata;
-    data['rank'] = this.rank;
-    data['product_id'] = this.productId;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['deleted_at'] = this.deletedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['url'] = url;
+    data['metadata'] = metadata;
+    data['rank'] = rank;
+    data['product_id'] = productId;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['deleted_at'] = deletedAt;
     return data;
   }
 }
@@ -381,26 +378,26 @@ class Images {
 class Variants {
   String? id;
   String? title;
-  Null? sku;
-  Null? barcode;
-  Null? ean;
-  Null? upc;
+  Null sku;
+  Null barcode;
+  Null ean;
+  Null upc;
   bool? allowBackorder;
   bool? manageInventory;
-  Null? hsCode;
+  Null hsCode;
   String? originCountry;
-  Null? midCode;
-  Null? material;
-  Null? weight;
-  Null? length;
-  Null? height;
-  Null? width;
-  Null? metadata;
+  Null midCode;
+  Null material;
+  Null weight;
+  Null length;
+  Null height;
+  Null width;
+  Null metadata;
   int? variantRank;
   String? productId;
   String? createdAt;
   String? updatedAt;
-  Null? deletedAt;
+  Null deletedAt;
   List<VariantsOptions>? options;
   CalculatedPrice? calculatedPrice;
 
@@ -456,43 +453,43 @@ class Variants {
     if (json['options'] != null) {
       options = <VariantsOptions>[];
       json['options'].forEach((v) {
-        options!.add(new VariantsOptions.fromJson(v));
+        options!.add(VariantsOptions.fromJson(v));
       });
     }
     calculatedPrice = json['calculated_price'] != null
-        ? new CalculatedPrice.fromJson(json['calculated_price'])
+        ? CalculatedPrice.fromJson(json['calculated_price'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['sku'] = this.sku;
-    data['barcode'] = this.barcode;
-    data['ean'] = this.ean;
-    data['upc'] = this.upc;
-    data['allow_backorder'] = this.allowBackorder;
-    data['manage_inventory'] = this.manageInventory;
-    data['hs_code'] = this.hsCode;
-    data['origin_country'] = this.originCountry;
-    data['mid_code'] = this.midCode;
-    data['material'] = this.material;
-    data['weight'] = this.weight;
-    data['length'] = this.length;
-    data['height'] = this.height;
-    data['width'] = this.width;
-    data['metadata'] = this.metadata;
-    data['variant_rank'] = this.variantRank;
-    data['product_id'] = this.productId;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['deleted_at'] = this.deletedAt;
-    if (this.options != null) {
-      data['options'] = this.options!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['title'] = title;
+    data['sku'] = sku;
+    data['barcode'] = barcode;
+    data['ean'] = ean;
+    data['upc'] = upc;
+    data['allow_backorder'] = allowBackorder;
+    data['manage_inventory'] = manageInventory;
+    data['hs_code'] = hsCode;
+    data['origin_country'] = originCountry;
+    data['mid_code'] = midCode;
+    data['material'] = material;
+    data['weight'] = weight;
+    data['length'] = length;
+    data['height'] = height;
+    data['width'] = width;
+    data['metadata'] = metadata;
+    data['variant_rank'] = variantRank;
+    data['product_id'] = productId;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['deleted_at'] = deletedAt;
+    if (options != null) {
+      data['options'] = options!.map((v) => v.toJson()).toList();
     }
-    if (this.calculatedPrice != null) {
-      data['calculated_price'] = this.calculatedPrice!.toJson();
+    if (calculatedPrice != null) {
+      data['calculated_price'] = calculatedPrice!.toJson();
     }
     return data;
   }
@@ -501,12 +498,12 @@ class Variants {
 class VariantsOptions {
   String? id;
   String? value;
-  Null? metadata;
+  Null metadata;
   String? optionId;
   Option? option;
   String? createdAt;
   String? updatedAt;
-  Null? deletedAt;
+  Null deletedAt;
 
   VariantsOptions(
       {this.id,
@@ -523,25 +520,24 @@ class VariantsOptions {
     value = json['value'];
     metadata = json['metadata'];
     optionId = json['option_id'];
-    option =
-        json['option'] != null ? new Option.fromJson(json['option']) : null;
+    option = json['option'] != null ? Option.fromJson(json['option']) : null;
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     deletedAt = json['deleted_at'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['value'] = this.value;
-    data['metadata'] = this.metadata;
-    data['option_id'] = this.optionId;
-    if (this.option != null) {
-      data['option'] = this.option!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['value'] = value;
+    data['metadata'] = metadata;
+    data['option_id'] = optionId;
+    if (option != null) {
+      data['option'] = option!.toJson();
     }
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['deleted_at'] = this.deletedAt;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['deleted_at'] = deletedAt;
     return data;
   }
 }
@@ -549,11 +545,11 @@ class VariantsOptions {
 class Option {
   String? id;
   String? title;
-  Null? metadata;
+  Null metadata;
   String? productId;
   String? createdAt;
   String? updatedAt;
-  Null? deletedAt;
+  Null deletedAt;
 
   Option(
       {this.id,
@@ -575,14 +571,14 @@ class Option {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['metadata'] = this.metadata;
-    data['product_id'] = this.productId;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['deleted_at'] = this.deletedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['title'] = title;
+    data['metadata'] = metadata;
+    data['product_id'] = productId;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['deleted_at'] = deletedAt;
     return data;
   }
 }
@@ -621,45 +617,44 @@ class CalculatedPrice {
     isCalculatedPriceTaxInclusive = json['is_calculated_price_tax_inclusive'];
     calculatedAmount = json['calculated_amount'];
     rawCalculatedAmount = json['raw_calculated_amount'] != null
-        ? new RawCalculatedAmount.fromJson(json['raw_calculated_amount'])
+        ? RawCalculatedAmount.fromJson(json['raw_calculated_amount'])
         : null;
     isOriginalPricePriceList = json['is_original_price_price_list'];
     isOriginalPriceTaxInclusive = json['is_original_price_tax_inclusive'];
     originalAmount = json['original_amount'];
     rawOriginalAmount = json['raw_original_amount'] != null
-        ? new RawCalculatedAmount.fromJson(json['raw_original_amount'])
+        ? RawCalculatedAmount.fromJson(json['raw_original_amount'])
         : null;
     currencyCode = json['currency_code'];
     calculatedPrice = json['calculated_price'] != null
-        ? new CalculatedPriceData.fromJson(json['calculated_price'])
+        ? CalculatedPriceData.fromJson(json['calculated_price'])
         : null;
     originalPrice = json['original_price'] != null
-        ? new CalculatedPriceData.fromJson(json['original_price'])
+        ? CalculatedPriceData.fromJson(json['original_price'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['is_calculated_price_price_list'] = this.isCalculatedPricePriceList;
-    data['is_calculated_price_tax_inclusive'] =
-        this.isCalculatedPriceTaxInclusive;
-    data['calculated_amount'] = this.calculatedAmount;
-    if (this.rawCalculatedAmount != null) {
-      data['raw_calculated_amount'] = this.rawCalculatedAmount!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['is_calculated_price_price_list'] = isCalculatedPricePriceList;
+    data['is_calculated_price_tax_inclusive'] = isCalculatedPriceTaxInclusive;
+    data['calculated_amount'] = calculatedAmount;
+    if (rawCalculatedAmount != null) {
+      data['raw_calculated_amount'] = rawCalculatedAmount!.toJson();
     }
-    data['is_original_price_price_list'] = this.isOriginalPricePriceList;
-    data['is_original_price_tax_inclusive'] = this.isOriginalPriceTaxInclusive;
-    data['original_amount'] = this.originalAmount;
-    if (this.rawOriginalAmount != null) {
-      data['raw_original_amount'] = this.rawOriginalAmount!.toJson();
+    data['is_original_price_price_list'] = isOriginalPricePriceList;
+    data['is_original_price_tax_inclusive'] = isOriginalPriceTaxInclusive;
+    data['original_amount'] = originalAmount;
+    if (rawOriginalAmount != null) {
+      data['raw_original_amount'] = rawOriginalAmount!.toJson();
     }
-    data['currency_code'] = this.currencyCode;
-    if (this.calculatedPrice != null) {
-      data['calculated_price'] = this.calculatedPrice!.toJson();
+    data['currency_code'] = currencyCode;
+    if (calculatedPrice != null) {
+      data['calculated_price'] = calculatedPrice!.toJson();
     }
-    if (this.originalPrice != null) {
-      data['original_price'] = this.originalPrice!.toJson();
+    if (originalPrice != null) {
+      data['original_price'] = originalPrice!.toJson();
     }
     return data;
   }
@@ -677,19 +672,19 @@ class RawCalculatedAmount {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['value'] = this.value;
-    data['precision'] = this.precision;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['value'] = value;
+    data['precision'] = precision;
     return data;
   }
 }
 
 class CalculatedPriceData {
   String? id;
-  Null? priceListId;
-  Null? priceListType;
-  Null? minQuantity;
-  Null? maxQuantity;
+  Null priceListId;
+  Null priceListType;
+  Null minQuantity;
+  Null maxQuantity;
 
   CalculatedPriceData(
       {this.id,
@@ -707,12 +702,12 @@ class CalculatedPriceData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['price_list_id'] = this.priceListId;
-    data['price_list_type'] = this.priceListType;
-    data['min_quantity'] = this.minQuantity;
-    data['max_quantity'] = this.maxQuantity;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['price_list_id'] = priceListId;
+    data['price_list_type'] = priceListType;
+    data['min_quantity'] = minQuantity;
+    data['max_quantity'] = maxQuantity;
     return data;
   }
 }

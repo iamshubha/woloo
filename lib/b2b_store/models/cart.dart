@@ -4,13 +4,13 @@ class CartModel {
   CartModel({this.cart});
 
   CartModel.fromJson(Map<String, dynamic> json) {
-    cart = json['cart'] != null ? new Cart.fromJson(json['cart']) : null;
+    cart = json['cart'] != null ? Cart.fromJson(json['cart']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.cart != null) {
-      data['cart'] = this.cart!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (cart != null) {
+      data['cart'] = cart!.toJson();
     }
     return data;
   }
@@ -23,7 +23,7 @@ class Cart {
   String? regionId;
   String? createdAt;
   String? updatedAt;
-  Null? completedAt;
+  Null completedAt;
   int? total;
   int? subtotal;
   int? taxTotal;
@@ -44,14 +44,14 @@ class Cart {
   int? originalShippingTaxTotal;
   int? originalShippingSubtotal;
   int? originalShippingTotal;
-  Null? metadata;
+  Null metadata;
   String? salesChannelId;
   String? shippingAddressId;
   String? customerId;
   List<Null>? items;
   List<Null>? shippingMethods;
   ShippingAddress? shippingAddress;
-  Null? billingAddress;
+  Null billingAddress;
   Customer? customer;
   Region? region;
   List<Null>? promotions;
@@ -130,59 +130,57 @@ class Cart {
     customerId = json['customer_id'];
 
     shippingAddress = json['shipping_address'] != null
-        ? new ShippingAddress.fromJson(json['shipping_address'])
+        ? ShippingAddress.fromJson(json['shipping_address'])
         : null;
     billingAddress = json['billing_address'];
-    customer = json['customer'] != null
-        ? new Customer.fromJson(json['customer'])
-        : null;
-    region =
-        json['region'] != null ? new Region.fromJson(json['region']) : null;
+    customer =
+        json['customer'] != null ? Customer.fromJson(json['customer']) : null;
+    region = json['region'] != null ? Region.fromJson(json['region']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['currency_code'] = this.currencyCode;
-    data['email'] = this.email;
-    data['region_id'] = this.regionId;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['completed_at'] = this.completedAt;
-    data['total'] = this.total;
-    data['subtotal'] = this.subtotal;
-    data['tax_total'] = this.taxTotal;
-    data['discount_total'] = this.discountTotal;
-    data['discount_subtotal'] = this.discountSubtotal;
-    data['discount_tax_total'] = this.discountTaxTotal;
-    data['original_total'] = this.originalTotal;
-    data['original_tax_total'] = this.originalTaxTotal;
-    data['item_total'] = this.itemTotal;
-    data['item_subtotal'] = this.itemSubtotal;
-    data['item_tax_total'] = this.itemTaxTotal;
-    data['original_item_total'] = this.originalItemTotal;
-    data['original_item_subtotal'] = this.originalItemSubtotal;
-    data['original_item_tax_total'] = this.originalItemTaxTotal;
-    data['shipping_total'] = this.shippingTotal;
-    data['shipping_subtotal'] = this.shippingSubtotal;
-    data['shipping_tax_total'] = this.shippingTaxTotal;
-    data['original_shipping_tax_total'] = this.originalShippingTaxTotal;
-    data['original_shipping_subtotal'] = this.originalShippingSubtotal;
-    data['original_shipping_total'] = this.originalShippingTotal;
-    data['metadata'] = this.metadata;
-    data['sales_channel_id'] = this.salesChannelId;
-    data['shipping_address_id'] = this.shippingAddressId;
-    data['customer_id'] = this.customerId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['currency_code'] = currencyCode;
+    data['email'] = email;
+    data['region_id'] = regionId;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['completed_at'] = completedAt;
+    data['total'] = total;
+    data['subtotal'] = subtotal;
+    data['tax_total'] = taxTotal;
+    data['discount_total'] = discountTotal;
+    data['discount_subtotal'] = discountSubtotal;
+    data['discount_tax_total'] = discountTaxTotal;
+    data['original_total'] = originalTotal;
+    data['original_tax_total'] = originalTaxTotal;
+    data['item_total'] = itemTotal;
+    data['item_subtotal'] = itemSubtotal;
+    data['item_tax_total'] = itemTaxTotal;
+    data['original_item_total'] = originalItemTotal;
+    data['original_item_subtotal'] = originalItemSubtotal;
+    data['original_item_tax_total'] = originalItemTaxTotal;
+    data['shipping_total'] = shippingTotal;
+    data['shipping_subtotal'] = shippingSubtotal;
+    data['shipping_tax_total'] = shippingTaxTotal;
+    data['original_shipping_tax_total'] = originalShippingTaxTotal;
+    data['original_shipping_subtotal'] = originalShippingSubtotal;
+    data['original_shipping_total'] = originalShippingTotal;
+    data['metadata'] = metadata;
+    data['sales_channel_id'] = salesChannelId;
+    data['shipping_address_id'] = shippingAddressId;
+    data['customer_id'] = customerId;
 
-    if (this.shippingAddress != null) {
-      data['shipping_address'] = this.shippingAddress!.toJson();
+    if (shippingAddress != null) {
+      data['shipping_address'] = shippingAddress!.toJson();
     }
-    data['billing_address'] = this.billingAddress;
-    if (this.customer != null) {
-      data['customer'] = this.customer!.toJson();
+    data['billing_address'] = billingAddress;
+    if (customer != null) {
+      data['customer'] = customer!.toJson();
     }
-    if (this.region != null) {
-      data['region'] = this.region!.toJson();
+    if (region != null) {
+      data['region'] = region!.toJson();
     }
 
     return data;
@@ -191,16 +189,16 @@ class Cart {
 
 class ShippingAddress {
   String? id;
-  Null? firstName;
-  Null? lastName;
-  Null? company;
-  Null? address1;
-  Null? address2;
-  Null? city;
-  Null? postalCode;
+  Null firstName;
+  Null lastName;
+  Null company;
+  Null address1;
+  Null address2;
+  Null city;
+  Null postalCode;
   String? countryCode;
-  Null? province;
-  Null? phone;
+  Null province;
+  Null phone;
 
   ShippingAddress(
       {this.id,
@@ -230,18 +228,18 @@ class ShippingAddress {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['first_name'] = this.firstName;
-    data['last_name'] = this.lastName;
-    data['company'] = this.company;
-    data['address_1'] = this.address1;
-    data['address_2'] = this.address2;
-    data['city'] = this.city;
-    data['postal_code'] = this.postalCode;
-    data['country_code'] = this.countryCode;
-    data['province'] = this.province;
-    data['phone'] = this.phone;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['first_name'] = firstName;
+    data['last_name'] = lastName;
+    data['company'] = company;
+    data['address_1'] = address1;
+    data['address_2'] = address2;
+    data['city'] = city;
+    data['postal_code'] = postalCode;
+    data['country_code'] = countryCode;
+    data['province'] = province;
+    data['phone'] = phone;
     return data;
   }
 }
@@ -262,9 +260,9 @@ class Customer {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['email'] = this.email;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['email'] = email;
 
     return data;
   }
@@ -292,19 +290,19 @@ class Region {
     if (json['countries'] != null) {
       countries = <Countries>[];
       json['countries'].forEach((v) {
-        countries!.add(new Countries.fromJson(v));
+        countries!.add(Countries.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['currency_code'] = this.currencyCode;
-    data['automatic_taxes'] = this.automaticTaxes;
-    if (this.countries != null) {
-      data['countries'] = this.countries!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['currency_code'] = currencyCode;
+    data['automatic_taxes'] = automaticTaxes;
+    if (countries != null) {
+      data['countries'] = countries!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -317,10 +315,10 @@ class Countries {
   String? name;
   String? displayName;
   String? regionId;
-  Null? metadata;
+  Null metadata;
   String? createdAt;
   String? updatedAt;
-  Null? deletedAt;
+  Null deletedAt;
 
   Countries(
       {this.iso2,
@@ -348,17 +346,17 @@ class Countries {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['iso_2'] = this.iso2;
-    data['iso_3'] = this.iso3;
-    data['num_code'] = this.numCode;
-    data['name'] = this.name;
-    data['display_name'] = this.displayName;
-    data['region_id'] = this.regionId;
-    data['metadata'] = this.metadata;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['deleted_at'] = this.deletedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['iso_2'] = iso2;
+    data['iso_3'] = iso3;
+    data['num_code'] = numCode;
+    data['name'] = name;
+    data['display_name'] = displayName;
+    data['region_id'] = regionId;
+    data['metadata'] = metadata;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['deleted_at'] = deletedAt;
     return data;
   }
 }

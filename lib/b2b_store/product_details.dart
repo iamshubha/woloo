@@ -8,7 +8,7 @@ import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
-  final Products? productData;
+  final Product? productData;
   const ProductDetailsScreen({super.key, this.productData});
 
   @override
@@ -89,14 +89,13 @@ class ProductDetailsScreen extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  "[Product Name]",
+                  productData?.title ?? "",
                   style:
                       TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
                 ),
                 Row(
                   children: [
                     Text(
-                      //TODO:
                       "Rs. ${productData?.variants![0].calculatedPrice!.calculatedAmount.toString()}",
                       // "Rs. ${productData.variants!.last.calculatedPrice!.calculatedAmount.toString()}",
 
@@ -122,7 +121,7 @@ class ProductDetailsScreen extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  "[Seller Name]",
+                  productData?.subtitle ?? "",
                   style: TextStyle(
                       color: AppColors.textgreyColor,
                       fontSize: 20.sp,
@@ -139,7 +138,7 @@ class ProductDetailsScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "[Product Description]",
+                  productData?.description ?? "",
                   style: TextStyle(
                       // color: AppColors.textgreyColor,
                       fontSize: 14.sp,
