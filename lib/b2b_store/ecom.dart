@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:simple_floating_bottom_nav_bar/floating_item.dart';
+import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
+import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
+import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
+import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/enums/ecom_tabs.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
+
+enum EcomTab { seeLess, seeAll }
 
 class EcomScreen extends StatefulWidget {
   const EcomScreen({super.key});
@@ -14,6 +24,9 @@ class EcomScreen extends StatefulWidget {
 }
 
 class _EcomScreenState extends State<EcomScreen> {
+  B2BStoreHomePage? _b2bStoreHomePage;
+  bool _isDataLoaded = false;
+  B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   EcomTab tab = EcomTab.seeLess;
   int currentIndex = 0;
   List<FloatingBottomNavItem> bottomNavItems = const [
@@ -38,172 +51,198 @@ class _EcomScreenState extends State<EcomScreen> {
       label: "Profile",
     ),
   ];
+
+  @override
+  void initState() {
+    _b2bStoreBloc.add(
+        StoreCustomerLoginReq(email: '000000000@gmail.com', pass: 'aaarati14'));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // bottomNavigationBar: FloatingBottomNavBar(
-      //   pages: const [
-      //     Center(child: Text("Home")),
-      //     Center(child: Text("Search")),
-      //     Center(child: Text("Add")),
-      //     Center(child: Text("Profile")),
-      //   ],
-      //   items: bottomNavItems,
-      //   initialPageIndex: 0,
-      //   backgroundColor: Colors.green,
-      //   bottomPadding: 10,
-      //   elevation: 0,
-      //   radius: 20,
-      //   width: 300,
-      //   height: 40,
-      // ),
-      appBar: EComAppbar(
-        isAll: tab == EcomTab.seeAll,
-      ),
-      body: tab == EcomTab.seeLess
-          ? SingleChildScrollView(
-              child: Column(
-                children: [
-                  const CategoriesSection(),
-                  LandingProducts(
-                    onTap: () {
-                      setState(() {
-                        if (tab == EcomTab.seeLess) {
-                          tab = EcomTab.seeAll;
-                        } else {
-                          tab = EcomTab.seeLess;
-                        }
-                      });
-                    },
-                  ),
-                ],
-              ),
-            )
-          : Stack(
-              children: [
-                SingleChildScrollView(
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: AppColors.themeBackground,
-                    ),
-                    padding:
-                        EdgeInsets.symmetric(vertical: 16.h, horizontal: 20.w),
-                    child: Column(
-                      spacing: 10.h,
-                      children: [
-                        Row(
-                          children: [
-                            Text("All Products",
-                                style: TextStyle(
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.bold)),
-                            const Spacer(),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  tab = EcomTab.seeLess;
-                                });
-                              },
-                              child: const Row(
-                                mainAxisSize: MainAxisSize.min,
+    return BlocConsumer(
+        bloc: _b2bStoreBloc,
+        listener: (context, state) {
+          print("dssa $state");
+          if (state is B2BStoreLoading) {
+            EasyLoading.show(status: state.message);
+          }
+          if (state is B2BStoreSuccess) {
+            EasyLoading.dismiss();
+            setState(() {
+              _b2bStoreHomePage = state.dashboardData;
+              _isDataLoaded = true;
+              // _dashboardData = state.dashboardData;
+            });
+          }
+
+          if (state is B2BStoreError) {
+            EasyLoading.dismiss();
+            EasyLoading.showError(state.error);
+          }
+        },
+        builder: (context, snapshot) {
+          return Scaffold(
+            // floatingActionButton: FloatingActionButton(onPressed: () {
+            //   print(_b2bStoreHomePage!.topBrands);
+            // }),
+            appBar: EComAppbar(
+              isAll: tab == EcomTab.seeAll,
+            ),
+            body: tab == EcomTab.seeLess
+                ? SingleChildScrollView(
+                    child: _isDataLoaded
+                        ? Column(
+                            children: [
+                              CategoriesSection(
+                                productCategory:
+                                    _b2bStoreHomePage!.productCategory,
+                              ),
+                              LandingProducts(
+                                topBrands: _b2bStoreHomePage!.topBrands,
+                                productCollections:
+                                    _b2bStoreHomePage!.productCollections,
+                                onTap: () {
+                                  setState(() {
+                                    if (tab == EcomTab.seeLess) {
+                                      tab = EcomTab.seeAll;
+                                    } else {
+                                      tab = EcomTab.seeLess;
+                                    }
+                                  });
+                                },
+                              ),
+                            ],
+                          )
+                        : Container(),
+                  )
+                : Stack(
+                    children: [
+                      SingleChildScrollView(
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            color: AppColors.themeBackground,
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 16.h, horizontal: 20.w),
+                          child: Column(
+                            spacing: 10.h,
+                            children: [
+                              Row(
                                 children: [
-                                  Icon(
-                                    Icons.arrow_back_ios_new_rounded,
-                                    size: 10,
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text(
-                                    "Back",
-                                    style: TextStyle(
-                                        fontSize: 10,
-                                        color: AppColors.greyCircleColor,
-                                        fontWeight: FontWeight.bold),
+                                  Text("All Products",
+                                      style: TextStyle(
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.bold)),
+                                  const Spacer(),
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        tab = EcomTab.seeLess;
+                                      });
+                                    },
+                                    child: const Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.arrow_back_ios_new_rounded,
+                                          size: 10,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          "Back",
+                                          style: TextStyle(
+                                              fontSize: 10,
+                                              color: AppColors.greyCircleColor,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ],
+                                    ),
                                   )
                                 ],
                               ),
-                            )
-                          ],
-                        ),
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                            childAspectRatio: 0.6,
+                              GridView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 10,
+                                  childAspectRatio: 0.6,
+                                ),
+                                itemCount: topBrands.length,
+                                itemBuilder: (context, index) {
+                                  return GridItem(
+                                    products: Products(),
+                                    // imageUrl: topBrands[index].imageUrl,
+                                  );
+                                },
+                              ),
+                              SizedBox(
+                                height: 60.h,
+                              ),
+                            ],
                           ),
-                          itemCount: topBrands.length,
-                          itemBuilder: (context, index) {
-                            return GridItem(
-                              imageUrl: topBrands[index].imageUrl,
-                            );
-                          },
                         ),
-                        SizedBox(
-                          height: 60.h,
+                      ),
+                      Positioned(
+                        bottom: 20,
+                        right: 0,
+                        left: 0,
+                        // alignment: Alignment.bottomCenter,
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 12.w),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20.w,
+                            vertical: 10.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.themeBackground,
+                            borderRadius: BorderRadius.circular(12.r),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: AppColors.greyShadowColor,
+                                blurRadius: 5.0,
+                                spreadRadius: 0.5,
+                                offset: Offset(0, -1),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              XNavBarItems(
+                                imageUrl: AppImages.homeIcon,
+                                title: "Home",
+                              ),
+                              XNavBarItems(
+                                imageUrl: AppImages.products,
+                                title: "Products",
+                              ),
+                              XNavBarItems(
+                                imageUrl: AppImages.monitoring,
+                                title: "Monitoring",
+                              ),
+                              XNavBarItems(
+                                imageUrl: AppImages.services,
+                                title: "Services",
+                              ),
+                              XNavBarItems(
+                                imageUrl: AppImages.profileIcon,
+                                title: "Profile",
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
+                      )
+                    ],
                   ),
-                ),
-                Positioned(
-                  bottom: 20,
-                  right: 0,
-                  left: 0,
-                  // alignment: Alignment.bottomCenter,
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 12.w),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20.w,
-                      vertical: 10.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.themeBackground,
-                      borderRadius: BorderRadius.circular(12.r),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: AppColors.greyShadowColor,
-                          blurRadius: 5.0,
-                          spreadRadius: 0.5,
-                          offset: Offset(0, -1),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        XNavBarItems(
-                          imageUrl: AppImages.homeIcon,
-                          title: "Home",
-                        ),
-                        XNavBarItems(
-                          imageUrl: AppImages.products,
-                          title: "Products",
-                        ),
-                        XNavBarItems(
-                          imageUrl: AppImages.monitoring,
-                          title: "Monitoring",
-                        ),
-                        XNavBarItems(
-                          imageUrl: AppImages.services,
-                          title: "Services",
-                        ),
-                        XNavBarItems(
-                          imageUrl: AppImages.profileIcon,
-                          title: "Profile",
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-             
-              ],
-            ),
-    );
+          );
+        });
   }
 }
 
@@ -242,11 +281,17 @@ class XNavBarItems extends StatelessWidget {
 }
 
 class LandingProducts extends StatelessWidget {
-  const LandingProducts({
+  final VoidCallback? onTap;
+  TopBrands topBrands;
+
+  ProductCollections productCollections;
+
+  LandingProducts({
     super.key,
+    required this.topBrands,
+    required this.productCollections,
     this.onTap,
   });
-  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -276,10 +321,12 @@ class LandingProducts extends StatelessWidget {
               mainAxisSpacing: 10,
               childAspectRatio: 1.0,
             ),
-            itemCount: topBrands.length,
+            itemCount: topBrands.collections!.length > 9
+                ? 9
+                : topBrands.collections!.length, //.length,
             itemBuilder: (context, index) {
               return BrandsGrid(
-                imageUrl: topBrands[index].imageUrl,
+                imageUrl: topBrands.collections![index].metadata!.image ?? '',
               );
             },
           ),
@@ -295,6 +342,8 @@ class LandingProducts extends StatelessWidget {
               )
             ],
           ),
+
+          //product collections
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -304,10 +353,13 @@ class LandingProducts extends StatelessWidget {
               mainAxisSpacing: 10,
               childAspectRatio: 0.6,
             ),
-            itemCount: topBrands.length,
+            itemCount: productCollections.products!.length > 8
+                ? 8
+                : productCollections.products!.length,
             itemBuilder: (context, index) {
               return GridItem(
-                imageUrl: topBrands[index].imageUrl,
+                products: productCollections.products![index],
+                // imageUrl: productCollections.products![index].thumbnail ?? '',
               );
             },
           ),
@@ -364,7 +416,7 @@ class BrandsGrid extends StatelessWidget {
           ]),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(25.r),
-        child: Image.asset(
+        child: Image.network(
           imageUrl,
           fit: BoxFit.fill,
         ),
@@ -374,111 +426,125 @@ class BrandsGrid extends StatelessWidget {
 }
 
 class GridItem extends StatelessWidget {
+  final Products products;
+  // final String imageUrl;
   const GridItem({
     super.key,
-    required this.imageUrl,
+    required this.products,
+    // required this.imageUrl,
   });
-  final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w),
-      decoration: BoxDecoration(
-          color: AppColors.themeBackground,
-          borderRadius: BorderRadius.circular(25.r),
-          boxShadow: const [
-            BoxShadow(
-              color: AppColors.greyShadowColor,
-              blurRadius: 5.0,
-              spreadRadius: 0.5,
-              offset: Offset(0, 2),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductDetailsScreen(
+              productData: products,
             ),
-            BoxShadow(
-              color: AppColors.greyShadowColor,
-              blurRadius: 5.0,
-              spreadRadius: 0.5,
-              offset: Offset(0, -1),
-            ),
-          ]),
-      child: Column(
-        spacing: 2.h,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(25.r)),
-            child: SizedBox(
-              height: 165.h,
-              child: Image.asset(
-                imageUrl,
-                fit: BoxFit.cover,
+          ),
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.w),
+        decoration: BoxDecoration(
+            color: AppColors.themeBackground,
+            borderRadius: BorderRadius.circular(25.r),
+            boxShadow: const [
+              BoxShadow(
+                color: AppColors.greyShadowColor,
+                blurRadius: 5.0,
+                spreadRadius: 0.5,
+                offset: Offset(0, 2),
               ),
-            ),
-          ),
-          Text(
-            "vurky room freshner",
-            style: TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            "vurky",
-            style: TextStyle(
-              fontSize: 8.sp,
-              color: AppColors.textgreyColor,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Row(
-            children: List.generate(
-              5,
-              (i) => Container(
-                  margin: EdgeInsets.only(right: 2.w),
-                  height: 10.h,
-                  width: 10.w,
-                  child: Image.asset(AppImages.stars)),
-            ),
-          ),
-          Row(
-            children: [
-              Text(
-                "Rs. 799",
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.bold,
+              BoxShadow(
+                color: AppColors.greyShadowColor,
+                blurRadius: 5.0,
+                spreadRadius: 0.5,
+                offset: Offset(0, -1),
+              ),
+            ]),
+        child: Column(
+          spacing: 2.h,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(25.r)),
+              child: SizedBox(
+                height: 165.h,
+                width: double.infinity,
+                child: Image.network(
+                  products.thumbnail ?? '',
+                  fit: BoxFit.contain,
                 ),
               ),
-              const Spacer(),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                    color: AppColors.buttonColor,
-                    borderRadius: BorderRadius.circular(3.r)),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.shopping_cart_outlined,
-                      color: AppColors.black,
-                      size: 10.sp,
-                    ),
-                    SizedBox(
-                      width: 5.w,
-                    ),
-                    Text(
-                      "Add to Cart",
-                      style: TextStyle(
-                          fontSize: 8.sp,
-                          color: AppColors.black,
-                          fontWeight: FontWeight.bold),
-                    )
-                  ],
+            ),
+            Text(
+              "vurky room freshner",
+              style: TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              "vurky",
+              style: TextStyle(
+                fontSize: 8.sp,
+                color: AppColors.textgreyColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Row(
+              children: List.generate(
+                5,
+                (i) => Container(
+                    margin: EdgeInsets.only(right: 2.w),
+                    height: 10.h,
+                    width: 10.w,
+                    child: Image.asset(AppImages.stars)),
+              ),
+            ),
+            Row(
+              children: [
+                Text(
+                  "Rs. ${products.variants!.last.calculatedPrice!.calculatedAmount.toString()}",
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              )
-            ],
-          )
-        ],
+                const Spacer(),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                      color: AppColors.buttonColor,
+                      borderRadius: BorderRadius.circular(3.r)),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.shopping_cart_outlined,
+                        color: AppColors.black,
+                        size: 10.sp,
+                      ),
+                      SizedBox(
+                        width: 5.w,
+                      ),
+                      Text(
+                        "Add to Cart",
+                        style: TextStyle(
+                            fontSize: 8.sp,
+                            color: AppColors.black,
+                            fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
- 
   }
 }
 
@@ -531,8 +597,10 @@ class SeeMoreButton extends StatelessWidget {
 }
 
 class CategoriesSection extends StatelessWidget {
-  const CategoriesSection({
+  ProductCategory productCategory;
+  CategoriesSection({
     super.key,
+    required this.productCategory,
   });
 
   @override
@@ -561,8 +629,10 @@ class CategoriesSection extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
                 final category = Category(
-                  name: categories[index].name,
-                  imageUrl: categories[index].imageUrl,
+                  name: productCategory.productCategories![index].name ?? '',
+                  imageUrl: productCategory
+                          .productCategories![index].metadata!.image ??
+                      '',
                   color: categories[index].color,
                 );
                 return Column(
@@ -571,7 +641,7 @@ class CategoriesSection extends StatelessWidget {
                       radius: 36.5.r,
                       backgroundColor: category.color,
                       child: Center(
-                        child: Image.asset(
+                        child: Image.network(
                           category.imageUrl,
                           width: 40.w,
                           height: 40.h,

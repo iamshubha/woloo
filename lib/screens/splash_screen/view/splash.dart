@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
+import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/core/bloc/core_bloc.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/screens/home_screen.dart';
@@ -152,7 +154,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) => const DashboardScreen(),
+                builder: (context) => const EcomScreen(),
               ),
               (route) => false,
             );

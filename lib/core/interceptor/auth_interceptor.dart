@@ -12,24 +12,28 @@ class AuthInterceptor extends Interceptor {
   void onError(DioException err, ErrorInterceptorHandler handler) {
     if (err.response?.statusCode == 401) {
       EasyLoading.showToast("Session timed out.\nPlease login again.");
-      Navigator.pushAndRemoveUntil(
-        ContextHolder.currentContext,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-        (route) => false,
-      );
-      return;
+      // Navigator.pushAndRemoveUntil(
+      //   ContextHolder.currentContext,
+      //   MaterialPageRoute(builder: (context) => const LoginScreen()),
+      //   (route) => false,
+      // );
+      // return;
     }
     super.onError(err, handler);
   }
-  
+
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     GlobalStorage globalStorage = GetIt.instance();
     bool isAuth = options.extra['auth'] ?? false;
     bool isSuperVisor = options.extra['isSupervisor'] ?? false;
     if (isAuth) {
-       debugPrint("is auth"); 
-       options.headers.addAll({"x-woloo-token":  isSuperVisor ? globalStorage.getClientToken() : globalStorage.getToken()});
+      debugPrint("is auth");
+      options.headers.addAll({
+        "x-woloo-token": isSuperVisor
+            ? globalStorage.getClientToken()
+            : globalStorage.getToken()
+      });
     }
     super.onRequest(options, handler);
   }
