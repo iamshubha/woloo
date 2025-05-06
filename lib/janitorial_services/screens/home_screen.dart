@@ -222,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 10,
               ),
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: 200,
                 child: ListView.builder(
@@ -250,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 15,
               ),
-                Container(
+                SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: 200,
                 child: ListView.builder(
@@ -308,7 +308,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   outer:false,
                   itemBuilder: (c, i) {
                     return
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width/5,
                         //
                         // decoration: BoxDecoration(
@@ -368,7 +368,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemCount: 5,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Center(

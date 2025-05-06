@@ -6,12 +6,15 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/search.dart';
 import 'package:woloo_smart_hygiene/screens/splash_screen/view/splash.dart';
+
+import 'package:woloo_smart_hygiene/hygine_services/service_order_details.dart';
 
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_constants.dart';
@@ -63,6 +66,7 @@ class _AppState extends State<App> {
           ),
         );
       },
+
       child: SplashScreen(),
     );
   }

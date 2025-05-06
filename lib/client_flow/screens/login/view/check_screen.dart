@@ -34,7 +34,7 @@ class _CheckScreenState extends State<CheckScreen> {
 
       decodedToken = JwtDecoder.decode(some);
 
-       print("print client token ${decodedToken} ");
+       print("print client token $decodedToken ");
 
      dashBoardBloc.add( ClientEvent(
       id: decodedToken!["id"]

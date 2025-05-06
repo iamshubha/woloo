@@ -189,5 +189,6 @@ class AppColors {
   static const Color pieDataColor1 = Color(0xffB8B8B8);
 
   static const Color containerTabColor = Color(0xFFefefef);
-  static const Color lightCyanColor=Color(0xff8BDFFB);
+  static const Color lightCyanColor = Color(0xff8BDFFB);
+  static const Color tileGrey=Color(0xffd9d9d9);
 }

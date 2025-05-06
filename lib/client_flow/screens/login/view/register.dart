@@ -16,7 +16,6 @@ import '../../../widgets/CustomTextField.dart';
 import '../bloc/signup_bloc.dart';
 import '../bloc/signup_event.dart';
 import '../bloc/signup_state.dart';
-import 'choose_service.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});

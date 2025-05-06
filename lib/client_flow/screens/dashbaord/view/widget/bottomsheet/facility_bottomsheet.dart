@@ -143,6 +143,7 @@ class _FacilityBottomsheetState extends State<FacilityBottomsheet> {
                                if (valu == null || valu.isEmpty) {
                                  return "Facility Name is required";
                                }
+                               return null;
                              },
                            ),
                          
@@ -185,13 +186,14 @@ class _FacilityBottomsheetState extends State<FacilityBottomsheet> {
                                   if (valu == null || valu.isEmpty) {
                                     return "Location is required";
                                   }
+                                  return null;
                                 },
 
                                 // debounceTime: 400,
-                                countries: ["in", "fr"],
+                                countries: const ["in", "fr"],
                                 isLatLngRequired: true,
                                 getPlaceDetailWithLatLng: (Prediction prediction) {
-                                  print("placeDetails" + prediction.lat.toString());
+                                  print("placeDetails${prediction.lat}");
                                 },
 
                                 itemClick: (Prediction prediction) {
@@ -214,7 +216,7 @@ class _FacilityBottomsheetState extends State<FacilityBottomsheet> {
                                         const SizedBox(
                                           width: 7,
                                         ),
-                                        Expanded(child: Text("${prediction.description ?? ""}"))
+                                        Expanded(child: Text(prediction.description ?? ""))
                                       ],
                                     ),
                                   );
@@ -240,7 +242,7 @@ class _FacilityBottomsheetState extends State<FacilityBottomsheet> {
                             height: 10,
                            ),
 
-                                                  Container(
+                                                  SizedBox(
                                                       width: MediaQuery.of(context).size.width,
                                                       // height: 120,
                                                       child:
@@ -282,6 +284,7 @@ class _FacilityBottomsheetState extends State<FacilityBottomsheet> {
                               if (valu == null || valu.isEmpty) {
                                 return "Please mention other type";
                               }
+                              return null;
                             },
                           )
                            : const SizedBox()

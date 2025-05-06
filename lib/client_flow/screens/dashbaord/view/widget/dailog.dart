@@ -11,7 +11,6 @@ import '../../../../../screens/common_widgets/image_provider.dart';
 import '../../../../../utils/app_color.dart';
 import '../../../../../utils/app_textstyle.dart';
 import '../../../../widgets/CustomButton.dart';
-import '../../../subcription/view/subcription.dart';
 
 class Dailog extends StatelessWidget {
    final String? image;

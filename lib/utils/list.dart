@@ -43,3 +43,21 @@ final topBrands = [
   Category(imageUrl: AppImages.fenyl5),
   Category(imageUrl: AppImages.fenyl6),
 ];
+
+final services = [
+  Category(imageUrl: AppImages.pest, name: "Pest Control"),
+  Category(imageUrl: AppImages.deepCleaning, name: "Deep Cleaning"),
+  Category(imageUrl: AppImages.chimney, name: "Chimney Cleaning"),
+  Category(imageUrl: AppImages.sofa, name: "Sofa Cleaning"),
+  Category(imageUrl: AppImages.acService, name: "AC Servicing"),
+  Category(imageUrl: AppImages.houseKeeping, name: "HouseKeeping Staff"),
+  Category(imageUrl: AppImages.bathroom, name: "Bathroom Cleaning"),
+  Category(imageUrl: AppImages.electric, name: "Electrical Audit"),
+  Category(imageUrl: AppImages.chefLogo, name: "Food handler Medical Audit"),
+];
+
+final banners = [
+  Category(imageUrl: AppImages.banner1),
+  Category(imageUrl: AppImages.banner2),
+  Category(imageUrl: AppImages.banner3),
+];

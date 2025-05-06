@@ -160,11 +160,7 @@ class _DropDownDialogState<T> extends State<DropDownDialog<T>> {
             // ),
             
             contentPadding:
-            widget.padding != null ?
-                 widget.padding
-
-                :
-            EdgeInsets.symmetric(
+            widget.padding ?? EdgeInsets.symmetric(
               horizontal: 10.w,
               vertical: 10.h,
             ),

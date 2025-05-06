@@ -89,6 +89,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                         )));
                           },
                         ),
+
                       ],
                     )
                   : Container(),
@@ -97,7 +98,6 @@ class _EcomScreenState extends State<EcomScreen> {
         });
   }
 }
-
 
 class LandingProducts extends StatelessWidget {
   final VoidCallback? onTap;
@@ -515,8 +515,9 @@ class CategoriesSection extends StatelessWidget {
 class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
   const EComAppbar({
     super.key,
-    this.isAll = false,
+    this.isAll = false,this.textFieldHintText='Search Products',
   });
+  final String textFieldHintText;
   final bool isAll;
   @override
   Size get preferredSize => const Size.fromHeight(130);
@@ -601,7 +602,7 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: AppColors.themeBackground,
-                      hintText: 'Search Products',
+                      hintText: textFieldHintText,
                       prefixIcon: const Icon(Icons.search),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.r),

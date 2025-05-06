@@ -2,12 +2,10 @@ import 'dart:io';
 
 import 'package:woloo_smart_hygiene/client_flow/utils/client_images.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
-import 'package:woloo_smart_hygiene/screens/common_widgets/button_widget.dart';
 import 'package:woloo_smart_hygiene/screens/login/bloc/login_bloc.dart';
 import 'package:woloo_smart_hygiene/screens/login/view/otp_screen.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_constants.dart';
-import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';

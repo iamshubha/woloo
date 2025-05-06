@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/network/failure.dart';
 
 abstract class SignUpState extends Equatable {
   const SignUpState();

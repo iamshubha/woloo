@@ -72,7 +72,7 @@ class _ChooseServiceState extends State<ChooseService> {
                ),
         
                Container(
-                 padding: EdgeInsets.symmetric(vertical: 25 , horizontal: 25),
+                 padding: const EdgeInsets.symmetric(vertical: 25 , horizontal: 25),
                 // height: 165.h,
                 decoration: BoxDecoration(
                   color: AppColors.white,
@@ -95,7 +95,7 @@ class _ChooseServiceState extends State<ChooseService> {
                         Text("TASKMASTER",
                         style: AppTextStyle.font20bold,
                         ),
-                         SizedBox(
+                         const SizedBox(
                            height: 10,
                          ),
 
@@ -106,7 +106,7 @@ class _ChooseServiceState extends State<ChooseService> {
                             color: AppColors.greyBorder
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         
