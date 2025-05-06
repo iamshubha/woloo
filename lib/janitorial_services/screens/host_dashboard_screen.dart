@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,17 +5,16 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gauge_chart/gauge_chart.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/model/host_dashboard_screen.dart';
+import 'package:woloo_smart_hygiene/janitorial_services/model/referral_coins.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/screens/bloc/iot_bloc.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/screens/bloc/iot_event.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/screens/bloc/iot_state.dart';
-import 'package:woloo_smart_hygiene/janitorial_services/screens/monitor-iot.dart';
 import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 
 import '../../utils/app_images.dart';
-import '../model/iotdata_model.dart';
 
 class HostDashboard extends StatefulWidget {
   const HostDashboard({super.key});
@@ -29,6 +26,7 @@ class HostDashboard extends StatefulWidget {
 class _HostDashboardState extends State<HostDashboard> {
   IotBloc iotBloc = IotBloc();
   HostDashboardData? _hostDashboardData;
+  ReferralCoins? coins;
   // bool _isLoading = false;
   final String _error = '';
   final String _timeFilter = 'ALL';
@@ -75,7 +73,8 @@ class _HostDashboardState extends State<HostDashboard> {
             if (state is HostDashboardSuccess) {
               EasyLoading.dismiss();
               setState(() {
-                _hostDashboardData = state.dashboardData;
+                _hostDashboardData = state.hostDashboardHome.dashboardData;
+                coins = state.hostDashboardHome.coins;
               });
             }
 
@@ -168,7 +167,9 @@ class _HostDashboardState extends State<HostDashboard> {
                   SizedBox(height: 16.h),
                   // const ShopWidget(),
                   SizedBox(height: 16.h),
-                  const RedeemPoints(),
+                  RedeemPoints(
+                    points: coins?.results?.totalCoins.toString() ?? "",
+                  ),
                   // SizedBox(height: 16.h),
                   // const DashboardOverview(),
                   // SizedBox(height: 16.h),
@@ -615,7 +616,9 @@ class DashboardOverview extends StatelessWidget {
 class RedeemPoints extends StatelessWidget {
   const RedeemPoints({
     super.key,
+    required this.points,
   });
+  final String points;
 
   @override
   Widget build(BuildContext context) {
@@ -647,7 +650,7 @@ class RedeemPoints extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "230 Woloo Points",
+                    "$points Woloo Points",
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.bold,

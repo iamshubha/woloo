@@ -1,4 +1,3 @@
-// Mock API Service
 import 'package:dashed_circular_progress_bar/dashed_circular_progress_bar.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -57,6 +56,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          print("DashboardData: $_dashboardData");
+        },
+        child: const Icon(Icons.shopping_cart),
+      ),
       appBar: AppBar(
         leading: CustomImageProvider(
           image: AppImages.dashlogo,

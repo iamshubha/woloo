@@ -6,6 +6,8 @@ import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
 
+import '../widgets/nav_bar.dart';
+
 class HygineSevicesScreen extends StatelessWidget {
   const HygineSevicesScreen({super.key});
 

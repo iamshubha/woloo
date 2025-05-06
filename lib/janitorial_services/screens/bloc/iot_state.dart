@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/model/host_dashboard_screen.dart';
+import 'package:woloo_smart_hygiene/janitorial_services/screens/bloc/iot_bloc.dart';
 
 import '../../model/iotdata_model.dart';
 
@@ -36,8 +37,8 @@ class IotSuccess extends IotState {
 }
 
 class HostDashboardSuccess extends IotState {
-  final HostDashboardData dashboardData;
-  const HostDashboardSuccess({required this.dashboardData});
+  final HostDashboardHome hostDashboardHome;
+  const HostDashboardSuccess({required this.hostDashboardHome});
   @override
-  List<Object> get props => [dashboardData];
+  List<Object> get props => [hostDashboardHome];
 }

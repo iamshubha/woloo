@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:woloo_smart_hygiene/janitorial_services/model/host_dashboard_screen.dart';
+import 'package:woloo_smart_hygiene/janitorial_services/model/referral_coins.dart';
 
 import '../network/iot_services.dart';
 import 'iot_event.dart';
@@ -16,7 +18,7 @@ class IotBloc extends Bloc<IotEvent, IotState> {
 
   IotBloc() : super(IotInitial()) {
     on<GetIot>(_mapGetIotToState);
-    on<GetHostDashboardData>(_mapgetHostDashboardData);
+    on<GetHostDashboardData>(_mappedReferralCoins);
   }
 
   FutureOr<void> _mapGetIotToState(GetIot event, Emitter<IotState> emit) async {
@@ -33,17 +35,40 @@ class IotBloc extends Bloc<IotEvent, IotState> {
     }
   }
 
-  FutureOr<void> _mapgetHostDashboardData(
-      GetHostDashboardData event, Emitter<IotState> emit) async {
+  // FutureOr<void> _mapgetHostDashboardData(
+  //     GetHostDashboardData event, Emitter<IotState> emit) async {
+  //   try {
+  //     emit(const IotLoading(message: "Loading Host Dashboard data..."));
+
+  //     var response = await iotService.gethostDashboardData(woloo_id: "");
+  //     debugPrint("requestId $response");
+
+  //     emit(HostDashboardSuccess(dashboardData: response));
+  //   } catch (e) {
+  //     emit(IotError(error: e.toString()));
+  //   }
+  // }
+
+  FutureOr<void> _mappedReferralCoins(
+      GetHostDashboardData event, Emitter<IotState> state) async {
     try {
       emit(const IotLoading(message: "Loading Host Dashboard data..."));
 
-      var response = await iotService.gethostDashboardData(woloo_id: "");
-      debugPrint("requestId $response");
+      final coins = await iotService.getReferralCoins(woloo_id: "");
+      final dashboardData = await iotService.gethostDashboardData(woloo_id: "");
+      // debugPrint("requestId $response");
 
-      emit(HostDashboardSuccess(dashboardData: response));
+      emit(HostDashboardSuccess(
+          hostDashboardHome:
+              HostDashboardHome(coins: coins, dashboardData: dashboardData)));
     } catch (e) {
       emit(IotError(error: e.toString()));
     }
   }
+}
+
+class HostDashboardHome {
+  final ReferralCoins coins;
+  final HostDashboardData dashboardData;
+  const HostDashboardHome({required this.coins, required this.dashboardData});
 }
