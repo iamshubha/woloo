@@ -144,15 +144,15 @@ class ProductDetailsScreen extends StatelessWidget {
                       fontSize: 14.sp,
                       fontWeight: FontWeight.bold),
                 ),
-                const Divider(
-                  thickness: 2,
-                ),
+                // const Divider(
+                //   thickness: 2,
+                // ),
               ],
             ),
 
             // const ProductTitleDesc(),
-            const XColorsSelection(),
-            SizeWidget(sizeList: sizeList),
+            // const XColorsSelection(),
+            // SizeWidget(sizeList: sizeList),
             const Divider(
               thickness: 2,
             ),

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 
 abstract class B2BStoreEvent extends Equatable {
   const B2BStoreEvent();
@@ -50,4 +51,13 @@ class GetHostDashboardData extends B2BStoreEvent {
 
   @override
   List<Object?> get props => [woloo_id];
+}
+
+class AddressReq extends B2BStoreEvent {
+  final AddressReqBody addressReqBody;
+
+  const AddressReq({required this.addressReqBody});
+
+  @override
+  List<Object?> get props => [addressReqBody];
 }

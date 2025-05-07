@@ -30,7 +30,9 @@ class CollectionsScreen extends StatelessWidget {
                           fontSize: 20.sp, fontWeight: FontWeight.bold)),
                   const Spacer(),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [

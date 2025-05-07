@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/login_flow.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
+import 'package:woloo_smart_hygiene/b2b_store/network/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/login_reg_flow.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/product.dart';
 import 'b2b_store_event.dart';
@@ -18,6 +20,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       LoginFlowService(dio: GetIt.instance());
 
   final ProductService _productService = ProductService(dio: GetIt.instance());
+  final AddressService _addresstService = AddressService(dio: GetIt.instance());
 
   var requestId = '';
   late int roleId;
@@ -26,6 +29,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   B2bStoreBloc() : super(B2BStoreInitial()) {
     // on<StoreCustomersReq>(_emailPassRegister);
     on<StoreCustomerLoginReq>(_emailPassLogin);
+    on<AddressReq>(_createAddress);
   }
 
   FutureOr<void> _emailPassRegister(
@@ -99,6 +103,25 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       )));
     } catch (e) {
       if (emit.isDone) return;
+      emit(B2BStoreError(error: e.toString()));
+      debugPrint("Error in IOT service: $e");
+    }
+  }
+
+  FutureOr<void> _createAddress(
+    AddressReq event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const B2BStoreLoading(message: "Loading data..."));
+      AddAddressResBody response = await _addresstService.addAddress(
+          body: event.addressReqBody, token: box.read('login_jwt'));
+
+      debugPrint("requestId $response");
+      print(response);
+      // emit(B2BStoreSuccess());
+      emit(AddAddressSuccess(addAddressResBody: response));
+    } catch (e) {
       emit(B2BStoreError(error: e.toString()));
       debugPrint("Error in IOT service: $e");
     }

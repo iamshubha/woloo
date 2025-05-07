@@ -202,33 +202,33 @@ class _HostDashboardState extends State<HostDashboard> {
   }
 }
 
-class XDesignedTextField extends StatelessWidget {
-  const XDesignedTextField({
-    super.key,
-    required this.hintText,
-    this.controller,
-  });
-  final String hintText;
-  final TextEditingController? controller;
+// class XDesignedTextField extends StatelessWidget {
+//   const XDesignedTextField({
+//     super.key,
+//     required this.hintText,
+//     this.controller,
+//   });
+//   final String hintText;
+//   final TextEditingController? controller;
 
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-        fillColor: AppColors.themeBackground,
-        filled: true,
-        hintText: hintText,
-        hintStyle: AppTextStyle.font12,
-        border: InputBorder.none,
-        focusedBorder: InputBorder.none,
-        enabledBorder: InputBorder.none,
-        errorBorder: InputBorder.none,
-        disabledBorder: InputBorder.none,
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return TextField(
+//       controller: controller,
+//       decoration: InputDecoration(
+//         fillColor: AppColors.themeBackground,
+//         filled: true,
+//         hintText: hintText,
+//         hintStyle: AppTextStyle.font12,
+//         border: InputBorder.none,
+//         focusedBorder: InputBorder.none,
+//         enabledBorder: InputBorder.none,
+//         errorBorder: InputBorder.none,
+//         disabledBorder: InputBorder.none,
+//       ),
+//     );
+//   }
+// }
 
 class JanitorPerformance extends StatelessWidget {
   const JanitorPerformance({

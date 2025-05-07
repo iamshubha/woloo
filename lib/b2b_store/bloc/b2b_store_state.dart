@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/model/host_dashboard_screen.dart';
 
 abstract class B2BStoreState extends Equatable {
@@ -39,4 +40,11 @@ class HostDashboardSuccess extends B2BStoreState {
   const HostDashboardSuccess({required this.dashboardData});
   @override
   List<Object> get props => [dashboardData];
+}
+
+class AddAddressSuccess extends B2BStoreState {
+  final AddAddressResBody addAddressResBody;
+  const AddAddressSuccess({required this.addAddressResBody});
+  @override
+  List<Object> get props => [addAddressResBody];
 }

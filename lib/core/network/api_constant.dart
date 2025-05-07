@@ -163,4 +163,6 @@ class APIConstants {
   // https://staging-store.woloo.in/store/
   static var PRODUCT_COLLECTIONS =
       '$AUTH_BASE_URL/store/products?fields=*variants.calculated_price';
+
+  static var CREATE_ADDRESS = '$AUTH_BASE_URL/store/customers/me/addresses';
 }

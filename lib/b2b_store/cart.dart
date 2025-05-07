@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -156,10 +157,10 @@ class ItemNamePrice extends StatelessWidget {
 class XDecoratedBox extends StatelessWidget {
   const XDecoratedBox({
     super.key,
-    this.child,
+    required this.child,
     this.padding = 12,
   });
-  final Widget? child;
+  final Widget child;
   final double padding;
 
   @override
@@ -179,6 +180,34 @@ class XDecoratedBox extends StatelessWidget {
         ],
       ),
       child: child,
+    );
+  }
+}
+
+class XDesignedTextField extends StatelessWidget {
+  const XDesignedTextField({
+    super.key,
+    required this.hintText,
+    this.controller,
+    this.validator,
+  });
+
+  final String hintText;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      validator: validator,
+      decoration: InputDecoration(
+        fillColor: AppColors.themeBackground,
+        filled: true,
+        hintText: hintText,
+        hintStyle: AppTextStyle.font12,
+        border: InputBorder.none,
+      ),
     );
   }
 }

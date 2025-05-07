@@ -11,6 +11,7 @@ import 'package:woloo_smart_hygiene/b2b_store/collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
+import 'package:woloo_smart_hygiene/janitorial_services/widgets/address_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
@@ -30,7 +31,6 @@ class _EcomScreenState extends State<EcomScreen> {
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   EcomTab tab = EcomTab.seeLess;
   int currentIndex = 0;
-
 
   @override
   void initState() {
@@ -89,7 +89,6 @@ class _EcomScreenState extends State<EcomScreen> {
                                         )));
                           },
                         ),
-
                       ],
                     )
                   : Container(),
@@ -140,8 +139,8 @@ class LandingProducts extends StatelessWidget {
               mainAxisSpacing: 10,
               childAspectRatio: 1.0,
             ),
-            itemCount: topBrands.collections!.length > 9
-                ? 9
+            itemCount: topBrands.collections!.length > 6
+                ? 6
                 : topBrands.collections!.length, //.length,
             itemBuilder: (context, index) {
               return BrandsGrid(
@@ -465,7 +464,7 @@ class CategoriesSection extends StatelessWidget {
           SizedBox(
             height: 100.h,
             child: ListView.separated(
-              itemCount: categories.length,
+              itemCount: productCategory.productCategories!.length,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
                 final category = Category(
@@ -473,7 +472,9 @@ class CategoriesSection extends StatelessWidget {
                   imageUrl: productCategory
                           .productCategories![index].metadata!.image ??
                       '',
-                  color: categories[index].color,
+                  color: Color(int.tryParse(
+                          "0xFF${productCategory.productCategories![index].metadata!.backgroundColor}") ??
+                      00000),
                 );
                 return Column(
                   children: [
@@ -515,7 +516,8 @@ class CategoriesSection extends StatelessWidget {
 class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
   const EComAppbar({
     super.key,
-    this.isAll = false,this.textFieldHintText='Search Products',
+    this.isAll = false,
+    this.textFieldHintText = 'Search Products',
   });
   final String textFieldHintText;
   final bool isAll;
@@ -551,26 +553,39 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
               color: Colors.black,
             ),
           ),
-          Row(
-            children: [
-              Text(
-                "1234 Lane road, Area, Location, Landmark",
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: Colors.grey,
+          InkWell(
+            onTap: () => showModalBottomSheet(
+              isScrollControlled: true,
+              isDismissible: true, // <-- Allow tap outside to dismiss
+              enableDrag: true, // <-- Allow swipe down to dismiss
+
+              backgroundColor: Colors
+                  .transparent, // Optional: if you want rounded corners to show correctly
+
+              context: context,
+              builder: (_) => AddressBottomSheet(),
+            ),
+            child: Row(
+              children: [
+                Text(
+                  "1234 Lane road, Area, Location, Landmark",
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: Colors.grey,
+                  ),
                 ),
-              ),
-              SizedBox(width: 5.w),
-              Container(
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    shape: BoxShape.circle),
-                child: const Icon(
-                  Icons.arrow_drop_down,
-                  color: Colors.grey,
+                SizedBox(width: 5.w),
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      shape: BoxShape.circle),
+                  child: const Icon(
+                    Icons.arrow_drop_down,
+                    color: Colors.grey,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           )
         ],
       ),
