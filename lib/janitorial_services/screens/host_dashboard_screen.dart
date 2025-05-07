@@ -44,7 +44,7 @@ class _HostDashboardState extends State<HostDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // bottomSheet: ReviewOrderBottomsheet(),
+      // bottomSheet: OrderSummeryBottomSheet(),
       appBar: AppBar(
         leading: CustomImageProvider(
           image: AppImages.dashlogo,
@@ -199,6 +199,28 @@ class _HostDashboardState extends State<HostDashboard> {
           },
         ),
       ),
+    );
+  }
+}
+
+class EditHeader extends StatelessWidget {
+  const EditHeader({
+    super.key,
+    required this.label,
+  });
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
+        ),
+        const Spacer(),
+        const EditButton(),
+      ],
     );
   }
 }

@@ -35,6 +35,7 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+
     return BlocConsumer(
         bloc: _b2bStoreBloc,
         listener: (context, state) {
@@ -63,19 +64,58 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
           return !_isDataLoaded
               ? Container()
               : Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-                  decoration: BoxDecoration(
-                      color: Colors.white, //.withValues(alpha: 0.75),
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(40.r))),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    spacing: 10.h,
-                    children: [
-                      const XBottmSheetTopDecor(),
-                      const SizedBox(
-                        height: 20,
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(40.r))),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 10.h,
+        children: [
+          const XBottmSheetTopDecor(),
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            spacing: 10.w,
+            children: [
+              SizedBox(
+                height: 30,
+                width: 30,
+                child: Image.asset(AppImages.addresses),
+              ),
+              Column(
+                // spacing: 10.h,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Addresses",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
+                  ),
+                  Text(
+                    "Select or edit your addresses",
+                    style: TextStyle(fontSize: 12.sp),
+                  ),
+                ],
+              )
+            ],
+          ),
+          SizedBox(
+            height: 250,
+            child: ListView.builder(
+                itemCount: 3,
+                itemBuilder: (c, i) {
+                  return Card(
+                    child: Container(
+                      height: 80,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+
                       ),
                       Row(
                         spacing: 10.w,

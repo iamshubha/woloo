@@ -156,18 +156,35 @@ class PricingCalculate extends StatelessWidget {
     this.subTotal,
     this.discount,
     this.itemTotal,
+     this.isHeader = false,
   });
   final int? total;
   final int? subTotal;
   final int? discount;
   final int? itemTotal;
 
+  final bool isHeader;
+
+
   @override
   Widget build(BuildContext context) {
     return XDecoratedBox(
         child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ItemNamePrice(
+
+       
+
+        if (isHeader) ...[
+          Text(
+            "Order Summary",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+        ],
+         ItemNamePrice(
           item: "Item Total",
           price: "Rs. $itemTotal",
         ),
@@ -361,8 +378,14 @@ class CyanTextButton extends StatelessWidget {
 }
 
 class CartItemCard extends StatelessWidget {
-  const CartItemCard({super.key, this.item});
+
+
   final Item? item;
+  final bool isSelected;
+
+  const CartItemCard({super.key,this.item, this.isSelected = true});
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -409,16 +432,17 @@ class CartItemCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        // Handle delete action
-                      },
-                      child: SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: Image.asset(AppImages.deleteLogo),
+                    if (isSelected)
+                      GestureDetector(
+                        onTap: () {
+                          // Handle delete action
+                        },
+                        child: SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: Image.asset(AppImages.deleteLogo),
+                        ),
                       ),
-                    ),
                   ],
                 ),
                 // SizedBox(height: 4.h),
@@ -441,7 +465,7 @@ class CartItemCard extends StatelessWidget {
                         color: Colors.black,
                       ),
                     ),
-                    const CartAddRemove()
+                    if (isSelected) const CartAddRemove()
                   ],
                 ),
               ],
@@ -477,18 +501,20 @@ class CartHeader extends StatelessWidget {
         const SizedBox(
           width: 10,
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              subtitle,
-              style: TextStyle(fontSize: 10.sp),
-            ),
-          ],
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                subtitle,
+                style: TextStyle(fontSize: 10.sp),
+              ),
+            ],
+          ),
         )
       ],
     );

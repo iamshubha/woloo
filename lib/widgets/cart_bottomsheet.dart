@@ -17,7 +17,7 @@ class CartBottomSheet extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
       decoration: BoxDecoration(
           color: Colors.white,
-          // const Color.fromARGB(255, 204, 203, 203).withValues(alpha: 0.75),
+
           borderRadius: BorderRadius.vertical(top: Radius.circular(40.r))),
       child: Column(
         spacing: 10,
