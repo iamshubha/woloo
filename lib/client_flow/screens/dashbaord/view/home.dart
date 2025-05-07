@@ -217,7 +217,7 @@ class _HomeState extends State<Home> {
           
                                     if (state is ClientSetUp  ) {
                                          EasyLoading.dismiss();
-                                         print("client setup ${isClientSupervisor}");
+                                         print("client setup $isClientSupervisor");
                                                  String clintId = globalStorage.getClientId();
       
                                             dashBoardBloc.add(CheckSupvisorEvent(id: int.parse(clintId)));
@@ -299,7 +299,7 @@ class _HomeState extends State<Home> {
                                                taskIds: taksIds,
                                                estimatedTime: estimatedTime.toString(),
                                                taskTimes: dashController.taskTimes,
-                                               janitorId: state.superVisorModel!.results!.data!.value!,
+                                               janitorId: state.superVisorModel!.results!.data!.value,
           
                                            ));
           
@@ -456,9 +456,9 @@ class _HomeState extends State<Home> {
                                        String paymentId = globalStorage.getPaymentId();
       
       
-                                        print("object ${planId} ");
+                                        print("object $planId ");
       
-                                        print("object ${paymentId} ");
+                                        print("object $paymentId ");
       
                                          if (planId.isEmpty && paymentId.isEmpty) {
                                                showDialog(context: context, builder: 
@@ -968,6 +968,7 @@ class _HomeState extends State<Home> {
                                    if (valu == null || valu.isEmpty) {
                                      return "Facility Name is required";
                                    }
+                                   return null;
                                  },
                                ),
                          
@@ -1018,15 +1019,16 @@ class _HomeState extends State<Home> {
                                       if (valu == null || valu.isEmpty) {
                                         return "Location is required";
                                       }
+                                      return null;
                                     },
                                             
                                     // debounceTime: 400,
-                                    countries: ["in", "fr"],
+                                    countries: const ["in", "fr"],
                                     isLatLngRequired: true,
                                     getPlaceDetailWithLatLng: (Prediction prediction) {
                                       
                                   
-                                      print("placeDetails" + prediction.lat.toString());
+                                      print("placeDetails${prediction.lat}");
                                     },
                                             
                                     itemClick: (Prediction prediction) {
@@ -1054,7 +1056,7 @@ class _HomeState extends State<Home> {
                                             const SizedBox(
                                               width: 7,
                                             ),
-                                            Expanded(child: Text("${prediction.description ?? ""}"))
+                                            Expanded(child: Text(prediction.description ?? ""))
                                           ],
                                         ),
                                       );
@@ -1085,7 +1087,7 @@ class _HomeState extends State<Home> {
                                 height: 10,
                                ),
                                             
-                                                      Container(
+                                                      SizedBox(
                                                           width: MediaQuery.of(context).size.width,
                                                           // height: 120,
                                                           child:
@@ -1165,6 +1167,7 @@ class _HomeState extends State<Home> {
                                   if (valu == null || valu.isEmpty) {
                                     return "Please mention other type";
                                   }
+                                  return null;
                                 },
                               )
                                : const SizedBox()
@@ -1381,7 +1384,7 @@ class _HomeState extends State<Home> {
                              validator: validateMobile
                              // prefixIcon: Icons.phone,
                            ),
-                           Spacer(),
+                           const Spacer(),
 
                           //  const SizedBox(height: 290),
 
@@ -1832,7 +1835,7 @@ class _HomeState extends State<Home> {
                            const SizedBox(height: 5),
                             Center(child: Text(
                                textAlign: TextAlign.center,
-                               "Shift shall complete at ${use12hour}" )),
+                               "Shift shall complete at $use12hour" )),
           
                           //  const SizedBox(height: 10),
                            // GestureDetector(
@@ -1872,7 +1875,7 @@ class _HomeState extends State<Home> {
           
           
                                  // janitorBottomSheet()
-                 ;                             } ,
+} ,
                                child: Custombutton(text: "Next", width: 328.w)),
           
                                         const SizedBox(height: 30),
@@ -1923,7 +1926,7 @@ class _HomeState extends State<Home> {
               startTime: shiftTime,
               endTime: use12hour,
               isFromExisting: isFromExiting,
-              janitorId: janitor == null ? null : janitor.id,
+              janitorId: janitor?.id,
 
               // taskStartTime: taskStartTime,
               // taskEndTime: taskEndTime,
@@ -2024,7 +2027,7 @@ class _HomeState extends State<Home> {
                            const SizedBox(
                              height: 20,
                            ),
-                           Container(
+                           SizedBox(
                              width: MediaQuery.of(context).size.width,
                              height: 151,
                              child: ListView.builder(
@@ -2150,25 +2153,25 @@ class _HomeState extends State<Home> {
                              height: 20.h,
                            ),
 
-                       Container(
+                       SizedBox(
                          height: 300,
                          width: 300,
                          child: ListView.builder(
                            shrinkWrap: true,
-                           itemCount: taskModel!.results!.data!.length,
+                           itemCount: taskModel.results.data.length,
                            itemBuilder: (context, index) {
-                             final janitor = taskModel!.results!.data![index].name;
+                             final janitor = taskModel.results.data[index].name;
                              return RadioListTile<String>(
-                               title: Text(janitor!),
+                               title: Text(janitor),
                                value: "$janitor + $index ",
                                groupValue: selectedJanitor,
                                onChanged: (value) {
 
                                  setState(() {
                                    selectedJanitor = value;
-                                    print("selected ${taskModel.results!.data![index]} ");
+                                    print("selected ${taskModel.results.data[index]} ");
 
-                                   selectedbuddy = taskModel.results!.data![index];
+                                   selectedbuddy = taskModel.results.data[index];
 
                                  });
                                },
@@ -2369,7 +2372,7 @@ class _HomeState extends State<Home> {
     ).then((v){
 
 
-                                   } );;
+                                   } );
 
     }
 
@@ -2549,20 +2552,20 @@ class _HomeState extends State<Home> {
 
          if(mounted){
             dashController.taskTimes.clear();
-             janNameController.text = buddy.name!;
-             for( var item in buddy.taskTimes! ) {
+             janNameController.text = buddy.name;
+             for( var item in buddy.taskTimes ) {
                  print("start time ${item.startTime}");
                   print("end time ${item.endTime}");
                String formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss')
-                   .format(item.startTime!);
+                   .format(item.startTime);
                String formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss')
-                   .format(item.endTime!);
+                   .format(item.endTime);
 
                TimeOfDay startTime = convertToTimeOfDay(formattedStartDate);
                TimeOfDay endTime = convertToTimeOfDay(formattedEndDate);
 
-                   print("start time ${startTime}");
-                    print("end time ${endTime}");
+                   print("start time $startTime");
+                    print("end time $endTime");
               //  dashController.taskTimes.add({
               //    "start_time": formattedStartDate!,
               //    "end_time": formattedEndDate,
@@ -2657,7 +2660,7 @@ class _HomeState extends State<Home> {
                                         ),
                                       Text(
                                         textAlign: TextAlign.center,
-                                        '${state.deleteModel!.results.message}',
+                                        state.deleteModel!.results.message,
                                          style: AppTextStyle.font18bold,
                                         ),
                                         SizedBox(
@@ -2682,7 +2685,6 @@ class _HomeState extends State<Home> {
                              );
                    
 
-                       ;
                   // EasyLoading.showSuccess(state.message);
                 }
                 // if (state is TaskTimeModel) {
@@ -3136,7 +3138,7 @@ class _HomeState extends State<Home> {
                                 const SizedBox(height: 5),
                                 Center(child: Text(
                                     textAlign: TextAlign.center,
-                                    "Shift shall complete at ${use12hour}" )),
+                                    "Shift shall complete at $use12hour" )),
               
                                 const SizedBox(height: 10),
                                 // GestureDetector(
@@ -3180,7 +3182,7 @@ class _HomeState extends State<Home> {
                                             taskIds: taksIds,
                                             estimatedTime: estimatedTime.toString(),
                                             taskTimes: dashController.taskTimes,
-                                            janitorId: buddy.id!,
+                                            janitorId: buddy.id,
                                           ));
               
                                          // print("org ${facilityController.text}");

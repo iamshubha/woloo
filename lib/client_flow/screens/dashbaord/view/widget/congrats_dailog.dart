@@ -58,7 +58,7 @@ class CongratsDailog extends StatelessWidget {
 
                      GestureDetector(
                        onTap: () {
-                          showDialog(context: context, builder: (context) =>  SelectBuddyDailog(), );
+                          showDialog(context: context, builder: (context) =>  const SelectBuddyDailog(), );
                        },
                        child: Custombutton(
                             height: 30.h,
@@ -73,7 +73,7 @@ class CongratsDailog extends StatelessWidget {
                         GestureDetector(
                           onTap: (){
                             Navigator.of(context).push( MaterialPageRoute(builder: (context) {
-                               return ClientDashboard();
+                               return const ClientDashboard();
                             }, ) );
                           },
                           child: Custombutton(

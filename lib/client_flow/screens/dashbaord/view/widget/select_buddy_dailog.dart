@@ -15,7 +15,6 @@ import '../../../../widgets/CustomButton.dart';
 import '../../bloc/dashboard_bloc.dart';
 import '../../bloc/dashboard_event.dart';
 import '../../bloc/dashboard_state.dart';
-import 'buddy_list_dailog.dart';
 
 class SelectBuddyDailog extends StatefulWidget {
   const SelectBuddyDailog({super.key});

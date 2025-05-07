@@ -507,7 +507,7 @@ Future<TaskModel> getAllJanitor({
  
 
     var response = await dio.delete(
-     "${APIConstants.DELETE_FACILITY}",
+     APIConstants.DELETE_FACILITY,
       options:  Options(extra: {"auth": true, "isSupervisor": true}),
       data: data
     );

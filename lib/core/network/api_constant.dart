@@ -6,8 +6,8 @@ class APIConstants {
 //
 // = "https://53f2-2409-4062-2097-da56-25a7-ecec-f87a-6912.ngrok-free.app";
 
-static var BASE_URL   = 'https://staging-api.woloo.in'; // QA
- // static var BASE_URL = 'https://api.woloo.in'; // Production
+  static var BASE_URL = 'https://staging-api.woloo.in'; // QA
+  // static var BASE_URL = 'https://api.woloo.in'; // Production
 //  static var BASE_URL = 'http://192.168.1.103:5000'; // P
   static var SEND_OTP = '$BASE_URL/api/whms/users/sendOTP';
   static var VERIFY_OTP = '$BASE_URL/api/whms/users/verifyOTP';
@@ -16,7 +16,8 @@ static var BASE_URL   = 'https://staging-api.woloo.in'; // QA
   static var ATTENDANCE = '$BASE_URL/api/whms/users/attendance';
 
   /// Template List - janitor Dashboard
-  static var GET_ALL_TASK_TAMPLATES = '$BASE_URL/api/whms/taskAllocation/getAllTaskByJanitorId';
+  static var GET_ALL_TASK_TAMPLATES =
+      '$BASE_URL/api/whms/taskAllocation/getAllTaskByJanitorId';
 
   /// upload selfie
   static var UPLOAD_SELFIE = '$BASE_URL/api/whms/users/upload_image';
@@ -29,7 +30,8 @@ static var BASE_URL   = 'https://staging-api.woloo.in'; // QA
   static var UPDATE_STATUS = '$BASE_URL/api/whms/users/updateStatus';
 
   /// Supervisor_dashboard
-  static var GET_SUPERVISOR_DASHBOARD_DATA = '$BASE_URL/api/whms/users/supervisor_dashboard';
+  static var GET_SUPERVISOR_DASHBOARD_DATA =
+      '$BASE_URL/api/whms/users/supervisor_dashboard';
 
   /// issues-list
   static var GET_ALL_ISSUES = '$BASE_URL/api/whms/users/IssuesList';
@@ -38,16 +40,20 @@ static var BASE_URL   = 'https://staging-api.woloo.in'; // QA
   static var GET_CLUSTER_DROPDOWN_DATA = '$BASE_URL/api/whms/users/clusterList';
 
   /// facility-dropdown-list
-  static var GET_FACILITIES_DROPDOWN_DATA = '$BASE_URL/api/whms/users/facilityListByClusterId';
+  static var GET_FACILITIES_DROPDOWN_DATA =
+      '$BASE_URL/api/whms/users/facilityListByClusterId';
 
   /// task-dropdown-list
-  static var GET_TASKS_DROPDOWN_DATA = '$BASE_URL/api/whms/template/getAllTemplate';
+  static var GET_TASKS_DROPDOWN_DATA =
+      '$BASE_URL/api/whms/template/getAllTemplate';
 
   /// cluster-dropdown-list
-  static var GET_ALL_SUBMITTED_TASK = '$BASE_URL/api/whms/users/listOfSubmitedTask';
+  static var GET_ALL_SUBMITTED_TASK =
+      '$BASE_URL/api/whms/users/listOfSubmitedTask';
 
   /// janitor-dropdown-list
-  static var GET_JANITOR_DROPDOWN_DATA = '$BASE_URL/api/whms/users/getAllJanitorByClusterId';
+  static var GET_JANITOR_DROPDOWN_DATA =
+      '$BASE_URL/api/whms/users/getAllJanitorByClusterId';
 
   /// report issue
   static var REPORT_ISSUE = '$BASE_URL/api/whms/users/reportIssue';
@@ -56,92 +62,112 @@ static var BASE_URL   = 'https://staging-api.woloo.in'; // QA
   static var UPDATE_TOKEN_FCM = '$BASE_URL/api/whms/users/updateToken';
 
   /// Cluster-list
-  static var CLUSTER_LIST = '$BASE_URL/api/whms/users/clusterListBySupervisorId';
+  static var CLUSTER_LIST =
+      '$BASE_URL/api/whms/users/clusterListBySupervisorId';
 
   /// Janitor-list
-static var  JANITOR_LIST = '$BASE_URL/api/whms/users/janitorsList';
+  static var JANITOR_LIST = '$BASE_URL/api/whms/users/janitorsList';
 
   /// Facility-list
-  static var FACILITY_LIST = '$BASE_URL/api/whms/taskAllocation/getJanitorTaskInfo';
+  static var FACILITY_LIST =
+      '$BASE_URL/api/whms/taskAllocation/getJanitorTaskInfo';
 
   /// Re-assign Task
-  static var RE_ASSIGN_TASK = '$BASE_URL/api/whms/taskAllocation/updateTaskAllocation';
+  static var RE_ASSIGN_TASK =
+      '$BASE_URL/api/whms/taskAllocation/updateTaskAllocation';
 
   /// App_Launch
   static var APP_LAUNCH = '$BASE_URL/api/whms/users/onAppLoad';
 
   static var USER_DETAILS = '$BASE_URL/api/whms/users/getUserByID';
 
-   //api/whms/users/getUserByID?id=151
+  //api/whms/users/getUserByID?id=151
 
   /// Cluster-list
-  static var ATTENDANCE_HISTORY_LIST = '$BASE_URL/api/whms/users/attendanceHistory';
-  static var ATTENDANCE_HISTORY_LIST_SUP = '$BASE_URL/api/whms/users/janitorAttendanceHistoryForSupervisor';
+  static var ATTENDANCE_HISTORY_LIST =
+      '$BASE_URL/api/whms/users/attendanceHistory';
+  static var ATTENDANCE_HISTORY_LIST_SUP =
+      '$BASE_URL/api/whms/users/janitorAttendanceHistoryForSupervisor';
 
   /// Cluster-list
   static var MONTH_LIST = '$BASE_URL/api/whms/users/getMonthlyHistory';
-  static var MONTH_LIST_SUP = '$BASE_URL/api/whms/users/getMonthAndYearForSupervisor';
+  static var MONTH_LIST_SUP =
+      '$BASE_URL/api/whms/users/getMonthAndYearForSupervisor';
 
+  //  janitor list by facility id
+  static var JANITOR_LIST_FACILITY = '$BASE_URL/api/whms/users/getAllUser';
 
-  //  janitor list by facility id 
-   static var JANITOR_LIST_FACILITY = '$BASE_URL/api/whms/users/getAllUser';
+  static var CREATE_CLIENT = '$BASE_URL/api/wolooGuest/createClient';
 
- 
-    static var CREATE_CLIENT =  
-   '$BASE_URL/api/wolooGuest/createClient';
+  static var CLIENT_SIGNUP = '$BASE_URL/api/whms/clients/clientSignUp';
 
-    static var CLIENT_SIGNUP = 
-     '$BASE_URL/api/whms/clients/clientSignUp';
+  static var CLIENT_LOGIN = '$BASE_URL/api/wolooGuest/login';
 
+  static var DELETE_USER = '$BASE_URL/api/wolooGuest/login';
 
-    static var CLIENT_LOGIN = 
-    '$BASE_URL/api/wolooGuest/login';  
+  static var CLIENT_SETUP = '$BASE_URL/api/whms/clients/clientSetUp';
 
-    static var DELETE_USER = 
-    '$BASE_URL/api/wolooGuest/login';  
-  
-    static var CLIENT_SETUP = 
-     '$BASE_URL/api/whms/clients/clientSetUp';
+  static var ADD_USER = '$BASE_URL/api/whms/users/addUser';
 
-    static var  ADD_USER = 
-    '$BASE_URL/api/whms/users/addUser';
+  static var GET_TASK = '$BASE_URL/api/whms/task/byCategory';
 
+  static var GET_TASK_DASHBOARD =
+      '$BASE_URL/api/whms/taskAllocation/getTaskDashboard';
 
-    static var  GET_TASK = 
-    '$BASE_URL/api/whms/task/byCategory'; 
+  static var SubscriptionExpiry =
+      '$BASE_URL/api/whms/plans/getSubscriptionExpiry';
 
+  static var CREATE_OREDER = '$BASE_URL/api/whms/payment/createOrder';
 
-     static var  GET_TASK_DASHBOARD = 
-    '$BASE_URL/api/whms/taskAllocation/getTaskDashboard'; 
+  static var ASSIGN_TASK = '$BASE_URL/api/whms/template/add';
 
-     static var  SubscriptionExpiry = 
-    '$BASE_URL/api/whms/plans/getSubscriptionExpiry';
+  static var GET_CLIENT_ID = '$BASE_URL/api/whms/users/client';
 
-     static var  CREATE_OREDER = 
-    '$BASE_URL/api/whms/payment/createOrder';
+  static var GET_ALL_USER = "$BASE_URL/api/whms/users/getAllUser";
 
-     static var ASSIGN_TASK =  '$BASE_URL/api/whms/template/add';
+  static var GET_USER_COINS = "$BASE_URL/api/wolooHost/user_coins";
 
-     static var GET_CLIENT_ID =  '$BASE_URL/api/whms/users/client';
-       
-     static var GET_ALL_USER =    "$BASE_URL/api/whms/users/getAllUser";
+  static var GET_ALL_FACILITY = "$BASE_URL/api/whms/facilities/getFacilities";
 
-    static var GET_USER_COINS =   "$BASE_URL/api/wolooHost/user_coins";
+  static var CHECK_TASK_TIME =
+      '$BASE_URL/api/whms/autoTaskMapping/checkJanitorTasktime';
 
-    static var GET_ALL_FACILITY =    "$BASE_URL/api/whms/facilities/getFacilities";
-          
-    static var CHECK_TASK_TIME =   '$BASE_URL/api/whms/autoTaskMapping/checkJanitorTasktime';
+  static var SUPERVISOR_CHECK = '$BASE_URL/api/whms/clients/supervisorCheck';
 
-    static var  SUPERVISOR_CHECK =     '$BASE_URL/api/whms/clients/supervisorCheck';
+  static var DELETE_TASK =
+      "$BASE_URL/api/whms/autoTaskMapping/deleteTasktiming";
 
-    static var  DELETE_TASK =  "$BASE_URL/api/whms/autoTaskMapping/deleteTasktiming";
-                       
-    static var  DELETE_FACILITY =   '$BASE_URL/api/whms/clients/facilityrollback';
-     
-  
+  static var DELETE_FACILITY = '$BASE_URL/api/whms/clients/facilityrollback';
 
+  static var GET_IOT_DASHBOARD_DATA =
+      '$BASE_URL/api/whms/iot/getIotDashboardData';
+  static var AUTH_BASE_URL = "https://staging-store.woloo.in";
+  static var EMAIL_PASS_REGISTER =
+      '$AUTH_BASE_URL/auth/customer/emailpass/register';
 
-    //  https://staging-api.woloo.in/api/whms/users/client?user_id=62447
+  static var STORE_CUSTOMER_REGISTER =
+      'https://staging-store.woloo.in/store/customers';
 
+  static var STORE_CUSTOMER_LOGIN = '$AUTH_BASE_URL/auth/customer/emailpass';
+
+  //Product
+//'https://staging-store.woloo.in/store/regions'
+  static var GET_REGIONS = '$AUTH_BASE_URL/store/regions';
+  static var CREATE_CART = '$AUTH_BASE_URL/store/carts';
+  // store/product-categories
+  static var GET_PRODUCT_CATEGORIES = '$AUTH_BASE_URL/store/product-categories';
+  //  https://staging-store.woloo.in/store/collections?fields=id,title,metadata
+  static var TOP_BRANDS =
+      '$AUTH_BASE_URL/store/collections?fields=id,title,metadata';
+
+  // https://staging-store.woloo.in/store/
+  static var PRODUCT_COLLECTIONS =
+      '$AUTH_BASE_URL/store/products?fields=*variants.calculated_price';
+
+  static var CREATE_ADDRESS = '$AUTH_BASE_URL/store/customers/me/addresses';
+
+  static var GET_ADDRESS = '$AUTH_BASE_URL/store/customers/me/addresses';
+
+  static var GET_ALL_CART_DATA = '$AUTH_BASE_URL/store/carts/';
+  static var ADD_TO_CART = '$AUTH_BASE_URL/store/carts/';
 }
- 

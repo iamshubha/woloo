@@ -112,11 +112,11 @@ class AlertAndNotificationWidget extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  Expanded(
+                  const Expanded(
                     flex: 4,
                     child: Text(
                       "Building A",
-                      style: const TextStyle(fontSize: 10),
+                      style: TextStyle(fontSize: 10),
                       textAlign: TextAlign.center,
                     ),
                   ),

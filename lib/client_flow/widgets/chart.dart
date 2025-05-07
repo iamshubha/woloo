@@ -353,7 +353,7 @@ class DualBarChart extends StatelessWidget {
   List<double>? value1;
   List<double>? value2;
 
-  DualBarChart({this.value1, this.value2});
+  DualBarChart({super.key, this.value1, this.value2});
 
   @override
   Widget build(BuildContext context) {
@@ -385,7 +385,7 @@ class DualBarChart extends StatelessWidget {
           const SizedBox(
             height: 15,
           ),
-          Container(
+          SizedBox(
             height: 200,
             width: 400,
             child: BarChart(

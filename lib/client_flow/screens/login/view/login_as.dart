@@ -71,7 +71,7 @@ class _LoginAsState extends State<LoginAs> {
                             ),
                           ),
                         ),
-                        child: Container(
+                        child: SizedBox(
                           width: 200.w,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
@@ -92,12 +92,12 @@ class _LoginAsState extends State<LoginAs> {
                                  //
                                  if(dropdownValue == "Admin" ){
                                    Navigator.of(context).push( MaterialPageRoute(builder: (context) {
-                                      return ClientLogin();
+                                      return const ClientLogin();
                                    },  ) );
                                  } 
                                  else{
                                      Navigator.of(context).push( MaterialPageRoute(builder: (context) {
-                                      return LoginScreen();
+                                      return const LoginScreen();
                                    },  ) );
                                  }
                           
@@ -108,7 +108,7 @@ class _LoginAsState extends State<LoginAs> {
                                  style: AppTextStyle.font10bold.copyWith(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w700,
-                                  color: Color(0xff8F8F8F)
+                                  color: const Color(0xff8F8F8F)
                                  ),
                                 ),
                               ),

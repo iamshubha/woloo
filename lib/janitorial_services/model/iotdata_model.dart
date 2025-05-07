@@ -14,34 +14,34 @@ class AirQualityData {
     if (json['amonia_table_data'] != null) {
       amoniaTableData = <AmoniaTableData>[];
       json['amonia_table_data'].forEach((v) {
-        amoniaTableData!.add(new AmoniaTableData.fromJson(v));
+        amoniaTableData!.add(AmoniaTableData.fromJson(v));
       });
     }
     ammoniaUnit = json['ammonia_unit'];
     rangeOfPpm = json['range_of_ppm'] != null
-        ? new RangeOfPpm.fromJson(json['range_of_ppm'])
+        ? RangeOfPpm.fromJson(json['range_of_ppm'])
         : null;
     if (json['avgppm_time_range'] != null) {
       avgppmTimeRange = <AvgppmTimeRange>[];
       json['avgppm_time_range'].forEach((v) {
-        avgppmTimeRange!.add(new AvgppmTimeRange.fromJson(v));
+        avgppmTimeRange!.add(AvgppmTimeRange.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.amoniaTableData != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (amoniaTableData != null) {
       data['amonia_table_data'] =
-          this.amoniaTableData!.map((v) => v.toJson()).toList();
+          amoniaTableData!.map((v) => v.toJson()).toList();
     }
-    data['ammonia_unit'] = this.ammoniaUnit;
-    if (this.rangeOfPpm != null) {
-      data['range_of_ppm'] = this.rangeOfPpm!.toJson();
+    data['ammonia_unit'] = ammoniaUnit;
+    if (rangeOfPpm != null) {
+      data['range_of_ppm'] = rangeOfPpm!.toJson();
     }
-    if (this.avgppmTimeRange != null) {
+    if (avgppmTimeRange != null) {
       data['avgppm_time_range'] =
-          this.avgppmTimeRange!.map((v) => v.toJson()).toList();
+          avgppmTimeRange!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -71,13 +71,13 @@ class AmoniaTableData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['pcd_max'] = this.pcdMax;
-    data['ppm_avg'] = this.ppmAvg;
-    data['heading'] = this.heading;
-    data['ppm_diff'] = this.ppmDiff;
-    if (this.value != null) {
-      data['value'] = this.value!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['pcd_max'] = pcdMax;
+    data['ppm_avg'] = ppmAvg;
+    data['heading'] = heading;
+    data['ppm_diff'] = ppmDiff;
+    if (value != null) {
+      data['value'] = value!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -109,13 +109,13 @@ class RangeOfPpm {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['unhealthy_max'] = this.unhealthyMax;
-    data['unhealthy_min'] = this.unhealthyMin;
-    data['healthy_min'] = this.healthyMin;
-    data['healthy_max'] = this.healthyMax;
-    data['moderate_max'] = this.moderateMax;
-    data['moderate_min'] = this.moderateMin;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['unhealthy_max'] = unhealthyMax;
+    data['unhealthy_min'] = unhealthyMin;
+    data['healthy_min'] = healthyMin;
+    data['healthy_max'] = healthyMax;
+    data['moderate_max'] = moderateMax;
+    data['moderate_min'] = moderateMin;
     return data;
   }
 }
@@ -143,12 +143,12 @@ class AvgppmTimeRange {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['time_range'] = this.timeRange;
-    data['avg_ppm_avg'] = this.avgPpmAvg;
-    data['avg_ppm_max'] = this.avgPpmMax;
-    data['avg_pcd_max'] = this.avgPcdMax;
-    data['avg_pch_max'] = this.avgPchMax;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['time_range'] = timeRange;
+    data['avg_ppm_avg'] = avgPpmAvg;
+    data['avg_ppm_max'] = avgPpmMax;
+    data['avg_pcd_max'] = avgPcdMax;
+    data['avg_pch_max'] = avgPchMax;
     return data;
   }
 }
@@ -201,7 +201,7 @@ class GaugeGraphData {
 
 class ChartDataPoint {
   final String color;
-  final int y;
+  var y;
 
   ChartDataPoint({
     required this.color,

@@ -1,0 +1,85 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
+import 'package:woloo_smart_hygiene/janitorial_services/widgets/address_bottomsheet.dart';
+import 'package:woloo_smart_hygiene/utils/app_images.dart';
+import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
+import 'package:woloo_smart_hygiene/widgets/review_order_bottomsheet.dart';
+
+class CartBottomSheet extends StatelessWidget {
+  const CartBottomSheet({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+      decoration: BoxDecoration(
+          color: Colors.white,
+
+          borderRadius: BorderRadius.vertical(top: Radius.circular(40.r))),
+      child: Column(
+        spacing: 10,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const XBottmSheetTopDecor(),
+          const SizedBox(
+            height: 20,
+          ),
+          CartHeader(
+            imgPath: AppImages.cart,
+            title: "Cart",
+            subtitle: 'Checkout you purchases from here',
+          ),
+          const Divider(
+            color: Colors.white,
+          ),
+          const CartItemCard(),
+          const Divider(
+            color: Colors.white,
+          ),
+          const ApplyPromo(),
+          const Divider(
+            color: Colors.white,
+          ),
+          const PricingCalculate(),
+          const Divider(
+            color: Colors.white,
+          ),
+          Row(
+            spacing: 10,
+            children: [
+              Expanded(
+                  child: LongLabeledButton(
+                label: "Checkout",
+                onTap: () {
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    isDismissible: true, // <-- Allow tap outside to dismiss
+                    enableDrag: true, // <-- Allow swipe down to dismiss
+
+                    backgroundColor: Colors
+                        .transparent, // Optional: if you want rounded corners to show correctly
+
+                    context: context,
+                    builder: (_) =>
+                        ReviewOrderBottomsheet(), //AddressBottomSheet
+                  );
+                },
+              )),
+              Expanded(
+                  child: LongLabeledButton(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                label: "Keep Shopping",
+                color: Colors.white,
+              )),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}

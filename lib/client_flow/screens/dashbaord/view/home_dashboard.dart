@@ -136,7 +136,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                              // DateTime dateTime = DateTime.parse(dateString);
                              DateTime futureDate =   state.subscriptionModel!.results!.expiryDate!; // Example future date
        
-                               print('Difference: ${futureDate} days');
+                               print('Difference: $futureDate days');
                               difference = 
                               
                               //  Duration(days: 0 ) ;
@@ -380,7 +380,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                  );
                }
              ),
-               Container(
+               SizedBox(
                  // width: MediaQuery.of(context).size.width/1,
                 // flex: 2,
                  height: 700.h,

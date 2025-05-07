@@ -1,0 +1,102 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/login_flow.dart';
+import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
+import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/janitorial_services/model/host_dashboard_screen.dart';
+import 'package:woloo_smart_hygiene/janitorial_services/model/iotdata_model.dart';
+
+class LoginFlowService {
+  final DioClient dio;
+  const LoginFlowService({required this.dio});
+
+  Future<String> emailPassRegister({
+    required String email,
+    required String pass,
+  }) async {
+    try {
+      var response = await dio.post(
+        APIConstants.EMAIL_PASS_REGISTER,
+        data: {
+          "email": email,
+          "password": pass,
+        },
+        options: Options(
+          headers: {
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Cookie':
+                'connect.sid=s%3ASfJ36OuHe8J1gf7mca9Ypke1aASxt4Ol.u11Lo%2BTCFXo04cJRSLUarjOOCDi6xR5Q9ZdEyDihHh8'
+          },
+        ),
+      );
+
+      return (response['token']);
+    } catch (e) {
+      debugPrint("Error in IOT service: $e");
+      rethrow;
+    }
+  }
+
+  Future<StoreCustomersRes> createCustomer({
+    required String email,
+    required String token,
+  }) async {
+    try {
+      var response = await dio.post(
+        APIConstants.STORE_CUSTOMER_REGISTER,
+        data: {
+          "email": email,
+        },
+        options: Options(
+          headers: {
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Content-Type': 'application/json',
+            'Cookie':
+                'connect.sid=s%3ASfJ36OuHe8J1gf7mca9Ypke1aASxt4Ol.u11Lo%2BTCFXo04cJRSLUarjOOCDi6xR5Q9ZdEyDihHh8; connect.sid=s%3ASfJ36OuHe8J1gf7mca9Ypke1aASxt4Ol.u11Lo%2BTCFXo04cJRSLUarjOOCDi6xR5Q9ZdEyDihHh8',
+            'Authorization': 'Bearer $token'
+          },
+        ),
+      );
+
+      return StoreCustomersRes.fromJson(response);
+    } catch (e) {
+      debugPrint("Error in IOT service: $e");
+      rethrow;
+    }
+  }
+
+  Future<String> loginCustomer({
+    required String email,
+    required String pass,
+    // required String token,
+  }) async {
+    try {
+      var response = await dio.post(
+        APIConstants.STORE_CUSTOMER_LOGIN,
+        data: {
+          "email": email,
+          "password": pass,
+        },
+        options: Options(
+          headers: {
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Cookie':
+                'connect.sid=s%3AMhPS4__dBpD_rU8z7Z8zS_VsRubU9zkJ.8VrkMiHyHFW1orsmAoLNileFblVHoFfvnCsMFgf6vew; connect.sid=s%3AuQMxSqqygCqgGw7n-as1QVluDdzCU9Os.gYiv2qNPMH5953UkPp3t%2FBcmycPJxY2TG8%2FQ1hXNBKw'
+          },
+        ),
+      );
+
+      return (response['token']);
+    } catch (e) {
+      debugPrint("Error in IOT service: $e");
+      rethrow;
+    }
+  }
+}

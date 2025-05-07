@@ -3,8 +3,6 @@
 import 'package:dio/dio.dart';
 import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
 import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
-import 'package:woloo_smart_hygiene/screens/login/data/model/send_otp.dart';
-import 'package:woloo_smart_hygiene/screens/login/data/model/verify_otp_model.dart';
 
 import '../../dashbaord/model/login_model.dart';
 

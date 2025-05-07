@@ -25,10 +25,8 @@ class DioClient {
       );
       return response.data;
     } catch (e) {
-
-   
       if (e is DioException) {
-            print( "error in get methode ${e.response}");
+        print("error in get methode ${e.response}");
         if (e.response == null) {
           rethrow;
         }
@@ -42,7 +40,7 @@ class DioClient {
   }
 
   /// Post:----------------------------------------------------------------------
-Future<dynamic> post(
+  Future<dynamic> post(
     String uri, {
     data,
     Map<String, dynamic>? queryParameters,
@@ -61,25 +59,21 @@ Future<dynamic> post(
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
-       
-       
+
       return response.data;
-    }      catch (e  ) {
+    } catch (e) {
       //  print("error in post methode ${e.toString()}");
 
-
-       
       if (e is DioException) {
-        
         //  print("error in post type ${e.error}");
-          // print("error in post type ${e.message}");
-            // print("error in post methode ${e.response!.statusMessage}");
-            print("error in post methode ${e.response!.data}");
-            //  print("erro response ${e.response!}");
+        // print("error in post type ${e.message}");
+        // print("error in post methode ${e.response!.statusMessage}");
+        print("error in post methode ${e.response!.data}");
+        //  print("erro response ${e.response!}");
 
-              // print("error in post methode ${e.response == null }");
-              //  print("error in post methode ${e.response!.data['error']}");
-                  //  print("error in post methode responr  ${e.response!}");
+        // print("error in post methode ${e.response == null }");
+        //  print("error in post methode ${e.response!.data['error']}");
+        //  print("error in post methode responr  ${e.response!}");
         if (e.response == null) {
           rethrow;
         }

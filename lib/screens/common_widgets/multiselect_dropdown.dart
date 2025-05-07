@@ -91,10 +91,10 @@ class _DropDownDialogState<T> extends State<MultiselectDropDownDialog<T>> {
       //   );
       // },
     dropdownBuilder: (context, selectedItems) {
-  if (selectedItems == null || selectedItems.isEmpty) {
+  if (selectedItems.isEmpty) {
     return Text(
       widget.hint ?? '',
-      style: TextStyle(color: Colors.grey),
+      style: const TextStyle(color: Colors.grey),
     );
   }
 

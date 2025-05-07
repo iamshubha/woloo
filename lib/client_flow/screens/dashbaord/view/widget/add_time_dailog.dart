@@ -91,7 +91,7 @@ class _AddTimeDailogState extends State<AddTimeDailog> {
                      //
                      //
                      // });
-                     var endTime =  dateTime.add(Duration(minutes: widget.estimatedTime!));
+                     var endTime =  dateTime.add(Duration(minutes: widget.estimatedTime));
                      TimeOfDay endTimeofDay = TimeOfDay.fromDateTime(endTime);
                      dashController.taskStartTime.add(timeOfDay!);
                      dashController.taskEndTime.add(endTimeofDay);
@@ -145,7 +145,7 @@ class _AddTimeDailogState extends State<AddTimeDailog> {
                    return AlertDialog(
                      backgroundColor: AppColors.white,
                      title: const Text(DashboardConst.scheduleTask,),
-                     content:  Container(
+                     content:  SizedBox(
                       width: double.infinity,
                        child: SingleChildScrollView(
                          child: ListBody(
@@ -206,7 +206,7 @@ class _AddTimeDailogState extends State<AddTimeDailog> {
                        
                                        String? formattedStartDate = "";
                                        String? formattedEndDate = "" ;
-                                       var endTime =  dateTime.add(Duration(minutes: widget.estimatedTime!));
+                                       var endTime =  dateTime.add(Duration(minutes: widget.estimatedTime));
                                        print("end timessss $endTime");
                                        print("estiamged ${widget.estimatedTime}");
                                        // estimatedTime;
@@ -314,7 +314,7 @@ class _AddTimeDailogState extends State<AddTimeDailog> {
                                           
                                      TimeOfDay endtimeTask =  stringToTimeOfDay12Hour( widget.endTime!);
                                           
-                                        print("is after ${isAfter(endTimeofDay!,endtimeTask )} ");
+                                        print("is after ${isAfter(endTimeofDay,endtimeTask )} ");
                                           
                        
                                           
@@ -340,7 +340,7 @@ class _AddTimeDailogState extends State<AddTimeDailog> {
                               ),
                                           
                              timeOfDay == null ?
-                                  SizedBox() :
+                                  const SizedBox() :
                                           
                              isAfterDate ?
                                           
@@ -351,27 +351,27 @@ class _AddTimeDailogState extends State<AddTimeDailog> {
                               )
                                  :
                                  isSafeToAdd! ? 
-                                 SizedBox() :
+                                 const SizedBox() :
                                  Text("Task already assigned for this time slot",
                                   style: AppTextStyle.font12.copyWith(
                                     color: AppColors.red
                                   ),
                                  ),
                                  
-                                   SizedBox(),
+                                   const SizedBox(),
                        
                              checkModel != null ?
                        
                        
                              checkModel!.results!.message == "Task time Added" ?
-                                  SizedBox() :
+                                  const SizedBox() :
                        
                                   Text(" ${checkModel!.results!.message}",
                                    style: AppTextStyle.font12.copyWith(
                                 color: AppColors.red
                               ),
                                   )
-                           : SizedBox()
+                           : const SizedBox()
                        
                        
                                           
