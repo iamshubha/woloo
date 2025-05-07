@@ -25,6 +25,8 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   bool _isDataLoaded = false;
   AddressesData _addressesData = AddressesData();
+  bool valid = false;
+  Map<String, bool> map = {};
 
   @override
   void initState() {
@@ -45,6 +47,8 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
             EasyLoading.dismiss();
             setState(() {
               _addressesData = state.addressesData;
+              map = Map.fromEntries(_addressesData.addresses!
+                  .map((e) => MapEntry(e.id ?? "", false)));
               // _b2bStoreHomePage = state.dashboardData;
               _isDataLoaded = true;
               // _dashboardData = state.dashboardData;
@@ -120,7 +124,13 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                                   child: Row(
                                     children: [
                                       XDesignedRadioButton(
-                                        onTap: () {},
+                                        onSelected:
+                                            map.entries.elementAt(i).value,
+                                        onTap: () {
+                                          setState(() {
+                                            onChange(address.id ?? "");
+                                          });
+                                        },
                                       ),
                                       const Spacer(
                                         flex: 1,
@@ -210,6 +220,19 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                 );
         });
   }
+
+  setAll(bool val) {
+    if (_addressesData.addresses == null) return;
+    map = Map.fromEntries(
+        _addressesData.addresses!.map((e) => MapEntry(e.id ?? "", val)));
+  }
+
+  onChange(String val) {
+    setState(() {
+      setAll(false);
+      map[val] = true;
+    });
+  }
 }
 
 class EditButton extends StatelessWidget {
@@ -243,18 +266,21 @@ class XDesignedRadioButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 20,
-      width: 20,
-      decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all()),
-      child: Center(
-        child: Container(
-          height: 12,
-          width: 12,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(),
-              color: onSelected ? Colors.green : null),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 20,
+        width: 20,
+        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all()),
+        child: Center(
+          child: Container(
+            height: 12,
+            width: 12,
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(),
+                color: onSelected ? Colors.green : null),
+          ),
         ),
       ),
     );
