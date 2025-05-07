@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 
 class CartModel {
   Cart? cart;
@@ -291,34 +291,37 @@ class Item {
     required this.product,
   });
 
-  factory Item.fromJson(Map<String, dynamic> json) => Item(
-        id: json["id"],
-        thumbnail: json["thumbnail"],
-        variantId: json["variant_id"],
-        productId: json["product_id"],
-        productTypeId: json["product_type_id"],
-        productTitle: json["product_title"],
-        productDescription: json["product_description"],
-        productSubtitle: json["product_subtitle"],
-        productType: json["product_type"],
-        productCollection: json["product_collection"],
-        productHandle: json["product_handle"],
-        variantSku: json["variant_sku"],
-        variantBarcode: json["variant_barcode"],
-        variantTitle: json["variant_title"],
-        requiresShipping: json["requires_shipping"],
-        metadata: Map<String, dynamic>.from(json["metadata"]),
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
-        title: json["title"],
-        quantity: json["quantity"],
-        unitPrice: json["unit_price"],
-        compareAtUnitPrice: json["compare_at_unit_price"],
-        isTaxInclusive: json["is_tax_inclusive"],
-        taxLines: List<dynamic>.from(json["tax_lines"]),
-        adjustments: List<dynamic>.from(json["adjustments"]),
-        product: Product.fromJson(json["product"]),
-      );
+  factory Item.fromJson(Map<String, dynamic> json) {
+    logger.w("Item: $json");
+    return Item(
+      id: json["id"],
+      thumbnail: json["thumbnail"],
+      variantId: json["variant_id"],
+      productId: json["product_id"],
+      productTypeId: json["product_type_id"],
+      productTitle: json["product_title"],
+      productDescription: json["product_description"],
+      productSubtitle: json["product_subtitle"],
+      productType: json["product_type"],
+      productCollection: json["product_collection"],
+      productHandle: json["product_handle"],
+      variantSku: json["variant_sku"],
+      variantBarcode: json["variant_barcode"],
+      variantTitle: json["variant_title"],
+      requiresShipping: json["requires_shipping"],
+      metadata: Map<String, dynamic>.from(json["metadata"]),
+      createdAt: DateTime.parse(json["created_at"]),
+      updatedAt: DateTime.parse(json["updated_at"]),
+      title: json["title"],
+      quantity: json["quantity"],
+      unitPrice: json["unit_price"],
+      compareAtUnitPrice: json["compare_at_unit_price"],
+      isTaxInclusive: json["is_tax_inclusive"],
+      taxLines: List<dynamic>.from(json["tax_lines"]),
+      adjustments: List<dynamic>.from(json["adjustments"]),
+      product: Product.fromJson(json["product"]),
+    );
+  }
 }
 
 class Product {

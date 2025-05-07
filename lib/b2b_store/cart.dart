@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
@@ -21,9 +23,10 @@ class _CartScreenState extends State<CartScreen> {
   // final
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   bool _isDataLoaded = false;
+  CartModel? cartModel;
   @override
   void initState() {
-    _b2bStoreBloc.add(GetCartData());
+    _b2bStoreBloc.add(const GetCartData());
     super.initState();
   }
 
@@ -52,6 +55,7 @@ class _CartScreenState extends State<CartScreen> {
                 print(state.cartData.cart);
                 // _addressesData = state.addressesData;
                 // _b2bStoreHomePage = state.dashboardData;
+                cartModel = state.cartData;
                 _isDataLoaded = true;
                 // _dashboardData = state.dashboardData;
               });
@@ -81,18 +85,27 @@ class _CartScreenState extends State<CartScreen> {
                               true, // Ensures ListView takes only the required space
                           physics:
                               const NeverScrollableScrollPhysics(), // Prevents nested scrolling
-                          itemCount: 5, // Replace with your cart item count
+                          itemCount: cartModel?.cart?.items
+                              .length, // Replace with your cart item count
                           itemBuilder: (context, index) {
+                            final item = cartModel?.cart?.items[index];
                             return Padding(
                               padding: EdgeInsets.symmetric(vertical: 8.h),
-                              child: const CartItemCard(),
+                              child: CartItemCard(
+                                item: item,
+                              ),
                             );
                           },
                         ),
                         const Divider(),
                         const ApplyPromo(),
                         const Divider(),
-                        const PricingCalculate(),
+                        PricingCalculate(
+                          total: cartModel?.cart?.total,
+                          subTotal: cartModel?.cart?.subtotal,
+                          discount: cartModel?.cart?.discountTotal,
+                          itemTotal: cartModel?.cart?.itemTotal,
+                        ),
                         const SizedBox(
                           height: 20,
                         )
@@ -139,29 +152,37 @@ class LongLabeledButton extends StatelessWidget {
 class PricingCalculate extends StatelessWidget {
   const PricingCalculate({
     super.key,
+    this.total,
+    this.subTotal,
+    this.discount,
+    this.itemTotal,
   });
+  final int? total;
+  final int? subTotal;
+  final int? discount;
+  final int? itemTotal;
 
   @override
   Widget build(BuildContext context) {
     return XDecoratedBox(
         child: Column(
       children: [
-        const ItemNamePrice(
+        ItemNamePrice(
           item: "Item Total",
-          price: "Rs. 799",
+          price: "Rs. $itemTotal",
         ),
-        const ItemNamePrice(
+        ItemNamePrice(
           item: "Discount",
-          price: "Rs. 50",
+          price: "Rs. $discount",
         ),
-        const ItemNamePrice(
+        ItemNamePrice(
           item: "Item Total",
-          price: "Rs. 749",
+          price: "Rs. $subTotal",
         ),
         const Divider(),
         ItemNamePrice(
           item: "Grand Total",
-          price: "Rs. 799",
+          price: "Rs. $total",
           itemStyle: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
         ),
       ],
@@ -340,8 +361,8 @@ class CyanTextButton extends StatelessWidget {
 }
 
 class CartItemCard extends StatelessWidget {
-  const CartItemCard({super.key});
-
+  const CartItemCard({super.key, this.item});
+  final Item? item;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -364,8 +385,9 @@ class CartItemCard extends StatelessWidget {
           // Product Image
           ClipRRect(
             borderRadius: BorderRadius.circular(12.r),
-            child: Image.asset(
-              AppImages.item, // Replace with your product image
+            child: CachedNetworkImage(
+              imageUrl:
+                  item?.thumbnail ?? "", // Replace with your product image
               height: 60.h,
               width: 60.w,
               fit: BoxFit.cover,
@@ -381,7 +403,7 @@ class CartItemCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Feather Toilet Seat",
+                      item?.productTitle ?? "",
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
@@ -401,7 +423,7 @@ class CartItemCard extends StatelessWidget {
                 ),
                 // SizedBox(height: 4.h),
                 Text(
-                  "Size: M",
+                  item?.productHandle ?? "",
                   style: TextStyle(
                     fontSize: 12.sp,
                     color: Colors.grey,
@@ -412,7 +434,7 @@ class CartItemCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Rs. 799",
+                      "Rs. ${item?.unitPrice}",
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,

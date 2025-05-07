@@ -48,9 +48,8 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
               _addressesData = state.addressesData;
               map = Map.fromEntries(_addressesData.addresses!
                   .map((e) => MapEntry(e.id ?? "", false)));
-              // _b2bStoreHomePage = state.dashboardData;
+
               _isDataLoaded = true;
-              // _dashboardData = state.dashboardData;
             });
           }
 
