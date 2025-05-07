@@ -43,7 +43,6 @@ class _HostDashboardState extends State<HostDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // bottomSheet: AddressChangeBottomSheet(),
       appBar: AppBar(
         leading: CustomImageProvider(
           image: AppImages.dashlogo,
