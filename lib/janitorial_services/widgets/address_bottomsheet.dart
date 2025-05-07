@@ -6,13 +6,12 @@ import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
-import 'package:woloo_smart_hygiene/janitorial_services/screens/host_dashboard_screen.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 
 class AddressBottomSheet extends StatefulWidget {
-  const AddressBottomSheet({super.key});
-
+  const AddressBottomSheet({super.key, this.adress});
+  final Addresses? adress;
   @override
   State<AddressBottomSheet> createState() => _AddressBottomSheetState();
 }
@@ -38,6 +37,9 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
   void initState() {
     super.initState();
     _controller = BottomSheet.createAnimationController(this);
+    if (widget.adress != null) {
+      onInit();
+    }
   }
 
   @override
@@ -229,5 +231,17 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
     if (value == null || value.trim().isEmpty) return 'Phone is required';
     if (!RegExp(r'^\d{10}$').hasMatch(value)) return 'Invalid phone number';
     return null;
+  }
+
+  void onInit() {
+    _firstNameController.text = widget.adress!.firstName ?? "";
+    _lastNameController.text = widget.adress!.lastName ?? "";
+    _flatNoController.text = widget.adress!.address1 ?? "";
+    _localityController.text = widget.adress!.address2 ?? "";
+    _apartmentController.text = widget.adress!.address1 ?? "";
+    _cityController.text = widget.adress!.city ?? "";
+    _pincodeController.text = widget.adress!.postalCode ?? "";
+    _phoneController.text = widget.adress!.phone ?? "";
+    _labelController.text = widget.adress!.addressName ?? "";
   }
 }

@@ -30,15 +30,15 @@ class AddressReqBody {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['address_1'] = this.address1;
-    data['address_name'] = this.addressName;
-    data['city'] = this.city;
-    data['first_name'] = this.firstName;
-    data['last_name'] = this.lastName;
-    data['phone'] = this.phone;
-    data['postal_code'] = this.postalCode;
-    data['province'] = this.province;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['address_1'] = address1;
+    data['address_name'] = addressName;
+    data['city'] = city;
+    data['first_name'] = firstName;
+    data['last_name'] = lastName;
+    data['phone'] = phone;
+    data['postal_code'] = postalCode;
+    data['province'] = province;
     return data;
   }
 }
@@ -49,15 +49,14 @@ class AddAddressResBody {
   AddAddressResBody({this.customer});
 
   AddAddressResBody.fromJson(Map<String, dynamic> json) {
-    customer = json['customer'] != null
-        ? new Customer.fromJson(json['customer'])
-        : null;
+    customer =
+        json['customer'] != null ? Customer.fromJson(json['customer']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.customer != null) {
-      data['customer'] = this.customer!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (customer != null) {
+      data['customer'] = customer!.toJson();
     }
     return data;
   }
@@ -66,13 +65,13 @@ class AddAddressResBody {
 class Customer {
   String? id;
   String? email;
-  Null? companyName;
+  Null companyName;
   String? firstName;
   String? lastName;
-  Null? phone;
-  Null? metadata;
+  Null phone;
+  Null metadata;
   bool? hasAccount;
-  Null? deletedAt;
+  Null deletedAt;
   String? createdAt;
   String? updatedAt;
   List<Addresses>? addresses;
@@ -106,26 +105,26 @@ class Customer {
     if (json['addresses'] != null) {
       addresses = <Addresses>[];
       json['addresses'].forEach((v) {
-        addresses!.add(new Addresses.fromJson(v));
+        addresses!.add(Addresses.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['email'] = this.email;
-    data['company_name'] = this.companyName;
-    data['first_name'] = this.firstName;
-    data['last_name'] = this.lastName;
-    data['phone'] = this.phone;
-    data['metadata'] = this.metadata;
-    data['has_account'] = this.hasAccount;
-    data['deleted_at'] = this.deletedAt;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    if (this.addresses != null) {
-      data['addresses'] = this.addresses!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['email'] = email;
+    data['company_name'] = companyName;
+    data['first_name'] = firstName;
+    data['last_name'] = lastName;
+    data['phone'] = phone;
+    data['metadata'] = metadata;
+    data['has_account'] = hasAccount;
+    data['deleted_at'] = deletedAt;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    if (addresses != null) {
+      data['addresses'] = addresses!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -136,21 +135,21 @@ class Addresses {
   String? addressName;
   bool? isDefaultShipping;
   bool? isDefaultBilling;
-  Null? company;
+  dynamic company;
   String? firstName;
   String? lastName;
   String? address1;
-  Null? address2;
+  dynamic address2;
   String? city;
-  Null? countryCode;
+  dynamic countryCode;
   String? province;
   String? postalCode;
   String? phone;
-  Null? metadata;
+  dynamic metadata;
   String? customerId;
   String? createdAt;
   String? updatedAt;
-  Null? deletedAt;
+  String? deletedAt;
 
   Addresses(
       {this.id,
@@ -196,26 +195,26 @@ class Addresses {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['address_name'] = this.addressName;
-    data['is_default_shipping'] = this.isDefaultShipping;
-    data['is_default_billing'] = this.isDefaultBilling;
-    data['company'] = this.company;
-    data['first_name'] = this.firstName;
-    data['last_name'] = this.lastName;
-    data['address_1'] = this.address1;
-    data['address_2'] = this.address2;
-    data['city'] = this.city;
-    data['country_code'] = this.countryCode;
-    data['province'] = this.province;
-    data['postal_code'] = this.postalCode;
-    data['phone'] = this.phone;
-    data['metadata'] = this.metadata;
-    data['customer_id'] = this.customerId;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['deleted_at'] = this.deletedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['address_name'] = addressName;
+    data['is_default_shipping'] = isDefaultShipping;
+    data['is_default_billing'] = isDefaultBilling;
+    data['company'] = company;
+    data['first_name'] = firstName;
+    data['last_name'] = lastName;
+    data['address_1'] = address1;
+    data['address_2'] = address2;
+    data['city'] = city;
+    data['country_code'] = countryCode;
+    data['province'] = province;
+    data['postal_code'] = postalCode;
+    data['phone'] = phone;
+    data['metadata'] = metadata;
+    data['customer_id'] = customerId;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['deleted_at'] = deletedAt;
     return data;
   }
 }
@@ -232,7 +231,7 @@ class AddressesData {
     if (json['addresses'] != null) {
       addresses = <Addresses>[];
       json['addresses'].forEach((v) {
-        addresses!.add(new Addresses.fromJson(v));
+        addresses!.add(Addresses.fromJson(v));
       });
     }
     count = json['count'];
@@ -241,13 +240,13 @@ class AddressesData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.addresses != null) {
-      data['addresses'] = this.addresses!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (addresses != null) {
+      data['addresses'] = addresses!.map((v) => v.toJson()).toList();
     }
-    data['count'] = this.count;
-    data['offset'] = this.offset;
-    data['limit'] = this.limit;
+    data['count'] = count;
+    data['offset'] = offset;
+    data['limit'] = limit;
     return data;
   }
 }

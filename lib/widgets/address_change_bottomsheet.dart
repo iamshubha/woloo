@@ -28,7 +28,7 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
 
   @override
   void initState() {
-    _b2bStoreBloc.add(GetAddress());
+    _b2bStoreBloc.add(const GetAddress());
     super.initState();
   }
 
@@ -107,6 +107,7 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                         child: ListView.builder(
                             itemCount: _addressesData.count,
                             itemBuilder: (c, i) {
+                              final address = _addressesData.addresses![i];
                               return Card(
                                 child: Container(
                                   height: 80,
@@ -132,13 +133,12 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Text(
-                                              _addressesData.addresses![i].city
-                                                  .toString(),
-                                              style: TextStyle(
+                                              address.city.toString(),
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
-                                              "${_addressesData.addresses![i].city} \n${_addressesData.addresses![i].postalCode}",
+                                              "${address.city} \n${address.postalCode}",
                                               style: TextStyle(fontSize: 12.sp),
                                             ),
                                           ],
@@ -147,7 +147,25 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                                       const Spacer(
                                         flex: 1,
                                       ),
-                                      const EditButton(),
+                                      EditButton(
+                                        onTap: () {
+                                          showModalBottomSheet(
+                                            isScrollControlled: true,
+                                            isDismissible:
+                                                true, // <-- Allow tap outside to dismiss
+                                            enableDrag:
+                                                true, // <-- Allow swipe down to dismiss
+
+                                            backgroundColor: Colors
+                                                .transparent, // Optional: if you want rounded corners to show correctly
+
+                                            context: context,
+                                            builder: (_) => AddressBottomSheet(
+                                              adress: address,
+                                            ), //AddressBottomSheet
+                                          );
+                                        },
+                                      ),
                                       const SizedBox(
                                         width: 5,
                                       ),
@@ -183,7 +201,7 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
 
                             context: context,
                             builder: (_) =>
-                                AddressBottomSheet(), //AddressBottomSheet
+                                const AddressBottomSheet(), //AddressBottomSheet
                           );
                         },
                       )
