@@ -91,13 +91,25 @@ class LongLabeledButton extends StatelessWidget {
 class PricingCalculate extends StatelessWidget {
   const PricingCalculate({
     super.key,
+    this.isHeader = false,
   });
+  final bool isHeader;
 
   @override
   Widget build(BuildContext context) {
     return XDecoratedBox(
         child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (isHeader) ...[
+          Text(
+            "Order Summary",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+        ],
         const ItemNamePrice(
           item: "Item Total",
           price: "Rs. 799",
@@ -292,7 +304,8 @@ class CyanTextButton extends StatelessWidget {
 }
 
 class CartItemCard extends StatelessWidget {
-  const CartItemCard({super.key});
+  const CartItemCard({super.key, this.isSelected = true});
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -339,16 +352,17 @@ class CartItemCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        // Handle delete action
-                      },
-                      child: SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: Image.asset(AppImages.deleteLogo),
+                    if (isSelected)
+                      GestureDetector(
+                        onTap: () {
+                          // Handle delete action
+                        },
+                        child: SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: Image.asset(AppImages.deleteLogo),
+                        ),
                       ),
-                    ),
                   ],
                 ),
                 // SizedBox(height: 4.h),
@@ -371,7 +385,7 @@ class CartItemCard extends StatelessWidget {
                         color: Colors.black,
                       ),
                     ),
-                    const CartAddRemove()
+                    if (isSelected) const CartAddRemove()
                   ],
                 ),
               ],
@@ -407,18 +421,20 @@ class CartHeader extends StatelessWidget {
         const SizedBox(
           width: 10,
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              subtitle,
-              style: TextStyle(fontSize: 10.sp),
-            ),
-          ],
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                subtitle,
+                style: TextStyle(fontSize: 10.sp),
+              ),
+            ],
+          ),
         )
       ],
     );

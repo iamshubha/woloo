@@ -16,7 +16,7 @@ class ReviewOrderBottomsheet extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
       decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.75),
+          color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(40.r))),
       child: Column(
         mainAxisSize: MainAxisSize.min,
