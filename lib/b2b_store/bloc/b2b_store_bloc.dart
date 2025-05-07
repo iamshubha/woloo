@@ -34,6 +34,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<AddressReq>(_createAddress);
     on<GetAddress>(_getAddress);
     on<GetCartData>(_getCart);
+    on<AddToCart>(_addToCart);
   }
 
   FutureOr<void> _emailPassRegister(
@@ -167,6 +168,29 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       print(response);
 
       // emit(CartSuccess());
+    } catch (e) {
+      emit(B2BStoreError(error: e.toString()));
+      debugPrint("Error in IOT service: $e");
+    }
+  }
+
+  FutureOr<void> _addToCart(
+    AddToCart event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const B2BStoreLoading(message: "Loading data..."));
+      AddToCartResponse response = await _cartService.addToCart(
+        token: box.read('login_jwt'),
+        cart_id: box.read('cart_id'),
+        variant_id: event.variant_id,
+        quantity: event.quantity,
+      );
+
+      debugPrint("requestId $response");
+      print(response);
+
+      emit(CartSuccess(cartData: response));
     } catch (e) {
       emit(B2BStoreError(error: e.toString()));
       debugPrint("Error in IOT service: $e");

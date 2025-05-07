@@ -75,3 +75,16 @@ class GetCartData extends B2BStoreEvent {
   @override
   List<Object?> get props => [];
 }
+
+class AddToCart extends B2BStoreEvent {
+  final String? variant_id;
+  final int quantity;
+
+  const AddToCart({
+    required this.variant_id,
+    required this.quantity,
+  });
+
+  @override
+  List<Object?> get props => [variant_id, quantity];
+}

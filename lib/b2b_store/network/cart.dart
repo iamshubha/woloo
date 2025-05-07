@@ -9,10 +9,10 @@ class CartApiService {
   final DioClient dio;
   const CartApiService({required this.dio});
 
-  Future<AddressesData> addToCart({
+  Future<AddToCartResponse> addToCart({
     required String token,
     required String cart_id,
-    required String variant_id,
+    required String? variant_id,
     required int quantity,
   }) async {
     try {
@@ -23,13 +23,13 @@ class CartApiService {
           headers: {
             'x-publishable-api-key':
                 'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/json',
             'Authorization': 'Bearer $token'
           },
         ),
       );
 
-      return AddressesData.fromJson(response);
+      return AddToCartResponse.fromJson(response);
     } catch (e) {
       debugPrint("Error in add  to cart  service: $e");
       rethrow;

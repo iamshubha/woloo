@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
+import 'package:woloo_smart_hygiene/screens/splash_screen/view/splash.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 
@@ -57,7 +58,7 @@ class _AppState extends State<App> {
           ),
         );
       },
-      child: const EcomScreen(),
+      child: const SplashScreen(),
     );
   }
 
