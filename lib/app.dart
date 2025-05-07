@@ -6,7 +6,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:woloo_smart_hygiene/janitorial_services/screens/host_dashboard_screen.dart';
+import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
+import 'package:woloo_smart_hygiene/janitorial_services/screens/home_screen.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 
@@ -57,7 +58,7 @@ class _AppState extends State<App> {
           ),
         );
       },
-      child: const HostDashboard(),
+      child: const EcomScreen(),
     );
   }
 
