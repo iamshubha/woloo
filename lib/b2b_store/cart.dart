@@ -49,6 +49,7 @@ class _CartScreenState extends State<CartScreen> {
             if (state is CartSuccess) {
               EasyLoading.dismiss();
               setState(() {
+                print(state.cartData.cart);
                 // _addressesData = state.addressesData;
                 // _b2bStoreHomePage = state.dashboardData;
                 _isDataLoaded = true;

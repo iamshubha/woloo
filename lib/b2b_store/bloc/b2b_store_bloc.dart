@@ -160,16 +160,16 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     Emitter<B2BStoreState> emit,
   ) async {
     try {
-      emit(const B2BStoreLoading(message: "Loading data..."));
+      emit(const CartLoading(message: "Loading data..."));
       CartModel response = await _cartService.getAllCartData(
           token: box.read('login_jwt'), cartId: box.read('cart_id'));
 
       debugPrint("requestId $response");
       print(response);
 
-      // emit(CartSuccess());
+      emit(CartSuccess(cartData: response));
     } catch (e) {
-      emit(B2BStoreError(error: e.toString()));
+      emit(CartError(error: e.toString()));
       debugPrint("Error in IOT service: $e");
     }
   }
@@ -190,7 +190,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       debugPrint("requestId $response");
       print(response);
 
-      emit(CartSuccess(cartData: response));
+      emit(AddToCartSuccess(cartData: response));
     } catch (e) {
       emit(B2BStoreError(error: e.toString()));
       debugPrint("Error in IOT service: $e");

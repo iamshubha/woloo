@@ -78,8 +78,15 @@ class CartError extends B2BStoreState {
   List<Object> get props => [error];
 }
 
-class CartSuccess extends B2BStoreState {
+class AddToCartSuccess extends B2BStoreState {
   final AddToCartResponse cartData;
+  const AddToCartSuccess({required this.cartData});
+  @override
+  List<Object> get props => [cartData];
+}
+
+class CartSuccess extends B2BStoreState {
+  final CartModel cartData;
   const CartSuccess({required this.cartData});
   @override
   List<Object> get props => [cartData];
