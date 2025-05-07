@@ -219,3 +219,35 @@ class Addresses {
     return data;
   }
 }
+
+class AddressesData {
+  List<Addresses>? addresses;
+  int? count;
+  int? offset;
+  int? limit;
+
+  AddressesData({this.addresses, this.count, this.offset, this.limit});
+
+  AddressesData.fromJson(Map<String, dynamic> json) {
+    if (json['addresses'] != null) {
+      addresses = <Addresses>[];
+      json['addresses'].forEach((v) {
+        addresses!.add(new Addresses.fromJson(v));
+      });
+    }
+    count = json['count'];
+    offset = json['offset'];
+    limit = json['limit'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.addresses != null) {
+      data['addresses'] = this.addresses!.map((v) => v.toJson()).toList();
+    }
+    data['count'] = this.count;
+    data['offset'] = this.offset;
+    data['limit'] = this.limit;
+    return data;
+  }
+}

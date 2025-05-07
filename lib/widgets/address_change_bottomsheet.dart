@@ -1,115 +1,196 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
+import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
+import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
+import 'package:woloo_smart_hygiene/janitorial_services/widgets/address_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 
-class AddressChangeBottomSheet extends StatelessWidget {
+class AddressChangeBottomSheet extends StatefulWidget {
   const AddressChangeBottomSheet({
     super.key,
   });
 
   @override
+  State<AddressChangeBottomSheet> createState() =>
+      _AddressChangeBottomSheetState();
+}
+
+class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
+  final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
+  bool _isDataLoaded = false;
+  AddressesData _addressesData = AddressesData();
+
+  @override
+  void initState() {
+    _b2bStoreBloc.add(GetAddress());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-      decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.75),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(40.r))),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        spacing: 10.h,
-        children: [
-          const XBottmSheetTopDecor(),
-          const SizedBox(
-            height: 20,
-          ),
-          Row(
-            spacing: 10.w,
-            children: [
-              SizedBox(
-                height: 30,
-                width: 30,
-                child: Image.asset(AppImages.addresses),
-              ),
-              Column(
-                // spacing: 10.h,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    "Addresses",
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
-                  ),
-                  Text(
-                    "Select or edit your addresses",
-                    style: TextStyle(fontSize: 12.sp),
-                  ),
-                ],
-              )
-            ],
-          ),
-          SizedBox(
-            height: 250,
-            child: ListView.builder(
-                itemCount: 3,
-                itemBuilder: (c, i) {
-                  return Card(
-                    child: Container(
-                      height: 80,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
+    return BlocConsumer(
+        bloc: _b2bStoreBloc,
+        listener: (context, state) {
+          // print("dssa $state");
+          if (state is B2BStoreLoading) {
+            EasyLoading.show(status: state.message);
+          }
+          if (state is GetAddressSuccess) {
+            EasyLoading.dismiss();
+            setState(() {
+              _addressesData = state.addressesData;
+              // _b2bStoreHomePage = state.dashboardData;
+              _isDataLoaded = true;
+              // _dashboardData = state.dashboardData;
+            });
+          }
+
+          if (state is B2BStoreError) {
+            EasyLoading.dismiss();
+            EasyLoading.showError(state.error);
+            Navigator.pop(context);
+          }
+        },
+        builder: (context, snapshot) {
+          return !_isDataLoaded
+              ? Container()
+              : Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                  decoration: BoxDecoration(
+                      color: Colors.white, //.withValues(alpha: 0.75),
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(40.r))),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: 10.h,
+                    children: [
+                      const XBottmSheetTopDecor(),
+                      const SizedBox(
+                        height: 20,
                       ),
-                      child: Row(
+                      Row(
+                        spacing: 10.w,
                         children: [
-                          XDesignedRadioButton(
-                            onTap: () {},
+                          SizedBox(
+                            height: 30,
+                            width: 30,
+                            child: Image.asset(AppImages.addresses),
                           ),
-                          const Spacer(
-                            flex: 1,
-                          ),
-                          Expanded(
-                            flex: 15,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Text(
-                                  "Home",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  "1234 Lane road, Area, Location, Landmark",
-                                  style: TextStyle(fontSize: 12.sp),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const Spacer(
-                            flex: 1,
-                          ),
-                          const EditButton(),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {},
+                          Column(
+                            // spacing: 10.h,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "Addresses",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.sp),
+                              ),
+                              Text(
+                                "Select or edit your addresses",
+                                style: TextStyle(fontSize: 12.sp),
+                              ),
+                            ],
                           )
                         ],
                       ),
-                    ),
-                  );
-                }),
-          ),
-          const LongLabeledButton(label: "Select Address"),
-          const LongLabeledButton(label: "Add Address")
-        ],
-      ),
-    );
+                      SizedBox(
+                        height: 250,
+                        child: ListView.builder(
+                            itemCount: _addressesData.count,
+                            itemBuilder: (c, i) {
+                              return Card(
+                                child: Container(
+                                  height: 80,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      XDesignedRadioButton(
+                                        onTap: () {},
+                                      ),
+                                      const Spacer(
+                                        flex: 1,
+                                      ),
+                                      Expanded(
+                                        flex: 15,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              _addressesData.addresses![i].city
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              "${_addressesData.addresses![i].city} \n${_addressesData.addresses![i].postalCode}",
+                                              style: TextStyle(fontSize: 12.sp),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const Spacer(
+                                        flex: 1,
+                                      ),
+                                      const EditButton(),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.delete),
+                                        onPressed: () {},
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }),
+                      ),
+                      LongLabeledButton(
+                        label: "Select Address",
+                        onTap: () {
+                          var box = GetStorage();
+                          var jwt = box.read('login_jwt');
+                          print(jwt);
+                        },
+                      ),
+                      LongLabeledButton(
+                        label: "Add Address",
+                        onTap: () {
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            isDismissible:
+                                true, // <-- Allow tap outside to dismiss
+                            enableDrag: true, // <-- Allow swipe down to dismiss
+
+                            backgroundColor: Colors
+                                .transparent, // Optional: if you want rounded corners to show correctly
+
+                            context: context,
+                            builder: (_) =>
+                                AddressBottomSheet(), //AddressBottomSheet
+                          );
+                        },
+                      )
+                    ],
+                  ),
+                );
+        });
   }
 }
 

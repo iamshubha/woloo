@@ -1,12 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
+import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
+import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
+
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  // final
+  final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
+  bool _isDataLoaded = false;
+  @override
+  void initState() {
+    _b2bStoreBloc.add(GetCartData());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,44 +33,72 @@ class CartScreen extends StatelessWidget {
       bottomSheet: Container(
         padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
         decoration: const BoxDecoration(color: Colors.white),
-        child: const LongLabeledButton(
+        child: LongLabeledButton(
+          onTap: () {},
           label: "Checkout",
         ),
       ),
       appBar: const BackAppBar(),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
-        child: Column(
-          spacing: 16.h,
-          children: [
-            CartHeader(
-              imgPath: AppImages.cart,
-              title: "Cart",
-              subtitle: 'Checkout you purchases from here',
-            ),
-            ListView.builder(
-              shrinkWrap:
-                  true, // Ensures ListView takes only the required space
-              physics:
-                  const NeverScrollableScrollPhysics(), // Prevents nested scrolling
-              itemCount: 5, // Replace with your cart item count
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.h),
-                  child: const CartItemCard(),
-                );
-              },
-            ),
-            const Divider(),
-            const ApplyPromo(),
-            const Divider(),
-            const PricingCalculate(),
-            const SizedBox(
-              height: 20,
-            )
-          ],
-        ),
-      ),
+      body: BlocConsumer(
+          bloc: _b2bStoreBloc,
+          listener: (context, state) {
+            // print("dssa $state");
+            if (state is CartLoading) {
+              EasyLoading.show(status: state.message);
+            }
+            if (state is CartSuccess) {
+              EasyLoading.dismiss();
+              setState(() {
+                // _addressesData = state.addressesData;
+                // _b2bStoreHomePage = state.dashboardData;
+                _isDataLoaded = true;
+                // _dashboardData = state.dashboardData;
+              });
+            }
+
+            if (state is CartError) {
+              EasyLoading.dismiss();
+              EasyLoading.showError(state.error);
+            }
+          },
+          builder: (context, snapshot) {
+            return !_isDataLoaded
+                ? Container()
+                : SingleChildScrollView(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+                    child: Column(
+                      spacing: 16.h,
+                      children: [
+                        CartHeader(
+                          imgPath: AppImages.cart,
+                          title: "Cart",
+                          subtitle: 'Checkout you purchases from here',
+                        ),
+                        ListView.builder(
+                          shrinkWrap:
+                              true, // Ensures ListView takes only the required space
+                          physics:
+                              const NeverScrollableScrollPhysics(), // Prevents nested scrolling
+                          itemCount: 5, // Replace with your cart item count
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(vertical: 8.h),
+                              child: const CartItemCard(),
+                            );
+                          },
+                        ),
+                        const Divider(),
+                        const ApplyPromo(),
+                        const Divider(),
+                        const PricingCalculate(),
+                        const SizedBox(
+                          height: 20,
+                        )
+                      ],
+                    ),
+                  );
+          }),
     );
   }
 }
@@ -59,11 +106,11 @@ class CartScreen extends StatelessWidget {
 class LongLabeledButton extends StatelessWidget {
   const LongLabeledButton({
     super.key,
-    this.onTap,
+    required this.onTap,
     required this.label,
     this.color = AppColors.lightCyanColor,
   });
-  final VoidCallback? onTap;
+  final VoidCallback onTap;
   final String label;
   final Color color;
 

@@ -48,3 +48,38 @@ class AddAddressSuccess extends B2BStoreState {
   @override
   List<Object> get props => [addAddressResBody];
 }
+
+class GetAddressSuccess extends B2BStoreState {
+  final AddressesData addressesData;
+  const GetAddressSuccess({required this.addressesData});
+  @override
+  List<Object> get props => [addressesData];
+}
+
+class CartInitial extends B2BStoreState {
+  @override
+  List<Object> get props => [];
+}
+
+class CartLoading extends B2BStoreState {
+  final String message;
+  const CartLoading({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+class CartError extends B2BStoreState {
+  final String error;
+  const CartError({required this.error});
+
+  @override
+  List<Object> get props => [error];
+}
+
+class CartSuccess extends B2BStoreState {
+  final B2BStoreHomePage dashboardData;
+  const CartSuccess(this.dashboardData);
+  @override
+  List<Object> get props => [dashboardData];
+}

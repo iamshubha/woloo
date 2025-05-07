@@ -6,6 +6,7 @@ import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
+import 'package:woloo_smart_hygiene/widgets/cart_bottomsheet.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   final Product? productData;
@@ -15,11 +16,24 @@ class ProductDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final sizeList = ["S", "M", "L", "XL"];
     return Scaffold(
-      bottomSheet: const XDecoratedBox(
+      bottomSheet: XDecoratedBox(
         child: Row(
           children: [
             Expanded(
               child: LongLabeledButton(
+                onTap: () {
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    isDismissible: true, // <-- Allow tap outside to dismiss
+                    enableDrag: true, // <-- Allow swipe down to dismiss
+
+                    backgroundColor: Colors
+                        .transparent, // Optional: if you want rounded corners to show correctly
+
+                    context: context,
+                    builder: (_) => CartBottomSheet(), //AddressBottomSheet
+                  );
+                },
                 label: "Buy Now",
               ),
             ),
@@ -28,6 +42,7 @@ class ProductDetailsScreen extends StatelessWidget {
             ),
             Expanded(
               child: LongLabeledButton(
+                onTap: () {},
                 label: "Add to Cart",
               ),
             ),

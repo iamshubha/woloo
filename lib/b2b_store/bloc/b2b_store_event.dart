@@ -61,3 +61,17 @@ class AddressReq extends B2BStoreEvent {
   @override
   List<Object?> get props => [addressReqBody];
 }
+
+class GetAddress extends B2BStoreEvent {
+  const GetAddress();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class GetCartData extends B2BStoreEvent {
+  const GetCartData();
+
+  @override
+  List<Object?> get props => [];
+}
