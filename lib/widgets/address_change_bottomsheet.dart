@@ -25,7 +25,6 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   bool _isDataLoaded = false;
   AddressesData _addressesData = AddressesData();
-  bool valid = false;
   Map<String, bool> map = {};
 
   @override
