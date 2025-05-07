@@ -109,4 +109,9 @@ abstract class AppImages {
   static String get redeem => "${_assetImgPath}redeem.png";
   static String get addresses => "${_assetImgPath}addresses.png";
   static String get edit => "${_assetImgPath}edit.png";
+  static String get creditCard => "${_assetImgPath}credit-card.png";
+  static String get netbanking => "${_assetImgPath}netbanking.png";
+  static String get upiIcon => "${_assetImgPath}UPI.png";
+  static String get checkout => "${_assetImgPath}checkout.png";
+  // static String get remove=>"${_assetImgPath}remove.png";
 }

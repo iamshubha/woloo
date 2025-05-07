@@ -13,6 +13,7 @@ import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
 
 import '../../utils/app_images.dart';
 
@@ -43,7 +44,7 @@ class _HostDashboardState extends State<HostDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // bottomSheet: const AddressChangeBottomSheet(),
+      // bottomSheet: ReviewOrderBottomsheet(),
       appBar: AppBar(
         leading: CustomImageProvider(
           image: AppImages.dashlogo,
@@ -198,6 +199,34 @@ class _HostDashboardState extends State<HostDashboard> {
           },
         ),
       ),
+    );
+  }
+}
+
+class XPaymentTile extends StatelessWidget {
+  const XPaymentTile({
+    super.key,
+    required this.imgPath,
+    required this.paymentMethod,
+  });
+  final String imgPath;
+  final String paymentMethod;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        SizedBox(height: 40, width: 40, child: Image.asset(imgPath)),
+        SizedBox(
+          width: 10.w,
+        ),
+        Text(
+          paymentMethod,
+          style: AppTextStyle.font14bold,
+        ),
+        const Spacer(),
+        const XDesignedRadioButton()
+      ],
     );
   }
 }
