@@ -1,25 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
+import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
+import 'package:woloo_smart_hygiene/widgets/cart_bottomsheet.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
+  final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   final Product? productData;
-  const ProductDetailsScreen({super.key, this.productData});
+  ProductDetailsScreen({super.key, this.productData});
 
   @override
   Widget build(BuildContext context) {
     final sizeList = ["S", "M", "L", "XL"];
     return Scaffold(
-      bottomSheet: const XDecoratedBox(
+      bottomSheet: XDecoratedBox(
         child: Row(
           children: [
             Expanded(
               child: LongLabeledButton(
+                onTap: () {
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    isDismissible: true, // <-- Allow tap outside to dismiss
+                    enableDrag: true, // <-- Allow swipe down to dismiss
+
+                    backgroundColor: Colors
+                        .transparent, // Optional: if you want rounded corners to show correctly
+
+                    context: context,
+                    builder: (_) => CartBottomSheet(), //AddressBottomSheet
+                  );
+                },
                 label: "Buy Now",
               ),
             ),
@@ -28,6 +45,7 @@ class ProductDetailsScreen extends StatelessWidget {
             ),
             Expanded(
               child: LongLabeledButton(
+                onTap: () {},
                 label: "Add to Cart",
               ),
             ),
@@ -104,17 +122,32 @@ class ProductDetailsScreen extends StatelessWidget {
                           fontSize: 36.sp, fontWeight: FontWeight.bold),
                     ),
                     const Spacer(),
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
-                      decoration: BoxDecoration(
-                          color: AppColors.lightCyanColor,
-                          borderRadius: BorderRadius.circular(8)),
-                      child: Center(
-                        child: Text(
-                          "Buy Now",
-                          style: TextStyle(
-                              fontSize: 20.sp, fontWeight: FontWeight.bold),
+                    InkWell(
+                      onTap: () {
+                        try {
+                          _b2bStoreBloc.add(AddToCart(
+                              quantity: 1,
+                              variant_id: productData?.variants![0].id));
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: const Text('Item added to cart!'),
+                            ),
+                          );
+                        } catch (e) {}
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 20.w, vertical: 5.h),
+                        decoration: BoxDecoration(
+                            color: AppColors.lightCyanColor,
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Center(
+                          child: Text(
+                            "Buy Now",
+                            style: TextStyle(
+                                fontSize: 20.sp, fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                     )

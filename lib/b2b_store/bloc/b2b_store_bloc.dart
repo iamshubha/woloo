@@ -9,6 +9,7 @@ import 'package:woloo_smart_hygiene/b2b_store/models/login_flow.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/address.dart';
+import 'package:woloo_smart_hygiene/b2b_store/network/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/login_reg_flow.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/product.dart';
 import 'b2b_store_event.dart';
@@ -21,6 +22,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
 
   final ProductService _productService = ProductService(dio: GetIt.instance());
   final AddressService _addresstService = AddressService(dio: GetIt.instance());
+  final CartApiService _cartService = CartApiService(dio: GetIt.instance());
 
   var requestId = '';
   late int roleId;
@@ -30,6 +32,9 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     // on<StoreCustomersReq>(_emailPassRegister);
     on<StoreCustomerLoginReq>(_emailPassLogin);
     on<AddressReq>(_createAddress);
+    on<GetAddress>(_getAddress);
+    on<GetCartData>(_getCart);
+    on<AddToCart>(_addToCart);
   }
 
   FutureOr<void> _emailPassRegister(
@@ -78,9 +83,13 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       final regionResponse = await _productService.getRegion(token: loginToken);
 
       // Create cart
-      await _productService.createCart(
-          token: loginToken,
-          regionId: regionResponse.regions![0].id.toString());
+      await _productService
+          .createCart(
+              token: loginToken,
+              regionId: regionResponse.regions![0].id.toString())
+          .then((cartData) {
+        box.write('cart_id', cartData.cart!.id);
+      });
 
       // Fetch all required data
       _categories =
@@ -121,6 +130,67 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       print(response);
       // emit(B2BStoreSuccess());
       emit(AddAddressSuccess(addAddressResBody: response));
+    } catch (e) {
+      emit(B2BStoreError(error: e.toString()));
+      debugPrint("Error in IOT service: $e");
+    }
+  }
+
+  FutureOr<void> _getAddress(
+    GetAddress event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const B2BStoreLoading(message: "Loading data..."));
+      AddressesData response =
+          await _addresstService.getAllAddress(token: box.read('login_jwt'));
+
+      debugPrint("requestId $response");
+      print(response);
+      // emit(B2BStoreSuccess());
+      emit(GetAddressSuccess(addressesData: response));
+    } catch (e) {
+      emit(B2BStoreError(error: e.toString()));
+      debugPrint("Error in IOT service: $e");
+    }
+  }
+
+  FutureOr<void> _getCart(
+    GetCartData event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const CartLoading(message: "Loading data..."));
+      CartModel response = await _cartService.getAllCartData(
+          token: box.read('login_jwt'), cartId: box.read('cart_id'));
+
+      debugPrint("requestId $response");
+      print(response);
+
+      emit(CartSuccess(cartData: response));
+    } catch (e) {
+      emit(CartError(error: e.toString()));
+      debugPrint("Error in IOT service: $e");
+    }
+  }
+
+  FutureOr<void> _addToCart(
+    AddToCart event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const B2BStoreLoading(message: "Loading data..."));
+      AddToCartResponse response = await _cartService.addToCart(
+        token: box.read('login_jwt'),
+        cart_id: box.read('cart_id'),
+        variant_id: event.variant_id,
+        quantity: event.quantity,
+      );
+
+      debugPrint("requestId $response");
+      print(response);
+
+      emit(AddToCartSuccess(cartData: response));
     } catch (e) {
       emit(B2BStoreError(error: e.toString()));
       debugPrint("Error in IOT service: $e");

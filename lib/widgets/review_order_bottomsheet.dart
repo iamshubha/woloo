@@ -16,7 +16,9 @@ class ReviewOrderBottomsheet extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
       decoration: BoxDecoration(
+
           color: Colors.white,
+
           borderRadius: BorderRadius.vertical(top: Radius.circular(40.r))),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -110,7 +112,10 @@ class ReviewOrderBottomsheet extends StatelessWidget {
           const Divider(
             color: Colors.white,
           ),
-          const LongLabeledButton(label: "Review Order")
+          LongLabeledButton(
+            label: "Review Order",
+            onTap: () {},
+          )
         ],
       ),
     );

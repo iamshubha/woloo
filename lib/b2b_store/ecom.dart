@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:simple_floating_bottom_nav_bar/floating_item.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
+import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
-import 'package:woloo_smart_hygiene/janitorial_services/widgets/address_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
+import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
 
 enum EcomTab { seeLess, seeAll }
 
@@ -536,7 +536,10 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
             backgroundColor: AppColors.greyIcon,
             child: IconButton(
               icon: ImageIcon(AssetImage(AppImages.bag)),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const CartScreen()));
+              },
             ),
           ),
         ),
@@ -563,7 +566,8 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                   .transparent, // Optional: if you want rounded corners to show correctly
 
               context: context,
-              builder: (_) => AddressBottomSheet(),
+              builder: (_) =>
+                  const AddressChangeBottomSheet(), //AddressBottomSheet
             ),
             child: Row(
               children: [

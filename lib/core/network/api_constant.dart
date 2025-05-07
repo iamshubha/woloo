@@ -165,4 +165,9 @@ class APIConstants {
       '$AUTH_BASE_URL/store/products?fields=*variants.calculated_price';
 
   static var CREATE_ADDRESS = '$AUTH_BASE_URL/store/customers/me/addresses';
+
+  static var GET_ADDRESS = '$AUTH_BASE_URL/store/customers/me/addresses';
+
+  static var GET_ALL_CART_DATA = '$AUTH_BASE_URL/store/carts/';
+  static var ADD_TO_CART = '$AUTH_BASE_URL/store/carts/';
 }
