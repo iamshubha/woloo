@@ -58,7 +58,7 @@ class _AppState extends State<App> {
           ),
         );
       },
-      child: const SplashScreen(),
+      child: const HostDashboard(),
     );
   }
 

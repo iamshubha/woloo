@@ -107,4 +107,6 @@ abstract class AppImages {
   static String get banner3 => "${_assetImgPath}banner3.png";
   static String get pestControlImage => "${_assetImgPath}pest-control-img.jpg";
   static String get redeem => "${_assetImgPath}redeem.png";
+  static String get addresses => "${_assetImgPath}addresses.png";
+  static String get edit => "${_assetImgPath}edit.png";
 }
