@@ -5,6 +5,7 @@ import 'package:woloo_smart_hygiene/janitorial_services/screens/host_dashboard_s
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
+import 'package:woloo_smart_hygiene/widgets/order_summery_bottomsheet.dart';
 
 class ReviewOrderBottomsheet extends StatelessWidget {
   const ReviewOrderBottomsheet({
@@ -16,9 +17,7 @@ class ReviewOrderBottomsheet extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
       decoration: BoxDecoration(
-
           color: Colors.white,
-
           borderRadius: BorderRadius.vertical(top: Radius.circular(40.r))),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -114,7 +113,20 @@ class ReviewOrderBottomsheet extends StatelessWidget {
           ),
           LongLabeledButton(
             label: "Review Order",
-            onTap: () {},
+            onTap: () {
+              // OrderSummeryBottomSheet
+              showModalBottomSheet(
+                isScrollControlled: true,
+                isDismissible: true, // <-- Allow tap outside to dismiss
+                enableDrag: true, // <-- Allow swipe down to dismiss
+
+                backgroundColor: Colors
+                    .transparent, // Optional: if you want rounded corners to show correctly
+
+                context: context,
+                builder: (_) => OrderSummeryBottomSheet(), //AddressBottomSheet
+              );
+            },
           )
         ],
       ),
