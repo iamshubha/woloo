@@ -30,8 +30,7 @@ class OrderSummeryBottomSheet extends StatelessWidget {
             CartHeader(
                 imgPath: AppImages.list,
                 title: "Order Summary",
-                subtitle:
-                    "Check the summary of your order here before paying"),
+                subtitle: "Check the summary of your order here before paying"),
             const Divider(
               color: Colors.white,
             ),
@@ -87,7 +86,10 @@ class OrderSummeryBottomSheet extends StatelessWidget {
             const Divider(
               color: Colors.white,
             ),
-            const LongLabeledButton(label: "Pay via [payment method]")
+            LongLabeledButton(
+              label: "Pay via [payment method]",
+              onTap: () {},
+            )
           ]),
     );
   }
