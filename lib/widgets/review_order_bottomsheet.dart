@@ -1,16 +1,33 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/screens/host_dashboard_screen.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/order_summery_bottomsheet.dart';
 
-class ReviewOrderBottomsheet extends StatelessWidget {
+class ReviewOrderBottomsheet extends StatefulWidget {
   const ReviewOrderBottomsheet({
     super.key,
   });
+
+  @override
+  State<ReviewOrderBottomsheet> createState() => _ReviewOrderBottomsheetState();
+}
+
+class _ReviewOrderBottomsheetState extends State<ReviewOrderBottomsheet> {
+  Addresses? address;
+  final box = GetStorage();
+  @override
+  void initState() {
+    super.initState();
+    address = getAddress();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,26 +70,43 @@ class ReviewOrderBottomsheet extends StatelessWidget {
                   "Home",
                   style: AppTextStyle.font14bold,
                 ),
-                Row(
-                  children: [
-                    Text(
-                      "1234 Lane road, Area, Location, Landmark",
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: Colors.grey,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      isDismissible: true, // <-- Allow tap outside to dismiss
+                      enableDrag: true, // <-- Allow swipe down to dismiss
+
+                      backgroundColor: Colors
+                          .transparent, // Optional: if you want rounded corners to show correctly
+
+                      context: context,
+                      builder: (_) =>
+                          const AddressChangeBottomSheet(), //AddressBottomSheet
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      Text(
+                        address?.address1 ?? "",
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: Colors.grey,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 5.w),
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          shape: BoxShape.circle),
-                      child: const Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.grey,
+                      SizedBox(width: 5.w),
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            shape: BoxShape.circle),
+                        child: const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.grey,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -124,12 +158,19 @@ class ReviewOrderBottomsheet extends StatelessWidget {
                     .transparent, // Optional: if you want rounded corners to show correctly
 
                 context: context,
-                builder: (_) => OrderSummeryBottomSheet(), //AddressBottomSheet
+                builder: (_) =>
+                    const OrderSummeryBottomSheet(), //AddressBottomSheet
               );
             },
           )
         ],
       ),
     );
+  }
+
+  Addresses? getAddress() {
+    address = Addresses.fromJson(jsonDecode(box.read("address")));
+    // setState(() {});
+    return address;
   }
 }

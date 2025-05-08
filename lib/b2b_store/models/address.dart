@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class AddressReqBody {
   String? address1;
   String? addressName;
@@ -217,6 +219,9 @@ class Addresses {
     data['deleted_at'] = deletedAt;
     return data;
   }
+
+  @override
+  String toString() => jsonEncode(toJson());
 }
 
 class AddressesData {

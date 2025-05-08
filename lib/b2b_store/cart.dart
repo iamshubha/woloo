@@ -156,7 +156,7 @@ class PricingCalculate extends StatelessWidget {
     this.subTotal,
     this.discount,
     this.itemTotal,
-     this.isHeader = false,
+    this.isHeader = false,
   });
   final int? total;
   final int? subTotal;
@@ -165,16 +165,12 @@ class PricingCalculate extends StatelessWidget {
 
   final bool isHeader;
 
-
   @override
   Widget build(BuildContext context) {
     return XDecoratedBox(
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
-       
-
         if (isHeader) ...[
           Text(
             "Order Summary",
@@ -184,7 +180,7 @@ class PricingCalculate extends StatelessWidget {
             height: 10,
           ),
         ],
-         ItemNamePrice(
+        ItemNamePrice(
           item: "Item Total",
           price: "Rs. $itemTotal",
         ),
@@ -378,13 +374,10 @@ class CyanTextButton extends StatelessWidget {
 }
 
 class CartItemCard extends StatelessWidget {
-
-
   final Item? item;
   final bool isSelected;
 
-  const CartItemCard({super.key,this.item, this.isSelected = true});
-
+  const CartItemCard({super.key, this.item, this.isSelected = true});
 
   @override
   Widget build(BuildContext context) {
@@ -425,11 +418,14 @@ class CartItemCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      item?.productTitle ?? "",
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold,
+                    Flexible(
+                      child: Text(
+                        item?.productTitle ?? "",
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     if (isSelected)

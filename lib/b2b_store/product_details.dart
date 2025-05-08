@@ -25,6 +25,17 @@ class ProductDetailsScreen extends StatelessWidget {
             Expanded(
               child: LongLabeledButton(
                 onTap: () {
+                  addToCart(context);
+                },
+                label: "Buy Now",
+              ),
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            Expanded(
+              child: LongLabeledButton(
+                onTap: () {
                   showModalBottomSheet(
                     isScrollControlled: true,
                     isDismissible: true, // <-- Allow tap outside to dismiss
@@ -34,18 +45,10 @@ class ProductDetailsScreen extends StatelessWidget {
                         .transparent, // Optional: if you want rounded corners to show correctly
 
                     context: context,
-                    builder: (_) => CartBottomSheet(), //AddressBottomSheet
+                    builder: (_) =>
+                        const CartBottomSheet(), //AddressBottomSheet
                   );
                 },
-                label: "Buy Now",
-              ),
-            ),
-            SizedBox(
-              width: 20,
-            ),
-            Expanded(
-              child: LongLabeledButton(
-                onTap: () {},
                 label: "Add to Cart",
               ),
             ),
@@ -123,19 +126,8 @@ class ProductDetailsScreen extends StatelessWidget {
                     ),
                     const Spacer(),
                     InkWell(
-                      onTap: () {
-                        try {
-                          _b2bStoreBloc.add(AddToCart(
-                              quantity: 1,
-                              variant_id: productData?.variants![0].id));
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: const Text('Item added to cart!'),
-                            ),
-                          );
-                        } catch (e) {}
-                      },
+                      borderRadius: BorderRadius.circular(8),
+                      onTap: () => addToCart(context),
                       child: Container(
                         padding: EdgeInsets.symmetric(
                             horizontal: 20.w, vertical: 5.h),
@@ -241,6 +233,19 @@ class ProductDetailsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void addToCart(context) {
+    try {
+      _b2bStoreBloc.add(
+          AddToCart(quantity: 1, variant_id: productData?.variants![0].id));
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Item added to cart!'),
+        ),
+      );
+    } catch (e) {}
   }
 }
 

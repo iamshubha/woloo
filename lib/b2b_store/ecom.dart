@@ -1,13 +1,17 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/collections.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
@@ -31,12 +35,15 @@ class _EcomScreenState extends State<EcomScreen> {
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   EcomTab tab = EcomTab.seeLess;
   int currentIndex = 0;
+  Addresses? address;
+  final box = GetStorage();
 
   @override
   void initState() {
     _b2bStoreBloc.add(const StoreCustomerLoginReq(
         email: '000000000@gmail.com', pass: 'aaarati14'));
     super.initState();
+    address = getAddress();
   }
 
   @override
@@ -67,7 +74,9 @@ class _EcomScreenState extends State<EcomScreen> {
             // floatingActionButton: FloatingActionButton(onPressed: () {
             //   print(_b2bStoreHomePage!.topBrands);
             // }),
-            appBar: const EComAppbar(),
+            appBar: EComAppbar(
+              selectedAddress: address?.address1 ?? "",
+            ),
             body: SingleChildScrollView(
               child: _isDataLoaded
                   ? Column(
@@ -95,6 +104,12 @@ class _EcomScreenState extends State<EcomScreen> {
             ),
           );
         });
+  }
+
+  Addresses? getAddress() {
+    address = Addresses.fromJson(jsonDecode(box.read("address")));
+    // setState(() {});
+    return address;
   }
 }
 
@@ -518,9 +533,11 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     this.isAll = false,
     this.textFieldHintText = 'Search Products',
+    this.selectedAddress = '',
   });
   final String textFieldHintText;
   final bool isAll;
+  final String selectedAddress;
   @override
   Size get preferredSize => const Size.fromHeight(130);
 
@@ -572,7 +589,7 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
             child: Row(
               children: [
                 Text(
-                  "1234 Lane road, Area, Location, Landmark",
+                  selectedAddress.isEmpty ? "Select Address" : selectedAddress,
                   style: TextStyle(
                     fontSize: 12.sp,
                     color: Colors.grey,
