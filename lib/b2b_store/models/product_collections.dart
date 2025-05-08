@@ -38,21 +38,21 @@ class Product {
   bool? discountable;
   String? thumbnail;
   String? collectionId;
-  Null typeId;
-  Null weight;
-  Null length;
-  Null height;
-  Null width;
-  Null hsCode;
-  Null originCountry;
-  Null midCode;
-  Null material;
+  dynamic typeId;
+  dynamic weight;
+  dynamic length;
+  dynamic height;
+  dynamic width;
+  dynamic hsCode;
+  dynamic originCountry;
+  dynamic midCode;
+  dynamic material;
   String? createdAt;
   String? updatedAt;
-  Null type;
+  dynamic type;
   Collection? collection;
   List<ProductsOptions>? options;
-  List<Null>? tags;
+  List<dynamic>? tags;
   List<Images>? images;
   List<Variants>? variants;
 
@@ -116,9 +116,9 @@ class Product {
       });
     }
     // if (json['tags'] != null) {
-    //   tags = <Null>[];
+    //   tags = <dynamic>[];
     //   json['tags'].forEach((v) {
-    //     tags!.add(new Null.fromJson(v));
+    //     tags!.add(new dynamic.fromJson(v));
     //   });
     // }
     if (json['images'] != null) {
@@ -184,7 +184,7 @@ class Collection {
   Metadata? metadata;
   String? createdAt;
   String? updatedAt;
-  Null deletedAt;
+  dynamic deletedAt;
 
   Collection(
       {this.id,
@@ -240,11 +240,11 @@ class Metadata {
 class ProductsOptions {
   String? id;
   String? title;
-  Null metadata;
+  dynamic metadata;
   String? productId;
   String? createdAt;
   String? updatedAt;
-  Null deletedAt;
+  dynamic deletedAt;
   List<Values>? values;
 
   ProductsOptions(
@@ -292,11 +292,11 @@ class ProductsOptions {
 class Values {
   String? id;
   String? value;
-  Null metadata;
+  dynamic metadata;
   String? optionId;
   String? createdAt;
   String? updatedAt;
-  Null deletedAt;
+  dynamic deletedAt;
 
   Values(
       {this.id,
@@ -333,12 +333,12 @@ class Values {
 class Images {
   String? id;
   String? url;
-  Null metadata;
+  dynamic metadata;
   int? rank;
   String? productId;
   String? createdAt;
   String? updatedAt;
-  Null deletedAt;
+  dynamic deletedAt;
 
   Images(
       {this.id,
@@ -378,26 +378,26 @@ class Images {
 class Variants {
   String? id;
   String? title;
-  Null sku;
-  Null barcode;
-  Null ean;
-  Null upc;
+  dynamic sku;
+  dynamic barcode;
+  dynamic ean;
+  dynamic upc;
   bool? allowBackorder;
   bool? manageInventory;
-  Null hsCode;
+  dynamic hsCode;
   String? originCountry;
-  Null midCode;
-  Null material;
-  Null weight;
-  Null length;
-  Null height;
-  Null width;
-  Null metadata;
+  dynamic midCode;
+  dynamic material;
+  dynamic weight;
+  dynamic length;
+  dynamic height;
+  dynamic width;
+  dynamic metadata;
   int? variantRank;
   String? productId;
   String? createdAt;
   String? updatedAt;
-  Null deletedAt;
+  dynamic deletedAt;
   List<VariantsOptions>? options;
   CalculatedPrice? calculatedPrice;
 
@@ -498,12 +498,12 @@ class Variants {
 class VariantsOptions {
   String? id;
   String? value;
-  Null metadata;
+  dynamic metadata;
   String? optionId;
   Option? option;
   String? createdAt;
   String? updatedAt;
-  Null deletedAt;
+  dynamic deletedAt;
 
   VariantsOptions(
       {this.id,
@@ -545,11 +545,11 @@ class VariantsOptions {
 class Option {
   String? id;
   String? title;
-  Null metadata;
+  dynamic metadata;
   String? productId;
   String? createdAt;
   String? updatedAt;
-  Null deletedAt;
+  dynamic deletedAt;
 
   Option(
       {this.id,
@@ -681,10 +681,10 @@ class RawCalculatedAmount {
 
 class CalculatedPriceData {
   String? id;
-  Null priceListId;
-  Null priceListType;
-  Null minQuantity;
-  Null maxQuantity;
+  dynamic priceListId;
+  dynamic priceListType;
+  dynamic minQuantity;
+  dynamic maxQuantity;
 
   CalculatedPriceData(
       {this.id,

@@ -12,6 +12,7 @@ import 'package:woloo_smart_hygiene/b2b_store/network/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/login_reg_flow.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/product.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'b2b_store_event.dart';
 import 'b2b_store_state.dart';
 
@@ -99,9 +100,9 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
           await _productService.getProductCollections(token: loginToken);
 
       // Debug prints
-      print(_categories);
-      print(_topBrands);
-      print(_productCollections);
+      logger.w(_categories);
+      logger.w(_topBrands);
+      logger.w(_productCollections);
 
       // Emit success state
       if (emit.isDone) return;
@@ -113,6 +114,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     } catch (e) {
       if (emit.isDone) return;
       emit(B2BStoreError(error: e.toString()));
+      logger.w("Error in IOT service: $e");
       debugPrint("Error in IOT service: $e");
     }
   }
