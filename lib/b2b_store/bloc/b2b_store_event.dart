@@ -77,10 +77,10 @@ class GetCartData extends B2BStoreEvent {
 }
 
 class Payment extends B2BStoreEvent {
- const Payment();
+  const Payment();
 
   @override
-  List<Object?> get props => []; 
+  List<Object?> get props => [];
 }
 
 class AddToCart extends B2BStoreEvent {
@@ -95,3 +95,5 @@ class AddToCart extends B2BStoreEvent {
   @override
   List<Object?> get props => [variant_id, quantity];
 }
+
+// class

@@ -16,6 +16,7 @@ import 'package:woloo_smart_hygiene/b2b_store/network/login_reg_flow.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/product.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 
+import '../models/payment_provider.dart';
 import 'b2b_store_event.dart';
 import 'b2b_store_state.dart';
 
@@ -214,68 +215,50 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   FutureOr<void> _proceedToCheckOut(
     Payment event,
     Emitter<B2BStoreState> emit,
-  ) {
+  ) async {
     emit(const CartLoading(message: "Proceed to cart"));
-    _checkoutApiService
-        .shippingOptions(
-      cart_id: box.read('cart_id'),
-      token: box.read('login_jwt'),
-    )
-        .then((onValue) {
-      _checkoutApiService
-          .shippingOptionsCalculate(
-        shipping_option: onValue.shippingOptions!.first.id,
+    try {
+      final shippingOptions = await _checkoutApiService.shippingOptions(
+        cart_id: box.read('cart_id'),
+        token: box.read('login_jwt'),
+      );
+
+      final shippingOptionsCalculate =
+          await _checkoutApiService.shippingOptionsCalculate(
+        shipping_option: shippingOptions.shippingOptions!.first.id,
         token: box.read('login_jwt'),
         cart_id: box.read('cart_id'),
-      )
-          .then((v) {
-        logger.w(v);
-        _checkoutApiService
-            .shippingMethods(
-                shipping_option: onValue.shippingOptions!.first.id,
-                token: box.read('login_jwt'),
-                cart_id: box.read('cart_id'))
-            .then((v) {
-          logger.w(v.cart);
-          _checkoutApiService
-              .paymentProviders(
-                  token: box.read('login_jwt'),
-                  region_id: box.read('region_id'))
-              .then((v) {
-            logger.w(v.paymentProviders);
-            _checkoutApiService
-                .paymentCollections(
-                    token: box.read('login_jwt'), cart_id: box.read('cart_id'))
-                .then((e) {
-              logger.w(e.paymentCollection);
-              _checkoutApiService
-                  .paymentSessions(
-                      token: box.read('login_jwt'),
-                      pay_col: e.paymentCollection!.id,
-                      provider_id: v.paymentProviders![0].id)
-                  .then((val) {
-                logger.w(val);
-                _checkoutApiService
-                    .completeVendor(
-                        token: box.read('login_jwt'),
-                        cart_id: box.read('cart_id'))
-                    .then((val) {
-                  logger.w(val);
-                  final orderId = val.order!.parentOrder!.id;
-                  _checkoutApiService
-                      .placeOrder(
-                          token: box.read('login_jwt'), order_id: orderId)
-                      .then((orderVal) {
-                    logger.w(orderVal);
-                  });
-                });
-              });
-            });
-          });
-        });
-      });
-    });
-    emit(CartSuccess(cartData: CartModel()));
+      );
+
+      final _shippingMethods = await _checkoutApiService.shippingMethods(
+          shipping_option: shippingOptions.shippingOptions!.first.id,
+          token: box.read('login_jwt'),
+          cart_id: box.read('cart_id'));
+
+      final _paymentProviders = await _checkoutApiService.paymentProviders(
+          token: box.read('login_jwt'), region_id: box.read('region_id'));
+
+      PaymentCollection _paymentCollections =
+          await _checkoutApiService.paymentCollections(
+              token: box.read('login_jwt'), cart_id: box.read('cart_id'));
+
+      final paymentSessions = await _checkoutApiService.paymentSessions(
+          token: box.read('login_jwt'),
+          pay_col: _paymentCollections.paymentCollection!.id,
+          provider_id: _paymentProviders.paymentProviders![0].id);
+
+      final completeVendor = await _checkoutApiService.completeVendor(
+          token: box.read('login_jwt'), cart_id: box.read('cart_id'));
+
+      final orderId = completeVendor.order!.parentOrder!.id;
+      final placeOrder = await _checkoutApiService.placeOrder(
+          token: box.read('login_jwt'), order_id: orderId);
+
+      // emit(CartSuccess(cartData: CartModel()));
+      emit(PaymentSuccess());
+    } catch (e) {
+      emit(CartError(error: e.toString()));
+    }
   }
 }
 

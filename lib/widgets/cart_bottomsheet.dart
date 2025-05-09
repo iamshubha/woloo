@@ -29,6 +29,13 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
   CartModel? cartModel;
   Addresses? address;
   final box = GetStorage();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   @override
   void initState() {
     _b2bStoreBloc.add(const GetCartData());

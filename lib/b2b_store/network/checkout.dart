@@ -61,7 +61,7 @@ class CheckoutApiService {
         APIConstants.SHIPPING_OPTIONS + "address?cart_id=" + cart_id,
         options: getHeaders(token),
       );
-
+      logger.w(response);
       return ShippingOptionsResponse.fromMap(response);
     } catch (e) {
       logger.w(e);
@@ -191,7 +191,7 @@ class CheckoutApiService {
     required String? order_id,
   }) async {
     try {
-      final response = await dio.post(
+      final response = await dio.get(
         "https://staging-store.woloo.in/store/orders/$order_id",
         options: getHeaders(token),
       );

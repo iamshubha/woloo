@@ -113,3 +113,9 @@ class AddressSet extends B2BStoreState {
   @override
   List<Object> get props => [message];
 }
+
+class PaymentSuccess extends B2BStoreState {
+  const PaymentSuccess();
+  @override
+  List<Object> get props => [];
+}

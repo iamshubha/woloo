@@ -9,6 +9,7 @@ import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
+import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/screens/host_dashboard_screen.dart';
@@ -32,6 +33,13 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
   CartModel? cartModel;
   Addresses? address;
   final box = GetStorage();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -62,6 +70,12 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
         if (state is CartError) {
           EasyLoading.dismiss();
           EasyLoading.showError(state.error);
+        }
+        if (state is PaymentSuccess) {
+          EasyLoading.dismiss();
+          Navigator.pop(context);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const EcomScreen()));
         }
       },
       builder: (context, state) {
@@ -155,7 +169,7 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
                       LongLabeledButton(
                         label: "Pay via [payment method]",
                         onTap: () {
-                          _b2bStoreBloc.add(const Payment());
+                          _b2bStoreBloc.add(Payment());
                         },
                       )
                     ]),

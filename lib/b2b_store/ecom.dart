@@ -46,7 +46,7 @@ class _EcomScreenState extends State<EcomScreen> {
     _b2bStoreBloc.add(const StoreCustomerLoginReq(
         email: '000000000@gmail.com', pass: 'aaarati14'));
     super.initState();
-    address = getAddress();
+    // address = getAddress();
   }
 
   @override
