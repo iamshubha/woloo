@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -14,6 +15,7 @@ import 'package:woloo_smart_hygiene/b2b_store/network/checkout.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/login_reg_flow.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/product.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
+
 import 'b2b_store_event.dart';
 import 'b2b_store_state.dart';
 
@@ -39,6 +41,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<GetAddress>(_getAddress);
     on<GetCartData>(_getCart);
     on<AddToCart>(_addToCart);
+    on<Payment>(_proceedToCheckOut);
   }
   _getSelectedAddress() {
     // final addressData = box.read("address");
@@ -76,9 +79,9 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     Emitter<B2BStoreState> emit,
   ) async {
     try {
-      ProductCategory _categories = ProductCategory();
-      TopBrands _topBrands = TopBrands();
-      ProductCollections _productCollections = ProductCollections();
+      ProductCategory categories = ProductCategory();
+      TopBrands topBrands = TopBrands();
+      ProductCollections productCollections = ProductCollections();
 
       emit(const B2BStoreLoading(message: "Loading data...sob data"));
 
@@ -102,23 +105,23 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       });
 
       // Fetch all required data
-      _categories =
+      categories =
           await _productService.getProductCategories(token: loginToken);
-      _topBrands = await _productService.getTopBrands(token: loginToken);
-      _productCollections =
+      topBrands = await _productService.getTopBrands(token: loginToken);
+      productCollections =
           await _productService.getProductCollections(token: loginToken);
 
       // Debug prints
-      logger.w(_categories);
-      logger.w(_topBrands);
-      logger.w(_productCollections);
+      logger.w(categories);
+      logger.w(topBrands);
+      logger.w(productCollections);
 
       // Emit success state
       if (emit.isDone) return;
       emit(B2BStoreSuccess(B2BStoreHomePage(
-        productCategory: _categories,
-        topBrands: _topBrands,
-        productCollections: _productCollections,
+        productCategory: categories,
+        topBrands: topBrands,
+        productCollections: productCollections,
       )));
     } catch (e) {
       if (emit.isDone) return;
@@ -209,7 +212,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   }
 
   FutureOr<void> _proceedToCheckOut(
-    AddToCart event,
+    Payment event,
     Emitter<B2BStoreState> emit,
   ) {
     emit(const CartLoading(message: "Proceed to cart"));
@@ -258,10 +261,10 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
                         cart_id: box.read('cart_id'))
                     .then((val) {
                   logger.w(val);
-                  final order_id = val.order!.parentOrder!.id;
+                  final orderId = val.order!.parentOrder!.id;
                   _checkoutApiService
                       .placeOrder(
-                          token: box.read('login_jwt'), order_id: order_id)
+                          token: box.read('login_jwt'), order_id: orderId)
                       .then((orderVal) {
                     logger.w(orderVal);
                   });
@@ -272,6 +275,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
         });
       });
     });
+    emit(CartSuccess(cartData: CartModel()));
   }
 }
 

@@ -76,6 +76,13 @@ class GetCartData extends B2BStoreEvent {
   List<Object?> get props => [];
 }
 
+class Payment extends B2BStoreEvent {
+ const Payment();
+
+  @override
+  List<Object?> get props => []; 
+}
+
 class AddToCart extends B2BStoreEvent {
   final String? variant_id;
   final int quantity;

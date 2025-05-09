@@ -11,6 +11,7 @@ import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/widgets/cart_bottomsheet.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -64,6 +65,7 @@ class _CartScreenState extends State<CartScreen> {
                 child: LongLabeledButton(
                   onTap: () {
                     // _b2bStoreBloc.add();
+                    showCartBottomSheet(context);
                   },
                   label: "Checkout",
                 ),
@@ -115,6 +117,20 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                     ));
         });
+  }
+
+  Future<dynamic> showCartBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      isScrollControlled: true,
+      isDismissible: true, // <-- Allow tap outside to dismiss
+      enableDrag: true, // <-- Allow swipe down to dismiss
+
+      backgroundColor: Colors
+          .transparent, // Optional: if you want rounded corners to show correctly
+
+      context: context,
+      builder: (_) => const CartBottomSheet(), //AddressBottomSheet
+    );
   }
 }
 

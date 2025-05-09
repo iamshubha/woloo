@@ -25,7 +25,7 @@ class ProductDetailsScreen extends StatelessWidget {
             Expanded(
               child: LongLabeledButton(
                 onTap: () {
-                  addToCart(context);
+                  showCartBottomSheet(context);
                 },
                 label: "Buy Now",
               ),
@@ -36,18 +36,7 @@ class ProductDetailsScreen extends StatelessWidget {
             Expanded(
               child: LongLabeledButton(
                 onTap: () {
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    isDismissible: true, // <-- Allow tap outside to dismiss
-                    enableDrag: true, // <-- Allow swipe down to dismiss
-
-                    backgroundColor: Colors
-                        .transparent, // Optional: if you want rounded corners to show correctly
-
-                    context: context,
-                    builder: (_) =>
-                        const CartBottomSheet(), //AddressBottomSheet
-                  );
+                  addToCart(context);
                 },
                 label: "Add to Cart",
               ),
@@ -127,7 +116,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     const Spacer(),
                     InkWell(
                       borderRadius: BorderRadius.circular(8),
-                      onTap: () => addToCart(context),
+                      onTap: () => showCartBottomSheet(context),
                       child: Container(
                         padding: EdgeInsets.symmetric(
                             horizontal: 20.w, vertical: 5.h),
@@ -232,6 +221,20 @@ class ProductDetailsScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Future<dynamic> showCartBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      isScrollControlled: true,
+      isDismissible: true, // <-- Allow tap outside to dismiss
+      enableDrag: true, // <-- Allow swipe down to dismiss
+
+      backgroundColor: Colors
+          .transparent, // Optional: if you want rounded corners to show correctly
+
+      context: context,
+      builder: (_) => const CartBottomSheet(), //AddressBottomSheet
     );
   }
 

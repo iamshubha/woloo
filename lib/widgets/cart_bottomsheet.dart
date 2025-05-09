@@ -149,13 +149,14 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                                   },
                                 )),
                                 Expanded(
-                                    child: LongLabeledButton(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  label: "Keep Shopping",
-                                  color: Colors.white,
-                                )),
+                                  child: LongLabeledButton(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    label: "Keep Shopping",
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ],
                             )
                           ],
@@ -211,7 +212,7 @@ class AddressChangeWidget extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  address?.address1 ?? "",
+                  address?.address1 ?? "Select Address",
                   style: TextStyle(
                     fontSize: 12.sp,
                     color: Colors.grey,
