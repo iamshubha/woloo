@@ -10,6 +10,7 @@ import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/cart.dart';
+import 'package:woloo_smart_hygiene/b2b_store/network/checkout.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/login_reg_flow.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/product.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
@@ -24,6 +25,8 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   final ProductService _productService = ProductService(dio: GetIt.instance());
   final AddressService _addresstService = AddressService(dio: GetIt.instance());
   final CartApiService _cartService = CartApiService(dio: GetIt.instance());
+  final CheckoutApiService _checkoutApiService =
+      CheckoutApiService(dio: GetIt.instance());
 
   var requestId = '';
   late int roleId;
@@ -36,6 +39,12 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<GetAddress>(_getAddress);
     on<GetCartData>(_getCart);
     on<AddToCart>(_addToCart);
+  }
+  _getSelectedAddress() {
+    // final addressData = box.read("address");
+    // address = Addresses.fromJson(jsonDecode(addressData));
+    // // setState(() {});
+    // return address;
   }
 
   FutureOr<void> _emailPassRegister(
@@ -82,7 +91,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
 
       // Get region
       final regionResponse = await _productService.getRegion(token: loginToken);
-
+      box.write('region_id', regionResponse.regions![0].id);
       // Create cart
       await _productService
           .createCart(
@@ -197,6 +206,72 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       emit(B2BStoreError(error: e.toString()));
       debugPrint("Error in IOT service: $e");
     }
+  }
+
+  FutureOr<void> _proceedToCheckOut(
+    AddToCart event,
+    Emitter<B2BStoreState> emit,
+  ) {
+    emit(const CartLoading(message: "Proceed to cart"));
+    _checkoutApiService
+        .shippingOptions(
+      cart_id: box.read('cart_id'),
+      token: box.read('login_jwt'),
+    )
+        .then((onValue) {
+      _checkoutApiService
+          .shippingOptionsCalculate(
+        shipping_option: onValue.shippingOptions!.first.id,
+        token: box.read('login_jwt'),
+        cart_id: box.read('cart_id'),
+      )
+          .then((v) {
+        logger.w(v);
+        _checkoutApiService
+            .shippingMethods(
+                shipping_option: onValue.shippingOptions!.first.id,
+                token: box.read('login_jwt'),
+                cart_id: box.read('cart_id'))
+            .then((v) {
+          logger.w(v.cart);
+          _checkoutApiService
+              .paymentProviders(
+                  token: box.read('login_jwt'),
+                  region_id: box.read('region_id'))
+              .then((v) {
+            logger.w(v.paymentProviders);
+            _checkoutApiService
+                .paymentCollections(
+                    token: box.read('login_jwt'), cart_id: box.read('cart_id'))
+                .then((e) {
+              logger.w(e.paymentCollection);
+              _checkoutApiService
+                  .paymentSessions(
+                      token: box.read('login_jwt'),
+                      pay_col: e.paymentCollection!.id,
+                      provider_id: v.paymentProviders![0].id)
+                  .then((val) {
+                logger.w(val);
+                _checkoutApiService
+                    .completeVendor(
+                        token: box.read('login_jwt'),
+                        cart_id: box.read('cart_id'))
+                    .then((val) {
+                  logger.w(val);
+                  final order_id = val.order!.parentOrder!.id;
+                  _checkoutApiService
+                      .placeOrder(
+                          token: box.read('login_jwt'), order_id: order_id)
+                      .then((orderVal) {
+                    logger.w(orderVal);
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
   }
 }
 

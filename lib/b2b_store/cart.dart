@@ -32,88 +32,89 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomSheet: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-        decoration: const BoxDecoration(color: Colors.white),
-        child: LongLabeledButton(
-          onTap: () {},
-          label: "Checkout",
-        ),
-      ),
-      appBar: const BackAppBar(),
-      body: BlocConsumer(
-          bloc: _b2bStoreBloc,
-          listener: (context, state) {
-            // print("dssa $state");
-            if (state is CartLoading) {
-              EasyLoading.show(status: state.message);
-            }
-            if (state is CartSuccess) {
-              EasyLoading.dismiss();
-              setState(() {
-                print(state.cartData.cart);
-                // _addressesData = state.addressesData;
-                // _b2bStoreHomePage = state.dashboardData;
-                cartModel = state.cartData;
-                _isDataLoaded = true;
-                // _dashboardData = state.dashboardData;
-              });
-            }
-
-            if (state is CartError) {
-              EasyLoading.dismiss();
-              EasyLoading.showError(state.error);
-            }
-          },
-          builder: (context, snapshot) {
-            return !_isDataLoaded
-                ? Container()
-                : SingleChildScrollView(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
-                    child: Column(
-                      spacing: 16.h,
-                      children: [
-                        CartHeader(
-                          imgPath: AppImages.cart,
-                          title: "Cart",
-                          subtitle: 'Checkout you purchases from here',
-                        ),
-                        ListView.builder(
-                          shrinkWrap:
-                              true, // Ensures ListView takes only the required space
-                          physics:
-                              const NeverScrollableScrollPhysics(), // Prevents nested scrolling
-                          itemCount: cartModel?.cart?.items
-                              .length, // Replace with your cart item count
-                          itemBuilder: (context, index) {
-                            final item = cartModel?.cart?.items[index];
-                            return Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8.h),
-                              child: CartItemCard(
-                                item: item,
-                              ),
-                            );
-                          },
-                        ),
-                        const Divider(),
-                        const ApplyPromo(),
-                        const Divider(),
-                        PricingCalculate(
-                          total: cartModel?.cart?.total,
-                          subTotal: cartModel?.cart?.subtotal,
-                          discount: cartModel?.cart?.discountTotal,
-                          itemTotal: cartModel?.cart?.itemTotal,
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        )
-                      ],
-                    ),
-                  );
-          }),
-    );
+    return BlocConsumer(
+        bloc: _b2bStoreBloc,
+        listener: (context, state) {
+          // print("dssa $state");
+          if (state is CartLoading) {
+            EasyLoading.show(status: state.message);
+          }
+          if (state is CartSuccess) {
+            EasyLoading.dismiss();
+            setState(() {
+              print(state.cartData.cart);
+              // _addressesData = state.addressesData;
+              // _b2bStoreHomePage = state.dashboardData;
+              cartModel = state.cartData;
+              _isDataLoaded = true;
+              // _dashboardData = state.dashboardData;
+            });
+          }
+          if (state is CartError) {
+            EasyLoading.dismiss();
+            EasyLoading.showError(state.error);
+          }
+        },
+        builder: (context, snapshot) {
+          return Scaffold(
+              bottomSheet: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                decoration: const BoxDecoration(color: Colors.white),
+                child: LongLabeledButton(
+                  onTap: () {
+                    // _b2bStoreBloc.add();
+                  },
+                  label: "Checkout",
+                ),
+              ),
+              appBar: const BackAppBar(),
+              body: !_isDataLoaded
+                  ? Container()
+                  : SingleChildScrollView(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 16.w, vertical: 20.h),
+                      child: Column(
+                        spacing: 16.h,
+                        children: [
+                          CartHeader(
+                            imgPath: AppImages.cart,
+                            title: "Cart",
+                            subtitle: 'Checkout you purchases from here',
+                          ),
+                          ListView.builder(
+                            shrinkWrap:
+                                true, // Ensures ListView takes only the required space
+                            physics:
+                                const NeverScrollableScrollPhysics(), // Prevents nested scrolling
+                            itemCount: cartModel?.cart?.items
+                                .length, // Replace with your cart item count
+                            itemBuilder: (context, index) {
+                              final item = cartModel?.cart?.items[index];
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.h),
+                                child: CartItemCard(
+                                  item: item,
+                                ),
+                              );
+                            },
+                          ),
+                          const Divider(),
+                          const ApplyPromo(),
+                          const Divider(),
+                          PricingCalculate(
+                            total: cartModel?.cart?.total,
+                            subTotal: cartModel?.cart?.subtotal,
+                            discount: cartModel?.cart?.discountTotal,
+                            itemTotal: cartModel?.cart?.itemTotal,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          )
+                        ],
+                      ),
+                    ));
+        });
   }
 }
 

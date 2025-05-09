@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
@@ -14,10 +15,12 @@ import 'package:woloo_smart_hygiene/b2b_store/collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
+import 'package:woloo_smart_hygiene/b2b_store/network/checkout.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
 
 enum EcomTab { seeLess, seeAll }
@@ -71,11 +74,73 @@ class _EcomScreenState extends State<EcomScreen> {
         },
         builder: (context, snapshot) {
           return Scaffold(
-            // floatingActionButton: FloatingActionButton(onPressed: () {
-            //   showDialog(
-            //       context: context,
-            //       builder: (context) => const OrderSuccessfulDialog());
-            // }),
+            floatingActionButton: FloatingActionButton(onPressed: () async {
+              final box = GetStorage();
+              CheckoutApiService _i = CheckoutApiService(dio: GetIt.instance());
+
+              _i
+                  .shippingOptions(
+                cart_id: box.read('cart_id'),
+                token: box.read('login_jwt'),
+              )
+                  .then((onValue) {
+                _i
+                    .shippingOptionsCalculate(
+                  shipping_option: onValue.shippingOptions!.first.id,
+                  token: box.read('login_jwt'),
+                  cart_id: box.read('cart_id'),
+                )
+                    .then((v) {
+                  logger.w(v);
+                  _i
+                      .shippingMethods(
+                          shipping_option: onValue.shippingOptions!.first.id,
+                          token: box.read('login_jwt'),
+                          cart_id: box.read('cart_id'))
+                      .then((v) {
+                    logger.w(v.cart);
+                    _i
+                        .paymentProviders(
+                            token: box.read('login_jwt'),
+                            region_id: box.read('region_id'))
+                        .then((v) {
+                      logger.w(v.paymentProviders);
+                      _i
+                          .paymentCollections(
+                              token: box.read('login_jwt'),
+                              cart_id: box.read('cart_id'))
+                          .then((e) {
+                        logger.w(e.paymentCollection);
+                        _i
+                            .paymentSessions(
+                                token: box.read('login_jwt'),
+                                pay_col: e.paymentCollection!.id,
+                                provider_id: v.paymentProviders![0].id)
+                            .then((val) {
+                          logger.w(val);
+                          _i
+                              .completeVendor(
+                                  token: box.read('login_jwt'),
+                                  cart_id: box.read('cart_id'))
+                              .then((val) {
+                            logger.w(val);
+                            final order_id = val.order!.parentOrder!.id;
+                            _i
+                                .placeOrder(
+                                    token: box.read('login_jwt'),
+                                    order_id: order_id)
+                                .then((orderVal) {
+                              logger.w(orderVal);
+                            });
+                          });
+                        });
+                      });
+                    });
+                  });
+                });
+              });
+              print(_b2bStoreHomePage!.topBrands);
+            }),
             appBar: EComAppbar(
               selectedAddress: address?.address1 ?? "",
             ),
@@ -109,7 +174,8 @@ class _EcomScreenState extends State<EcomScreen> {
   }
 
   Addresses? getAddress() {
-    address = Addresses.fromJson(jsonDecode(box.read("address")));
+    final addressData = box.read("address");
+    address = Addresses.fromJson(jsonDecode(addressData));
     // setState(() {});
     return address;
   }

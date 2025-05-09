@@ -91,3 +91,25 @@ class CartSuccess extends B2BStoreState {
   @override
   List<Object> get props => [cartData];
 }
+
+class ProceedCart extends B2BStoreState {
+  final CartModel cartData;
+  const ProceedCart({required this.cartData});
+  @override
+  List<Object> get props => [];
+}
+
+class AddressGet extends B2BStoreState {
+  final Addresses addressesData;
+  const AddressGet({required this.addressesData});
+  @override
+  List<Object> get props => [addressesData];
+}
+
+class AddressSet extends B2BStoreState {
+  final Addresses message;
+  const AddressSet({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}

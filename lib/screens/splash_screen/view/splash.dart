@@ -66,7 +66,7 @@ class _SplashScreenState extends State<SplashScreen> {
     coreBloc.add(CheckUserIsLoggedInOrNot());
   }
 
-  apiCall() {}
+  // apiCall() {}
 
   // void setToken(String? token) {
   //   print('FCM Token: $token');
