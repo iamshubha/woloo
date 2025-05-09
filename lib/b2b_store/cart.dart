@@ -241,9 +241,11 @@ class XDecoratedBox extends StatelessWidget {
     super.key,
     required this.child,
     this.padding = 12,
+    this.radius = 16,
   });
   final Widget child;
   final double padding;
+  final double radius;
 
   @override
   Widget build(BuildContext context) {
@@ -251,7 +253,7 @@ class XDecoratedBox extends StatelessWidget {
       padding: EdgeInsets.all(padding.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(radius.r),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.1),
