@@ -31,6 +31,19 @@ class StoreCustomerLoginReq extends B2BStoreEvent {
   List<Object?> get props => [email, pass];
 }
 
+class AddRemoveItemReq extends B2BStoreEvent {
+  final String itemId;
+  final int count;
+  const AddRemoveItemReq({
+    required this.itemId,
+    required this.count,
+  });
+
+  @override
+  List<Object?> get props => [itemId, count];
+
+}
+
 class GetIot extends B2BStoreEvent {
   final String deviceId;
   final String type;
@@ -79,6 +92,12 @@ class GetCartData extends B2BStoreEvent {
 class Payment extends B2BStoreEvent {
   const Payment();
 
+  @override
+  List<Object?> get props => [];
+}
+
+class AddRemoveId extends B2BStoreEvent {
+  const AddRemoveId();
   @override
   List<Object?> get props => [];
 }

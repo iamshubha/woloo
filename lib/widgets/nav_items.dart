@@ -6,31 +6,36 @@ class XNavBarItems extends StatelessWidget {
     super.key,
     required this.imageUrl,
     required this.title,
+    this.onTap,
   });
   final String imageUrl;
   final String title;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SizedBox(
-          height: 23.h,
-          width: 23.h,
-          child: Image.asset(
-            imageUrl,
-            fit: BoxFit.fill,
+    return InkWell(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: 23.h,
+            width: 23.h,
+            child: Image.asset(
+              imageUrl,
+              fit: BoxFit.fill,
+            ),
           ),
-        ),
-        SizedBox(
-          height: 8.h,
-        ),
-        Text(
-          title,
-          style: TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.bold),
-        ),
-      ],
+          SizedBox(
+            height: 8.h,
+          ),
+          Text(
+            title,
+            style: TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
     );
   }
 }

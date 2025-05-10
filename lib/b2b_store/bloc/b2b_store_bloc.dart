@@ -43,6 +43,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<GetCartData>(_getCart);
     on<AddToCart>(_addToCart);
     on<Payment>(_proceedToCheckOut);
+    on<AddRemoveItemReq>(_addRemoveItems);
   }
   _getSelectedAddress() {
     // final addressData = box.read("address");
@@ -96,14 +97,16 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       // Get region
       final regionResponse = await _productService.getRegion(token: loginToken);
       box.write('region_id', regionResponse.regions![0].id);
-      // Create cart
-      await _productService
-          .createCart(
-              token: loginToken,
-              regionId: regionResponse.regions![0].id.toString())
-          .then((cartData) {
-        box.write('cart_id', cartData.cart!.id);
-      });
+      //? Create cart
+      // await _productService
+      //     .createCart(
+      //         token: loginToken,
+      //         regionId: regionResponse.regions![0].id.toString())
+      //     .then((cartData) {
+      //   box.write('cart_id', cartData.cart!.id);
+      // });
+      CartModel cartModel = await _cartService.getAllCartData(
+          token: box.read('login_jwt'), cartId: box.read('cart_id'));
 
       // Fetch all required data
       categories =
@@ -120,10 +123,10 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       // Emit success state
       if (emit.isDone) return;
       emit(B2BStoreSuccess(B2BStoreHomePage(
-        productCategory: categories,
-        topBrands: topBrands,
-        productCollections: productCollections,
-      )));
+          productCategory: categories,
+          topBrands: topBrands,
+          productCollections: productCollections,
+          cartData: cartModel)));
     } catch (e) {
       if (emit.isDone) return;
       emit(B2BStoreError(error: e.toString()));
@@ -189,6 +192,25 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     }
   }
 
+  FutureOr<void> _addRemoveItems(
+    AddRemoveItemReq event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const CartLoading(message: "Loading data..."));
+      CartModel response = await _cartService.addOrRemoveItem(
+          itemId: event.itemId,
+          count: event.count,
+          token: box.read('login_jwt'),
+          cartId: box.read('cart_id'));
+      logger.w(response);
+      emit(CartSuccess(cartData: response));
+    } catch (e) {
+      logger.w("Error in bloc: $e");
+      rethrow;
+    }
+  }
+
   FutureOr<void> _addToCart(
     AddToCart event,
     Emitter<B2BStoreState> emit,
@@ -230,22 +252,22 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
         cart_id: box.read('cart_id'),
       );
 
-      final _shippingMethods = await _checkoutApiService.shippingMethods(
+      final shippingMethods = await _checkoutApiService.shippingMethods(
           shipping_option: shippingOptions.shippingOptions!.first.id,
           token: box.read('login_jwt'),
           cart_id: box.read('cart_id'));
 
-      final _paymentProviders = await _checkoutApiService.paymentProviders(
+      final paymentProviders = await _checkoutApiService.paymentProviders(
           token: box.read('login_jwt'), region_id: box.read('region_id'));
 
-      PaymentCollection _paymentCollections =
+      PaymentCollection paymentCollections =
           await _checkoutApiService.paymentCollections(
               token: box.read('login_jwt'), cart_id: box.read('cart_id'));
 
       final paymentSessions = await _checkoutApiService.paymentSessions(
           token: box.read('login_jwt'),
-          pay_col: _paymentCollections.paymentCollection!.id,
-          provider_id: _paymentProviders.paymentProviders![0].id);
+          pay_col: paymentCollections.paymentCollection!.id,
+          provider_id: paymentProviders.paymentProviders![0].id);
 
       final completeVendor = await _checkoutApiService.completeVendor(
           token: box.read('login_jwt'), cart_id: box.read('cart_id'));
@@ -255,7 +277,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
           token: box.read('login_jwt'), order_id: orderId);
 
       // emit(CartSuccess(cartData: CartModel()));
-      emit(PaymentSuccess());
+      emit(const PaymentSuccess());
     } catch (e) {
       emit(CartError(error: e.toString()));
     }
@@ -266,10 +288,10 @@ class B2BStoreHomePage {
   ProductCategory productCategory;
   TopBrands topBrands;
   ProductCollections productCollections;
-
-  B2BStoreHomePage({
-    required this.productCategory,
-    required this.topBrands,
-    required this.productCollections,
-  });
+  CartModel cartData;
+  B2BStoreHomePage(
+      {required this.productCategory,
+      required this.topBrands,
+      required this.productCollections,
+      required this.cartData});
 }

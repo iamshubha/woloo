@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
+import 'package:woloo_smart_hygiene/enums/payment_method.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/screens/host_dashboard_screen.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
@@ -23,6 +24,7 @@ class ReviewOrderBottomsheet extends StatefulWidget {
 class _ReviewOrderBottomsheetState extends State<ReviewOrderBottomsheet> {
   Addresses? address;
   final box = GetStorage();
+  PaymentMethod? paymentMethod;
   @override
   void dispose() {
     // TODO: implement dispose
@@ -129,6 +131,7 @@ class _ReviewOrderBottomsheetState extends State<ReviewOrderBottomsheet> {
                 child: Column(
                   spacing: 10,
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       "Payment Method",
@@ -141,15 +144,31 @@ class _ReviewOrderBottomsheetState extends State<ReviewOrderBottomsheet> {
                     XPaymentTile(
                       paymentMethod: "UPI App",
                       imgPath: AppImages.upiIcon,
+                      onSelected: paymentMethod == PaymentMethod.upi,
+                      onTap: () {
+                        setState(() {
+                          paymentMethod = PaymentMethod.upi;
+                        });
+                      },
                     ),
                     XPaymentTile(
-                      paymentMethod: "Credit/Debit Card",
-                      imgPath: AppImages.creditCard,
-                    ),
+                        paymentMethod: "Credit/Debit Card",
+                        imgPath: AppImages.creditCard,
+                        onSelected: paymentMethod == PaymentMethod.card,
+                        onTap: () {
+                          setState(() {
+                            paymentMethod = PaymentMethod.card;
+                          });
+                        }),
                     XPaymentTile(
-                      paymentMethod: "Net Banking",
-                      imgPath: AppImages.netbanking,
-                    ),
+                        paymentMethod: "Net Banking",
+                        imgPath: AppImages.netbanking,
+                        onSelected: paymentMethod == PaymentMethod.netBanking,
+                        onTap: () {
+                          setState(() {
+                            paymentMethod = PaymentMethod.netBanking;
+                          });
+                        }),
                   ],
                 ),
               ),
