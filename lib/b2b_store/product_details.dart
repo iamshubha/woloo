@@ -27,7 +27,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   bool _isDataLoaded = false;
   cart_model.CartModel? cartModel;
-  int productCount = 1;
+  int productCount = 0;
   @override
   initState() {
     super.initState();
@@ -47,10 +47,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         if (state is CartSuccess) {
           EasyLoading.dismiss();
           setState(() {
-            print(state.cartData.cart);
+            cartModel = state.cartData;
+            cartModel?.cart?.items.forEach((i) {
+              if (i.variantId == widget.productData?.variants![0].id) {
+                productCount = i.quantity;
+              }
+            });
+            // print(state.cartData.cart);
             // _addressesData = state.addressesData;
             // _b2bStoreHomePage = state.dashboardData;
-            cartModel = state.cartData;
+
             _isDataLoaded = true;
             // _dashboardData = state.dashboardData;
           });
@@ -147,10 +153,31 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               CartAddRemove(
                                 value: productCount,
                                 onAdd: () {
-                                  // To add value
+                                  productCount == 0
+                                      ? addToCart(context)
+                                      :
+                                      // To add value
+                                      cartModel?.cart?.items.forEach((i) {
+                                          if (i.variantId ==
+                                              widget.productData?.variants![0]
+                                                  .id) {
+                                            productCount += 1;
+                                            _b2bStoreBloc.add(AddRemoveItemReq(
+                                                count: productCount,
+                                                itemId: i.id));
+                                          }
+                                        });
+                                  // setState(() {});
                                 },
                                 onRemove: () {
-                                  // To substract value
+                                  cartModel?.cart?.items?.forEach((i) {
+                                    if (i.variantId ==
+                                        widget.productData?.variants![0].id) {
+                                      productCount -= 1;
+                                      _b2bStoreBloc.add(AddRemoveItemReq(
+                                          count: productCount, itemId: i.id));
+                                    }
+                                  });
                                 },
                               )
                             ],

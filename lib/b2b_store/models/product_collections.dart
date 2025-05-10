@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class ProductCollections {
   List<Product> products;
   int? count;
@@ -174,6 +176,11 @@ class Product {
       data['variants'] = variants!.map((v) => v.toJson()).toList();
     }
     return data;
+  }
+
+  @override
+  String toString() {
+    return jsonEncode(toJson());
   }
 }
 
