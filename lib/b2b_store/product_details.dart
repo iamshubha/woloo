@@ -145,8 +145,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ),
                               const Spacer(),
                               CartAddRemove(
-                                productId:
-                                    widget.productData?.id ?? "",
+                                value: productCount,
+                                onAdd: () {
+                                  // To add value
+                                },
+                                onRemove: () {
+                                  // To substract value
+                                },
                               )
                             ],
                           ),
@@ -783,20 +788,17 @@ class XColorsSelection extends StatelessWidget {
   }
 }
 
-class CartAddRemove extends StatefulWidget {
+class CartAddRemove extends StatelessWidget {
   const CartAddRemove({
     super.key,
-    this.productId = '',
+    this.onRemove,
+    this.onAdd,
+    this.value = 1,
   });
-  final String productId;
-  @override
-  State<CartAddRemove> createState() => _CartAddRemoveState();
-}
+  final VoidCallback? onRemove;
+  final VoidCallback? onAdd;
+  final int value;
 
-class _CartAddRemoveState extends State<CartAddRemove> {
-  final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
-
-  int productCount = 1;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -808,14 +810,14 @@ class _CartAddRemoveState extends State<CartAddRemove> {
         spacing: 7,
         children: [
           XAddRemove(
-            onTap: () {
-              if (productCount <= 1) return;
-              _b2bStoreBloc.add(AddRemoveItemReq(
-                  itemId: widget.productId, count: productCount));
-              setState(() {
-                productCount--;
-              });
-            },
+            onTap: onRemove,
+            // if (productCount <= 1) return;
+            // _b2bStoreBloc.add(AddRemoveItemReq(
+            //     itemId: widget.productId, count: productCount));
+            // setState(() {
+            //   productCount--;
+            // });
+
             icon: Icons.remove,
           ),
           const SizedBox(
@@ -826,20 +828,14 @@ class _CartAddRemoveState extends State<CartAddRemove> {
             size: 22,
           ),
           Text(
-            productCount.toString(),
+            value.toString(),
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(
             width: 15,
           ),
           XAddRemove(
-            onTap: () {
-              _b2bStoreBloc.add(AddRemoveItemReq(
-                  itemId: widget.productId, count: productCount));
-              setState(() {
-                productCount++;
-              });
-            },
+            onTap: onAdd,
             icon: Icons.add,
           ),
         ],
