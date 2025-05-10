@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 
 class CartModel {
@@ -47,6 +49,11 @@ class Region {
       data['countries'] = countries!.map((v) => v.toJson()).toList();
     }
     return data;
+  }
+
+  @override
+  String toString() {
+    return jsonEncode(toJson());
   }
 }
 
