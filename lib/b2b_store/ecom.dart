@@ -19,6 +19,7 @@ import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
+import 'package:woloo_smart_hygiene/widgets/add_time_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
 
@@ -74,6 +75,7 @@ class _EcomScreenState extends State<EcomScreen> {
         builder: (context, snapshot) {
           return Scaffold(
             bottomNavigationBar: const XBottomBar(),
+            bottomSheet: const AddTimeBottomSheet(),
             appBar: EComAppbar(
               selectedAddress: address?.address1 ?? "",
               cartValue: _b2bStoreHomePage?.cartData.cart?.items.length ?? 0,
