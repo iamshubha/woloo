@@ -26,4 +26,26 @@ class HygieneServiceApi {
       rethrow;
     }
   }
+
+  Future<Product> getHygieneDataById({
+    required String productId,
+  }) async {
+    try {
+      var response = await dio.get(
+        "https://staging-store.woloo.in/store/products/$productId?fields=*variants.calculated_price",
+        options: Options(
+          headers: {
+            'x-publishable-api-key':
+                'pk_67ce4e90f35529f44006d2a95b330dbabbe576e43d3fd06021ca656ee00806cf',
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        ),
+      );
+
+      return Product.fromJson(response['product']);
+    } catch (e) {
+      debugPrint("Error in IOT service: $e");
+      rethrow;
+    }
+  }
 }

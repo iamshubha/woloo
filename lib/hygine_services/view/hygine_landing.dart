@@ -4,9 +4,11 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
-import 'package:woloo_smart_hygiene/hygine_services/bloc/b2b_store_bloc.dart';
-import 'package:woloo_smart_hygiene/hygine_services/bloc/b2b_store_event.dart';
-import 'package:woloo_smart_hygiene/hygine_services/bloc/b2b_store_state.dart';
+import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_bloc.dart';
+import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_event.dart';
+import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_state.dart';
+import 'package:woloo_smart_hygiene/hygine_services/view/service_detail.dart';
+import 'package:woloo_smart_hygiene/hygine_services/view/service_order_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
@@ -91,7 +93,18 @@ class _HygieneServicesScreenState extends State<HygieneServicesScreen> {
                                       mainAxisSpacing: 10),
                               itemBuilder: (c, i) {
                                 final category = services[i];
-                                return ServicesTile(category: category);
+                                return GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ServiceDetail(
+                                                    productId: _hygieneService!
+                                                        .products[i].id,
+                                                  )));
+                                    },
+                                    child: ServicesTile(category: category));
                               }),
                         ),
                         Text(

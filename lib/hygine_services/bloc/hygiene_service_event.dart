@@ -10,3 +10,10 @@ class HygieneServiceReq extends HygieneServiceEvent {
   @override
   List<Object?> get props => [];
 }
+
+class HygieneServiceReqById extends HygieneServiceEvent {
+  final String productId;
+  const HygieneServiceReqById({required this.productId});
+  @override
+  List<Object?> get props => [];
+}
