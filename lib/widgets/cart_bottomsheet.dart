@@ -13,6 +13,7 @@ import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/review_order_bottomsheet.dart';
 
@@ -58,6 +59,7 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
               // _addressesData = state.addressesData;
               // _b2bStoreHomePage = state.dashboardData;
               cartModel = state.cartData;
+              // logger.w(cartModel?.cart?.items);
               _isDataLoaded = true;
               // _dashboardData = state.dashboardData;
             });
@@ -105,11 +107,27 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                                     itemBuilder: (context, index) {
                                       final item =
                                           cartModel?.cart?.items[index];
+                                      int count = item?.quantity ?? 0;
                                       return Padding(
                                         padding:
                                             EdgeInsets.symmetric(vertical: 8.h),
                                         child: CartItemCard(
                                           item: item,
+                                          onAdd: () {
+                                            count++;
+                                            logger.w(item?.id);
+                                            _b2bStoreBloc.add(AddRemoveItemReq(
+                                                count: count,
+                                                itemId: item?.id ?? ""));
+                                            // _b2bStoreBloc
+                                            //     .add(const GetCartData());
+                                          },
+                                          onRemove: () {
+                                            count--;
+                                            _b2bStoreBloc.add(AddRemoveItemReq(
+                                                count: count,
+                                                itemId: item?.id ?? ""));
+                                          },
                                         ),
                                       );
                                     },

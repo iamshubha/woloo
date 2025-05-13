@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:woloo_smart_hygiene/utils/logger.dart';
-
 class CartModel {
   Cart? cart;
 
@@ -299,7 +297,7 @@ class Item {
   });
 
   factory Item.fromJson(Map<String, dynamic> json) {
-    logger.w("Item: $json");
+    // logger.w("Item: $json");
     return Item(
       id: json["id"],
       thumbnail: json["thumbnail"],

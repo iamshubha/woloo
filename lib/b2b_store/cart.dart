@@ -93,10 +93,22 @@ class _CartScreenState extends State<CartScreen> {
                                 .length, // Replace with your cart item count
                             itemBuilder: (context, index) {
                               final item = cartModel?.cart?.items[index];
+                              int count = item?.quantity ?? 0;
+
                               return Padding(
                                 padding: EdgeInsets.symmetric(vertical: 8.h),
                                 child: CartItemCard(
                                   item: item,
+                                  onAdd: () {
+                                    count++;
+                                    _b2bStoreBloc.add(AddRemoveItemReq(
+                                        count: count, itemId: item?.id ?? ""));
+                                  },
+                                  onRemove: () {
+                                    count--;
+                                    _b2bStoreBloc.add(AddRemoveItemReq(
+                                        count: count, itemId: item?.id ?? ""));
+                                  },
                                 ),
                               );
                             },
@@ -395,8 +407,15 @@ class CyanTextButton extends StatelessWidget {
 class CartItemCard extends StatelessWidget {
   final Item? item;
   final bool isSelected;
+  final VoidCallback? onAdd;
+  final VoidCallback? onRemove;
 
-  const CartItemCard({super.key, this.item, this.isSelected = true});
+  const CartItemCard(
+      {super.key,
+      this.item,
+      this.isSelected = true,
+      this.onAdd,
+      this.onRemove});
 
   @override
   Widget build(BuildContext context) {
@@ -480,7 +499,12 @@ class CartItemCard extends StatelessWidget {
                         color: Colors.black,
                       ),
                     ),
-                    if (isSelected) const CartAddRemove()
+                    if (isSelected)
+                      CartAddRemove(
+                        onAdd: onAdd,
+                        onRemove: onRemove,
+                        value: item?.quantity ?? 0,
+                      )
                   ],
                 ),
               ],
