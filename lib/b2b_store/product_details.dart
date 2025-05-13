@@ -170,7 +170,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   // setState(() {});
                                 },
                                 onRemove: () {
-                                  cartModel?.cart?.items?.forEach((i) {
+                                  cartModel?.cart?.items.forEach((i) {
                                     if (i.variantId ==
                                         widget.productData?.variants![0].id) {
                                       productCount -= 1;
@@ -199,24 +199,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     fontWeight: FontWeight.bold),
                               ),
                               const Spacer(),
-                              InkWell(
-                                borderRadius: BorderRadius.circular(8),
+                              ShortLabelledButton(
                                 onTap: () => showCartBottomSheet(context),
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 20.w, vertical: 5.h),
-                                  decoration: BoxDecoration(
-                                      color: AppColors.lightCyanColor,
-                                      borderRadius: BorderRadius.circular(8)),
-                                  child: Center(
-                                    child: Text(
-                                      "Buy Now",
-                                      style: TextStyle(
-                                          fontSize: 20.sp,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
                               )
                             ],
                           ),
@@ -340,6 +324,36 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         ),
       );
     } catch (e) {}
+  }
+}
+
+class ShortLabelledButton extends StatelessWidget {
+  const ShortLabelledButton({
+    super.key,
+    this.onTap,
+    this.label = "Buy Now",
+  });
+  final String label;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
+        decoration: BoxDecoration(
+            color: AppColors.lightCyanColor,
+            borderRadius: BorderRadius.circular(8)),
+        child: Center(
+          child: Text(
+            label,
+            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+    );
   }
 }
 

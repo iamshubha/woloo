@@ -61,9 +61,9 @@ class Product {
   final DateTime updatedAt;
   final dynamic type;
   final dynamic collection;
-  final List<Image> options;
+  final List<XImage> options;
   final List<dynamic> tags;
-  final List<Image> images;
+  final List<XImage> images;
   final List<Variant> variants;
 
   Product({
@@ -119,9 +119,10 @@ class Product {
         type: json["type"],
         collection: json["collection"],
         options:
-            List<Image>.from(json["options"].map((x) => Image.fromJson(x))),
+            List<XImage>.from(json["options"].map((x) => XImage.fromJson(x))),
         tags: List<dynamic>.from(json["tags"].map((x) => x)),
-        images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
+        images:
+            List<XImage>.from(json["images"].map((x) => XImage.fromJson(x))),
         variants: List<Variant>.from(
             json["variants"].map((x) => Variant.fromJson(x))),
       );
@@ -154,6 +155,9 @@ class Product {
         "images": List<dynamic>.from(images.map((x) => x.toJson())),
         "variants": List<dynamic>.from(variants.map((x) => x.toJson())),
       };
+
+  @override
+  String toString() => jsonEncode(toJson());
 }
 
 class Option {
@@ -164,7 +168,7 @@ class Option {
   final DateTime createdAt;
   final DateTime updatedAt;
   final dynamic deletedAt;
-  final Image? option;
+  final XImage? option;
 
   Option({
     required this.id,
@@ -185,7 +189,7 @@ class Option {
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
         deletedAt: json["deleted_at"],
-        option: json["option"] == null ? null : Image.fromJson(json["option"]),
+        option: json["option"] == null ? null : XImage.fromJson(json["option"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -200,7 +204,7 @@ class Option {
       };
 }
 
-class Image {
+class XImage {
   final String id;
   final String? url;
   final dynamic metadata;
@@ -212,7 +216,7 @@ class Image {
   final String? title;
   final List<Option>? values;
 
-  Image({
+  XImage({
     required this.id,
     this.url,
     required this.metadata,
@@ -225,7 +229,7 @@ class Image {
     this.values,
   });
 
-  factory Image.fromJson(Map<String, dynamic> json) => Image(
+  factory XImage.fromJson(Map<String, dynamic> json) => XImage(
         id: json["id"],
         url: json["url"],
         metadata: json["metadata"],

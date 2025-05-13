@@ -1,17 +1,23 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:woloo_smart_hygiene/client_flow/widgets/CustomButton.dart';
+import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
+import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
+import 'package:woloo_smart_hygiene/enums/product_mode.dart';
 import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_bloc.dart';
 import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_event.dart';
 import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_state.dart';
 import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
+import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
 
 import '../../janitorial_services/utils/app_images.dart';
 import '../../janitorial_services/utils/app_strings.dart';
+import '../../utils/text_to_line_converter.dart';
 import '../model/hygiene_services.dart';
 
 class ServiceDetail extends StatefulWidget {
@@ -27,13 +33,14 @@ class _ServiceDetailState extends State<ServiceDetail> {
   bool _isDataLoaded = false;
   // hygiene.? _hygieneService;
   Product? _hygieneService;
+  List<PestControlService> services = [];
 
   @override
   void initState() {
+    super.initState();
     _hygieneServiceBloc.add(HygieneServiceReqById(
       productId: widget.productId,
     ));
-    super.initState();
   }
 
   @override
@@ -49,7 +56,9 @@ class _ServiceDetailState extends State<ServiceDetail> {
             EasyLoading.dismiss();
             setState(() {
               _hygieneService = state.dashboardData;
+              services = parseServices(_hygieneService?.description ?? "");
               _isDataLoaded = true;
+              logger.w("Hygine Service: $_hygieneService");
             });
           }
           if (state is HygieneServiceError) {
@@ -73,11 +82,27 @@ class _ServiceDetailState extends State<ServiceDetail> {
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CustomImageProvider(
-                              image: ServicesImages.banner,
-                              width: MediaQuery.of(context).size.width,
+                            // CustomImageProvider(
+                            //   image: _hygieneService?.images.first,
+                            //   width: MediaQuery.of(context).size.width,
+                            //   height: 300,
+                            //   fit: BoxFit.cover,
+                            // ),
+                            SizedBox(
                               height: 300,
-                              fit: BoxFit.cover,
+                              width: MediaQuery.of(context).size.width,
+                              child: CarouselView(
+                                itemExtent: 1,
+                                children: List.generate(
+                                  _hygieneService?.images.length ?? 0,
+                                  (index) {
+                                    final image =
+                                        _hygieneService?.images[index];
+                                    return CachedNetworkImage(
+                                        imageUrl: image?.url ?? "");
+                                  },
+                                ),
+                              ),
                             ),
                             const SizedBox(
                               height: 20,
@@ -147,7 +172,7 @@ class _ServiceDetailState extends State<ServiceDetail> {
                               height: 10,
                             ),
                             Text(
-                              ServicesStrings.pestControl,
+                              _hygieneService?.title ?? "N/A",
                               style: AppTextStyle.font20bold,
                             ),
                             const SizedBox(
@@ -157,11 +182,34 @@ class _ServiceDetailState extends State<ServiceDetail> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  ServicesStrings.pestControlPrice,
+                                  _hygieneService?.variants.first
+                                          .calculatedPrice.calculatedAmount
+                                          .toString() ??
+                                      "N/A",
                                   style: AppTextStyle.font32bold,
                                 ),
-                                const Custombutton(
-                                    text: ServicesStrings.bookNow, width: 138)
+                                ShortLabelledButton(
+                                  label: "Book Now",
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        isDismissible:
+                                            true, // <-- Allow tap outside to dismiss
+                                        enableDrag:
+                                            true, // <-- Allow swipe down to dismiss
+
+                                        backgroundColor: Colors
+                                            .transparent, // Optional: if you want rounded corners to show correctly
+
+                                        context: context,
+                                        builder: (context) {
+                                          return const AddressChangeBottomSheet(
+                                            productMode:
+                                                ProductMode.serviceDetails,
+                                          );
+                                        });
+                                  },
+                                )
                               ],
                             ),
                             const SizedBox(
@@ -178,31 +226,44 @@ class _ServiceDetailState extends State<ServiceDetail> {
                             const SizedBox(
                               height: 10,
                             ),
-                            card(
-                                ServicesStrings.preServiceChecks,
-                                ServicesStrings.preServiceDetails,
-                                AppColors.backgroundColor),
-                            const SizedBox(
-                              height: 15,
+                            Column(
+                              spacing: 15.h,
+                              mainAxisSize: MainAxisSize.min,
+                              children: List.generate(
+                                  services.length,
+                                  (i) => card(
+                                      "${services[i].icon} ${services[i].title}",
+                                      services[i].description,
+                                      i % 2 == 0
+                                          ? AppColors.greyIcon
+                                          : AppColors.backgroundColor)),
                             ),
-                            card(
-                                ServicesStrings.indoorUnit,
-                                ServicesStrings.indoorUnitDetails,
-                                AppColors.greyIcon),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            card(
-                                ServicesStrings.outdoorUnit,
-                                ServicesStrings.outdoorUnitDetails,
-                                AppColors.backgroundColor),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            card(
-                                ServicesStrings.finalCheckup,
-                                ServicesStrings.finalCheckupDetails,
-                                AppColors.greyIcon),
+
+                            // card(
+                            //     services.first.icon + services.first.title,
+                            //     services.first.description,
+                            //     AppColors.backgroundColor),
+                            // const SizedBox(
+                            //   height: 15,
+                            // ),
+                            // card(
+                            //     ServicesStrings.indoorUnit,
+                            //     ServicesStrings.indoorUnitDetails,
+                            //     AppColors.greyIcon),
+                            // const SizedBox(
+                            //   height: 15,
+                            // ),
+                            // card(
+                            //     ServicesStrings.outdoorUnit,
+                            //     ServicesStrings.outdoorUnitDetails,
+                            //     AppColors.backgroundColor),
+                            // const SizedBox(
+                            //   height: 15,
+                            // ),
+                            // card(
+                            //     ServicesStrings.finalCheckup,
+                            //     ServicesStrings.finalCheckupDetails,
+                            //     AppColors.greyIcon),
                             const SizedBox(
                               height: 10,
                             ),
@@ -242,9 +303,31 @@ class _ServiceDetailState extends State<ServiceDetail> {
                                         ServicesStrings.pestControlPrice,
                                         style: AppTextStyle.font20bold,
                                       ),
-                                      const Custombutton(
-                                          text: ServicesStrings.bookNow,
-                                          width: 138)
+                                      // const Custombutton(
+                                      //     text: ServicesStrings.bookNow,
+                                      //     width: 138)
+                                      ShortLabelledButton(
+                                        label: "Book Now",
+                                        onTap: () {
+                                          showModalBottomSheet(
+                                              isScrollControlled: true,
+                                              isDismissible:
+                                                  true, // <-- Allow tap outside to dismiss
+                                              enableDrag:
+                                                  true, // <-- Allow swipe down to dismiss
+
+                                              backgroundColor: Colors
+                                                  .transparent, // Optional: if you want rounded corners to show correctly
+
+                                              context: context,
+                                              builder: (context) {
+                                                return const AddressChangeBottomSheet(
+                                                  productMode: ProductMode
+                                                      .serviceDetails,
+                                                );
+                                              });
+                                        },
+                                      )
                                     ],
                                   )
                                 ],
@@ -322,30 +405,58 @@ class _ServiceDetailState extends State<ServiceDetail> {
                                   ),
                                 ],
                               ),
+                            ),
+                            SizedBox(
+                              height: 70.h,
                             )
                           ]),
                     ),
                   ),
-                  bottomNavigationBar: Container(
-                    height: 60.h,
-                    padding: EdgeInsets.symmetric(horizontal: 20.sp),
+                  // bottomNavigationBar: Container(
+                  //   height: 60.h,
+                  //   padding: EdgeInsets.symmetric(horizontal: 20.sp),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //     children: [
+                  //       GestureDetector(
+                  //         onTap: () {
+                  //           superVisorBottomSheet();
+                  //         },
+                  //         child: Custombutton(
+                  //             height: 45.h,
+                  //             text: ServicesStrings.bookNow,
+                  //             width: 132.h),
+                  //       ),
+                  //       Custombutton(
+                  //           height: 45.h,
+                  //           color: AppColors.greyIcon,
+                  //           text: ServicesStrings.addToCart,
+                  //           width: 132.h)
+                  //     ],
+                  //   ),
+                  // ),
+                  bottomSheet: XDecoratedBox(
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            superVisorBottomSheet();
-                          },
-                          child: Custombutton(
-                              height: 45.h,
-                              text: ServicesStrings.bookNow,
-                              width: 132.h),
+                        Expanded(
+                          child: LongLabeledButton(
+                            onTap: () {
+                              // showCartBottomSheet(context);
+                            },
+                            label: "Buy Now",
+                          ),
                         ),
-                        Custombutton(
-                            height: 45.h,
-                            color: AppColors.greyIcon,
-                            text: ServicesStrings.addToCart,
-                            width: 132.h)
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        Expanded(
+                          child: LongLabeledButton(
+                            onTap: () {
+                              // addToCart(context);
+                            },
+                            label: "Add to Cart",
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -353,7 +464,7 @@ class _ServiceDetailState extends State<ServiceDetail> {
         });
   }
 
-  Widget card(String title, String subTitle, Color color) {
+  Widget card(String title, List<String> subtitles, Color color) {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -370,10 +481,16 @@ class _ServiceDetailState extends State<ServiceDetail> {
             title,
             style: AppTextStyle.font14w7,
           ),
-          Text(
-            subTitle,
-            textAlign: TextAlign.left,
-            style: AppTextStyle.font10,
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: List.generate(
+              subtitles.length,
+              (i) => Text(
+                subtitles[i],
+                textAlign: TextAlign.left,
+                style: AppTextStyle.font10,
+              ),
+            ),
           ),
         ],
       ),

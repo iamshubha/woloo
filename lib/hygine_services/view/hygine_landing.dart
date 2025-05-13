@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -8,12 +9,12 @@ import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_bloc.da
 import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_event.dart';
 import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_state.dart';
 import 'package:woloo_smart_hygiene/hygine_services/view/service_detail.dart';
-import 'package:woloo_smart_hygiene/hygine_services/view/service_order_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 
+import '../../hygine_services/model/hygiene_services.dart';
 import '../../widgets/nav_bar.dart';
 import '../model/hygiene_services.dart' as hygiene;
 
@@ -92,7 +93,7 @@ class _HygieneServicesScreenState extends State<HygieneServicesScreen> {
                                       crossAxisSpacing: 10,
                                       mainAxisSpacing: 10),
                               itemBuilder: (c, i) {
-                                final category = services[i];
+                                final category = _hygieneService!.products[i];
                                 return GestureDetector(
                                     onTap: () {
                                       Navigator.push(
@@ -308,7 +309,7 @@ class ServicesTile extends StatelessWidget {
     required this.category,
   });
 
-  final Category category;
+  final Product category;
 
   @override
   Widget build(BuildContext context) {
@@ -337,9 +338,14 @@ class ServicesTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-              height: 30, width: 30, child: Image.asset(category.imageUrl)),
+              height: 30,
+              width: 30,
+              child: CachedNetworkImage(
+                imageUrl: category.thumbnail,
+                fit: BoxFit.fill,
+              )),
           Text(
-            category.name,
+            category.title,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.bold),
           ),

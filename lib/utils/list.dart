@@ -61,3 +61,5 @@ final banners = [
   Category(imageUrl: AppImages.banner2),
   Category(imageUrl: AppImages.banner3),
 ];
+
+final bhkValues=["1 RK","1 BHK","2 BHK","3 BHK"];

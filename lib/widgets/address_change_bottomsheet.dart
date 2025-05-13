@@ -9,14 +9,18 @@ import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
+import 'package:woloo_smart_hygiene/enums/product_mode.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/widgets/address_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
+import 'package:woloo_smart_hygiene/widgets/get_date_time_bottomsheet.dart';
 
 class AddressChangeBottomSheet extends StatefulWidget {
   const AddressChangeBottomSheet({
     super.key,
+    this.productMode = ProductMode.productDetails,
   });
+  final ProductMode productMode;
 
   @override
   State<AddressChangeBottomSheet> createState() =>
@@ -195,11 +199,39 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                       LongLabeledButton(
                         label: "Select Address",
                         onTap: () {
-                          final box = GetStorage();
-                          var jwt = box.read('login_jwt');
-                          logger.w(jwt);
-                          box.write('address', selectedAddress?.toString());
-                          Navigator.pop(context);
+                          switch (widget.productMode) {
+                            case ProductMode.productDetails:
+                              {
+                                final box = GetStorage();
+                                var jwt = box.read('login_jwt');
+                                logger.w(jwt);
+                                box.write(
+                                    'address', selectedAddress?.toString());
+                                Navigator.pop(context);
+                              }
+
+                              break;
+                            case ProductMode.serviceDetails:
+                              {
+                                Navigator.pop(context);
+                                showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    isDismissible:
+                                        true, // <-- Allow tap outside to dismiss
+                                    enableDrag:
+                                        true, // <-- Allow swipe down to dismiss
+
+                                    backgroundColor: Colors
+                                        .transparent, // Optional: if you want rounded corners to show correctly
+
+                                    context: context,
+                                    builder: (context) {
+                                      return const GetTimeScheduleBottomSheet();
+                                    });
+                              }
+
+                              break;
+                          }
                         },
                       ),
                       LongLabeledButton(
