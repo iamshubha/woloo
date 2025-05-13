@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
 import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 
 class AddressService {
   final DioClient dio;
@@ -36,6 +37,7 @@ class AddressService {
   Future<AddressesData> getAllAddress({
     required String token,
   }) async {
+    // logger.w("Token: $token");
     try {
       var response = await dio.get(
         APIConstants.GET_ADDRESS,

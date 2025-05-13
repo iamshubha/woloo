@@ -13,7 +13,6 @@ import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
-import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/review_order_bottomsheet.dart';
 
@@ -33,7 +32,6 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -115,12 +113,11 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                                           item: item,
                                           onAdd: () {
                                             count++;
-                                            logger.w(item?.id);
+                                             
                                             _b2bStoreBloc.add(AddRemoveItemReq(
                                                 count: count,
                                                 itemId: item?.id ?? ""));
-                                            // _b2bStoreBloc
-                                            //     .add(const GetCartData());
+                                         
                                           },
                                           onRemove: () {
                                             count--;
