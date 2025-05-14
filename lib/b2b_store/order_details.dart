@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -25,7 +26,7 @@ class _OrderScreenState extends State<OrderScreen> {
   OrderDetails? orderDetailsData;
   @override
   void initState() {
-    _b2bStoreBloc.add(OrderDetailsEvent());
+    _b2bStoreBloc.add(const OrderDetailsEvent());
     super.initState();
   }
 
@@ -69,8 +70,23 @@ class _OrderScreenState extends State<OrderScreen> {
                       title: "Order Details ",
                       subtitle:
                           "Check or modify the details of your order here"),
-                  OrderStatusCard(
-                    timeLineList: timeLineList,
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: orderDetailsData?.orders.length ?? 0,
+                        itemBuilder: (c, i) {
+                          final order = orderDetailsData?.orders[i];
+                          return OrderStatusCard(
+                            timeLineList: timeLineList,
+                            url: order?.items.first.thumbnail ?? "",
+                            productLabel:
+                                order?.items.first.productTitle.toString() ??
+                                    "",
+                            subTitle:
+                                order?.items.first.subtitle.toString() ?? "",
+                            price: order?.items.first.shippedTotal.toString() ??
+                                "",
+                          );
+                        }),
                   ),
                   // const Spacer()
                 ],
@@ -82,9 +98,18 @@ class _OrderScreenState extends State<OrderScreen> {
 }
 
 class OrderStatusCard extends StatelessWidget {
-  const OrderStatusCard({super.key, required this.timeLineList});
+  const OrderStatusCard(
+      {super.key,
+      required this.timeLineList,
+      required this.url,
+      required this.productLabel,
+      required this.subTitle,
+      required this.price});
   final List<String> timeLineList;
-
+  final String url;
+  final String productLabel;
+  final String subTitle;
+  final String price;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -112,12 +137,19 @@ class OrderStatusCard extends StatelessWidget {
               // Product Image
               ClipRRect(
                 borderRadius: BorderRadius.circular(12.r),
-                child: Image.asset(
-                  AppImages.item, // Replace with your product image
-                  height: 60.h,
-                  width: 60.w,
-                  fit: BoxFit.cover,
-                ),
+                child: url.isEmpty
+                    ? Image.asset(
+                        AppImages.appLogo,
+                        height: 60.h,
+                        width: 60.w,
+                        fit: BoxFit.cover,
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: url, // Replace with your product image
+                        height: 60.h,
+                        width: 60.w,
+                        fit: BoxFit.cover,
+                      ),
               ),
               SizedBox(width: 12.w),
               // Product Info
@@ -126,7 +158,7 @@ class OrderStatusCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Feather Toilet Seat",
+                      productLabel,
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
@@ -134,7 +166,7 @@ class OrderStatusCard extends StatelessWidget {
                     ),
                     SizedBox(height: 4.h),
                     Text(
-                      "Size: M  |  QTY: 3",
+                      subTitle,
                       style: TextStyle(
                         fontSize: 12.sp,
                         color: Colors.grey,
@@ -142,7 +174,7 @@ class OrderStatusCard extends StatelessWidget {
                     ),
                     SizedBox(height: 8.h),
                     Text(
-                      "Rs. 799",
+                      "Rs. $price",
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
@@ -194,7 +226,7 @@ class OrderStatusCard extends StatelessWidget {
                     ),
                   );
                 },
-                itemCount: 4),
+                itemCount: timeLineList.length),
           ),
 
           SizedBox(height: 12.h),
