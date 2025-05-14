@@ -165,6 +165,7 @@ class APIConstants {
       '$AUTH_BASE_URL/store/products?fields=*variants.calculated_price';
 
   static var CREATE_ADDRESS = '$AUTH_BASE_URL/store/customers/me/addresses';
+  static var SET_BILLING_ADDRESS = '$AUTH_BASE_URL/store/carts/';
 
   static var GET_ADDRESS = '$AUTH_BASE_URL/store/customers/me/addresses';
 

@@ -57,4 +57,34 @@ class AddressService {
       rethrow;
     }
   }
+
+  Future<AddAddressResBody> setAddress({
+    required AddressReqBody shipping_address,
+    required AddressReqBody billing_address,
+    required String token,
+    required String cart_id,
+  }) async {
+    try {
+      var response = await dio.post(
+        APIConstants.SET_BILLING_ADDRESS + cart_id,
+        data: {
+          'billing_address': billing_address.toJson(),
+          'shipping_address': shipping_address.toJson(),
+        },
+        options: Options(
+          headers: {
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Bearer $token'
+          },
+        ),
+      );
+
+      return AddAddressResBody.fromJson(response);
+    } catch (e) {
+      debugPrint("Error in IOT service: $e");
+      rethrow;
+    }
+  }
 }

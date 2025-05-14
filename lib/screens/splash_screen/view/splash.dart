@@ -9,8 +9,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
+
 import 'package:woloo_smart_hygiene/core/bloc/core_bloc.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+
 import 'package:woloo_smart_hygiene/messaging.dart';
 // import 'package:woloo_smart_hygiene/screens/login/view/login_screen.dart';
 import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/view/supervisor_dashboard_screen.dart';
@@ -144,9 +146,8 @@ class _SplashScreenState extends State<SplashScreen> {
           } catch (e) {
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(
-                builder: (context) => const EcomScreen(),
-              ),
+              MaterialPageRoute(builder: (context) => EcomScreen() //LoginAs(),
+                  ),
               (route) => false,
             );
           }
