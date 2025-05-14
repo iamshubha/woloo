@@ -80,7 +80,7 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                       color: Colors.white,
                       borderRadius:
                           BorderRadius.vertical(top: Radius.circular(40.r))),
-                  child: cartModel?.cart?.items.isEmpty ?? true
+                  child: cartModel?.cart.items.isEmpty ?? true
                       ? Container()
                       : Column(
                           spacing: 16.h,
@@ -100,30 +100,38 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                                         const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
                                     // Prevents nested scrolling
-                                    itemCount: cartModel?.cart?.items
+                                    itemCount: cartModel?.cart.items
                                         .length, // Replace with your cart item count
                                     itemBuilder: (context, index) {
-                                      final item =
-                                          cartModel?.cart?.items[index];
+                                      final item = cartModel?.cart.items[index];
                                       int count = item?.quantity ?? 0;
                                       return Padding(
                                         padding:
                                             EdgeInsets.symmetric(vertical: 8.h),
                                         child: CartItemCard(
+                                          onDelete: () {
+                                            _b2bStoreBloc.add(DeleteItemReq(
+                                                itemId: item?.id ?? ""));
+                                          },
                                           item: item,
                                           onAdd: () {
                                             count++;
-                                             
+
                                             _b2bStoreBloc.add(AddRemoveItemReq(
                                                 count: count,
                                                 itemId: item?.id ?? ""));
-                                         
                                           },
                                           onRemove: () {
                                             count--;
-                                            _b2bStoreBloc.add(AddRemoveItemReq(
-                                                count: count,
-                                                itemId: item?.id ?? ""));
+                                            if (count > 0) {
+                                              _b2bStoreBloc.add(
+                                                  AddRemoveItemReq(
+                                                      count: count,
+                                                      itemId: item?.id ?? ""));
+                                            } else {
+                                              _b2bStoreBloc.add(DeleteItemReq(
+                                                  itemId: item?.id ?? ""));
+                                            }
                                           },
                                         ),
                                       );
@@ -135,10 +143,10 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                                   const ApplyPromo(),
                                   const Divider(),
                                   PricingCalculate(
-                                    total: cartModel?.cart?.total,
-                                    subTotal: cartModel?.cart?.subtotal,
-                                    discount: cartModel?.cart?.discountTotal,
-                                    itemTotal: cartModel?.cart?.itemTotal,
+                                    total: cartModel?.cart.total,
+                                    subTotal: cartModel?.cart.subtotal,
+                                    discount: cartModel?.cart.discountTotal,
+                                    itemTotal: cartModel?.cart.itemTotal,
                                   ),
                                   const SizedBox(
                                     height: 20,

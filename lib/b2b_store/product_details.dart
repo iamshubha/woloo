@@ -48,7 +48,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           EasyLoading.dismiss();
           setState(() {
             cartModel = state.cartData;
-            cartModel?.cart?.items.forEach((i) {
+            cartModel?.cart.items.forEach((i) {
               if (i.variantId == widget.productData?.variants![0].id) {
                 productCount = i.quantity;
               }
@@ -157,7 +157,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       ? addToCart(context)
                                       :
                                       // To add value
-                                      cartModel?.cart?.items.forEach((i) {
+                                      cartModel?.cart.items.forEach((i) {
                                           if (i.variantId ==
                                               widget.productData?.variants![0]
                                                   .id) {
@@ -170,7 +170,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   // setState(() {});
                                 },
                                 onRemove: () {
-                                  cartModel?.cart?.items.forEach((i) {
+                                  if (productCount == 0) return;
+                                  cartModel?.cart.items.forEach((i) {
                                     if (i.variantId ==
                                         widget.productData?.variants![0].id) {
                                       productCount -= 1;
@@ -297,7 +298,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   Future<dynamic> showCartBottomSheet(BuildContext context) {
-    if (cartModel?.cart?.items.isEmpty ?? true) {
+    if (cartModel?.cart.items.isEmpty ?? true) {
       addToCart(context);
     }
     return showModalBottomSheet(

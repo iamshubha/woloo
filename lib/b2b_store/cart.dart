@@ -92,16 +92,19 @@ class _CartScreenState extends State<CartScreen> {
                                 true, // Ensures ListView takes only the required space
                             physics:
                                 const NeverScrollableScrollPhysics(), // Prevents nested scrolling
-                            itemCount: cartModel?.cart?.items
+                            itemCount: cartModel?.cart.items
                                 .length, // Replace with your cart item count
                             itemBuilder: (context, index) {
-                              final item = cartModel?.cart?.items[index];
+                              final item = cartModel?.cart.items[index];
                               int count = item?.quantity ?? 0;
 
                               return Padding(
                                 padding: EdgeInsets.symmetric(vertical: 8.h),
                                 child: CartItemCard(
-                                  //TODO: add remove functionality add
+                                  onDelete: () {
+                                    _b2bStoreBloc.add(
+                                        DeleteItemReq(itemId: item?.id ?? ""));
+                                  },
                                   item: item,
                                   onAdd: () {
                                     count++;
@@ -110,8 +113,8 @@ class _CartScreenState extends State<CartScreen> {
                                   },
                                   onRemove: () {
                                     count--;
-                                    logger.w("Count: $count");
-                                    if (count > 1) {
+                                    // logger.w("Count: $count");
+                                    if (count > 0) {
                                       _b2bStoreBloc.add(AddRemoveItemReq(
                                           count: count,
                                           itemId: item?.id ?? ""));
@@ -129,10 +132,10 @@ class _CartScreenState extends State<CartScreen> {
                           const ApplyPromo(),
                           const Divider(),
                           PricingCalculate(
-                            total: cartModel?.cart?.total,
-                            subTotal: cartModel?.cart?.subtotal,
-                            discount: cartModel?.cart?.discountTotal,
-                            itemTotal: cartModel?.cart?.itemTotal,
+                            total: cartModel?.cart.total,
+                            subTotal: cartModel?.cart.subtotal,
+                            discount: cartModel?.cart.discountTotal,
+                            itemTotal: cartModel?.cart.itemTotal,
                           ),
                           const SizedBox(
                             height: 20,
@@ -421,13 +424,15 @@ class CartItemCard extends StatelessWidget {
   final bool isSelected;
   final VoidCallback? onAdd;
   final VoidCallback? onRemove;
+  final VoidCallback onDelete;
 
   const CartItemCard(
       {super.key,
       this.item,
       this.isSelected = true,
       this.onAdd,
-      this.onRemove});
+      this.onRemove,
+      required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -480,9 +485,7 @@ class CartItemCard extends StatelessWidget {
                     ),
                     if (isSelected)
                       GestureDetector(
-                        onTap: () {
-                          // Handle delete action
-                        },
+                        onTap: onDelete,
                         child: SizedBox(
                           height: 20,
                           width: 20,

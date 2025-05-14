@@ -52,7 +52,7 @@ class CartApiService {
           },
         ),
       );
-      logger.w(response);
+      // logger.w(response);
       return CartModel.fromJson(response);
     } catch (e) {
       debugPrint("Error in IOT service: $e");
@@ -87,7 +87,7 @@ class CartApiService {
     }
   }
 
-  Future<CartModel> deleteItem(
+  Future<bool> deleteItem(
       {required String cartId,
       required String itemId,
       required String token}) async {
@@ -103,8 +103,8 @@ class CartApiService {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token'
           }));
-
-      return CartModel.fromJson(res);
+      logger.w("Delete Item Repo $res");
+      return res["deleted"];
     } catch (e) {
       logger.e("Error in delete item service: $e");
       rethrow;

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/login_flow.dart';
@@ -15,8 +14,6 @@ import 'package:woloo_smart_hygiene/b2b_store/network/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/checkout.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/login_reg_flow.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/product.dart';
-import 'package:woloo_smart_hygiene/b2b_store/order_details.dart';
-import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 
 import '../models/payment_provider.dart';
@@ -222,17 +219,23 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   ) async {
     try {
       emit(const B2BStoreLoading(message: "Loading data..."));
-      AddToCartResponse response = await _cartService.addToCart(
+      AddToCartResponse res = await _cartService.addToCart(
         token: box.read('login_jwt'),
         cart_id: box.read('cart_id'),
         variant_id: event.variant_id,
         quantity: event.quantity,
       );
 
-      debugPrint("requestId $response");
-      print("Response Id: $response");
+      // debugPrint("requestId $response");
+      // print("Response Id: $response");
+      CartModel response = await _cartService.getAllCartData(
+          token: box.read('login_jwt'), cartId: box.read('cart_id'));
 
-      emit(AddToCartSuccess(cartData: response));
+      debugPrint("requestId $response");
+      print(response);
+
+      emit(CartSuccess(cartData: response));
+      // emit(AddToCartSuccess(cartData: response));
     } catch (e) {
       emit(B2BStoreError(error: e.toString()));
       debugPrint("Error in ATC service: $e");
@@ -341,14 +344,17 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       DeleteItemReq event, Emitter<B2BStoreState> emit) async {
     emit(const CartLoading(message: "Proceed to cart"));
     try {
-      CartModel response = await _cartService.deleteItem(
+      await _cartService.deleteItem(
           itemId: event.itemId,
           token: box.read('login_jwt'),
           cartId: box.read('cart_id'));
-      logger.w(response);
+      // logger.w(response);
+      CartModel response = await _cartService.getAllCartData(
+          token: box.read('login_jwt'), cartId: box.read('cart_id'));
+
       emit(CartSuccess(cartData: response));
     } catch (e) {
-      logger.e("Error in dete Item Bloc: $e");
+      logger.e("Error in delete Item Bloc: $e");
       rethrow;
     }
   }

@@ -14,7 +14,6 @@ import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
-import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/bloc/dashboard_event.dart';
 import 'package:woloo_smart_hygiene/client_flow/utils/client_images.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/screens/host_dashboard_screen.dart';
@@ -25,8 +24,6 @@ import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/cart_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/dialogs.dart/order_successful.dart';
-
-import '../client_flow/widgets/CustomButton.dart';
 
 class OrderSummeryBottomSheet extends StatefulWidget {
   const OrderSummeryBottomSheet({
@@ -74,7 +71,7 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
         if (state is CartSuccess) {
           EasyLoading.dismiss();
           setState(() {
-            print(state.cartData.cart);
+            // print(state.cartData.cart);
             // _addressesData = state.addressesData;
             // _b2bStoreHomePage = state.dashboardData;
             cartModel = state.cartData;
@@ -152,14 +149,36 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
                               physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               // Prevents nested scrolling
-                              itemCount: cartModel?.cart?.items
+                              itemCount: cartModel?.cart.items
                                   .length, // Replace with your cart item count
                               itemBuilder: (context, index) {
-                                final item = cartModel?.cart?.items[index];
+                                final item = cartModel?.cart.items[index];
+                                int count = item?.quantity ?? 0;
                                 return Padding(
                                   padding: EdgeInsets.symmetric(vertical: 8.h),
                                   child: CartItemCard(
                                     item: item,
+                                    onDelete: () {
+                                      _b2bStoreBloc.add(DeleteItemReq(
+                                          itemId: item?.id ?? ""));
+                                    },
+                                    onAdd: () {
+                                      count++;
+                                      _b2bStoreBloc.add(AddRemoveItemReq(
+                                          count: count,
+                                          itemId: item?.id ?? ""));
+                                    },
+                                    onRemove: () {
+                                      count--;
+                                      if (count > 0) {
+                                        _b2bStoreBloc.add(AddRemoveItemReq(
+                                            count: count,
+                                            itemId: item?.id ?? ""));
+                                      } else {
+                                        _b2bStoreBloc.add(DeleteItemReq(
+                                            itemId: item?.id ?? ""));
+                                      }
+                                    },
                                   ),
                                 );
                               },
@@ -193,10 +212,10 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
                             ),
                             const Divider(),
                             PricingCalculate(
-                              total: cartModel?.cart?.total,
-                              subTotal: cartModel?.cart?.subtotal,
-                              discount: cartModel?.cart?.discountTotal,
-                              itemTotal: cartModel?.cart?.itemTotal,
+                              total: cartModel?.cart.total,
+                              subTotal: cartModel?.cart.subtotal,
+                              discount: cartModel?.cart.discountTotal,
+                              itemTotal: cartModel?.cart.itemTotal,
                             ),
                             const Divider(),
                             const SizedBox(
@@ -234,7 +253,7 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
                           // razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET,
                           //     handleExternalWalletSelected);
                           // razorpay.open(v);
-                          _b2bStoreBloc.add(Payment());
+                          _b2bStoreBloc.add(const Payment());
                           // try {
                           // _b2bStoreBloc.add(Payment(razorpay: razorpay));
                           // } catch (e) {}
@@ -350,7 +369,7 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
           //    textAlign: TextAlign.center,
           //   ),
           // ),
-          content: OrderSuccessfulDialog(),
+          content: const OrderSuccessfulDialog(),
         );
       },
     );
