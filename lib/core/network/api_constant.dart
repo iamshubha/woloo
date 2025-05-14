@@ -165,9 +165,17 @@ class APIConstants {
       '$AUTH_BASE_URL/store/products?fields=*variants.calculated_price';
 
   static var CREATE_ADDRESS = '$AUTH_BASE_URL/store/customers/me/addresses';
+  static var SET_BILLING_ADDRESS = '$AUTH_BASE_URL/store/carts/';
 
   static var GET_ADDRESS = '$AUTH_BASE_URL/store/customers/me/addresses';
 
   static var GET_ALL_CART_DATA = '$AUTH_BASE_URL/store/carts/';
   static var ADD_TO_CART = '$AUTH_BASE_URL/store/carts/';
+
+  //Cart
+  // URL: https://staging-store.woloo.in/store/carts/cart_01JTQVACY3V5FY8NBBZY3ZZ06C/promotions
+  static var CART_BASE_URL = '$AUTH_BASE_URL/store/carts/';
+  // https://staging-store.woloo.in/store/shipping-options/address?cart_id=cart_01JTQVACY3V5FY8NBBZY3ZZ06C
+  static var SHIPPING_OPTIONS = '$AUTH_BASE_URL/store/shipping-options/';
+  static var Add_Remove_Item = '/line-items/';
 }

@@ -230,25 +230,34 @@ class XPaymentTile extends StatelessWidget {
     super.key,
     required this.imgPath,
     required this.paymentMethod,
+    this.onTap,
+    this.onSelected = false,
   });
   final String imgPath;
   final String paymentMethod;
+  final VoidCallback? onTap;
+  final bool onSelected;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(height: 40, width: 40, child: Image.asset(imgPath)),
-        SizedBox(
-          width: 10.w,
-        ),
-        Text(
-          paymentMethod,
-          style: AppTextStyle.font14bold,
-        ),
-        const Spacer(),
-        const XDesignedRadioButton()
-      ],
+    return InkWell(
+      onTap: onTap,
+      child: Row(
+        children: [
+          SizedBox(height: 40, width: 40, child: Image.asset(imgPath)),
+          SizedBox(
+            width: 10.w,
+          ),
+          Text(
+            paymentMethod,
+            style: AppTextStyle.font14bold,
+          ),
+          const Spacer(),
+          XDesignedRadioButton(
+            onSelected: onSelected,
+          )
+        ],
+      ),
     );
   }
 }

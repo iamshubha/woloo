@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 
 abstract class B2BStoreEvent extends Equatable {
@@ -29,6 +30,24 @@ class StoreCustomerLoginReq extends B2BStoreEvent {
 
   @override
   List<Object?> get props => [email, pass];
+}
+
+class AddRemoveItemReq extends B2BStoreEvent {
+  final String itemId;
+  final int count;
+  const AddRemoveItemReq({
+    required this.itemId,
+    required this.count,
+  });
+
+  @override
+  List<Object?> get props => [itemId, count];
+}
+class DeleteItemReq extends B2BStoreEvent {
+  final String itemId;
+  const DeleteItemReq({required this.itemId});
+  @override
+  List<Object?> get props => [itemId];
 }
 
 class GetIot extends B2BStoreEvent {
@@ -76,6 +95,33 @@ class GetCartData extends B2BStoreEvent {
   List<Object?> get props => [];
 }
 
+class Payment extends B2BStoreEvent {
+  const Payment();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class PlaceOrder extends B2BStoreEvent {
+  final String? order_id;
+  const PlaceOrder({required this.order_id});
+
+  @override
+  List<Object?> get props => [];
+}
+
+class LetsTry extends B2BStoreEvent {
+  const LetsTry();
+  @override
+  List<Object?> get props => [];
+}
+
+class AddRemoveId extends B2BStoreEvent {
+  const AddRemoveId();
+  @override
+  List<Object?> get props => [];
+}
+
 class AddToCart extends B2BStoreEvent {
   final String? variant_id;
   final int quantity;
@@ -87,4 +133,12 @@ class AddToCart extends B2BStoreEvent {
 
   @override
   List<Object?> get props => [variant_id, quantity];
+}
+
+// class
+
+class OrderDetailsEvent extends B2BStoreEvent {
+  const OrderDetailsEvent();
+  @override
+  List<Object?> get props => [];
 }

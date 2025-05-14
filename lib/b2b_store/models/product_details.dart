@@ -131,7 +131,7 @@ class ParentCategory {
   String? handle;
   int? rank;
   Metadata? metadata;
-  Null? parentCategoryId;
+  dynamic? parentCategoryId;
   String? createdAt;
   String? updatedAt;
 

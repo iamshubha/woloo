@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
 import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 
 class CartApiService {
   final DioClient dio;
@@ -17,7 +17,7 @@ class CartApiService {
   }) async {
     try {
       var response = await dio.post(
-        APIConstants.ADD_TO_CART + cart_id + '/line-items',
+        '${APIConstants.ADD_TO_CART}$cart_id/line-items',
         data: {"variant_id": variant_id, "quantity": quantity, "metadata": {}},
         options: Options(
           headers: {
@@ -52,10 +52,61 @@ class CartApiService {
           },
         ),
       );
-
+      // logger.w(response);
       return CartModel.fromJson(response);
     } catch (e) {
       debugPrint("Error in IOT service: $e");
+      rethrow;
+    }
+  }
+
+  Future<CartModel> addOrRemoveItem(
+      {required String cartId,
+      required String itemId,
+      required int count,
+      required String token}) async {
+    try {
+      logger.w(
+          "URL: ${APIConstants.ADD_TO_CART + cartId + APIConstants.Add_Remove_Item + itemId}");
+      final res = await dio.post(
+          APIConstants.ADD_TO_CART +
+              cartId +
+              APIConstants.Add_Remove_Item +
+              itemId,
+          data: {"quantity": count},
+          options: Options(headers: {
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          }));
+      return CartModel.fromJson(res);
+    } catch (e) {
+      logger.e("Error in add or remove item service: $e");
+      rethrow;
+    }
+  }
+
+  Future<bool> deleteItem(
+      {required String cartId,
+      required String itemId,
+      required String token}) async {
+    try {
+      final res = await dio.delete(
+          APIConstants.ADD_TO_CART +
+              cartId +
+              APIConstants.Add_Remove_Item +
+              itemId,
+          options: Options(headers: {
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          }));
+      logger.w("Delete Item Repo $res");
+      return res["deleted"];
+    } catch (e) {
+      logger.e("Error in delete item service: $e");
       rethrow;
     }
   }

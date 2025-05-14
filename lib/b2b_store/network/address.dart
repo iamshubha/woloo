@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
 import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 
 class AddressService {
   final DioClient dio;
@@ -36,6 +37,7 @@ class AddressService {
   Future<AddressesData> getAllAddress({
     required String token,
   }) async {
+    // logger.w("Token: $token");
     try {
       var response = await dio.get(
         APIConstants.GET_ADDRESS,
@@ -50,6 +52,36 @@ class AddressService {
       );
 
       return AddressesData.fromJson(response);
+    } catch (e) {
+      debugPrint("Error in IOT service: $e");
+      rethrow;
+    }
+  }
+
+  Future<AddAddressResBody> setAddress({
+    required AddressReqBody shipping_address,
+    required AddressReqBody billing_address,
+    required String token,
+    required String cart_id,
+  }) async {
+    try {
+      var response = await dio.post(
+        APIConstants.SET_BILLING_ADDRESS + cart_id,
+        data: {
+          'billing_address': billing_address.toJson(),
+          'shipping_address': shipping_address.toJson(),
+        },
+        options: Options(
+          headers: {
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Bearer $token'
+          },
+        ),
+      );
+
+      return AddAddressResBody.fromJson(response);
     } catch (e) {
       debugPrint("Error in IOT service: $e");
       rethrow;

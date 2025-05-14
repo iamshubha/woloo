@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -6,12 +7,18 @@ import 'package:get_storage/get_storage.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/login_flow.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/cart.dart';
+import 'package:woloo_smart_hygiene/b2b_store/network/checkout.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/login_reg_flow.dart';
+import 'package:woloo_smart_hygiene/b2b_store/network/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/product.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
+
+import '../models/payment_provider.dart';
 import 'b2b_store_event.dart';
 import 'b2b_store_state.dart';
 
@@ -23,6 +30,10 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   final ProductService _productService = ProductService(dio: GetIt.instance());
   final AddressService _addresstService = AddressService(dio: GetIt.instance());
   final CartApiService _cartService = CartApiService(dio: GetIt.instance());
+  final CheckoutApiService _checkoutApiService =
+      CheckoutApiService(dio: GetIt.instance());
+  final OrderDetailsService _orderDetailsService =
+      OrderDetailsService(dio: GetIt.instance());
 
   var requestId = '';
   late int roleId;
@@ -35,6 +46,12 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<GetAddress>(_getAddress);
     on<GetCartData>(_getCart);
     on<AddToCart>(_addToCart);
+    on<Payment>(_proceedToCheckOut);
+    on<AddRemoveItemReq>(_addRemoveItems);
+    on<PlaceOrder>(_placeOrder);
+    on<DeleteItemReq>(_deleteItem);
+
+    on<OrderDetailsEvent>(_getOrderDetails);
   }
 
   FutureOr<void> _emailPassRegister(
@@ -66,9 +83,9 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     Emitter<B2BStoreState> emit,
   ) async {
     try {
-      ProductCategory _categories = ProductCategory();
-      TopBrands _topBrands = TopBrands();
-      ProductCollections _productCollections = ProductCollections();
+      ProductCategory categories = ProductCategory();
+      TopBrands topBrands = TopBrands();
+      ProductCollections productCollections = ProductCollections();
 
       emit(const B2BStoreLoading(message: "Loading data...sob data"));
 
@@ -81,38 +98,41 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
 
       // Get region
       final regionResponse = await _productService.getRegion(token: loginToken);
+      box.write('region_id', regionResponse.regions![0].id);
 
-      // Create cart
-      await _productService
-          .createCart(
-              token: loginToken,
-              regionId: regionResponse.regions![0].id.toString())
-          .then((cartData) {
-        box.write('cart_id', cartData.cart!.id);
-      });
+      // await _productService
+      //     .createCart(
+      //         token: loginToken,
+      //         regionId: regionResponse.regions![0].id.toString())
+      //     .then((cartData) {
+      //   box.write('cart_id', cartData.cart!.id);
+      // });
+      CartModel cartModel = await _cartService.getAllCartData(
+          token: box.read('login_jwt'), cartId: box.read('cart_id'));
 
       // Fetch all required data
-      _categories =
+      categories =
           await _productService.getProductCategories(token: loginToken);
-      _topBrands = await _productService.getTopBrands(token: loginToken);
-      _productCollections =
+      topBrands = await _productService.getTopBrands(token: loginToken);
+      productCollections =
           await _productService.getProductCollections(token: loginToken);
 
       // Debug prints
-      print(_categories);
-      print(_topBrands);
-      print(_productCollections);
+      logger.w(categories);
+      logger.w(topBrands);
+      logger.w(productCollections);
 
       // Emit success state
       if (emit.isDone) return;
       emit(B2BStoreSuccess(B2BStoreHomePage(
-        productCategory: _categories,
-        topBrands: _topBrands,
-        productCollections: _productCollections,
-      )));
+          productCategory: categories,
+          topBrands: topBrands,
+          productCollections: productCollections,
+          cartData: cartModel)));
     } catch (e) {
       if (emit.isDone) return;
       emit(B2BStoreError(error: e.toString()));
+      logger.w("Error in IOT service: $e");
       debugPrint("Error in IOT service: $e");
     }
   }
@@ -170,7 +190,26 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       emit(CartSuccess(cartData: response));
     } catch (e) {
       emit(CartError(error: e.toString()));
-      debugPrint("Error in IOT service: $e");
+      debugPrint("Error in GetCart service: $e");
+    }
+  }
+
+  FutureOr<void> _addRemoveItems(
+    AddRemoveItemReq event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const CartLoading(message: "Loading data..."));
+      CartModel response = await _cartService.addOrRemoveItem(
+          itemId: event.itemId,
+          count: event.count,
+          token: box.read('login_jwt'),
+          cartId: box.read('cart_id'));
+      logger.w(response);
+      emit(CartSuccess(cartData: response));
+    } catch (e) {
+      logger.w("Error in bloc: $e");
+      rethrow;
     }
   }
 
@@ -180,20 +219,163 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   ) async {
     try {
       emit(const B2BStoreLoading(message: "Loading data..."));
-      AddToCartResponse response = await _cartService.addToCart(
+      AddToCartResponse res = await _cartService.addToCart(
         token: box.read('login_jwt'),
         cart_id: box.read('cart_id'),
         variant_id: event.variant_id,
         quantity: event.quantity,
       );
 
+      // debugPrint("requestId $response");
+      // print("Response Id: $response");
+      CartModel response = await _cartService.getAllCartData(
+          token: box.read('login_jwt'), cartId: box.read('cart_id'));
+
       debugPrint("requestId $response");
       print(response);
 
-      emit(AddToCartSuccess(cartData: response));
+      emit(CartSuccess(cartData: response));
+      // emit(AddToCartSuccess(cartData: response));
     } catch (e) {
       emit(B2BStoreError(error: e.toString()));
-      debugPrint("Error in IOT service: $e");
+      debugPrint("Error in ATC service: $e");
+    }
+  }
+
+  FutureOr<void> _proceedToCheckOut(
+    Payment event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    emit(const CartLoading(message: "Proceed to cart"));
+    try {
+      final shippingOptions = await _checkoutApiService.shippingOptions(
+        cart_id: box.read('cart_id'),
+        token: box.read('login_jwt'),
+      );
+
+      // final shippingOptionsCalculate =
+      //     await _checkoutApiService.shippingOptionsCalculate(
+      //   shipping_option: shippingOptions.shippingOptions!.first.id,
+      //   token: box.read('login_jwt'),
+      //   cart_id: box.read('cart_id'),
+      // );
+
+      final shippingMethods = await _checkoutApiService.shippingMethods(
+          // TODO:
+          /*
+                    
+                    curl --location -g '{{base-url}}/store/carts/{{cart-id}}/add-shipping-methods' \
+            --header 'Content-Type: application/json' \
+            --header 'x-publishable-api-key: {{publishable-api-key}}' \
+            --header 'Authorization: Bearer {{customer-token}}' \
+            --data '// Staging
+            {
+                "options": [
+                    {
+                        "id": "so_01JV4P2DWP2QJD9QCZSDJ0RPJN"
+                    },
+                    {
+                        "id": "so_01JV4RA9FFC3203JWJN0RAB53J"
+                    }
+                ]
+            }'
+
+
+
+        */
+          shipping_option: shippingOptions.shippingOptions!.first.id,
+          token: box.read('login_jwt'),
+          cart_id: box.read('cart_id'));
+
+      final paymentProviders = await _checkoutApiService.paymentProviders(
+          token: box.read('login_jwt'), region_id: box.read('region_id'));
+
+      PaymentCollection paymentCollections =
+          await _checkoutApiService.paymentCollections(
+              token: box.read('login_jwt'), cart_id: box.read('cart_id'));
+
+      final paymentSessions = await _checkoutApiService.paymentSessions(
+          token: box.read('login_jwt'),
+          pay_col: paymentCollections.paymentCollection!.id,
+          provider_id: paymentProviders.paymentProviders![0].id);
+
+      // final completeVendor = await _checkoutApiService.completeVendor(
+      //     token: box.read('login_jwt'), cart_id: box.read('cart_id'));
+
+      final orderId =
+          paymentSessions.paymentCollection!.paymentSessions![0].data!.id ??
+              "0";
+
+      // final placeOrder = await _checkoutApiService.placeOrder(
+      //     token: box.read('login_jwt'), order_id: orderId);
+
+      // emit(CartSuccess(cartData: CartModel()));
+      emit(LetsTryState(
+        order_id: orderId,
+        total_price:
+            paymentSessions.paymentCollection!.paymentSessions![0].amount ?? 0,
+      ) //completeVendor.orderSet.orders[0].items[0].total)
+          );
+    } catch (e) {
+      emit(CartError(error: e.toString()));
+    }
+  }
+
+  FutureOr<void> _placeOrder(
+    PlaceOrder event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    emit(const CartLoading(message: "Proceed to cart"));
+    try {
+      // final placeOrder = await _checkoutApiService.placeOrder(
+      //     cart_id: box.read('cart_id'),
+      //     token: box.read('login_jwt'),
+      //     order_id: event.order_id);
+      final completeVendor = await _checkoutApiService.completeVendor(
+          token: box.read('login_jwt'), cart_id: box.read('cart_id'));
+      await _productService
+          .createCart(
+              token: box.read('login_jwt'), regionId: box.read('region_id'))
+          .then((cartData) {
+        box.write('cart_id', cartData.cart.id);
+      });
+      emit(PaymentSuccess(completeVendor: completeVendor));
+    } catch (e) {
+      emit(CartError(error: e.toString()));
+    }
+  }
+
+  FutureOr<void> _deleteItem(
+      DeleteItemReq event, Emitter<B2BStoreState> emit) async {
+    emit(const CartLoading(message: "Proceed to cart"));
+    try {
+      await _cartService.deleteItem(
+          itemId: event.itemId,
+          token: box.read('login_jwt'),
+          cartId: box.read('cart_id'));
+      // logger.w(response);
+      CartModel response = await _cartService.getAllCartData(
+          token: box.read('login_jwt'), cartId: box.read('cart_id'));
+
+      emit(CartSuccess(cartData: response));
+    } catch (e) {
+      logger.e("Error in delete Item Bloc: $e");
+      emit(CartError(error: e.toString()));
+    }
+  }
+
+  FutureOr<void> _getOrderDetails(
+    OrderDetailsEvent event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    emit(OrderDetailsLoading(message: 'Loading order details...'));
+    try {
+      OrderDetails _orderDetails = await _orderDetailsService.getOrderDetails(
+          token: box.read('login_jwt'));
+      emit(OrderDetailsSuccess(orderDetailsData: _orderDetails));
+    } catch (e) {
+      debugPrint("Error in getOrderDetails service: $e");
+      emit(OrderDetailsError(error: e.toString()));
     }
   }
 }
@@ -202,10 +384,10 @@ class B2BStoreHomePage {
   ProductCategory productCategory;
   TopBrands topBrands;
   ProductCollections productCollections;
-
-  B2BStoreHomePage({
-    required this.productCategory,
-    required this.topBrands,
-    required this.productCollections,
-  });
+  CartModel cartData;
+  B2BStoreHomePage(
+      {required this.productCategory,
+      required this.topBrands,
+      required this.productCollections,
+      required this.cartData});
 }

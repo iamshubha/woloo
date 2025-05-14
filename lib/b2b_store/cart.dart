@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
@@ -11,6 +12,8 @@ import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
+import 'package:woloo_smart_hygiene/widgets/cart_bottomsheet.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -21,6 +24,7 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   // final
+  Razorpay razorpay = Razorpay();
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   bool _isDataLoaded = false;
   CartModel? cartModel;
@@ -32,87 +36,127 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomSheet: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-        decoration: const BoxDecoration(color: Colors.white),
-        child: LongLabeledButton(
-          onTap: () {},
-          label: "Checkout",
-        ),
-      ),
-      appBar: const BackAppBar(),
-      body: BlocConsumer(
-          bloc: _b2bStoreBloc,
-          listener: (context, state) {
-            // print("dssa $state");
-            if (state is CartLoading) {
-              EasyLoading.show(status: state.message);
-            }
-            if (state is CartSuccess) {
-              EasyLoading.dismiss();
-              setState(() {
-                print(state.cartData.cart);
-                // _addressesData = state.addressesData;
-                // _b2bStoreHomePage = state.dashboardData;
-                cartModel = state.cartData;
-                _isDataLoaded = true;
-                // _dashboardData = state.dashboardData;
-              });
-            }
+    return BlocConsumer(
+        bloc: _b2bStoreBloc,
+        listener: (context, state) {
+          // print("dssa $state");
+          if (state is CartLoading) {
+            EasyLoading.show(status: state.message);
+          }
+          if (state is CartSuccess) {
+            EasyLoading.dismiss();
+            setState(() {
+              print(state.cartData.cart);
+              // _addressesData = state.addressesData;
+              // _b2bStoreHomePage = state.dashboardData;
+              cartModel = state.cartData;
+              _isDataLoaded = true;
+              // _dashboardData = state.dashboardData;
+            });
+          }
+          if (state is CartError) {
+            EasyLoading.dismiss();
+            EasyLoading.showError(state.error);
+          }
+        },
+        builder: (context, snapshot) {
+          return Scaffold(
+              bottomSheet: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                decoration: const BoxDecoration(color: Colors.white),
+                child: LongLabeledButton(
+                  onTap: () {
+                    // _b2bStoreBloc.add();
+                    showCartBottomSheet(context);
+                  },
+                  label: "Checkout",
+                ),
+              ),
+              appBar: const BackAppBar(),
+              body: !_isDataLoaded
+                  ? Container()
+                  : SingleChildScrollView(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 16.w, vertical: 20.h),
+                      child: Column(
+                        spacing: 16.h,
+                        children: [
+                          CartHeader(
+                            imgPath: AppImages.cart,
+                            title: "Cart",
+                            subtitle: 'Checkout you purchases from here',
+                          ),
+                          ListView.builder(
+                            shrinkWrap:
+                                true, // Ensures ListView takes only the required space
+                            physics:
+                                const NeverScrollableScrollPhysics(), // Prevents nested scrolling
+                            itemCount: cartModel?.cart.items
+                                .length, // Replace with your cart item count
+                            itemBuilder: (context, index) {
+                              final item = cartModel?.cart.items[index];
+                              int count = item?.quantity ?? 0;
 
-            if (state is CartError) {
-              EasyLoading.dismiss();
-              EasyLoading.showError(state.error);
-            }
-          },
-          builder: (context, snapshot) {
-            return !_isDataLoaded
-                ? Container()
-                : SingleChildScrollView(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
-                    child: Column(
-                      spacing: 16.h,
-                      children: [
-                        CartHeader(
-                          imgPath: AppImages.cart,
-                          title: "Cart",
-                          subtitle: 'Checkout you purchases from here',
-                        ),
-                        ListView.builder(
-                          shrinkWrap:
-                              true, // Ensures ListView takes only the required space
-                          physics:
-                              const NeverScrollableScrollPhysics(), // Prevents nested scrolling
-                          itemCount: cartModel?.cart?.items
-                              .length, // Replace with your cart item count
-                          itemBuilder: (context, index) {
-                            final item = cartModel?.cart?.items[index];
-                            return Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8.h),
-                              child: CartItemCard(
-                                item: item,
-                              ),
-                            );
-                          },
-                        ),
-                        const Divider(),
-                        const ApplyPromo(),
-                        const Divider(),
-                        PricingCalculate(
-                          total: cartModel?.cart?.total,
-                          subTotal: cartModel?.cart?.subtotal,
-                          discount: cartModel?.cart?.discountTotal,
-                          itemTotal: cartModel?.cart?.itemTotal,
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        )
-                      ],
-                    ),
-                  );
-          }),
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.h),
+                                child: CartItemCard(
+                                  onDelete: () {
+                                    _b2bStoreBloc.add(
+                                        DeleteItemReq(itemId: item?.id ?? ""));
+                                  },
+                                  item: item,
+                                  onAdd: () {
+                                    count++;
+                                    _b2bStoreBloc.add(AddRemoveItemReq(
+                                        count: count, itemId: item?.id ?? ""));
+                                  },
+                                  onRemove: () {
+                                    count--;
+                                    // logger.w("Count: $count");
+                                    if (count > 0) {
+                                      _b2bStoreBloc.add(AddRemoveItemReq(
+                                          count: count,
+                                          itemId: item?.id ?? ""));
+                                    } else {
+                                      logger.w("$count delete");
+                                      _b2bStoreBloc.add(DeleteItemReq(
+                                          itemId: item?.id ?? ""));
+                                    }
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                          const Divider(),
+                          const ApplyPromo(),
+                          const Divider(),
+                          PricingCalculate(
+                            total: cartModel?.cart.total,
+                            subTotal: cartModel?.cart.subtotal,
+                            discount: cartModel?.cart.discountTotal,
+                            itemTotal: cartModel?.cart.itemTotal,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          )
+                        ],
+                      ),
+                    ));
+        });
+  }
+
+  Future<dynamic> showCartBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      isScrollControlled: true,
+      isDismissible: true, // <-- Allow tap outside to dismiss
+      enableDrag: true, // <-- Allow swipe down to dismiss
+
+      backgroundColor: Colors
+          .transparent, // Optional: if you want rounded corners to show correctly
+
+      context: context,
+      builder: (_) => const CartBottomSheet(), //AddressBottomSheet
     );
   }
 }
@@ -156,7 +200,7 @@ class PricingCalculate extends StatelessWidget {
     this.subTotal,
     this.discount,
     this.itemTotal,
-     this.isHeader = false,
+    this.isHeader = false,
   });
   final int? total;
   final int? subTotal;
@@ -165,16 +209,12 @@ class PricingCalculate extends StatelessWidget {
 
   final bool isHeader;
 
-
   @override
   Widget build(BuildContext context) {
     return XDecoratedBox(
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
-       
-
         if (isHeader) ...[
           Text(
             "Order Summary",
@@ -184,7 +224,7 @@ class PricingCalculate extends StatelessWidget {
             height: 10,
           ),
         ],
-         ItemNamePrice(
+        ItemNamePrice(
           item: "Item Total",
           price: "Rs. $itemTotal",
         ),
@@ -245,9 +285,11 @@ class XDecoratedBox extends StatelessWidget {
     super.key,
     required this.child,
     this.padding = 12,
+    this.radius = 16,
   });
   final Widget child;
   final double padding;
+  final double radius;
 
   @override
   Widget build(BuildContext context) {
@@ -255,7 +297,7 @@ class XDecoratedBox extends StatelessWidget {
       padding: EdgeInsets.all(padding.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(radius.r),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.1),
@@ -378,13 +420,19 @@ class CyanTextButton extends StatelessWidget {
 }
 
 class CartItemCard extends StatelessWidget {
-
-
   final Item? item;
   final bool isSelected;
+  final VoidCallback? onAdd;
+  final VoidCallback? onRemove;
+  final VoidCallback onDelete;
 
-  const CartItemCard({super.key,this.item, this.isSelected = true});
-
+  const CartItemCard(
+      {super.key,
+      this.item,
+      this.isSelected = true,
+      this.onAdd,
+      this.onRemove,
+      required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -425,18 +473,19 @@ class CartItemCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      item?.productTitle ?? "",
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold,
+                    Flexible(
+                      child: Text(
+                        item?.productTitle ?? "",
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     if (isSelected)
                       GestureDetector(
-                        onTap: () {
-                          // Handle delete action
-                        },
+                        onTap: onDelete,
                         child: SizedBox(
                           height: 20,
                           width: 20,
@@ -465,7 +514,12 @@ class CartItemCard extends StatelessWidget {
                         color: Colors.black,
                       ),
                     ),
-                    if (isSelected) const CartAddRemove()
+                    if (isSelected)
+                      CartAddRemove(
+                        onAdd: onAdd,
+                        onRemove: onRemove,
+                        value: item?.quantity ?? 0,
+                      )
                   ],
                 ),
               ],

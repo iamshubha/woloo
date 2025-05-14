@@ -3,18 +3,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
+import 'package:woloo_smart_hygiene/enums/product_mode.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/widgets/address_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
+import 'package:woloo_smart_hygiene/widgets/get_date_time_bottomsheet.dart';
 
 class AddressChangeBottomSheet extends StatefulWidget {
   const AddressChangeBottomSheet({
     super.key,
+    this.productMode = ProductMode.productDetails,
   });
+  final ProductMode productMode;
 
   @override
   State<AddressChangeBottomSheet> createState() =>
@@ -26,6 +32,8 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
   bool _isDataLoaded = false;
   AddressesData _addressesData = AddressesData();
   Map<String, bool> map = {};
+  SharedPreferences? prefs;
+  Addresses? selectedAddress;
 
   @override
   void initState() {
@@ -35,7 +43,6 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-
     return BlocConsumer(
         bloc: _b2bStoreBloc,
         listener: (context, state) {
@@ -64,58 +71,19 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
           return !_isDataLoaded
               ? Container()
               : Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(40.r))),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        spacing: 10.h,
-        children: [
-          const XBottmSheetTopDecor(),
-          const SizedBox(
-            height: 20,
-          ),
-          Row(
-            spacing: 10.w,
-            children: [
-              SizedBox(
-                height: 30,
-                width: 30,
-                child: Image.asset(AppImages.addresses),
-              ),
-              Column(
-                // spacing: 10.h,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    "Addresses",
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
-                  ),
-                  Text(
-                    "Select or edit your addresses",
-                    style: TextStyle(fontSize: 12.sp),
-                  ),
-                ],
-              )
-            ],
-          ),
-          SizedBox(
-            height: 250,
-            child: ListView.builder(
-                itemCount: 3,
-                itemBuilder: (c, i) {
-                  return Card(
-                    child: Container(
-                      height: 80,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(40.r))),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: 10.h,
+                    children: [
+                      const XBottmSheetTopDecor(),
+                      const SizedBox(
+                        height: 20,
                       ),
                       Row(
                         spacing: 10.w,
@@ -167,6 +135,7 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                                         onTap: () {
                                           setState(() {
                                             onChange(address.id ?? "");
+                                            selectedAddress = address;
                                           });
                                         },
                                       ),
@@ -230,9 +199,39 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                       LongLabeledButton(
                         label: "Select Address",
                         onTap: () {
-                          var box = GetStorage();
-                          var jwt = box.read('login_jwt');
-                          print(jwt);
+                          switch (widget.productMode) {
+                            case ProductMode.productDetails:
+                              {
+                                final box = GetStorage();
+                                var jwt = box.read('login_jwt');
+                                logger.w(jwt);
+                                box.write(
+                                    'address', selectedAddress?.toString());
+                                Navigator.pop(context);
+                              }
+
+                              break;
+                            case ProductMode.serviceDetails:
+                              {
+                                Navigator.pop(context);
+                                showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    isDismissible:
+                                        true, // <-- Allow tap outside to dismiss
+                                    enableDrag:
+                                        true, // <-- Allow swipe down to dismiss
+
+                                    backgroundColor: Colors
+                                        .transparent, // Optional: if you want rounded corners to show correctly
+
+                                    context: context,
+                                    builder: (context) {
+                                      return const GetTimeScheduleBottomSheet();
+                                    });
+                              }
+
+                              break;
+                          }
                         },
                       ),
                       LongLabeledButton(

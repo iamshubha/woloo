@@ -1,19 +1,5 @@
 import 'dart:io';
 
-import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
-import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
-import 'package:woloo_smart_hygiene/core/bloc/core_bloc.dart';
-import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
-import 'package:woloo_smart_hygiene/janitorial_services/screens/home_screen.dart';
-import 'package:woloo_smart_hygiene/janitorial_services/screens/monitor-iot.dart';
-import 'package:woloo_smart_hygiene/janitorial_services/screens/host_dashboard_screen.dart';
-import 'package:woloo_smart_hygiene/messaging.dart';
-// import 'package:woloo_smart_hygiene/screens/login/view/login_screen.dart';
-import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/view/supervisor_dashboard_screen.dart';
-import 'package:woloo_smart_hygiene/utils/app_color.dart';
-import 'package:woloo_smart_hygiene/utils/app_constants.dart';
-import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:dio_log/dio_log.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -21,16 +7,23 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import '../../../client_flow/screens/dashbaord/bloc/dashboard_bloc.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
+
+import 'package:woloo_smart_hygiene/core/bloc/core_bloc.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+
+import 'package:woloo_smart_hygiene/messaging.dart';
+// import 'package:woloo_smart_hygiene/screens/login/view/login_screen.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/view/supervisor_dashboard_screen.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
+import 'package:woloo_smart_hygiene/utils/app_images.dart';
+
 // import '../../../client_flow/screens/dashbaord/bloc/dashboard_event.dart';
 import '../../../client_flow/screens/dashbaord/view/dashboard.dart';
 import '../../../client_flow/screens/dashbaord/view/home.dart';
-import '../../../client_flow/screens/dashbaord/view/onboarding_screen.dart';
 import '../../../client_flow/screens/login/bloc/signup_bloc.dart';
-import '../../../client_flow/screens/login/view/choose_service.dart';
-import '../../../client_flow/screens/login/view/login.dart';
-import '../../../client_flow/screens/login/view/login_as.dart';
-import '../../../client_flow/screens/login/view/term_screen.dart';
 import '../../common_widgets/image_provider.dart';
 import '../../dashboard/view/regular_task.dart';
 
@@ -66,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
     coreBloc.add(CheckUserIsLoggedInOrNot());
   }
 
-  apiCall() {}
+  // apiCall() {}
 
   // void setToken(String? token) {
   //   print('FCM Token: $token');
@@ -153,9 +146,8 @@ class _SplashScreenState extends State<SplashScreen> {
           } catch (e) {
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(
-                builder: (context) => const EcomScreen(),
-              ),
+              MaterialPageRoute(builder: (context) => EcomScreen() //LoginAs(),
+                  ),
               (route) => false,
             );
           }

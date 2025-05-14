@@ -1,14 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timelines_plus/timelines_plus.dart';
+import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
+import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
+import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
 
-class OrderScreen extends StatelessWidget {
+class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
+
+  @override
+  State<OrderScreen> createState() => _OrderScreenState();
+}
+
+class _OrderScreenState extends State<OrderScreen> {
+  final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
+  OrderDetails? orderDetailsData;
+  @override
+  void initState() {
+    _b2bStoreBloc.add(OrderDetailsEvent());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,27 +37,47 @@ class OrderScreen extends StatelessWidget {
       "Order Shipped",
       "Order Delevered"
     ];
-    return Scaffold(
-      appBar: const BackAppBar(),
-      bottomNavigationBar: const XBottomBar(),
-      body: Padding(
-        // padding: const EdgeInsets.all(8.0),
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
-        child: Column(
-          spacing: 16.h,
-          children: [
-            CartHeader(
-                imgPath: AppImages.list,
-                title: "Order Details ",
-                subtitle: "Check or modify the details of your order here"),
-            OrderStatusCard(
-              timeLineList: timeLineList,
+    return BlocConsumer<B2bStoreBloc, B2BStoreState>(
+        bloc: _b2bStoreBloc,
+        listener: (context, state) {
+          if (state is OrderDetailsLoading) {
+            EasyLoading.show(status: state.message);
+          }
+          if (state is OrderDetailsSuccess) {
+            setState(() {
+              orderDetailsData = state.orderDetailsData;
+              print(state.orderDetailsData);
+            });
+            EasyLoading.dismiss();
+          }
+          if (state is OrderDetailsError) {
+            EasyLoading.dismiss();
+            EasyLoading.showError(state.error);
+          }
+        },
+        builder: (context, snapshot) {
+          return Scaffold(
+            appBar: const BackAppBar(),
+            bottomNavigationBar: const XBottomBar(),
+            body: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+              child: Column(
+                spacing: 16.h,
+                children: [
+                  CartHeader(
+                      imgPath: AppImages.list,
+                      title: "Order Details ",
+                      subtitle:
+                          "Check or modify the details of your order here"),
+                  OrderStatusCard(
+                    timeLineList: timeLineList,
+                  ),
+                  // const Spacer()
+                ],
+              ),
             ),
-            // const Spacer()
-          ],
-        ),
-      ),
-    );
+          );
+        });
   }
 }
 

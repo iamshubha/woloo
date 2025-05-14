@@ -36,8 +36,8 @@ class Regions {
   String? currencyCode;
   String? createdAt;
   String? updatedAt;
-  Null? deletedAt;
-  Null? metadata;
+  dynamic? deletedAt;
+  dynamic? metadata;
   List<Countries>? countries;
 
   Regions(
@@ -89,10 +89,10 @@ class Countries {
   String? name;
   String? displayName;
   String? regionId;
-  Null? metadata;
+  dynamic? metadata;
   String? createdAt;
   String? updatedAt;
-  Null? deletedAt;
+  dynamic? deletedAt;
 
   Countries(
       {this.iso2,
