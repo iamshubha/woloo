@@ -86,4 +86,28 @@ class CartApiService {
       rethrow;
     }
   }
+
+  Future<CartModel> deleteItem(
+      {required String cartId,
+      required String itemId,
+      required String token}) async {
+    try {
+      final res = await dio.delete(
+          APIConstants.ADD_TO_CART +
+              cartId +
+              APIConstants.Add_Remove_Item +
+              itemId,
+          options: Options(headers: {
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          }));
+
+      return CartModel.fromJson(res);
+    } catch (e) {
+      logger.e("Error in delete item service: $e");
+      rethrow;
+    }
+  }
 }

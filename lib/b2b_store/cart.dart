@@ -12,6 +12,7 @@ import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/cart_bottomsheet.dart';
 
 class CartScreen extends StatefulWidget {
@@ -109,8 +110,16 @@ class _CartScreenState extends State<CartScreen> {
                                   },
                                   onRemove: () {
                                     count--;
-                                    _b2bStoreBloc.add(AddRemoveItemReq(
-                                        count: count, itemId: item?.id ?? ""));
+                                    logger.w("Count: $count");
+                                    if (count > 1) {
+                                      _b2bStoreBloc.add(AddRemoveItemReq(
+                                          count: count,
+                                          itemId: item?.id ?? ""));
+                                    } else {
+                                      logger.w("$count delete");
+                                      _b2bStoreBloc.add(DeleteItemReq(
+                                          itemId: item?.id ?? ""));
+                                    }
                                   },
                                 ),
                               );

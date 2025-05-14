@@ -43,6 +43,12 @@ class AddRemoveItemReq extends B2BStoreEvent {
   @override
   List<Object?> get props => [itemId, count];
 }
+class DeleteItemReq extends B2BStoreEvent {
+  final String itemId;
+  const DeleteItemReq({required this.itemId});
+  @override
+  List<Object?> get props => [itemId];
+}
 
 class GetIot extends B2BStoreEvent {
   final String deviceId;

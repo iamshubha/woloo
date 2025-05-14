@@ -48,6 +48,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<Payment>(_proceedToCheckOut);
     on<AddRemoveItemReq>(_addRemoveItems);
     on<PlaceOrder>(_placeOrder);
+    on<DeleteItemReq>(_deleteItem);
   }
   _getSelectedAddress() {
     // final addressData = box.read("address");
@@ -192,7 +193,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       emit(CartSuccess(cartData: response));
     } catch (e) {
       emit(CartError(error: e.toString()));
-      debugPrint("Error in IOT service: $e");
+      debugPrint("Error in GetCart service: $e");
     }
   }
 
@@ -229,12 +230,12 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       );
 
       debugPrint("requestId $response");
-      print(response);
+      print("Response Id: $response");
 
       emit(AddToCartSuccess(cartData: response));
     } catch (e) {
       emit(B2BStoreError(error: e.toString()));
-      debugPrint("Error in IOT service: $e");
+      debugPrint("Error in ATC service: $e");
     }
   }
 
@@ -333,6 +334,22 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       emit(PaymentSuccess(completeVendor: completeVendor));
     } catch (e) {
       emit(CartError(error: e.toString()));
+    }
+  }
+
+  FutureOr<void> _deleteItem(
+      DeleteItemReq event, Emitter<B2BStoreState> emit) async {
+    emit(const CartLoading(message: "Proceed to cart"));
+    try {
+      CartModel response = await _cartService.deleteItem(
+          itemId: event.itemId,
+          token: box.read('login_jwt'),
+          cartId: box.read('cart_id'));
+      logger.w(response);
+      emit(CartSuccess(cartData: response));
+    } catch (e) {
+      logger.e("Error in dete Item Bloc: $e");
+      rethrow;
     }
   }
 }
