@@ -5,6 +5,7 @@ import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/model/host_dashboard_screen.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/model/iotdata_model.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/model/referral_coins.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 
 class IotService {
   final DioClient dio;
@@ -30,7 +31,7 @@ class IotService {
           },
         ),
       );
-
+      logger.w(response);
       return DashboardData.fromJson(response);
     } catch (e) {
       debugPrint("Error in IOT service: $e");

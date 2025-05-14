@@ -67,13 +67,13 @@ class AddAddressResBody {
 class Customer {
   String? id;
   String? email;
-  Null companyName;
+  dynamic companyName;
   String? firstName;
   String? lastName;
-  Null phone;
-  Null metadata;
+  dynamic phone;
+  dynamic metadata;
   bool? hasAccount;
-  Null deletedAt;
+  dynamic deletedAt;
   String? createdAt;
   String? updatedAt;
   List<Addresses>? addresses;

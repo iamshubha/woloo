@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/order.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/model/host_dashboard_screen.dart';
 
 abstract class B2BStoreState extends Equatable {
@@ -115,7 +116,20 @@ class AddressSet extends B2BStoreState {
 }
 
 class PaymentSuccess extends B2BStoreState {
-  const PaymentSuccess();
+  final CompleteVendor completeVendor;
+  PaymentSuccess({required this.completeVendor});
+
   @override
   List<Object> get props => [];
+}
+
+class LetsTryState extends B2BStoreState {
+  final String order_id;
+  final int total_price;
+  const LetsTryState({
+    required this.order_id,
+    required this.total_price,
+  });
+  @override
+  List<Object> get props => [order_id];
 }

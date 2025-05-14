@@ -21,16 +21,16 @@ class StoreCustomersRes {
 class Customer {
   String? id;
   String? email;
-  Null? companyName;
-  Null? firstName;
-  Null? lastName;
-  Null? phone;
-  Null? metadata;
+  dynamic? companyName;
+  dynamic? firstName;
+  dynamic? lastName;
+  dynamic? phone;
+  dynamic? metadata;
   bool? hasAccount;
-  Null? deletedAt;
+  dynamic? deletedAt;
   String? createdAt;
   String? updatedAt;
-  List<Null>? addresses;
+  List<dynamic>? addresses;
 
   Customer(
       {this.id,
@@ -59,9 +59,9 @@ class Customer {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     // if (json['addresses'] != null) {
-    //   addresses = <Null>[];
+    //   addresses = <dynamic>[];
     //   json['addresses'].forEach((v) {
-    //     addresses!.add(new Null.fromJson(v));
+    //     addresses!.add(new dynamic.fromJson(v));
     //   });
     // }
   }

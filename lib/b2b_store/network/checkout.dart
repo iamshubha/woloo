@@ -5,6 +5,8 @@ import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/delhivery_check.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/order.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/payment_provider.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/payment_provider.dart'
+    as payment_provider;
 import 'package:woloo_smart_hygiene/b2b_store/models/promotion.dart';
 import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
 import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
@@ -103,7 +105,7 @@ class CheckoutApiService {
           "https://staging-store.woloo.in/store/carts/$cart_id/shipping-methods",
           options: getHeaders(token),
           data: {"option_id": shipping_option});
-
+      logger.w(response);
       return AddToCartResponse.fromJson(response);
     } catch (e) {
       logger.w(e);
@@ -131,7 +133,7 @@ class CheckoutApiService {
     }
   }
 
-  Future<PaymentCollection> paymentCollections({
+  Future<payment_provider.PaymentCollection> paymentCollections({
     required String token,
     required String cart_id,
   }) async {
@@ -141,7 +143,7 @@ class CheckoutApiService {
           options: getHeaders(token),
           data: {"cart_id": cart_id});
 
-      return PaymentCollection.fromMap(response);
+      return payment_provider.PaymentCollection.fromMap(response);
     } catch (e) {
       logger.w(e);
       debugPrint("Error in shippingOptionsCalculate api call: $e");
@@ -149,7 +151,7 @@ class CheckoutApiService {
     }
   }
 
-  Future<PaymentCollection> paymentSessions({
+  Future<payment_provider.PaymentCollection> paymentSessions({
     required String token,
     required String? pay_col,
     required String? provider_id,
@@ -160,7 +162,7 @@ class CheckoutApiService {
           options: getHeaders(token),
           data: {"provider_id": "pp_razorpay_razorpay"});
 
-      return PaymentCollection.fromMap(response);
+      return payment_provider.PaymentCollection.fromMap(response);
     } catch (e) {
       logger.w(e);
       debugPrint("Error in shippingOptionsCalculate api call: $e");
@@ -174,11 +176,11 @@ class CheckoutApiService {
   }) async {
     try {
       final response = await dio.post(
-        "https://staging-store.woloo.in/store/carts/cart_01JTQVACY3V5FY8NBBZY3ZZ06C/complete-vendor",
+        "https://staging-store.woloo.in/store/carts/$cart_id/split-and-complete-cart",
         options: getHeaders(token),
       );
-
-      return CompleteVendor.fromMap(response);
+      logger.w(response);
+      return CompleteVendor.fromJson(response);
     } catch (e) {
       logger.w(e);
       debugPrint("Error in shippingOptionsCalculate api call: $e");
@@ -189,14 +191,15 @@ class CheckoutApiService {
   Future<CompleteVendor> placeOrder({
     required String token,
     required String? order_id,
+    required String? cart_id,
   }) async {
     try {
-      final response = await dio.get(
-        "https://staging-store.woloo.in/store/orders/$order_id",
+      final response = await dio.post(
+        "https://staging-store.woloo.in/store/carts/$cart_id/complete",
         options: getHeaders(token),
       );
-
-      return CompleteVendor.fromMap(response);
+      logger.w(response);
+      return CompleteVendor.fromJson(response);
     } catch (e) {
       logger.w(e);
       debugPrint("Error in shippingOptionsCalculate api call: $e");

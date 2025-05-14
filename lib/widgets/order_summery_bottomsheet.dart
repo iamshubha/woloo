@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
@@ -12,10 +14,19 @@ import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
+import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/bloc/dashboard_event.dart';
+import 'package:woloo_smart_hygiene/client_flow/utils/client_images.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/screens/host_dashboard_screen.dart';
+import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/cart_bottomsheet.dart';
+import 'package:woloo_smart_hygiene/widgets/dialogs.dart/order_successful.dart';
+
+import '../client_flow/widgets/CustomButton.dart';
 
 class OrderSummeryBottomSheet extends StatefulWidget {
   const OrderSummeryBottomSheet({
@@ -28,12 +39,16 @@ class OrderSummeryBottomSheet extends StatefulWidget {
 }
 
 class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
+  GlobalStorage globalStorage = GetIt.instance();
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   bool _isDataLoaded = false;
   CartModel? cartModel;
   Addresses? address;
   final box = GetStorage();
+  String order_id = "";
+  // Razorpay razorpay = Razorpay();
 
+  late Razorpay razorpay;
   @override
   void dispose() {
     // TODO: implement dispose
@@ -43,6 +58,7 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
   @override
   void initState() {
     super.initState();
+    razorpay = Razorpay();
     _b2bStoreBloc.add(const GetCartData());
     address = getAddress();
   }
@@ -76,6 +92,31 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
           Navigator.pop(context);
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => const EcomScreen()));
+        }
+        if (state is LetsTryState) {
+          setState(() {
+            order_id = state.order_id;
+          });
+          EasyLoading.dismiss();
+          final v = {
+            "key": "rzp_test_ZIlhyKgx2C38vT",
+            "amount": state.total_price * 100,
+            "name": "Woloo",
+            "description": "Premium Plan",
+            "retry": {"enabled": true, "max_count": 1},
+            "send_sms_hash": true,
+            "order_id": state.order_id,
+            "prefill": {"contact": "8097473483", "email": "test@razorpay.com"},
+            "external": {
+              "wallets": ["paytm"]
+            }
+          };
+          razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentErrorResponse);
+          razorpay.on(
+              Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccessResponse);
+          razorpay.on(
+              Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWalletSelected);
+          razorpay.open(v);
         }
       },
       builder: (context, state) {
@@ -169,11 +210,175 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
                       LongLabeledButton(
                         label: "Pay via [payment method]",
                         onTap: () {
+                          // final v = {
+                          //   "key": "rzp_test_ZIlhyKgx2C38vT",
+                          //   "amount": 58900,
+                          //   "name": "Woloo",
+                          //   "description": "Premium Plan",
+                          //   "retry": {"enabled": true, "max_count": 1},
+                          //   "send_sms_hash": true,
+                          //   "order_id": "order_QUiITAh35chkgQ",
+                          //   "prefill": {
+                          //     "contact": "8097473483",
+                          //     "email": "test@razorpay.com"
+                          //   },
+                          //   "external": {
+                          //     "wallets": ["paytm"]
+                          //   }
+                          // };
+
+                          // razorpay.on(Razorpay.EVENT_PAYMENT_ERROR,
+                          //     handlePaymentErrorResponse);
+                          // razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
+                          //     handlePaymentSuccessResponse);
+                          // razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET,
+                          //     handleExternalWalletSelected);
+                          // razorpay.open(v);
                           _b2bStoreBloc.add(Payment());
+                          // try {
+                          // _b2bStoreBloc.add(Payment(razorpay: razorpay));
+                          // } catch (e) {}
                         },
                       )
                     ]),
               );
+      },
+    );
+  }
+
+  Map<String, Object> getPaymentOptions(
+      {required String amountValue, orderId, mobileNumberValue}) {
+    String merchantKeyValue = "rzp_test_ZIlhyKgx2C38vT";
+    return {
+      'key': merchantKeyValue,
+      'amount': int.parse(amountValue),
+      'name': 'Woloo',
+      'description': 'Premium Plan',
+      'retry': {'enabled': true, 'max_count': 1},
+      'send_sms_hash': true,
+      'order_id': 'cart_01JV50CYN7X1W3KX62X4G44GQE',
+      'prefill': {'contact': mobileNumberValue, 'email': 'test@razorpay.com'},
+      'external': {
+        'wallets': ['paytm']
+      }
+    };
+  }
+
+  void handlePaymentErrorResponse(PaymentFailureResponse response) {
+    /** PaymentFailureResponse contains three values:
+    * 1. Error Code
+    * 2. Error Description
+    * 3. Metadata
+    **/
+    showDialog(
+      // barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(60),
+          ),
+
+          backgroundColor: AppColors.white,
+          // title:  Center(
+          //   child: Text("Your Free Subscription has expired",
+          //    style: AppTextStyle.font20bold,
+          //    textAlign: TextAlign.center,
+          //   ),
+          // ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                CustomImageProvider(
+                  image: ClientImages.warning,
+                  width: 86.w,
+                  height: 86.h,
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                Text(
+                  textAlign: TextAlign.center,
+                  "Oops! Your payment has not gone through",
+                  style: AppTextStyle.font18bold,
+                ),
+                SizedBox(
+                  height: 20.h,
+                ),
+                // const Custombutton(
+                //   width: 300,
+                //   text: "Pay Now",
+                // )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    // showAlertDialog(context, "Payment Failed", "Code: ${response.code}\nDescription: ${response.message}\nMetadata:${response.error.toString()}");
+  }
+
+  //TODO:implement on success
+  void handlePaymentSuccessResponse(PaymentSuccessResponse response) {
+    /** Payment Success Response contains three values:
+    * 1. Order ID
+    * 2. Payment ID
+    * 3. Signature
+    **/
+    globalStorage.getClientId();
+    String clintId = globalStorage.getClientId();
+    _b2bStoreBloc.add(PlaceOrder(order_id: order_id));
+    // _b2bStoreBloc.add(SubcriptionEvent(id: int.parse(clintId)));
+    // if (widget.isfromFacility!) {
+    //   print("is from facility");
+    //   globalStorage.savePaymentId(accessPayemntId: response.paymentId!);
+    // }
+
+    showDialog(
+      // barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+
+          backgroundColor: AppColors.white,
+          // title:  Center(
+          //   child: Text("Your Free Subscription has expired",
+          //    style: AppTextStyle.font20bold,
+          //    textAlign: TextAlign.center,
+          //   ),
+          // ),
+          content: OrderSuccessfulDialog(),
+        );
+      },
+    );
+
+    // showAlertDialog(context, "Payment Successful", "Payment ID: ${response.paymentId}");
+  }
+
+  void handleExternalWalletSelected(ExternalWalletResponse response) {
+    showAlertDialog(
+        context, "External Wallet Selected", "${response.walletName}");
+  }
+
+  void showAlertDialog(BuildContext context, String title, String message) {
+    // set up the buttons
+    Widget continueButton = ElevatedButton(
+      child: const Text("Continue"),
+      onPressed: () {},
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(title),
+      content: Text(message),
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
       },
     );
   }

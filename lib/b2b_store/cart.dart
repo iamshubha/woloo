@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
@@ -22,6 +23,7 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   // final
+  Razorpay razorpay = Razorpay();
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   bool _isDataLoaded = false;
   CartModel? cartModel;
@@ -98,6 +100,7 @@ class _CartScreenState extends State<CartScreen> {
                               return Padding(
                                 padding: EdgeInsets.symmetric(vertical: 8.h),
                                 child: CartItemCard(
+                                  //TODO: add remove functionality add
                                   item: item,
                                   onAdd: () {
                                     count++;

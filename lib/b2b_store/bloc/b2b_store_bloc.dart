@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/login_flow.dart';
@@ -14,6 +15,8 @@ import 'package:woloo_smart_hygiene/b2b_store/network/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/checkout.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/login_reg_flow.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/product.dart';
+import 'package:woloo_smart_hygiene/b2b_store/order_details.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 
 import '../models/payment_provider.dart';
@@ -44,6 +47,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<AddToCart>(_addToCart);
     on<Payment>(_proceedToCheckOut);
     on<AddRemoveItemReq>(_addRemoveItems);
+    on<PlaceOrder>(_placeOrder);
   }
   _getSelectedAddress() {
     // final addressData = box.read("address");
@@ -97,7 +101,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       // Get region
       final regionResponse = await _productService.getRegion(token: loginToken);
       box.write('region_id', regionResponse.regions![0].id);
-      //? Create cart
+
       // await _productService
       //     .createCart(
       //         token: loginToken,
@@ -245,14 +249,36 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
         token: box.read('login_jwt'),
       );
 
-      final shippingOptionsCalculate =
-          await _checkoutApiService.shippingOptionsCalculate(
-        shipping_option: shippingOptions.shippingOptions!.first.id,
-        token: box.read('login_jwt'),
-        cart_id: box.read('cart_id'),
-      );
+      // final shippingOptionsCalculate =
+      //     await _checkoutApiService.shippingOptionsCalculate(
+      //   shipping_option: shippingOptions.shippingOptions!.first.id,
+      //   token: box.read('login_jwt'),
+      //   cart_id: box.read('cart_id'),
+      // );
 
       final shippingMethods = await _checkoutApiService.shippingMethods(
+          // TODO:
+          /*
+                    
+                    curl --location -g '{{base-url}}/store/carts/{{cart-id}}/add-shipping-methods' \
+            --header 'Content-Type: application/json' \
+            --header 'x-publishable-api-key: {{publishable-api-key}}' \
+            --header 'Authorization: Bearer {{customer-token}}' \
+            --data '// Staging
+            {
+                "options": [
+                    {
+                        "id": "so_01JV4P2DWP2QJD9QCZSDJ0RPJN"
+                    },
+                    {
+                        "id": "so_01JV4RA9FFC3203JWJN0RAB53J"
+                    }
+                ]
+            }'
+
+
+
+        */
           shipping_option: shippingOptions.shippingOptions!.first.id,
           token: box.read('login_jwt'),
           cart_id: box.read('cart_id'));
@@ -269,15 +295,42 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
           pay_col: paymentCollections.paymentCollection!.id,
           provider_id: paymentProviders.paymentProviders![0].id);
 
+      // final completeVendor = await _checkoutApiService.completeVendor(
+      //     token: box.read('login_jwt'), cart_id: box.read('cart_id'));
+
+      final orderId =
+          paymentSessions.paymentCollection!.paymentSessions![0].data!.id ??
+              "0";
+
+      // final placeOrder = await _checkoutApiService.placeOrder(
+      //     token: box.read('login_jwt'), order_id: orderId);
+
+      // emit(CartSuccess(cartData: CartModel()));
+      emit(LetsTryState(
+        order_id: orderId,
+        total_price:
+            paymentSessions.paymentCollection!.paymentSessions![0].amount ?? 0,
+      ) //completeVendor.orderSet.orders[0].items[0].total)
+          );
+    } catch (e) {
+      emit(CartError(error: e.toString()));
+    }
+  }
+
+  FutureOr<void> _placeOrder(
+    PlaceOrder event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    emit(const CartLoading(message: "Proceed to cart"));
+    try {
+      final placeOrder = await _checkoutApiService.placeOrder(
+          cart_id: box.read('cart_id'),
+          token: box.read('login_jwt'),
+          order_id: event.order_id);
       final completeVendor = await _checkoutApiService.completeVendor(
           token: box.read('login_jwt'), cart_id: box.read('cart_id'));
 
-      final orderId = completeVendor.order!.parentOrder!.id;
-      final placeOrder = await _checkoutApiService.placeOrder(
-          token: box.read('login_jwt'), order_id: orderId);
-
-      // emit(CartSuccess(cartData: CartModel()));
-      emit(const PaymentSuccess());
+      emit(PaymentSuccess(completeVendor: completeVendor));
     } catch (e) {
       emit(CartError(error: e.toString()));
     }

@@ -52,7 +52,7 @@ class CartApiService {
           },
         ),
       );
-
+      logger.w(response);
       return CartModel.fromJson(response);
     } catch (e) {
       debugPrint("Error in IOT service: $e");

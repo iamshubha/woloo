@@ -56,4 +56,11 @@ class HygieneServiceBloc
       debugPrint("Error in _getAllHygieneData service: $e");
     }
   }
+
+  // FutureOr<void> _address(
+  //   AddressReq event,
+  //   Emitter<HygieneServiceState> emit,
+  // ) {
+  //   try {} catch (e) {}
+  // }
 }
