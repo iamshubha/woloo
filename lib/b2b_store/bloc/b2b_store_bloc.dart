@@ -7,12 +7,14 @@ import 'package:get_storage/get_storage.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/login_flow.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/checkout.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/login_reg_flow.dart';
+import 'package:woloo_smart_hygiene/b2b_store/network/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/product.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 
@@ -30,6 +32,8 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   final CartApiService _cartService = CartApiService(dio: GetIt.instance());
   final CheckoutApiService _checkoutApiService =
       CheckoutApiService(dio: GetIt.instance());
+  final OrderDetailsService _orderDetailsService =
+      OrderDetailsService(dio: GetIt.instance());
 
   var requestId = '';
   late int roleId;
@@ -46,12 +50,8 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<AddRemoveItemReq>(_addRemoveItems);
     on<PlaceOrder>(_placeOrder);
     on<DeleteItemReq>(_deleteItem);
-  }
-  _getSelectedAddress() {
-    // final addressData = box.read("address");
-    // address = Addresses.fromJson(jsonDecode(addressData));
-    // // setState(() {});
-    // return address;
+
+    on<OrderDetailsEvent>(_getOrderDetails);
   }
 
   FutureOr<void> _emailPassRegister(
@@ -327,13 +327,18 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   ) async {
     emit(const CartLoading(message: "Proceed to cart"));
     try {
-      final placeOrder = await _checkoutApiService.placeOrder(
-          cart_id: box.read('cart_id'),
-          token: box.read('login_jwt'),
-          order_id: event.order_id);
+      // final placeOrder = await _checkoutApiService.placeOrder(
+      //     cart_id: box.read('cart_id'),
+      //     token: box.read('login_jwt'),
+      //     order_id: event.order_id);
       final completeVendor = await _checkoutApiService.completeVendor(
           token: box.read('login_jwt'), cart_id: box.read('cart_id'));
-
+      await _productService
+          .createCart(
+              token: box.read('login_jwt'), regionId: box.read('region_id'))
+          .then((cartData) {
+        box.write('cart_id', cartData.cart.id);
+      });
       emit(PaymentSuccess(completeVendor: completeVendor));
     } catch (e) {
       emit(CartError(error: e.toString()));
@@ -355,7 +360,22 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       emit(CartSuccess(cartData: response));
     } catch (e) {
       logger.e("Error in delete Item Bloc: $e");
-      rethrow;
+      emit(CartError(error: e.toString()));
+    }
+  }
+
+  FutureOr<void> _getOrderDetails(
+    OrderDetailsEvent event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    emit(OrderDetailsLoading(message: 'Loading order details...'));
+    try {
+      OrderDetails _orderDetails = await _orderDetailsService.getOrderDetails(
+          token: box.read('login_jwt'));
+      emit(OrderDetailsSuccess(orderDetailsData: _orderDetails));
+    } catch (e) {
+      debugPrint("Error in getOrderDetails service: $e");
+      emit(OrderDetailsError(error: e.toString()));
     }
   }
 }

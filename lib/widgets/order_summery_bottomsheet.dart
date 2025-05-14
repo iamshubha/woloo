@@ -347,6 +347,7 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
     globalStorage.getClientId();
     String clintId = globalStorage.getClientId();
     _b2bStoreBloc.add(PlaceOrder(order_id: order_id));
+
     // _b2bStoreBloc.add(SubcriptionEvent(id: int.parse(clintId)));
     // if (widget.isfromFacility!) {
     //   print("is from facility");

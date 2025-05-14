@@ -136,3 +136,9 @@ class AddToCart extends B2BStoreEvent {
 }
 
 // class
+
+class OrderDetailsEvent extends B2BStoreEvent {
+  const OrderDetailsEvent();
+  @override
+  List<Object?> get props => [];
+}

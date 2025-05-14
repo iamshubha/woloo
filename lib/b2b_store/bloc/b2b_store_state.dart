@@ -3,6 +3,7 @@ import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/order.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/model/host_dashboard_screen.dart';
 
 abstract class B2BStoreState extends Equatable {
@@ -132,4 +133,27 @@ class LetsTryState extends B2BStoreState {
   });
   @override
   List<Object> get props => [order_id];
+}
+
+class OrderDetailsSuccess extends B2BStoreState {
+  final OrderDetails orderDetailsData;
+  const OrderDetailsSuccess({required this.orderDetailsData});
+  @override
+  List<Object> get props => [orderDetailsData];
+}
+
+class OrderDetailsLoading extends B2BStoreState {
+  final String message;
+  const OrderDetailsLoading({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+class OrderDetailsError extends B2BStoreState {
+  final String error;
+  const OrderDetailsError({required this.error});
+
+  @override
+  List<Object> get props => [error];
 }

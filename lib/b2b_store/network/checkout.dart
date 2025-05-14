@@ -188,24 +188,24 @@ class CheckoutApiService {
     }
   }
 
-  Future<CompleteVendor> placeOrder({
-    required String token,
-    required String? order_id,
-    required String? cart_id,
-  }) async {
-    try {
-      final response = await dio.post(
-        "https://staging-store.woloo.in/store/carts/$cart_id/complete",
-        options: getHeaders(token),
-      );
-      logger.w(response);
-      return CompleteVendor.fromJson(response);
-    } catch (e) {
-      logger.w(e);
-      debugPrint("Error in shippingOptionsCalculate api call: $e");
-      rethrow;
-    }
-  }
+  // Future<CompleteVendor> placeOrder({
+  //   required String token,
+  //   required String? order_id,
+  //   required String? cart_id,
+  // }) async {
+  //   try {
+  //     final response = await dio.post(
+  //       "https://staging-store.woloo.in/store/carts/$cart_id/complete",
+  //       options: getHeaders(token),
+  //     );
+  //     logger.w(response);
+  //     return CompleteVendor.fromJson(response);
+  //   } catch (e) {
+  //     logger.w(e);
+  //     debugPrint("Error in shippingOptionsCalculate api call: $e");
+  //     rethrow;
+  //   }
+  // }
 }
 
 Options getHeaders(String token) {
