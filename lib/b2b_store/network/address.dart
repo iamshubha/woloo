@@ -58,7 +58,7 @@ class AddressService {
     }
   }
 
-  Future<AddAddressResBody> asetAddress({
+  Future<AddAddressResBody> setAddress({
     required AddressReqBody shipping_address,
     required AddressReqBody billing_address,
     required String token,
