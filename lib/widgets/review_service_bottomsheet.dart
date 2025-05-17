@@ -1,11 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/enums/payment_method.dart';
+import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_bloc.dart';
+import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_event.dart';
+import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_state.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/screens/host_dashboard_screen.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
@@ -30,6 +35,9 @@ class _ReviewServiceBottomsheetState extends State<ReviewServiceBottomsheet> {
   Addresses? address;
   final box = GetStorage();
   PaymentMethod? paymentMethod;
+
+  HygieneServiceBloc _hygieneServiceBloc = HygieneServiceBloc();
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -44,169 +52,200 @@ class _ReviewServiceBottomsheetState extends State<ReviewServiceBottomsheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.6,
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(40.r))),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        spacing: 10,
-        children: [
-          const XBottmSheetTopDecor(),
-          const SizedBox(
-            height: 20,
-          ),
-          CartHeader(
-              imgPath: AppImages.checkout,
-              title: "Checkout",
-              subtitle: "Please choose your address and mode of payment"),
-          const Divider(
-            color: Colors.white,
-          ),
-          Expanded(
-              child: ListView(
-            children: [
-              XDecoratedBox(
-                child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 10,
+    return BlocConsumer<HygieneServiceBloc, HygieneServiceState>(
+        bloc: _hygieneServiceBloc,
+        listener: (context, state) {
+          // print("dssa $state");
+          if (state is HygieneServiceLoading) {
+            EasyLoading.show(status: state.message);
+          }
+          if (state is HygieneServiceCartSuccess) {
+            EasyLoading.dismiss();
+          }
+
+          if (state is HygieneServiceError) {
+            EasyLoading.dismiss();
+            EasyLoading.showError(state.error);
+          }
+        },
+        builder: (context, snapshot) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.6,
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius:
+                    BorderRadius.vertical(top: Radius.circular(40.r))),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 10,
+              children: [
+                const XBottmSheetTopDecor(),
+                const SizedBox(
+                  height: 20,
+                ),
+                CartHeader(
+                    imgPath: AppImages.checkout,
+                    title: "Checkout",
+                    subtitle: "Please choose your address and mode of payment"),
+                const Divider(
+                  color: Colors.white,
+                ),
+                Expanded(
+                    child: ListView(
                   children: [
-                    Text(
-                      "Address",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 14.sp),
-                    ),
-                    SizedBox(
-                      height: 10.h,
-                    ),
-                    Text(
-                      "Home",
-                      style: AppTextStyle.font14bold,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          isDismissible:
-                              true, // <-- Allow tap outside to dismiss
-                          enableDrag: true, // <-- Allow swipe down to dismiss
-
-                          backgroundColor: Colors
-                              .transparent, // Optional: if you want rounded corners to show correctly
-
-                          context: context,
-                          builder: (_) =>
-                              const AddressChangeBottomSheet(), //AddressBottomSheet
-                        );
-                      },
-                      child: Row(
+                    XDecoratedBox(
+                      child: Column(
+                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        spacing: 10,
                         children: [
                           Text(
-                            address?.address1 ?? "",
+                            "Address",
                             style: TextStyle(
-                              fontSize: 12.sp,
-                              color: Colors.grey,
-                            ),
+                                fontWeight: FontWeight.bold, fontSize: 14.sp),
                           ),
-                          SizedBox(width: 5.w),
-                          Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                shape: BoxShape.circle),
-                            child: const Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.grey,
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          Text(
+                            "Home",
+                            style: AppTextStyle.font14bold,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                              showModalBottomSheet(
+                                isScrollControlled: true,
+                                isDismissible:
+                                    true, // <-- Allow tap outside to dismiss
+                                enableDrag:
+                                    true, // <-- Allow swipe down to dismiss
+
+                                backgroundColor: Colors
+                                    .transparent, // Optional: if you want rounded corners to show correctly
+
+                                context: context,
+                                builder: (_) =>
+                                    const AddressChangeBottomSheet(), //AddressBottomSheet
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Text(
+                                  address?.address1 ?? "",
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                SizedBox(width: 5.w),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey),
+                                      shape: BoxShape.circle),
+                                  child: const Icon(
+                                    Icons.arrow_forward_ios,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
                       ),
                     ),
+                    const Divider(
+                      color: Colors.white,
+                    ),
+                    XDecoratedBox(
+                      child: Column(
+                        spacing: 10,
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Payment Method",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 14.sp),
+                          ),
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          XPaymentTile(
+                            paymentMethod: "UPI App",
+                            imgPath: AppImages.upiIcon,
+                            onSelected: paymentMethod == PaymentMethod.upi,
+                            onTap: () {
+                              setState(() {
+                                paymentMethod = PaymentMethod.upi;
+                              });
+                            },
+                          ),
+                          XPaymentTile(
+                              paymentMethod: "Credit/Debit Card",
+                              imgPath: AppImages.creditCard,
+                              onSelected: paymentMethod == PaymentMethod.card,
+                              onTap: () {
+                                setState(() {
+                                  paymentMethod = PaymentMethod.card;
+                                });
+                              }),
+                          XPaymentTile(
+                              paymentMethod: "Net Banking",
+                              imgPath: AppImages.netbanking,
+                              onSelected:
+                                  paymentMethod == PaymentMethod.netBanking,
+                              onTap: () {
+                                setState(() {
+                                  paymentMethod = PaymentMethod.netBanking;
+                                });
+                              }),
+                        ],
+                      ),
+                    ),
                   ],
+                )),
+                const Divider(
+                  color: Colors.white,
                 ),
-              ),
-              const Divider(
-                color: Colors.white,
-              ),
-              XDecoratedBox(
-                child: Column(
-                  spacing: 10,
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Payment Method",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 14.sp),
-                    ),
-                    SizedBox(
-                      height: 10.h,
-                    ),
-                    XPaymentTile(
-                      paymentMethod: "UPI App",
-                      imgPath: AppImages.upiIcon,
-                      onSelected: paymentMethod == PaymentMethod.upi,
-                      onTap: () {
-                        setState(() {
-                          paymentMethod = PaymentMethod.upi;
-                        });
-                      },
-                    ),
-                    XPaymentTile(
-                        paymentMethod: "Credit/Debit Card",
-                        imgPath: AppImages.creditCard,
-                        onSelected: paymentMethod == PaymentMethod.card,
-                        onTap: () {
-                          setState(() {
-                            paymentMethod = PaymentMethod.card;
-                          });
-                        }),
-                    XPaymentTile(
-                        paymentMethod: "Net Banking",
-                        imgPath: AppImages.netbanking,
-                        onSelected: paymentMethod == PaymentMethod.netBanking,
-                        onTap: () {
-                          setState(() {
-                            paymentMethod = PaymentMethod.netBanking;
-                          });
-                        }),
-                  ],
-                ),
-              ),
-            ],
-          )),
-          const Divider(
-            color: Colors.white,
-          ),
-          LongLabeledButton(
-            label: "Review Order",
-            onTap: () {
-              // OrderSummeryBottomSheet
-              Navigator.pop(context);
-              showModalBottomSheet(
-                isScrollControlled: true,
-                isDismissible: true, // <-- Allow tap outside to dismiss
-                enableDrag: true, // <-- Allow swipe down to dismiss
+                LongLabeledButton(
+                  label: "Review Order",
+                  onTap: () {
+                    _hygieneServiceBloc.add(AddToCart(
+                      service_date: widget.date,
+                      service_time: widget.time,
+                      service_area: widget.selectedBHKValue,
+                      variant_id: widget.selectedBHKValue,
+                      quantity: 1,
+                    ));
+                    print(widget.date);
+                    print(widget.time);
+                    print(widget.selectedBHKValue);
+                    // OrderSummeryBottomSheet
+                    Navigator.pop(context);
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      isDismissible: true, // <-- Allow tap outside to dismiss
+                      enableDrag: true, // <-- Allow swipe down to dismiss
 
-                backgroundColor: Colors
-                    .transparent, // Optional: if you want rounded corners to show correctly
+                      backgroundColor: Colors
+                          .transparent, // Optional: if you want rounded corners to show correctly
 
-                context: context,
-                builder: (_) => ServiceSummeryBottomSheet(
-                  date: widget.date,
-                  time: widget.time,
-                  selectedBHKValue: widget.selectedBHKValue,
-                ), //AddressBottomSheet
-              );
-            },
-          )
-        ],
-      ),
-    );
+                      context: context,
+                      builder: (_) => ServiceSummeryBottomSheet(
+                        date: widget.date,
+                        time: widget.time,
+                        selectedBHKValue: widget.selectedBHKValue,
+                      ), //AddressBottomSheet
+                    );
+                  },
+                )
+              ],
+            ),
+          );
+        });
   }
 
   Addresses? getAddress() {

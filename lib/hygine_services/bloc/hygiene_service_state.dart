@@ -39,3 +39,9 @@ class HygieneServiceProductSuccess extends HygieneServiceState {
   @override
   List<Object> get props => [dashboardData];
 }
+
+class HygieneServiceCartSuccess extends HygieneServiceState {
+  const HygieneServiceCartSuccess();
+  @override
+  List<Object> get props => [];
+}
