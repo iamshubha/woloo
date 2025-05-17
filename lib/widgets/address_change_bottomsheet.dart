@@ -18,8 +18,10 @@ class AddressChangeBottomSheet extends StatefulWidget {
   const AddressChangeBottomSheet({
     super.key,
     this.productMode = ProductMode.productDetails,
+    this.productId,
   });
   final ProductMode productMode;
+  final String? productId;
 
   @override
   State<AddressChangeBottomSheet> createState() =>
@@ -232,7 +234,9 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
 
                                     context: context,
                                     builder: (context) {
-                                      return const GetTimeScheduleBottomSheet();
+                                      return GetTimeScheduleBottomSheet(
+                                        productId: widget.productId ?? "",
+                                      );
                                     });
                               }
 

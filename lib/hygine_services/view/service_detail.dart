@@ -212,9 +212,11 @@ class _ServiceDetailState extends State<ServiceDetail> {
 
                                         context: context,
                                         builder: (context) {
-                                          return const AddressChangeBottomSheet(
+                                          return AddressChangeBottomSheet(
                                             productMode:
                                                 ProductMode.serviceDetails,
+                                            productId: _hygieneService
+                                                ?.variants.first.id,
                                           );
                                         });
                                   },

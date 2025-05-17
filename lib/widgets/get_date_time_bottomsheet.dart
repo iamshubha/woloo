@@ -10,8 +10,9 @@ import 'package:woloo_smart_hygiene/widgets/review_service_bottomsheet.dart';
 
 class GetTimeScheduleBottomSheet extends StatefulWidget {
   const GetTimeScheduleBottomSheet({
-    super.key,
+    super.key, required this.productId,
   });
+  final String productId;
 
   @override
   State<GetTimeScheduleBottomSheet> createState() =>
@@ -118,6 +119,18 @@ class _GetTimeScheduleBottomSheetState
             const Divider(),
             LongLabeledButton(
                 onTap: () {
+                  if (date.isEmpty ||
+                      time.isEmpty ||
+                      selectedBHKValue.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Please select all the fields"),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                    return;
+                  }
+
                   Navigator.pop(context);
                   showModalBottomSheet(
                       context: context,
