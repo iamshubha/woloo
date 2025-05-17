@@ -143,7 +143,7 @@ class Addresses {
   String? address1;
   dynamic address2;
   String? city;
-  dynamic countryCode;
+  String? countryCode;
   String? province;
   String? postalCode;
   String? phone;
@@ -217,6 +217,19 @@ class Addresses {
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
     data['deleted_at'] = deletedAt;
+    return data;
+  }
+
+  Map<String, dynamic> toFieldData() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['first_name'] = firstName;
+    data['last_name'] = lastName;
+    data['address_1'] = address1;
+    data['city'] = city;
+    data['country_code'] = countryCode ?? "in";
+    data['province'] = province ?? "MH";
+    data['postal_code'] = postalCode;
+    data['phone'] = phone;
     return data;
   }
 

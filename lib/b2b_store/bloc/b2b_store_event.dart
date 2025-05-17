@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 
 abstract class B2BStoreEvent extends Equatable {
@@ -43,6 +42,7 @@ class AddRemoveItemReq extends B2BStoreEvent {
   @override
   List<Object?> get props => [itemId, count];
 }
+
 class DeleteItemReq extends B2BStoreEvent {
   final String itemId;
   const DeleteItemReq({required this.itemId});
@@ -86,6 +86,13 @@ class GetAddress extends B2BStoreEvent {
 
   @override
   List<Object?> get props => [];
+}
+
+class SelectAddress extends B2BStoreEvent {
+  const SelectAddress(this.addresses);
+  final Addresses addresses;
+  @override
+  List<Object?> get props => [addresses];
 }
 
 class GetCartData extends B2BStoreEvent {

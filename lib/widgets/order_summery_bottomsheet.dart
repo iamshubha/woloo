@@ -94,17 +94,17 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
         }
         if (state is LetsTryState) {
           setState(() {
-            order_id = state.order_id;
+            order_id = state.orderId;
           });
           EasyLoading.dismiss();
           final v = {
             "key": "rzp_test_ZIlhyKgx2C38vT",
-            "amount": state.total_price * 100,
+            "amount": state.totalPrice * 100,
             "name": "Woloo",
             "description": "Premium Plan",
             "retry": {"enabled": true, "max_count": 1},
             "send_sms_hash": true,
-            "order_id": state.order_id,
+            "order_id": state.orderId,
             "prefill": {"contact": "8097473483", "email": "test@razorpay.com"},
             "external": {
               "wallets": ["paytm"]

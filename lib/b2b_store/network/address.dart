@@ -59,17 +59,17 @@ class AddressService {
   }
 
   Future<AddAddressResBody> setAddress({
-    required AddressReqBody shipping_address,
-    required AddressReqBody billing_address,
+    required AddressReqBody shippingAddress,
+    required AddressReqBody billingAddress,
     required String token,
-    required String cart_id,
+    required String cartId,
   }) async {
     try {
       var response = await dio.post(
-        APIConstants.SET_BILLING_ADDRESS + cart_id,
+        APIConstants.SET_BILLING_ADDRESS + cartId,
         data: {
-          'billing_address': billing_address.toJson(),
-          'shipping_address': shipping_address.toJson(),
+          'billing_address': billingAddress.toJson(),
+          'shipping_address': shippingAddress.toJson(),
         },
         options: Options(
           headers: {
@@ -82,6 +82,36 @@ class AddressService {
       );
 
       return AddAddressResBody.fromJson(response);
+    } catch (e) {
+      debugPrint("Error in IOT service: $e");
+      rethrow;
+    }
+  }
+
+  Future selectAddress({
+    required Addresses shippingAddress,
+    required String token,
+    required String cartId,
+  }) async {
+    try {
+      logger.w("Address: ${shippingAddress.toFieldData()}");
+      var response = await dio.post(
+        APIConstants.SET_BILLING_ADDRESS + cartId,
+        data: {
+          'billing_address': shippingAddress.toFieldData(),
+          'shipping_address': shippingAddress.toFieldData(),
+        },
+        options: Options(
+          headers: {
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+        ),
+      );
+      logger.w("Response: $response");
+      return response;
     } catch (e) {
       debugPrint("Error in IOT service: $e");
       rethrow;

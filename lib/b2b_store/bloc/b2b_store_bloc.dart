@@ -52,6 +52,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<DeleteItemReq>(_deleteItem);
 
     on<OrderDetailsEvent>(_getOrderDetails);
+    on<SelectAddress>(_selectAddress);
   }
 
   FutureOr<void> _emailPassRegister(
@@ -172,6 +173,20 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     } catch (e) {
       emit(B2BStoreError(error: e.toString()));
       debugPrint("Error in IOT service: $e");
+    }
+  }
+
+  FutureOr<void> _selectAddress(
+      SelectAddress event, Emitter<B2BStoreState> emit) async {
+    emit(const PostAddressLoading(message: "Loading...."));
+    try {
+      await _addresstService.selectAddress(
+          cartId: box.read('cart_id'),
+          shippingAddress: event.addresses,
+          token: box.read('login_jwt'));
+      emit(const PostAddressSuccess());
+    } catch (e) {
+      logger.w("Error in Select Address: $e");
     }
   }
 
@@ -311,8 +326,8 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
 
       // emit(CartSuccess(cartData: CartModel()));
       emit(LetsTryState(
-        order_id: orderId,
-        total_price:
+        orderId: orderId,
+        totalPrice:
             paymentSessions.paymentCollection!.paymentSessions![0].amount ?? 0,
       ) //completeVendor.orderSet.orders[0].items[0].total)
           );
@@ -368,11 +383,11 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     OrderDetailsEvent event,
     Emitter<B2BStoreState> emit,
   ) async {
-    emit(OrderDetailsLoading(message: 'Loading order details...'));
+    emit(const OrderDetailsLoading(message: 'Loading order details...'));
     try {
-      OrderDetails _orderDetails = await _orderDetailsService.getOrderDetails(
+      OrderDetails orderDetails = await _orderDetailsService.getOrderDetails(
           token: box.read('login_jwt'));
-      emit(OrderDetailsSuccess(orderDetailsData: _orderDetails));
+      emit(OrderDetailsSuccess(orderDetailsData: orderDetails));
     } catch (e) {
       debugPrint("Error in getOrderDetails service: $e");
       emit(OrderDetailsError(error: e.toString()));

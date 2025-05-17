@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
@@ -32,7 +31,7 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
   bool _isDataLoaded = false;
   AddressesData _addressesData = AddressesData();
   Map<String, bool> map = {};
-  SharedPreferences? prefs;
+
   Addresses? selectedAddress;
 
   @override
@@ -199,6 +198,12 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                       LongLabeledButton(
                         label: "Select Address",
                         onTap: () {
+                          if (selectedAddress == null) {
+                            EasyLoading.showError("Please select an address");
+                            return;
+                          }
+                          _b2bStoreBloc.add(
+                              SelectAddress(selectedAddress ?? Addresses()));
                           switch (widget.productMode) {
                             case ProductMode.productDetails:
                               {
@@ -207,6 +212,7 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                                 logger.w(jwt);
                                 box.write(
                                     'address', selectedAddress?.toString());
+
                                 Navigator.pop(context);
                               }
 

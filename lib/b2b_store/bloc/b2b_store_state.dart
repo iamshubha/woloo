@@ -59,6 +59,13 @@ class GetAddressSuccess extends B2BStoreState {
   List<Object> get props => [addressesData];
 }
 
+class PostAddressSuccess extends B2BStoreState {
+  const PostAddressSuccess();
+  @override
+  List<Object> get props => [];
+}
+
+
 class CartInitial extends B2BStoreState {
   @override
   List<Object> get props => [];
@@ -71,6 +78,15 @@ class CartLoading extends B2BStoreState {
   @override
   List<Object> get props => [message];
 }
+
+class PostAddressLoading extends B2BStoreState {
+  final String message;
+  const PostAddressLoading({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
 
 class CartError extends B2BStoreState {
   final String error;
@@ -118,21 +134,21 @@ class AddressSet extends B2BStoreState {
 
 class PaymentSuccess extends B2BStoreState {
   final CompleteVendor completeVendor;
-  PaymentSuccess({required this.completeVendor});
+  const PaymentSuccess({required this.completeVendor});
 
   @override
   List<Object> get props => [];
 }
 
 class LetsTryState extends B2BStoreState {
-  final String order_id;
-  final int total_price;
+  final String orderId;
+  final int totalPrice;
   const LetsTryState({
-    required this.order_id,
-    required this.total_price,
+    required this.orderId,
+    required this.totalPrice,
   });
   @override
-  List<Object> get props => [order_id];
+  List<Object> get props => [orderId];
 }
 
 class OrderDetailsSuccess extends B2BStoreState {
