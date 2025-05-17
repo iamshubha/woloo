@@ -92,18 +92,26 @@ class _ServiceDetailState extends State<ServiceDetail> {
                             SizedBox(
                               height: 300,
                               width: MediaQuery.of(context).size.width,
-                              child: CarouselView(
-                                itemExtent: 1,
-                                children: List.generate(
-                                  _hygieneService?.images.length ?? 0,
-                                  (index) {
-                                    final image =
-                                        _hygieneService?.images[index];
-                                    return CachedNetworkImage(
-                                        imageUrl: image?.url ?? "");
-                                  },
-                                ),
-                              ),
+                              child:
+                                  //  _hygieneService!.images.isNotEmpty
+                                  //     ? CarouselView(
+                                  //         itemExtent: 1,
+                                  //         children: List.generate(
+                                  //           _hygieneService?.images.length ?? 0,
+                                  //           (index) {
+                                  //             logger.w(
+                                  //                 "Images: ${_hygieneService?.images}");
+                                  //             final image =
+                                  //                 _hygieneService?.images[index];
+                                  //             return CachedNetworkImage(
+                                  //                 imageUrl: image?.url ?? "");
+                                  //           },
+                                  //         ),
+                                  //       )
+                                  //     :
+                                  CachedNetworkImage(
+                                      imageUrl:
+                                          _hygieneService?.thumbnail ?? ""),
                             ),
                             const SizedBox(
                               height: 20,
