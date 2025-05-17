@@ -4,19 +4,20 @@ import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 
 class ServiceItemCard extends StatelessWidget {
-
   final bool isSelected;
   final VoidCallback? onAdd;
   final VoidCallback? onRemove;
   final VoidCallback onDelete;
-  final String date,time,selectedBHKValue;
+  final String date, time, selectedBHKValue;
   const ServiceItemCard(
       {super.key,
-
       this.isSelected = true,
       this.onAdd,
       this.onRemove,
-      required this.onDelete, required this.date, required this.time, required this.selectedBHKValue});
+      required this.onDelete,
+      required this.date,
+      required this.time,
+      required this.selectedBHKValue});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +48,11 @@ class ServiceItemCard extends StatelessWidget {
             //   width: 60.w,
             //   fit: BoxFit.cover,
             // ),
-            child: Image.asset(AppImages.pest,height: 60.h,width: 60.w,),
+            child: Image.asset(
+              AppImages.pest,
+              height: 60.h,
+              width: 60.w,
+            ),
           ),
           SizedBox(width: 12.w),
           // Product Details
@@ -80,8 +85,28 @@ class ServiceItemCard extends StatelessWidget {
                   ],
                 ),
                 // SizedBox(height: 4.h),
+                Row(
+                  spacing: 10,
+                  children: [
+                    Text(
+                      "Date :$date",
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    Text(
+                      "Time :$time",
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+                // SizedBox(height: 8.h),
                 Text(
-                  "Date :$date",
+                  "Home Area : $selectedBHKValue",
                   style: TextStyle(
                     fontSize: 12.sp,
                     color: Colors.grey,
@@ -116,4 +141,3 @@ class ServiceItemCard extends StatelessWidget {
     );
   }
 }
-
