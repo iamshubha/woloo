@@ -14,6 +14,7 @@ import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
+import 'package:woloo_smart_hygiene/widgets/review_order_bottomsheet.dart';
 
 import '../../janitorial_services/utils/app_images.dart';
 import '../../janitorial_services/utils/app_strings.dart';
@@ -442,6 +443,12 @@ class _ServiceDetailState extends State<ServiceDetail> {
                           child: LongLabeledButton(
                             onTap: () {
                               // showCartBottomSheet(context);
+                              Navigator.pop(context);
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: (c) {
+                                    return const ReviewOrderBottomsheet();
+                                  });
                             },
                             label: "Buy Now",
                           ),

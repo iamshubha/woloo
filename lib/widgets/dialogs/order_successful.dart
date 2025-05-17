@@ -12,7 +12,7 @@ class OrderSuccessfulDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       child: SizedBox(
-        width: MediaQuery.sizeOf(context).width * 0.5,
+        // width: MediaQuery.sizeOf(context).width * 0.5,
         child: XDecoratedBox(
             padding: 20,
             radius: 25,

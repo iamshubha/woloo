@@ -22,22 +22,25 @@ import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
+import 'package:woloo_smart_hygiene/widgets/boxes/service_cart_item.dart';
 import 'package:woloo_smart_hygiene/widgets/cart_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/dialogs/order_successful.dart';
 
-import 'boxes/cart_item.dart';
-
-class OrderSummeryBottomSheet extends StatefulWidget {
-  const OrderSummeryBottomSheet({
+class ServiceSummeryBottomSheet extends StatefulWidget {
+  const ServiceSummeryBottomSheet({
     super.key,
+    required this.date,
+    required this.time,
+    required this.selectedBHKValue,
   });
+  final String date, time, selectedBHKValue;
 
   @override
-  State<OrderSummeryBottomSheet> createState() =>
-      _OrderSummeryBottomSheetState();
+  State<ServiceSummeryBottomSheet> createState() =>
+      _ServiceSummeryBottomSheetState();
 }
 
-class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
+class _ServiceSummeryBottomSheetState extends State<ServiceSummeryBottomSheet> {
   GlobalStorage globalStorage = GetIt.instance();
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   bool _isDataLoaded = false;
@@ -158,8 +161,10 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
                                 int count = item?.quantity ?? 0;
                                 return Padding(
                                   padding: EdgeInsets.symmetric(vertical: 8.h),
-                                  child: CartItemCard(
-                                    item: item,
+                                  child: ServiceItemCard(
+                                    date: widget.date,
+                                    time: widget.time,
+                                    selectedBHKValue: widget.selectedBHKValue,
                                     onDelete: () {
                                       _b2bStoreBloc.add(DeleteItemReq(
                                           itemId: item?.id ?? ""));
@@ -360,7 +365,20 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
       // barrierDismissible: false,
       context: context,
       builder: (context) {
-        return const OrderSuccessfulDialog();
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+
+          backgroundColor: AppColors.white,
+          // title:  Center(
+          //   child: Text("Your Free Subscription has expired",
+          //    style: AppTextStyle.font20bold,
+          //    textAlign: TextAlign.center,
+          //   ),
+          // ),
+          content: const OrderSuccessfulDialog(),
+        );
       },
     );
 

@@ -6,6 +6,7 @@ import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
 import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
+import 'package:woloo_smart_hygiene/widgets/review_service_bottomsheet.dart';
 
 class GetTimeScheduleBottomSheet extends StatefulWidget {
   const GetTimeScheduleBottomSheet({
@@ -20,6 +21,8 @@ class GetTimeScheduleBottomSheet extends StatefulWidget {
 class _GetTimeScheduleBottomSheetState
     extends State<GetTimeScheduleBottomSheet> {
   String selectedBHKValue = "";
+  String date = "";
+  String time = "";
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -44,20 +47,39 @@ class _GetTimeScheduleBottomSheetState
             LabeledFeaturePresentation(
               onTap: () {
                 showDatePicker(
-                    context: context,
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime(2027));
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime(2027),
+                ).then((pickedDate) {
+                  if (pickedDate != null) {
+                    setState(() {
+                      date = "${pickedDate.day.toString().padLeft(2, '0')} "
+                          "${pickedDate.month.toString().padLeft(2, '0')} "
+                          "${pickedDate.year}";
+                    });
+                  }
+                });
               },
               label: "Booking Date",
-              buttonHeader: "Date",
+              buttonHeader: date.isEmpty ? "Date" : date,
               icon: Icons.calendar_month,
             ),
             LabeledFeaturePresentation(
               onTap: () {
-                showTimePicker(context: context, initialTime: TimeOfDay.now());
+                showTimePicker(
+                  context: context,
+                  initialTime: TimeOfDay.now(),
+                ).then((pickedTime) {
+                  if (pickedTime != null) {
+                    setState(() {
+                      time = pickedTime.format(context);
+                    });
+                  }
+                });
               },
               label: "Booking Time",
-              buttonHeader: "Time",
+              buttonHeader: time.isEmpty ? "Time" : time,
               icon: Icons.watch_later_outlined,
             ),
             const Divider(),
@@ -94,7 +116,20 @@ class _GetTimeScheduleBottomSheetState
               ),
             ),
             const Divider(),
-            LongLabeledButton(onTap: () {}, label: "Next")
+            LongLabeledButton(
+                onTap: () {
+                  Navigator.pop(context);
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (c) {
+                        return ReviewServiceBottomsheet(
+                          time: time,
+                          date: date,
+                          selectedBHKValue: selectedBHKValue,
+                        );
+                      });
+                },
+                label: "Next")
           ],
         ),
       ),
