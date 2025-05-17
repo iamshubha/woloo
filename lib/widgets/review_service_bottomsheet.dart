@@ -22,9 +22,10 @@ class ReviewServiceBottomsheet extends StatefulWidget {
     super.key,
     required this.date,
     required this.time,
-    required this.selectedBHKValue,
+    required this.selectedBHKValue, required this.productId,
   });
-  final String date, time, selectedBHKValue;
+  final String date, time, selectedBHKValue,productId;
+  
 
   @override
   State<ReviewServiceBottomsheet> createState() =>

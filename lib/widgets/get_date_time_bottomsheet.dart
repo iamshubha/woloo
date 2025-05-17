@@ -10,7 +10,8 @@ import 'package:woloo_smart_hygiene/widgets/review_service_bottomsheet.dart';
 
 class GetTimeScheduleBottomSheet extends StatefulWidget {
   const GetTimeScheduleBottomSheet({
-    super.key, required this.productId,
+    super.key,
+    required this.productId,
   });
   final String productId;
 
@@ -139,6 +140,7 @@ class _GetTimeScheduleBottomSheetState
                           time: time,
                           date: date,
                           selectedBHKValue: selectedBHKValue,
+                          productId: widget.productId,
                         );
                       });
                 },
