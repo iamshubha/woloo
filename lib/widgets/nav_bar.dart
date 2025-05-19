@@ -52,12 +52,7 @@ class XBottomBar extends StatelessWidget {
           ),
           XNavBarItems(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AllOrderScreen(),
-                ),
-              );
+            
             },
             imageUrl: AppImages.profileIcon,
             title: "Profile",

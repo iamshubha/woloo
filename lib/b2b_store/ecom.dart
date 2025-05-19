@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:woloo_smart_hygiene/b2b_store/all_orders.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
@@ -17,11 +18,12 @@ import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
-import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
+
+import '../utils/app_textstyle.dart';
 
 enum EcomTab { seeLess, seeAll }
 
@@ -77,7 +79,7 @@ class _EcomScreenState extends State<EcomScreen> {
             bottomNavigationBar: const XBottomBar(),
             appBar: EComAppbar(
               selectedAddress: address?.address1 ?? "",
-              cartValue: _b2bStoreHomePage?.cartData.cart?.items.length ?? 0,
+              cartValue: _b2bStoreHomePage?.cartData.cart.items.length ?? 0,
             ),
             body: SingleChildScrollView(
               child: _isDataLoaded
@@ -85,6 +87,47 @@ class _EcomScreenState extends State<EcomScreen> {
                       children: [
                         CategoriesSection(
                           productCategory: _b2bStoreHomePage!.productCategory,
+                        ),
+                        Container(
+                          color: AppColors.themeBackground,
+                          padding: EdgeInsets.symmetric(
+                              vertical: 16.h, horizontal: 20.w),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  child: XTabButton(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const AllOrderScreen(),
+                                          ),
+                                        );
+                                      },
+                                      logo: AppImages.bag,
+                                      label: "Order")),
+                              SizedBox(
+                                width: 10.w,
+                              ),
+                              Expanded(
+                                  child: XTabButton(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (c) =>
+                                                    CollectionsScreen(
+                                                      products:
+                                                          _b2bStoreHomePage!
+                                                              .productCollections
+                                                              .products,
+                                                    )));
+                                      },
+                                      logo: AppImages.favourites,
+                                      label: "Favourites")),
+                            ],
+                          ),
                         ),
                         LandingProducts(
                           topBrands: _b2bStoreHomePage!.topBrands,
@@ -120,6 +163,44 @@ class _EcomScreenState extends State<EcomScreen> {
   }
 }
 
+class XTabButton extends StatelessWidget {
+  const XTabButton({
+    super.key,
+    required this.logo,
+    required this.label,
+    this.onTap,
+  });
+  final String logo;
+  final String label;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        decoration: BoxDecoration(
+          color: AppColors.buttonYellowColor,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Row(
+          spacing: 10,
+          children: [
+            ImageIcon(
+              AssetImage(logo),
+              size: 20,
+            ),
+            Text(
+              label,
+              style: AppTextStyle.font14bold,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class LandingProducts extends StatelessWidget {
   final VoidCallback? onTap;
@@ -230,10 +311,7 @@ class LandingProducts extends StatelessWidget {
 }
 
 class BrandsGrid extends StatelessWidget {
-  const BrandsGrid({
-    super.key,
-    required this.imageUrl,
-  });
+  const BrandsGrid({super.key, required this.imageUrl});
   final String imageUrl;
 
   @override
@@ -271,9 +349,13 @@ class BrandsGrid extends StatelessWidget {
 class GridItem extends StatelessWidget {
   final Product products;
   // final String imageUrl;
+  final bool isSelected;
+  final VoidCallback? onTap;
   const GridItem({
     super.key,
     required this.products,
+    this.isSelected = false,
+    this.onTap,
     // required this.imageUrl,
   });
 
@@ -290,80 +372,98 @@ class GridItem extends StatelessWidget {
           ),
         );
       },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10.w),
-        decoration: BoxDecoration(
-            color: AppColors.themeBackground,
-            borderRadius: BorderRadius.circular(25.r),
-            boxShadow: const [
-              BoxShadow(
-                color: AppColors.greyShadowColor,
-                blurRadius: 5.0,
-                spreadRadius: 0.5,
-                offset: Offset(0, 2),
-              ),
-              BoxShadow(
-                color: AppColors.greyShadowColor,
-                blurRadius: 5.0,
-                spreadRadius: 0.5,
-                offset: Offset(0, -1),
-              ),
-            ]),
-        child: Column(
-          spacing: 2.h,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(25.r)),
-              child: SizedBox(
-                height: 165.h,
-                width: double.infinity,
-                child: Image.network(
-                  products.thumbnail ?? '',
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-            Text(
-              products.title ?? "",
-              style: TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.bold),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            Text(
-              products.subtitle ?? "",
-              style: TextStyle(
-                fontSize: 8.sp,
-                color: AppColors.textgreyColor,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Row(
-              children: List.generate(
-                5,
-                (i) => Container(
-                    margin: EdgeInsets.only(right: 2.w),
-                    height: 10.h,
-                    width: 10.w,
-                    child: Image.asset(AppImages.stars)),
-              ),
-            ),
-            Row(
+      child: Stack(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            decoration: BoxDecoration(
+                color: AppColors.themeBackground,
+                borderRadius: BorderRadius.circular(25.r),
+                boxShadow: const [
+                  BoxShadow(
+                    color: AppColors.greyShadowColor,
+                    blurRadius: 5.0,
+                    spreadRadius: 0.5,
+                    offset: Offset(0, 2),
+                  ),
+                  BoxShadow(
+                    color: AppColors.greyShadowColor,
+                    blurRadius: 5.0,
+                    spreadRadius: 0.5,
+                    offset: Offset(0, -1),
+                  ),
+                ]),
+            child: Column(
+              spacing: 2.h,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
+                ClipRRect(
+                  borderRadius:
+                      BorderRadius.vertical(top: Radius.circular(25.r)),
+                  child: SizedBox(
+                    height: 165.h,
+                    width: double.infinity,
+                    child: Image.network(
+                      products.thumbnail ?? '',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
                 Text(
-                  "Rs. ${products.variants!.last.calculatedPrice!.calculatedAmount.toString()}",
+                  products.title ?? "",
+                  style:
+                      TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.bold),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  products.subtitle ?? "",
                   style: TextStyle(
-                    fontSize: 13.sp,
+                    fontSize: 8.sp,
+                    color: AppColors.textgreyColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Spacer(),
-                const AddToCartButton()
+                Row(
+                  children: List.generate(
+                    5,
+                    (i) => Container(
+                        margin: EdgeInsets.only(right: 2.w),
+                        height: 10.h,
+                        width: 10.w,
+                        child: Image.asset(AppImages.stars)),
+                  ),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "Rs. ${products.variants!.last.calculatedPrice!.calculatedAmount.toString()}",
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Spacer(),
+                    const AddToCartButton()
+                  ],
+                )
               ],
-            )
-          ],
-        ),
+            ),
+          ),
+          Positioned(
+            top: 20,
+            right: 20,
+            child: InkWell(
+                onTap: onTap,
+                child: Icon(
+                  isSelected
+                      ? Icons.favorite_rounded
+                      : Icons.favorite_border_rounded,
+                  color: isSelected ? Colors.pink : null,
+                )),
+          ),
+        ],
       ),
     );
   }

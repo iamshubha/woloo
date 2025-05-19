@@ -109,6 +109,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     children: [
                       ImageView(
                         imageUrl: widget.productData?.thumbnail ?? '',
+                        onTap: () {},
+                        isSelected: true,
                       ),
                       Column(
                         spacing: 10.h,
@@ -920,10 +922,10 @@ class XAddRemove extends StatelessWidget {
 
 class ImageView extends StatelessWidget {
   final String imageUrl;
-  const ImageView({
-    super.key,
-    required this.imageUrl,
-  });
+  const ImageView(
+      {super.key, required this.imageUrl, this.onTap, this.isSelected = false});
+  final VoidCallback? onTap;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -953,10 +955,17 @@ class ImageView extends StatelessWidget {
               height: 382, // Match the container's height
               width: 382, // Match the container's width
             ),
-            const Positioned(
+            Positioned(
               top: 20,
               right: 20,
-              child: Icon(Icons.favorite_border_rounded),
+              child: InkWell(
+                  onTap: onTap,
+                  child: Icon(
+                    isSelected
+                        ? Icons.favorite_rounded
+                        : Icons.favorite_border_rounded,
+                    color: isSelected ? Colors.pink : null,
+                  )),
             ),
           ],
         ),

@@ -10,6 +10,7 @@ import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
+import 'package:woloo_smart_hygiene/extensions/string_extension.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
@@ -122,8 +123,10 @@ class OrderItemWithReview extends StatelessWidget {
               child: SizedBox(
                 height: 60,
                 width: 60,
-                child:
-                    CachedNetworkImage(imageUrl: orderDetails.thumbnail ?? ''),
+                child: orderDetails.thumbnail.isEmptyOrNull
+                    ? Image.asset(AppImages.appLogo)
+                    : CachedNetworkImage(
+                        imageUrl: orderDetails.thumbnail ?? ''),
               ),
             ),
             Flexible(
