@@ -50,7 +50,7 @@ class OrderSet {
   final String? paymentCollectionId;
   final OrderSetCustomer? customer;
   final Cart? cart;
-  final PaymentCollection? paymentCollection;
+  final PaymentCollectionInOrderDetails? paymentCollection;
   final List<Order> orders;
   final PurpleStatus? status;
   final PaymentStatusEnum? paymentStatus;
@@ -101,7 +101,8 @@ class OrderSet {
         cart: json["cart"] == null ? null : Cart.fromJson(json["cart"]),
         paymentCollection: json["payment_collection"] == null
             ? null
-            : PaymentCollection.fromJson(json["payment_collection"]),
+            : PaymentCollectionInOrderDetails.fromJson(
+                json["payment_collection"]),
         orders: json["orders"] == null
             ? []
             : List<Order>.from(json["orders"]!.map((x) => Order.fromJson(x))),
@@ -360,7 +361,7 @@ class Order {
   final List<Item>? items;
   final OrderSetCustomer? customer;
   final List<dynamic>? fulfillments;
-  final List<PaymentCollection>? paymentCollections;
+  final List<PaymentCollectionInOrderDetails>? paymentCollections;
   final PaymentStatusEnum? paymentStatus;
   final FulfillmentStatus? fulfillmentStatus;
 
@@ -437,8 +438,9 @@ class Order {
             : List<dynamic>.from(json["fulfillments"]!.map((x) => x)),
         paymentCollections: json["payment_collections"] == null
             ? []
-            : List<PaymentCollection>.from(json["payment_collections"]!
-                .map((x) => PaymentCollection.fromJson(x))),
+            : List<PaymentCollectionInOrderDetails>.from(
+                json["payment_collections"]!
+                    .map((x) => PaymentCollectionInOrderDetails.fromJson(x))),
         paymentStatus: paymentStatusEnumValues.map[json["payment_status"]]!,
         fulfillmentStatus:
             fulfillmentStatusValues.map[json["fulfillment_status"]]!,
@@ -487,21 +489,21 @@ class Order {
 
 class Item {
   final String? id;
-  final TitleEnum? title;
-  final ProductTitleEnum? subtitle;
+  final dynamic? title;
+  final dynamic? subtitle;
   final String? thumbnail;
-  final VariantId? variantId;
-  final ProductId? productId;
-  final ProductTitleEnum? productTitle;
+  final dynamic? variantId;
+  final dynamic? productId;
+  final dynamic? productTitle;
   final String? productDescription;
   final String? productSubtitle;
   final dynamic productType;
   final dynamic productTypeId;
-  final ProductCollection? productCollection;
-  final ProductHandle? productHandle;
+  final dynamic? productCollection;
+  final dynamic? productHandle;
   final dynamic variantSku;
   final dynamic variantBarcode;
-  final TitleEnum? variantTitle;
+  final dynamic? variantTitle;
   final dynamic variantOptionValues;
   final bool? requiresShipping;
   final bool? isGiftcard;
@@ -626,22 +628,21 @@ class Item {
 
   factory Item.fromJson(Map<String, dynamic> json) => Item(
         id: json["id"],
-        title: titleEnumValues.map[json["title"]]!,
-        subtitle: productTitleEnumValues.map[json["subtitle"]]!,
+        title: json["title"],
+        subtitle: json["subtitle"],
         thumbnail: json["thumbnail"],
-        variantId: variantIdValues.map[json["variant_id"]]!,
-        productId: productIdValues.map[json["product_id"]]!,
-        productTitle: productTitleEnumValues.map[json["product_title"]]!,
+        variantId: json["variant_id"],
+        productId: json["product_id"],
+        productTitle: json["product_title"],
         productDescription: json["product_description"],
         productSubtitle: json["product_subtitle"],
         productType: json["product_type"],
         productTypeId: json["product_type_id"],
-        productCollection:
-            productCollectionValues.map[json["product_collection"]]!,
-        productHandle: productHandleValues.map[json["product_handle"]]!,
+        productCollection: json["product_collection"],
+        productHandle: json["product_handle"],
         variantSku: json["variant_sku"],
         variantBarcode: json["variant_barcode"],
-        variantTitle: titleEnumValues.map[json["variant_title"]]!,
+        variantTitle: json["variant_title"],
         variantOptionValues: json["variant_option_values"],
         requiresShipping: json["requires_shipping"],
         isGiftcard: json["is_giftcard"],
@@ -742,22 +743,21 @@ class Item {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "title": titleEnumValues.reverse[title],
-        "subtitle": productTitleEnumValues.reverse[subtitle],
+        "title": title,
+        "subtitle": subtitle,
         "thumbnail": thumbnail,
-        "variant_id": variantIdValues.reverse[variantId],
-        "product_id": productIdValues.reverse[productId],
-        "product_title": productTitleEnumValues.reverse[productTitle],
+        "variant_id": variantId,
+        "product_id": productId,
+        "product_title": productTitle,
         "product_description": productDescription,
         "product_subtitle": productSubtitle,
         "product_type": productType,
         "product_type_id": productTypeId,
-        "product_collection":
-            productCollectionValues.reverse[productCollection],
-        "product_handle": productHandleValues.reverse[productHandle],
+        "product_collection": productCollection,
+        "product_handle": productHandle,
         "variant_sku": variantSku,
         "variant_barcode": variantBarcode,
-        "variant_title": titleEnumValues.reverse[variantTitle],
+        "variant_title": variantTitle,
         "variant_option_values": variantOptionValues,
         "requires_shipping": requiresShipping,
         "is_giftcard": isGiftcard,
@@ -989,69 +989,69 @@ class Metadata {
   Map<String, dynamic> toJson() => {};
 }
 
-enum ProductCollection { CARMESI, OSHINE_PRODUCTS, PAND_G }
+// enum ProductCollection { CARMESI, OSHINE_PRODUCTS, PAND_G }
 
-final productCollectionValues = EnumValues({
-  "Carmesi": ProductCollection.CARMESI,
-  "OSHINE PRODUCTS": ProductCollection.OSHINE_PRODUCTS,
-  "PandG": ProductCollection.PAND_G
-});
+// final productCollectionValues = EnumValues({
+//   "Carmesi": ProductCollection.CARMESI,
+//   "OSHINE PRODUCTS": ProductCollection.OSHINE_PRODUCTS,
+//   "PandG": ProductCollection.PAND_G
+// });
 
-enum ProductHandle { DEMO_PRODUCT, POLO_T_SHIRTS, TOILET_CLEANER_500_ML }
+// enum ProductHandle { DEMO_PRODUCT, POLO_T_SHIRTS, TOILET_CLEANER_500_ML }
 
-final productHandleValues = EnumValues({
-  "demo-product": ProductHandle.DEMO_PRODUCT,
-  "polo-t-shirts": ProductHandle.POLO_T_SHIRTS,
-  "toilet-cleaner-500ml": ProductHandle.TOILET_CLEANER_500_ML
-});
+// final productHandleValues = EnumValues({
+//   "demo-product": ProductHandle.DEMO_PRODUCT,
+//   "polo-t-shirts": ProductHandle.POLO_T_SHIRTS,
+//   "toilet-cleaner-500ml": ProductHandle.TOILET_CLEANER_500_ML
+// });
 
-enum ProductId {
-  PROD_01_JQV6_J4_CPDTDZQPNBQPZJAMDB,
-  PROD_01_JV4_RJVFER0_FQW4_XN6_TV09_Q3_R,
-  PROD_01_JVCD76_B889_HCZR00_QSWY0_KF9
-}
+// enum ProductId {
+//   PROD_01_JQV6_J4_CPDTDZQPNBQPZJAMDB,
+//   PROD_01_JV4_RJVFER0_FQW4_XN6_TV09_Q3_R,
+//   PROD_01_JVCD76_B889_HCZR00_QSWY0_KF9
+// }
 
-final productIdValues = EnumValues({
-  "prod_01JQV6J4CPDTDZQPNBQPZJAMDB":
-      ProductId.PROD_01_JQV6_J4_CPDTDZQPNBQPZJAMDB,
-  "prod_01JV4RJVFER0FQW4XN6TV09Q3R":
-      ProductId.PROD_01_JV4_RJVFER0_FQW4_XN6_TV09_Q3_R,
-  "prod_01JVCD76B889HCZR00QSWY0KF9":
-      ProductId.PROD_01_JVCD76_B889_HCZR00_QSWY0_KF9
-});
+// final productIdValues = EnumValues({
+//   "prod_01JQV6J4CPDTDZQPNBQPZJAMDB":
+//       ProductId.PROD_01_JQV6_J4_CPDTDZQPNBQPZJAMDB,
+//   "prod_01JV4RJVFER0FQW4XN6TV09Q3R":
+//       ProductId.PROD_01_JV4_RJVFER0_FQW4_XN6_TV09_Q3_R,
+//   "prod_01JVCD76B889HCZR00QSWY0KF9":
+//       ProductId.PROD_01_JVCD76_B889_HCZR00_QSWY0_KF9
+// });
 
-enum ProductTitleEnum { DEMO_PRODUCT, POLO_T_SHIRTS, TOILET_CLEANER_500_ML }
+// enum ProductTitleEnum { DEMO_PRODUCT, POLO_T_SHIRTS, TOILET_CLEANER_500_ML }
 
-final productTitleEnumValues = EnumValues({
-  "Demo-product": ProductTitleEnum.DEMO_PRODUCT,
-  "Polo T-shirts": ProductTitleEnum.POLO_T_SHIRTS,
-  "TOILET CLEANER 500ML": ProductTitleEnum.TOILET_CLEANER_500_ML
-});
+// final productTitleEnumValues = EnumValues({
+//   "Demo-product": ProductTitleEnum.DEMO_PRODUCT,
+//   "Polo T-shirts": ProductTitleEnum.POLO_T_SHIRTS,
+//   "TOILET CLEANER 500ML": ProductTitleEnum.TOILET_CLEANER_500_ML
+// });
 
-enum TitleEnum { DEFAULT_VARIANT, M_BLACK, POLO_T_SHIRTS_BLACK }
+// enum TitleEnum { DEFAULT_VARIANT, M_BLACK, POLO_T_SHIRTS_BLACK }
 
-final titleEnumValues = EnumValues({
-  "Default variant": TitleEnum.DEFAULT_VARIANT,
-  "M / Black": TitleEnum.M_BLACK,
-  "Polo T-shirts (Black)": TitleEnum.POLO_T_SHIRTS_BLACK
-});
+// final titleEnumValues = EnumValues({
+//   "Default variant": TitleEnum.DEFAULT_VARIANT,
+//   "M / Black": TitleEnum.M_BLACK,
+//   "Polo T-shirts (Black)": TitleEnum.POLO_T_SHIRTS_BLACK
+// });
 
-enum VariantId {
-  VARIANT_01_JQV6_J4_GZ3_TJMJ82_TPXCFTN80,
-  VARIANT_01_JV4_RJVHYCXH9_QYV8_GMDCCGK9,
-  VARIANT_01_JVCD76_DQX6_Z16_GFN2_RP47_NPJ
-}
+// enum VariantId {
+//   VARIANT_01_JQV6_J4_GZ3_TJMJ82_TPXCFTN80,
+//   VARIANT_01_JV4_RJVHYCXH9_QYV8_GMDCCGK9,
+//   VARIANT_01_JVCD76_DQX6_Z16_GFN2_RP47_NPJ
+// }
 
-final variantIdValues = EnumValues({
-  "variant_01JQV6J4GZ3TJMJ82TPXCFTN80":
-      VariantId.VARIANT_01_JQV6_J4_GZ3_TJMJ82_TPXCFTN80,
-  "variant_01JV4RJVHYCXH9QYV8GMDCCGK9":
-      VariantId.VARIANT_01_JV4_RJVHYCXH9_QYV8_GMDCCGK9,
-  "variant_01JVCD76DQX6Z16GFN2RP47NPJ":
-      VariantId.VARIANT_01_JVCD76_DQX6_Z16_GFN2_RP47_NPJ
-});
+// final variantIdValues = EnumValues({
+//   "variant_01JQV6J4GZ3TJMJ82TPXCFTN80":
+//       VariantId.VARIANT_01_JQV6_J4_GZ3_TJMJ82_TPXCFTN80,
+//   "variant_01JV4RJVHYCXH9QYV8GMDCCGK9":
+//       VariantId.VARIANT_01_JV4_RJVHYCXH9_QYV8_GMDCCGK9,
+//   "variant_01JVCD76DQX6Z16GFN2RP47NPJ":
+//       VariantId.VARIANT_01_JVCD76_DQX6_Z16_GFN2_RP47_NPJ
+// });
 
-class PaymentCollection {
+class PaymentCollectionInOrderDetails {
   final String? id;
   final CurrencyCode? currencyCode;
   final dynamic completedAt;
@@ -1064,13 +1064,13 @@ class PaymentCollection {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final dynamic deletedAt;
-  final List<Payment>? payments;
+  final List<PaymentInOrderDetails>? payments;
   final int? amount;
   final int? authorizedAmount;
   final int? capturedAmount;
   final int? refundedAmount;
 
-  PaymentCollection({
+  PaymentCollectionInOrderDetails({
     this.id,
     this.currencyCode,
     this.completedAt,
@@ -1090,8 +1090,8 @@ class PaymentCollection {
     this.refundedAmount,
   });
 
-  factory PaymentCollection.fromJson(Map<String, dynamic> json) =>
-      PaymentCollection(
+  factory PaymentCollectionInOrderDetails.fromJson(Map<String, dynamic> json) =>
+      PaymentCollectionInOrderDetails(
         id: json["id"],
         currencyCode: currencyCodeValues.map[json["currency_code"]]!,
         completedAt: json["completed_at"],
@@ -1118,8 +1118,8 @@ class PaymentCollection {
         deletedAt: json["deleted_at"],
         payments: json["payments"] == null
             ? []
-            : List<Payment>.from(
-                json["payments"]!.map((x) => Payment.fromJson(x))),
+            : List<PaymentInOrderDetails>.from(json["payments"]!
+                .map((x) => PaymentInOrderDetails.fromJson(x))),
         amount: json["amount"],
         authorizedAmount: json["authorized_amount"],
         capturedAmount: json["captured_amount"],
@@ -1149,7 +1149,7 @@ class PaymentCollection {
       };
 }
 
-class Payment {
+class PaymentInOrderDetails {
   final String? id;
   final CurrencyCode? currencyCode;
   final ProviderId? providerId;
@@ -1167,7 +1167,7 @@ class Payment {
   final List<dynamic>? refunds;
   final int? amount;
 
-  Payment({
+  PaymentInOrderDetails({
     this.id,
     this.currencyCode,
     this.providerId,
@@ -1186,7 +1186,8 @@ class Payment {
     this.amount,
   });
 
-  factory Payment.fromJson(Map<String, dynamic> json) => Payment(
+  factory PaymentInOrderDetails.fromJson(Map<String, dynamic> json) =>
+      PaymentInOrderDetails(
         id: json["id"],
         currencyCode: currencyCodeValues.map[json["currency_code"]]!,
         providerId: providerIdValues.map[json["provider_id"]]!,

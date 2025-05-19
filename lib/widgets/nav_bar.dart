@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:woloo_smart_hygiene/b2b_store/all_orders.dart';
 import 'package:woloo_smart_hygiene/b2b_store/order_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
@@ -54,7 +55,7 @@ class XBottomBar extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const OrderScreen(),
+                  builder: (context) => const AllOrderScreen(),
                 ),
               );
             },

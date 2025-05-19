@@ -122,59 +122,59 @@ class _ServiceDetailState extends State<ServiceDetail> {
                                 CustomImageProvider(
                                   image: ServicesImages.stars,
                                 ),
-                                Container(
-                                  width: 145.w,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 3),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(7),
-                                      color: AppColors.backgroundColor),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {},
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                                border: Border.all(),
-                                                borderRadius:
-                                                    BorderRadius.circular(4)),
-                                            child: const Icon(
-                                              Icons.remove,
-                                              size: 17,
-                                            )),
-                                      ),
-                                      Row(
-                                        children: [
-                                          CustomImageProvider(
-                                            image: ServicesImages.cart,
-                                            width: 20,
-                                          ),
-                                          const SizedBox(
-                                            width: 4,
-                                          ),
-                                          Text(
-                                            "1",
-                                            style: AppTextStyle.font20bold,
-                                          ),
-                                        ],
-                                      ),
-                                      InkWell(
-                                        onTap: () {},
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                                border: Border.all(),
-                                                borderRadius:
-                                                    BorderRadius.circular(4)),
-                                            child: const Icon(
-                                              Icons.add,
-                                              size: 17,
-                                            )),
-                                      )
-                                    ],
-                                  ),
-                                ),
+                                // Container(
+                                //   width: 145.w,
+                                //   padding: const EdgeInsets.symmetric(
+                                //       horizontal: 16, vertical: 3),
+                                //   decoration: BoxDecoration(
+                                //       borderRadius: BorderRadius.circular(7),
+                                //       color: AppColors.backgroundColor),
+                                //   child: Row(
+                                //     mainAxisAlignment:
+                                //         MainAxisAlignment.spaceBetween,
+                                //     children: [
+                                //       InkWell(
+                                //         onTap: () {},
+                                //         child: Container(
+                                //             decoration: BoxDecoration(
+                                //                 border: Border.all(),
+                                //                 borderRadius:
+                                //                     BorderRadius.circular(4)),
+                                //             child: const Icon(
+                                //               Icons.remove,
+                                //               size: 17,
+                                //             )),
+                                //       ),
+                                //       Row(
+                                //         children: [
+                                //           CustomImageProvider(
+                                //             image: ServicesImages.cart,
+                                //             width: 20,
+                                //           ),
+                                //           const SizedBox(
+                                //             width: 4,
+                                //           ),
+                                //           Text(
+                                //             "1",
+                                //             style: AppTextStyle.font20bold,
+                                //           ),
+                                //         ],
+                                //       ),
+                                //       InkWell(
+                                //         onTap: () {},
+                                //         child: Container(
+                                //             decoration: BoxDecoration(
+                                //                 border: Border.all(),
+                                //                 borderRadius:
+                                //                     BorderRadius.circular(4)),
+                                //             child: const Icon(
+                                //               Icons.add,
+                                //               size: 17,
+                                //             )),
+                                //       )
+                                //     ],
+                                //   ),
+                                // ),
                               ],
                             ),
                             const SizedBox(
@@ -446,37 +446,37 @@ class _ServiceDetailState extends State<ServiceDetail> {
                   //     ],
                   //   ),
                   // ),
-                  bottomSheet: XDecoratedBox(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: LongLabeledButton(
-                            onTap: () {
-                              // showCartBottomSheet(context);
-                              Navigator.pop(context);
-                              showModalBottomSheet(
-                                  context: context,
-                                  builder: (c) {
-                                    return const ReviewOrderBottomsheet();
-                                  });
-                            },
-                            label: "Buy Now",
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        Expanded(
-                          child: LongLabeledButton(
-                            onTap: () {
-                              // addToCart(context);
-                            },
-                            label: "Add to Cart",
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // bottomSheet: XDecoratedBox(
+                  //   child: Row(
+                  //     children: [
+                  //       Expanded(
+                  //         child: LongLabeledButton(
+                  //           onTap: () {
+                  //             // showCartBottomSheet(context);
+                  //             Navigator.pop(context);
+                  //             showModalBottomSheet(
+                  //                 context: context,
+                  //                 builder: (c) {
+                  //                   return const ReviewOrderBottomsheet();
+                  //                 });
+                  //           },
+                  //           label: "Buy Now",
+                  //         ),
+                  //       ),
+                  //       const SizedBox(
+                  //         width: 20,
+                  //       ),
+                  //       Expanded(
+                  //         child: LongLabeledButton(
+                  //           onTap: () {
+                  //             // addToCart(context);
+                  //           },
+                  //           label: "Add to Cart",
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                 );
         });
   }

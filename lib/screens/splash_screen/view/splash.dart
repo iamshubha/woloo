@@ -142,7 +142,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) => const AllOrderScreen(), //LoginAs(),
+                builder: (context) => const EcomScreen(), //LoginAs(),
               ),
               (route) => false,
             );
@@ -204,7 +204,7 @@ class _SplashScreenState extends State<SplashScreen> {
             MaterialPageRoute(
               builder: (context) => clientId.isNotEmpty
                   ? isComplete
-                      ? const ClientDashboard()
+                      ? const EcomScreen()
                       : const EcomScreen(
                           // isFromDashboard: false,
                           )

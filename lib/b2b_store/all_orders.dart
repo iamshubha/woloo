@@ -1,51 +1,98 @@
 import 'package:animated_rating_stars/animated_rating_stars.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
+import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
+import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 
-class AllOrderScreen extends StatelessWidget {
+class AllOrderScreen extends StatefulWidget {
   const AllOrderScreen({super.key});
 
   @override
+  State<AllOrderScreen> createState() => _AllOrderScreenState();
+}
+
+class _AllOrderScreenState extends State<AllOrderScreen> {
+  final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
+  OrderDetails? orderDetailsData;
+  bool isLoading = true;
+  @override
+  void initState() {
+    _b2bStoreBloc.add(const OrderDetailsEvent());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const BackAppBar(),
-      body: Column(
-        children: [
-          CartHeader(
-              imgPath: AppImages.bag,
-              title: "Order",
-              subtitle: "check your recent order here"),
-          const SizedBox(
-            height: 10,
-          ),
-          Expanded(
-              child: ListView.separated(
-                  itemBuilder: (c, i) => XDecoratedBox(
-                          child: Column(
-                        spacing: 20,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("Order Id : 1234567890"),
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            spacing: 10,
-                            children: List.generate(
-                                4, (i) => const OrderItemWithReview()),
-                          )
-                        ],
-                      )),
-                  separatorBuilder: (c, i) => const SizedBox(
+    return BlocConsumer<B2bStoreBloc, B2BStoreState>(
+        bloc: _b2bStoreBloc,
+        listener: (context, state) {
+          if (state is OrderDetailsLoading) {
+            EasyLoading.show(status: state.message);
+          }
+          if (state is OrderDetailsSuccess) {
+            setState(() {
+              orderDetailsData = state.orderDetailsData;
+              isLoading = false;
+              print(state.orderDetailsData.orderSets);
+            });
+            EasyLoading.dismiss();
+          }
+          if (state is OrderDetailsError) {
+            EasyLoading.dismiss();
+            EasyLoading.showError(state.error);
+          }
+        },
+        builder: (context, snapshot) {
+          return !isLoading
+              ? Scaffold(
+                  appBar: const BackAppBar(),
+                  body: Column(
+                    children: [
+                      CartHeader(
+                          imgPath: AppImages.bag,
+                          title: "Order",
+                          subtitle: "check your recent order here"),
+                      const SizedBox(
                         height: 10,
                       ),
-                  itemCount: 5)),
-        ],
-      ),
-    );
+                      Expanded(
+                          child: ListView.separated(
+                              itemBuilder: (c, i) => XDecoratedBox(
+                                      child: Column(
+                                    spacing: 20,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                          orderDetailsData!.orderSets[i].id
+                                              .toString(),
+                                          style: AppTextStyle.font14bold),
+                                      Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        spacing: 10,
+                                        children: List.generate(4,
+                                            (i) => const OrderItemWithReview()),
+                                      )
+                                    ],
+                                  )),
+                              separatorBuilder: (c, i) => const SizedBox(
+                                    height: 10,
+                                  ),
+                              itemCount: 5)),
+                    ],
+                  ),
+                )
+              : Container();
+        });
   }
 }
 

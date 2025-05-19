@@ -244,10 +244,10 @@ class PricingCalculate extends StatelessWidget {
                 price: "Rs. $shipping",
               )
             : const SizedBox(),
-        // ItemNamePrice(
-        //   item: "Item Total",
-        //   price: "Rs. $subTotal",
-        // ),
+        ItemNamePrice(
+          item: "Item Total",
+          price: "Rs. $subTotal",
+        ),
         const Divider(),
         ItemNamePrice(
           item: "Grand Total",
