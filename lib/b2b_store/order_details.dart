@@ -47,7 +47,7 @@ class _OrderScreenState extends State<OrderScreen> {
           if (state is OrderDetailsSuccess) {
             setState(() {
               orderDetailsData = state.orderDetailsData;
-              print(state.orderDetailsData);
+              print(state.orderDetailsData.orderSets);
             });
             EasyLoading.dismiss();
           }
@@ -72,17 +72,22 @@ class _OrderScreenState extends State<OrderScreen> {
                           "Check or modify the details of your order here"),
                   Expanded(
                     child: ListView.builder(
-                        itemCount: orderDetailsData?.orders.length ?? 0,
+                        itemCount: orderDetailsData?.orderSets.length ?? 0,
                         itemBuilder: (c, i) {
-                          final order = orderDetailsData?.orders[i];
+                          final order = orderDetailsData?.orderSets[i];
                           return OrderStatusCard(
                             timeLineList: timeLineList,
-                            url: order!.items?.first.thumbnail ?? "",
-                            productLabel:
-                                order.items?.first.title.toString() ?? "",
-                            subTitle:
-                                order.items?.first.subtitle.toString() ?? "",
-                            price: order.items?.first.total.toString() ?? "",
+                            url:
+                                order!.orders.first.items.first.thumbnail ?? "",
+                            productLabel: order.orders.first.items.first.title
+                                    .toString() ??
+                                "",
+                            subTitle: order.orders.first.items.first.subtitle
+                                    .toString() ??
+                                "",
+                            price: order.orders.first.items.first.total
+                                    .toString() ??
+                                "",
                           );
                         }),
                   ),
