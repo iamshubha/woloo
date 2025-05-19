@@ -1,4 +1,5 @@
 import 'package:animated_rating_stars/animated_rating_stars.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -66,28 +67,31 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
                       ),
                       Expanded(
                           child: ListView.separated(
-                              itemBuilder: (c, i) => XDecoratedBox(
-                                      child: Column(
-                                    spacing: 20,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          orderDetailsData!.orderSets[i].id
-                                              .toString(),
-                                          style: AppTextStyle.font14bold),
-                                      Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        spacing: 10,
-                                        children: List.generate(4,
-                                            (i) => const OrderItemWithReview()),
-                                      )
-                                    ],
-                                  )),
-                              separatorBuilder: (c, i) => const SizedBox(
-                                    height: 10,
-                                  ),
-                              itemCount: 5)),
+                        itemCount: orderDetailsData!.orderSets.length,
+                        itemBuilder: (c, i) => XDecoratedBox(
+                            child: Column(
+                          spacing: 20,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(orderDetailsData!.orderSets[i].id.toString(),
+                                style: AppTextStyle.font14bold),
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              spacing: 10,
+                              children: List.generate(
+                                orderDetailsData!.orderSets[i].orders.length,
+                                (j) => OrderItemWithReview(
+                                  orderDetails: orderDetailsData!
+                                      .orderSets[i].orders[0].items![j],
+                                ),
+                              ),
+                            )
+                          ],
+                        )),
+                        separatorBuilder: (c, i) => const SizedBox(
+                          height: 10,
+                        ),
+                      )),
                     ],
                   ),
                 )
@@ -99,7 +103,9 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
 class OrderItemWithReview extends StatelessWidget {
   const OrderItemWithReview({
     super.key,
+    required this.orderDetails,
   });
+  final Item orderDetails;
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +122,8 @@ class OrderItemWithReview extends StatelessWidget {
               child: SizedBox(
                 height: 60,
                 width: 60,
-                child: Image.asset(AppImages.pest),
+                child:
+                    CachedNetworkImage(imageUrl: orderDetails.thumbnail ?? ''),
               ),
             ),
             Flexible(
@@ -125,13 +132,14 @@ class OrderItemWithReview extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Small Menstrual Cups",
+                    orderDetails.title ?? '',
                     style: AppTextStyle.font14bold,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text("Rs. 480"),
+                      Text(orderDetails.unitPrice.toString(),
+                          style: AppTextStyle.font14bold),
                       // const Spacer(),
                       InkWell(
                         onTap: () {
