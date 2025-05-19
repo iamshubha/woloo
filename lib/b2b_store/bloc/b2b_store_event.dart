@@ -109,6 +109,13 @@ class Payment extends B2BStoreEvent {
   List<Object?> get props => [];
 }
 
+class ProceedToShip extends B2BStoreEvent {
+  const ProceedToShip();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class PlaceOrder extends B2BStoreEvent {
   final String? order_id;
   const PlaceOrder({required this.order_id});

@@ -46,6 +46,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<GetAddress>(_getAddress);
     on<GetCartData>(_getCart);
     on<AddToCart>(_addToCart);
+    on<ProceedToShip>(_proceedToSheep);
     on<Payment>(_proceedToCheckOut);
     on<AddRemoveItemReq>(_addRemoveItems);
     on<PlaceOrder>(_placeOrder);
@@ -88,7 +89,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       TopBrands topBrands = TopBrands();
       ProductCollections productCollections = ProductCollections();
 
-      emit(const B2BStoreLoading(message: "Loading data...sob data"));
+      emit(const B2BStoreLoading(message: "Loading data..."));
 
       // Login and get token
       final loginToken = await loginFlowService.loginCustomer(
@@ -101,13 +102,13 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       final regionResponse = await _productService.getRegion(token: loginToken);
       box.write('region_id', regionResponse.regions![0].id);
 
-      // await _productService
-      //     .createCart(
-      //         token: loginToken,
-      //         regionId: regionResponse.regions![0].id.toString())
-      //     .then((cartData) {
-      //   box.write('cart_id', cartData.cart!.id);
-      // });
+      await _productService
+          .createCart(
+              token: loginToken,
+              regionId: regionResponse.regions![0].id.toString())
+          .then((cartData) {
+        box.write('cart_id', cartData.cart!.id);
+      });
       CartModel cartModel = await _cartService.getAllCartData(
           token: box.read('login_jwt'), cartId: box.read('cart_id'));
 
@@ -257,12 +258,14 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     }
   }
 
-  FutureOr<void> _proceedToCheckOut(
-    Payment event,
+  FutureOr<void> _proceedToSheep(
+    ProceedToShip event,
     Emitter<B2BStoreState> emit,
   ) async {
     emit(const CartLoading(message: "Proceed to cart"));
     try {
+      //call on checkout button click then add delivery total at cart bottom sheet
+
       final shippingOptions = await _checkoutApiService.shippingOptions(
         cart_id: box.read('cart_id'),
         token: box.read('login_jwt'),
@@ -276,8 +279,45 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       // );
 
       final shippingMethods = await _checkoutApiService.shippingMethods(
-          // TODO:
-          /*
+          shipping_option: shippingOptions.shippingOptions!.first.id,
+          // shippingOptions.shippingOptions!
+          //     .map<Map<String, dynamic>>((option) => {'id': option.id})
+          //     .toList(),
+          token: box.read('login_jwt'),
+          cart_id: box.read('cart_id'));
+
+      emit(ReadyToShip(
+        shippingDetails: shippingMethods,
+      ) //completeVendor.orderSet.orders[0].items[0].total)
+          );
+    } catch (e) {
+      emit(CartError(error: e.toString()));
+    }
+  }
+
+  FutureOr<void> _proceedToCheckOut(
+    Payment event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    emit(const CartLoading(message: "Proceed to cart"));
+    try {
+      //call on checkout button click then add delivery total at cart bottom sheet
+      {
+        final shippingOptions = await _checkoutApiService.shippingOptions(
+          cart_id: box.read('cart_id'),
+          token: box.read('login_jwt'),
+        );
+
+        // final shippingOptionsCalculate =
+        //     await _checkoutApiService.shippingOptionsCalculate(
+        //   shipping_option: shippingOptions.shippingOptions!.first.id,
+        //   token: box.read('login_jwt'),
+        //   cart_id: box.read('cart_id'),
+        // );
+
+        final shippingMethods = await _checkoutApiService.shippingMethods(
+            // TODO:
+            /*
                     
                     curl --location -g '{{base-url}}/store/carts/{{cart-id}}/add-shipping-methods' \
             --header 'Content-Type: application/json' \
@@ -298,10 +338,13 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
 
 
         */
-          shipping_option: shippingOptions.shippingOptions!.first.id,
-          token: box.read('login_jwt'),
-          cart_id: box.read('cart_id'));
-
+            shipping_option: shippingOptions.shippingOptions!.first.id,
+            // shippingOptions.shippingOptions!
+            //     .map<Map<String, dynamic>>((option) => {'id': option.id})
+            //     .toList(),
+            token: box.read('login_jwt'),
+            cart_id: box.read('cart_id'));
+      }
       final paymentProviders = await _checkoutApiService.paymentProviders(
           token: box.read('login_jwt'), region_id: box.read('region_id'));
 

@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
@@ -85,7 +87,7 @@ class CheckoutApiService {
               "/calculate",
           options: getHeaders(token),
           data: {"cart_id": cart_id});
-
+      logger.w(response);
       return ShippingOption.fromMap(response['shipping_option']);
     } catch (e) {
       logger.w(e);
@@ -95,16 +97,18 @@ class CheckoutApiService {
   }
 
   Future<AddToCartResponse> shippingMethods({
+    // required List<Map<String, dynamic>> shipping_option,
     required String? shipping_option,
     required String token,
     required String cart_id,
   }) async {
     try {
+      final body = {"option_id": shipping_option};
       // https://staging-store.woloo.in/store/carts/cart_01JTQVACY3V5FY8NBBZY3ZZ06C/shipping-methods
       final response = await dio.post(
           "https://staging-store.woloo.in/store/carts/$cart_id/shipping-methods",
           options: getHeaders(token),
-          data: {"option_id": shipping_option});
+          data: body);
       logger.w(response);
       return AddToCartResponse.fromJson(response);
     } catch (e) {
@@ -125,7 +129,7 @@ class CheckoutApiService {
         options: getHeaders(token),
       );
 
-      return PaymentProviders.fromMap(response);
+      return PaymentProviders.fromJson(response);
     } catch (e) {
       logger.w(e);
       debugPrint("Error in shippingOptionsCalculate api call: $e");
@@ -142,8 +146,8 @@ class CheckoutApiService {
           "https://staging-store.woloo.in/store/payment-collections",
           options: getHeaders(token),
           data: {"cart_id": cart_id});
-
-      return payment_provider.PaymentCollection.fromMap(response);
+      logger.w(response);
+      return payment_provider.PaymentCollection.fromJson(response);
     } catch (e) {
       logger.w(e);
       debugPrint("Error in shippingOptionsCalculate api call: $e");
@@ -162,7 +166,7 @@ class CheckoutApiService {
           options: getHeaders(token),
           data: {"provider_id": "pp_razorpay_razorpay"});
 
-      return payment_provider.PaymentCollection.fromMap(response);
+      return payment_provider.PaymentCollection.fromJson(response);
     } catch (e) {
       logger.w(e);
       debugPrint("Error in shippingOptionsCalculate api call: $e");

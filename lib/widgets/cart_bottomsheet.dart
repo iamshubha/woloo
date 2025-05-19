@@ -147,6 +147,7 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                                     total: cartModel?.cart.total,
                                     subTotal: cartModel?.cart.subtotal,
                                     discount: cartModel?.cart.discountTotal,
+                                    shipping: cartModel?.cart.shippingTotal,
                                     itemTotal: cartModel?.cart.itemTotal,
                                   ),
                                   const SizedBox(

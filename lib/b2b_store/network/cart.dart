@@ -18,7 +18,15 @@ class CartApiService {
     try {
       var response = await dio.post(
         '${APIConstants.ADD_TO_CART}$cart_id/line-items',
-        data: {"variant_id": variant_id, "quantity": quantity, "metadata": {}},
+        data: {
+          "variant_id": variant_id,
+          "quantity": quantity,
+          "metadata": {
+            //TODO: for hygine service i need to add {
+            // data - val and time - val
+            // }
+          }
+        },
         options: Options(
           headers: {
             'x-publishable-api-key':

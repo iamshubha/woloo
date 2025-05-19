@@ -92,7 +92,7 @@ class HygieneServiceApi {
           },
         ),
       );
-
+      logger.w(response);
       return cart.AddToCartResponse.fromJson(response);
     } catch (e) {
       debugPrint("Error in add  to cart  service: $e");

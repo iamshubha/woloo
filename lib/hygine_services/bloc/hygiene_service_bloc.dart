@@ -38,9 +38,9 @@ class HygieneServiceBloc
       final regionResponse =
           await hygieneServiceApi.getRegion(token: box.read('login_jwt'));
       box.write('region_id', regionResponse.regions![0].id);
-      // await hygieneServiceApi.createCart(
-      //     token: box.read('login_jwt'),
-      //     regionId: regionResponse.regions![0].id.toString());
+      await hygieneServiceApi.createCart(
+          token: box.read('login_jwt'),
+          regionId: regionResponse.regions![0].id.toString());
       final response = await hygieneServiceApi.getAllHygieneData();
       debugPrint("requestId $response");
       print(response);
@@ -142,6 +142,9 @@ class HygieneServiceBloc
 
         */
           shipping_option: shippingOptions.shippingOptions!.first.id,
+          // shippingOptions.shippingOptions!
+          //     .map<Map<String, dynamic>>((option) => {'id': option.id})
+          //     .toList(),
           token: box.read('login_jwt'),
           cart_id: box.read('cart_id'));
 

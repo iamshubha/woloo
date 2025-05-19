@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/core/bloc/core_bloc.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/hygine_services/view/hygine_landing.dart';
@@ -145,8 +146,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      const HygieneServicesScreen() //LoginAs(),
+                  builder: (context) => const EcomScreen() //LoginAs(),
                   ),
               (route) => false,
             );
@@ -209,14 +209,14 @@ class _SplashScreenState extends State<SplashScreen> {
               builder: (context) => clientId.isNotEmpty
                   ? isComplete
                       ? const ClientDashboard()
-                      : const Home(
-                          isFromDashboard: false,
-                        )
+                      : const EcomScreen(
+                          // isFromDashboard: false,
+                          )
                   : roleId == 1
-                      ? const Dashboard()
-                      : const SupervisorDashboard(
-                          isFromSupervisor: false,
-                        ),
+                      ? const EcomScreen()
+                      : const EcomScreen(
+                          // isFromSupervisor: false,
+                          ),
             ),
             (route) => false,
           );

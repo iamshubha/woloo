@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -45,7 +44,6 @@ class _CartScreenState extends State<CartScreen> {
             EasyLoading.show(status: state.message);
           }
           if (state is CartSuccess) {
-            EasyLoading.dismiss();
             setState(() {
               print(state.cartData.cart);
               // _addressesData = state.addressesData;
@@ -54,10 +52,15 @@ class _CartScreenState extends State<CartScreen> {
               _isDataLoaded = true;
               // _dashboardData = state.dashboardData;
             });
+            EasyLoading.dismiss();
           }
           if (state is CartError) {
             EasyLoading.dismiss();
             EasyLoading.showError(state.error);
+          }
+          if (state is ReadyToShip) {
+            EasyLoading.dismiss();
+            showCartBottomSheet(context);
           }
         },
         builder: (context, snapshot) {
@@ -68,8 +71,7 @@ class _CartScreenState extends State<CartScreen> {
                 decoration: const BoxDecoration(color: Colors.white),
                 child: LongLabeledButton(
                   onTap: () {
-                    // _b2bStoreBloc.add();
-                    showCartBottomSheet(context);
+                    _b2bStoreBloc.add(const ProceedToShip());
                   },
                   label: "Checkout",
                 ),
@@ -136,6 +138,7 @@ class _CartScreenState extends State<CartScreen> {
                             total: cartModel?.cart.total,
                             subTotal: cartModel?.cart.subtotal,
                             discount: cartModel?.cart.discountTotal,
+                            shipping: cartModel?.cart.shippingTotal,
                             itemTotal: cartModel?.cart.itemTotal,
                           ),
                           const SizedBox(
@@ -201,12 +204,14 @@ class PricingCalculate extends StatelessWidget {
     this.subTotal,
     this.discount,
     this.itemTotal,
+    this.shipping,
     this.isHeader = false,
   });
   final int? total;
   final int? subTotal;
   final int? discount;
   final int? itemTotal;
+  final int? shipping;
 
   final bool isHeader;
 
@@ -233,10 +238,16 @@ class PricingCalculate extends StatelessWidget {
           item: "Discount",
           price: "Rs. $discount",
         ),
-        ItemNamePrice(
-          item: "Item Total",
-          price: "Rs. $subTotal",
-        ),
+        shipping != 0
+            ? ItemNamePrice(
+                item: "Shipping",
+                price: "Rs. $shipping",
+              )
+            : const SizedBox(),
+        // ItemNamePrice(
+        //   item: "Item Total",
+        //   price: "Rs. $subTotal",
+        // ),
         const Divider(),
         ItemNamePrice(
           item: "Grand Total",

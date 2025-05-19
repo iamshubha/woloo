@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
@@ -22,10 +23,10 @@ class ReviewServiceBottomsheet extends StatefulWidget {
     super.key,
     required this.date,
     required this.time,
-    required this.selectedBHKValue, required this.productId,
+    required this.selectedBHKValue,
+    required this.productId,
   });
-  final String date, time, selectedBHKValue,productId;
-  
+  final String date, time, selectedBHKValue, productId;
 
   @override
   State<ReviewServiceBottomsheet> createState() =>
@@ -62,6 +63,12 @@ class _ReviewServiceBottomsheetState extends State<ReviewServiceBottomsheet> {
           }
           if (state is HygieneServiceCartSuccess) {
             EasyLoading.dismiss();
+            Navigator.pop(context);
+            EasyLoading.showSuccess("Added to cart");
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => const HostDashboardScreen()));
           }
 
           if (state is HygieneServiceError) {
@@ -218,7 +225,7 @@ class _ReviewServiceBottomsheetState extends State<ReviewServiceBottomsheet> {
                       service_date: widget.date,
                       service_time: widget.time,
                       service_area: widget.selectedBHKValue,
-                      variant_id: widget.selectedBHKValue,
+                      variant_id: widget.productId,
                       quantity: 1,
                     ));
                     print(widget.date);

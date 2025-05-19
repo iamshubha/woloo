@@ -66,6 +66,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           EasyLoading.dismiss();
           EasyLoading.showError(state.error);
         }
+        // if (state is ReadyToShip) {
+        //   EasyLoading.dismiss();
+        //   showCartBottomSheet(context);
+        // }
       },
       builder: (context, state) {
         return !_isDataLoaded
@@ -297,10 +301,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Future<dynamic> showCartBottomSheet(BuildContext context) {
+  Future<dynamic> showCartBottomSheet(BuildContext context) async {
     if (cartModel?.cart.items.isEmpty ?? true) {
-      addToCart(context);
+      await addToCart(context);
     }
+    _b2bStoreBloc.add(const ProceedToShip());
     return showModalBottomSheet(
       isScrollControlled: true,
       isDismissible: true, // <-- Allow tap outside to dismiss
@@ -314,7 +319,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  void addToCart(context) {
+  Future<void> addToCart(BuildContext context) async {
     try {
       _b2bStoreBloc.add(AddToCart(
           quantity: 1, variant_id: widget.productData?.variants![0].id));

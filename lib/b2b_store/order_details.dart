@@ -77,14 +77,12 @@ class _OrderScreenState extends State<OrderScreen> {
                           final order = orderDetailsData?.orders[i];
                           return OrderStatusCard(
                             timeLineList: timeLineList,
-                            url: order?.items.first.thumbnail ?? "",
+                            url: order!.items?.first.thumbnail ?? "",
                             productLabel:
-                                order?.items.first.productTitle.toString() ??
-                                    "",
+                                order.items?.first.title.toString() ?? "",
                             subTitle:
-                                order?.items.first.subtitle.toString() ?? "",
-                            price: order?.items.first.shippedTotal.toString() ??
-                                "",
+                                order.items?.first.subtitle.toString() ?? "",
+                            price: order.items?.first.total.toString() ?? "",
                           );
                         }),
                   ),

@@ -65,7 +65,6 @@ class PostAddressSuccess extends B2BStoreState {
   List<Object> get props => [];
 }
 
-
 class CartInitial extends B2BStoreState {
   @override
   List<Object> get props => [];
@@ -86,7 +85,6 @@ class PostAddressLoading extends B2BStoreState {
   @override
   List<Object> get props => [message];
 }
-
 
 class CartError extends B2BStoreState {
   final String error;
@@ -149,6 +147,16 @@ class LetsTryState extends B2BStoreState {
   });
   @override
   List<Object> get props => [orderId];
+}
+
+class ReadyToShip extends B2BStoreState {
+  final AddToCartResponse shippingDetails;
+
+  const ReadyToShip({
+    required this.shippingDetails,
+  });
+  @override
+  List<Object> get props => [shippingDetails];
 }
 
 class OrderDetailsSuccess extends B2BStoreState {
