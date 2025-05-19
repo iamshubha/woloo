@@ -63,6 +63,7 @@ class _OrderScreenState extends State<OrderScreen> {
             body: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 16.h,
                 children: [
                   CartHeader(
@@ -92,11 +93,68 @@ class _OrderScreenState extends State<OrderScreen> {
                         }),
                   ),
                   // const Spacer()
+                  const Text("Other items in the order"),
+                  const Divider(),
+                  const OtherItemOrder(), // Place Other Item If necessary place a list
+
+                  LongLabeledButton(
+                    onTap: () {},
+                    label: "Help & Support",
+                    color: AppColors.greyColorFields,
+                  )
                 ],
               ),
             ),
           );
         });
+  }
+}
+
+class OtherItemOrder extends StatelessWidget {
+  const OtherItemOrder({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return XDecoratedBox(
+        child: Row(
+      spacing: 10,
+      children: [
+        SizedBox(
+          height: 60,
+          width: 64,
+          child: Image.asset(AppImages.pest), // Replace With Product Image
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "Natural Deodrant Roll On", // Replace with real product label
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              "default variant", // Replace with real sub title
+              style: TextStyle(
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.greyBorderProfile),
+            ),
+            Text(
+              "Rs. 299", // Replace with real price
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        )
+      ],
+    ));
   }
 }
 
