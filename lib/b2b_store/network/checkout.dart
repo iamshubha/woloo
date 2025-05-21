@@ -97,16 +97,16 @@ class CheckoutApiService {
   }
 
   Future<AddToCartResponse> shippingMethods({
-    // required List<Map<String, dynamic>> shipping_option,
-    required String? shipping_option,
+    required List<Map<String, dynamic>> shipping_option,
+    // required String? shipping_option,
     required String token,
     required String cart_id,
   }) async {
     try {
-      final body = {"option_id": shipping_option};
+      final body = {"options": shipping_option};
       // https://staging-store.woloo.in/store/carts/cart_01JTQVACY3V5FY8NBBZY3ZZ06C/shipping-methods
       final response = await dio.post(
-          "https://staging-store.woloo.in/store/carts/$cart_id/shipping-methods",
+          "https://staging-store.woloo.in/store/carts/$cart_id/add-shipping-methods",
           options: getHeaders(token),
           data: body);
       logger.w(response);

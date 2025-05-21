@@ -287,10 +287,11 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       // );
 
       final shippingMethods = await _checkoutApiService.shippingMethods(
-          shipping_option: shippingOptions.shippingOptions!.first.id,
-          // shippingOptions.shippingOptions!
-          //     .map<Map<String, dynamic>>((option) => {'id': option.id})
-          //     .toList(),
+          shipping_option:
+              // shippingOptions.shippingOptions!.first.id,
+              shippingOptions.shippingOptions!
+                  .map<Map<String, dynamic>>((option) => {'id': option.id})
+                  .toList(),
           token: box.read('login_jwt'),
           cart_id: box.read('cart_id'));
 
@@ -346,10 +347,11 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
 
 
         */
-            shipping_option: shippingOptions.shippingOptions!.first.id,
-            // shippingOptions.shippingOptions!
-            //     .map<Map<String, dynamic>>((option) => {'id': option.id})
-            //     .toList(),
+            shipping_option:
+                // shippingOptions.shippingOptions!.first.id,
+                shippingOptions.shippingOptions!
+                    .map<Map<String, dynamic>>((option) => {'id': option.id})
+                    .toList(),
             token: box.read('login_jwt'),
             cart_id: box.read('cart_id'));
       }

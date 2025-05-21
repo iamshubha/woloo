@@ -48,6 +48,7 @@ class _HygieneServicesScreenState extends State<HygieneServicesScreen> {
             EasyLoading.dismiss();
             setState(() {
               _hygieneService = state.dashboardData;
+              print(_hygieneService);
               _isDataLoaded = true;
             });
           }

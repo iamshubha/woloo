@@ -9,6 +9,7 @@ import 'package:woloo_smart_hygiene/b2b_store/models/payment_provider.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/checkout.dart';
 import 'package:woloo_smart_hygiene/hygine_services/network/hygiene_service.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 
 import 'hygiene_service_event.dart';
 import 'hygiene_service_state.dart';
@@ -38,12 +39,16 @@ class HygieneServiceBloc
       final regionResponse =
           await hygieneServiceApi.getRegion(token: box.read('login_jwt'));
       box.write('region_id', regionResponse.regions![0].id);
-      await hygieneServiceApi.createCart(
-          token: box.read('login_jwt'),
-          regionId: regionResponse.regions![0].id.toString());
+      await hygieneServiceApi
+          .createCart(
+              token: box.read('login_jwt'),
+              regionId: regionResponse.regions![0].id.toString())
+          .then((e) {
+        box.write('cart_id', e.cart.id);
+      });
       final response = await hygieneServiceApi.getAllHygieneData();
       debugPrint("requestId $response");
-      print(response);
+      logger.w(response);
       // emit(HygieneServiceSuccess());
       emit(HygieneServiceSuccess(dashboardData: response));
     } catch (e) {
@@ -141,10 +146,11 @@ class HygieneServiceBloc
 
 
         */
-          shipping_option: shippingOptions.shippingOptions!.first.id,
-          // shippingOptions.shippingOptions!
-          //     .map<Map<String, dynamic>>((option) => {'id': option.id})
-          //     .toList(),
+          shipping_option:
+              // shippingOptions.shippingOptions!.first.id,
+              shippingOptions.shippingOptions!
+                  .map<Map<String, dynamic>>((option) => {'id': option.id})
+                  .toList(),
           token: box.read('login_jwt'),
           cart_id: box.read('cart_id'));
 

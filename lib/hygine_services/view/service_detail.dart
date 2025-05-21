@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
+import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/enums/product_mode.dart';
 import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_event.d
 import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_state.dart';
 import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
@@ -227,6 +229,158 @@ class _ServiceDetailState extends State<ServiceDetail> {
                               height: 10,
                             ),
                             const Divider(),
+                            //add a row to show the variant of the product in listview builder
+                            Container(
+                              height: 120.h,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount:
+                                    _hygieneService?.variants.length ?? 0,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    child: Column(children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(25.r)),
+                                        child: SizedBox(
+                                          height: 60.h,
+                                          width: 60.w,
+                                          child: CachedNetworkImage(
+                                            imageUrl:
+                                                _hygieneService!.thumbnail ??
+                                                    "",
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                      Text(
+                                        _hygieneService
+                                                ?.variants[index].title ??
+                                            "N/A",
+                                        // style: AppTextStyle.font16regular,
+                                      ),
+                                      Text(
+                                        _hygieneService
+                                                ?.variants[index]
+                                                .calculatedPrice
+                                                .calculatedAmount
+                                                .toString() ??
+                                            "N/A",
+                                        // style: AppTextStyle.font14regular,
+                                      ),
+                                    ]),
+                                  );
+                                },
+                              ),
+                              // child: ListView.builder(
+                              //   scrollDirection: Axis.horizontal,
+                              //   itemCount:
+                              //       _hygieneService?.variants.length ?? 0,
+                              //   itemBuilder: (context, index) {
+                              //     return GestureDetector(
+                              //       onTap: () {
+                              //         // Navigator.push(
+                              //         //   context,
+                              //         //   MaterialPageRoute(
+                              //         //     builder: (context) => ProductDetailsScreen(
+                              //         //       productData: products,
+                              //         //     ),
+                              //         //   ),
+                              //         // );
+                              //       },
+                              //       child: Container(
+                              //         padding: EdgeInsets.symmetric(
+                              //             horizontal: 10.w),
+                              //         decoration: BoxDecoration(
+                              //             color: AppColors.themeBackground,
+                              //             borderRadius:
+                              //                 BorderRadius.circular(25.r),
+                              //             boxShadow: const [
+                              //               BoxShadow(
+                              //                 color: AppColors.greyShadowColor,
+                              //                 blurRadius: 5.0,
+                              //                 spreadRadius: 0.5,
+                              //                 offset: Offset(0, 2),
+                              //               ),
+                              //               BoxShadow(
+                              //                 color: AppColors.greyShadowColor,
+                              //                 blurRadius: 5.0,
+                              //                 spreadRadius: 0.5,
+                              //                 offset: Offset(0, -1),
+                              //               ),
+                              //             ]),
+                              //         child: Column(
+                              //           spacing: 2.h,
+                              //           crossAxisAlignment:
+                              //               CrossAxisAlignment.start,
+                              //           mainAxisSize: MainAxisSize.min,
+                              //           children: [
+                              //             ClipRRect(
+                              //               borderRadius: BorderRadius.vertical(
+                              //                   top: Radius.circular(25.r)),
+                              //               child: SizedBox(
+                              //                 height: 60.h,
+                              //                 width: double.infinity,
+                              //                 // child:
+                              //                 // Image.network(
+                              //                 //   _hygieneService!.thumbnail ??
+                              //                 //       '',
+                              //                 //   fit: BoxFit.contain,
+                              //                 // ),
+                              //               ),
+                              //             ),
+                              //             Text(
+                              //               _hygieneService!
+                              //                       .variants[index].title ??
+                              //                   "",
+                              //               style: TextStyle(
+                              //                   fontSize: 10.5.sp,
+                              //                   fontWeight: FontWeight.bold),
+                              //               maxLines: 1,
+                              //               overflow: TextOverflow.ellipsis,
+                              //             ),
+                              //             // Text(
+                              //             //   // products.subtitle ??
+                              //             //   "",
+                              //             //   style: TextStyle(
+                              //             //     fontSize: 8.sp,
+                              //             //     color: AppColors.textgreyColor,
+                              //             //     fontWeight: FontWeight.bold,
+                              //             //   ),
+                              //             // ),
+                              //             // Row(
+                              //             //   children: List.generate(
+                              //             //     5,
+                              //             //     (i) => Container(
+                              //             //         margin:
+                              //             //             EdgeInsets.only(right: 2.w),
+                              //             //         height: 10.h,
+                              //             //         width: 10.w,
+                              //             //         child: Image.asset(
+                              //             //             AppImages.stars)),
+                              //             //   ),
+                              //             // ),
+                              //             Row(
+                              //               children: [
+                              //                 Text(
+                              //                   "Rs. ${_hygieneService!.variants[index].calculatedPrice.calculatedAmount.toString()}",
+                              //                   style: TextStyle(
+                              //                     fontSize: 13.sp,
+                              //                     fontWeight: FontWeight.bold,
+                              //                   ),
+                              //                 ),
+                              //                 const Spacer(),
+                              //                 const AddToCartButton()
+                              //               ],
+                              //             )
+                              //           ],
+                              //         ),
+                              //       ),
+                              //     );
+                              //   },
+                              // ),
+                            ),
+
                             const SizedBox(
                               height: 10,
                             ),
