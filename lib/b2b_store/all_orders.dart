@@ -15,6 +15,8 @@ import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 
+import '../utils/logger.dart';
+
 class AllOrderScreen extends StatefulWidget {
   const AllOrderScreen({super.key});
 
@@ -85,11 +87,38 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
                                   orderDetails: orderDetailsData!
                                       .orderSets[i].orders[0].items![j],
                                   onChanged: (value) {
-                                    RateExperienceCard(
-                                      onWriteReviewPressed: () {
-                                        ReviewBottomSheet.show(
-                                          context,
-                                          onSubmit: (review) {
+                                    logger.w("$value");
+                                    // RateExperienceCard(
+                                    //   onWriteReviewPressed: () {
+                                    //     ReviewBottomSheet.show(
+                                    //       context,
+                                    //       onSubmit: (review) {
+                                    //         _b2bStoreBloc.add(ReviewEvent(
+                                    //           product_id: orderDetailsData!
+                                    //               .orderSets[i]
+                                    //               .orders[0]
+                                    //               .items![j]
+                                    //               .productId,
+                                    //           rating: value.toInt(),
+                                    //           comment: review,
+                                    //           line_item_id: orderDetailsData!
+                                    //               .orderSets[i]
+                                    //               .orders[0]
+                                    //               .items![j]
+                                    //               .detail!
+                                    //               .itemId
+                                    //               .toString(),
+                                    //         ));
+                                    //         // Handle the submitted review
+                                    //       },
+                                    //     );
+                                    //   },
+                                    // );
+                                    showModalBottomSheet(
+                                        context: context,
+                                        builder: (c) {
+                                          return ReviewBottomSheet(
+                                              onSubmit: (reviewGiven) {
                                             _b2bStoreBloc.add(ReviewEvent(
                                               product_id: orderDetailsData!
                                                   .orderSets[i]
@@ -97,7 +126,7 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
                                                   .items![j]
                                                   .productId,
                                               rating: value.toInt(),
-                                              comment: review,
+                                              comment: reviewGiven,
                                               line_item_id: orderDetailsData!
                                                   .orderSets[i]
                                                   .orders[0]
@@ -106,11 +135,8 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
                                                   .itemId
                                                   .toString(),
                                             ));
-                                            // Handle the submitted review
-                                          },
-                                        );
-                                      },
-                                    );
+                                          });
+                                        });
                                   },
                                 ),
                               ),

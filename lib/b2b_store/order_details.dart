@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:timelines_plus/timelines_plus.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
@@ -13,6 +12,7 @@ import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
 
 class OrderScreen extends StatefulWidget {
@@ -122,12 +122,12 @@ class ReviewBottomSheet extends StatefulWidget {
   final String submitButtonText;
 
   const ReviewBottomSheet({
-    Key? key,
+    super.key,
     required this.onSubmit,
     this.title = 'Write a Review',
     this.hintText = 'Type Your Review Here!',
     this.submitButtonText = 'Submit',
-  }) : super(key: key);
+  });
 
   @override
   State<ReviewBottomSheet> createState() => _ReviewBottomSheetState();
@@ -140,6 +140,7 @@ class ReviewBottomSheet extends StatefulWidget {
     String hintText = 'Type Your Review Here!',
     String submitButtonText = 'Submit',
   }) {
+    logger.w("Executing***");
     return showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
@@ -211,7 +212,7 @@ class _ReviewBottomSheetState extends State<ReviewBottomSheet> {
               ],
             ),
           ),
-
+          // XDecoratedBox(child: StarRa),
           // Review input area
           Expanded(
             child: Padding(
@@ -285,7 +286,7 @@ class _ReviewBottomSheetState extends State<ReviewBottomSheet> {
 
 // Example usage:
 class ReviewExample extends StatelessWidget {
-  const ReviewExample({Key? key}) : super(key: key);
+  const ReviewExample({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -532,7 +533,7 @@ class RateExperienceCard extends StatelessWidget {
   final Color buttonTextColor;
 
   const RateExperienceCard({
-    Key? key,
+    super.key,
     required this.onWriteReviewPressed,
     this.title = 'Rate Your Experience',
     this.subtitle = 'Your rating help us improve our service',
@@ -541,7 +542,7 @@ class RateExperienceCard extends StatelessWidget {
     this.textColor = Colors.white,
     this.buttonBackgroundColor = Colors.white,
     this.buttonTextColor = Colors.black,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
