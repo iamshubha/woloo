@@ -109,7 +109,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     children: [
                       ImageView(
                         imageUrl: widget.productData?.thumbnail ?? '',
-                        onTap: () {},
+                        onTap: () {
+                          _b2bStoreBloc.add(AddToWishList(
+                            variantId:
+                                widget.productData?.variants![0].id ?? '',
+                          ));
+                        },
                         isSelected: true,
                       ),
                       Column(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:timelines_plus/timelines_plus.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
@@ -55,6 +56,10 @@ class _OrderScreenState extends State<OrderScreen> {
             EasyLoading.dismiss();
             EasyLoading.showError(state.error);
           }
+          if (state is ReviewSuccess) {
+            EasyLoading.dismiss();
+            EasyLoading.showSuccess(state.message);
+          }
         },
         builder: (context, snapshot) {
           return Scaffold(
@@ -64,7 +69,7 @@ class _OrderScreenState extends State<OrderScreen> {
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 16.h,
+                spacing: 8.h,
                 children: [
                   CartHeader(
                       imgPath: AppImages.list,
@@ -101,12 +106,227 @@ class _OrderScreenState extends State<OrderScreen> {
                     onTap: () {},
                     label: "Help & Support",
                     color: AppColors.greyColorFields,
+                  ),
+                  RateExperienceCard(
+                    onWriteReviewPressed: () {
+                      ReviewBottomSheet.show(
+                        context,
+                        onSubmit: (review) {
+                          _b2bStoreBloc.add(ReviewEvent(
+                            product_id: orderDetailsData!
+                                .orderSets[0].orders[0].items![0].productId,
+                            rating: 4,
+                            comment: review,
+                            line_item_id: orderDetailsData!
+                                .orderSets[0].orders[0].items![0].detail!.itemId
+                                .toString(),
+                          ));
+                          // Handle the submitted review
+                        },
+                      );
+                    },
                   )
                 ],
               ),
             ),
           );
         });
+  }
+}
+
+class ReviewBottomSheet extends StatefulWidget {
+  final Function(String) onSubmit;
+  final String title;
+  final String hintText;
+  final String submitButtonText;
+
+  const ReviewBottomSheet({
+    Key? key,
+    required this.onSubmit,
+    this.title = 'Write a Review',
+    this.hintText = 'Type Your Review Here!',
+    this.submitButtonText = 'Submit',
+  }) : super(key: key);
+
+  @override
+  State<ReviewBottomSheet> createState() => _ReviewBottomSheetState();
+
+  /// Shows the review bottom sheet
+  static Future<String?> show(
+    BuildContext context, {
+    required Function(String) onSubmit,
+    String title = 'Write a Review',
+    String hintText = 'Type Your Review Here!',
+    String submitButtonText = 'Submit',
+  }) {
+    return showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => ReviewBottomSheet(
+        onSubmit: onSubmit,
+        title: title,
+        hintText: hintText,
+        submitButtonText: submitButtonText,
+      ),
+    );
+  }
+}
+
+class _ReviewBottomSheetState extends State<ReviewBottomSheet> {
+  final TextEditingController _reviewController = TextEditingController();
+
+  @override
+  void dispose() {
+    _reviewController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Get available height for the bottom sheet
+    final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
+    final availableHeight = MediaQuery.of(context).size.height * 0.45;
+
+    return Container(
+      height: availableHeight,
+      margin: EdgeInsets.only(bottom: keyboardSpace),
+      decoration: const BoxDecoration(
+        color: Color(0xFFD3D3D3), // Light gray background color
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Drag indicator
+          Container(
+            height: 4,
+            width: 40,
+            margin: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade400,
+              borderRadius: BorderRadius.circular(2),
+            ),
+            alignment: Alignment.center,
+          ),
+
+          // Title bar with back button
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.pop(context),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  widget.title,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Review input area
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: TextField(
+                    controller: _reviewController,
+                    maxLines: null, // Allows unlimited lines
+                    decoration: InputDecoration(
+                      hintText: widget.hintText,
+                      border: InputBorder.none,
+                      hintStyle: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          // Submit button
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: ElevatedButton(
+              onPressed: () {
+                if (_reviewController.text.isNotEmpty) {
+                  widget.onSubmit(_reviewController.text);
+                  Navigator.pop(context, _reviewController.text);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF87CEEB), // Light blue
+                foregroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(
+                widget.submitButtonText,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Example usage:
+class ReviewExample extends StatelessWidget {
+  const ReviewExample({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Review Example')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            ReviewBottomSheet.show(
+              context,
+              onSubmit: (review) {
+                // Handle the submitted review
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Review submitted: $review')),
+                );
+              },
+            );
+          },
+          child: const Text('Write A Review'),
+        ),
+      ),
+    );
   }
 }
 
@@ -319,3 +539,111 @@ class OrderStatusCard extends StatelessWidget {
     );
   }
 }
+
+class RateExperienceCard extends StatelessWidget {
+  final VoidCallback onWriteReviewPressed;
+  final String title;
+  final String subtitle;
+  final String buttonText;
+  final Color backgroundColor;
+  final Color textColor;
+  final Color buttonBackgroundColor;
+  final Color buttonTextColor;
+
+  const RateExperienceCard({
+    Key? key,
+    required this.onWriteReviewPressed,
+    this.title = 'Rate Your Experience',
+    this.subtitle = 'Your rating help us improve our service',
+    this.buttonText = 'Write A Review',
+    this.backgroundColor = const Color(0xFF87CEEB),
+    this.textColor = Colors.white,
+    this.buttonBackgroundColor = Colors.white,
+    this.buttonTextColor = Colors.black,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 90.h,
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(24.0),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: textColor,
+                    fontSize: 10.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    color: textColor,
+                    fontSize: 10.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 16.0),
+          ElevatedButton(
+            onPressed: onWriteReviewPressed,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: buttonBackgroundColor,
+              foregroundColor: buttonTextColor,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0),
+              ),
+            ),
+            child: Text(
+              buttonText,
+              style: TextStyle(
+                fontSize: 10.0,
+                fontWeight: FontWeight.bold,
+                color: buttonTextColor,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// // Example usage:
+// class ExampleUsage extends StatelessWidget {
+//   const ExampleUsage({Key? key}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: Center(
+//         child: Padding(
+//           padding: const EdgeInsets.all(16.0),
+//           child: RateExperienceCard(
+//             onWriteReviewPressed: () {
+//               // Navigate to review form or show review dialog
+//               print('Write review pressed');
+//               // Example: Navigator.push(context, MaterialPageRoute(builder: (_) => ReviewPage()));
+//             },
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

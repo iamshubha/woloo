@@ -156,3 +156,32 @@ class OrderDetailsEvent extends B2BStoreEvent {
   @override
   List<Object?> get props => [];
 }
+
+class WishlistEvent extends B2BStoreEvent {
+  const WishlistEvent();
+  @override
+  List<Object?> get props => [];
+}
+
+class AddToWishList extends B2BStoreEvent {
+  final String variantId;
+
+  const AddToWishList({required this.variantId});
+
+  @override
+  List<Object?> get props => [variantId];
+}
+
+class ReviewEvent extends B2BStoreEvent {
+  final String product_id;
+  final int rating;
+  final String comment;
+  final String line_item_id;
+  const ReviewEvent(
+      {required this.product_id,
+      required this.rating,
+      required this.comment,
+      required this.line_item_id});
+  @override
+  List<Object?> get props => [product_id, rating, comment, line_item_id];
+}

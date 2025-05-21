@@ -10,9 +10,12 @@ import 'package:woloo_smart_hygiene/b2b_store/models/login_flow.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/review.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/wishlist.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/checkout.dart';
+import 'package:woloo_smart_hygiene/b2b_store/network/favorite.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/login_reg_flow.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/product.dart';
@@ -34,6 +37,8 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       CheckoutApiService(dio: GetIt.instance());
   final OrderDetailsService _orderDetailsService =
       OrderDetailsService(dio: GetIt.instance());
+  final FavoriteService _favoriteService =
+      FavoriteService(dio: GetIt.instance());
 
   var requestId = '';
   late int roleId;
@@ -54,6 +59,9 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
 
     on<OrderDetailsEvent>(_getOrderDetails);
     on<SelectAddress>(_selectAddress);
+    on<WishlistEvent>(_getWishlist);
+    on<AddToWishList>(_addWishlist);
+    on<ReviewEvent>(_addReview);
   }
 
   FutureOr<void> _emailPassRegister(
@@ -433,6 +441,55 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     } catch (e) {
       debugPrint("Error in getOrderDetails service: $e");
       emit(OrderDetailsError(error: e.toString()));
+    }
+  }
+
+  FutureOr<void> _getWishlist(
+    WishlistEvent event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    emit(const WishlistLoading(message: 'Loading wishlist...'));
+    try {
+      Wishlist wishlist =
+          await _favoriteService.getFavorites(token: box.read('login_jwt'));
+      emit(WishlistSuccess(wishlistData: wishlist));
+    } catch (e) {
+      debugPrint("Error in getFavorites service: $e");
+      emit(WishlistError(error: e.toString()));
+    }
+  }
+
+  FutureOr<void> _addWishlist(
+    AddToWishList event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    emit(const WishlistLoading(message: 'Loading wishlist...'));
+    try {
+      Wishlist wishlist = await _favoriteService.addToWishList(
+          token: box.read('login_jwt'), variantId: event.variantId);
+      emit(WishlistSuccess(wishlistData: wishlist));
+    } catch (e) {
+      debugPrint("Error in getFavorites service: $e");
+      emit(WishlistError(error: e.toString()));
+    }
+  }
+
+  FutureOr<void> _addReview(
+    ReviewEvent event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    emit(const WishlistLoading(message: 'Loading wishlist...'));
+    try {
+      Review review = await _favoriteService.addReview(
+          token: box.read('login_jwt'),
+          product_id: event.product_id,
+          rating: event.rating,
+          comment: event.comment,
+          line_item_id: event.line_item_id);
+      // emit(WishlistSuccess(wishlistData: wishlist));
+    } catch (e) {
+      debugPrint("Error in getFavorites service: $e");
+      // emit(WishlistError(error: e.toString()));
     }
   }
 }

@@ -16,6 +16,7 @@ import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
+import 'package:woloo_smart_hygiene/b2b_store/wishlist.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
@@ -117,12 +118,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (c) =>
-                                                    CollectionsScreen(
-                                                      products:
-                                                          _b2bStoreHomePage!
-                                                              .productCollections
-                                                              .products,
-                                                    )));
+                                                    WishListScreen()));
                                       },
                                       logo: AppImages.favourites,
                                       label: "Favourites")),
