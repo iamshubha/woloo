@@ -107,25 +107,6 @@ class _OrderScreenState extends State<OrderScreen> {
                     label: "Help & Support",
                     color: AppColors.greyColorFields,
                   ),
-                  RateExperienceCard(
-                    onWriteReviewPressed: () {
-                      ReviewBottomSheet.show(
-                        context,
-                        onSubmit: (review) {
-                          _b2bStoreBloc.add(ReviewEvent(
-                            product_id: orderDetailsData!
-                                .orderSets[0].orders[0].items![0].productId,
-                            rating: 4,
-                            comment: review,
-                            line_item_id: orderDetailsData!
-                                .orderSets[0].orders[0].items![0].detail!.itemId
-                                .toString(),
-                          ));
-                          // Handle the submitted review
-                        },
-                      );
-                    },
-                  )
                 ],
               ),
             ),

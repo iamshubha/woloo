@@ -84,6 +84,34 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
                                 (j) => OrderItemWithReview(
                                   orderDetails: orderDetailsData!
                                       .orderSets[i].orders[0].items![j],
+                                  onChanged: (value) {
+                                    RateExperienceCard(
+                                      onWriteReviewPressed: () {
+                                        ReviewBottomSheet.show(
+                                          context,
+                                          onSubmit: (review) {
+                                            _b2bStoreBloc.add(ReviewEvent(
+                                              product_id: orderDetailsData!
+                                                  .orderSets[i]
+                                                  .orders[0]
+                                                  .items![j]
+                                                  .productId,
+                                              rating: value.toInt(),
+                                              comment: review,
+                                              line_item_id: orderDetailsData!
+                                                  .orderSets[i]
+                                                  .orders[0]
+                                                  .items![j]
+                                                  .detail!
+                                                  .itemId
+                                                  .toString(),
+                                            ));
+                                            // Handle the submitted review
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
                                 ),
                               ),
                             )
@@ -102,11 +130,13 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
 }
 
 class OrderItemWithReview extends StatelessWidget {
+  final Item orderDetails;
+  final Function(double) onChanged;
   const OrderItemWithReview({
     super.key,
     required this.orderDetails,
+    required this.onChanged,
   });
-  final Item orderDetails;
 
   @override
   Widget build(BuildContext context) {
@@ -187,10 +217,7 @@ class OrderItemWithReview extends StatelessWidget {
           filledIcon: Icons.star,
           halfFilledIcon: Icons.star_half,
           emptyIcon: Icons.star_border,
-          onChanged: (double rating) {
-            // Handle the rating change here
-            print('Rating: $rating');
-          },
+          onChanged: onChanged,
           displayRatingValue: true,
           interactiveTooltips: true,
           customFilledIcon: Icons.star,
