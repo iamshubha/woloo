@@ -71,17 +71,17 @@ class FavoriteService {
     required String line_item_id,
   }) async {
     try {
-      var response = await dio.post(
-          "https://staging-store.woloo.in/store/customers/me/wishlists/items",
-          options: Options(
-            headers: {
-              'x-publishable-api-key':
-                  'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $token'
-            },
-          ),
-          data: {
+      var response =
+          await dio.post("https://staging-store.woloo.in/store/orders/review",
+              options: Options(
+                headers: {
+                  'x-publishable-api-key':
+                      'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+                  'Content-Type': 'application/json',
+                  'Authorization': 'Bearer $token'
+                },
+              ),
+              data: {
             "product_id": "$product_id",
             "rating": rating,
             "comment": "$comment",

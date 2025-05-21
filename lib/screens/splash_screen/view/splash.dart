@@ -10,6 +10,7 @@ import 'package:get_it/get_it.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:woloo_smart_hygiene/core/bloc/core_bloc.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/hygine_services/view/hygine_landing.dart';
 import 'package:woloo_smart_hygiene/messaging.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_constants.dart';
@@ -142,7 +143,8 @@ class _SplashScreenState extends State<SplashScreen> {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) => const EcomScreen(), //LoginAs(),
+                builder: (context) =>
+                    const HygieneServicesScreen(), //LoginAs(),
               ),
               (route) => false,
             );
@@ -204,13 +206,13 @@ class _SplashScreenState extends State<SplashScreen> {
             MaterialPageRoute(
               builder: (context) => clientId.isNotEmpty
                   ? isComplete
-                      ? const EcomScreen()
-                      : const EcomScreen(
+                      ? const HygieneServicesScreen()
+                      : const HygieneServicesScreen(
                           // isFromDashboard: false,
                           )
                   : roleId == 1
-                      ? const EcomScreen()
-                      : const EcomScreen(
+                      ? const HygieneServicesScreen()
+                      : const HygieneServicesScreen(
                           // isFromSupervisor: false,
                           ),
             ),
