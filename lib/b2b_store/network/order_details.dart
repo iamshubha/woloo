@@ -11,7 +11,7 @@ class OrderDetailsService {
   Future<OrderDetails> getOrderDetails({required String token}) async {
     try {
       var response = await dio.get(
-        "https://staging-store.woloo.in/store/orders",
+        "https://staging-store.woloo.in/store/order-sets",
         options: Options(
           headers: {
             'x-publishable-api-key':
@@ -21,6 +21,7 @@ class OrderDetailsService {
           },
         ),
       );
+      logger.w(response);
       return OrderDetails.fromJson(response);
     } catch (e) {
       debugPrint("Error in getOrderDetails service: $e");

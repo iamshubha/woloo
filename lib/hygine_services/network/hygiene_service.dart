@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart' as cart;
+import 'package:woloo_smart_hygiene/b2b_store/models/region.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/checkout.dart';
 import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
 import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
@@ -10,6 +12,93 @@ import 'package:woloo_smart_hygiene/utils/logger.dart';
 class HygieneServiceApi {
   final DioClient dio;
   const HygieneServiceApi({required this.dio});
+  Future<RegionsModel> getRegion({
+    required String token,
+  }) async {
+    try {
+      var response = await dio.get(
+        APIConstants.GET_REGIONS,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      return RegionsModel.fromJson(response);
+    } catch (e) {
+      debugPrint("error $e");
+      rethrow;
+    }
+  }
+
+  Future<cart.CartModel> createCart({
+    required String token,
+    required String regionId,
+  }) async {
+    try {
+      var response = await dio.post(
+        APIConstants.CREATE_CART,
+        data: {
+          "region_id": regionId,
+        },
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      return cart.CartModel.fromJson(response);
+    } catch (e) {
+      debugPrint("error $e");
+      rethrow;
+    }
+  }
+
+  Future<cart.AddToCartResponse> addToCart({
+    required String token,
+    required String cart_id,
+    required String? variant_id,
+    required String service_date,
+    required String service_time,
+    required String service_area,
+    required int quantity,
+  }) async {
+    try {
+      var response = await dio.post(
+        '${APIConstants.ADD_TO_CART}$cart_id/line-items',
+        data: {
+          "variant_id": variant_id,
+          "quantity": quantity,
+          "metadata": {
+            "service_date": "$service_date",
+            "service_time": "$service_time",
+            "service_area": "$service_area"
+          }
+        },
+        options: Options(
+          headers: {
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+        ),
+      );
+      logger.w(response);
+      return cart.AddToCartResponse.fromJson(response);
+    } catch (e) {
+      debugPrint("Error in add  to cart  service: $e");
+      rethrow;
+    }
+  }
 
   Future<HygieneService> getAllHygieneData() async {
     try {

@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/enums/product_mode.dart';
 import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_bloc.dart';
 import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_event.dart';
 import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_state.dart';
+import 'package:woloo_smart_hygiene/hygine_services/get_date_time_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
@@ -34,6 +34,7 @@ class _ServiceDetailState extends State<ServiceDetail> {
   // hygiene.? _hygieneService;
   Product? _hygieneService;
   List<PestControlService> services = [];
+  bool isOpen = false;
 
   @override
   void initState() {
@@ -91,18 +92,26 @@ class _ServiceDetailState extends State<ServiceDetail> {
                             SizedBox(
                               height: 300,
                               width: MediaQuery.of(context).size.width,
-                              child: CarouselView(
-                                itemExtent: 1,
-                                children: List.generate(
-                                  _hygieneService?.images.length ?? 0,
-                                  (index) {
-                                    final image =
-                                        _hygieneService?.images[index];
-                                    return CachedNetworkImage(
-                                        imageUrl: image?.url ?? "");
-                                  },
-                                ),
-                              ),
+                              child:
+                                  //  _hygieneService!.images.isNotEmpty
+                                  //     ? CarouselView(
+                                  //         itemExtent: 1,
+                                  //         children: List.generate(
+                                  //           _hygieneService?.images.length ?? 0,
+                                  //           (index) {
+                                  //             logger.w(
+                                  //                 "Images: ${_hygieneService?.images}");
+                                  //             final image =
+                                  //                 _hygieneService?.images[index];
+                                  //             return CachedNetworkImage(
+                                  //                 imageUrl: image?.url ?? "");
+                                  //           },
+                                  //         ),
+                                  //       )
+                                  //     :
+                                  CachedNetworkImage(
+                                      imageUrl:
+                                          _hygieneService?.thumbnail ?? ""),
                             ),
                             const SizedBox(
                               height: 20,
@@ -113,59 +122,59 @@ class _ServiceDetailState extends State<ServiceDetail> {
                                 CustomImageProvider(
                                   image: ServicesImages.stars,
                                 ),
-                                Container(
-                                  width: 145.w,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 3),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(7),
-                                      color: AppColors.backgroundColor),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {},
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                                border: Border.all(),
-                                                borderRadius:
-                                                    BorderRadius.circular(4)),
-                                            child: const Icon(
-                                              Icons.remove,
-                                              size: 17,
-                                            )),
-                                      ),
-                                      Row(
-                                        children: [
-                                          CustomImageProvider(
-                                            image: ServicesImages.cart,
-                                            width: 20,
-                                          ),
-                                          const SizedBox(
-                                            width: 4,
-                                          ),
-                                          Text(
-                                            "1",
-                                            style: AppTextStyle.font20bold,
-                                          ),
-                                        ],
-                                      ),
-                                      InkWell(
-                                        onTap: () {},
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                                border: Border.all(),
-                                                borderRadius:
-                                                    BorderRadius.circular(4)),
-                                            child: const Icon(
-                                              Icons.add,
-                                              size: 17,
-                                            )),
-                                      )
-                                    ],
-                                  ),
-                                ),
+                                // Container(
+                                //   width: 145.w,
+                                //   padding: const EdgeInsets.symmetric(
+                                //       horizontal: 16, vertical: 3),
+                                //   decoration: BoxDecoration(
+                                //       borderRadius: BorderRadius.circular(7),
+                                //       color: AppColors.backgroundColor),
+                                //   child: Row(
+                                //     mainAxisAlignment:
+                                //         MainAxisAlignment.spaceBetween,
+                                //     children: [
+                                //       InkWell(
+                                //         onTap: () {},
+                                //         child: Container(
+                                //             decoration: BoxDecoration(
+                                //                 border: Border.all(),
+                                //                 borderRadius:
+                                //                     BorderRadius.circular(4)),
+                                //             child: const Icon(
+                                //               Icons.remove,
+                                //               size: 17,
+                                //             )),
+                                //       ),
+                                //       Row(
+                                //         children: [
+                                //           CustomImageProvider(
+                                //             image: ServicesImages.cart,
+                                //             width: 20,
+                                //           ),
+                                //           const SizedBox(
+                                //             width: 4,
+                                //           ),
+                                //           Text(
+                                //             "1",
+                                //             style: AppTextStyle.font20bold,
+                                //           ),
+                                //         ],
+                                //       ),
+                                //       InkWell(
+                                //         onTap: () {},
+                                //         child: Container(
+                                //             decoration: BoxDecoration(
+                                //                 border: Border.all(),
+                                //                 borderRadius:
+                                //                     BorderRadius.circular(4)),
+                                //             child: const Icon(
+                                //               Icons.add,
+                                //               size: 17,
+                                //             )),
+                                //       )
+                                //     ],
+                                //   ),
+                                // ),
                               ],
                             ),
                             const SizedBox(
@@ -188,34 +197,207 @@ class _ServiceDetailState extends State<ServiceDetail> {
                                       "N/A",
                                   style: AppTextStyle.font32bold,
                                 ),
-                                ShortLabelledButton(
-                                  label: "Book Now",
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                        isScrollControlled: true,
-                                        isDismissible:
-                                            true, // <-- Allow tap outside to dismiss
-                                        enableDrag:
-                                            true, // <-- Allow swipe down to dismiss
-
-                                        backgroundColor: Colors
-                                            .transparent, // Optional: if you want rounded corners to show correctly
-
-                                        context: context,
-                                        builder: (context) {
-                                          return const AddressChangeBottomSheet(
-                                            productMode:
-                                                ProductMode.serviceDetails,
-                                          );
-                                        });
-                                  },
-                                )
+                                if (!isOpen)
+                                  ShortLabelledButton(
+                                    label: "Book Now",
+                                    onTap: () {
+                                      isOpen = !isOpen;
+                                      setState(() {});
+                                    },
+                                  ),
+                                if (isOpen)
+                                  GestureDetector(
+                                      onTap: () {
+                                        isOpen = !isOpen;
+                                        setState(() {});
+                                      },
+                                      child: const Icon(Icons.arrow_upward))
                               ],
                             ),
                             const SizedBox(
                               height: 10,
                             ),
                             const Divider(),
+                            //add a row to show the variant of the product in listview builder
+                            Visibility(
+                              visible: isOpen,
+                              child: SizedBox(
+                                height: 160.h,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount:
+                                      _hygieneService?.variants.length ?? 0,
+                                  itemBuilder: (context, index) {
+                                    return Card(
+                                      child: Column(children: [
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(25.r)),
+                                          child: SizedBox(
+                                            height: 60.h,
+                                            width: 60.w,
+                                            child: CachedNetworkImage(
+                                              imageUrl:
+                                                  _hygieneService!.thumbnail ??
+                                                      "",
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          _hygieneService
+                                                  ?.variants[index].title ??
+                                              "N/A",
+                                          // style: AppTextStyle.font16regular,
+                                        ),
+                                        Text(
+                                          _hygieneService
+                                                  ?.variants[index]
+                                                  .calculatedPrice
+                                                  .calculatedAmount
+                                                  .toString() ??
+                                              "N/A",
+                                          // style: AppTextStyle.font14regular,
+                                        ),
+                                        ShortLabelledButton(
+                                          label: "Book Now",
+                                          onTap: () {
+                                            showModalBottomSheet(
+                                                isScrollControlled: true,
+                                                isDismissible:
+                                                    true, // <-- Allow tap outside to dismiss
+                                                enableDrag:
+                                                    true, // <-- Allow swipe down to dismiss
+
+                                                backgroundColor: Colors
+                                                    .transparent, // Optional: if you want rounded corners to show correctly
+
+                                                context: context,
+                                                builder: (context) {
+                                                  return GetTimeScheduleBottomSheet(
+                                                    productId: _hygieneService!
+                                                        .variants[index].id,
+                                                  );
+                                                });
+                                          },
+                                        )
+                                      ]),
+                                    );
+                                  },
+                                ),
+                                // child: ListView.builder(
+                                //   scrollDirection: Axis.horizontal,
+                                //   itemCount:
+                                //       _hygieneService?.variants.length ?? 0,
+                                //   itemBuilder: (context, index) {
+                                //     return GestureDetector(
+                                //       onTap: () {
+                                //         // Navigator.push(
+                                //         //   context,
+                                //         //   MaterialPageRoute(
+                                //         //     builder: (context) => ProductDetailsScreen(
+                                //         //       productData: products,
+                                //         //     ),
+                                //         //   ),
+                                //         // );
+                                //       },
+                                //       child: Container(
+                                //         padding: EdgeInsets.symmetric(
+                                //             horizontal: 10.w),
+                                //         decoration: BoxDecoration(
+                                //             color: AppColors.themeBackground,
+                                //             borderRadius:
+                                //                 BorderRadius.circular(25.r),
+                                //             boxShadow: const [
+                                //               BoxShadow(
+                                //                 color: AppColors.greyShadowColor,
+                                //                 blurRadius: 5.0,
+                                //                 spreadRadius: 0.5,
+                                //                 offset: Offset(0, 2),
+                                //               ),
+                                //               BoxShadow(
+                                //                 color: AppColors.greyShadowColor,
+                                //                 blurRadius: 5.0,
+                                //                 spreadRadius: 0.5,
+                                //                 offset: Offset(0, -1),
+                                //               ),
+                                //             ]),
+                                //         child: Column(
+                                //           spacing: 2.h,
+                                //           crossAxisAlignment:
+                                //               CrossAxisAlignment.start,
+                                //           mainAxisSize: MainAxisSize.min,
+                                //           children: [
+                                //             ClipRRect(
+                                //               borderRadius: BorderRadius.vertical(
+                                //                   top: Radius.circular(25.r)),
+                                //               child: SizedBox(
+                                //                 height: 60.h,
+                                //                 width: double.infinity,
+                                //                 // child:
+                                //                 // Image.network(
+                                //                 //   _hygieneService!.thumbnail ??
+                                //                 //       '',
+                                //                 //   fit: BoxFit.contain,
+                                //                 // ),
+                                //               ),
+                                //             ),
+                                //             Text(
+                                //               _hygieneService!
+                                //                       .variants[index].title ??
+                                //                   "",
+                                //               style: TextStyle(
+                                //                   fontSize: 10.5.sp,
+                                //                   fontWeight: FontWeight.bold),
+                                //               maxLines: 1,
+                                //               overflow: TextOverflow.ellipsis,
+                                //             ),
+                                //             // Text(
+                                //             //   // products.subtitle ??
+                                //             //   "",
+                                //             //   style: TextStyle(
+                                //             //     fontSize: 8.sp,
+                                //             //     color: AppColors.textgreyColor,
+                                //             //     fontWeight: FontWeight.bold,
+                                //             //   ),
+                                //             // ),
+                                //             // Row(
+                                //             //   children: List.generate(
+                                //             //     5,
+                                //             //     (i) => Container(
+                                //             //         margin:
+                                //             //             EdgeInsets.only(right: 2.w),
+                                //             //         height: 10.h,
+                                //             //         width: 10.w,
+                                //             //         child: Image.asset(
+                                //             //             AppImages.stars)),
+                                //             //   ),
+                                //             // ),
+                                //             Row(
+                                //               children: [
+                                //                 Text(
+                                //                   "Rs. ${_hygieneService!.variants[index].calculatedPrice.calculatedAmount.toString()}",
+                                //                   style: TextStyle(
+                                //                     fontSize: 13.sp,
+                                //                     fontWeight: FontWeight.bold,
+                                //                   ),
+                                //                 ),
+                                //                 const Spacer(),
+                                //                 const AddToCartButton()
+                                //               ],
+                                //             )
+                                //           ],
+                                //         ),
+                                //       ),
+                                //     );
+                                //   },
+                                // ),
+                              ),
+                            ),
+
                             const SizedBox(
                               height: 10,
                             ),
@@ -435,31 +617,37 @@ class _ServiceDetailState extends State<ServiceDetail> {
                   //     ],
                   //   ),
                   // ),
-                  bottomSheet: XDecoratedBox(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: LongLabeledButton(
-                            onTap: () {
-                              // showCartBottomSheet(context);
-                            },
-                            label: "Buy Now",
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        Expanded(
-                          child: LongLabeledButton(
-                            onTap: () {
-                              // addToCart(context);
-                            },
-                            label: "Add to Cart",
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // bottomSheet: XDecoratedBox(
+                  //   child: Row(
+                  //     children: [
+                  //       Expanded(
+                  //         child: LongLabeledButton(
+                  //           onTap: () {
+                  //             // showCartBottomSheet(context);
+                  //             Navigator.pop(context);
+                  //             showModalBottomSheet(
+                  //                 context: context,
+                  //                 builder: (c) {
+                  //                   return const ReviewOrderBottomsheet();
+                  //                 });
+                  //           },
+                  //           label: "Buy Now",
+                  //         ),
+                  //       ),
+                  //       const SizedBox(
+                  //         width: 20,
+                  //       ),
+                  //       Expanded(
+                  //         child: LongLabeledButton(
+                  //           onTap: () {
+                  //             // addToCart(context);
+                  //           },
+                  //           label: "Add to Cart",
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                 );
         });
   }

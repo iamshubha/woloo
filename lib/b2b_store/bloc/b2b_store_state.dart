@@ -4,6 +4,7 @@ import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/order.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/wishlist.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/model/host_dashboard_screen.dart';
 
 abstract class B2BStoreState extends Equatable {
@@ -59,6 +60,12 @@ class GetAddressSuccess extends B2BStoreState {
   List<Object> get props => [addressesData];
 }
 
+class PostAddressSuccess extends B2BStoreState {
+  const PostAddressSuccess();
+  @override
+  List<Object> get props => [];
+}
+
 class CartInitial extends B2BStoreState {
   @override
   List<Object> get props => [];
@@ -67,6 +74,14 @@ class CartInitial extends B2BStoreState {
 class CartLoading extends B2BStoreState {
   final String message;
   const CartLoading({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+class PostAddressLoading extends B2BStoreState {
+  final String message;
+  const PostAddressLoading({required this.message});
 
   @override
   List<Object> get props => [message];
@@ -118,21 +133,31 @@ class AddressSet extends B2BStoreState {
 
 class PaymentSuccess extends B2BStoreState {
   final CompleteVendor completeVendor;
-  PaymentSuccess({required this.completeVendor});
+  const PaymentSuccess({required this.completeVendor});
 
   @override
   List<Object> get props => [];
 }
 
 class LetsTryState extends B2BStoreState {
-  final String order_id;
-  final int total_price;
+  final String orderId;
+  final int totalPrice;
   const LetsTryState({
-    required this.order_id,
-    required this.total_price,
+    required this.orderId,
+    required this.totalPrice,
   });
   @override
-  List<Object> get props => [order_id];
+  List<Object> get props => [orderId];
+}
+
+class ReadyToShip extends B2BStoreState {
+  final AddToCartResponse shippingDetails;
+
+  const ReadyToShip({
+    required this.shippingDetails,
+  });
+  @override
+  List<Object> get props => [shippingDetails];
 }
 
 class OrderDetailsSuccess extends B2BStoreState {
@@ -156,4 +181,34 @@ class OrderDetailsError extends B2BStoreState {
 
   @override
   List<Object> get props => [error];
+}
+
+class WishlistSuccess extends B2BStoreState {
+  final Wishlist wishlistData;
+  const WishlistSuccess({required this.wishlistData});
+  @override
+  List<Object> get props => [wishlistData];
+}
+
+class WishlistLoading extends B2BStoreState {
+  final String message;
+  const WishlistLoading({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+class WishlistError extends B2BStoreState {
+  final String error;
+  const WishlistError({required this.error});
+
+  @override
+  List<Object> get props => [error];
+}
+
+class ReviewSuccess extends B2BStoreState {
+  final String message;
+  const ReviewSuccess({required this.message});
+  @override
+  List<Object> get props => [message];
 }

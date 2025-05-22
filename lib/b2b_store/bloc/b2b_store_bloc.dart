@@ -10,9 +10,12 @@ import 'package:woloo_smart_hygiene/b2b_store/models/login_flow.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/review.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/wishlist.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/checkout.dart';
+import 'package:woloo_smart_hygiene/b2b_store/network/favorite.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/login_reg_flow.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/product.dart';
@@ -34,6 +37,8 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       CheckoutApiService(dio: GetIt.instance());
   final OrderDetailsService _orderDetailsService =
       OrderDetailsService(dio: GetIt.instance());
+  final FavoriteService _favoriteService =
+      FavoriteService(dio: GetIt.instance());
 
   var requestId = '';
   late int roleId;
@@ -46,12 +51,17 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<GetAddress>(_getAddress);
     on<GetCartData>(_getCart);
     on<AddToCart>(_addToCart);
+    on<ProceedToShip>(_proceedToSheep);
     on<Payment>(_proceedToCheckOut);
     on<AddRemoveItemReq>(_addRemoveItems);
     on<PlaceOrder>(_placeOrder);
     on<DeleteItemReq>(_deleteItem);
 
     on<OrderDetailsEvent>(_getOrderDetails);
+    on<SelectAddress>(_selectAddress);
+    on<WishlistEvent>(_getWishlist);
+    on<AddToWishList>(_addWishlist);
+    on<ReviewEvent>(_addReview);
   }
 
   FutureOr<void> _emailPassRegister(
@@ -87,7 +97,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       TopBrands topBrands = TopBrands();
       ProductCollections productCollections = ProductCollections();
 
-      emit(const B2BStoreLoading(message: "Loading data...sob data"));
+      emit(const B2BStoreLoading(message: "Loading data..."));
 
       // Login and get token
       final loginToken = await loginFlowService.loginCustomer(
@@ -100,13 +110,13 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       final regionResponse = await _productService.getRegion(token: loginToken);
       box.write('region_id', regionResponse.regions![0].id);
 
-      // await _productService
-      //     .createCart(
-      //         token: loginToken,
-      //         regionId: regionResponse.regions![0].id.toString())
-      //     .then((cartData) {
-      //   box.write('cart_id', cartData.cart!.id);
-      // });
+      await _productService
+          .createCart(
+              token: loginToken,
+              regionId: regionResponse.regions![0].id.toString())
+          .then((cartData) {
+        box.write('cart_id', cartData.cart.id);
+      });
       CartModel cartModel = await _cartService.getAllCartData(
           token: box.read('login_jwt'), cartId: box.read('cart_id'));
 
@@ -172,6 +182,20 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     } catch (e) {
       emit(B2BStoreError(error: e.toString()));
       debugPrint("Error in IOT service: $e");
+    }
+  }
+
+  FutureOr<void> _selectAddress(
+      SelectAddress event, Emitter<B2BStoreState> emit) async {
+    emit(const PostAddressLoading(message: "Loading...."));
+    try {
+      await _addresstService.selectAddress(
+          cartId: box.read('cart_id'),
+          shippingAddress: event.addresses,
+          token: box.read('login_jwt'));
+      emit(const PostAddressSuccess());
+    } catch (e) {
+      logger.w("Error in Select Address: $e");
     }
   }
 
@@ -242,12 +266,14 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     }
   }
 
-  FutureOr<void> _proceedToCheckOut(
-    Payment event,
+  FutureOr<void> _proceedToSheep(
+    ProceedToShip event,
     Emitter<B2BStoreState> emit,
   ) async {
     emit(const CartLoading(message: "Proceed to cart"));
     try {
+      //call on checkout button click then add delivery total at cart bottom sheet
+
       final shippingOptions = await _checkoutApiService.shippingOptions(
         cart_id: box.read('cart_id'),
         token: box.read('login_jwt'),
@@ -261,8 +287,46 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       // );
 
       final shippingMethods = await _checkoutApiService.shippingMethods(
-          // TODO:
-          /*
+          shipping_option:
+              // shippingOptions.shippingOptions!.first.id,
+              shippingOptions.shippingOptions!
+                  .map<Map<String, dynamic>>((option) => {'id': option.id})
+                  .toList(),
+          token: box.read('login_jwt'),
+          cart_id: box.read('cart_id'));
+
+      emit(ReadyToShip(
+        shippingDetails: shippingMethods,
+      ) //completeVendor.orderSet.orders[0].items[0].total)
+          );
+    } catch (e) {
+      emit(CartError(error: e.toString()));
+    }
+  }
+
+  FutureOr<void> _proceedToCheckOut(
+    Payment event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    emit(const CartLoading(message: "Proceed to cart"));
+    try {
+      //call on checkout button click then add delivery total at cart bottom sheet
+      {
+        final shippingOptions = await _checkoutApiService.shippingOptions(
+          cart_id: box.read('cart_id'),
+          token: box.read('login_jwt'),
+        );
+
+        // final shippingOptionsCalculate =
+        //     await _checkoutApiService.shippingOptionsCalculate(
+        //   shipping_option: shippingOptions.shippingOptions!.first.id,
+        //   token: box.read('login_jwt'),
+        //   cart_id: box.read('cart_id'),
+        // );
+
+        final shippingMethods = await _checkoutApiService.shippingMethods(
+            // TODO:
+            /*
                     
                     curl --location -g '{{base-url}}/store/carts/{{cart-id}}/add-shipping-methods' \
             --header 'Content-Type: application/json' \
@@ -283,10 +347,14 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
 
 
         */
-          shipping_option: shippingOptions.shippingOptions!.first.id,
-          token: box.read('login_jwt'),
-          cart_id: box.read('cart_id'));
-
+            shipping_option:
+                // shippingOptions.shippingOptions!.first.id,
+                shippingOptions.shippingOptions!
+                    .map<Map<String, dynamic>>((option) => {'id': option.id})
+                    .toList(),
+            token: box.read('login_jwt'),
+            cart_id: box.read('cart_id'));
+      }
       final paymentProviders = await _checkoutApiService.paymentProviders(
           token: box.read('login_jwt'), region_id: box.read('region_id'));
 
@@ -296,24 +364,23 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
 
       final paymentSessions = await _checkoutApiService.paymentSessions(
           token: box.read('login_jwt'),
-          pay_col: paymentCollections.paymentCollection!.id,
-          provider_id: paymentProviders.paymentProviders![0].id);
+          pay_col: paymentCollections.paymentCollection.id,
+          provider_id: paymentProviders.paymentProviders[0].id);
 
       // final completeVendor = await _checkoutApiService.completeVendor(
       //     token: box.read('login_jwt'), cart_id: box.read('cart_id'));
 
       final orderId =
-          paymentSessions.paymentCollection!.paymentSessions![0].data!.id ??
-              "0";
+          paymentSessions.paymentCollection.paymentSessions[0].data.id ?? "0";
 
       // final placeOrder = await _checkoutApiService.placeOrder(
       //     token: box.read('login_jwt'), order_id: orderId);
 
       // emit(CartSuccess(cartData: CartModel()));
       emit(LetsTryState(
-        order_id: orderId,
-        total_price:
-            paymentSessions.paymentCollection!.paymentSessions![0].amount ?? 0,
+        orderId: orderId,
+        totalPrice:
+            paymentSessions.paymentCollection.paymentSessions[0].amount ?? 0,
       ) //completeVendor.orderSet.orders[0].items[0].total)
           );
     } catch (e) {
@@ -368,14 +435,63 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     OrderDetailsEvent event,
     Emitter<B2BStoreState> emit,
   ) async {
-    emit(OrderDetailsLoading(message: 'Loading order details...'));
+    emit(const OrderDetailsLoading(message: 'Loading order details...'));
     try {
-      OrderDetails _orderDetails = await _orderDetailsService.getOrderDetails(
+      OrderDetails orderDetails = await _orderDetailsService.getOrderDetails(
           token: box.read('login_jwt'));
-      emit(OrderDetailsSuccess(orderDetailsData: _orderDetails));
+      emit(OrderDetailsSuccess(orderDetailsData: orderDetails));
     } catch (e) {
       debugPrint("Error in getOrderDetails service: $e");
       emit(OrderDetailsError(error: e.toString()));
+    }
+  }
+
+  FutureOr<void> _getWishlist(
+    WishlistEvent event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    emit(const WishlistLoading(message: 'Loading wishlist...'));
+    try {
+      Wishlist wishlist =
+          await _favoriteService.getFavorites(token: box.read('login_jwt'));
+      emit(WishlistSuccess(wishlistData: wishlist));
+    } catch (e) {
+      debugPrint("Error in getFavorites service: $e");
+      emit(WishlistError(error: e.toString()));
+    }
+  }
+
+  FutureOr<void> _addWishlist(
+    AddToWishList event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    emit(const WishlistLoading(message: 'Loading wishlist...'));
+    try {
+      Wishlist wishlist = await _favoriteService.addToWishList(
+          token: box.read('login_jwt'), variantId: event.variantId);
+      emit(WishlistSuccess(wishlistData: wishlist));
+    } catch (e) {
+      debugPrint("Error in getFavorites service: $e");
+      emit(WishlistError(error: e.toString()));
+    }
+  }
+
+  FutureOr<void> _addReview(
+    ReviewEvent event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    emit(const WishlistLoading(message: 'Loading wishlist...'));
+    try {
+      Review review = await _favoriteService.addReview(
+          token: box.read('login_jwt'),
+          product_id: event.product_id,
+          rating: event.rating,
+          comment: event.comment,
+          line_item_id: event.line_item_id);
+      // emit(WishlistSuccess(wishlistData: wishlist));
+    } catch (e) {
+      debugPrint("Error in getFavorites service: $e");
+      // emit(WishlistError(error: e.toString()));
     }
   }
 }

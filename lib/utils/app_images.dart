@@ -115,4 +115,5 @@ abstract class AppImages {
   static String get checkout => "${_assetImgPath}checkout.png";
   static String get verify => "${_assetImgPath}verify.png";
   static String get timeCalender => "${_assetImgPath}time_calender.png";
+  static String get favourites => "${_assetImgPath}favourite.png";
 }

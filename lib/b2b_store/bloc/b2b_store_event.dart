@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 
 abstract class B2BStoreEvent extends Equatable {
@@ -43,6 +42,7 @@ class AddRemoveItemReq extends B2BStoreEvent {
   @override
   List<Object?> get props => [itemId, count];
 }
+
 class DeleteItemReq extends B2BStoreEvent {
   final String itemId;
   const DeleteItemReq({required this.itemId});
@@ -88,6 +88,13 @@ class GetAddress extends B2BStoreEvent {
   List<Object?> get props => [];
 }
 
+class SelectAddress extends B2BStoreEvent {
+  const SelectAddress(this.addresses);
+  final Addresses addresses;
+  @override
+  List<Object?> get props => [addresses];
+}
+
 class GetCartData extends B2BStoreEvent {
   const GetCartData();
 
@@ -97,6 +104,13 @@ class GetCartData extends B2BStoreEvent {
 
 class Payment extends B2BStoreEvent {
   const Payment();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class ProceedToShip extends B2BStoreEvent {
+  const ProceedToShip();
 
   @override
   List<Object?> get props => [];
@@ -141,4 +155,33 @@ class OrderDetailsEvent extends B2BStoreEvent {
   const OrderDetailsEvent();
   @override
   List<Object?> get props => [];
+}
+
+class WishlistEvent extends B2BStoreEvent {
+  const WishlistEvent();
+  @override
+  List<Object?> get props => [];
+}
+
+class AddToWishList extends B2BStoreEvent {
+  final String variantId;
+
+  const AddToWishList({required this.variantId});
+
+  @override
+  List<Object?> get props => [variantId];
+}
+
+class ReviewEvent extends B2BStoreEvent {
+  final String product_id;
+  final int rating;
+  final String comment;
+  final String line_item_id;
+  const ReviewEvent(
+      {required this.product_id,
+      required this.rating,
+      required this.comment,
+      required this.line_item_id});
+  @override
+  List<Object?> get props => [product_id, rating, comment, line_item_id];
 }

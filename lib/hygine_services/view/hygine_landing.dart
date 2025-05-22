@@ -48,6 +48,7 @@ class _HygieneServicesScreenState extends State<HygieneServicesScreen> {
             EasyLoading.dismiss();
             setState(() {
               _hygieneService = state.dashboardData;
+              print(_hygieneService);
               _isDataLoaded = true;
             });
           }
@@ -60,9 +61,6 @@ class _HygieneServicesScreenState extends State<HygieneServicesScreen> {
           return !_isDataLoaded
               ? Container()
               : Scaffold(
-                  floatingActionButton: FloatingActionButton(onPressed: () {
-                    logger.w(_hygieneService!.products);
-                  }),
                   appBar: const EComAppbar(
                     textFieldHintText: 'Search Services',
                   ),
