@@ -17,6 +17,8 @@ import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/wishlist.dart';
+import 'package:woloo_smart_hygiene/enums/product_mode.dart';
+import 'package:woloo_smart_hygiene/extensions/string_extension.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
@@ -24,6 +26,7 @@ import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
 
+import '../hygine_services/view/address_notifier.dart';
 import '../utils/app_textstyle.dart';
 
 enum EcomTab { seeLess, seeAll }
@@ -79,7 +82,6 @@ class _EcomScreenState extends State<EcomScreen> {
           return Scaffold(
             bottomNavigationBar: const XBottomBar(),
             appBar: EComAppbar(
-              selectedAddress: address?.address1 ?? "",
               cartValue: _b2bStoreHomePage?.cartData.cart.items.length ?? 0,
             ),
             body: SingleChildScrollView(
@@ -633,16 +635,17 @@ class CategoriesSection extends StatelessWidget {
 }
 
 class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const EComAppbar({
-    super.key,
-    this.isAll = false,
-    this.textFieldHintText = 'Search Products',
-    this.selectedAddress = '',
-    this.cartValue = 0,
-  });
+  const EComAppbar(
+      {super.key,
+      this.isAll = false,
+      this.textFieldHintText = 'Search Products',
+      this.cartValue = 0,
+      this.productMode = ProductMode.productDetails});
+  final ProductMode productMode;
+
   final String textFieldHintText;
   final bool isAll;
-  final String selectedAddress;
+
   final int cartValue;
   @override
   Size get preferredSize => const Size.fromHeight(130);
@@ -689,18 +692,25 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                   .transparent, // Optional: if you want rounded corners to show correctly
 
               context: context,
-              builder: (_) =>
-                  const AddressChangeBottomSheet(), //AddressBottomSheet
+              builder: (_) => AddressChangeBottomSheet(
+                productMode: productMode,
+              ), //AddressBottomSheet
             ),
             child: Row(
               children: [
-                Text(
-                  selectedAddress.isEmpty ? "Select Address" : selectedAddress,
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: Colors.grey,
-                  ),
-                ),
+                ValueListenableBuilder<Addresses>(
+                    valueListenable: selectedAddress,
+                    builder: (context, value, child) {
+                      return Text(
+                        value.address1.isEmptyOrNull
+                            ? "Select New Address"
+                            : value.address1!,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: Colors.grey,
+                        ),
+                      );
+                    }),
                 SizedBox(width: 5.w),
                 Container(
                   decoration: BoxDecoration(

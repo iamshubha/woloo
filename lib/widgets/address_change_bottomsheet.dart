@@ -9,10 +9,13 @@ import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/enums/product_mode.dart';
+import 'package:woloo_smart_hygiene/extensions/string_extension.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/widgets/address_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/hygine_services/get_date_time_bottomsheet.dart';
+
+import '../hygine_services/view/address_notifier.dart';
 
 class AddressChangeBottomSheet extends StatefulWidget {
   const AddressChangeBottomSheet({
@@ -33,8 +36,6 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
   bool _isDataLoaded = false;
   AddressesData _addressesData = AddressesData();
   Map<String, bool> map = {};
-
-  Addresses? selectedAddress;
 
   @override
   void initState() {
@@ -131,12 +132,15 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                                   child: Row(
                                     children: [
                                       XDesignedRadioButton(
-                                        onSelected:
-                                            map.entries.elementAt(i).value,
+                                        onSelected: selectedAddress.value.id ==
+                                            address.id,
                                         onTap: () {
                                           setState(() {
-                                            onChange(address.id ?? "");
-                                            selectedAddress = address;
+                                            // onChange(address.id ?? "");
+                                            selectedAddress.value = address;
+                                            setState(() {});
+                                            logger.w(
+                                                "SelectedAddress Value: ${selectedAddress.value}");
                                           });
                                         },
                                       ),
@@ -200,28 +204,32 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                       LongLabeledButton(
                         label: "Select Address",
                         onTap: () {
-                          if (selectedAddress == null) {
+                          if (selectedAddress.value.address1.isEmptyOrNull) {
                             EasyLoading.showError("Please select an address");
                             return;
                           }
-                          _b2bStoreBloc.add(
-                              SelectAddress(selectedAddress ?? Addresses()));
+                          _b2bStoreBloc
+                              .add(SelectAddress(selectedAddress.value));
                           switch (widget.productMode) {
                             case ProductMode.productDetails:
                               {
+                                Navigator.pop(context);
                                 final box = GetStorage();
                                 var jwt = box.read('login_jwt');
                                 logger.w(jwt);
-                                box.write(
-                                    'address', selectedAddress?.toString());
-
-                                Navigator.pop(context);
+                                box.write('address',
+                                    selectedAddress.value.toString());
                               }
 
                               break;
                             case ProductMode.serviceDetails:
                               {
+                                logger.w("This Is Executing");
                                 Navigator.pop(context);
+                                final box = GetStorage();
+                                box.write('address',
+                                    selectedAddress.value.toString());
+
                                 showModalBottomSheet(
                                     isScrollControlled: true,
                                     isDismissible:

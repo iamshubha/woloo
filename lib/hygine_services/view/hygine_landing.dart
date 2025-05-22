@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
+import 'package:woloo_smart_hygiene/enums/product_mode.dart';
 import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_bloc.dart';
 import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_event.dart';
 import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_state.dart';
@@ -62,6 +63,7 @@ class _HygieneServicesScreenState extends State<HygieneServicesScreen> {
               ? Container()
               : Scaffold(
                   appBar: const EComAppbar(
+                    productMode: ProductMode.serviceDetails,
                     textFieldHintText: 'Search Services',
                   ),
                   bottomNavigationBar: const XBottomBar(),

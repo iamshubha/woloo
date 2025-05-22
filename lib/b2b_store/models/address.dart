@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
+
 class AddressReqBody {
   String? address1;
   String? addressName;
@@ -132,7 +134,7 @@ class Customer {
   }
 }
 
-class Addresses {
+class Addresses extends Equatable {
   String? id;
   String? addressName;
   bool? isDefaultShipping;
@@ -235,6 +237,10 @@ class Addresses {
 
   @override
   String toString() => jsonEncode(toJson());
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [id];
 }
 
 class AddressesData {
