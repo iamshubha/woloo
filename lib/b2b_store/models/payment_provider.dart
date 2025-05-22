@@ -257,17 +257,17 @@ class Customer {
 
 class Address {
   final String id;
-  final City city;
+  final dynamic city;
   final String phone;
   final dynamic company;
   final dynamic metadata;
   final Province province;
-  final Address1 address1;
+  final dynamic address1;
   final dynamic address2;
-  final LastName lastName;
+  final dynamic lastName;
   final DateTime createdAt;
   final dynamic deletedAt;
-  final FirstName firstName;
+  final dynamic firstName;
   final DateTime updatedAt;
   final Id customerId;
   final String postalCode;
@@ -300,17 +300,17 @@ class Address {
 
   factory Address.fromJson(Map<String, dynamic> json) => Address(
         id: json["id"],
-        city: cityValues.map[json["city"]]!,
+        city: json["city"],
         phone: json["phone"],
         company: json["company"],
         metadata: json["metadata"],
         province: provinceValues.map[json["province"]]!,
-        address1: address1Values.map[json["address_1"]]!,
+        address1: json["address_1"],
         address2: json["address_2"],
-        lastName: lastNameValues.map[json["last_name"]]!,
+        lastName: json["last_name"],
         createdAt: DateTime.parse(json["created_at"]),
         deletedAt: json["deleted_at"],
-        firstName: firstNameValues.map[json["first_name"]]!,
+        firstName: json["first_name"],
         updatedAt: DateTime.parse(json["updated_at"]),
         customerId: idValues.map[json["customer_id"]]!,
         postalCode: json["postal_code"],
@@ -322,17 +322,17 @@ class Address {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "city": cityValues.reverse[city],
+        "city": city,
         "phone": phone,
         "company": company,
         "metadata": metadata,
         "province": provinceValues.reverse[province],
-        "address_1": address1Values.reverse[address1],
+        "address_1": address1,
         "address_2": address2,
-        "last_name": lastNameValues.reverse[lastName],
+        "last_name": lastName,
         "created_at": createdAt.toIso8601String(),
         "deleted_at": deletedAt,
-        "first_name": firstNameValues.reverse[firstName],
+        "first_name": firstName,
         "updated_at": updatedAt.toIso8601String(),
         "customer_id": idValues.reverse[customerId],
         "postal_code": postalCode,
@@ -343,49 +343,14 @@ class Address {
       };
 }
 
-enum Address1 { B_304_NANCY_BRAMHA, CFERVGEVEGRVRE, LANCE_DOWN, NVSKO }
-
-final address1Values = EnumValues({
-  "  B 304 nancy bramha": Address1.B_304_NANCY_BRAMHA,
-  "cfervgevegrvre": Address1.CFERVGEVEGRVRE,
-  "LanceDown ": Address1.LANCE_DOWN,
-  "nvsko": Address1.NVSKO
-});
-
 enum AddressName { DEFAULT }
 
 final addressNameValues = EnumValues({"Default": AddressName.DEFAULT});
-
-enum City { BANGALORE, EFVGREGVGT, NEW_YORK, NVKSO }
-
-final cityValues = EnumValues({
-  "Bangalore": City.BANGALORE,
-  "efvgregvgt": City.EFVGREGVGT,
-  "NewYork": City.NEW_YORK,
-  "nvkso": City.NVKSO
-});
 
 enum Id { CUS_01_JT8_BSP0_NZJB59_BCR4_P2_ACSM7 }
 
 final idValues = EnumValues({
   "cus_01JT8BSP0NZJB59BCR4P2ACSM7": Id.CUS_01_JT8_BSP0_NZJB59_BCR4_P2_ACSM7
-});
-
-enum FirstName { ARNAB, NCFJEHNCJUNF, SHUBHA }
-
-final firstNameValues = EnumValues({
-  "Arnab": FirstName.ARNAB,
-  "ncfjehncjunf": FirstName.NCFJEHNCJUNF,
-  "shubha": FirstName.SHUBHA
-});
-
-enum LastName { BANERJEE, FERCERFCERFCE, GHOSH, LAST_NAME_BANERJEE }
-
-final lastNameValues = EnumValues({
-  "banerjee": LastName.BANERJEE,
-  "fercerfcerfce": LastName.FERCERFCERFCE,
-  "ghosh": LastName.GHOSH,
-  "Banerjee": LastName.LAST_NAME_BANERJEE
 });
 
 enum Province { BANGALORE, EMPTY }

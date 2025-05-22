@@ -143,8 +143,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    const HygieneServicesScreen(), //LoginAs(),
+                builder: (context) => const EcomScreen(), //LoginAs(),
               ),
               (route) => false,
             );
@@ -206,13 +205,13 @@ class _SplashScreenState extends State<SplashScreen> {
             MaterialPageRoute(
               builder: (context) => clientId.isNotEmpty
                   ? isComplete
-                      ? const HygieneServicesScreen()
-                      : const HygieneServicesScreen(
+                      ? const EcomScreen()
+                      : const EcomScreen(
                           // isFromDashboard: false,
                           )
                   : roleId == 1
-                      ? const HygieneServicesScreen()
-                      : const HygieneServicesScreen(
+                      ? const EcomScreen()
+                      : const EcomScreen(
                           // isFromSupervisor: false,
                           ),
             ),

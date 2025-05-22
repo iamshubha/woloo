@@ -118,4 +118,3 @@ class CartItemCard extends StatelessWidget {
     );
   }
 }
-

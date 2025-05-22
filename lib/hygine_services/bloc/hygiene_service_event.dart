@@ -47,6 +47,13 @@ class Payment extends HygieneServiceEvent {
   List<Object?> get props => [];
 }
 
+class ProceedToShip extends HygieneServiceEvent {
+  const ProceedToShip();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class PlaceOrder extends HygieneServiceEvent {
   final String? order_id;
   const PlaceOrder({required this.order_id});
@@ -59,4 +66,30 @@ class RazorpayEvent extends HygieneServiceEvent {
   const RazorpayEvent();
   @override
   List<Object?> get props => [];
+}
+
+class GetCartData extends HygieneServiceEvent {
+  const GetCartData();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class AddRemoveItemReq extends HygieneServiceEvent {
+  final String itemId;
+  final int count;
+  const AddRemoveItemReq({
+    required this.itemId,
+    required this.count,
+  });
+
+  @override
+  List<Object?> get props => [itemId, count];
+}
+
+class DeleteItemReq extends HygieneServiceEvent {
+  final String itemId;
+  const DeleteItemReq({required this.itemId});
+  @override
+  List<Object?> get props => [itemId];
 }

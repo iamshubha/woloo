@@ -7,39 +7,48 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
-import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
-import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
-import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
-import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
+// import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
+// import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
+// import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
+// import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
+// import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
+// import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
+// import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/client_flow/utils/client_images.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_bloc.dart';
+import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_event.dart';
+import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_state.dart';
+import 'package:woloo_smart_hygiene/hygine_services/view/hygine_landing.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/screens/host_dashboard_screen.dart';
 import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
+import 'package:woloo_smart_hygiene/widgets/boxes/cart_item.dart';
 import 'package:woloo_smart_hygiene/widgets/cart_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/dialogs/order_successful.dart';
 
-import 'boxes/cart_item.dart';
-
-class OrderSummeryBottomSheet extends StatefulWidget {
-  const OrderSummeryBottomSheet({
+class HygineServicesOrderSummeryBottomSheet extends StatefulWidget {
+  const HygineServicesOrderSummeryBottomSheet({
     super.key,
   });
 
   @override
-  State<OrderSummeryBottomSheet> createState() =>
+  State<HygineServicesOrderSummeryBottomSheet> createState() =>
       _OrderSummeryBottomSheetState();
 }
 
-class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
+class _OrderSummeryBottomSheetState
+    extends State<HygineServicesOrderSummeryBottomSheet> {
   GlobalStorage globalStorage = GetIt.instance();
-  final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
+  // final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
+
+  final HygieneServiceBloc _hygieneServiceBloc = HygieneServiceBloc();
   bool _isDataLoaded = false;
   CartModel? cartModel;
   Addresses? address;
@@ -58,19 +67,19 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
   void initState() {
     super.initState();
     razorpay = Razorpay();
-    _b2bStoreBloc.add(const GetCartData());
+    _hygieneServiceBloc.add(const GetCartData());
     address = getAddress();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer(
-      bloc: _b2bStoreBloc,
+      bloc: _hygieneServiceBloc,
       listener: (context, state) {
-        if (state is CartLoading) {
+        if (state is HygieneCartLoading) {
           EasyLoading.show(status: state.message);
         }
-        if (state is CartSuccess) {
+        if (state is HygieneServiceCartSuccess) {
           EasyLoading.dismiss();
           setState(() {
             // print(state.cartData.cart);
@@ -82,7 +91,7 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
           });
         }
 
-        if (state is CartError) {
+        if (state is HygieneCartError) {
           EasyLoading.dismiss();
           EasyLoading.showError(state.error);
         }
@@ -90,10 +99,10 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
           EasyLoading.dismiss();
           Navigator.pop(context);
           Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const EcomScreen()),
-            (route) => false,
-          );
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const HygieneServicesScreen()),
+              (route) => false);
         }
         if (state is LetsTryState) {
           setState(() {
@@ -164,23 +173,24 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
                                   child: CartItemCard(
                                     item: item,
                                     onDelete: () {
-                                      _b2bStoreBloc.add(DeleteItemReq(
+                                      _hygieneServiceBloc.add(DeleteItemReq(
                                           itemId: item?.id ?? ""));
                                     },
                                     onAdd: () {
                                       count++;
-                                      _b2bStoreBloc.add(AddRemoveItemReq(
+                                      _hygieneServiceBloc.add(AddRemoveItemReq(
                                           count: count,
                                           itemId: item?.id ?? ""));
                                     },
                                     onRemove: () {
                                       count--;
                                       if (count > 0) {
-                                        _b2bStoreBloc.add(AddRemoveItemReq(
-                                            count: count,
-                                            itemId: item?.id ?? ""));
+                                        _hygieneServiceBloc.add(
+                                            AddRemoveItemReq(
+                                                count: count,
+                                                itemId: item?.id ?? ""));
                                       } else {
-                                        _b2bStoreBloc.add(DeleteItemReq(
+                                        _hygieneServiceBloc.add(DeleteItemReq(
                                             itemId: item?.id ?? ""));
                                       }
                                     },
@@ -259,7 +269,7 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
                           // razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET,
                           //     handleExternalWalletSelected);
                           // razorpay.open(v);
-                          _b2bStoreBloc.add(const Payment());
+                          _hygieneServiceBloc.add(const Payment());
                           // try {
                           // _b2bStoreBloc.add(Payment(razorpay: razorpay));
                           // } catch (e) {}
@@ -352,7 +362,7 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
     **/
     globalStorage.getClientId();
     String clintId = globalStorage.getClientId();
-    _b2bStoreBloc.add(PlaceOrder(order_id: order_id));
+    _hygieneServiceBloc.add(PlaceOrder(order_id: order_id));
 
     // _b2bStoreBloc.add(SubcriptionEvent(id: int.parse(clintId)));
     // if (widget.isfromFacility!) {

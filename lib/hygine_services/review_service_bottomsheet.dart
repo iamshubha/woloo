@@ -12,9 +12,11 @@ import 'package:woloo_smart_hygiene/enums/payment_method.dart';
 import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_bloc.dart';
 import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_event.dart';
 import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_state.dart';
+import 'package:woloo_smart_hygiene/hygine_services/order_summery_bottomsheet_hygine_service.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/screens/host_dashboard_screen.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/service_summery_bottomsheet.dart';
 
@@ -58,20 +60,32 @@ class _ReviewServiceBottomsheetState extends State<ReviewServiceBottomsheet> {
         bloc: _hygieneServiceBloc,
         listener: (context, state) {
           // print("dssa $state");
-          if (state is HygieneServiceLoading) {
+          if (state is HygieneCartLoading) {
             EasyLoading.show(status: state.message);
           }
-          if (state is HygieneServiceCartSuccess) {
+          if (state is ReadyToShip) {
+            logger.w(state);
+
             EasyLoading.dismiss();
-            Navigator.pop(context);
-            EasyLoading.showSuccess("Added to cart");
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (context) => const HostDashboardScreen()));
+            // Navigator.pop(context);
+            showModalBottomSheet(
+              isScrollControlled: true,
+              isDismissible: true, // <-- Allow tap outside to dismiss
+              enableDrag: true, // <-- Allow swipe down to dismiss
+
+              backgroundColor: Colors
+                  .transparent, // Optional: if you want rounded corners to show correctly
+
+              context: context,
+              builder: (_) => HygineServicesOrderSummeryBottomSheet(
+                  // date: widget.date,
+                  // time: widget.time,
+                  // selectedBHKValue: widget.selectedBHKValue,
+                  ), //AddressBottomSheet
+            );
           }
 
-          if (state is HygieneServiceError) {
+          if (state is HygieneCartError) {
             EasyLoading.dismiss();
             EasyLoading.showError(state.error);
           }
@@ -123,7 +137,7 @@ class _ReviewServiceBottomsheetState extends State<ReviewServiceBottomsheet> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.pop(context);
+                              // Navigator.pop(context);
                               showModalBottomSheet(
                                 isScrollControlled: true,
                                 isDismissible:
@@ -221,33 +235,8 @@ class _ReviewServiceBottomsheetState extends State<ReviewServiceBottomsheet> {
                 LongLabeledButton(
                   label: "Review Order",
                   onTap: () {
-                    _hygieneServiceBloc.add(AddToCart(
-                      service_date: widget.date,
-                      service_time: widget.time,
-                      service_area: widget.selectedBHKValue,
-                      variant_id: widget.productId,
-                      quantity: 1,
-                    ));
-                    print(widget.date);
-                    print(widget.time);
-                    print(widget.selectedBHKValue);
-                    // OrderSummeryBottomSheet
-                    Navigator.pop(context);
-                    showModalBottomSheet(
-                      isScrollControlled: true,
-                      isDismissible: true, // <-- Allow tap outside to dismiss
-                      enableDrag: true, // <-- Allow swipe down to dismiss
-
-                      backgroundColor: Colors
-                          .transparent, // Optional: if you want rounded corners to show correctly
-
-                      context: context,
-                      builder: (_) => ServiceSummeryBottomSheet(
-                        date: widget.date,
-                        time: widget.time,
-                        selectedBHKValue: widget.selectedBHKValue,
-                      ), //AddressBottomSheet
-                    );
+                    _hygieneServiceBloc.add(const ProceedToShip());
+                    // _proceedToSheep()
                   },
                 )
               ],

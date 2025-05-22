@@ -8,6 +8,7 @@ import 'package:woloo_smart_hygiene/enums/product_mode.dart';
 import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_bloc.dart';
 import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_event.dart';
 import 'package:woloo_smart_hygiene/hygine_services/bloc/hygiene_service_state.dart';
+import 'package:woloo_smart_hygiene/hygine_services/get_date_time_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
@@ -276,11 +277,9 @@ class _ServiceDetailState extends State<ServiceDetail> {
 
                                                 context: context,
                                                 builder: (context) {
-                                                  return AddressChangeBottomSheet(
-                                                    productMode: ProductMode
-                                                        .serviceDetails,
-                                                    productId: _hygieneService
-                                                        ?.variants.first.id,
+                                                  return GetTimeScheduleBottomSheet(
+                                                    productId: _hygieneService!
+                                                        .variants[index].id,
                                                   );
                                                 });
                                           },
