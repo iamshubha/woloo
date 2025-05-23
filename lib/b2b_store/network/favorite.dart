@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
-import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/review.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/wishlist.dart';
 import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
@@ -24,7 +22,7 @@ class FavoriteService {
           },
         ),
       );
-      logger.w("Response from getOrderDetails: ${response}");
+      logger.w("Response from getOrderDetails: $response");
       return Wishlist.fromJson(response);
     } catch (e) {
       debugPrint("Error in getOrderDetails service: $e");
@@ -55,7 +53,7 @@ class FavoriteService {
           data: {
             "variant_id": variantId,
           });
-      logger.w("Response from getOrderDetails: ${response}");
+      logger.w(response);
       return Wishlist.fromJson(response);
     } catch (e) {
       debugPrint("Error in getOrderDetails service: $e");
@@ -82,15 +80,35 @@ class FavoriteService {
                 },
               ),
               data: {
-            "product_id": "$product_id",
+            "product_id": product_id,
             "rating": rating,
-            "comment": "$comment",
-            "line_item_id": "$line_item_id"
+            "comment": comment,
+            "line_item_id": line_item_id
           });
-      logger.w("Response from getOrderDetails: ${response}");
+      logger.w("Response from getOrderDetails: $response");
       return Review.fromJson(response);
     } catch (e) {
       debugPrint("Error in getOrderDetails service: $e");
+      rethrow;
+    }
+  }
+
+  Future<Wishlist> removeItemFromWishlist(String token, String itemId) async {
+    try {
+      final response = await dio.delete(
+        "https://staging-store.woloo.in/store/customers/me/wishlists/items/$itemId",
+        options: Options(
+          headers: {
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+        ),
+      );
+      return Wishlist.fromJson(response);
+    } catch (e) {
+      logger.e("Remove Item Failure: $e");
       rethrow;
     }
   }

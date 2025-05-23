@@ -179,6 +179,15 @@ class AddToWishList extends B2BStoreEvent {
   List<Object?> get props => [variantId];
 }
 
+class RemoveWishList extends B2BStoreEvent {
+  final String itemId;
+
+  const RemoveWishList({required this.itemId});
+
+  @override
+  List<Object?> get props => [itemId];
+}
+
 class ReviewEvent extends B2BStoreEvent {
   final String product_id;
   final int rating;

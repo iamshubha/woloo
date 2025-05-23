@@ -68,7 +68,9 @@ class _EcomScreenState extends State<EcomScreen> {
             EasyLoading.dismiss();
             setState(() {
               _b2bStoreHomePage = state.dashboardData;
+
               _isDataLoaded = true;
+
               // _dashboardData = state.dashboardData;
             });
           }
@@ -204,7 +206,7 @@ class XTabButton extends StatelessWidget {
 class LandingProducts extends StatelessWidget {
   final VoidCallback? onTap;
   TopBrands topBrands;
-  final List<String> favIds;
+  final List<Map<String, String>> favIds;
   ProductCollections productCollections;
 
   LandingProducts(
@@ -281,7 +283,15 @@ class LandingProducts extends StatelessWidget {
               final product = productCollections.products[index];
               return GridItem(
                 products: product,
-                isSelected: favIds.contains(product.id),
+                isSelected: favIds.any((e) => e.containsKey(product.id)),
+                productIdforWishList: favIds
+                        .any((e) => e.containsKey(product.id))
+                    ? favIds
+                        .firstWhere((e) => e.entries.first.key == product.id)
+                        .entries
+                        .first
+                        .value
+                    : "",
                 // imageUrl: productCollections.products![index].thumbnail ?? '',
               );
             },
@@ -350,15 +360,17 @@ class BrandsGrid extends StatelessWidget {
 class GridItem extends StatelessWidget {
   final Product products;
   // final String imageUrl;
+  final String productIdforWishList;
   final bool isSelected;
   final VoidCallback? onTap;
-  const GridItem({
-    super.key,
-    required this.products,
-    this.isSelected = false,
-    this.onTap,
-    // required this.imageUrl,
-  });
+  const GridItem(
+      {super.key,
+      required this.products,
+      this.isSelected = false,
+      this.onTap,
+      this.productIdforWishList = ''
+      // required this.imageUrl,
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -369,6 +381,8 @@ class GridItem extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => ProductDetailsScreen(
               productData: products,
+              isSelected: isSelected,
+              productIdforWishList: productIdforWishList,
             ),
           ),
         );

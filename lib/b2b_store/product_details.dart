@@ -13,12 +13,18 @@ import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart'
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/cart_bottomsheet.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final product_collections.Product? productData;
-  const ProductDetailsScreen({super.key, this.productData});
-
+  ProductDetailsScreen(
+      {super.key,
+      this.productData,
+      required this.isSelected,
+      this.productIdforWishList = ''});
+  final bool isSelected;
+  String productIdforWishList;
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
 }
@@ -28,11 +34,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   bool _isDataLoaded = false;
   cart_model.CartModel? cartModel;
   int productCount = 0;
+  late bool isSelected;
   @override
   initState() {
     super.initState();
 
     _b2bStoreBloc.add(const GetCartData());
+    isSelected = widget.isSelected;
   }
 
   @override
@@ -44,6 +52,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         if (state is CartLoading) {
           EasyLoading.show(status: state.message);
         }
+
+        // if (state is WishlistLoading) {
+        //   EasyLoading.show(status: state.message);
+        // }
         if (state is CartSuccess) {
           EasyLoading.dismiss();
           setState(() {
@@ -62,10 +74,29 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           });
         }
 
+        if (state is WishlistSuccess) {
+          EasyLoading.dismiss();
+          logger.w(state);
+          // widget.productData?.id ==
+          //     state.wishlistData.wishlist.items.first.productVariant.productId;
+          final data = state.wishlistData.wishlist.items.firstWhere((item) =>
+              item.productVariant.productId == widget.productData?.id);
+
+          setState(() {
+            widget.productIdforWishList = data.id;
+          });
+        }
+
         if (state is CartError) {
           EasyLoading.dismiss();
           EasyLoading.showError(state.error);
         }
+
+        // if (state is WishlistError) {
+        //   EasyLoading.dismiss();
+        //   EasyLoading.showError(state.error);
+        // }
+
         // if (state is ReadyToShip) {
         //   EasyLoading.dismiss();
         //   showCartBottomSheet(context);
@@ -110,12 +141,20 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       ImageView(
                         imageUrl: widget.productData?.thumbnail ?? '',
                         onTap: () {
-                          _b2bStoreBloc.add(AddToWishList(
-                            variantId:
-                                widget.productData?.variants![0].id ?? '',
-                          ));
+                          if (!isSelected) {
+                            _b2bStoreBloc.add(AddToWishList(
+                              variantId:
+                                  widget.productData?.variants![0].id ?? '',
+                            ));
+                          } else {
+                            _b2bStoreBloc.add(RemoveWishList(
+                                itemId: widget.productIdforWishList));
+                          }
+
+                          isSelected = !isSelected;
+                          setState(() {});
                         },
-                        isSelected: true,
+                        isSelected: isSelected,
                       ),
                       Column(
                         spacing: 10.h,

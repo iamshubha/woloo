@@ -16,10 +16,7 @@ import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 
-// import '../../../client_flow/screens/dashbaord/bloc/dashboard_event.dart';
-import '../../../b2b_store/all_orders.dart';
 import '../../../b2b_store/ecom.dart';
-import '../../../client_flow/screens/dashbaord/view/dashboard.dart';
 import '../../../client_flow/screens/login/bloc/signup_bloc.dart';
 import '../../common_widgets/image_provider.dart';
 
@@ -143,7 +140,8 @@ class _SplashScreenState extends State<SplashScreen> {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) => const EcomScreen(), //LoginAs(),
+                builder: (context) =>
+                    const EcomScreen(), //LoginAs(),
               ),
               (route) => false,
             );

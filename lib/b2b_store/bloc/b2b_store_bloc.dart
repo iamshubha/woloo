@@ -27,7 +27,7 @@ import 'b2b_store_state.dart';
 
 class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   final box = GetStorage();
-  List<String> favIds = [];
+  List<Map<String, String>> favIds = [];
   final LoginFlowService loginFlowService =
       LoginFlowService(dio: GetIt.instance());
 
@@ -64,6 +64,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<AddToWishList>(_addWishlist);
     on<ReviewEvent>(_addReview);
     on<DeleteAddress>(_deleteAddress);
+    on<RemoveWishList>(_removeFromWishlist);
   }
 
   FutureOr<void> _emailPassRegister(
@@ -144,7 +145,8 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
           productCategory: categories,
           topBrands: topBrands,
           productCollections: productCollections,
-          cartData: cartModel)));
+          cartData: cartModel,
+          fav: fav)));
     } catch (e) {
       if (emit.isDone) return;
       emit(B2BStoreError(error: e.toString()));
@@ -224,10 +226,10 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     }
   }
 
-  List<String> getCommonProductIds(
+  List<Map<String, String>> getCommonProductIds(
       Wishlist wishlist, ProductCollections productCollections) {
-    List<String> wishlistProductIds = wishlist.wishlist.items
-        .map((item) => item.productVariant.productId)
+    List<Map<String, String>> wishlistProductIds = wishlist.wishlist.items
+        .map((item) => <String, String>{item.productVariant.productId: item.id})
         .toList();
     List<String> collectionProductIds = productCollections.products
         .map((product) => product.id)
@@ -235,7 +237,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
         .toList();
 
     return wishlistProductIds
-        .where((id) => collectionProductIds.contains(id))
+        .where((id) => collectionProductIds.contains(id.entries.first.key))
         .toList();
   }
 
@@ -516,6 +518,19 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     }
   }
 
+  FutureOr<void> _removeFromWishlist(
+      RemoveWishList event, Emitter<B2BStoreState> emit) async {
+    emit(const WishlistLoading(message: 'Loading wishlist...'));
+    try {
+      Wishlist wishlist = await _favoriteService.removeItemFromWishlist(
+          box.read('login_jwt'), event.itemId);
+      emit(WishlistSuccess(wishlistData: wishlist));
+    } catch (e) {
+      debugPrint("Error in getFavorites service: $e");
+      emit(WishlistError(error: e.toString()));
+    }
+  }
+
   FutureOr<void> _addReview(
     ReviewEvent event,
     Emitter<B2BStoreState> emit,
@@ -541,9 +556,11 @@ class B2BStoreHomePage {
   TopBrands topBrands;
   ProductCollections productCollections;
   CartModel cartData;
+  Wishlist fav;
   B2BStoreHomePage(
       {required this.productCategory,
       required this.topBrands,
       required this.productCollections,
-      required this.cartData});
+      required this.cartData,
+      required this.fav});
 }
