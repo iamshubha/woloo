@@ -10,10 +10,10 @@ import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/enums/product_mode.dart';
 import 'package:woloo_smart_hygiene/extensions/string_extension.dart';
+import 'package:woloo_smart_hygiene/hygine_services/get_date_time_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/widgets/address_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
-import 'package:woloo_smart_hygiene/hygine_services/get_date_time_bottomsheet.dart';
 
 import '../hygine_services/view/address_notifier.dart';
 
@@ -139,8 +139,6 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                                             // onChange(address.id ?? "");
                                             selectedAddress.value = address;
                                             setState(() {});
-                                            logger.w(
-                                                "SelectedAddress Value: ${selectedAddress.value}");
                                           });
                                         },
                                       ),
@@ -193,7 +191,10 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                                       ),
                                       IconButton(
                                         icon: const Icon(Icons.delete),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          _b2bStoreBloc.add(DeleteAddress(
+                                              addressId: address.id ?? ""));
+                                        },
                                       )
                                     ],
                                   ),

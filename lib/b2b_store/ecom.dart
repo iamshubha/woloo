@@ -128,6 +128,7 @@ class _EcomScreenState extends State<EcomScreen> {
                           ),
                         ),
                         LandingProducts(
+                          favIds: _b2bStoreBloc.favIds,
                           topBrands: _b2bStoreHomePage!.topBrands,
                           productCollections:
                               _b2bStoreHomePage!.productCollections,
@@ -203,15 +204,15 @@ class XTabButton extends StatelessWidget {
 class LandingProducts extends StatelessWidget {
   final VoidCallback? onTap;
   TopBrands topBrands;
-
+  final List<String> favIds;
   ProductCollections productCollections;
 
-  LandingProducts({
-    super.key,
-    required this.topBrands,
-    required this.productCollections,
-    this.onTap,
-  });
+  LandingProducts(
+      {super.key,
+      required this.topBrands,
+      required this.productCollections,
+      this.onTap,
+      this.favIds = const []});
 
   @override
   Widget build(BuildContext context) {
@@ -277,8 +278,10 @@ class LandingProducts extends StatelessWidget {
                 ? 8
                 : productCollections.products.length,
             itemBuilder: (context, index) {
+              final product = productCollections.products[index];
               return GridItem(
-                products: productCollections.products[index],
+                products: product,
+                isSelected: favIds.contains(product.id),
                 // imageUrl: productCollections.products![index].thumbnail ?? '',
               );
             },

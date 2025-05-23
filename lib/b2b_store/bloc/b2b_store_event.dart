@@ -95,6 +95,13 @@ class SelectAddress extends B2BStoreEvent {
   List<Object?> get props => [addresses];
 }
 
+class DeleteAddress extends B2BStoreEvent {
+  const DeleteAddress({required this.addressId});
+  final String addressId;
+  @override
+  List<Object?> get props => [addressId];
+}
+
 class GetCartData extends B2BStoreEvent {
   const GetCartData();
 

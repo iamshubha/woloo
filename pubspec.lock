@@ -281,6 +281,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  cherry_toast:
+    dependency: "direct main"
+    description:
+      name: cherry_toast
+      sha256: "0f7631131696ce774567d0b498c3288b95beebefb620c6d3eeb3a44276a19c41"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.12.0"
   cli_util:
     dependency: transitive
     description:
@@ -1003,7 +1011,7 @@ packages:
     source: sdk
     version: "0.0.0"
   fluttertoast:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: fluttertoast
       sha256: "25e51620424d92d3db3832464774a6143b5053f15e382d8ffbfd40b6e795dcf1"

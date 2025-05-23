@@ -117,4 +117,26 @@ class AddressService {
       rethrow;
     }
   }
+
+  Future deleteAddress(
+      {required String addressId, required String token}) async {
+    try {
+      final url = "${APIConstants.GET_ADDRESS}/$addressId";
+      final res = await dio.delete(
+        url,
+        options: Options(
+          headers: {
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+        ),
+      );
+      return res;
+    } catch (e) {
+      logger.e("Delete Address Issue: $e");
+      rethrow;
+    }
+  }
 }

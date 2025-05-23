@@ -27,6 +27,7 @@ import 'b2b_store_state.dart';
 
 class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   final box = GetStorage();
+  List<String> favIds = [];
   final LoginFlowService loginFlowService =
       LoginFlowService(dio: GetIt.instance());
 
@@ -62,6 +63,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<WishlistEvent>(_getWishlist);
     on<AddToWishList>(_addWishlist);
     on<ReviewEvent>(_addReview);
+    on<DeleteAddress>(_deleteAddress);
   }
 
   FutureOr<void> _emailPassRegister(
@@ -126,7 +128,11 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       topBrands = await _productService.getTopBrands(token: loginToken);
       productCollections =
           await _productService.getProductCollections(token: loginToken);
+      logger.w("----------------------------");
+      final fav = await _favoriteService.getFavorites(token: loginToken);
 
+      favIds = getCommonProductIds(fav, productCollections);
+      logger.w(favIds);
       // Debug prints
       logger.w(categories);
       logger.w(topBrands);
@@ -185,6 +191,25 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     }
   }
 
+  FutureOr<void> _deleteAddress(
+      DeleteAddress event, Emitter<B2BStoreState> emit) async {
+    emit(const PostAddressLoading(message: "Loading...."));
+    try {
+      final val = await _addresstService.deleteAddress(
+          addressId: event.addressId, token: box.read('login_jwt'));
+      logger.w("Val: $val");
+      AddressesData response =
+          await _addresstService.getAllAddress(token: box.read('login_jwt'));
+
+      debugPrint("requestId $response");
+      // print(response);
+      // emit(B2BStoreSuccess());
+      emit(GetAddressSuccess(addressesData: response));
+    } catch (e) {
+      logger.e("Address Delete Bloc Issue: $e");
+    }
+  }
+
   FutureOr<void> _selectAddress(
       SelectAddress event, Emitter<B2BStoreState> emit) async {
     emit(const PostAddressLoading(message: "Loading...."));
@@ -197,6 +222,21 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     } catch (e) {
       logger.w("Error in Select Address: $e");
     }
+  }
+
+  List<String> getCommonProductIds(
+      Wishlist wishlist, ProductCollections productCollections) {
+    List<String> wishlistProductIds = wishlist.wishlist.items
+        .map((item) => item.productVariant.productId)
+        .toList();
+    List<String> collectionProductIds = productCollections.products
+        .map((product) => product.id)
+        .whereType<String>()
+        .toList();
+
+    return wishlistProductIds
+        .where((id) => collectionProductIds.contains(id))
+        .toList();
   }
 
   FutureOr<void> _getCart(

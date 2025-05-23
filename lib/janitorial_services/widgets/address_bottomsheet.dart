@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
@@ -187,7 +188,7 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
                         // Form is valid, proceed
-                        print("Form submitted");
+                        // print("Form submitted");
                         _b2bStoreBloc.add(
                           AddressReq(
                             addressReqBody: AddressReqBody(
@@ -202,6 +203,14 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                             ),
                           ),
                         );
+                        Fluttertoast.showToast(
+                            msg: "Address added successfully",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white, 
+                            fontSize: 16.0);
                       }
                     },
                   ),
