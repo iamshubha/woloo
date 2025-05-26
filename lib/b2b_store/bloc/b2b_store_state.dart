@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/customer_reviews.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/order.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/wishlist.dart';
@@ -211,4 +212,27 @@ class ReviewSuccess extends B2BStoreState {
   const ReviewSuccess({required this.message});
   @override
   List<Object> get props => [message];
+}
+
+class ReviewLoading extends B2BStoreState {
+  final String message;
+  const ReviewLoading({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+class ReviewError extends B2BStoreState {
+  final String error;
+  const ReviewError({required this.error});
+
+  @override
+  List<Object> get props => [error];
+}
+
+class CustomerReviewSuccess extends B2BStoreState {
+  final CustomerReviews customerReview;
+  const CustomerReviewSuccess({required this.customerReview});
+  @override
+  List<Object> get props => [customerReview];
 }

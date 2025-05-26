@@ -201,3 +201,13 @@ class ReviewEvent extends B2BStoreEvent {
   @override
   List<Object?> get props => [product_id, rating, comment, line_item_id];
 }
+
+
+class GetOrderReview extends B2BStoreEvent {
+  final String productId;
+
+  const GetOrderReview({required this.productId});
+
+  @override
+  List<Object?> get props => [productId];
+}

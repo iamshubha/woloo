@@ -70,67 +70,47 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
                       ),
                       Expanded(
                           child: ListView.separated(
-                        itemCount: orderDetailsData!.orderSets!.length,
+                        itemCount: orderDetailsData!.orderSets.length,
                         itemBuilder: (c, i) => XDecoratedBox(
                             child: Column(
                           spacing: 20,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(orderDetailsData!.orderSets![i].id.toString(),
+                            Text(orderDetailsData!.orderSets[i].id.toString(),
                                 style: AppTextStyle.font14bold),
                             Column(
                               mainAxisSize: MainAxisSize.min,
                               spacing: 10,
                               children: List.generate(
-                                orderDetailsData!.orderSets![i].orders!.length,
-                                (j) => OrderItemWithReview(
+                                  orderDetailsData!.orderSets[i].orders.length,
+                                  (j) {
+                                final orderSet = orderDetailsData!.orderSets[i];
+                                return OrderItemWithReview(
+                                  orderSet: orderSet,
                                   orderDetails: orderDetailsData!
-                                      .orderSets![i].orders![0].items![j],
+                                      .orderSets[i].orders[0].items[j],
                                   onChanged: (value) {
                                     logger.w("$value");
-                                    // RateExperienceCard(
-                                    //   onWriteReviewPressed: () {
-                                    //     ReviewBottomSheet.show(
-                                    //       context,
-                                    //       onSubmit: (review) {
-                                    //         _b2bStoreBloc.add(ReviewEvent(
-                                    //           product_id: orderDetailsData!
-                                    //               .orderSets[i]
-                                    //               .orders[0]
-                                    //               .items![j]
-                                    //               .productId,
-                                    //           rating: value.toInt(),
-                                    //           comment: review,
-                                    //           line_item_id: orderDetailsData!
-                                    //               .orderSets[i]
-                                    //               .orders[0]
-                                    //               .items![j]
-                                    //               .detail!
-                                    //               .itemId
-                                    //               .toString(),
-                                    //         ));
-                                    //         // Handle the submitted review
-                                    //       },
-                                    //     );
-                                    //   },
-                                    // );
+
                                     showModalBottomSheet(
                                         context: context,
+                                        isScrollControlled: true,
                                         builder: (c) {
                                           return ReviewBottomSheet(
                                               onSubmit: (reviewGiven) {
                                             _b2bStoreBloc.add(ReviewEvent(
                                               product_id: orderDetailsData!
-                                                  .orderSets![i]
-                                                  .orders![0]
-                                                  .items![j]
-                                                  .productId,
+                                                      .orderSets[i]
+                                                      .orders[0]
+                                                      .items[j]
+                                                      .productId ??
+                                                  "",
                                               rating: value.toInt(),
                                               comment: reviewGiven,
                                               line_item_id: orderDetailsData!
-                                                  .orderSets![i]
-                                                  .orders![0]
-                                                  .items![j]
+                                                  .orderSets[i]
+                                                  .orders[0]
+                                                  .items[j]
                                                   .detail!
                                                   .itemId
                                                   .toString(),
@@ -138,8 +118,8 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
                                           });
                                         });
                                   },
-                                ),
-                              ),
+                                );
+                              }),
                             )
                           ],
                         )),
@@ -158,10 +138,12 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
 class OrderItemWithReview extends StatelessWidget {
   final Item orderDetails;
   final Function(double) onChanged;
+  final OrderSet orderSet;
   const OrderItemWithReview({
     super.key,
     required this.orderDetails,
     required this.onChanged,
+    required this.orderSet,
   });
 
   @override
@@ -208,7 +190,9 @@ class OrderItemWithReview extends StatelessWidget {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (c) =>  OrderScreen(orderSet: ,)));
+                                      builder: (c) => OrderScreen(
+                                            orderSet: orderSet,
+                                          )));
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(

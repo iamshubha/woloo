@@ -8,6 +8,7 @@ import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart' as cart_model;
+import 'package:woloo_smart_hygiene/b2b_store/models/customer_reviews.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart'
     as product_collections;
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
@@ -35,11 +36,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   cart_model.CartModel? cartModel;
   int productCount = 0;
   late bool isSelected;
+  CustomerReviews? customerReviews;
   @override
   initState() {
     super.initState();
 
     _b2bStoreBloc.add(const GetCartData());
+    logger.w(widget.productData?.id);
+    _b2bStoreBloc.add(GetOrderReview(productId: widget.productData?.id ?? ''));
     isSelected = widget.isSelected;
   }
 
@@ -85,6 +89,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           setState(() {
             widget.productIdforWishList = data.id;
           });
+        }
+
+        if (state is CustomerReviewSuccess) {
+          customerReviews = state.customerReview;
+          logger.w(customerReviews);
         }
 
         if (state is CartError) {
@@ -309,36 +318,41 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         ],
                       ),
                       const RecentSearches(),
-                      Row(
-                        children: [
-                          Text(
-                            "Ratings & Reviews",
-                            style: TextStyle(
-                                fontSize: 14.sp, fontWeight: FontWeight.bold),
-                          ),
-                          const Spacer(),
-                          SeeMoreButton(
-                            onTap: () {},
-                          )
-                        ],
-                      ),
+                      if (customerReviews?.reviews.isNotEmpty ?? false)
+                        Row(
+                          children: [
+                            Text(
+                              "Ratings & Reviews",
+                              style: TextStyle(
+                                  fontSize: 14.sp, fontWeight: FontWeight.bold),
+                            ),
+                            const Spacer(),
+                            SeeMoreButton(
+                              onTap: () {},
+                            )
+                          ],
+                        ),
                       ListView.separated(
+                        itemCount: customerReviews?.reviews.length ?? 0,
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (c, i) {
-                          return const ReviewCard(
-                              name: "[Name]",
-                              date: "22-07-2025",
-                              rating: 4.5,
-                              review: "[Review]");
+                          final review = customerReviews?.reviews[i];
+                          return ReviewCard(
+                              name: review?.customer?.firstName ?? "Customer",
+                              date: review?.formattedCreatedAt ?? "",
+                              rating: review?.rating?.toDouble() ?? 0.0,
+                              review: review?.comment ?? "No review provided");
                         },
                         separatorBuilder: (c, i) {
                           return const SizedBox(
                             height: 10,
                           );
                         },
-                        itemCount: 5,
-                      )
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
                     ],
                   ),
                 ),

@@ -65,6 +65,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<ReviewEvent>(_addReview);
     on<DeleteAddress>(_deleteAddress);
     on<RemoveWishList>(_removeFromWishlist);
+    on<GetOrderReview>(getProductReviews);
   }
 
   FutureOr<void> _emailPassRegister(
@@ -547,6 +548,21 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     } catch (e) {
       debugPrint("Error in getFavorites service: $e");
       // emit(WishlistError(error: e.toString()));
+    }
+  }
+
+  FutureOr<void> getProductReviews(
+    GetOrderReview getOrderReview,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const ReviewLoading(message: 'Loading product reviews...'));
+      final response = await _orderDetailsService.getOrderReviews(
+          token: box.read('login_jwt'), productId: getOrderReview.productId);
+      // logger.w(response);
+      emit(CustomerReviewSuccess(customerReview: response));
+    } catch (e) {
+      logger.e("Error in getProductReviews: $e");
     }
   }
 }

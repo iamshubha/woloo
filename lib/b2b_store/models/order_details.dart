@@ -45,16 +45,16 @@ class OrderSet {
   final DateTime? updatedAt;
   final DateTime? createdAt;
   final dynamic displayId;
-  final dynamic? customerId;
+  final dynamic customerId;
   final String? cartId;
   final String? paymentCollectionId;
   final OrderSetCustomer? customer;
   final Cart? cart;
   final PaymentCollectionInOrderDetails? paymentCollection;
   final List<Order> orders;
-  final dynamic? status;
-  final dynamic? paymentStatus;
-  final dynamic? fulfillmentStatus;
+  final dynamic status;
+  final dynamic paymentStatus;
+  final dynamic fulfillmentStatus;
   final int? taxTotal;
   final int? shippingTaxTotal;
   final int? shippingTotal;
@@ -141,11 +141,11 @@ class OrderSet {
 
 class Cart {
   final String? id;
-  final dynamic? regionId;
-  final dynamic? customerId;
-  final dynamic? salesChannelId;
-  final dynamic? email;
-  final dynamic? currencyCode;
+  final dynamic regionId;
+  final dynamic customerId;
+  final dynamic salesChannelId;
+  final dynamic email;
+  final dynamic currencyCode;
   final dynamic metadata;
   final DateTime? completedAt;
   final ShippingAddress? shippingAddress;
@@ -233,11 +233,11 @@ class ShippingAddress {
 }
 
 class OrderSetCustomer {
-  final dynamic? id;
+  final dynamic id;
   final dynamic companyName;
   final dynamic firstName;
   final dynamic lastName;
-  final dynamic? email;
+  final dynamic email;
   final dynamic phone;
   final bool? hasAccount;
   final dynamic metadata;
@@ -298,13 +298,13 @@ class OrderSetCustomer {
 }
 
 class Order {
-  final dynamic? customerId;
+  final dynamic customerId;
   final String? id;
-  final dynamic? currencyCode;
-  final dynamic? email;
+  final dynamic currencyCode;
+  final dynamic email;
   final DateTime? createdAt;
   final DateTime? updatedAt;
-  final dynamic? status;
+  final dynamic status;
   final int? total;
   final int? subtotal;
   final int? taxTotal;
@@ -315,19 +315,19 @@ class Order {
   final int? itemTotal;
   final int? itemSubtotal;
   final int? itemTaxTotal;
-  final dynamic? salesChannelId;
+  final dynamic salesChannelId;
   final int? originalItemTotal;
   final int? originalItemSubtotal;
   final int? originalItemTaxTotal;
   final int? shippingTotal;
   final int? shippingSubtotal;
   final int? shippingTaxTotal;
-  final List<Item>? items;
+  final List<Item> items;
   final OrderSetCustomer? customer;
   final List<dynamic>? fulfillments;
   final List<PaymentCollectionInOrderDetails>? paymentCollections;
-  final dynamic? paymentStatus;
-  final dynamic? fulfillmentStatus;
+  final dynamic paymentStatus;
+  final dynamic fulfillmentStatus;
 
   Order({
     this.customerId,
@@ -354,7 +354,7 @@ class Order {
     this.shippingTotal,
     this.shippingSubtotal,
     this.shippingTaxTotal,
-    this.items,
+    this.items = const [],
     this.customer,
     this.fulfillments,
     this.paymentCollections,
@@ -436,7 +436,7 @@ class Order {
         "shipping_tax_total": shippingTaxTotal,
         "items": items == null
             ? []
-            : List<dynamic>.from(items!.map((x) => x.toJson())),
+            : List<dynamic>.from(items.map((x) => x.toJson())),
         "customer": customer?.toJson(),
         "fulfillments": fulfillments == null
             ? []
@@ -451,21 +451,21 @@ class Order {
 
 class Item {
   final String? id;
-  final dynamic? title;
-  final dynamic? subtitle;
+  final String? title;
+  final String? subtitle;
   final String? thumbnail;
-  final dynamic? variantId;
-  final dynamic? productId;
-  final dynamic? productTitle;
+  final String? variantId;
+  final String? productId;
+  final String? productTitle;
   final String? productDescription;
   final String? productSubtitle;
   final dynamic productType;
   final dynamic productTypeId;
-  final dynamic? productCollection;
-  final dynamic? productHandle;
+  final dynamic productCollection;
+  final dynamic productHandle;
   final dynamic variantSku;
   final dynamic variantBarcode;
-  final dynamic? variantTitle;
+  final dynamic variantTitle;
   final dynamic variantOptionValues;
   final bool? requiresShipping;
   final bool? isGiftcard;
@@ -1015,9 +1015,9 @@ class Metadata {
 
 class PaymentCollectionInOrderDetails {
   final String? id;
-  final dynamic? currencyCode;
+  final dynamic currencyCode;
   final dynamic completedAt;
-  final dynamic? status;
+  final dynamic status;
   final dynamic metadata;
   final Raw? rawAmount;
   final Raw? rawAuthorizedAmount;
@@ -1113,8 +1113,8 @@ class PaymentCollectionInOrderDetails {
 
 class PaymentInOrderDetails {
   final String? id;
-  final dynamic? currencyCode;
-  final dynamic? providerId;
+  final dynamic currencyCode;
+  final dynamic providerId;
   final Data? data;
   final dynamic metadata;
   final dynamic capturedAt;
@@ -1203,11 +1203,11 @@ class Data {
   final String? id;
   final Notes? notes;
   final int? amount;
-  final dynamic? entity;
-  final dynamic? status;
+  final dynamic entity;
+  final dynamic status;
   final String? receipt;
   final int? attempts;
-  final dynamic? currency;
+  final dynamic currency;
   final dynamic offerId;
   final int? amountDue;
   final int? createdAt;
@@ -1282,10 +1282,10 @@ class Notes {
 }
 
 class NotesCustomer {
-  final dynamic? id;
-  final dynamic? email;
-  final dynamic? phone;
-  final dynamic? metadata;
+  final dynamic id;
+  final dynamic email;
+  final dynamic phone;
+  final dynamic metadata;
   final List<Address>? addresses;
   final dynamic lastName;
   final dynamic firstName;
@@ -1345,22 +1345,22 @@ class NotesCustomer {
 }
 
 class Address {
-  final dynamic? id;
-  final dynamic? city;
+  final dynamic id;
+  final dynamic city;
   final String? phone;
   final dynamic company;
   final dynamic metadata;
-  final dynamic? province;
-  final dynamic? address1;
+  final dynamic province;
+  final dynamic address1;
   final dynamic address2;
-  final dynamic? lastName;
+  final dynamic lastName;
   final DateTime? createdAt;
   final dynamic deletedAt;
-  final dynamic? firstName;
+  final dynamic firstName;
   final DateTime? updatedAt;
-  final dynamic? customerId;
+  final dynamic customerId;
   final String? postalCode;
-  final dynamic? addressName;
+  final dynamic addressName;
   final dynamic countryCode;
   final bool? isDefaultBilling;
   final bool? isDefaultShipping;
