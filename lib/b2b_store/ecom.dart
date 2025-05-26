@@ -602,7 +602,9 @@ class CategoriesSection extends StatelessWidget {
           SizedBox(
             height: 100.h,
             child: ListView.separated(
-              itemCount: productCategory.productCategories!.length,
+              itemCount: productCategory.productCategories != null
+                  ? productCategory.productCategories!.length
+                  : 0,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
                 final category = Category(

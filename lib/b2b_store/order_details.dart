@@ -16,7 +16,8 @@ import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
 
 class OrderScreen extends StatefulWidget {
-  const OrderScreen({super.key});
+  OrderSet orderSet;
+  OrderScreen({super.key, required this.orderSet});
 
   @override
   State<OrderScreen> createState() => _OrderScreenState();
@@ -24,10 +25,9 @@ class OrderScreen extends StatefulWidget {
 
 class _OrderScreenState extends State<OrderScreen> {
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
-  OrderDetails? orderDetailsData;
+  // OrderSet? orderDetailsData = widget.orderSet;
   @override
   void initState() {
-    _b2bStoreBloc.add(const OrderDetailsEvent());
     super.initState();
   }
 
@@ -46,10 +46,11 @@ class _OrderScreenState extends State<OrderScreen> {
             EasyLoading.show(status: state.message);
           }
           if (state is OrderDetailsSuccess) {
-            setState(() {
-              orderDetailsData = state.orderDetailsData;
-              print(state.orderDetailsData.orderSets);
-            });
+            // setState(() {
+            //   orderDetailsData = state.orderDetailsData;
+            //   isLoading = false;
+            //   print(state.orderDetailsData.orderSets);
+            // });
             EasyLoading.dismiss();
           }
           if (state is OrderDetailsError) {
@@ -78,20 +79,18 @@ class _OrderScreenState extends State<OrderScreen> {
                           "Check or modify the details of your order here"),
                   Expanded(
                     child: ListView.builder(
-                        itemCount: orderDetailsData?.orderSets.length ?? 0,
+                        itemCount: widget.orderSet.orders.length,
                         itemBuilder: (c, i) {
-                          final order = orderDetailsData?.orderSets[i];
+                          final order = widget.orderSet.orders[i];
                           return OrderStatusCard(
                             timeLineList: timeLineList,
-                            url: order!.orders.first.items?.first.thumbnail ??
-                                "",
-                            productLabel: order.orders.first.items?.first.title
-                                    .toString() ??
-                                "",
+                            url: order.items!.first.thumbnail ?? "",
+                            productLabel:
+                                order.items!.first.title.toString() ?? "",
                             subTitle: order.orders.first.items?.first.subtitle
                                     .toString() ??
                                 "",
-                            price: order.orders.first.items?.first.total
+                            price: order.orders!.first.items?.first.total
                                     .toString() ??
                                 "",
                           );
