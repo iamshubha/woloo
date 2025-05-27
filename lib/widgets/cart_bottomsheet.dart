@@ -18,8 +18,8 @@ import 'package:woloo_smart_hygiene/widgets/boxes/cart_item.dart';
 import 'package:woloo_smart_hygiene/widgets/review_order_bottomsheet.dart';
 
 class CartBottomSheet extends StatefulWidget {
-  const CartBottomSheet({super.key});
-
+  const CartBottomSheet({super.key, this.onTap});
+  final VoidCallback? onTap;
   @override
   State<CartBottomSheet> createState() => _CartBottomSheetState();
 }
@@ -54,13 +54,12 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
           if (state is CartSuccess) {
             EasyLoading.dismiss();
             setState(() {
-              print(state.cartData.cart);
-              // _addressesData = state.addressesData;
-              // _b2bStoreHomePage = state.dashboardData;
               cartModel = state.cartData;
-              // logger.w(cartModel?.cart?.items);
+              if (cartModel?.cart.items.isEmpty ?? true) {
+                widget.onTap!();
+                Navigator.pop(context);
+              }
               _isDataLoaded = true;
-              // _dashboardData = state.dashboardData;
             });
           }
 
@@ -71,7 +70,9 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
         },
         builder: (context, snapshot) {
           return !_isDataLoaded
-              ? Container()
+              ? Container(
+                  child: Text("data nay"),
+                )
               : Container(
                   height: MediaQuery.of(context).size.height * 0.6,
                   // width: MediaQuery.of(context).size.width,
@@ -82,7 +83,9 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                       borderRadius:
                           BorderRadius.vertical(top: Radius.circular(40.r))),
                   child: cartModel?.cart.items.isEmpty ?? true
-                      ? Container()
+                      ? Container(
+                          // child: Text("No items in cart"),
+                          )
                       : Column(
                           spacing: 16.h,
                           mainAxisSize: MainAxisSize.min,

@@ -122,9 +122,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         child: LongLabeledButton(
                           onTap: () async {
                             if (productCount == 0) {
-                              await addToCart(context);
+                              final val = await addToCart(context);
+                              EasyLoading.show(status: "loading...");
+                              await Future.delayed(Duration(seconds: 2));
+                              EasyLoading.dismiss();
+                              if (val) {
+                                showCartBottomSheet(context);
+                              }
+                              return;
+                            } else {
+                              showCartBottomSheet(context);
                             }
-                            showCartBottomSheet(context);
                           },
                           label: "Buy Now",
                         ),
@@ -280,9 +288,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ShortLabelledButton(
                                 onTap: () async {
                                   if (productCount == 0) {
-                                    await addToCart(context);
+                                    final val = await addToCart(context);
+                                    EasyLoading.show(status: "loading...");
+                                    await Future.delayed(Duration(seconds: 2));
+                                    EasyLoading.dismiss();
+                                    if (val) {
+                                      showCartBottomSheet(context);
+                                    }
+                                    return;
+                                  } else {
+                                    showCartBottomSheet(context);
                                   }
-                                  showCartBottomSheet(context);
                                 },
                               )
                             ],
@@ -384,9 +400,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  showCartBottomSheet(BuildContext context) {
+  void showCartBottomSheet(BuildContext context) {
     // _b2bStoreBloc.add(const ProceedToShip());
-
+    // await Future.delayed(Duration(seconds: 2));
     showModalBottomSheet(
       isScrollControlled: true,
       isDismissible: true, // <-- Allow tap outside to dismiss
@@ -396,11 +412,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           .transparent, // Optional: if you want rounded corners to show correctly
 
       context: context,
-      builder: (_) => const CartBottomSheet(), //AddressBottomSheet
+      builder: (_) => CartBottomSheet(
+        onTap: () {
+          _b2bStoreBloc.add(const GetCartData());
+          logger.w(widget.productData?.id);
+          _b2bStoreBloc
+              .add(GetOrderReview(productId: widget.productData?.id ?? ''));
+          isSelected = widget.isSelected;
+        },
+      ), //AddressBottomSheet
     );
   }
 
-  Future<void> addToCart(BuildContext context) async {
+  Future<bool> addToCart(BuildContext context) async {
     try {
       _b2bStoreBloc.add(AddToCart(
           quantity: 1, variant_id: widget.productData?.variants![0].id));
@@ -410,7 +434,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           content: Text('Item added to cart!'),
         ),
       );
-    } catch (e) {}
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }
 
