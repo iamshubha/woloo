@@ -37,6 +37,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   int productCount = 0;
   late bool isSelected;
   CustomerReviews? customerReviews;
+
+  bool _shouldShowCartBottomSheetAfterAdd = false;
+
   @override
   initState() {
     super.initState();
@@ -52,7 +55,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     final sizeList = ["S", "M", "L", "XL"];
     return BlocConsumer(
       bloc: _b2bStoreBloc,
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is CartLoading) {
           EasyLoading.show(status: state.message);
         }
@@ -84,6 +87,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             _isDataLoaded = true;
             // _dashboardData = state.dashboardData;
           });
+          if (_shouldShowCartBottomSheetAfterAdd) {
+            _shouldShowCartBottomSheetAfterAdd = false; // Reset the flag
+            final resultFromBottomSheet =
+                await showCartBottomSheet(context, {'from': 'buy_now_success'});
+            _handleCartBottomSheetDismissal(resultFromBottomSheet);
+          }
         }
 
         if (state is WishlistSuccess) {
@@ -105,6 +114,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         }
 
         if (state is CartError) {
+          _shouldShowCartBottomSheetAfterAdd = false;
           EasyLoading.dismiss();
           EasyLoading.showError(state.error);
         }
@@ -131,16 +141,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           onTap: () async {
                             if (productCount == 0) {
                               final val = await addToCart(context);
-                              EasyLoading.show(status: "loading...");
-                              await Future.delayed(Duration(seconds: 2));
-                              EasyLoading.dismiss();
-                              if (val) {
-                                final resultFromBottomSheet =
-                                    await showCartBottomSheet(
-                                        context, {'from': 'buy_now'});
-                                _handleCartBottomSheetDismissal(
-                                    resultFromBottomSheet);
-                              }
+                              // EasyLoading.show(status: "loading...");
+                              // await Future.delayed(Duration(seconds: 2));
+                              // EasyLoading.dismiss();
+                              // if (val) {
+                              //   final resultFromBottomSheet =
+                              //       await showCartBottomSheet(
+                              //           context, {'from': 'buy_now'});
+                              //   _handleCartBottomSheetDismissal(
+                              //       resultFromBottomSheet);
+                              // }
                               return;
                             } else {
                               final resultFromBottomSheet =
@@ -305,16 +315,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 onTap: () async {
                                   if (productCount == 0) {
                                     final val = await addToCart(context);
-                                    EasyLoading.show(status: "loading...");
-                                    await Future.delayed(Duration(seconds: 2));
-                                    EasyLoading.dismiss();
-                                    if (val) {
-                                      final resultFromBottomSheet =
-                                          await showCartBottomSheet(
-                                              context, {'from': 'buy_now'});
-                                      _handleCartBottomSheetDismissal(
-                                          resultFromBottomSheet);
-                                    }
+                                    // EasyLoading.show(status: "loading...");
+                                    // await Future.delayed(Duration(seconds: 2));
+                                    // EasyLoading.dismiss();
+                                    // if (val) {
+                                    //   final resultFromBottomSheet =
+                                    //       await showCartBottomSheet(
+                                    //           context, {'from': 'buy_now'});
+                                    //   _handleCartBottomSheetDismissal(
+                                    //       resultFromBottomSheet);
+                                    // }
                                     return;
                                   } else {
                                     final resultFromBottomSheet =
@@ -473,6 +483,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   Future<bool> addToCart(BuildContext context) async {
+    _shouldShowCartBottomSheetAfterAdd = true;
     try {
       _b2bStoreBloc.add(AddToCart(
           quantity: 1, variant_id: widget.productData?.variants![0].id));
