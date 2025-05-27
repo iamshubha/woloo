@@ -140,17 +140,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         child: LongLabeledButton(
                           onTap: () async {
                             if (productCount == 0) {
-                              final val = await addToCart(context);
-                              // EasyLoading.show(status: "loading...");
-                              // await Future.delayed(Duration(seconds: 2));
-                              // EasyLoading.dismiss();
-                              // if (val) {
-                              //   final resultFromBottomSheet =
-                              //       await showCartBottomSheet(
-                              //           context, {'from': 'buy_now'});
-                              //   _handleCartBottomSheetDismissal(
-                              //       resultFromBottomSheet);
-                              // }
+                              addToCart(context);
+
                               return;
                             } else {
                               final resultFromBottomSheet =
@@ -314,17 +305,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ShortLabelledButton(
                                 onTap: () async {
                                   if (productCount == 0) {
-                                    final val = await addToCart(context);
-                                    // EasyLoading.show(status: "loading...");
-                                    // await Future.delayed(Duration(seconds: 2));
-                                    // EasyLoading.dismiss();
-                                    // if (val) {
-                                    //   final resultFromBottomSheet =
-                                    //       await showCartBottomSheet(
-                                    //           context, {'from': 'buy_now'});
-                                    //   _handleCartBottomSheetDismissal(
-                                    //       resultFromBottomSheet);
-                                    // }
+                                    await addToCart(context);
+
                                     return;
                                   } else {
                                     final resultFromBottomSheet =
@@ -482,7 +464,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     return v;
   }
 
-  Future<bool> addToCart(BuildContext context) async {
+  addToCart(BuildContext context) async {
     _shouldShowCartBottomSheetAfterAdd = true;
     try {
       _b2bStoreBloc.add(AddToCart(
@@ -493,10 +475,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           content: Text('Item added to cart!'),
         ),
       );
-      return true;
-    } catch (e) {
-      return false;
-    }
+    } catch (e) {}
   }
 }
 
