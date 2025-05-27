@@ -120,7 +120,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     children: [
                       Expanded(
                         child: LongLabeledButton(
-                          onTap: () {
+                          onTap: () async {
+                            if (productCount == 0) {
+                              await addToCart(context);
+                            }
                             showCartBottomSheet(context);
                           },
                           label: "Buy Now",
@@ -229,7 +232,22 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   // setState(() {});
                                 },
                                 onRemove: () {
-                                  if (productCount == 0) return;
+                                  productCount == 0
+                                      ? EasyLoading.showError(
+                                          "Product count cannot be less than 0")
+                                      : null;
+                                  // if (productCount == 1) {
+                                  //   // EasyLoading.showError(
+                                  //   //     "Product count cannot be less than 0");
+                                  //   cartModel?.cart.items.forEach((i) {
+                                  //     if (i.variantId ==
+                                  //         widget.productData?.variants![0].id) {
+                                  //       _b2bStoreBloc
+                                  //           .add(DeleteItemReq(itemId: i.id));
+                                  //     }
+                                  //   });
+                                  //   return;
+                                  // }
                                   cartModel?.cart.items.forEach((i) {
                                     if (i.variantId ==
                                         widget.productData?.variants![0].id) {
@@ -260,7 +278,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ),
                               const Spacer(),
                               ShortLabelledButton(
-                                onTap: () => showCartBottomSheet(context),
+                                onTap: () async {
+                                  if (productCount == 0) {
+                                    await addToCart(context);
+                                  }
+                                  showCartBottomSheet(context);
+                                },
                               )
                             ],
                           ),
@@ -361,12 +384,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Future<dynamic> showCartBottomSheet(BuildContext context) async {
-    if (cartModel?.cart.items.isEmpty ?? true) {
-      await addToCart(context);
-    }
-    _b2bStoreBloc.add(const ProceedToShip());
-    return showModalBottomSheet(
+  showCartBottomSheet(BuildContext context) {
+    // _b2bStoreBloc.add(const ProceedToShip());
+
+    showModalBottomSheet(
       isScrollControlled: true,
       isDismissible: true, // <-- Allow tap outside to dismiss
       enableDrag: true, // <-- Allow swipe down to dismiss

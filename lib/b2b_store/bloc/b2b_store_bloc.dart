@@ -267,14 +267,26 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   ) async {
     try {
       emit(const CartLoading(message: "Loading data..."));
-      CartModel response = await _cartService.addOrRemoveItem(
-          itemId: event.itemId,
-          count: event.count,
-          token: box.read('login_jwt'),
-          cartId: box.read('cart_id'));
+      CartModel response;
+      if (event.count == 0) {
+        await _cartService.deleteItem(
+            itemId: event.itemId,
+            token: box.read('login_jwt'),
+            cartId: box.read('cart_id'));
+        response = await _cartService.getAllCartData(
+            token: box.read('login_jwt'), cartId: box.read('cart_id'));
+      } else {
+        response = await _cartService.addOrRemoveItem(
+            itemId: event.itemId,
+            count: event.count,
+            token: box.read('login_jwt'),
+            cartId: box.read('cart_id'));
+      }
+
       logger.w(response);
       emit(CartSuccess(cartData: response));
     } catch (e) {
+      emit(CartError(error: e.toString()));
       logger.w("Error in bloc: $e");
       rethrow;
     }
@@ -286,6 +298,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   ) async {
     try {
       emit(const B2BStoreLoading(message: "Loading data..."));
+      emit(const CartLoading(message: "Loading data..."));
       AddToCartResponse res = await _cartService.addToCart(
         token: box.read('login_jwt'),
         cart_id: box.read('cart_id'),
