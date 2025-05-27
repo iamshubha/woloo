@@ -64,11 +64,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           EasyLoading.dismiss();
           setState(() {
             cartModel = state.cartData;
-            cartModel?.cart.items.forEach((i) {
-              if (i.variantId == widget.productData?.variants![0].id) {
-                productCount = i.quantity;
-              }
-            });
+
+            final itemsData = cartModel?.cart.items;
+            if (itemsData!.isEmpty) {
+              productCount = 0;
+            } else {
+              itemsData.forEach((i) {
+                if (i.variantId == widget.productData?.variants![0].id) {
+                  productCount = i.quantity;
+                } else {
+                  productCount = 0;
+                }
+              });
+            }
             // print(state.cartData.cart);
             // _addressesData = state.addressesData;
             // _b2bStoreHomePage = state.dashboardData;
@@ -127,11 +135,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               await Future.delayed(Duration(seconds: 2));
                               EasyLoading.dismiss();
                               if (val) {
-                                showCartBottomSheet(context);
+                                final resultFromBottomSheet =
+                                    await showCartBottomSheet(
+                                        context, {'from': 'buy_now'});
+                                _handleCartBottomSheetDismissal(
+                                    resultFromBottomSheet);
                               }
                               return;
                             } else {
-                              showCartBottomSheet(context);
+                              final resultFromBottomSheet =
+                                  await showCartBottomSheet(
+                                      context, {'from': 'buy_now'});
+                              _handleCartBottomSheetDismissal(
+                                  resultFromBottomSheet);
                             }
                           },
                           label: "Buy Now",
@@ -293,11 +309,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     await Future.delayed(Duration(seconds: 2));
                                     EasyLoading.dismiss();
                                     if (val) {
-                                      showCartBottomSheet(context);
+                                      final resultFromBottomSheet =
+                                          await showCartBottomSheet(
+                                              context, {'from': 'buy_now'});
+                                      _handleCartBottomSheetDismissal(
+                                          resultFromBottomSheet);
                                     }
                                     return;
                                   } else {
-                                    showCartBottomSheet(context);
+                                    final resultFromBottomSheet =
+                                        await showCartBottomSheet(
+                                            context, {'from': 'buy_now'});
+                                    _handleCartBottomSheetDismissal(
+                                        resultFromBottomSheet);
                                   }
                                 },
                               )
@@ -400,10 +424,39 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  void showCartBottomSheet(BuildContext context) {
+  void _handleCartBottomSheetDismissal(String? result) {
+    logger.d(
+        'ProductDetailsScreen: CartBottomSheet dismissed with result: $result');
+    // Here you can update UI or trigger further actions based on the result
+    setState(() {
+      if (result == 'checkout_initiated') {
+        // User initiated checkout from cart, maybe navigate to final checkout screen
+        EasyLoading.showSuccess('Checkout initiated from cart!');
+      } else if (result == 'keep_shopping' ||
+          result == 'cart_empty_after_load') {
+        // User wants to keep shopping or cart is empty
+        EasyLoading.showInfo('Cart dismissed. Happy shopping!');
+      } else if (result == 'cart_load_error') {
+        EasyLoading.showError('Error loading cart.');
+      } else if (result == 'address_changed') {
+        EasyLoading.showToast('Address updated!');
+        // If changing address in CartBottomSheet affects ProductDetailsScreen,
+        // dispatch an event to refresh relevant data here.
+        // e.g., _b2bStoreBloc.add(const GetCartData()); // To refresh cart prices with new address
+      }
+      // You can add more cases based on results popped from CartBottomSheet
+    });
+    // You might also want to refresh the cart data here in case it was modified
+    // from outside the bloc listener (e.g. if the bottom sheet was dismissed by drag)
+
+    _b2bStoreBloc.add(const GetCartData()); // Always refresh cart data
+  }
+
+  Future<String?> showCartBottomSheet(
+      BuildContext context, Map<String, dynamic> preCartData) async {
     // _b2bStoreBloc.add(const ProceedToShip());
     // await Future.delayed(Duration(seconds: 2));
-    showModalBottomSheet(
+    final v = await showModalBottomSheet<String>(
       isScrollControlled: true,
       isDismissible: true, // <-- Allow tap outside to dismiss
       enableDrag: true, // <-- Allow swipe down to dismiss
@@ -413,15 +466,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
       context: context,
       builder: (_) => CartBottomSheet(
-        onTap: () {
-          _b2bStoreBloc.add(const GetCartData());
-          logger.w(widget.productData?.id);
-          _b2bStoreBloc
-              .add(GetOrderReview(productId: widget.productData?.id ?? ''));
-          isSelected = widget.isSelected;
-        },
+        initialApiData: preCartData,
       ), //AddressBottomSheet
     );
+    return v;
   }
 
   Future<bool> addToCart(BuildContext context) async {
