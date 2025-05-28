@@ -192,19 +192,29 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                     color: AppColors.buttonYellowColor,
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
+                        //"address_1": "B 304 nancy bramha",
+                        // "address_2": "bavdhan police chauki",
+                        // "address_name": "Default",
+                        // "city": "Pune",
+                        // "first_name": "aarati gujar",
+                        // "last_name": "Gujar",
+                        // "phone": "9011099012",
+                        // "postal_code": "411021",
+                        // "province": "Maharashtra"
                         // Form is valid, proceed
                         // print("Form submitted");
                         _b2bStoreBloc.add(
                           AddressReq(
                             addressReqBody: AddressReqBody(
-                              firstName: _firstNameController.text,
-                              lastName: _lastNameController.text,
-                              address1: _apartmentController.text,
-                              addressName: 'Default',
-                              city: _cityController.text,
-                              phone: _phoneController.text,
-                              postalCode: _pincodeController.text,
-                              province: '',
+                              firstName: _firstNameController.text.trim(),
+                              lastName: _lastNameController.text.trim(),
+                              phone: _phoneController.text.trim(),
+                              address1: _flatNoController.text.trim(),
+                              address2: _localityController.text.trim(),
+                              city: _cityController.text.trim(),
+                              postalCode: _pincodeController.text.trim(),
+                              province: "Maharashtra", // Assuming fixed for now
+                              addressName: _labelController.text.trim(),
                             ),
                           ),
                         );

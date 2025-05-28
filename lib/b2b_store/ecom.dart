@@ -88,7 +88,7 @@ class _EcomScreenState extends State<EcomScreen> {
           return Scaffold(
             bottomNavigationBar: const XBottomBar(),
             appBar: EComAppbar(
-              cartValue: _b2bStoreHomePage?.cartData.cart.items.length ?? 0,
+              cartValue: _b2bStoreHomePage!.cartData.cart.items.length,
             ),
             body: SingleChildScrollView(
               child: _isDataLoaded
@@ -210,9 +210,9 @@ class _EcomScreenState extends State<EcomScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (c) => CollectionsScreen(
-                                                    products: _b2bStoreHomePage!
-                                                        .productCollections
-                                                        .products,
+                                                  // products: _b2bStoreHomePage!
+                                                  //     .productCollections
+                                                  //     .products,
                                                   )));
                                     },
                                   )
@@ -777,6 +777,7 @@ class CategoriesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    logger.w(productCategory.productCategories);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
       decoration: const BoxDecoration(

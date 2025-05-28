@@ -121,25 +121,24 @@ class _WishListScreenState extends State<WishListScreen> {
                                   final result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          ProductDetailsScreen(
-                                      
-                                        productData: product,
-                                        isSelected: _b2bStoreBloc.favIds.any(
-                                            (e) => e.containsKey(product.id)),
-                                        productIdforWishList:
-                                            _b2bStoreBloc.favIds.any((e) =>
-                                                    e.containsKey(product.id))
-                                                ? _b2bStoreBloc.favIds
-                                                    .firstWhere((e) =>
-                                                        e.entries.first.key ==
-                                                        product.id)
-                                                    .entries
-                                                    .first
-                                                    .value
-                                        //         : "",
-                                      ),
-                                    ),
+                                        builder: (context) => Container()
+                                        //     ProductDetailsScreen(
+                                        //   productData: product,
+                                        //   isSelected: _b2bStoreBloc.favIds.any(
+                                        //       (e) => e.containsKey(product.id)),
+                                        //   productIdforWishList:
+                                        //       _b2bStoreBloc.favIds.any((e) =>
+                                        //               e.containsKey(product.id))
+                                        //           ? _b2bStoreBloc.favIds
+                                        //               .firstWhere((e) =>
+                                        //                   e.entries.first.key ==
+                                        //                   product.id)
+                                        //               .entries
+                                        //               .first
+                                        //               .value
+                                        //           : "",
+                                        // ),
+                                        ),
                                   );
                                   if (result != null && result == 'refresh') {
                                     _b2bStoreBloc.add(const WishlistEvent());

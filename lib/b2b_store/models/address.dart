@@ -3,60 +3,63 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 
 class AddressReqBody {
-  String? address1;
-  String? addressName;
-  String? city;
+  Map<String, dynamic>? metadata;
   String? firstName;
   String? lastName;
   String? phone;
-  String? postalCode;
+  String? company;
+  String? address1;
+  String? address2;
+  String? city;
+  String? countryCode;
   String? province;
+  String? postalCode;
+  String? addressName;
 
-  AddressReqBody(
-      {this.address1,
-      this.addressName,
-      this.city,
-      this.firstName,
-      this.lastName,
-      this.phone,
-      this.postalCode,
-      this.province});
+  AddressReqBody({
+    this.metadata,
+    this.firstName,
+    this.lastName,
+    this.phone,
+    this.company,
+    this.address1,
+    this.address2,
+    this.city,
+    this.countryCode,
+    this.province,
+    this.postalCode,
+    this.addressName,
+  });
 
   AddressReqBody.fromJson(Map<String, dynamic> json) {
-    address1 = json['address_1'];
-    addressName = json['address_name'];
-    city = json['city'];
+    metadata = json['metadata'];
     firstName = json['first_name'];
     lastName = json['last_name'];
     phone = json['phone'];
-    postalCode = json['postal_code'];
+    company = json['company'];
+    address1 = json['address_1'];
+    address2 = json['address_2'];
+    city = json['city'];
+    countryCode = json['country_code'];
     province = json['province'];
+    postalCode = json['postal_code'];
+    addressName = json['address_name'];
   }
-/*
 
-  "metadata": {},
-  "first_name": "John",
-  "last_name": "Doe",
-  "phone": "9909988088",
-  "company": "Woloo",
-  "address_1": "Supreme Lodha",
-  "address_2": "Powai",
-  "city": "Mumbai",
-  "country_code": "in",
-  "province": "",
-  "postal_code": "382324",
-  "address_name": "Home"
- */
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['address_1'] = address1;
-    data['address_name'] = addressName;
-    data['city'] = city;
+    data['metadata'] = metadata;
     data['first_name'] = firstName;
     data['last_name'] = lastName;
     data['phone'] = phone;
-    data['postal_code'] = postalCode;
+    data['company'] = company;
+    data['address_1'] = address1;
+    data['address_2'] = address2;
+    data['city'] = city;
+    data['country_code'] = countryCode;
     data['province'] = province;
+    data['postal_code'] = postalCode;
+    data['address_name'] = addressName;
     return data;
   }
 }
