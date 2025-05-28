@@ -23,7 +23,7 @@ import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
-import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
+import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
 
 import '../hygine_services/view/address_notifier.dart';
@@ -53,6 +53,10 @@ class _EcomScreenState extends State<EcomScreen> {
         email: '000000000@gmail.com', pass: 'aaarati14'));
     super.initState();
     // address = getAddress();
+  }
+
+  _refresh() {
+    _b2bStoreBloc.add(const Refresh());
   }
 
   @override
@@ -129,21 +133,196 @@ class _EcomScreenState extends State<EcomScreen> {
                             ],
                           ),
                         ),
-                        LandingProducts(
-                          favIds: _b2bStoreBloc.favIds,
-                          topBrands: _b2bStoreHomePage!.topBrands,
-                          productCollections:
-                              _b2bStoreHomePage!.productCollections,
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (c) => CollectionsScreen(
-                                          products: _b2bStoreHomePage!
-                                              .productCollections.products,
-                                        )));
-                          },
-                        ),
+                        // LandingProducts(
+                        //   favIds: _b2bStoreBloc.favIds,
+                        //   topBrands: _b2bStoreHomePage!.topBrands,
+                        //   productCollections:
+                        //       _b2bStoreHomePage!.productCollections,
+                        //   onTap: () {
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //             builder: (c) => CollectionsScreen(
+                        //                   products: _b2bStoreHomePage!
+                        //                       .productCollections.products,
+                        //                 )));
+                        //   },
+                        // ),
+                        Container(
+                          color: AppColors.themeBackground,
+                          padding: EdgeInsets.symmetric(
+                              vertical: 16.h, horizontal: 20.w),
+                          child: Column(
+                            spacing: 10.h,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    "Top Brands",
+                                    style: TextStyle(
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const Spacer(),
+                                  const SeeMoreButton()
+                                ],
+                              ),
+                              GridView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 10,
+                                  childAspectRatio: 1.0,
+                                ),
+                                itemCount: _b2bStoreHomePage!
+                                            .topBrands.collections!.length >
+                                        6
+                                    ? 6
+                                    : _b2bStoreHomePage!.topBrands.collections!
+                                        .length, //.length,
+                                itemBuilder: (context, index) {
+                                  return BrandsGrid(
+                                    imageUrl: _b2bStoreHomePage!
+                                            .topBrands
+                                            .collections![index]
+                                            .metadata
+                                            ?.image ??
+                                        '',
+                                  );
+                                },
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Collections",
+                                    style: TextStyle(
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const Spacer(),
+                                  SeeMoreButton(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (c) => CollectionsScreen(
+                                                    products: _b2bStoreHomePage!
+                                                        .productCollections
+                                                        .products,
+                                                  )));
+                                    },
+                                  )
+                                ],
+                              ),
+
+                              //product collections
+                              GridView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 10,
+                                  childAspectRatio: 0.6,
+                                ),
+                                itemCount: _b2bStoreHomePage!.productCollections
+                                            .products.length >
+                                        8
+                                    ? 8
+                                    : _b2bStoreHomePage!
+                                        .productCollections.products.length,
+                                itemBuilder: (context, index) {
+                                  final product = _b2bStoreHomePage!
+                                      .productCollections.products[index];
+                                  return GestureDetector(
+                                    onTap: () async {
+                                      final result = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProductDetailsScreen(
+                                            productData: product,
+                                            isSelected: _b2bStoreBloc.favIds
+                                                .any((e) =>
+                                                    e.containsKey(product.id)),
+                                            productIdforWishList: _b2bStoreBloc
+                                                    .favIds
+                                                    .any((e) => e.containsKey(
+                                                        product.id))
+                                                ? _b2bStoreBloc.favIds
+                                                    .firstWhere((e) =>
+                                                        e.entries.first.key ==
+                                                        product.id)
+                                                    .entries
+                                                    .first
+                                                    .value
+                                                : "",
+                                          ),
+                                        ),
+                                      );
+                                      if (result != null &&
+                                          result == 'refresh') {
+                                        _refresh();
+                                        print(
+                                            'Returned from Page B with refresh signal (or physical back).');
+                                        // _initializeData(); // Re-initialize or refresh data
+                                      } else {
+                                        _refresh();
+                                        print(
+                                            'Returned from Page B without refresh signal or cancelled.');
+                                      }
+                                    },
+                                    child: GridItem(
+                                      products: product,
+                                      isSelected: _b2bStoreBloc.favIds.any(
+                                          (e) => e.containsKey(product.id)),
+                                      productIdforWishList: _b2bStoreBloc.favIds
+                                              .any((e) =>
+                                                  e.containsKey(product.id))
+                                          ? _b2bStoreBloc.favIds
+                                              .firstWhere((e) =>
+                                                  e.entries.first.key ==
+                                                  product.id)
+                                              .entries
+                                              .first
+                                              .value
+                                          : "",
+                                      // imageUrl: productCollections.products![index].thumbnail ?? '',
+                                    ),
+                                  );
+                                },
+                              ),
+                              SizedBox(
+                                height: 5.h,
+                              ),
+                              Text(
+                                "New in Store",
+                                style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                height: 130.h,
+                                child: ListView.separated(
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (c, i) => ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(25.r),
+                                        child:
+                                            Image.asset(AppImages.bTemplate)),
+                                    separatorBuilder: (c, i) => const SizedBox(
+                                          width: 10,
+                                        ),
+                                    itemCount: 4),
+                              ),
+                            ],
+                          ),
+                        )
                       ],
                     )
                   : Container(),
@@ -281,18 +460,49 @@ class LandingProducts extends StatelessWidget {
                 : productCollections.products.length,
             itemBuilder: (context, index) {
               final product = productCollections.products[index];
-              return GridItem(
-                products: product,
-                isSelected: favIds.any((e) => e.containsKey(product.id)),
-                productIdforWishList: favIds
-                        .any((e) => e.containsKey(product.id))
-                    ? favIds
-                        .firstWhere((e) => e.entries.first.key == product.id)
-                        .entries
-                        .first
-                        .value
-                    : "",
-                // imageUrl: productCollections.products![index].thumbnail ?? '',
+              return GestureDetector(
+                onTap: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductDetailsScreen(
+                        productData: product,
+                        isSelected:
+                            favIds.any((e) => e.containsKey(product.id)),
+                        productIdforWishList: favIds
+                                .any((e) => e.containsKey(product.id))
+                            ? favIds
+                                .firstWhere(
+                                    (e) => e.entries.first.key == product.id)
+                                .entries
+                                .first
+                                .value
+                            : "",
+                      ),
+                    ),
+                  );
+                  if (result != null && result == 'refresh') {
+                    print(
+                        'Returned from Page B with refresh signal (or physical back).');
+                    // _initializeData(); // Re-initialize or refresh data
+                  } else {
+                    print(
+                        'Returned from Page B without refresh signal or cancelled.');
+                  }
+                },
+                child: GridItem(
+                  products: product,
+                  isSelected: favIds.any((e) => e.containsKey(product.id)),
+                  productIdforWishList: favIds
+                          .any((e) => e.containsKey(product.id))
+                      ? favIds
+                          .firstWhere((e) => e.entries.first.key == product.id)
+                          .entries
+                          .first
+                          .value
+                      : "",
+                  // imageUrl: productCollections.products![index].thumbnail ?? '',
+                ),
               );
             },
           ),
@@ -374,112 +584,97 @@ class GridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProductDetailsScreen(
-              productData: products,
-              isSelected: isSelected,
-              productIdforWishList: productIdforWishList,
-            ),
-          ),
-        );
-      },
-      child: Stack(
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.w),
-            decoration: BoxDecoration(
-                color: AppColors.themeBackground,
-                borderRadius: BorderRadius.circular(25.r),
-                boxShadow: const [
-                  BoxShadow(
-                    color: AppColors.greyShadowColor,
-                    blurRadius: 5.0,
-                    spreadRadius: 0.5,
-                    offset: Offset(0, 2),
+    return Stack(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 10.w),
+          decoration: BoxDecoration(
+              color: AppColors.themeBackground,
+              borderRadius: BorderRadius.circular(25.r),
+              boxShadow: const [
+                BoxShadow(
+                  color: AppColors.greyShadowColor,
+                  blurRadius: 5.0,
+                  spreadRadius: 0.5,
+                  offset: Offset(0, 2),
+                ),
+                BoxShadow(
+                  color: AppColors.greyShadowColor,
+                  blurRadius: 5.0,
+                  spreadRadius: 0.5,
+                  offset: Offset(0, -1),
+                ),
+              ]),
+          child: Column(
+            spacing: 2.h,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(25.r)),
+                child: SizedBox(
+                  height: 165.h,
+                  width: double.infinity,
+                  child: Image.network(
+                    products.thumbnail ?? '',
+                    fit: BoxFit.contain,
                   ),
-                  BoxShadow(
-                    color: AppColors.greyShadowColor,
-                    blurRadius: 5.0,
-                    spreadRadius: 0.5,
-                    offset: Offset(0, -1),
-                  ),
-                ]),
-            child: Column(
-              spacing: 2.h,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ClipRRect(
-                  borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(25.r)),
-                  child: SizedBox(
-                    height: 165.h,
-                    width: double.infinity,
-                    child: Image.network(
-                      products.thumbnail ?? '',
-                      fit: BoxFit.contain,
+                ),
+              ),
+              Text(
+                products.title ?? "",
+                style:
+                    TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.bold),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                products.subtitle ?? "",
+                style: TextStyle(
+                  fontSize: 8.sp,
+                  color: AppColors.textgreyColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Row(
+                children: List.generate(
+                  5,
+                  (i) => Container(
+                      margin: EdgeInsets.only(right: 2.w),
+                      height: 10.h,
+                      width: 10.w,
+                      child: Image.asset(AppImages.stars)),
+                ),
+              ),
+              Row(
+                children: [
+                  Text(
+                    "Rs. ${products.variants!.last.calculatedPrice!.calculatedAmount.toString()}",
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-                Text(
-                  products.title ?? "",
-                  style:
-                      TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.bold),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  products.subtitle ?? "",
-                  style: TextStyle(
-                    fontSize: 8.sp,
-                    color: AppColors.textgreyColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Row(
-                  children: List.generate(
-                    5,
-                    (i) => Container(
-                        margin: EdgeInsets.only(right: 2.w),
-                        height: 10.h,
-                        width: 10.w,
-                        child: Image.asset(AppImages.stars)),
-                  ),
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "Rs. ${products.variants!.last.calculatedPrice!.calculatedAmount.toString()}",
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Spacer(),
-                    const AddToCartButton()
-                  ],
-                )
-              ],
-            ),
+                  const Spacer(),
+                  const AddToCartButton()
+                ],
+              )
+            ],
           ),
-          Positioned(
-            top: 20,
-            right: 20,
-            child: InkWell(
-                onTap: onTap,
-                child: Icon(
-                  isSelected
-                      ? Icons.favorite_rounded
-                      : Icons.favorite_border_rounded,
-                  color: isSelected ? Colors.pink : null,
-                )),
-          ),
-        ],
-      ),
+        ),
+        Positioned(
+          top: 20,
+          right: 20,
+          child: InkWell(
+              onTap: onTap,
+              child: Icon(
+                isSelected
+                    ? Icons.favorite_rounded
+                    : Icons.favorite_border_rounded,
+                color: isSelected ? Colors.pink : null,
+              )),
+        ),
+      ],
     );
   }
 }

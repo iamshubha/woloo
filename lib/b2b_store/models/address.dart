@@ -32,7 +32,21 @@ class AddressReqBody {
     postalCode = json['postal_code'];
     province = json['province'];
   }
+/*
 
+  "metadata": {},
+  "first_name": "John",
+  "last_name": "Doe",
+  "phone": "9909988088",
+  "company": "Woloo",
+  "address_1": "Supreme Lodha",
+  "address_2": "Powai",
+  "city": "Mumbai",
+  "country_code": "in",
+  "province": "",
+  "postal_code": "382324",
+  "address_name": "Home"
+ */
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['address_1'] = address1;

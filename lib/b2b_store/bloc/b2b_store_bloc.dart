@@ -50,6 +50,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<StoreCustomerLoginReq>(_emailPassLogin);
     on<AddressReq>(_createAddress);
     on<GetAddress>(_getAddress);
+    on<UpdateAddressReq>(_updateAddress);
     on<GetCartData>(_getCart);
     on<AddToCart>(_addToCart);
     on<ProceedToShip>(_proceedToSheep);
@@ -66,6 +67,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<DeleteAddress>(_deleteAddress);
     on<RemoveWishList>(_removeFromWishlist);
     on<GetOrderReview>(getProductReviews);
+    on<Refresh>(_refresh);
   }
 
   FutureOr<void> _emailPassRegister(
@@ -156,6 +158,63 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     }
   }
 
+  FutureOr<void> _refresh(
+    Refresh event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      ProductCategory categories = ProductCategory();
+      TopBrands topBrands = TopBrands();
+      ProductCollections productCollections = ProductCollections();
+
+      emit(const B2BStoreLoading(message: "Loading data..."));
+
+      // // Login and get token
+      // final loginToken = await loginFlowService.loginCustomer(
+      //   email: event.email,
+      //   pass: event.pass,
+      // );
+      final loginToken = box.read('login_jwt');
+
+      // Get region
+      final regionResponse = await _productService.getRegion(token: loginToken);
+      box.write('region_id', regionResponse.regions![0].id);
+
+      CartModel cartModel = await _cartService.getAllCartData(
+          token: box.read('login_jwt'), cartId: box.read('cart_id'));
+
+      // Fetch all required data
+      categories =
+          await _productService.getProductCategories(token: loginToken);
+      topBrands = await _productService.getTopBrands(token: loginToken);
+      productCollections =
+          await _productService.getProductCollections(token: loginToken);
+      logger.w("----------------------------");
+      final fav = await _favoriteService.getFavorites(token: loginToken);
+
+      favIds = getCommonProductIds(fav, productCollections);
+      logger.w(favIds);
+      // Debug prints
+      logger.w(categories);
+      logger.w(topBrands);
+      logger.w(productCollections);
+
+      // Emit success state
+      if (emit.isDone) return;
+      emit(B2BStoreSuccess(B2BStoreHomePage(
+          productCategory: categories,
+          topBrands: topBrands,
+          productCollections: productCollections,
+          cartData: cartModel,
+          fav: fav)));
+    } catch (e) {
+      if (emit.isDone) return;
+      emit(B2BStoreError(error: e.toString()));
+      logger.w("Error in IOT service: $e");
+      debugPrint("Error in IOT service: $e");
+    }
+  }
+
   FutureOr<void> _createAddress(
     AddressReq event,
     Emitter<B2BStoreState> emit,
@@ -164,6 +223,27 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       emit(const B2BStoreLoading(message: "Loading data..."));
       AddAddressResBody response = await _addresstService.addAddress(
           body: event.addressReqBody, token: box.read('login_jwt'));
+
+      debugPrint("requestId $response");
+      print(response);
+      // emit(B2BStoreSuccess());
+      emit(AddAddressSuccess(addAddressResBody: response));
+    } catch (e) {
+      emit(B2BStoreError(error: e.toString()));
+      debugPrint("Error in IOT service: $e");
+    }
+  }
+
+  FutureOr<void> _updateAddress(
+    UpdateAddressReq event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const B2BStoreLoading(message: "Loading data..."));
+      AddAddressResBody response = await _addresstService.updateAddress(
+          body: event.addressReqBody,
+          token: box.read('login_jwt'),
+          addressId: event.addressId);
 
       debugPrint("requestId $response");
       print(response);

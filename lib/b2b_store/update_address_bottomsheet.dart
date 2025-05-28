@@ -10,14 +10,15 @@ import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 
-class AddressBottomSheet extends StatefulWidget {
-  const AddressBottomSheet({super.key, this.adress});
+class UpdateAddressBottomSheet extends StatefulWidget {
+  const UpdateAddressBottomSheet({super.key, this.adress});
   final Addresses? adress;
   @override
-  State<AddressBottomSheet> createState() => _AddressBottomSheetState();
+  State<UpdateAddressBottomSheet> createState() =>
+      _UpdateAddressBottomSheetState();
 }
 
-class _AddressBottomSheetState extends State<AddressBottomSheet>
+class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
     with SingleTickerProviderStateMixin {
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   final _formKey = GlobalKey<FormState>();
@@ -61,14 +62,18 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
 
   @override
   Widget build(BuildContext context) {
-    // return
-    //  BottomSheet(
-    //   onClosing: () => FocusScope.of(context).unfocus(),
-    //   builder: (context) {
     return BlocConsumer<B2bStoreBloc, B2BStoreState>(
         bloc: _b2bStoreBloc,
         listener: (context, state) {
           if (state is AddAddressSuccess) {
+            Fluttertoast.showToast(
+                msg: "Address Edit successfully",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.lightBlue,
+                textColor: Colors.white,
+                fontSize: 16.0);
             Navigator.pop(context);
           }
         },
@@ -91,7 +96,7 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                           onPressed: () => Navigator.pop(context),
                           icon: const Icon(Icons.arrow_back_sharp)),
                       SizedBox(width: 10.w),
-                      Text("Add Address", style: AppTextStyle.font14bold),
+                      Text("Update Address", style: AppTextStyle.font14bold),
                     ],
                   ),
                   Row(
@@ -190,7 +195,8 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                         // Form is valid, proceed
                         // print("Form submitted");
                         _b2bStoreBloc.add(
-                          AddressReq(
+                          UpdateAddressReq(
+                            addressId: widget.adress!.id!,
                             addressReqBody: AddressReqBody(
                               address1: _apartmentController.text,
                               addressName: 'Default',
@@ -203,14 +209,6 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                             ),
                           ),
                         );
-                        Fluttertoast.showToast(
-                            msg: "Address added successfully",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.red,
-                            textColor: Colors.white, 
-                            fontSize: 16.0);
                       }
                     },
                   ),

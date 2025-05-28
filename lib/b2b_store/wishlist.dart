@@ -8,6 +8,7 @@ import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/wishlist.dart';
+import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
@@ -116,16 +117,40 @@ class _WishListScreenState extends State<WishListScreen> {
                               final product =
                                   wishlistData?.wishlist.items[index];
                               return GestureDetector(
-                                onTap: () {
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) =>
-                                  //         ProductDetailsScreen(
-                                  //       productData: products,
-                                  //     ),
-                                  //   ),
-                                  // );
+                                onTap: () async {
+                                  final result = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ProductDetailsScreen(
+                                      
+                                        productData: product,
+                                        isSelected: _b2bStoreBloc.favIds.any(
+                                            (e) => e.containsKey(product.id)),
+                                        productIdforWishList:
+                                            _b2bStoreBloc.favIds.any((e) =>
+                                                    e.containsKey(product.id))
+                                                ? _b2bStoreBloc.favIds
+                                                    .firstWhere((e) =>
+                                                        e.entries.first.key ==
+                                                        product.id)
+                                                    .entries
+                                                    .first
+                                                    .value
+                                        //         : "",
+                                      ),
+                                    ),
+                                  );
+                                  if (result != null && result == 'refresh') {
+                                    _b2bStoreBloc.add(const WishlistEvent());
+                                    print(
+                                        'Returned from Page B with refresh signal (or physical back).');
+                                    // _initializeData(); // Re-initialize or refresh data
+                                  } else {
+                                    _b2bStoreBloc.add(const WishlistEvent());
+                                    print(
+                                        'Returned from Page B without refresh signal or cancelled.');
+                                  }
                                 },
                                 child: Stack(
                                   children: [

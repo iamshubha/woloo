@@ -31,6 +31,13 @@ class StoreCustomerLoginReq extends B2BStoreEvent {
   List<Object?> get props => [email, pass];
 }
 
+class Refresh extends B2BStoreEvent {
+  const Refresh();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class AddRemoveItemReq extends B2BStoreEvent {
   final String itemId;
   final int count;
@@ -79,6 +86,17 @@ class AddressReq extends B2BStoreEvent {
 
   @override
   List<Object?> get props => [addressReqBody];
+}
+
+class UpdateAddressReq extends B2BStoreEvent {
+  final String addressId;
+  final AddressReqBody addressReqBody;
+
+  const UpdateAddressReq(
+      {required this.addressId, required this.addressReqBody});
+
+  @override
+  List<Object?> get props => [addressId, addressReqBody];
 }
 
 class GetAddress extends B2BStoreEvent {
@@ -201,7 +219,6 @@ class ReviewEvent extends B2BStoreEvent {
   @override
   List<Object?> get props => [product_id, rating, comment, line_item_id];
 }
-
 
 class GetOrderReview extends B2BStoreEvent {
   final String productId;

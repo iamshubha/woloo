@@ -8,10 +8,11 @@ import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
+import 'package:woloo_smart_hygiene/b2b_store/update_address_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/enums/product_mode.dart';
 import 'package:woloo_smart_hygiene/extensions/string_extension.dart';
 import 'package:woloo_smart_hygiene/hygine_services/get_date_time_bottomsheet.dart';
-import 'package:woloo_smart_hygiene/janitorial_services/widgets/address_bottomsheet.dart';
+import 'package:woloo_smart_hygiene/b2b_store/add_new_address_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 
@@ -180,7 +181,8 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                                                 .transparent, // Optional: if you want rounded corners to show correctly
 
                                             context: context,
-                                            builder: (_) => AddressBottomSheet(
+                                            builder: (_) =>
+                                                UpdateAddressBottomSheet(
                                               adress: address,
                                             ), //AddressBottomSheet
                                           );

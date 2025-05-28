@@ -34,6 +34,32 @@ class AddressService {
     }
   }
 
+  Future<AddAddressResBody> updateAddress({
+    required AddressReqBody body,
+    required String addressId,
+    required String token,
+  }) async {
+    try {
+      var response = await dio.post(
+        APIConstants.UPDATE_ADDRESS + addressId,
+        data: body.toJson(),
+        options: Options(
+          headers: {
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Bearer $token'
+          },
+        ),
+      );
+
+      return AddAddressResBody.fromJson(response);
+    } catch (e) {
+      debugPrint("Error in IOT service: $e");
+      rethrow;
+    }
+  }
+
   Future<AddressesData> getAllAddress({
     required String token,
   }) async {
