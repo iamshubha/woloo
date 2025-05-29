@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/b2b_store/all_orders.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
@@ -23,7 +24,6 @@ import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
-import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
 
 import '../hygine_services/view/address_notifier.dart';
@@ -86,6 +86,7 @@ class _EcomScreenState extends State<EcomScreen> {
         },
         builder: (context, snapshot) {
           return Scaffold(
+            resizeToAvoidBottomInset: false,
             bottomNavigationBar: const XBottomBar(),
             appBar: EComAppbar(
               cartValue: _isDataLoaded
@@ -229,11 +230,12 @@ class _EcomScreenState extends State<EcomScreen> {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (c) => CollectionsScreen(
-                                                  // products: _b2bStoreHomePage!
-                                                  //     .productCollections
-                                                  //     .products,
-                                                  )));
+                                              builder: (c) =>
+                                                  const CollectionsScreen(
+                                                      // products: _b2bStoreHomePage!
+                                                      //     .productCollections
+                                                      //     .products,
+                                                      )));
                                     },
                                   )
                                 ],
