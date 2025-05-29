@@ -12,22 +12,39 @@ import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart'
+    as product_collections;
 
 class WishListScreen extends StatefulWidget {
+  final List<product_collections.Product> productData;
+  const WishListScreen({
+    super.key,
+    required this.productData,
+  });
   @override
   State<WishListScreen> createState() => _WishListScreenState();
 }
 
 class _WishListScreenState extends State<WishListScreen> {
-  Wishlist? wishlistData;
+  // Wishlist? wishlistData;
   bool _isDataLoaded = false;
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
-
+  List<product_collections.Product> _wProductData = [];
+  // final List<product_collections.Product> _wData = [];
   @override
   void initState() {
+    // _wData.addAll(getFavProducts());
+    // print(_wData.length);
     // TODO: implement initState
     _b2bStoreBloc.add(const WishlistEvent());
     super.initState();
+  }
+
+  List<product_collections.Product> getFavProducts() {
+    final favid = _b2bStoreBloc.favIds.map((e) => e.entries.first.key).toList();
+    return widget.productData
+        .where((element) => favid.contains(element.id))
+        .toList();
   }
 
   @override
@@ -40,12 +57,15 @@ class _WishListScreenState extends State<WishListScreen> {
             EasyLoading.show(status: state.message);
           }
           if (state is WishlistSuccess) {
-            EasyLoading.dismiss();
             setState(() {
-              wishlistData = state.wishlistData;
               _isDataLoaded = true;
-              // _dashboardData = state.dashboardData;
+              _wProductData = getFavProducts();
             });
+            EasyLoading.dismiss();
+            // setState(() {
+            // wishlistData = state.wishlistData;
+            // _dashboardData = state.dashboardData;
+            // });
           }
 
           if (state is WishlistError) {
@@ -112,33 +132,32 @@ class _WishListScreenState extends State<WishListScreen> {
                               mainAxisSpacing: 10,
                               childAspectRatio: 0.6,
                             ),
-                            itemCount: wishlistData?.wishlist.items.length,
+                            itemCount: _wProductData.length,
                             itemBuilder: (context, index) {
-                              final product =
-                                  wishlistData?.wishlist.items[index];
+                              final product = _wProductData[index];
                               return GestureDetector(
                                 onTap: () async {
                                   final result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => Container()
-                                        //     ProductDetailsScreen(
-                                        //   productData: product,
-                                        //   isSelected: _b2bStoreBloc.favIds.any(
-                                        //       (e) => e.containsKey(product.id)),
-                                        //   productIdforWishList:
-                                        //       _b2bStoreBloc.favIds.any((e) =>
-                                        //               e.containsKey(product.id))
-                                        //           ? _b2bStoreBloc.favIds
-                                        //               .firstWhere((e) =>
-                                        //                   e.entries.first.key ==
-                                        //                   product.id)
-                                        //               .entries
-                                        //               .first
-                                        //               .value
-                                        //           : "",
-                                        // ),
-                                        ),
+                                      builder: (context) =>
+                                          ProductDetailsScreen(
+                                        productData: product,
+                                        isSelected: _b2bStoreBloc.favIds.any(
+                                            (e) => e.containsKey(product.id)),
+                                        productIdforWishList:
+                                            _b2bStoreBloc.favIds.any((e) =>
+                                                    e.containsKey(product.id))
+                                                ? _b2bStoreBloc.favIds
+                                                    .firstWhere((e) =>
+                                                        e.entries.first.key ==
+                                                        product.id)
+                                                    .entries
+                                                    .first
+                                                    .value
+                                                : "",
+                                      ),
+                                    ),
                                   );
                                   if (result != null && result == 'refresh') {
                                     _b2bStoreBloc.add(const WishlistEvent());
@@ -187,11 +206,7 @@ class _WishListScreenState extends State<WishListScreen> {
                                               height: 165.h,
                                               width: double.infinity,
                                               child: Image.network(
-                                                wishlistData
-                                                        ?.wishlist
-                                                        .items[index]
-                                                        .productVariant
-                                                        .product
+                                                _wProductData[index]
                                                         .thumbnail ??
                                                     '',
                                                 fit: BoxFit.contain,
@@ -199,13 +214,7 @@ class _WishListScreenState extends State<WishListScreen> {
                                             ),
                                           ),
                                           Text(
-                                            wishlistData
-                                                    ?.wishlist
-                                                    .items[index]
-                                                    .productVariant
-                                                    .product
-                                                    .title ??
-                                                "",
+                                            _wProductData[index].title ?? "",
                                             style: TextStyle(
                                                 fontSize: 10.5.sp,
                                                 fontWeight: FontWeight.bold),
@@ -213,13 +222,7 @@ class _WishListScreenState extends State<WishListScreen> {
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                           Text(
-                                            wishlistData
-                                                    ?.wishlist
-                                                    .items[index]
-                                                    .productVariant
-                                                    .product
-                                                    .subtitle ??
-                                                "",
+                                            _wProductData[index].subtitle ?? "",
                                             style: TextStyle(
                                               fontSize: 8.sp,
                                               color: AppColors.textgreyColor,
@@ -241,7 +244,7 @@ class _WishListScreenState extends State<WishListScreen> {
                                           Row(
                                             children: [
                                               Text(
-                                                "Rs. ${wishlistData?.wishlist.items[index].productVariant.calculatedPrice!.calculatedAmount.toString()}",
+                                                "Rs. ${_wProductData[index].variants!.first.calculatedPrice!.calculatedAmount.toString()}",
                                                 style: TextStyle(
                                                   fontSize: 13.sp,
                                                   fontWeight: FontWeight.bold,

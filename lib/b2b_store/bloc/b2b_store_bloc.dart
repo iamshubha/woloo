@@ -187,8 +187,14 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       categories =
           await _productService.getProductCategories(token: loginToken);
       topBrands = await _productService.getTopBrands(token: loginToken);
-      productCollections =
-          await _productService.getProductCollections(token: loginToken);
+      if (event.id != null) {
+        productCollections = await _productService.getProductCollectionsById(
+            token: loginToken, id: event.id!);
+      } else {
+        productCollections =
+            await _productService.getProductCollections(token: loginToken);
+      }
+
       logger.w("----------------------------");
       final fav = await _favoriteService.getFavorites(token: loginToken);
 
@@ -309,9 +315,12 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
 
   List<Map<String, String>> getCommonProductIds(
       Wishlist wishlist, ProductCollections productCollections) {
-    List<Map<String, String>> wishlistProductIds = wishlist.wishlist.items
-        .map((item) => <String, String>{item.productVariant.productId: item.id})
-        .toList();
+    List<Map<String, String>> wishlistProductIds = wishlist.wishlist?.items
+            ?.map((item) => <String, String>{
+                  item.productVariant?.productId ?? '': item.id ?? ''
+                })
+            .toList() ??
+        [];
     List<String> collectionProductIds = productCollections.products
         .map((product) => product.id)
         .whereType<String>()
@@ -590,6 +599,9 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     try {
       Wishlist wishlist =
           await _favoriteService.getFavorites(token: box.read('login_jwt'));
+      final productCollections = await _productService.getProductCollections(
+          token: box.read('login_jwt'));
+      favIds = getCommonProductIds(wishlist, productCollections);
       emit(WishlistSuccess(wishlistData: wishlist));
     } catch (e) {
       debugPrint("Error in getFavorites service: $e");
@@ -603,7 +615,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   ) async {
     emit(const WishlistLoading(message: 'Loading wishlist...'));
     try {
-      Wishlist wishlist = await _favoriteService.addToWishList(
+      final wishlist = await _favoriteService.addToWishList(
           token: box.read('login_jwt'), variantId: event.variantId);
       emit(WishlistSuccess(wishlistData: wishlist));
     } catch (e) {

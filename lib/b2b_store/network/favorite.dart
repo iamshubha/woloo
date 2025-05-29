@@ -22,7 +22,7 @@ class FavoriteService {
           },
         ),
       );
-      logger.w("Response from getOrderDetails: $response");
+      logger.w(response);
       return Wishlist.fromJson(response);
     } catch (e) {
       debugPrint("Error in getOrderDetails service: $e");
@@ -106,6 +106,7 @@ class FavoriteService {
           },
         ),
       );
+      logger.w(response);
       return Wishlist.fromJson(response);
     } catch (e) {
       logger.e("Remove Item Failure: $e");

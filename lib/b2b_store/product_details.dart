@@ -102,11 +102,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             logger.w(state);
             // widget.productData?.id ==
             //     state.wishlistData.wishlist.items.first.productVariant.productId;
-            final data = state.wishlistData.wishlist.items.firstWhere((item) =>
-                item.productVariant.productId == widget.productData?.id);
+            final data = state.wishlistData.wishlist?.items?.firstWhere(
+                (item) =>
+                    item.productVariant?.productId == widget.productData?.id);
 
             setState(() {
-              widget.productIdforWishList = data.id;
+              widget.productIdforWishList = data?.id ?? '';
             });
           }
 

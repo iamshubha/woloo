@@ -32,10 +32,11 @@ class StoreCustomerLoginReq extends B2BStoreEvent {
 }
 
 class Refresh extends B2BStoreEvent {
-  const Refresh();
+  final String? id;
+  const Refresh({this.id});
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [id];
 }
 
 class AddRemoveItemReq extends B2BStoreEvent {

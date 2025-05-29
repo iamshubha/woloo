@@ -7,6 +7,7 @@ import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/region.dart';
 import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
 import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 
 class ProductService {
   final DioClient dio;
@@ -77,6 +78,7 @@ class ProductService {
           },
         ),
       );
+      logger.w(response);
       return ProductCategory.fromJson(response);
     } catch (e) {
       debugPrint("error $e");
@@ -112,6 +114,30 @@ class ProductService {
     try {
       var response = await dio.get(
         APIConstants.PRODUCT_COLLECTIONS,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      logger.w(response);
+      return ProductCollections.fromJson(response);
+    } catch (e) {
+      debugPrint("error $e");
+      rethrow;
+    }
+  }
+
+  Future<ProductCollections> getProductCollectionsById({
+    required String token,
+    required String id,
+  }) async {
+    try {
+      var response = await dio.get(
+        "https://staging-store.woloo.in/store/products?fields=*variants.calculated_price&collection_id=$id",
         options: Options(
           headers: {
             'Content-Type': 'application/json',

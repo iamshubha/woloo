@@ -88,7 +88,9 @@ class _EcomScreenState extends State<EcomScreen> {
           return Scaffold(
             bottomNavigationBar: const XBottomBar(),
             appBar: EComAppbar(
-              cartValue: _b2bStoreHomePage!.cartData.cart.items.length,
+              cartValue: _isDataLoaded
+                  ? _b2bStoreHomePage!.cartData.cart.items.length
+                  : 0,
             ),
             body: SingleChildScrollView(
               child: _isDataLoaded
@@ -121,12 +123,30 @@ class _EcomScreenState extends State<EcomScreen> {
                               ),
                               Expanded(
                                   child: XTabButton(
-                                      onTap: () {
-                                        Navigator.push(
+                                      onTap: () async {
+                                        final result = await Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (c) =>
-                                                    WishListScreen()));
+                                                builder: (c) => WishListScreen(
+                                                      productData:
+                                                          _b2bStoreHomePage!
+                                                              .productCollections
+                                                              .products,
+
+                                                      //          _b2bStoreBloc.favIds
+                                                      // .any((e) =>
+                                                      //     e.containsKey(product.id))
+                                                    )));
+                                        if (result != null &&
+                                            result == 'refresh') {
+                                          _refresh();
+                                          print(
+                                              'Returned from Page B with refresh signal (or physical back).');
+                                        } else {
+                                          _refresh();
+                                          print(
+                                              'Returned from Page B without refresh signal or cancelled.');
+                                        }
                                       },
                                       logo: AppImages.favourites,
                                       label: "Favourites")),
@@ -804,12 +824,12 @@ class CategoriesSection extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
                 final category = Category(
-                  name: productCategory.productCategories![index].name ?? '',
+                  name: productCategory.productCategories?[index].name ?? '',
                   imageUrl: productCategory
-                          .productCategories![index].metadata!.image ??
+                          .productCategories?[index].metadata?.image ??
                       '',
                   color: Color(int.tryParse(
-                          "0xFF${productCategory.productCategories![index].metadata!.backgroundColor}") ??
+                          "0xFF${productCategory.productCategories?[index].metadata?.backgroundColor}") ??
                       00000),
                 );
                 return Column(
@@ -818,11 +838,17 @@ class CategoriesSection extends StatelessWidget {
                       radius: 36.5.r,
                       backgroundColor: category.color,
                       child: Center(
-                        child: Image.network(
-                          category.imageUrl,
-                          width: 40.w,
-                          height: 40.h,
-                        ),
+                        child: category.imageUrl.isEmptyOrNull
+                            ? Image.asset(
+                                AppImages.woloologo,
+                                width: 40.w,
+                                height: 40.h,
+                              )
+                            : Image.network(
+                                category.imageUrl,
+                                width: 40.w,
+                                height: 40.h,
+                              ),
                       ),
                     ),
                     SizedBox(height: 10.h),
