@@ -882,14 +882,14 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
       {super.key,
       this.isAll = false,
       this.textFieldHintText = 'Search Products',
-      this.cartValue = 0,
+      this.cartValue,
       this.productMode = ProductMode.productDetails});
   final ProductMode productMode;
 
   final String textFieldHintText;
   final bool isAll;
 
-  final int cartValue;
+  final int? cartValue;
   @override
   Size get preferredSize => const Size.fromHeight(130);
 
@@ -899,19 +899,23 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false, // Remove default back button
       backgroundColor: AppColors.themeBackground,
       actions: [
-        Badge(
-          label: Text(cartValue.toString()),
-          child: CircleAvatar(
-            backgroundColor: AppColors.greyIcon,
-            child: IconButton(
-              icon: ImageIcon(AssetImage(AppImages.bag)),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const CartScreen()));
-              },
-            ),
-          ),
-        ),
+        cartValue != 0
+            ? Badge(
+                label: Text(cartValue.toString()),
+                child: CircleAvatar(
+                  backgroundColor: AppColors.greyIcon,
+                  child: IconButton(
+                    icon: ImageIcon(AssetImage(AppImages.bag)),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const CartScreen()));
+                    },
+                  ),
+                ),
+              )
+            : SizedBox(),
         SizedBox(width: 10.w),
       ],
       title: Column(

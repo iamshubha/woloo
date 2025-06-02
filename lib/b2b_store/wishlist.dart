@@ -78,7 +78,7 @@ class _WishListScreenState extends State<WishListScreen> {
               ? Container()
               : Scaffold(
                   bottomNavigationBar: const XBottomBar(),
-                  appBar: const EComAppbar(),
+                  appBar: EComAppbar(),
                   body: SingleChildScrollView(
                     child: Container(
                       decoration: const BoxDecoration(

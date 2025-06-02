@@ -5,18 +5,64 @@ import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
 import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 
+class AddAddressReqBody {
+  final String? first_name;
+  final String? last_name;
+  final String? address_1;
+  final String? city;
+  final String? phone_number;
+  final String? postal_code;
+  final String? province;
+  final String? address_name;
+  // Assuming this class is defined elsewhere in your codebase
+  AddAddressReqBody.fromJson(Map<String, dynamic> json)
+      : first_name = json['first_name'],
+        last_name = json['last_name'],
+        address_1 = json['address_1'],
+        city = json['city'],
+        phone_number = json['phone'],
+        postal_code = json['postal_code'],
+        province = json['province'],
+        address_name = json['address_name'];
+  Map<String, dynamic> toJson() {
+    return {
+      'first_name': first_name,
+      'last_name': last_name,
+      'address_1': address_1,
+      'city': city,
+      'phone': phone_number,
+      'postal_code': postal_code,
+      'province': province,
+      'address_name': address_name,
+    };
+  }
+
+  AddAddressReqBody({
+    required this.first_name,
+    required this.last_name,
+    required this.address_1,
+    required this.city,
+    required this.phone_number,
+    required this.postal_code,
+    required this.province,
+    required this.address_name,
+  });
+}
+
 class AddressService {
   final DioClient dio;
   const AddressService({required this.dio});
 
   Future<AddAddressResBody> addAddress({
-    required AddressReqBody body,
+    required AddAddressReqBody body,
     required String token,
   }) async {
     try {
+      final Map<String, dynamic> data = body.toJson();
+      logger.w(data);
       var response = await dio.post(
         APIConstants.CREATE_ADDRESS,
-        data: body.toJson(),
+        data: data,
         options: Options(
           headers: {
             'x-publishable-api-key':
@@ -40,9 +86,11 @@ class AddressService {
     required String token,
   }) async {
     try {
+      final data = body.toJson();
+      logger.w(data);
       var response = await dio.post(
         APIConstants.UPDATE_ADDRESS + addressId,
-        data: body.toJson(),
+        data: data,
         options: Options(
           headers: {
             'x-publishable-api-key':
@@ -66,7 +114,7 @@ class AddressService {
     // logger.w("Token: $token");
     try {
       var response = await dio.get(
-        APIConstants.GET_ADDRESS,
+        APIConstants.GET_ADDRESS + "?fields=+address_name",
         options: Options(
           headers: {
             'x-publishable-api-key':
@@ -76,7 +124,7 @@ class AddressService {
           },
         ),
       );
-
+      logger.w(response);
       return AddressesData.fromJson(response);
     } catch (e) {
       debugPrint("Error in IOT service: $e");

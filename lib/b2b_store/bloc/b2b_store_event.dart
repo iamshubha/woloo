@@ -81,12 +81,37 @@ class GetHostDashboardData extends B2BStoreEvent {
 }
 
 class AddressReq extends B2BStoreEvent {
-  final AddressReqBody addressReqBody;
+  // final AddressReqBody addressReqBody;
+  final String? first_name;
+  final String? last_name;
+  final String? address_1;
+  final String? city;
+  final String? phone_number;
+  final String? pincode;
+  final String? province;
+  final String? address_name;
 
-  const AddressReq({required this.addressReqBody});
+  const AddressReq(
+      {required this.first_name,
+      required this.last_name,
+      required this.address_1,
+      required this.city,
+      required this.phone_number,
+      required this.pincode,
+      required this.province,
+      required this.address_name});
 
   @override
-  List<Object?> get props => [addressReqBody];
+  List<Object?> get props => [
+        first_name,
+        last_name,
+        address_1,
+        city,
+        phone_number,
+        pincode,
+        province,
+        address_name
+      ];
 }
 
 class UpdateAddressReq extends B2BStoreEvent {
