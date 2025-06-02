@@ -1,46 +1,66 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
+
 class AddressReqBody {
-  String? address1;
-  String? addressName;
-  String? city;
+  Map<String, dynamic>? metadata = <String, dynamic>{};
   String? firstName;
   String? lastName;
   String? phone;
-  String? postalCode;
+  String? company;
+  String? address1;
+  String? address2;
+  String? city;
+  String? countryCode;
   String? province;
+  String? postalCode;
+  String? addressName;
 
-  AddressReqBody(
-      {this.address1,
-      this.addressName,
-      this.city,
-      this.firstName,
-      this.lastName,
-      this.phone,
-      this.postalCode,
-      this.province});
+  AddressReqBody({
+    this.metadata,
+    this.firstName,
+    this.lastName,
+    this.phone,
+    this.company,
+    this.address1,
+    this.address2,
+    this.city,
+    this.countryCode,
+    this.province,
+    this.postalCode,
+    this.addressName,
+  });
 
   AddressReqBody.fromJson(Map<String, dynamic> json) {
-    address1 = json['address_1'];
-    addressName = json['address_name'];
-    city = json['city'];
+    metadata = json['metadata'];
     firstName = json['first_name'];
     lastName = json['last_name'];
     phone = json['phone'];
-    postalCode = json['postal_code'];
+    company = json['company'];
+    address1 = json['address_1'];
+    address2 = json['address_2'];
+    city = json['city'];
+    countryCode = json['country_code'];
     province = json['province'];
+    postalCode = json['postal_code'];
+    addressName = json['address_name'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['address_1'] = address1;
-    data['address_name'] = addressName;
-    data['city'] = city;
+    data['metadata'] =
+        metadata == null || metadata!.isEmpty ? <String, dynamic>{} : metadata;
     data['first_name'] = firstName;
     data['last_name'] = lastName;
     data['phone'] = phone;
-    data['postal_code'] = postalCode;
+    data['company'] = company;
+    data['address_1'] = address1;
+    data['address_2'] = address2;
+    data['city'] = city;
+    data['country_code'] = countryCode;
     data['province'] = province;
+    data['postal_code'] = postalCode;
+    data['address_name'] = addressName;
     return data;
   }
 }
@@ -132,7 +152,7 @@ class Customer {
   }
 }
 
-class Addresses {
+class Addresses extends Equatable {
   String? id;
   String? addressName;
   bool? isDefaultShipping;
@@ -235,6 +255,10 @@ class Addresses {
 
   @override
   String toString() => jsonEncode(toJson());
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [id];
 }
 
 class AddressesData {

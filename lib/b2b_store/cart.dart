@@ -8,6 +8,7 @@ import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
+import 'package:woloo_smart_hygiene/janitorial_services/screens/host_dashboard_screen.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
@@ -132,6 +133,9 @@ class _CartScreenState extends State<CartScreen> {
                             },
                           ),
                           const Divider(),
+                          RedeemPoints(
+                            points: "",
+                          ),
                           const ApplyPromo(),
                           const Divider(),
                           PricingCalculate(

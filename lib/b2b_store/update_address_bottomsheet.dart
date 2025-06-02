@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
@@ -9,14 +10,15 @@ import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 
-class AddressBottomSheet extends StatefulWidget {
-  const AddressBottomSheet({super.key, this.adress});
+class UpdateAddressBottomSheet extends StatefulWidget {
+  const UpdateAddressBottomSheet({super.key, this.adress});
   final Addresses? adress;
   @override
-  State<AddressBottomSheet> createState() => _AddressBottomSheetState();
+  State<UpdateAddressBottomSheet> createState() =>
+      _UpdateAddressBottomSheetState();
 }
 
-class _AddressBottomSheetState extends State<AddressBottomSheet>
+class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
     with SingleTickerProviderStateMixin {
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   final _formKey = GlobalKey<FormState>();
@@ -60,14 +62,18 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
 
   @override
   Widget build(BuildContext context) {
-    // return
-    //  BottomSheet(
-    //   onClosing: () => FocusScope.of(context).unfocus(),
-    //   builder: (context) {
     return BlocConsumer<B2bStoreBloc, B2BStoreState>(
         bloc: _b2bStoreBloc,
         listener: (context, state) {
           if (state is AddAddressSuccess) {
+            Fluttertoast.showToast(
+                msg: "Address Edit successfully",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.lightBlue,
+                textColor: Colors.white,
+                fontSize: 16.0);
             Navigator.pop(context);
           }
         },
@@ -90,9 +96,10 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                           onPressed: () => Navigator.pop(context),
                           icon: const Icon(Icons.arrow_back_sharp)),
                       SizedBox(width: 10.w),
-                      Text("Add Address", style: AppTextStyle.font14bold),
+                      Text("Update Address", style: AppTextStyle.font14bold),
                     ],
                   ),
+                  SizedBox(height: 10.h),
                   Row(
                     children: [
                       Expanded(
@@ -105,6 +112,7 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                           ),
                         ),
                       ),
+                      SizedBox(width: 8.w),
                       Expanded(
                         child: XDecoratedBox(
                           padding: 4,
@@ -117,45 +125,38 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                       ),
                     ],
                   ),
+                  XDecoratedBox(
+                    padding: 4,
+                    child: XDesignedTextField(
+                      hintText: "Address",
+                      controller: _flatNoController,
+                      validator: _requiredValidator,
+                    ),
+                  ),
                   Row(
                     children: [
                       Expanded(
                         child: XDecoratedBox(
                           padding: 4,
                           child: XDesignedTextField(
-                            hintText: "Flat No.",
-                            controller: _flatNoController,
+                            hintText: "City",
+                            controller: _cityController,
                             validator: _requiredValidator,
                           ),
                         ),
                       ),
+                      SizedBox(width: 8.w),
                       Expanded(
                         child: XDecoratedBox(
                           padding: 4,
                           child: XDesignedTextField(
-                            hintText: "Locality",
+                            hintText: "State",
                             controller: _localityController,
                             validator: _requiredValidator,
                           ),
                         ),
                       ),
                     ],
-                  ),
-                  XDecoratedBox(
-                    padding: 4,
-                    child: XDesignedTextField(
-                      hintText: "Apartment Name/Road/Area",
-                      controller: _apartmentController,
-                      validator: _requiredValidator,
-                    ),
-                  ),
-                  XDecoratedBox(
-                    padding: 4,
-                    child: XDesignedTextField(
-                      hintText: "City",
-                      controller: _cityController,
-                      validator: _requiredValidator,
-                    ),
                   ),
                   XDecoratedBox(
                     padding: 4,
@@ -181,37 +182,47 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                       validator: _requiredValidator,
                     ),
                   ),
+                  SizedBox(height: 20.h),
                   LongLabeledButton(
                     label: "Submit",
                     color: AppColors.buttonYellowColor,
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
-                        // Form is valid, proceed
-                        print("Form submitted");
+                        String fullAddress1 = _flatNoController.text.trim();
+
+                        if (_apartmentController.text.trim().isNotEmpty) {
+                          fullAddress1 +=
+                              ", ${_apartmentController.text.trim()}";
+                        }
+
                         _b2bStoreBloc.add(
-                          AddressReq(
+                          UpdateAddressReq(
+                            addressId: widget.adress!.id!,
                             addressReqBody: AddressReqBody(
-                              address1: _apartmentController.text,
-                              addressName: 'Default',
-                              city: _cityController.text,
-                              firstName: _firstNameController.text,
-                              lastName: _lastNameController.text,
-                              phone: _phoneController.text,
-                              postalCode: _pincodeController.text,
-                              province: '',
+                              address1: fullAddress1,
+                              addressName: _labelController.text.trim(),
+                              city: _cityController.text.trim(),
+                              firstName: _firstNameController.text.trim(),
+                              lastName: _lastNameController.text.trim(),
+                              phone: _phoneController.text.trim(),
+                              postalCode: _pincodeController.text.trim(),
+                              province: _localityController.text.trim(),
                             ),
                           ),
                         );
                       }
                     },
                   ),
+                  SizedBox(height: 10.h),
+                  MediaQuery.of(context).viewInsets.bottom != 0
+                      ? SizedBox(
+                          height: MediaQuery.of(context).viewInsets.bottom)
+                      : const SizedBox.shrink(),
                 ],
               ),
             ),
           );
         });
-    //   },
-    // );
   }
 
   String? _requiredValidator(String? value) {
@@ -237,7 +248,7 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
     _firstNameController.text = widget.adress!.firstName ?? "";
     _lastNameController.text = widget.adress!.lastName ?? "";
     _flatNoController.text = widget.adress!.address1 ?? "";
-    _localityController.text = widget.adress!.address2 ?? "";
+    _localityController.text = widget.adress!.province ?? "";
     _apartmentController.text = widget.adress!.address1 ?? "";
     _cityController.text = widget.adress!.city ?? "";
     _pincodeController.text = widget.adress!.postalCode ?? "";

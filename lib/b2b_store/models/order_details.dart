@@ -45,16 +45,16 @@ class OrderSet {
   final DateTime? updatedAt;
   final DateTime? createdAt;
   final dynamic displayId;
-  final CustomerId? customerId;
+  final dynamic customerId;
   final String? cartId;
   final String? paymentCollectionId;
   final OrderSetCustomer? customer;
   final Cart? cart;
   final PaymentCollectionInOrderDetails? paymentCollection;
   final List<Order> orders;
-  final PurpleStatus? status;
-  final PaymentStatusEnum? paymentStatus;
-  final FulfillmentStatus? fulfillmentStatus;
+  final dynamic status;
+  final dynamic paymentStatus;
+  final dynamic fulfillmentStatus;
   final int? taxTotal;
   final int? shippingTaxTotal;
   final int? shippingTotal;
@@ -92,7 +92,7 @@ class OrderSet {
             ? null
             : DateTime.parse(json["created_at"]),
         displayId: json["display_id"],
-        customerId: customerIdValues.map[json["customer_id"]]!,
+        customerId: json["customer_id"],
         cartId: json["cart_id"],
         paymentCollectionId: json["payment_collection_id"],
         customer: json["customer"] == null
@@ -106,10 +106,9 @@ class OrderSet {
         orders: json["orders"] == null
             ? []
             : List<Order>.from(json["orders"]!.map((x) => Order.fromJson(x))),
-        status: purpleStatusValues.map[json["status"]]!,
-        paymentStatus: paymentStatusEnumValues.map[json["payment_status"]]!,
-        fulfillmentStatus:
-            fulfillmentStatusValues.map[json["fulfillment_status"]]!,
+        status: json["status"],
+        paymentStatus: json["payment_status"],
+        fulfillmentStatus: json["fulfillment_status"],
         taxTotal: json["tax_total"],
         shippingTaxTotal: json["shipping_tax_total"],
         shippingTotal: json["shipping_total"],
@@ -122,17 +121,16 @@ class OrderSet {
         "updated_at": updatedAt?.toIso8601String(),
         "created_at": createdAt?.toIso8601String(),
         "display_id": displayId,
-        "customer_id": customerIdValues.reverse[customerId],
+        "customer_id": customerId,
         "cart_id": cartId,
         "payment_collection_id": paymentCollectionId,
         "customer": customer?.toJson(),
         "cart": cart?.toJson(),
         "payment_collection": paymentCollection?.toJson(),
         "orders": List<dynamic>.from(orders.map((x) => x.toJson())),
-        "status": purpleStatusValues.reverse[status],
-        "payment_status": paymentStatusEnumValues.reverse[paymentStatus],
-        "fulfillment_status":
-            fulfillmentStatusValues.reverse[fulfillmentStatus],
+        "status": status,
+        "payment_status": paymentStatus,
+        "fulfillment_status": fulfillmentStatus,
         "tax_total": taxTotal,
         "shipping_tax_total": shippingTaxTotal,
         "shipping_total": shippingTotal,
@@ -143,11 +141,11 @@ class OrderSet {
 
 class Cart {
   final String? id;
-  final RegionId? regionId;
-  final CustomerId? customerId;
-  final SalesChannelId? salesChannelId;
-  final Email? email;
-  final CurrencyCode? currencyCode;
+  final dynamic regionId;
+  final dynamic customerId;
+  final dynamic salesChannelId;
+  final dynamic email;
+  final dynamic currencyCode;
   final dynamic metadata;
   final DateTime? completedAt;
   final ShippingAddress? shippingAddress;
@@ -176,11 +174,11 @@ class Cart {
 
   factory Cart.fromJson(Map<String, dynamic> json) => Cart(
         id: json["id"],
-        regionId: regionIdValues.map[json["region_id"]]!,
-        customerId: customerIdValues.map[json["customer_id"]]!,
-        salesChannelId: salesChannelIdValues.map[json["sales_channel_id"]]!,
-        email: emailValues.map[json["email"]]!,
-        currencyCode: currencyCodeValues.map[json["currency_code"]]!,
+        regionId: json["region_id"],
+        customerId: json["customer_id"],
+        salesChannelId: json["sales_channel_id"],
+        email: json["email"],
+        currencyCode: json["currency_code"],
         metadata: json["metadata"],
         completedAt: json["completed_at"] == null
             ? null
@@ -201,11 +199,11 @@ class Cart {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "region_id": regionIdValues.reverse[regionId],
-        "customer_id": customerIdValues.reverse[customerId],
-        "sales_channel_id": salesChannelIdValues.reverse[salesChannelId],
-        "email": emailValues.reverse[email],
-        "currency_code": currencyCodeValues.reverse[currencyCode],
+        "region_id": regionId,
+        "customer_id": customerId,
+        "sales_channel_id": salesChannelId,
+        "email": email,
+        "currency_code": currencyCode,
         "metadata": metadata,
         "completed_at": completedAt?.toIso8601String(),
         "shipping_address": shippingAddress?.toJson(),
@@ -216,35 +214,6 @@ class Cart {
         "shipping_address_id": shippingAddressId,
       };
 }
-
-enum CurrencyCode { INR }
-
-final currencyCodeValues = EnumValues({"inr": CurrencyCode.INR});
-
-enum CustomerId { CUS_01_JT8_BSP0_NZJB59_BCR4_P2_ACSM7 }
-
-final customerIdValues = EnumValues({
-  "cus_01JT8BSP0NZJB59BCR4P2ACSM7":
-      CustomerId.CUS_01_JT8_BSP0_NZJB59_BCR4_P2_ACSM7
-});
-
-enum Email { THE_000000000_GMAIL_COM }
-
-final emailValues =
-    EnumValues({"000000000@gmail.com": Email.THE_000000000_GMAIL_COM});
-
-enum RegionId { REG_01_JPH693_TAM20_TXZEJNBJ5_QBV4 }
-
-final regionIdValues = EnumValues({
-  "reg_01JPH693TAM20TXZEJNBJ5QBV4": RegionId.REG_01_JPH693_TAM20_TXZEJNBJ5_QBV4
-});
-
-enum SalesChannelId { SC_01_JPCA7_CXBJ09_KEBMBCXK3_M302 }
-
-final salesChannelIdValues = EnumValues({
-  "sc_01JPCA7CXBJ09KEBMBCXK3M302":
-      SalesChannelId.SC_01_JPCA7_CXBJ09_KEBMBCXK3_M302
-});
 
 class ShippingAddress {
   final String? id;
@@ -264,11 +233,11 @@ class ShippingAddress {
 }
 
 class OrderSetCustomer {
-  final CustomerId? id;
+  final dynamic id;
   final dynamic companyName;
   final dynamic firstName;
   final dynamic lastName;
-  final Email? email;
+  final dynamic email;
   final dynamic phone;
   final bool? hasAccount;
   final dynamic metadata;
@@ -294,11 +263,11 @@ class OrderSetCustomer {
 
   factory OrderSetCustomer.fromJson(Map<String, dynamic> json) =>
       OrderSetCustomer(
-        id: customerIdValues.map[json["id"]]!,
+        id: json["id"],
         companyName: json["company_name"],
         firstName: json["first_name"],
         lastName: json["last_name"],
-        email: emailValues.map[json["email"]]!,
+        email: json["email"],
         phone: json["phone"],
         hasAccount: json["has_account"],
         metadata: json["metadata"],
@@ -313,11 +282,11 @@ class OrderSetCustomer {
       );
 
   Map<String, dynamic> toJson() => {
-        "id": customerIdValues.reverse[id],
+        "id": id,
         "company_name": companyName,
         "first_name": firstName,
         "last_name": lastName,
-        "email": emailValues.reverse[email],
+        "email": email,
         "phone": phone,
         "has_account": hasAccount,
         "metadata": metadata,
@@ -328,19 +297,14 @@ class OrderSetCustomer {
       };
 }
 
-enum FulfillmentStatus { NOT_FULFILLED }
-
-final fulfillmentStatusValues =
-    EnumValues({"not_fulfilled": FulfillmentStatus.NOT_FULFILLED});
-
 class Order {
-  final CustomerId? customerId;
+  final dynamic customerId;
   final String? id;
-  final CurrencyCode? currencyCode;
-  final Email? email;
+  final dynamic currencyCode;
+  final dynamic email;
   final DateTime? createdAt;
   final DateTime? updatedAt;
-  final PurpleStatus? status;
+  final dynamic status;
   final int? total;
   final int? subtotal;
   final int? taxTotal;
@@ -351,19 +315,19 @@ class Order {
   final int? itemTotal;
   final int? itemSubtotal;
   final int? itemTaxTotal;
-  final SalesChannelId? salesChannelId;
+  final dynamic salesChannelId;
   final int? originalItemTotal;
   final int? originalItemSubtotal;
   final int? originalItemTaxTotal;
   final int? shippingTotal;
   final int? shippingSubtotal;
   final int? shippingTaxTotal;
-  final List<Item>? items;
+  final List<Item> items;
   final OrderSetCustomer? customer;
   final List<dynamic>? fulfillments;
   final List<PaymentCollectionInOrderDetails>? paymentCollections;
-  final PaymentStatusEnum? paymentStatus;
-  final FulfillmentStatus? fulfillmentStatus;
+  final dynamic paymentStatus;
+  final dynamic fulfillmentStatus;
 
   Order({
     this.customerId,
@@ -390,7 +354,7 @@ class Order {
     this.shippingTotal,
     this.shippingSubtotal,
     this.shippingTaxTotal,
-    this.items,
+    this.items = const [],
     this.customer,
     this.fulfillments,
     this.paymentCollections,
@@ -399,17 +363,17 @@ class Order {
   });
 
   factory Order.fromJson(Map<String, dynamic> json) => Order(
-        customerId: customerIdValues.map[json["customer_id"]]!,
+        customerId: json["customer_id"],
         id: json["id"],
-        currencyCode: currencyCodeValues.map[json["currency_code"]]!,
-        email: emailValues.map[json["email"]]!,
+        currencyCode: json["currency_code"],
+        email: json["email"],
         createdAt: json["created_at"] == null
             ? null
             : DateTime.parse(json["created_at"]),
         updatedAt: json["updated_at"] == null
             ? null
             : DateTime.parse(json["updated_at"]),
-        status: purpleStatusValues.map[json["status"]]!,
+        status: json["status"],
         total: json["total"],
         subtotal: json["subtotal"],
         taxTotal: json["tax_total"],
@@ -420,7 +384,7 @@ class Order {
         itemTotal: json["item_total"],
         itemSubtotal: json["item_subtotal"],
         itemTaxTotal: json["item_tax_total"],
-        salesChannelId: salesChannelIdValues.map[json["sales_channel_id"]]!,
+        salesChannelId: json["sales_channel_id"],
         originalItemTotal: json["original_item_total"],
         originalItemSubtotal: json["original_item_subtotal"],
         originalItemTaxTotal: json["original_item_tax_total"],
@@ -441,19 +405,18 @@ class Order {
             : List<PaymentCollectionInOrderDetails>.from(
                 json["payment_collections"]!
                     .map((x) => PaymentCollectionInOrderDetails.fromJson(x))),
-        paymentStatus: paymentStatusEnumValues.map[json["payment_status"]]!,
-        fulfillmentStatus:
-            fulfillmentStatusValues.map[json["fulfillment_status"]]!,
+        paymentStatus: json["payment_status"],
+        fulfillmentStatus: json["fulfillment_status"],
       );
 
   Map<String, dynamic> toJson() => {
-        "customer_id": customerIdValues.reverse[customerId],
+        "customer_id": customerId,
         "id": id,
-        "currency_code": currencyCodeValues.reverse[currencyCode],
-        "email": emailValues.reverse[email],
+        "currency_code": currencyCode,
+        "email": email,
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
-        "status": purpleStatusValues.reverse[status],
+        "status": status,
         "total": total,
         "subtotal": subtotal,
         "tax_total": taxTotal,
@@ -464,7 +427,7 @@ class Order {
         "item_total": itemTotal,
         "item_subtotal": itemSubtotal,
         "item_tax_total": itemTaxTotal,
-        "sales_channel_id": salesChannelIdValues.reverse[salesChannelId],
+        "sales_channel_id": salesChannelId,
         "original_item_total": originalItemTotal,
         "original_item_subtotal": originalItemSubtotal,
         "original_item_tax_total": originalItemTaxTotal,
@@ -473,7 +436,7 @@ class Order {
         "shipping_tax_total": shippingTaxTotal,
         "items": items == null
             ? []
-            : List<dynamic>.from(items!.map((x) => x.toJson())),
+            : List<dynamic>.from(items.map((x) => x.toJson())),
         "customer": customer?.toJson(),
         "fulfillments": fulfillments == null
             ? []
@@ -481,29 +444,28 @@ class Order {
         "payment_collections": paymentCollections == null
             ? []
             : List<dynamic>.from(paymentCollections!.map((x) => x.toJson())),
-        "payment_status": paymentStatusEnumValues.reverse[paymentStatus],
-        "fulfillment_status":
-            fulfillmentStatusValues.reverse[fulfillmentStatus],
+        "payment_status": paymentStatus,
+        "fulfillment_status": fulfillmentStatus,
       };
 }
 
 class Item {
   final String? id;
-  final dynamic? title;
-  final dynamic? subtitle;
+  final String? title;
+  final String? subtitle;
   final String? thumbnail;
-  final dynamic? variantId;
-  final dynamic? productId;
-  final dynamic? productTitle;
+  final String? variantId;
+  final String? productId;
+  final String? productTitle;
   final String? productDescription;
   final String? productSubtitle;
   final dynamic productType;
   final dynamic productTypeId;
-  final dynamic? productCollection;
-  final dynamic? productHandle;
+  final dynamic productCollection;
+  final dynamic productHandle;
   final dynamic variantSku;
   final dynamic variantBarcode;
-  final dynamic? variantTitle;
+  final dynamic variantTitle;
   final dynamic variantOptionValues;
   final bool? requiresShipping;
   final bool? isGiftcard;
@@ -1053,9 +1015,9 @@ class Metadata {
 
 class PaymentCollectionInOrderDetails {
   final String? id;
-  final CurrencyCode? currencyCode;
+  final dynamic currencyCode;
   final dynamic completedAt;
-  final PaymentStatusEnum? status;
+  final dynamic status;
   final dynamic metadata;
   final Raw? rawAmount;
   final Raw? rawAuthorizedAmount;
@@ -1093,9 +1055,9 @@ class PaymentCollectionInOrderDetails {
   factory PaymentCollectionInOrderDetails.fromJson(Map<String, dynamic> json) =>
       PaymentCollectionInOrderDetails(
         id: json["id"],
-        currencyCode: currencyCodeValues.map[json["currency_code"]]!,
+        currencyCode: json["currency_code"],
         completedAt: json["completed_at"],
-        status: paymentStatusEnumValues.map[json["status"]]!,
+        status: json["status"],
         metadata: json["metadata"],
         rawAmount: json["raw_amount"] == null
             ? null
@@ -1128,9 +1090,9 @@ class PaymentCollectionInOrderDetails {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "currency_code": currencyCodeValues.reverse[currencyCode],
+        "currency_code": currencyCode,
         "completed_at": completedAt,
-        "status": paymentStatusEnumValues.reverse[status],
+        "status": status,
         "metadata": metadata,
         "raw_amount": rawAmount?.toJson(),
         "raw_authorized_amount": rawAuthorizedAmount?.toJson(),
@@ -1151,8 +1113,8 @@ class PaymentCollectionInOrderDetails {
 
 class PaymentInOrderDetails {
   final String? id;
-  final CurrencyCode? currencyCode;
-  final ProviderId? providerId;
+  final dynamic currencyCode;
+  final dynamic providerId;
   final Data? data;
   final dynamic metadata;
   final dynamic capturedAt;
@@ -1189,8 +1151,8 @@ class PaymentInOrderDetails {
   factory PaymentInOrderDetails.fromJson(Map<String, dynamic> json) =>
       PaymentInOrderDetails(
         id: json["id"],
-        currencyCode: currencyCodeValues.map[json["currency_code"]]!,
-        providerId: providerIdValues.map[json["provider_id"]]!,
+        currencyCode: json["currency_code"],
+        providerId: json["provider_id"],
         data: json["data"] == null ? null : Data.fromJson(json["data"]),
         metadata: json["metadata"],
         capturedAt: json["captured_at"],
@@ -1218,8 +1180,8 @@ class PaymentInOrderDetails {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "currency_code": currencyCodeValues.reverse[currencyCode],
-        "provider_id": providerIdValues.reverse[providerId],
+        "currency_code": currencyCode,
+        "provider_id": providerId,
         "data": data?.toJson(),
         "metadata": metadata,
         "captured_at": capturedAt,
@@ -1241,11 +1203,11 @@ class Data {
   final String? id;
   final Notes? notes;
   final int? amount;
-  final Entity? entity;
-  final DataStatus? status;
+  final dynamic entity;
+  final dynamic status;
   final String? receipt;
   final int? attempts;
-  final Currency? currency;
+  final dynamic currency;
   final dynamic offerId;
   final int? amountDue;
   final int? createdAt;
@@ -1270,11 +1232,11 @@ class Data {
         id: json["id"],
         notes: json["notes"] == null ? null : Notes.fromJson(json["notes"]),
         amount: json["amount"],
-        entity: entityValues.map[json["entity"]]!,
-        status: dataStatusValues.map[json["status"]]!,
+        entity: json["entity"],
+        status: json["status"],
         receipt: json["receipt"],
         attempts: json["attempts"],
-        currency: currencyValues.map[json["currency"]]!,
+        currency: json["currency"],
         offerId: json["offer_id"],
         amountDue: json["amount_due"],
         createdAt: json["created_at"],
@@ -1285,25 +1247,17 @@ class Data {
         "id": id,
         "notes": notes?.toJson(),
         "amount": amount,
-        "entity": entityValues.reverse[entity],
-        "status": dataStatusValues.reverse[status],
+        "entity": entity,
+        "status": status,
         "receipt": receipt,
         "attempts": attempts,
-        "currency": currencyValues.reverse[currency],
+        "currency": currency,
         "offer_id": offerId,
         "amount_due": amountDue,
         "created_at": createdAt,
         "amount_paid": amountPaid,
       };
 }
-
-enum Currency { INR }
-
-final currencyValues = EnumValues({"INR": Currency.INR});
-
-enum Entity { ORDER }
-
-final entityValues = EnumValues({"order": Entity.ORDER});
 
 class Notes {
   final NotesCustomer? customer;
@@ -1328,8 +1282,8 @@ class Notes {
 }
 
 class NotesCustomer {
-  final CustomerId? id;
-  final Email? email;
+  final dynamic id;
+  final dynamic email;
   final dynamic phone;
   final dynamic metadata;
   final List<Address>? addresses;
@@ -1353,8 +1307,8 @@ class NotesCustomer {
   });
 
   factory NotesCustomer.fromJson(Map<String, dynamic> json) => NotesCustomer(
-        id: customerIdValues.map[json["id"]]!,
-        email: emailValues.map[json["email"]]!,
+        id: json["id"],
+        email: json["email"],
         phone: json["phone"],
         metadata: json["metadata"],
         addresses: json["addresses"] == null
@@ -1373,8 +1327,8 @@ class NotesCustomer {
       );
 
   Map<String, dynamic> toJson() => {
-        "id": customerIdValues.reverse[id],
-        "email": emailValues.reverse[email],
+        "id": id,
+        "email": email,
         "phone": phone,
         "metadata": metadata,
         "addresses": addresses == null
@@ -1391,22 +1345,22 @@ class NotesCustomer {
 }
 
 class Address {
-  final Id? id;
-  final City? city;
+  final dynamic id;
+  final dynamic city;
   final String? phone;
   final dynamic company;
   final dynamic metadata;
-  final Province? province;
-  final Address1? address1;
+  final dynamic province;
+  final dynamic address1;
   final dynamic address2;
-  final LastName? lastName;
+  final dynamic lastName;
   final DateTime? createdAt;
   final dynamic deletedAt;
-  final FirstName? firstName;
+  final dynamic firstName;
   final DateTime? updatedAt;
-  final CustomerId? customerId;
+  final dynamic customerId;
   final String? postalCode;
-  final AddressName? addressName;
+  final dynamic addressName;
   final dynamic countryCode;
   final bool? isDefaultBilling;
   final bool? isDefaultShipping;
@@ -1434,152 +1388,152 @@ class Address {
   });
 
   factory Address.fromJson(Map<String, dynamic> json) => Address(
-        id: idValues.map[json["id"]]!,
-        city: cityValues.map[json["city"]]!,
+        id: json["id"],
+        city: json["city"],
         phone: json["phone"],
         company: json["company"],
         metadata: json["metadata"],
-        province: provinceValues.map[json["province"]]!,
-        address1: address1Values.map[json["address_1"]]!,
+        province: json["province"],
+        address1: json["address_1"],
         address2: json["address_2"],
-        lastName: lastNameValues.map[json["last_name"]]!,
+        lastName: json["last_name"],
         createdAt: json["created_at"] == null
             ? null
             : DateTime.parse(json["created_at"]),
         deletedAt: json["deleted_at"],
-        firstName: firstNameValues.map[json["first_name"]]!,
+        firstName: json["first_name"],
         updatedAt: json["updated_at"] == null
             ? null
             : DateTime.parse(json["updated_at"]),
-        customerId: customerIdValues.map[json["customer_id"]]!,
+        customerId: json["customer_id"],
         postalCode: json["postal_code"],
-        addressName: addressNameValues.map[json["address_name"]]!,
+        addressName: json["address_name"],
         countryCode: json["country_code"],
         isDefaultBilling: json["is_default_billing"],
         isDefaultShipping: json["is_default_shipping"],
       );
 
   Map<String, dynamic> toJson() => {
-        "id": idValues.reverse[id],
-        "city": cityValues.reverse[city],
+        "id": [id],
+        "city": [city],
         "phone": phone,
         "company": company,
         "metadata": metadata,
-        "province": provinceValues.reverse[province],
-        "address_1": address1Values.reverse[address1],
+        "province": [province],
+        "address_1": [address1],
         "address_2": address2,
-        "last_name": lastNameValues.reverse[lastName],
+        "last_name": [lastName],
         "created_at": createdAt?.toIso8601String(),
         "deleted_at": deletedAt,
-        "first_name": firstNameValues.reverse[firstName],
+        "first_name": [firstName],
         "updated_at": updatedAt?.toIso8601String(),
-        "customer_id": customerIdValues.reverse[customerId],
+        "customer_id": customerId,
         "postal_code": postalCode,
-        "address_name": addressNameValues.reverse[addressName],
+        "address_name": [addressName],
         "country_code": countryCode,
         "is_default_billing": isDefaultBilling,
         "is_default_shipping": isDefaultShipping,
       };
 }
 
-enum Address1 { B_304_NANCY_BRAMHA, CFERVGEVEGRVRE, LANCE_DOWN, NVSKO }
+// enum Address1 { B_304_NANCY_BRAMHA, CFERVGEVEGRVRE, LANCE_DOWN, NVSKO }
 
-final address1Values = EnumValues({
-  "  B 304 nancy bramha": Address1.B_304_NANCY_BRAMHA,
-  "cfervgevegrvre": Address1.CFERVGEVEGRVRE,
-  "LanceDown ": Address1.LANCE_DOWN,
-  "nvsko": Address1.NVSKO
-});
+// final address1Values = EnumValues({
+//   "  B 304 nancy bramha": Address1.B_304_NANCY_BRAMHA,
+//   "cfervgevegrvre": Address1.CFERVGEVEGRVRE,
+//   "LanceDown ": Address1.LANCE_DOWN,
+//   "nvsko": Address1.NVSKO
+// });
 
-enum AddressName { DEFAULT }
+// enum AddressName { DEFAULT }
 
-final addressNameValues = EnumValues({"Default": AddressName.DEFAULT});
+// final addressNameValues = EnumValues({"Default": AddressName.DEFAULT});
 
-enum City { BANGALORE, EFVGREGVGT, NEW_YORK, NVKSO }
+// enum City { BANGALORE, EFVGREGVGT, NEW_YORK, NVKSO }
 
-final cityValues = EnumValues({
-  "Bangalore": City.BANGALORE,
-  "efvgregvgt": City.EFVGREGVGT,
-  "NewYork": City.NEW_YORK,
-  "nvkso": City.NVKSO
-});
+// final cityValues = EnumValues({
+//   "Bangalore": City.BANGALORE,
+//   "efvgregvgt": City.EFVGREGVGT,
+//   "NewYork": City.NEW_YORK,
+//   "nvkso": City.NVKSO
+// });
 
-enum FirstName { ARNAB, NCFJEHNCJUNF, SHUBHA }
+// enum FirstName { ARNAB, NCFJEHNCJUNF, SHUBHA }
 
-final firstNameValues = EnumValues({
-  "Arnab": FirstName.ARNAB,
-  "ncfjehncjunf": FirstName.NCFJEHNCJUNF,
-  "shubha": FirstName.SHUBHA
-});
+// final firstNameValues = EnumValues({
+//   "Arnab": FirstName.ARNAB,
+//   "ncfjehncjunf": FirstName.NCFJEHNCJUNF,
+//   "shubha": FirstName.SHUBHA
+// });
 
-enum Id {
-  CUADDR_01_JTKQ0_ZBPS48_K5_TS849_Q8_PB1_R,
-  CUADDR_01_JTKQ2_EGSEYP5_FHJZ1_WJXH7_BQ,
-  CUADDR_01_JTKQ2_P3_BHGZ6_MCQH7_JMKW74_G,
-  CUADDR_01_JTKQCNCH4_V0_MTNP6_PZ8_Y9_XCM,
-  CUADDR_01_JTMPZ7_XAAJAYYFD3_VKYAMWA0,
-  CUADDR_01_JTN6_J3_Y7_WHSXRA5_X54173_QH6,
-  CUADDR_01_JV6_WK7_ZNAVVM0_TS0_VQ6_GVVS9,
-  CUADDR_01_JVEMKARD4960_GEF4_SY03_GEB5
-}
+// enum Id {
+//   CUADDR_01_JTKQ0_ZBPS48_K5_TS849_Q8_PB1_R,
+//   CUADDR_01_JTKQ2_EGSEYP5_FHJZ1_WJXH7_BQ,
+//   CUADDR_01_JTKQ2_P3_BHGZ6_MCQH7_JMKW74_G,
+//   CUADDR_01_JTKQCNCH4_V0_MTNP6_PZ8_Y9_XCM,
+//   CUADDR_01_JTMPZ7_XAAJAYYFD3_VKYAMWA0,
+//   CUADDR_01_JTN6_J3_Y7_WHSXRA5_X54173_QH6,
+//   CUADDR_01_JV6_WK7_ZNAVVM0_TS0_VQ6_GVVS9,
+//   CUADDR_01_JVEMKARD4960_GEF4_SY03_GEB5
+// }
 
-final idValues = EnumValues({
-  "cuaddr_01JTKQ0ZBPS48K5TS849Q8PB1R":
-      Id.CUADDR_01_JTKQ0_ZBPS48_K5_TS849_Q8_PB1_R,
-  "cuaddr_01JTKQ2EGSEYP5FHJZ1WJXH7BQ":
-      Id.CUADDR_01_JTKQ2_EGSEYP5_FHJZ1_WJXH7_BQ,
-  "cuaddr_01JTKQ2P3BHGZ6MCQH7JMKW74G":
-      Id.CUADDR_01_JTKQ2_P3_BHGZ6_MCQH7_JMKW74_G,
-  "cuaddr_01JTKQCNCH4V0MTNP6PZ8Y9XCM":
-      Id.CUADDR_01_JTKQCNCH4_V0_MTNP6_PZ8_Y9_XCM,
-  "cuaddr_01JTMPZ7XAAJAYYFD3VKYAMWA0": Id.CUADDR_01_JTMPZ7_XAAJAYYFD3_VKYAMWA0,
-  "cuaddr_01JTN6J3Y7WHSXRA5X54173QH6":
-      Id.CUADDR_01_JTN6_J3_Y7_WHSXRA5_X54173_QH6,
-  "cuaddr_01JV6WK7ZNAVVM0TS0VQ6GVVS9":
-      Id.CUADDR_01_JV6_WK7_ZNAVVM0_TS0_VQ6_GVVS9,
-  "cuaddr_01JVEMKARD4960GEF4SY03GEB5": Id.CUADDR_01_JVEMKARD4960_GEF4_SY03_GEB5
-});
+// final idValues = EnumValues({
+//   "cuaddr_01JTKQ0ZBPS48K5TS849Q8PB1R":
+//       Id.CUADDR_01_JTKQ0_ZBPS48_K5_TS849_Q8_PB1_R,
+//   "cuaddr_01JTKQ2EGSEYP5FHJZ1WJXH7BQ":
+//       Id.CUADDR_01_JTKQ2_EGSEYP5_FHJZ1_WJXH7_BQ,
+//   "cuaddr_01JTKQ2P3BHGZ6MCQH7JMKW74G":
+//       Id.CUADDR_01_JTKQ2_P3_BHGZ6_MCQH7_JMKW74_G,
+//   "cuaddr_01JTKQCNCH4V0MTNP6PZ8Y9XCM":
+//       Id.CUADDR_01_JTKQCNCH4_V0_MTNP6_PZ8_Y9_XCM,
+//   "cuaddr_01JTMPZ7XAAJAYYFD3VKYAMWA0": Id.CUADDR_01_JTMPZ7_XAAJAYYFD3_VKYAMWA0,
+//   "cuaddr_01JTN6J3Y7WHSXRA5X54173QH6":
+//       Id.CUADDR_01_JTN6_J3_Y7_WHSXRA5_X54173_QH6,
+//   "cuaddr_01JV6WK7ZNAVVM0TS0VQ6GVVS9":
+//       Id.CUADDR_01_JV6_WK7_ZNAVVM0_TS0_VQ6_GVVS9,
+//   "cuaddr_01JVEMKARD4960GEF4SY03GEB5": Id.CUADDR_01_JVEMKARD4960_GEF4_SY03_GEB5
+// });
 
-enum LastName { BANERJEE, FERCERFCERFCE, GHOSH, LAST_NAME_BANERJEE }
+// enum LastName { BANERJEE, FERCERFCERFCE, GHOSH, LAST_NAME_BANERJEE }
 
-final lastNameValues = EnumValues({
-  "banerjee": LastName.BANERJEE,
-  "fercerfcerfce": LastName.FERCERFCERFCE,
-  "ghosh": LastName.GHOSH,
-  "Banerjee": LastName.LAST_NAME_BANERJEE
-});
+// final lastNameValues = EnumValues({
+//   "banerjee": LastName.BANERJEE,
+//   "fercerfcerfce": LastName.FERCERFCERFCE,
+//   "ghosh": LastName.GHOSH,
+//   "Banerjee": LastName.LAST_NAME_BANERJEE
+// });
 
-enum Province { BANGALORE, EMPTY }
+// enum Province { BANGALORE, EMPTY }
 
-final provinceValues =
-    EnumValues({"bangalore": Province.BANGALORE, "": Province.EMPTY});
+// final provinceValues =
+//     EnumValues({"bangalore": Province.BANGALORE, "": Province.EMPTY});
 
-enum DataStatus { CREATED }
+// enum DataStatus { CREATED }
 
-final dataStatusValues = EnumValues({"created": DataStatus.CREATED});
+// final dataStatusValues = EnumValues({"created": DataStatus.CREATED});
 
-enum ProviderId { PP_RAZORPAY_RAZORPAY }
+// enum ProviderId { PP_RAZORPAY_RAZORPAY }
 
-final providerIdValues =
-    EnumValues({"pp_razorpay_razorpay": ProviderId.PP_RAZORPAY_RAZORPAY});
+// final providerIdValues =
+//     EnumValues({"pp_razorpay_razorpay": ProviderId.PP_RAZORPAY_RAZORPAY});
 
-enum PaymentStatusEnum { AUTHORIZED }
+// enum PaymentStatusEnum { AUTHORIZED }
 
-final paymentStatusEnumValues =
-    EnumValues({"authorized": PaymentStatusEnum.AUTHORIZED});
+// final paymentStatusEnumValues =
+//     EnumValues({"authorized": PaymentStatusEnum.AUTHORIZED});
 
-enum PurpleStatus { PENDING }
+// enum PurpleStatus { PENDING }
 
-final purpleStatusValues = EnumValues({"pending": PurpleStatus.PENDING});
+// final purpleStatusValues = EnumValues({"pending": PurpleStatus.PENDING});
 
-class EnumValues<T> {
-  Map<String, T> map;
-  late Map<T, String> reverseMap;
+// class EnumValues<T> {
+//   Map<String, T> map;
+//   late Map<T, String> reverseMap;
 
-  EnumValues(this.map);
+//   EnumValues(this.map);
 
-  Map<T, String> get reverse {
-    reverseMap = map.map((k, v) => MapEntry(v, k));
-    return reverseMap;
-  }
-}
+//   Map<T, String> get reverse {
+//     reverseMap = map.map((k, v) => MapEntry(v, k));
+//     return reverseMap;
+//   }
+// }

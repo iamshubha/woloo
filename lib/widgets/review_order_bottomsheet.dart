@@ -9,7 +9,7 @@ import 'package:woloo_smart_hygiene/enums/payment_method.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/screens/host_dashboard_screen.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
-import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
+import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/order_summery_bottomsheet.dart';
 
 class ReviewOrderBottomsheet extends StatefulWidget {

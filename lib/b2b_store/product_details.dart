@@ -8,17 +8,24 @@ import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart' as cart_model;
+import 'package:woloo_smart_hygiene/b2b_store/models/customer_reviews.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart'
     as product_collections;
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/cart_bottomsheet.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final product_collections.Product? productData;
-  const ProductDetailsScreen({super.key, this.productData});
-
+  ProductDetailsScreen(
+      {super.key,
+      this.productData,
+      required this.isSelected,
+      this.productIdforWishList = ''});
+  final bool isSelected;
+  String productIdforWishList;
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
 }
@@ -28,292 +35,427 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   bool _isDataLoaded = false;
   cart_model.CartModel? cartModel;
   int productCount = 0;
+  late bool isSelected;
+  CustomerReviews? customerReviews;
+
+  bool _shouldShowCartBottomSheetAfterAdd = false;
+
   @override
   initState() {
     super.initState();
 
     _b2bStoreBloc.add(const GetCartData());
+    logger.w(widget.productData?.id);
+    _b2bStoreBloc.add(GetOrderReview(productId: widget.productData?.id ?? ''));
+    isSelected = widget.isSelected;
   }
 
   @override
   Widget build(BuildContext context) {
     final sizeList = ["S", "M", "L", "XL"];
-    return BlocConsumer(
-      bloc: _b2bStoreBloc,
-      listener: (context, state) {
-        if (state is CartLoading) {
-          EasyLoading.show(status: state.message);
-        }
-        if (state is CartSuccess) {
-          EasyLoading.dismiss();
-          setState(() {
-            cartModel = state.cartData;
-            cartModel?.cart.items.forEach((i) {
-              if (i.variantId == widget.productData?.variants![0].id) {
-                productCount = i.quantity;
+    return PopScope(
+      canPop: true,
+      child: BlocConsumer(
+        bloc: _b2bStoreBloc,
+        listener: (context, state) async {
+          if (state is CartLoading) {
+            EasyLoading.show(status: state.message);
+          }
+
+          // if (state is WishlistLoading) {
+          //   EasyLoading.show(status: state.message);
+          // }
+          if (state is CartSuccess) {
+            EasyLoading.dismiss();
+            setState(() {
+              cartModel = state.cartData;
+
+              final itemsData = cartModel?.cart.items;
+              if (itemsData!.isEmpty) {
+                productCount = 0;
+              } else {
+                itemsData.forEach((i) {
+                  if (i.variantId == widget.productData?.variants![0].id) {
+                    productCount = i.quantity;
+                  } else {
+                    productCount = 0;
+                  }
+                });
               }
+              // print(state.cartData.cart);
+              // _addressesData = state.addressesData;
+              // _b2bStoreHomePage = state.dashboardData;
+
+              _isDataLoaded = true;
+              // _dashboardData = state.dashboardData;
             });
-            // print(state.cartData.cart);
-            // _addressesData = state.addressesData;
-            // _b2bStoreHomePage = state.dashboardData;
+            if (_shouldShowCartBottomSheetAfterAdd) {
+              _shouldShowCartBottomSheetAfterAdd = false; // Reset the flag
+              final resultFromBottomSheet = await showCartBottomSheet(
+                  context, {'from': 'buy_now_success'});
+              _handleCartBottomSheetDismissal(resultFromBottomSheet);
+            }
+          }
 
-            _isDataLoaded = true;
-            // _dashboardData = state.dashboardData;
-          });
-        }
+          if (state is WishlistSuccess) {
+            EasyLoading.dismiss();
+            logger.w(state);
+            // widget.productData?.id ==
+            //     state.wishlistData.wishlist.items.first.productVariant.productId;
+            final data = state.wishlistData.wishlist?.items?.firstWhere(
+                (item) =>
+                    item.productVariant?.productId == widget.productData?.id);
 
-        if (state is CartError) {
-          EasyLoading.dismiss();
-          EasyLoading.showError(state.error);
-        }
-        // if (state is ReadyToShip) {
-        //   EasyLoading.dismiss();
-        //   showCartBottomSheet(context);
-        // }
-      },
-      builder: (context, state) {
-        return !_isDataLoaded
-            ? Container()
-            : Scaffold(
-                bottomSheet: XDecoratedBox(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: LongLabeledButton(
-                          onTap: () {
-                            showCartBottomSheet(context);
-                          },
-                          label: "Buy Now",
+            setState(() {
+              widget.productIdforWishList = data?.id ?? '';
+            });
+          }
+
+          if (state is CustomerReviewSuccess) {
+            customerReviews = state.customerReview;
+            logger.w(customerReviews);
+          }
+
+          if (state is CartError) {
+            _shouldShowCartBottomSheetAfterAdd = false;
+            EasyLoading.dismiss();
+            EasyLoading.showError(state.error);
+          }
+
+          // if (state is WishlistError) {
+          //   EasyLoading.dismiss();
+          //   EasyLoading.showError(state.error);
+          // }
+
+          // if (state is ReadyToShip) {
+          //   EasyLoading.dismiss();
+          //   showCartBottomSheet(context);
+          // }
+        },
+        builder: (context, state) {
+          return !_isDataLoaded
+              ? Container()
+              : Scaffold(
+                  bottomSheet: XDecoratedBox(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: LongLabeledButton(
+                            onTap: () async {
+                              if (productCount == 0) {
+                                addToCart(context);
+
+                                return;
+                              } else {
+                                final resultFromBottomSheet =
+                                    await showCartBottomSheet(
+                                        context, {'from': 'buy_now'});
+                                _handleCartBottomSheetDismissal(
+                                    resultFromBottomSheet);
+                              }
+                            },
+                            label: "Buy Now",
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      Expanded(
-                        child: LongLabeledButton(
-                          onTap: () {
-                            addToCart(context);
-                          },
-                          label: "Add to Cart",
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                    ],
+                        Expanded(
+                          child: LongLabeledButton(
+                            onTap: () {
+                              addToCart(context);
+                            },
+                            label: "Add to Cart",
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                appBar: const BackAppBar(),
-                body: SingleChildScrollView(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
-                  child: Column(
-                    spacing: 16.h,
-                    children: [
-                      ImageView(
-                        imageUrl: widget.productData?.thumbnail ?? '',
-                        onTap: () {
-                          _b2bStoreBloc.add(AddToWishList(
-                            variantId:
-                                widget.productData?.variants![0].id ?? '',
-                          ));
-                        },
-                        isSelected: true,
-                      ),
-                      Column(
-                        spacing: 10.h,
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Row(
-                                children: List.generate(
-                                  5,
-                                  (index) => Container(
-                                    margin: const EdgeInsets.only(left: 2),
-                                    height: 15,
-                                    child: Image.asset(
-                                      AppImages.stars,
+                  appBar: const BackAppBar(),
+                  body: SingleChildScrollView(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+                    child: Column(
+                      spacing: 16.h,
+                      children: [
+                        ImageView(
+                          imageUrl: widget.productData?.thumbnail ?? '',
+                          onTap: () {
+                            if (!isSelected) {
+                              _b2bStoreBloc.add(AddToWishList(
+                                variantId:
+                                    widget.productData?.variants![0].id ?? '',
+                              ));
+                            } else {
+                              _b2bStoreBloc.add(RemoveWishList(
+                                  itemId: widget.productIdforWishList));
+                            }
+
+                            isSelected = !isSelected;
+                            setState(() {});
+                          },
+                          isSelected: isSelected,
+                        ),
+                        Column(
+                          spacing: 10.h,
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Row(
+                                  children: List.generate(
+                                    5,
+                                    (index) => Container(
+                                      margin: const EdgeInsets.only(left: 2),
+                                      height: 15,
+                                      child: Image.asset(
+                                        AppImages.stars,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                "(5)",
-                                style: TextStyle(
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Container(
-                                height: 20,
-                                width: 20,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                      color: AppColors.alertShadowColor),
+                                const SizedBox(
+                                  width: 5,
                                 ),
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.arrow_forward_ios_outlined,
-                                    size: 15,
+                                Text(
+                                  "(5)",
+                                  style: TextStyle(
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Container(
+                                  height: 20,
+                                  width: 20,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                        color: AppColors.alertShadowColor),
+                                  ),
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.arrow_forward_ios_outlined,
+                                      size: 15,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const Spacer(),
-                              CartAddRemove(
-                                value: productCount,
-                                onAdd: () {
-                                  productCount == 0
-                                      ? addToCart(context)
-                                      :
-                                      // To add value
-                                      cartModel?.cart.items.forEach((i) {
-                                          if (i.variantId ==
-                                              widget.productData?.variants![0]
-                                                  .id) {
-                                            productCount += 1;
-                                            _b2bStoreBloc.add(AddRemoveItemReq(
-                                                count: productCount,
-                                                itemId: i.id));
-                                          }
-                                        });
-                                  // setState(() {});
-                                },
-                                onRemove: () {
-                                  if (productCount == 0) return;
-                                  cartModel?.cart.items.forEach((i) {
-                                    if (i.variantId ==
-                                        widget.productData?.variants![0].id) {
-                                      productCount -= 1;
-                                      _b2bStoreBloc.add(AddRemoveItemReq(
-                                          count: productCount, itemId: i.id));
+                                const Spacer(),
+                                CartAddRemove(
+                                  value: productCount,
+                                  onAdd: () {
+                                    productCount == 0
+                                        ? addToCart(context)
+                                        :
+                                        // To add value
+                                        cartModel?.cart.items.forEach((i) {
+                                            if (i.variantId ==
+                                                widget.productData?.variants![0]
+                                                    .id) {
+                                              productCount += 1;
+                                              _b2bStoreBloc.add(
+                                                  AddRemoveItemReq(
+                                                      count: productCount,
+                                                      itemId: i.id));
+                                            }
+                                          });
+                                    // setState(() {});
+                                  },
+                                  onRemove: () {
+                                    productCount == 0
+                                        ? EasyLoading.showError(
+                                            "Product count cannot be less than 0")
+                                        : null;
+                                    // if (productCount == 1) {
+                                    //   // EasyLoading.showError(
+                                    //   //     "Product count cannot be less than 0");
+                                    //   cartModel?.cart.items.forEach((i) {
+                                    //     if (i.variantId ==
+                                    //         widget.productData?.variants![0].id) {
+                                    //       _b2bStoreBloc
+                                    //           .add(DeleteItemReq(itemId: i.id));
+                                    //     }
+                                    //   });
+                                    //   return;
+                                    // }
+                                    cartModel?.cart.items.forEach((i) {
+                                      if (i.variantId ==
+                                          widget.productData?.variants![0].id) {
+                                        productCount -= 1;
+                                        _b2bStoreBloc.add(AddRemoveItemReq(
+                                            count: productCount, itemId: i.id));
+                                      }
+                                    });
+                                  },
+                                )
+                              ],
+                            ),
+                            Text(
+                              widget.productData?.title ?? "",
+                              style: TextStyle(
+                                  fontSize: 20.sp, fontWeight: FontWeight.bold),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "Rs. ${widget.productData?.variants![0].calculatedPrice!.calculatedAmount.toString()}",
+                                  // "Rs. ${productData.variants!.last.calculatedPrice!.calculatedAmount.toString()}",
+
+                                  // "Rs. 799",
+                                  style: TextStyle(
+                                      fontSize: 36.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const Spacer(),
+                                ShortLabelledButton(
+                                  onTap: () async {
+                                    if (productCount == 0) {
+                                      await addToCart(context);
+
+                                      return;
+                                    } else {
+                                      final resultFromBottomSheet =
+                                          await showCartBottomSheet(
+                                              context, {'from': 'buy_now'});
+                                      _handleCartBottomSheetDismissal(
+                                          resultFromBottomSheet);
                                     }
-                                  });
-                                },
-                              )
-                            ],
-                          ),
-                          Text(
-                            widget.productData?.title ?? "",
-                            style: TextStyle(
-                                fontSize: 20.sp, fontWeight: FontWeight.bold),
-                          ),
+                                  },
+                                )
+                              ],
+                            ),
+                            Text(
+                              widget.productData?.subtitle ?? "",
+                              style: TextStyle(
+                                  color: AppColors.textgreyColor,
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            const Divider(
+                              thickness: 2,
+                            ),
+                            Text(
+                              "Description",
+                              style: TextStyle(
+                                  // color: AppColors.textgreyColor,
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              widget.productData?.description ?? "",
+                              style: TextStyle(
+                                  // color: AppColors.textgreyColor,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            // const Divider(
+                            //   thickness: 2,
+                            // ),
+                          ],
+                        ),
+
+                        // const ProductTitleDesc(),
+                        // const XColorsSelection(),
+                        // SizeWidget(sizeList: sizeList),
+                        const Divider(
+                          thickness: 2,
+                        ),
+                        const HomeAddress(),
+                        const Divider(
+                          thickness: 2,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "Based on your Recent Searches",
+                              style: TextStyle(
+                                  fontSize: 14.sp, fontWeight: FontWeight.bold),
+                            ),
+                            const Spacer(),
+                            SeeMoreButton(
+                              onTap: () {},
+                            )
+                          ],
+                        ),
+                        const RecentSearches(),
+                        if (customerReviews?.reviews.isNotEmpty ?? false)
                           Row(
                             children: [
                               Text(
-                                "Rs. ${widget.productData?.variants![0].calculatedPrice!.calculatedAmount.toString()}",
-                                // "Rs. ${productData.variants!.last.calculatedPrice!.calculatedAmount.toString()}",
-
-                                // "Rs. 799",
+                                "Ratings & Reviews",
                                 style: TextStyle(
-                                    fontSize: 36.sp,
+                                    fontSize: 14.sp,
                                     fontWeight: FontWeight.bold),
                               ),
                               const Spacer(),
-                              ShortLabelledButton(
-                                onTap: () => showCartBottomSheet(context),
+                              SeeMoreButton(
+                                onTap: () {},
                               )
                             ],
                           ),
-                          Text(
-                            widget.productData?.subtitle ?? "",
-                            style: TextStyle(
-                                color: AppColors.textgreyColor,
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          const Divider(
-                            thickness: 2,
-                          ),
-                          Text(
-                            "Description",
-                            style: TextStyle(
-                                // color: AppColors.textgreyColor,
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            widget.productData?.description ?? "",
-                            style: TextStyle(
-                                // color: AppColors.textgreyColor,
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          // const Divider(
-                          //   thickness: 2,
-                          // ),
-                        ],
-                      ),
-
-                      // const ProductTitleDesc(),
-                      // const XColorsSelection(),
-                      // SizeWidget(sizeList: sizeList),
-                      const Divider(
-                        thickness: 2,
-                      ),
-                      const HomeAddress(),
-                      const Divider(
-                        thickness: 2,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "Based on your Recent Searches",
-                            style: TextStyle(
-                                fontSize: 14.sp, fontWeight: FontWeight.bold),
-                          ),
-                          const Spacer(),
-                          SeeMoreButton(
-                            onTap: () {},
-                          )
-                        ],
-                      ),
-                      const RecentSearches(),
-                      Row(
-                        children: [
-                          Text(
-                            "Ratings & Reviews",
-                            style: TextStyle(
-                                fontSize: 14.sp, fontWeight: FontWeight.bold),
-                          ),
-                          const Spacer(),
-                          SeeMoreButton(
-                            onTap: () {},
-                          )
-                        ],
-                      ),
-                      ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (c, i) {
-                          return const ReviewCard(
-                              name: "[Name]",
-                              date: "22-07-2025",
-                              rating: 4.5,
-                              review: "[Review]");
-                        },
-                        separatorBuilder: (c, i) {
-                          return const SizedBox(
-                            height: 10,
-                          );
-                        },
-                        itemCount: 5,
-                      )
-                    ],
+                        ListView.separated(
+                          itemCount: customerReviews?.reviews.length ?? 0,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (c, i) {
+                            final review = customerReviews?.reviews[i];
+                            return ReviewCard(
+                                name: review?.customer?.firstName ?? "Customer",
+                                date: review?.formattedCreatedAt ?? "",
+                                rating: review?.rating?.toDouble() ?? 0.0,
+                                review:
+                                    review?.comment ?? "No review provided");
+                          },
+                          separatorBuilder: (c, i) {
+                            return const SizedBox(
+                              height: 10,
+                            );
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-      },
+                );
+        },
+      ),
     );
   }
 
-  Future<dynamic> showCartBottomSheet(BuildContext context) async {
-    if (cartModel?.cart.items.isEmpty ?? true) {
-      await addToCart(context);
-    }
-    _b2bStoreBloc.add(const ProceedToShip());
-    return showModalBottomSheet(
+  void _handleCartBottomSheetDismissal(String? result) {
+    logger.d(
+        'ProductDetailsScreen: CartBottomSheet dismissed with result: $result');
+    // Here you can update UI or trigger further actions based on the result
+    setState(() {
+      if (result == 'checkout_initiated') {
+        // User initiated checkout from cart, maybe navigate to final checkout screen
+        EasyLoading.showSuccess('Checkout initiated from cart!');
+      } else if (result == 'keep_shopping' ||
+          result == 'cart_empty_after_load') {
+        // User wants to keep shopping or cart is empty
+        EasyLoading.showInfo('Cart dismissed. Happy shopping!');
+      } else if (result == 'cart_load_error') {
+        EasyLoading.showError('Error loading cart.');
+      } else if (result == 'address_changed') {
+        EasyLoading.showToast('Address updated!');
+        // If changing address in CartBottomSheet affects ProductDetailsScreen,
+        // dispatch an event to refresh relevant data here.
+        // e.g., _b2bStoreBloc.add(const GetCartData()); // To refresh cart prices with new address
+      }
+      // You can add more cases based on results popped from CartBottomSheet
+    });
+    // You might also want to refresh the cart data here in case it was modified
+    // from outside the bloc listener (e.g. if the bottom sheet was dismissed by drag)
+
+    _b2bStoreBloc.add(const GetCartData()); // Always refresh cart data
+  }
+
+  Future<String?> showCartBottomSheet(
+      BuildContext context, Map<String, dynamic> preCartData) async {
+    // _b2bStoreBloc.add(const ProceedToShip());
+    // await Future.delayed(Duration(seconds: 2));
+    final v = await showModalBottomSheet<String>(
       isScrollControlled: true,
       isDismissible: true, // <-- Allow tap outside to dismiss
       enableDrag: true, // <-- Allow swipe down to dismiss
@@ -322,11 +464,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           .transparent, // Optional: if you want rounded corners to show correctly
 
       context: context,
-      builder: (_) => const CartBottomSheet(), //AddressBottomSheet
+      builder: (_) => CartBottomSheet(
+        initialApiData: preCartData,
+      ), //AddressBottomSheet
     );
+    return v;
   }
 
-  Future<void> addToCart(BuildContext context) async {
+  addToCart(BuildContext context) async {
+    _shouldShowCartBottomSheetAfterAdd = true;
     try {
       _b2bStoreBloc.add(AddToCart(
           quantity: 1, variant_id: widget.productData?.variants![0].id));
@@ -992,7 +1138,7 @@ class BackAppBar extends StatelessWidget implements PreferredSizeWidget {
       leadingWidth: 100, // Adjust width for the "Back" button
       leading: GestureDetector(
         onTap: () {
-          Navigator.pop(context); // Navigate back when tapped
+          Navigator.pop(context, 'refresh'); // Navigate back when tapped
         },
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.start,

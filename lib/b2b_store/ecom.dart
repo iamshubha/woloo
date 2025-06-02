@@ -17,13 +17,16 @@ import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/wishlist.dart';
+import 'package:woloo_smart_hygiene/enums/product_mode.dart';
+import 'package:woloo_smart_hygiene/extensions/string_extension.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
-import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
+import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
 
+import '../hygine_services/view/address_notifier.dart';
 import '../utils/app_textstyle.dart';
 
 enum EcomTab { seeLess, seeAll }
@@ -52,6 +55,10 @@ class _EcomScreenState extends State<EcomScreen> {
     // address = getAddress();
   }
 
+  _refresh() {
+    _b2bStoreBloc.add(const Refresh());
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer(
@@ -65,7 +72,9 @@ class _EcomScreenState extends State<EcomScreen> {
             EasyLoading.dismiss();
             setState(() {
               _b2bStoreHomePage = state.dashboardData;
+
               _isDataLoaded = true;
+
               // _dashboardData = state.dashboardData;
             });
           }
@@ -79,8 +88,9 @@ class _EcomScreenState extends State<EcomScreen> {
           return Scaffold(
             bottomNavigationBar: const XBottomBar(),
             appBar: EComAppbar(
-              selectedAddress: address?.address1 ?? "",
-              cartValue: _b2bStoreHomePage?.cartData.cart.items.length ?? 0,
+              cartValue: _isDataLoaded
+                  ? _b2bStoreHomePage!.cartData.cart.items.length
+                  : 0,
             ),
             body: SingleChildScrollView(
               child: _isDataLoaded
@@ -113,32 +123,226 @@ class _EcomScreenState extends State<EcomScreen> {
                               ),
                               Expanded(
                                   child: XTabButton(
-                                      onTap: () {
-                                        Navigator.push(
+                                      onTap: () async {
+                                        final result = await Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (c) =>
-                                                    WishListScreen()));
+                                                builder: (c) => WishListScreen(
+                                                      productData:
+                                                          _b2bStoreHomePage!
+                                                              .productCollections
+                                                              .products,
+
+                                                      //          _b2bStoreBloc.favIds
+                                                      // .any((e) =>
+                                                      //     e.containsKey(product.id))
+                                                    )));
+                                        if (result != null &&
+                                            result == 'refresh') {
+                                          _refresh();
+                                          print(
+                                              'Returned from Page B with refresh signal (or physical back).');
+                                        } else {
+                                          _refresh();
+                                          print(
+                                              'Returned from Page B without refresh signal or cancelled.');
+                                        }
                                       },
                                       logo: AppImages.favourites,
                                       label: "Favourites")),
                             ],
                           ),
                         ),
-                        LandingProducts(
-                          topBrands: _b2bStoreHomePage!.topBrands,
-                          productCollections:
-                              _b2bStoreHomePage!.productCollections,
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (c) => CollectionsScreen(
-                                          products: _b2bStoreHomePage!
-                                              .productCollections.products,
-                                        )));
-                          },
-                        ),
+                        // LandingProducts(
+                        //   favIds: _b2bStoreBloc.favIds,
+                        //   topBrands: _b2bStoreHomePage!.topBrands,
+                        //   productCollections:
+                        //       _b2bStoreHomePage!.productCollections,
+                        //   onTap: () {
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //             builder: (c) => CollectionsScreen(
+                        //                   products: _b2bStoreHomePage!
+                        //                       .productCollections.products,
+                        //                 )));
+                        //   },
+                        // ),
+                        Container(
+                          color: AppColors.themeBackground,
+                          padding: EdgeInsets.symmetric(
+                              vertical: 16.h, horizontal: 20.w),
+                          child: Column(
+                            spacing: 10.h,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    "Top Brands",
+                                    style: TextStyle(
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const Spacer(),
+                                  const SeeMoreButton()
+                                ],
+                              ),
+                              GridView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 10,
+                                  childAspectRatio: 1.0,
+                                ),
+                                itemCount: _b2bStoreHomePage!
+                                            .topBrands.collections!.length >
+                                        6
+                                    ? 6
+                                    : _b2bStoreHomePage!.topBrands.collections!
+                                        .length, //.length,
+                                itemBuilder: (context, index) {
+                                  return BrandsGrid(
+                                    imageUrl: _b2bStoreHomePage!
+                                            .topBrands
+                                            .collections![index]
+                                            .metadata
+                                            ?.image ??
+                                        '',
+                                  );
+                                },
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Collections",
+                                    style: TextStyle(
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const Spacer(),
+                                  SeeMoreButton(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (c) => CollectionsScreen(
+                                                  // products: _b2bStoreHomePage!
+                                                  //     .productCollections
+                                                  //     .products,
+                                                  )));
+                                    },
+                                  )
+                                ],
+                              ),
+
+                              //product collections
+                              GridView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 10,
+                                  childAspectRatio: 0.6,
+                                ),
+                                itemCount: _b2bStoreHomePage!.productCollections
+                                            .products.length >
+                                        8
+                                    ? 8
+                                    : _b2bStoreHomePage!
+                                        .productCollections.products.length,
+                                itemBuilder: (context, index) {
+                                  final product = _b2bStoreHomePage!
+                                      .productCollections.products[index];
+                                  return GestureDetector(
+                                    onTap: () async {
+                                      final result = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProductDetailsScreen(
+                                            productData: product,
+                                            isSelected: _b2bStoreBloc.favIds
+                                                .any((e) =>
+                                                    e.containsKey(product.id)),
+                                            productIdforWishList: _b2bStoreBloc
+                                                    .favIds
+                                                    .any((e) => e.containsKey(
+                                                        product.id))
+                                                ? _b2bStoreBloc.favIds
+                                                    .firstWhere((e) =>
+                                                        e.entries.first.key ==
+                                                        product.id)
+                                                    .entries
+                                                    .first
+                                                    .value
+                                                : "",
+                                          ),
+                                        ),
+                                      );
+                                      if (result != null &&
+                                          result == 'refresh') {
+                                        _refresh();
+                                        print(
+                                            'Returned from Page B with refresh signal (or physical back).');
+                                        // _initializeData(); // Re-initialize or refresh data
+                                      } else {
+                                        _refresh();
+                                        print(
+                                            'Returned from Page B without refresh signal or cancelled.');
+                                      }
+                                    },
+                                    child: GridItem(
+                                      products: product,
+                                      isSelected: _b2bStoreBloc.favIds.any(
+                                          (e) => e.containsKey(product.id)),
+                                      productIdforWishList: _b2bStoreBloc.favIds
+                                              .any((e) =>
+                                                  e.containsKey(product.id))
+                                          ? _b2bStoreBloc.favIds
+                                              .firstWhere((e) =>
+                                                  e.entries.first.key ==
+                                                  product.id)
+                                              .entries
+                                              .first
+                                              .value
+                                          : "",
+                                      // imageUrl: productCollections.products![index].thumbnail ?? '',
+                                    ),
+                                  );
+                                },
+                              ),
+                              SizedBox(
+                                height: 5.h,
+                              ),
+                              Text(
+                                "New in Store",
+                                style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                height: 130.h,
+                                child: ListView.separated(
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (c, i) => ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(25.r),
+                                        child:
+                                            Image.asset(AppImages.bTemplate)),
+                                    separatorBuilder: (c, i) => const SizedBox(
+                                          width: 10,
+                                        ),
+                                    itemCount: 4),
+                              ),
+                            ],
+                          ),
+                        )
                       ],
                     )
                   : Container(),
@@ -201,15 +405,15 @@ class XTabButton extends StatelessWidget {
 class LandingProducts extends StatelessWidget {
   final VoidCallback? onTap;
   TopBrands topBrands;
-
+  final List<Map<String, String>> favIds;
   ProductCollections productCollections;
 
-  LandingProducts({
-    super.key,
-    required this.topBrands,
-    required this.productCollections,
-    this.onTap,
-  });
+  LandingProducts(
+      {super.key,
+      required this.topBrands,
+      required this.productCollections,
+      this.onTap,
+      this.favIds = const []});
 
   @override
   Widget build(BuildContext context) {
@@ -275,9 +479,50 @@ class LandingProducts extends StatelessWidget {
                 ? 8
                 : productCollections.products.length,
             itemBuilder: (context, index) {
-              return GridItem(
-                products: productCollections.products[index],
-                // imageUrl: productCollections.products![index].thumbnail ?? '',
+              final product = productCollections.products[index];
+              return GestureDetector(
+                onTap: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductDetailsScreen(
+                        productData: product,
+                        isSelected:
+                            favIds.any((e) => e.containsKey(product.id)),
+                        productIdforWishList: favIds
+                                .any((e) => e.containsKey(product.id))
+                            ? favIds
+                                .firstWhere(
+                                    (e) => e.entries.first.key == product.id)
+                                .entries
+                                .first
+                                .value
+                            : "",
+                      ),
+                    ),
+                  );
+                  if (result != null && result == 'refresh') {
+                    print(
+                        'Returned from Page B with refresh signal (or physical back).');
+                    // _initializeData(); // Re-initialize or refresh data
+                  } else {
+                    print(
+                        'Returned from Page B without refresh signal or cancelled.');
+                  }
+                },
+                child: GridItem(
+                  products: product,
+                  isSelected: favIds.any((e) => e.containsKey(product.id)),
+                  productIdforWishList: favIds
+                          .any((e) => e.containsKey(product.id))
+                      ? favIds
+                          .firstWhere((e) => e.entries.first.key == product.id)
+                          .entries
+                          .first
+                          .value
+                      : "",
+                  // imageUrl: productCollections.products![index].thumbnail ?? '',
+                ),
               );
             },
           ),
@@ -345,122 +590,111 @@ class BrandsGrid extends StatelessWidget {
 class GridItem extends StatelessWidget {
   final Product products;
   // final String imageUrl;
+  final String productIdforWishList;
   final bool isSelected;
   final VoidCallback? onTap;
-  const GridItem({
-    super.key,
-    required this.products,
-    this.isSelected = false,
-    this.onTap,
-    // required this.imageUrl,
-  });
+  const GridItem(
+      {super.key,
+      required this.products,
+      this.isSelected = false,
+      this.onTap,
+      this.productIdforWishList = ''
+      // required this.imageUrl,
+      });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProductDetailsScreen(
-              productData: products,
-            ),
-          ),
-        );
-      },
-      child: Stack(
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.w),
-            decoration: BoxDecoration(
-                color: AppColors.themeBackground,
-                borderRadius: BorderRadius.circular(25.r),
-                boxShadow: const [
-                  BoxShadow(
-                    color: AppColors.greyShadowColor,
-                    blurRadius: 5.0,
-                    spreadRadius: 0.5,
-                    offset: Offset(0, 2),
+    return Stack(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 10.w),
+          decoration: BoxDecoration(
+              color: AppColors.themeBackground,
+              borderRadius: BorderRadius.circular(25.r),
+              boxShadow: const [
+                BoxShadow(
+                  color: AppColors.greyShadowColor,
+                  blurRadius: 5.0,
+                  spreadRadius: 0.5,
+                  offset: Offset(0, 2),
+                ),
+                BoxShadow(
+                  color: AppColors.greyShadowColor,
+                  blurRadius: 5.0,
+                  spreadRadius: 0.5,
+                  offset: Offset(0, -1),
+                ),
+              ]),
+          child: Column(
+            spacing: 2.h,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(25.r)),
+                child: SizedBox(
+                  height: 165.h,
+                  width: double.infinity,
+                  child: Image.network(
+                    products.thumbnail ?? '',
+                    fit: BoxFit.contain,
                   ),
-                  BoxShadow(
-                    color: AppColors.greyShadowColor,
-                    blurRadius: 5.0,
-                    spreadRadius: 0.5,
-                    offset: Offset(0, -1),
-                  ),
-                ]),
-            child: Column(
-              spacing: 2.h,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ClipRRect(
-                  borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(25.r)),
-                  child: SizedBox(
-                    height: 165.h,
-                    width: double.infinity,
-                    child: Image.network(
-                      products.thumbnail ?? '',
-                      fit: BoxFit.contain,
+                ),
+              ),
+              Text(
+                products.title ?? "",
+                style:
+                    TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.bold),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                products.subtitle ?? "",
+                style: TextStyle(
+                  fontSize: 8.sp,
+                  color: AppColors.textgreyColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Row(
+                children: List.generate(
+                  5,
+                  (i) => Container(
+                      margin: EdgeInsets.only(right: 2.w),
+                      height: 10.h,
+                      width: 10.w,
+                      child: Image.asset(AppImages.stars)),
+                ),
+              ),
+              Row(
+                children: [
+                  Text(
+                    "Rs. ${products.variants!.last.calculatedPrice!.calculatedAmount.toString()}",
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-                Text(
-                  products.title ?? "",
-                  style:
-                      TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.bold),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  products.subtitle ?? "",
-                  style: TextStyle(
-                    fontSize: 8.sp,
-                    color: AppColors.textgreyColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Row(
-                  children: List.generate(
-                    5,
-                    (i) => Container(
-                        margin: EdgeInsets.only(right: 2.w),
-                        height: 10.h,
-                        width: 10.w,
-                        child: Image.asset(AppImages.stars)),
-                  ),
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "Rs. ${products.variants!.last.calculatedPrice!.calculatedAmount.toString()}",
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Spacer(),
-                    const AddToCartButton()
-                  ],
-                )
-              ],
-            ),
+                  const Spacer(),
+                  const AddToCartButton()
+                ],
+              )
+            ],
           ),
-          Positioned(
-            top: 20,
-            right: 20,
-            child: InkWell(
-                onTap: onTap,
-                child: Icon(
-                  isSelected
-                      ? Icons.favorite_rounded
-                      : Icons.favorite_border_rounded,
-                  color: isSelected ? Colors.pink : null,
-                )),
-          ),
-        ],
-      ),
+        ),
+        Positioned(
+          top: 20,
+          right: 20,
+          child: InkWell(
+              onTap: onTap,
+              child: Icon(
+                isSelected
+                    ? Icons.favorite_rounded
+                    : Icons.favorite_border_rounded,
+                color: isSelected ? Colors.pink : null,
+              )),
+        ),
+      ],
     );
   }
 }
@@ -563,6 +797,7 @@ class CategoriesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    logger.w(productCategory.productCategories);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
       decoration: const BoxDecoration(
@@ -583,16 +818,18 @@ class CategoriesSection extends StatelessWidget {
           SizedBox(
             height: 100.h,
             child: ListView.separated(
-              itemCount: productCategory.productCategories!.length,
+              itemCount: productCategory.productCategories != null
+                  ? productCategory.productCategories!.length
+                  : 0,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
                 final category = Category(
-                  name: productCategory.productCategories![index].name ?? '',
+                  name: productCategory.productCategories?[index].name ?? '',
                   imageUrl: productCategory
-                          .productCategories![index].metadata!.image ??
+                          .productCategories?[index].metadata?.image ??
                       '',
                   color: Color(int.tryParse(
-                          "0xFF${productCategory.productCategories![index].metadata!.backgroundColor}") ??
+                          "0xFF${productCategory.productCategories?[index].metadata?.backgroundColor}") ??
                       00000),
                 );
                 return Column(
@@ -601,11 +838,17 @@ class CategoriesSection extends StatelessWidget {
                       radius: 36.5.r,
                       backgroundColor: category.color,
                       child: Center(
-                        child: Image.network(
-                          category.imageUrl,
-                          width: 40.w,
-                          height: 40.h,
-                        ),
+                        child: category.imageUrl.isEmptyOrNull
+                            ? Image.asset(
+                                AppImages.woloologo,
+                                width: 40.w,
+                                height: 40.h,
+                              )
+                            : Image.network(
+                                category.imageUrl,
+                                width: 40.w,
+                                height: 40.h,
+                              ),
                       ),
                     ),
                     SizedBox(height: 10.h),
@@ -633,17 +876,18 @@ class CategoriesSection extends StatelessWidget {
 }
 
 class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const EComAppbar({
-    super.key,
-    this.isAll = false,
-    this.textFieldHintText = 'Search Products',
-    this.selectedAddress = '',
-    this.cartValue = 0,
-  });
+  const EComAppbar(
+      {super.key,
+      this.isAll = false,
+      this.textFieldHintText = 'Search Products',
+      this.cartValue,
+      this.productMode = ProductMode.productDetails});
+  final ProductMode productMode;
+
   final String textFieldHintText;
   final bool isAll;
-  final String selectedAddress;
-  final int cartValue;
+
+  final int? cartValue;
   @override
   Size get preferredSize => const Size.fromHeight(130);
 
@@ -653,19 +897,23 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false, // Remove default back button
       backgroundColor: AppColors.themeBackground,
       actions: [
-        Badge(
-          label: Text(cartValue.toString()),
-          child: CircleAvatar(
-            backgroundColor: AppColors.greyIcon,
-            child: IconButton(
-              icon: ImageIcon(AssetImage(AppImages.bag)),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const CartScreen()));
-              },
-            ),
-          ),
-        ),
+        cartValue != 0
+            ? Badge(
+                label: Text(cartValue.toString()),
+                child: CircleAvatar(
+                  backgroundColor: AppColors.greyIcon,
+                  child: IconButton(
+                    icon: ImageIcon(AssetImage(AppImages.bag)),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const CartScreen()));
+                    },
+                  ),
+                ),
+              )
+            : SizedBox(),
         SizedBox(width: 10.w),
       ],
       title: Column(
@@ -689,18 +937,25 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                   .transparent, // Optional: if you want rounded corners to show correctly
 
               context: context,
-              builder: (_) =>
-                  const AddressChangeBottomSheet(), //AddressBottomSheet
+              builder: (_) => AddressChangeBottomSheet(
+                productMode: productMode,
+              ), //AddressBottomSheet
             ),
             child: Row(
               children: [
-                Text(
-                  selectedAddress.isEmpty ? "Select Address" : selectedAddress,
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: Colors.grey,
-                  ),
-                ),
+                ValueListenableBuilder<Addresses>(
+                    valueListenable: selectedAddress,
+                    builder: (context, value, child) {
+                      return Text(
+                        value.address1.isEmptyOrNull
+                            ? "Select New Address"
+                            : value.address1!,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: Colors.grey,
+                        ),
+                      );
+                    }),
                 SizedBox(width: 5.w),
                 Container(
                   decoration: BoxDecoration(

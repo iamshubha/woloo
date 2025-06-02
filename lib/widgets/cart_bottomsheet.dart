@@ -13,12 +13,13 @@ import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
-import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
+import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/boxes/cart_item.dart';
 import 'package:woloo_smart_hygiene/widgets/review_order_bottomsheet.dart';
 
 class CartBottomSheet extends StatefulWidget {
-  const CartBottomSheet({super.key});
+  final Map<String, dynamic>? initialApiData; // NEW
+  const CartBottomSheet({super.key, this.initialApiData}); // NEW
 
   @override
   State<CartBottomSheet> createState() => _CartBottomSheetState();
@@ -41,6 +42,7 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
     _b2bStoreBloc.add(const GetCartData());
     super.initState();
     address = getAddress();
+    print('CartBottomSheet opened with initial data: ${widget.initialApiData}');
   }
 
   @override
@@ -54,24 +56,26 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
           if (state is CartSuccess) {
             EasyLoading.dismiss();
             setState(() {
-              print(state.cartData.cart);
-              // _addressesData = state.addressesData;
-              // _b2bStoreHomePage = state.dashboardData;
               cartModel = state.cartData;
-              // logger.w(cartModel?.cart?.items);
+              if (cartModel?.cart.items.isEmpty ?? true) {
+                Navigator.pop(context,
+                    'cart_empty_after_load'); // Dismiss and pass result
+              }
               _isDataLoaded = true;
-              // _dashboardData = state.dashboardData;
             });
           }
 
           if (state is CartError) {
             EasyLoading.dismiss();
             EasyLoading.showError(state.error);
+            Navigator.pop(context, 'cart_load_error'); // Dismiss on error
           }
         },
         builder: (context, snapshot) {
           return !_isDataLoaded
-              ? Container()
+              ? Container(
+                  child: Text("data nay"),
+                )
               : Container(
                   height: MediaQuery.of(context).size.height * 0.6,
                   // width: MediaQuery.of(context).size.width,
@@ -82,7 +86,9 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                       borderRadius:
                           BorderRadius.vertical(top: Radius.circular(40.r))),
                   child: cartModel?.cart.items.isEmpty ?? true
-                      ? Container()
+                      ? Container(
+                          // child: Text("No items in cart"),
+                          )
                       : Column(
                           spacing: 16.h,
                           mainAxisSize: MainAxisSize.min,
@@ -139,7 +145,65 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                                     },
                                   ),
                                   const Divider(),
-                                  AddressChangeWidget(address: address),
+                                  // AddressChangeWidget(address: address),
+                                  XDecoratedBox(
+                                    child: Column(
+                                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      spacing: 10,
+                                      children: [
+                                        Text(
+                                          "Home",
+                                          style: AppTextStyle.font14bold,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.pop(
+                                                context, "address_changed");
+                                            showModalBottomSheet(
+                                              isScrollControlled: true,
+                                              isDismissible:
+                                                  true, // <-- Allow tap outside to dismiss
+                                              enableDrag:
+                                                  true, // <-- Allow swipe down to dismiss
+
+                                              backgroundColor: Colors
+                                                  .transparent, // Optional: if you want rounded corners to show correctly
+
+                                              context: context,
+                                              builder: (_) =>
+                                                  const AddressChangeBottomSheet(), //AddressBottomSheet
+                                            );
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                address?.address1 ??
+                                                    "Select Address",
+                                                style: TextStyle(
+                                                  fontSize: 12.sp,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                              SizedBox(width: 5.w),
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        color: Colors.grey),
+                                                    shape: BoxShape.circle),
+                                                child: const Icon(
+                                                  Icons.arrow_forward_ios,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                   const Divider(),
                                   const ApplyPromo(),
                                   const Divider(),
@@ -163,7 +227,8 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                                     child: LongLabeledButton(
                                   label: "Checkout",
                                   onTap: () {
-                                    Navigator.pop(context);
+                                    // Navigator.pop(
+                                    //     context, 'checkout_initiated');
                                     showModalBottomSheet(
                                       isScrollControlled: true,
                                       isDismissible:
@@ -183,7 +248,7 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                                 Expanded(
                                   child: LongLabeledButton(
                                     onTap: () {
-                                      Navigator.pop(context);
+                                      Navigator.pop(context, 'keep_shopping');
                                     },
                                     label: "Keep Shopping",
                                     color: Colors.white,
@@ -227,7 +292,7 @@ class AddressChangeWidget extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.pop(context);
+              Navigator.pop(context, "address_changed");
               showModalBottomSheet(
                 isScrollControlled: true,
                 isDismissible: true, // <-- Allow tap outside to dismiss

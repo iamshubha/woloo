@@ -8,9 +8,9 @@ class ProductCategory {
       {this.productCategories, this.count, this.offset, this.limit});
 
   ProductCategory.fromJson(Map<String, dynamic> json) {
-    if (json['product_categories'] != null) {
+    if (json['categories'] != null) {
       productCategories = <ProductCategories>[];
-      json['product_categories'].forEach((v) {
+      json['categories'].forEach((v) {
         productCategories!.add(new ProductCategories.fromJson(v));
       });
     }
@@ -22,7 +22,7 @@ class ProductCategory {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.productCategories != null) {
-      data['product_categories'] =
+      data['categories'] =
           this.productCategories!.map((v) => v.toJson()).toList();
     }
     data['count'] = this.count;

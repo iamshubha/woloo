@@ -5,7 +5,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timelines_plus/timelines_plus.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
-import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
@@ -13,10 +12,12 @@ import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
+import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
 
 class OrderScreen extends StatefulWidget {
-  const OrderScreen({super.key});
+  OrderSet orderSet;
+  OrderScreen({super.key, required this.orderSet});
 
   @override
   State<OrderScreen> createState() => _OrderScreenState();
@@ -24,10 +25,9 @@ class OrderScreen extends StatefulWidget {
 
 class _OrderScreenState extends State<OrderScreen> {
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
-  OrderDetails? orderDetailsData;
+  // OrderSet? orderDetailsData = widget.orderSet;
   @override
   void initState() {
-    _b2bStoreBloc.add(const OrderDetailsEvent());
     super.initState();
   }
 
@@ -46,10 +46,11 @@ class _OrderScreenState extends State<OrderScreen> {
             EasyLoading.show(status: state.message);
           }
           if (state is OrderDetailsSuccess) {
-            setState(() {
-              orderDetailsData = state.orderDetailsData;
-              print(state.orderDetailsData.orderSets);
-            });
+            // setState(() {
+            //   orderDetailsData = state.orderDetailsData;
+            //   isLoading = false;
+            //   print(state.orderDetailsData.orderSets);
+            // });
             EasyLoading.dismiss();
           }
           if (state is OrderDetailsError) {
@@ -78,22 +79,16 @@ class _OrderScreenState extends State<OrderScreen> {
                           "Check or modify the details of your order here"),
                   Expanded(
                     child: ListView.builder(
-                        itemCount: orderDetailsData?.orderSets.length ?? 0,
+                        itemCount: widget.orderSet.orders.first.items.length,
                         itemBuilder: (c, i) {
-                          final order = orderDetailsData?.orderSets[i];
+                          final order = widget.orderSet.orders.first;
+                          final item = order.items[i];
                           return OrderStatusCard(
                             timeLineList: timeLineList,
-                            url: order!.orders.first.items?.first.thumbnail ??
-                                "",
-                            productLabel: order.orders.first.items?.first.title
-                                    .toString() ??
-                                "",
-                            subTitle: order.orders.first.items?.first.subtitle
-                                    .toString() ??
-                                "",
-                            price: order.orders.first.items?.first.total
-                                    .toString() ??
-                                "",
+                            url: item.thumbnail ?? "",
+                            productLabel: item.title ?? "",
+                            subTitle: item.subtitle ?? "",
+                            price: (item.total ?? 0).toString(),
                           );
                         }),
                   ),
@@ -181,16 +176,7 @@ class _ReviewBottomSheetState extends State<ReviewBottomSheet> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Drag indicator
-          Container(
-            height: 4,
-            width: 40,
-            margin: const EdgeInsets.symmetric(vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade400,
-              borderRadius: BorderRadius.circular(2),
-            ),
-            alignment: Alignment.center,
-          ),
+          const XBottmSheetTopDecor(),
 
           // Title bar with back button
           Padding(

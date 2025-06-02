@@ -17,7 +17,7 @@ import 'package:woloo_smart_hygiene/janitorial_services/screens/host_dashboard_s
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
-import 'package:woloo_smart_hygiene/widgets/address_change_bottomsheet.dart';
+import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/service_summery_bottomsheet.dart';
 
 class ReviewServiceBottomsheet extends StatefulWidget {

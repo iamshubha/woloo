@@ -27,6 +27,7 @@ import 'b2b_store_state.dart';
 
 class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   final box = GetStorage();
+  List<Map<String, String>> favIds = [];
   final LoginFlowService loginFlowService =
       LoginFlowService(dio: GetIt.instance());
 
@@ -49,6 +50,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<StoreCustomerLoginReq>(_emailPassLogin);
     on<AddressReq>(_createAddress);
     on<GetAddress>(_getAddress);
+    on<UpdateAddressReq>(_updateAddress);
     on<GetCartData>(_getCart);
     on<AddToCart>(_addToCart);
     on<ProceedToShip>(_proceedToSheep);
@@ -62,6 +64,10 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<WishlistEvent>(_getWishlist);
     on<AddToWishList>(_addWishlist);
     on<ReviewEvent>(_addReview);
+    on<DeleteAddress>(_deleteAddress);
+    on<RemoveWishList>(_removeFromWishlist);
+    on<GetOrderReview>(getProductReviews);
+    on<Refresh>(_refresh);
   }
 
   FutureOr<void> _emailPassRegister(
@@ -126,7 +132,11 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       topBrands = await _productService.getTopBrands(token: loginToken);
       productCollections =
           await _productService.getProductCollections(token: loginToken);
+      logger.w("----------------------------");
+      final fav = await _favoriteService.getFavorites(token: loginToken);
 
+      favIds = getCommonProductIds(fav, productCollections);
+      logger.w(favIds);
       // Debug prints
       logger.w(categories);
       logger.w(topBrands);
@@ -138,7 +148,71 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
           productCategory: categories,
           topBrands: topBrands,
           productCollections: productCollections,
-          cartData: cartModel)));
+          cartData: cartModel,
+          fav: fav)));
+    } catch (e) {
+      if (emit.isDone) return;
+      emit(B2BStoreError(error: e.toString()));
+      logger.w("Error in IOT service: $e");
+      debugPrint("Error in IOT service: $e");
+    }
+  }
+
+  FutureOr<void> _refresh(
+    Refresh event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      ProductCategory categories = ProductCategory();
+      TopBrands topBrands = TopBrands();
+      ProductCollections productCollections = ProductCollections();
+
+      emit(const B2BStoreLoading(message: "Loading data..."));
+
+      // // Login and get token
+      // final loginToken = await loginFlowService.loginCustomer(
+      //   email: event.email,
+      //   pass: event.pass,
+      // );
+      final loginToken = box.read('login_jwt');
+
+      // Get region
+      final regionResponse = await _productService.getRegion(token: loginToken);
+      box.write('region_id', regionResponse.regions![0].id);
+
+      CartModel cartModel = await _cartService.getAllCartData(
+          token: box.read('login_jwt'), cartId: box.read('cart_id'));
+
+      // Fetch all required data
+      categories =
+          await _productService.getProductCategories(token: loginToken);
+      topBrands = await _productService.getTopBrands(token: loginToken);
+      if (event.id != null) {
+        productCollections = await _productService.getProductCollectionsById(
+            token: loginToken, id: event.id!);
+      } else {
+        productCollections =
+            await _productService.getProductCollections(token: loginToken);
+      }
+
+      logger.w("----------------------------");
+      final fav = await _favoriteService.getFavorites(token: loginToken);
+
+      favIds = getCommonProductIds(fav, productCollections);
+      logger.w(favIds);
+      // Debug prints
+      logger.w(categories);
+      logger.w(topBrands);
+      logger.w(productCollections);
+
+      // Emit success state
+      if (emit.isDone) return;
+      emit(B2BStoreSuccess(B2BStoreHomePage(
+          productCategory: categories,
+          topBrands: topBrands,
+          productCollections: productCollections,
+          cartData: cartModel,
+          fav: fav)));
     } catch (e) {
       if (emit.isDone) return;
       emit(B2BStoreError(error: e.toString()));
@@ -154,7 +228,38 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     try {
       emit(const B2BStoreLoading(message: "Loading data..."));
       AddAddressResBody response = await _addresstService.addAddress(
-          body: event.addressReqBody, token: box.read('login_jwt'));
+          body: AddAddressReqBody(
+            first_name: event.first_name,
+            last_name: event.last_name,
+            address_1: event.address_1,
+            city: event.city,
+            phone_number: event.phone_number,
+            postal_code: event.pincode,
+            province: event.province,
+            address_name: event.address_name,
+          ),
+          token: box.read('login_jwt'));
+
+      debugPrint("requestId $response");
+      print(response);
+      // emit(B2BStoreSuccess());
+      emit(AddAddressSuccess(addAddressResBody: response));
+    } catch (e) {
+      emit(B2BStoreError(error: e.toString()));
+      debugPrint("Error in IOT service: $e");
+    }
+  }
+
+  FutureOr<void> _updateAddress(
+    UpdateAddressReq event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const B2BStoreLoading(message: "Loading data..."));
+      AddAddressResBody response = await _addresstService.updateAddress(
+          body: event.addressReqBody,
+          token: box.read('login_jwt'),
+          addressId: event.addressId);
 
       debugPrint("requestId $response");
       print(response);
@@ -185,6 +290,25 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     }
   }
 
+  FutureOr<void> _deleteAddress(
+      DeleteAddress event, Emitter<B2BStoreState> emit) async {
+    emit(const PostAddressLoading(message: "Loading...."));
+    try {
+      final val = await _addresstService.deleteAddress(
+          addressId: event.addressId, token: box.read('login_jwt'));
+      logger.w("Val: $val");
+      AddressesData response =
+          await _addresstService.getAllAddress(token: box.read('login_jwt'));
+
+      debugPrint("requestId $response");
+      // print(response);
+      // emit(B2BStoreSuccess());
+      emit(GetAddressSuccess(addressesData: response));
+    } catch (e) {
+      logger.e("Address Delete Bloc Issue: $e");
+    }
+  }
+
   FutureOr<void> _selectAddress(
       SelectAddress event, Emitter<B2BStoreState> emit) async {
     emit(const PostAddressLoading(message: "Loading...."));
@@ -197,6 +321,24 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     } catch (e) {
       logger.w("Error in Select Address: $e");
     }
+  }
+
+  List<Map<String, String>> getCommonProductIds(
+      Wishlist wishlist, ProductCollections productCollections) {
+    List<Map<String, String>> wishlistProductIds = wishlist.wishlist?.items
+            ?.map((item) => <String, String>{
+                  item.productVariant?.productId ?? '': item.id ?? ''
+                })
+            .toList() ??
+        [];
+    List<String> collectionProductIds = productCollections.products
+        .map((product) => product.id)
+        .whereType<String>()
+        .toList();
+
+    return wishlistProductIds
+        .where((id) => collectionProductIds.contains(id.entries.first.key))
+        .toList();
   }
 
   FutureOr<void> _getCart(
@@ -224,14 +366,26 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   ) async {
     try {
       emit(const CartLoading(message: "Loading data..."));
-      CartModel response = await _cartService.addOrRemoveItem(
-          itemId: event.itemId,
-          count: event.count,
-          token: box.read('login_jwt'),
-          cartId: box.read('cart_id'));
+      CartModel response;
+      if (event.count == 0) {
+        await _cartService.deleteItem(
+            itemId: event.itemId,
+            token: box.read('login_jwt'),
+            cartId: box.read('cart_id'));
+        response = await _cartService.getAllCartData(
+            token: box.read('login_jwt'), cartId: box.read('cart_id'));
+      } else {
+        response = await _cartService.addOrRemoveItem(
+            itemId: event.itemId,
+            count: event.count,
+            token: box.read('login_jwt'),
+            cartId: box.read('cart_id'));
+      }
+
       logger.w(response);
       emit(CartSuccess(cartData: response));
     } catch (e) {
+      emit(CartError(error: e.toString()));
       logger.w("Error in bloc: $e");
       rethrow;
     }
@@ -243,6 +397,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   ) async {
     try {
       emit(const B2BStoreLoading(message: "Loading data..."));
+      emit(const CartLoading(message: "Loading data..."));
       AddToCartResponse res = await _cartService.addToCart(
         token: box.read('login_jwt'),
         cart_id: box.read('cart_id'),
@@ -454,6 +609,9 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     try {
       Wishlist wishlist =
           await _favoriteService.getFavorites(token: box.read('login_jwt'));
+      final productCollections = await _productService.getProductCollections(
+          token: box.read('login_jwt'));
+      favIds = getCommonProductIds(wishlist, productCollections);
       emit(WishlistSuccess(wishlistData: wishlist));
     } catch (e) {
       debugPrint("Error in getFavorites service: $e");
@@ -467,8 +625,21 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   ) async {
     emit(const WishlistLoading(message: 'Loading wishlist...'));
     try {
-      Wishlist wishlist = await _favoriteService.addToWishList(
+      final wishlist = await _favoriteService.addToWishList(
           token: box.read('login_jwt'), variantId: event.variantId);
+      emit(WishlistSuccess(wishlistData: wishlist));
+    } catch (e) {
+      debugPrint("Error in getFavorites service: $e");
+      emit(WishlistError(error: e.toString()));
+    }
+  }
+
+  FutureOr<void> _removeFromWishlist(
+      RemoveWishList event, Emitter<B2BStoreState> emit) async {
+    emit(const WishlistLoading(message: 'Loading wishlist...'));
+    try {
+      Wishlist wishlist = await _favoriteService.removeItemFromWishlist(
+          box.read('login_jwt'), event.itemId);
       emit(WishlistSuccess(wishlistData: wishlist));
     } catch (e) {
       debugPrint("Error in getFavorites service: $e");
@@ -494,6 +665,21 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       // emit(WishlistError(error: e.toString()));
     }
   }
+
+  FutureOr<void> getProductReviews(
+    GetOrderReview getOrderReview,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const ReviewLoading(message: 'Loading product reviews...'));
+      final response = await _orderDetailsService.getOrderReviews(
+          token: box.read('login_jwt'), productId: getOrderReview.productId);
+      // logger.w(response);
+      emit(CustomerReviewSuccess(customerReview: response));
+    } catch (e) {
+      logger.e("Error in getProductReviews: $e");
+    }
+  }
 }
 
 class B2BStoreHomePage {
@@ -501,9 +687,11 @@ class B2BStoreHomePage {
   TopBrands topBrands;
   ProductCollections productCollections;
   CartModel cartData;
+  Wishlist fav;
   B2BStoreHomePage(
       {required this.productCategory,
       required this.topBrands,
       required this.productCollections,
-      required this.cartData});
+      required this.cartData,
+      required this.fav});
 }

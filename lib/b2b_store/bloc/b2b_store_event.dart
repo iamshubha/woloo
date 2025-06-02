@@ -31,6 +31,14 @@ class StoreCustomerLoginReq extends B2BStoreEvent {
   List<Object?> get props => [email, pass];
 }
 
+class Refresh extends B2BStoreEvent {
+  final String? id;
+  const Refresh({this.id});
+
+  @override
+  List<Object?> get props => [id];
+}
+
 class AddRemoveItemReq extends B2BStoreEvent {
   final String itemId;
   final int count;
@@ -73,12 +81,48 @@ class GetHostDashboardData extends B2BStoreEvent {
 }
 
 class AddressReq extends B2BStoreEvent {
-  final AddressReqBody addressReqBody;
+  // final AddressReqBody addressReqBody;
+  final String? first_name;
+  final String? last_name;
+  final String? address_1;
+  final String? city;
+  final String? phone_number;
+  final String? pincode;
+  final String? province;
+  final String? address_name;
 
-  const AddressReq({required this.addressReqBody});
+  const AddressReq(
+      {required this.first_name,
+      required this.last_name,
+      required this.address_1,
+      required this.city,
+      required this.phone_number,
+      required this.pincode,
+      required this.province,
+      required this.address_name});
 
   @override
-  List<Object?> get props => [addressReqBody];
+  List<Object?> get props => [
+        first_name,
+        last_name,
+        address_1,
+        city,
+        phone_number,
+        pincode,
+        province,
+        address_name
+      ];
+}
+
+class UpdateAddressReq extends B2BStoreEvent {
+  final String addressId;
+  final AddressReqBody addressReqBody;
+
+  const UpdateAddressReq(
+      {required this.addressId, required this.addressReqBody});
+
+  @override
+  List<Object?> get props => [addressId, addressReqBody];
 }
 
 class GetAddress extends B2BStoreEvent {
@@ -93,6 +137,13 @@ class SelectAddress extends B2BStoreEvent {
   final Addresses addresses;
   @override
   List<Object?> get props => [addresses];
+}
+
+class DeleteAddress extends B2BStoreEvent {
+  const DeleteAddress({required this.addressId});
+  final String addressId;
+  @override
+  List<Object?> get props => [addressId];
 }
 
 class GetCartData extends B2BStoreEvent {
@@ -172,6 +223,15 @@ class AddToWishList extends B2BStoreEvent {
   List<Object?> get props => [variantId];
 }
 
+class RemoveWishList extends B2BStoreEvent {
+  final String itemId;
+
+  const RemoveWishList({required this.itemId});
+
+  @override
+  List<Object?> get props => [itemId];
+}
+
 class ReviewEvent extends B2BStoreEvent {
   final String product_id;
   final int rating;
@@ -184,4 +244,13 @@ class ReviewEvent extends B2BStoreEvent {
       required this.line_item_id});
   @override
   List<Object?> get props => [product_id, rating, comment, line_item_id];
+}
+
+class GetOrderReview extends B2BStoreEvent {
+  final String productId;
+
+  const GetOrderReview({required this.productId});
+
+  @override
+  List<Object?> get props => [productId];
 }
