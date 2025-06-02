@@ -132,15 +132,12 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       topBrands = await _productService.getTopBrands(token: loginToken);
       productCollections =
           await _productService.getProductCollections(token: loginToken);
-      logger.w("----------------------------");
+
       final fav = await _favoriteService.getFavorites(token: loginToken);
 
       favIds = getCommonProductIds(fav, productCollections);
-      logger.w(favIds);
+
       // Debug prints
-      logger.w(categories);
-      logger.w(topBrands);
-      logger.w(productCollections);
 
       // Emit success state
       if (emit.isDone) return;
@@ -195,15 +192,9 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
             await _productService.getProductCollections(token: loginToken);
       }
 
-      logger.w("----------------------------");
       final fav = await _favoriteService.getFavorites(token: loginToken);
 
       favIds = getCommonProductIds(fav, productCollections);
-      logger.w(favIds);
-      // Debug prints
-      logger.w(categories);
-      logger.w(topBrands);
-      logger.w(productCollections);
 
       // Emit success state
       if (emit.isDone) return;
@@ -216,8 +207,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     } catch (e) {
       if (emit.isDone) return;
       emit(B2BStoreError(error: e.toString()));
-      logger.w("Error in IOT service: $e");
-      debugPrint("Error in IOT service: $e");
+      logger.e("Error in IOT service: $e");
     }
   }
 
@@ -382,7 +372,6 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
             cartId: box.read('cart_id'));
       }
 
-      logger.w(response);
       emit(CartSuccess(cartData: response));
     } catch (e) {
       emit(CartError(error: e.toString()));

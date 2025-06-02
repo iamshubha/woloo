@@ -799,7 +799,7 @@ class CategoriesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    logger.w(productCategory.productCategories);
+    // logger.w(productCategory.productCategories);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
       decoration: const BoxDecoration(

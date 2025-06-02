@@ -1,21 +1,30 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart' as cart_model;
 import 'package:woloo_smart_hygiene/b2b_store/models/customer_reviews.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart'
     as product_collections;
+import 'package:woloo_smart_hygiene/extensions/string_extension.dart';
+import 'package:woloo_smart_hygiene/hygine_services/view/address_notifier.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/cart_bottomsheet.dart';
+
+import '../utils/app_textstyle.dart';
+import 'address_change_bottomsheet.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final product_collections.Product? productData;
@@ -37,8 +46,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   int productCount = 0;
   late bool isSelected;
   CustomerReviews? customerReviews;
-
+  final box = GetStorage();
   bool _shouldShowCartBottomSheetAfterAdd = false;
+  Addresses? address;
 
   @override
   initState() {
@@ -46,8 +56,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
     _b2bStoreBloc.add(const GetCartData());
     logger.w(widget.productData?.id);
+    address = getAddress();
     _b2bStoreBloc.add(GetOrderReview(productId: widget.productData?.id ?? ''));
     isSelected = widget.isSelected;
+  }
+
+  Addresses? getAddress() {
+    final addressJson = box.read("address");
+    if (addressJson == null) {
+      return null; // or return a default address
+    }
+    address = Addresses.fromJson(jsonDecode(box.read("address")));
+    // setState(() {});
+    return address;
   }
 
   @override
@@ -74,13 +95,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               if (itemsData!.isEmpty) {
                 productCount = 0;
               } else {
-                itemsData.forEach((i) {
+                for (var i in itemsData) {
                   if (i.variantId == widget.productData?.variants![0].id) {
                     productCount = i.quantity;
                   } else {
                     productCount = 0;
                   }
-                });
+                }
               }
               // print(state.cartData.cart);
               // _addressesData = state.addressesData;
@@ -142,6 +163,25 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         Expanded(
                           child: LongLabeledButton(
                             onTap: () async {
+                              logger.w(
+                                  "Buy Now button tapped with product count: ${address?.address1} and productCount: $productCount");
+                              if (address?.address1.isEmptyOrNull ?? true) {
+                                showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  isDismissible:
+                                      true, // <-- Allow tap outside to dismiss
+                                  enableDrag:
+                                      true, // <-- Allow swipe down to dismiss
+
+                                  backgroundColor: Colors
+                                      .transparent, // Optional: if you want rounded corners to show correctly
+
+                                  context: context,
+                                  builder: (_) =>
+                                      const AddressChangeBottomSheet(), //AddressBottomSheet
+                                );
+                                return;
+                              }
                               if (productCount == 0) {
                                 addToCart(context);
 
@@ -359,7 +399,70 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         const Divider(
                           thickness: 2,
                         ),
-                        const HomeAddress(),
+                        XDecoratedBox(
+                          child: Column(
+                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            spacing: 10,
+                            children: [
+                              Text(
+                                "Home",
+                                style: AppTextStyle.font14bold,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  // Navigator.pop(context, "address_changed");
+                                  showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    isDismissible:
+                                        true, // <-- Allow tap outside to dismiss
+                                    enableDrag:
+                                        true, // <-- Allow swipe down to dismiss
+
+                                    backgroundColor: Colors
+                                        .transparent, // Optional: if you want rounded corners to show correctly
+
+                                    context: context,
+                                    builder: (_) =>
+                                        const AddressChangeBottomSheet(), //AddressBottomSheet
+                                  );
+                                },
+                                child: Row(
+                                  children: [
+                                    ValueListenableBuilder<Addresses>(
+                                        valueListenable: selectedAddress,
+                                        builder: (context, value, child) {
+                                          return Expanded(
+                                            child: Text(
+                                              value.address1.isEmptyOrNull
+                                                  ? "Select New Address"
+                                                  : value.address1!,
+                                              style: TextStyle(
+                                                fontSize: 12.sp,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          );
+                                        }),
+                                    SizedBox(width: 5.w),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: Colors.grey),
+                                          shape: BoxShape.circle),
+                                      child: const Icon(
+                                        Icons.arrow_forward_ios,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
                         const Divider(
                           thickness: 2,
                         ),
