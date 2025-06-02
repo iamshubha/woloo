@@ -16,6 +16,8 @@ import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/boxes/cart_item.dart';
 import 'package:woloo_smart_hygiene/widgets/cart_bottomsheet.dart';
 
+import '../widgets/review_order_bottomsheet.dart';
+
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
@@ -45,6 +47,7 @@ class _CartScreenState extends State<CartScreen> {
             EasyLoading.show(status: state.message);
           }
           if (state is CartSuccess) {
+            // _b2bStoreBloc.add(const GetCartData());
             setState(() {
               print(state.cartData.cart);
               // _addressesData = state.addressesData;
@@ -164,7 +167,7 @@ class _CartScreenState extends State<CartScreen> {
           .transparent, // Optional: if you want rounded corners to show correctly
 
       context: context,
-      builder: (_) => const CartBottomSheet(), //AddressBottomSheet
+      builder: (_) => const ReviewOrderBottomsheet(), //AddressBottomSheet
     );
   }
 }

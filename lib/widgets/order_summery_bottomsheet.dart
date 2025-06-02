@@ -14,6 +14,8 @@ import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
+import 'package:woloo_smart_hygiene/b2b_store/order_details.dart';
 import 'package:woloo_smart_hygiene/client_flow/utils/client_images.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/screens/host_dashboard_screen.dart';
@@ -93,7 +95,17 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
             context,
             MaterialPageRoute(builder: (context) => const EcomScreen()),
             (route) => false,
-          );
+          ).then((_) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (c) => OrderScreen(
+                          orderSet: OrderSet(
+                              //TODO:Add order details here
+
+                              ),
+                        )));
+          });
         }
         if (state is LetsTryState) {
           setState(() {
