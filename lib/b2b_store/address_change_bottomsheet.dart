@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:woloo_smart_hygiene/b2b_store/add_new_address_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
@@ -12,7 +13,6 @@ import 'package:woloo_smart_hygiene/b2b_store/update_address_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/enums/product_mode.dart';
 import 'package:woloo_smart_hygiene/extensions/string_extension.dart';
 import 'package:woloo_smart_hygiene/hygine_services/get_date_time_bottomsheet.dart';
-import 'package:woloo_smart_hygiene/b2b_store/add_new_address_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 
@@ -182,9 +182,14 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                                                 .transparent, // Optional: if you want rounded corners to show correctly
 
                                             context: context,
-                                            builder: (_) =>
-                                                UpdateAddressBottomSheet(
-                                              adress: address,
+                                            builder: (_) => Padding(
+                                              padding: EdgeInsets.only(
+                                                  bottom: MediaQuery.of(context)
+                                                      .viewInsets
+                                                      .bottom),
+                                              child: UpdateAddressBottomSheet(
+                                                adress: address,
+                                              ),
                                             ), //AddressBottomSheet
                                           );
                                           // if (result == null && result) {

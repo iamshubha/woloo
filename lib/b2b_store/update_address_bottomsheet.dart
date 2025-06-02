@@ -199,6 +199,7 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
                           UpdateAddressReq(
                             addressId: widget.adress!.id!,
                             addressReqBody: AddressReqBody(
+
                               address1: fullAddress1,
                               addressName: _labelController.text.trim(),
                               city: _cityController.text.trim(),
@@ -207,6 +208,7 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
                               phone: _phoneController.text.trim(),
                               postalCode: _pincodeController.text.trim(),
                               province: _localityController.text.trim(),
+
                             ),
                           ),
                         );
@@ -247,9 +249,11 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
   void onInit() {
     _firstNameController.text = widget.adress!.firstName ?? "";
     _lastNameController.text = widget.adress!.lastName ?? "";
+
     _flatNoController.text = widget.adress!.address1 ?? "";
     _localityController.text = widget.adress!.province ?? "";
     _apartmentController.text = widget.adress!.address1 ?? "";
+
     _cityController.text = widget.adress!.city ?? "";
     _pincodeController.text = widget.adress!.postalCode ?? "";
     _phoneController.text = widget.adress!.phone ?? "";
