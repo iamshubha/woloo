@@ -228,7 +228,17 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     try {
       emit(const B2BStoreLoading(message: "Loading data..."));
       AddAddressResBody response = await _addresstService.addAddress(
-          body: event.addressReqBody, token: box.read('login_jwt'));
+          body: AddAddressReqBody(
+            first_name: event.first_name,
+            last_name: event.last_name,
+            address_1: event.address_1,
+            city: event.city,
+            phone_number: event.phone_number,
+            postal_code: event.pincode,
+            province: event.province,
+            address_name: event.address_name,
+          ),
+          token: box.read('login_jwt'));
 
       debugPrint("requestId $response");
       print(response);

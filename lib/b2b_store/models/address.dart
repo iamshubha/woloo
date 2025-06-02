@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 
 class AddressReqBody {
-  Map<String, dynamic>? metadata;
+  Map<String, dynamic>? metadata = <String, dynamic>{};
   String? firstName;
   String? lastName;
   String? phone;
@@ -48,7 +48,8 @@ class AddressReqBody {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['metadata'] = metadata;
+    data['metadata'] =
+        metadata == null || metadata!.isEmpty ? <String, dynamic>{} : metadata;
     data['first_name'] = firstName;
     data['last_name'] = lastName;
     data['phone'] = phone;

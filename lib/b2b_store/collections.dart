@@ -62,7 +62,10 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
         builder: (context, snapshot) {
           return Scaffold(
             bottomNavigationBar: const XBottomBar(),
-            appBar: const EComAppbar(),
+            appBar: EComAppbar(
+                cartValue: _isDataLoaded
+                    ? _b2bStoreHomePage?.cartData.cart.items.length ?? 0
+                    : 0),
             body: _isDataLoaded
                 ? SingleChildScrollView(
                     child: Container(

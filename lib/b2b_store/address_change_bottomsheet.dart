@@ -169,8 +169,9 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                                         flex: 1,
                                       ),
                                       EditButton(
-                                        onTap: () {
-                                          showModalBottomSheet(
+                                        onTap: () async {
+                                          final result =
+                                              await showModalBottomSheet(
                                             isScrollControlled: true,
                                             isDismissible:
                                                 true, // <-- Allow tap outside to dismiss
@@ -186,6 +187,9 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                                               adress: address,
                                             ), //AddressBottomSheet
                                           );
+                                          // if (result == null && result) {
+                                          _b2bStoreBloc.add(const GetAddress());
+                                          // }
                                         },
                                       ),
                                       const SizedBox(
@@ -257,8 +261,8 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                       ),
                       LongLabeledButton(
                         label: "Add Address",
-                        onTap: () {
-                          showModalBottomSheet(
+                        onTap: () async {
+                          final result = await showModalBottomSheet(
                             isScrollControlled: true,
                             isDismissible:
                                 true, // <-- Allow tap outside to dismiss
@@ -271,6 +275,9 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                             builder: (_) =>
                                 const AddressBottomSheet(), //AddressBottomSheet
                           );
+                          // if (result == null && result) {
+                          _b2bStoreBloc.add(const GetAddress());
+                          // }
                         },
                       )
                     ],

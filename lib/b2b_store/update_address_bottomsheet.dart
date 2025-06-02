@@ -99,6 +99,7 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
                       Text("Update Address", style: AppTextStyle.font14bold),
                     ],
                   ),
+                  SizedBox(height: 10.h),
                   Row(
                     children: [
                       Expanded(
@@ -111,6 +112,7 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
                           ),
                         ),
                       ),
+                      SizedBox(width: 8.w),
                       Expanded(
                         child: XDecoratedBox(
                           padding: 4,
@@ -123,45 +125,38 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
                       ),
                     ],
                   ),
+                  XDecoratedBox(
+                    padding: 4,
+                    child: XDesignedTextField(
+                      hintText: "Address",
+                      controller: _flatNoController,
+                      validator: _requiredValidator,
+                    ),
+                  ),
                   Row(
                     children: [
                       Expanded(
                         child: XDecoratedBox(
                           padding: 4,
                           child: XDesignedTextField(
-                            hintText: "Flat No.",
-                            controller: _flatNoController,
+                            hintText: "City",
+                            controller: _cityController,
                             validator: _requiredValidator,
                           ),
                         ),
                       ),
+                      SizedBox(width: 8.w),
                       Expanded(
                         child: XDecoratedBox(
                           padding: 4,
                           child: XDesignedTextField(
-                            hintText: "Locality",
+                            hintText: "State",
                             controller: _localityController,
                             validator: _requiredValidator,
                           ),
                         ),
                       ),
                     ],
-                  ),
-                  XDecoratedBox(
-                    padding: 4,
-                    child: XDesignedTextField(
-                      hintText: "Apartment Name/Road/Area",
-                      controller: _apartmentController,
-                      validator: _requiredValidator,
-                    ),
-                  ),
-                  XDecoratedBox(
-                    padding: 4,
-                    child: XDesignedTextField(
-                      hintText: "City",
-                      controller: _cityController,
-                      validator: _requiredValidator,
-                    ),
                   ),
                   XDecoratedBox(
                     padding: 4,
@@ -187,38 +182,47 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
                       validator: _requiredValidator,
                     ),
                   ),
+                  SizedBox(height: 20.h),
                   LongLabeledButton(
                     label: "Submit",
                     color: AppColors.buttonYellowColor,
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
-                        // Form is valid, proceed
-                        // print("Form submitted");
+                        String fullAddress1 = _flatNoController.text.trim();
+
+                        if (_apartmentController.text.trim().isNotEmpty) {
+                          fullAddress1 +=
+                              ", ${_apartmentController.text.trim()}";
+                        }
+
                         _b2bStoreBloc.add(
                           UpdateAddressReq(
                             addressId: widget.adress!.id!,
                             addressReqBody: AddressReqBody(
-                              address1: _apartmentController.text,
-                              addressName: 'Default',
-                              city: _cityController.text,
-                              firstName: _firstNameController.text,
-                              lastName: _lastNameController.text,
-                              phone: _phoneController.text,
-                              postalCode: _pincodeController.text,
-                              province: '',
+                              address1: fullAddress1,
+                              addressName: _labelController.text.trim(),
+                              city: _cityController.text.trim(),
+                              firstName: _firstNameController.text.trim(),
+                              lastName: _lastNameController.text.trim(),
+                              phone: _phoneController.text.trim(),
+                              postalCode: _pincodeController.text.trim(),
+                              province: _localityController.text.trim(),
                             ),
                           ),
                         );
                       }
                     },
                   ),
+                  SizedBox(height: 10.h),
+                  MediaQuery.of(context).viewInsets.bottom != 0
+                      ? SizedBox(
+                          height: MediaQuery.of(context).viewInsets.bottom)
+                      : const SizedBox.shrink(),
                 ],
               ),
             ),
           );
         });
-    //   },
-    // );
   }
 
   String? _requiredValidator(String? value) {
@@ -244,7 +248,7 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
     _firstNameController.text = widget.adress!.firstName ?? "";
     _lastNameController.text = widget.adress!.lastName ?? "";
     _flatNoController.text = widget.adress!.address1 ?? "";
-    _localityController.text = widget.adress!.address2 ?? "";
+    _localityController.text = widget.adress!.province ?? "";
     _apartmentController.text = widget.adress!.address1 ?? "";
     _cityController.text = widget.adress!.city ?? "";
     _pincodeController.text = widget.adress!.postalCode ?? "";
