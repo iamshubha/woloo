@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
@@ -23,7 +24,6 @@ import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
-import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/cart_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/dialogs/order_successful.dart';
 
@@ -100,10 +100,9 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
                 context,
                 MaterialPageRoute(
                     builder: (c) => OrderScreen(
-                          orderSet: OrderSet(
-                              //TODO:Add order details here
-
-                              ),
+                          orderSet: OrderSet.fromJson(
+                              state.completeVendor.orderSet.toJson()),
+                          // orderSet: state.completeVendor.orderSet,
                         )));
           });
         }
