@@ -519,14 +519,15 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
 
       final paymentSessions = await _checkoutApiService.paymentSessions(
           token: box.read('login_jwt'),
-          pay_col: paymentCollections.paymentCollection.id,
+          pay_col: paymentCollections.paymentCollection?.id,
           provider_id: paymentProviders.paymentProviders[0].id);
 
       // final completeVendor = await _checkoutApiService.completeVendor(
       //     token: box.read('login_jwt'), cart_id: box.read('cart_id'));
 
       final orderId =
-          paymentSessions.paymentCollection.paymentSessions[0].data.id ?? "0";
+          paymentSessions.paymentCollection?.paymentSessions?[0].data?.id ??
+              "0";
 
       // final placeOrder = await _checkoutApiService.placeOrder(
       //     token: box.read('login_jwt'), order_id: orderId);
@@ -535,7 +536,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       emit(LetsTryState(
         orderId: orderId,
         totalPrice:
-            paymentSessions.paymentCollection.paymentSessions[0].amount ?? 0,
+            paymentSessions.paymentCollection?.paymentSessions?[0].amount ?? 0,
       ) //completeVendor.orderSet.orders[0].items[0].total)
           );
     } catch (e) {
