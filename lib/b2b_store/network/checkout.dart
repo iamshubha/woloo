@@ -65,7 +65,7 @@ class CheckoutApiService {
         APIConstants.SHIPPING_OPTIONS + "address?cart_id=" + cart_id,
         options: getHeaders(token),
       );
-      logger.w(response);
+
       return ShippingOptionsResponse.fromMap(response);
     } catch (e) {
       logger.w(e);
@@ -87,7 +87,7 @@ class CheckoutApiService {
               "/calculate",
           options: getHeaders(token),
           data: {"cart_id": cart_id});
-      logger.w(response);
+
       return ShippingOption.fromMap(response['shipping_option']);
     } catch (e) {
       logger.w(e);
@@ -109,7 +109,7 @@ class CheckoutApiService {
           "https://staging-store.woloo.in/store/carts/$cart_id/add-shipping-methods",
           options: getHeaders(token),
           data: body);
-      logger.w(response);
+
       return AddToCartResponse.fromJson(response);
     } catch (e) {
       logger.w(e);
@@ -146,7 +146,7 @@ class CheckoutApiService {
           "https://staging-store.woloo.in/store/payment-collections",
           options: getHeaders(token),
           data: {"cart_id": cart_id});
-      logger.w(response);
+
       // logger.w(response['payment_collection']["id"]);
       // logger.w()
       /*
@@ -190,7 +190,7 @@ class CheckoutApiService {
         "https://staging-store.woloo.in/store/carts/$cart_id/split-and-complete-cart",
         options: getHeaders(token),
       );
-      logger.w(response);
+
       return CompleteVendor.fromJson(response);
     } catch (e) {
       logger.w(e);
@@ -209,7 +209,7 @@ class CheckoutApiService {
   //       "https://staging-store.woloo.in/store/carts/$cart_id/complete",
   //       options: getHeaders(token),
   //     );
-  //     logger.w(response);
+  //
   //     return CompleteVendor.fromJson(response);
   //   } catch (e) {
   //     logger.w(e);

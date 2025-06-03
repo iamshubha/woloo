@@ -111,7 +111,7 @@ class CartApiService {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token'
           }));
-      logger.w("Delete Item Repo $res");
+
       return res["deleted"];
     } catch (e) {
       logger.e("Error in delete item service: $e");

@@ -124,7 +124,7 @@ class AddressService {
           },
         ),
       );
-      logger.w(response);
+
       return AddressesData.fromJson(response);
     } catch (e) {
       debugPrint("Error in IOT service: $e");
@@ -184,7 +184,7 @@ class AddressService {
           },
         ),
       );
-      logger.w("Response: $response");
+
       return response;
     } catch (e) {
       debugPrint("Error in IOT service: $e");

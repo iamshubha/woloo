@@ -78,7 +78,10 @@ class _EcomScreenState extends State<EcomScreen> {
               // _dashboardData = state.dashboardData;
             });
           }
-
+          if (state is WishlistSuccess) {
+            EasyLoading.dismiss();
+            _refresh();
+          }
           if (state is B2BStoreError) {
             EasyLoading.dismiss();
             EasyLoading.showError(state.error);
@@ -301,6 +304,28 @@ class _EcomScreenState extends State<EcomScreen> {
                                     },
                                     child: GridItem(
                                       products: product,
+                                      onTap: () {
+                                        if (!_b2bStoreBloc.favIds.any(
+                                            (e) => e.containsKey(product.id))) {
+                                          _b2bStoreBloc.add(AddToWishList(
+                                            variantId:
+                                                product.variants![0].id ?? '',
+                                          ));
+                                        } else {
+                                          _b2bStoreBloc.add(RemoveWishList(
+                                              itemId: _b2bStoreBloc.favIds.any(
+                                                      (e) => e.containsKey(
+                                                          product.id))
+                                                  ? _b2bStoreBloc.favIds
+                                                      .firstWhere((e) =>
+                                                          e.entries.first.key ==
+                                                          product.id)
+                                                      .entries
+                                                      .first
+                                                      .value
+                                                  : ""));
+                                        }
+                                      },
                                       isSelected: _b2bStoreBloc.favIds.any(
                                           (e) => e.containsKey(product.id)),
                                       productIdforWishList: _b2bStoreBloc.favIds
@@ -399,155 +424,6 @@ class XTabButton extends StatelessWidget {
             )
           ],
         ),
-      ),
-    );
-  }
-}
-
-class LandingProducts extends StatelessWidget {
-  final VoidCallback? onTap;
-  TopBrands topBrands;
-  final List<Map<String, String>> favIds;
-  ProductCollections productCollections;
-
-  LandingProducts(
-      {super.key,
-      required this.topBrands,
-      required this.productCollections,
-      this.onTap,
-      this.favIds = const []});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.themeBackground,
-      padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 20.w),
-      child: Column(
-        spacing: 10.h,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                "Top Brands",
-                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
-              ),
-              const Spacer(),
-              const SeeMoreButton()
-            ],
-          ),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 1.0,
-            ),
-            itemCount: topBrands.collections!.length > 6
-                ? 6
-                : topBrands.collections!.length, //.length,
-            itemBuilder: (context, index) {
-              return BrandsGrid(
-                imageUrl: topBrands.collections![index].metadata?.image ?? '',
-              );
-            },
-          ),
-          Row(
-            children: [
-              Text(
-                "Collections",
-                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
-              ),
-              const Spacer(),
-              SeeMoreButton(
-                onTap: onTap,
-              )
-            ],
-          ),
-
-          //product collections
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 0.6,
-            ),
-            itemCount: productCollections.products.length > 8
-                ? 8
-                : productCollections.products.length,
-            itemBuilder: (context, index) {
-              final product = productCollections.products[index];
-              return GestureDetector(
-                onTap: () async {
-                  final result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProductDetailsScreen(
-                        productData: product,
-                        isSelected:
-                            favIds.any((e) => e.containsKey(product.id)),
-                        productIdforWishList: favIds
-                                .any((e) => e.containsKey(product.id))
-                            ? favIds
-                                .firstWhere(
-                                    (e) => e.entries.first.key == product.id)
-                                .entries
-                                .first
-                                .value
-                            : "",
-                      ),
-                    ),
-                  );
-                  if (result != null && result == 'refresh') {
-                    print(
-                        'Returned from Page B with refresh signal (or physical back).');
-                    // _initializeData(); // Re-initialize or refresh data
-                  } else {
-                    print(
-                        'Returned from Page B without refresh signal or cancelled.');
-                  }
-                },
-                child: GridItem(
-                  products: product,
-                  isSelected: favIds.any((e) => e.containsKey(product.id)),
-                  productIdforWishList: favIds
-                          .any((e) => e.containsKey(product.id))
-                      ? favIds
-                          .firstWhere((e) => e.entries.first.key == product.id)
-                          .entries
-                          .first
-                          .value
-                      : "",
-                  // imageUrl: productCollections.products![index].thumbnail ?? '',
-                ),
-              );
-            },
-          ),
-          SizedBox(
-            height: 5.h,
-          ),
-          Text(
-            "New in Store",
-            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(
-            height: 130.h,
-            child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (c, i) => ClipRRect(
-                    borderRadius: BorderRadius.circular(25.r),
-                    child: Image.asset(AppImages.bTemplate)),
-                separatorBuilder: (c, i) => const SizedBox(
-                      width: 10,
-                    ),
-                itemCount: 4),
-          ),
-        ],
       ),
     );
   }

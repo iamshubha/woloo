@@ -78,7 +78,7 @@ class ProductService {
           },
         ),
       );
-      logger.w(response);
+
       return ProductCategory.fromJson(response);
     } catch (e) {
       debugPrint("error $e");
@@ -123,7 +123,7 @@ class ProductService {
           },
         ),
       );
-      logger.w(response);
+
       return ProductCollections.fromJson(response);
     } catch (e) {
       debugPrint("error $e");

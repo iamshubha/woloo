@@ -22,7 +22,7 @@ class FavoriteService {
           },
         ),
       );
-      logger.w(response);
+
       return Wishlist.fromJson(response);
     } catch (e) {
       debugPrint("Error in getOrderDetails service: $e");
