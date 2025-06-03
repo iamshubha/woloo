@@ -139,7 +139,9 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       favIds = getCommonProductIds(fav, productCollections);
       final address = box.read('address');
       // Debug prints
-      selectedAddress.value = Addresses.fromJson(jsonDecode(address));
+      selectedAddress.value = address != null
+          ? Addresses.fromJson(jsonDecode(address))
+          : Addresses();
       // Emit success state
       if (emit.isDone) return;
       emit(B2BStoreSuccess(B2BStoreHomePage(
