@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,9 +20,9 @@ import 'package:woloo_smart_hygiene/b2b_store/network/favorite.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/login_reg_flow.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/product.dart';
+import 'package:woloo_smart_hygiene/hygine_services/view/address_notifier.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 
-import '../models/payment_provider.dart';
 import 'b2b_store_event.dart';
 import 'b2b_store_state.dart';
 
@@ -136,9 +137,9 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       final fav = await _favoriteService.getFavorites(token: loginToken);
 
       favIds = getCommonProductIds(fav, productCollections);
-
+      final address = box.read('address');
       // Debug prints
-
+      selectedAddress.value = Addresses.fromJson(jsonDecode(address));
       // Emit success state
       if (emit.isDone) return;
       emit(B2BStoreSuccess(B2BStoreHomePage(
@@ -286,7 +287,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     try {
       final val = await _addresstService.deleteAddress(
           addressId: event.addressId, token: box.read('login_jwt'));
-      logger.w("Val: $val");
+
       AddressesData response =
           await _addresstService.getAllAddress(token: box.read('login_jwt'));
 

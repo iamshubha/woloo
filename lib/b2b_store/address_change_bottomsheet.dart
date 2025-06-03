@@ -37,7 +37,7 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
   bool _isDataLoaded = false;
   AddressesData _addressesData = AddressesData();
   Map<String, bool> map = {};
-
+  final box = GetStorage();
   @override
   void initState() {
     _b2bStoreBloc.add(const GetAddress());
@@ -205,6 +205,13 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                                         onPressed: () {
                                           _b2bStoreBloc.add(DeleteAddress(
                                               addressId: address.id ?? ""));
+                                          if (selectedAddress.value.id ==
+                                              address.id) {
+                                            selectedAddress.value = Addresses();
+                                            box.remove('address');
+                                          }
+
+                                          logger.w(box.read('address'));
                                         },
                                       )
                                     ],
@@ -226,7 +233,7 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                             case ProductMode.productDetails:
                               {
                                 Navigator.pop(context);
-                                final box = GetStorage();
+
                                 var jwt = box.read('login_jwt');
                                 logger.w(jwt);
                                 box.write('address',
