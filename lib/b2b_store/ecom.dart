@@ -915,7 +915,21 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
               )
-            : SizedBox(),
+            : Badge(
+                label: Text("0"),
+                child: CircleAvatar(
+                  backgroundColor: AppColors.greyIcon,
+                  child: IconButton(
+                    icon: ImageIcon(AssetImage(AppImages.bag)),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const CartScreen()));
+                    },
+                  ),
+                ),
+              ),
         SizedBox(width: 10.w),
       ],
       title: Column(

@@ -137,7 +137,7 @@ class CheckoutApiService {
     }
   }
 
-  Future<payment_provider.PaymentCollection> paymentCollections({
+  Future<String> paymentCollections({
     required String token,
     required String cart_id,
   }) async {
@@ -147,7 +147,14 @@ class CheckoutApiService {
           options: getHeaders(token),
           data: {"cart_id": cart_id});
       logger.w(response);
-      return payment_provider.PaymentCollection.fromJson(response);
+      // logger.w(response['payment_collection']["id"]);
+      // logger.w()
+      /*
+
+          pay_col: paymentCollections.paymentCollection?.id,
+          provider_id: paymentProviders.paymentProviders[0].id
+      */
+      return response['payment_collection']["id"];
     } catch (e) {
       logger.w(e);
       debugPrint("Error in shippingOptionsCalculate api call: $e");

@@ -190,16 +190,15 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
                       if (_formKey.currentState!.validate()) {
                         String fullAddress1 = _flatNoController.text.trim();
 
-                        if (_apartmentController.text.trim().isNotEmpty) {
-                          fullAddress1 +=
-                              ", ${_apartmentController.text.trim()}";
-                        }
+                        // if (_apartmentController.text.trim().isNotEmpty) {
+                        //   fullAddress1 +=
+                        //       ", ${_apartmentController.text.trim()}";
+                        // }
 
                         _b2bStoreBloc.add(
                           UpdateAddressReq(
                             addressId: widget.adress!.id!,
                             addressReqBody: AddressReqBody(
-
                               address1: fullAddress1,
                               addressName: _labelController.text.trim(),
                               city: _cityController.text.trim(),
@@ -208,7 +207,6 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
                               phone: _phoneController.text.trim(),
                               postalCode: _pincodeController.text.trim(),
                               province: _localityController.text.trim(),
-
                             ),
                           ),
                         );

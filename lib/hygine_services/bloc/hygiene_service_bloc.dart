@@ -184,13 +184,12 @@ class HygieneServiceBloc
       final paymentProviders = await _checkoutApiService.paymentProviders(
           token: box.read('login_jwt'), region_id: box.read('region_id'));
 
-      PaymentCollection paymentCollections =
-          await _checkoutApiService.paymentCollections(
-              token: box.read('login_jwt'), cart_id: box.read('cart_id'));
+      final paymentCollections = await _checkoutApiService.paymentCollections(
+          token: box.read('login_jwt'), cart_id: box.read('cart_id'));
 
       final paymentSessions = await _checkoutApiService.paymentSessions(
           token: box.read('login_jwt'),
-          pay_col: paymentCollections.paymentCollection!.id,
+          pay_col: paymentCollections, //.paymentCollection!.id,
           provider_id: paymentProviders.paymentProviders![0].id);
 
       final orderId =

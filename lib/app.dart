@@ -6,8 +6,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
-import 'package:woloo_smart_hygiene/hygine_services/view/hygine_landing.dart';
 
 import 'package:woloo_smart_hygiene/screens/splash_screen/view/splash.dart';
 

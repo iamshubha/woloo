@@ -218,7 +218,7 @@ class Context {
 }
 
 class Customer {
-  final Id? id;
+  final dynamic id;
   final String? email;
   final dynamic phone;
   final dynamic metadata;
@@ -243,7 +243,7 @@ class Customer {
   });
 
   factory Customer.fromJson(Map<String, dynamic> json) => Customer(
-        id: idValues.map[json["id"]]!,
+        id: json["id"]!,
         email: json["email"],
         phone: json["phone"],
         metadata: json["metadata"],
@@ -263,7 +263,7 @@ class Customer {
       );
 
   Map<String, dynamic> toJson() => {
-        "id": idValues.reverse[id],
+        "id": id,
         "email": email,
         "phone": phone,
         "metadata": metadata,
@@ -286,17 +286,17 @@ class Address {
   final String? phone;
   final String? company;
   final Metadata? metadata;
-  final Province? province;
+  final dynamic province;
   final String? address1;
   final String? address2;
-  final LastName? lastName;
+  final dynamic lastName;
   final DateTime? createdAt;
   final dynamic deletedAt;
   final String? firstName;
   final DateTime? updatedAt;
-  final Id? customerId;
+  final dynamic customerId;
   final String? postalCode;
-  final AddressName? addressName;
+  final dynamic addressName;
   final String? countryCode;
   final bool? isDefaultBilling;
   final bool? isDefaultShipping;
@@ -331,10 +331,10 @@ class Address {
         metadata: json["metadata"] == null
             ? null
             : Metadata.fromJson(json["metadata"]),
-        province: provinceValues.map[json["province"]]!,
+        province: json["province"],
         address1: json["address_1"],
         address2: json["address_2"],
-        lastName: lastNameValues.map[json["last_name"]]!,
+        lastName: json["last_name"],
         createdAt: json["created_at"] == null
             ? null
             : DateTime.parse(json["created_at"]),
@@ -343,9 +343,9 @@ class Address {
         updatedAt: json["updated_at"] == null
             ? null
             : DateTime.parse(json["updated_at"]),
-        customerId: idValues.map[json["customer_id"]]!,
+        customerId: json["customer_id"],
         postalCode: json["postal_code"],
-        addressName: addressNameValues.map[json["address_name"]]!,
+        addressName: json["address_name"]!,
         countryCode: json["country_code"],
         isDefaultBilling: json["is_default_billing"],
         isDefaultShipping: json["is_default_shipping"],
@@ -357,41 +357,41 @@ class Address {
         "phone": phone,
         "company": company,
         "metadata": metadata?.toJson(),
-        "province": provinceValues.reverse[province],
+        "province": province,
         "address_1": address1,
         "address_2": address2,
-        "last_name": lastNameValues.reverse[lastName],
+        "last_name": lastName,
         "created_at": createdAt?.toIso8601String(),
         "deleted_at": deletedAt,
         "first_name": firstName,
         "updated_at": updatedAt?.toIso8601String(),
-        "customer_id": idValues.reverse[customerId],
+        "customer_id": customerId,
         "postal_code": postalCode,
-        "address_name": addressNameValues.reverse[addressName],
+        "address_name": addressName,
         "country_code": countryCode,
         "is_default_billing": isDefaultBilling,
         "is_default_shipping": isDefaultShipping,
       };
 }
 
-enum AddressName { DEFAULT, HOME, OFFICE }
+// enum AddressName { DEFAULT, HOME, OFFICE }
 
-final addressNameValues = EnumValues({
-  "Default": AddressName.DEFAULT,
-  "Home": AddressName.HOME,
-  "Office": AddressName.OFFICE
-});
+// final addressNameValues = EnumValues({
+//   "Default": AddressName.DEFAULT,
+//   "Home": AddressName.HOME,
+//   "Office": AddressName.OFFICE
+// });
 
-enum Id { CUS_01_JT8_BSP0_NZJB59_BCR4_P2_ACSM7 }
+// enum Id { CUS_01_JT8_BSP0_NZJB59_BCR4_P2_ACSM7 }
 
-final idValues = EnumValues({
-  "cus_01JT8BSP0NZJB59BCR4P2ACSM7": Id.CUS_01_JT8_BSP0_NZJB59_BCR4_P2_ACSM7
-});
+// final idValues = EnumValues({
+//   "cus_01JT8BSP0NZJB59BCR4P2ACSM7": Id.CUS_01_JT8_BSP0_NZJB59_BCR4_P2_ACSM7
+// });
 
-enum LastName { BANERJEE, C, DOE }
+// enum LastName { BANERJEE, C, DOE }
 
-final lastNameValues = EnumValues(
-    {"banerjee": LastName.BANERJEE, "c": LastName.C, "Doe": LastName.DOE});
+// final lastNameValues = EnumValues(
+//     {"banerjee": LastName.BANERJEE, "c": LastName.C, "Doe": LastName.DOE});
 
 class Metadata {
   Metadata();
@@ -401,10 +401,10 @@ class Metadata {
   Map<String, dynamic> toJson() => {};
 }
 
-enum Province { EMPTY, WESTBENGAL }
+// enum Province { EMPTY, WESTBENGAL }
 
-final provinceValues =
-    EnumValues({"": Province.EMPTY, "westbengal": Province.WESTBENGAL});
+// final provinceValues =
+//     EnumValues({"": Province.EMPTY, "westbengal": Province.WESTBENGAL});
 
 class Data {
   final String? id;

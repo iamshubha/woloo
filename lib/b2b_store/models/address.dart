@@ -56,7 +56,7 @@ class AddressReqBody {
     data['phone'] = phone;
     data['company'] = company ?? '';
     data['address_1'] = address1;
-    data['address_2'] = address2;
+    data['address_2'] = address2 ?? '';
     data['city'] = city;
     data['country_code'] = countryCode ?? 'in';
     data['province'] = province;
