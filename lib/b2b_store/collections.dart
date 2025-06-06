@@ -6,7 +6,6 @@ import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
-import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
@@ -136,10 +135,10 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
                             physics: const NeverScrollableScrollPhysics(),
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 10,
+                              crossAxisCount: 3,
                               mainAxisSpacing: 10,
-                              childAspectRatio: 0.6,
+                              crossAxisSpacing: 8,
+                              childAspectRatio: 0.5,
                             ),
                             itemCount: _b2bStoreHomePage!
                                 .productCollections.products.length,

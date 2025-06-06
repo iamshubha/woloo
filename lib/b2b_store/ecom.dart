@@ -18,6 +18,7 @@ import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/wishlist.dart';
+import 'package:woloo_smart_hygiene/enums/add_button_mode.dart';
 import 'package:woloo_smart_hygiene/enums/product_mode.dart';
 import 'package:woloo_smart_hygiene/extensions/string_extension.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
@@ -28,6 +29,7 @@ import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
 
 import '../hygine_services/view/address_notifier.dart';
 import '../utils/app_textstyle.dart';
+import 'custom_widget/start_rating.dart';
 
 enum EcomTab { seeLess, seeAll }
 
@@ -250,15 +252,15 @@ class _EcomScreenState extends State<EcomScreen> {
                                 physics: const NeverScrollableScrollPhysics(),
                                 gridDelegate:
                                     const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 10,
+                                  crossAxisCount: 3,
                                   mainAxisSpacing: 10,
-                                  childAspectRatio: 0.6,
+                                  crossAxisSpacing: 8,
+                                  childAspectRatio: 0.5,
                                 ),
                                 itemCount: _b2bStoreHomePage!.productCollections
                                             .products.length >
-                                        8
-                                    ? 8
+                                        9
+                                    ? 9
                                     : _b2bStoreHomePage!
                                         .productCollections.products.length,
                                 itemBuilder: (context, index) {
@@ -482,97 +484,246 @@ class GridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 10.w),
-          decoration: BoxDecoration(
-              color: AppColors.themeBackground,
-              borderRadius: BorderRadius.circular(25.r),
-              boxShadow: const [
-                BoxShadow(
-                  color: AppColors.greyShadowColor,
-                  blurRadius: 5.0,
-                  spreadRadius: 0.5,
-                  offset: Offset(0, 2),
-                ),
-                BoxShadow(
-                  color: AppColors.greyShadowColor,
-                  blurRadius: 5.0,
-                  spreadRadius: 0.5,
-                  offset: Offset(0, -1),
-                ),
-              ]),
-          child: Column(
-            spacing: 2.h,
+    return Container(
+      // padding: EdgeInsets.symmetric(horizontal: 10.w),
+      child: Stack(
+        children: [
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(25.r)),
-                child: SizedBox(
-                  height: 165.h,
-                  width: double.infinity,
-                  child: Image.network(
-                    products.thumbnail ?? '',
-                    fit: BoxFit.contain,
-                  ),
+              Container(
+                height: 80.h,
+                width: 80.h,
+                decoration: BoxDecoration(
+                    color: AppColors.themeBackground,
+                    borderRadius: BorderRadius.circular(12.r),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: AppColors.greyShadowColor,
+                        blurRadius: 5.0,
+                        spreadRadius: 0.5,
+                        offset: Offset(0, 2),
+                      ),
+                      BoxShadow(
+                        color: AppColors.greyShadowColor,
+                        blurRadius: 5.0,
+                        spreadRadius: 0.5,
+                        offset: Offset(0, -1),
+                      ),
+                    ]),
+                child: Image.network(
+                  products.thumbnail ?? '',
+                  fit: BoxFit.contain,
                 ),
+              ),
+              SizedBox(
+                height: 5.h,
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(3.r),
+                  color: AppColors.lightCyanColor,
+                ),
+                child: Text(
+                  "80ml",
+                  style: AppTextStyle.font10bold,
+                ),
+              ),
+              SizedBox(
+                height: 5.h,
               ),
               Text(
                 products.title ?? "",
-                style:
-                    TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.bold),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 8.sp, fontWeight: FontWeight.bold),
               ),
-              Text(
-                products.subtitle ?? "",
-                style: TextStyle(
-                  fontSize: 8.sp,
-                  color: AppColors.textgreyColor,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Row(
-                children: List.generate(
-                  5,
-                  (i) => Container(
-                      margin: EdgeInsets.only(right: 2.w),
-                      height: 10.h,
-                      width: 10.w,
-                      child: Image.asset(AppImages.stars)),
-                ),
-              ),
+              // Text(
+              //   products.subtitle ?? "",
+              //   style: TextStyle(
+              //     fontSize: 8.sp,
+              //     color: AppColors.textgreyColor,
+              //     fontWeight: FontWeight.bold,
+              //   ),
+              // ),
               Row(
                 children: [
+                  AnimatedRatingStars(
+                    initialRating: 3.5,
+                    minRating: 0.0,
+                    maxRating: 5.0,
+                    filledColor: Colors.amber,
+                    emptyColor: Colors.grey,
+                    filledIcon: Icons.star,
+                    halfFilledIcon: Icons.star_half,
+                    emptyIcon: Icons.star_border,
+                    onChanged: (a) {},
+                    displayRatingValue: true,
+                    interactiveTooltips: true,
+                    customFilledIcon: Icons.star,
+                    customHalfFilledIcon: Icons.star_half,
+                    customEmptyIcon: Icons.star_border,
+                    starSize: 10,
+                    animationDuration: const Duration(milliseconds: 300),
+                    animationCurve: Curves.easeInOut,
+                    readOnly: false,
+                  ),
                   Text(
-                    "Rs. ${products.variants!.last.calculatedPrice!.calculatedAmount.toString()}",
+                    "(1288)",
+                    style: AppTextStyle.font10bold,
+                  )
+                ],
+              ),
+
+              Row(
+                spacing: 5.w,
+                children: [
+                  Text(
+                    "\u{20B9}${products.variants!.last.calculatedPrice!.calculatedAmount.toString()}",
                     style: TextStyle(
-                      fontSize: 13.sp,
+                      fontSize: 10.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const Spacer(),
-                  const AddToCartButton()
+                  Text(
+                    "MRP 1299",
+                    style: TextStyle(
+                        decoration: TextDecoration.lineThrough,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textgreyColor),
+                  ),
                 ],
               )
             ],
           ),
+          const Positioned(right: 0, top: 80, child: AddAnimatedButton())
+        ],
+      ),
+    );
+  }
+}
+
+class AddAnimatedButton extends StatefulWidget {
+  const AddAnimatedButton({
+    super.key,
+    this.onTap,
+    this.onAdd,
+    this.onRemove,
+  });
+
+  final VoidCallback? onTap;
+  final VoidCallback? onAdd;
+  final VoidCallback? onRemove;
+
+  @override
+  State<AddAnimatedButton> createState() => _AddAnimatedButtonState();
+}
+
+class _AddAnimatedButtonState extends State<AddAnimatedButton> {
+  int count = 1;
+  AddButtonMode mode = AddButtonMode.remove;
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        // if (widget.isSelected) {
+        //   widget.onRemove?.call();
+        // } else {
+        //   widget.onAdd?.call();
+        // }
+        setState(() {
+          mode = AddButtonMode.add;
+        });
+        await Future.delayed(const Duration(milliseconds: 500), () {
+          setState(() {
+            mode = AddButtonMode.count;
+          });
+        });
+
+        if (widget.onTap != null) {
+          widget.onTap!();
+        }
+      },
+      borderRadius: BorderRadius.circular(3.r),
+      child: AnimatedContainer(
+        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+        decoration: BoxDecoration(
+            border: Border.all(color: AppColors.buttonColor, width: 1.5),
+            color: mode == AddButtonMode.remove
+                ? AppColors.themeBackground
+                : AppColors.buttonYellowColor,
+            borderRadius: BorderRadius.circular(3.r)),
+        duration: const Duration(milliseconds: 500),
+        child: Center(
+          child: mode == AddButtonMode.remove
+              ? Text(
+                  "Add",
+                  style: AppTextStyle.font10bold,
+                )
+              : mode == AddButtonMode.add
+                  ? Text(
+                      "Added",
+                      style: AppTextStyle.font10bold,
+                    )
+                  : Row(
+                      spacing: 10,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            if (count == 0) return;
+                            count -= 1;
+                            if (count == 0) {
+                              count = 1;
+                              mode = AddButtonMode.remove;
+                              if (widget.onRemove != null) {
+                                widget.onRemove!();
+                              }
+                            }
+                            setState(() {});
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                    width: 1, color: AppColors.black)),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 2, horizontal: 2),
+                            child: const Icon(
+                              Icons.remove,
+                              size: 8,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          count.toString(),
+                          style: AppTextStyle.font10,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            count += 1;
+                            setState(() {});
+                            if (widget.onAdd != null) {
+                              widget.onAdd!();
+                            }
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                    width: 1, color: AppColors.black)),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 2, horizontal: 2),
+                            child: const Icon(
+                              Icons.add,
+                              size: 10,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
         ),
-        Positioned(
-          top: 20,
-          right: 20,
-          child: InkWell(
-              onTap: onTap,
-              child: Icon(
-                isSelected
-                    ? Icons.favorite_rounded
-                    : Icons.favorite_border_rounded,
-                color: isSelected ? Colors.pink : null,
-              )),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -792,7 +943,7 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               )
             : Badge(
-                label: Text("0"),
+                label: const Text("0"),
                 child: CircleAvatar(
                   backgroundColor: AppColors.greyIcon,
                   child: IconButton(
