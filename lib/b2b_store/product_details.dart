@@ -298,25 +298,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                       itemId: i.id));
                                             }
                                           });
-                                    // setState(() {});
                                   },
                                   onRemove: () {
                                     productCount == 0
                                         ? EasyLoading.showError(
                                             "Product count cannot be less than 0")
                                         : null;
-                                    // if (productCount == 1) {
-                                    //   // EasyLoading.showError(
-                                    //   //     "Product count cannot be less than 0");
-                                    //   cartModel?.cart.items.forEach((i) {
-                                    //     if (i.variantId ==
-                                    //         widget.productData?.variants![0].id) {
-                                    //       _b2bStoreBloc
-                                    //           .add(DeleteItemReq(itemId: i.id));
-                                    //     }
-                                    //   });
-                                    //   return;
-                                    // }
                                     cartModel?.cart.items.forEach((i) {
                                       if (i.variantId ==
                                           widget.productData?.variants![0].id) {
