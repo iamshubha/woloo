@@ -278,7 +278,9 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
                                             Row(
                                               children: [
                                                 AnimatedRatingStars(
-                                                  initialRating: 3.5,
+                                                  initialRating:
+                                                      product.averageRating ??
+                                                          0,
                                                   minRating: 0.0,
                                                   maxRating: 5.0,
                                                   filledColor: Colors.amber,
@@ -303,11 +305,14 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
                                                       Curves.easeInOut,
                                                   readOnly: false,
                                                 ),
-                                                Text(
-                                                  "(1288)",
-                                                  style:
-                                                      AppTextStyle.font10bold,
-                                                )
+                                                if (product.reviewCount !=
+                                                        null &&
+                                                    product.reviewCount != 0)
+                                                  Text(
+                                                    "(${product.reviewCount ?? 0})",
+                                                    style:
+                                                        AppTextStyle.font10bold,
+                                                  )
                                               ],
                                             ),
 

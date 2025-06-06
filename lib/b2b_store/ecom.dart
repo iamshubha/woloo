@@ -434,11 +434,14 @@ class _EcomScreenState extends State<EcomScreen> {
                                                         Curves.easeInOut,
                                                     readOnly: false,
                                                   ),
-                                                  Text(
-                                                    "(${product.reviewCount ?? 0})",
-                                                    style:
-                                                        AppTextStyle.font10bold,
-                                                  )
+                                                  if (product.reviewCount !=
+                                                          null &&
+                                                      product.reviewCount != 0)
+                                                    Text(
+                                                      "(${product.reviewCount ?? 0})",
+                                                      style: AppTextStyle
+                                                          .font10bold,
+                                                    )
                                                 ],
                                               ),
 
