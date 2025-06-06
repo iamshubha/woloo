@@ -449,19 +449,23 @@ class _EcomScreenState extends State<EcomScreen> {
                                                 spacing: 5.w,
                                                 children: [
                                                   Text(
-                                                    "\u{20B9}${product.variants!.last.calculatedPrice!.calculatedAmount.toString()}",
+                                                    "\u{20B9}${product.variants!.first.calculatedPrice!.calculatedAmount.toString()}",
                                                     style: TextStyle(
                                                       fontSize: 10.sp,
                                                       fontWeight:
                                                           FontWeight.bold,
                                                     ),
                                                   ),
+                                                  //TODO: Check Price Logic -- Abar asibo fire
                                                   Text(
-                                                    "MRP 1299",
+                                                    "MRP ${product.variants!.first.calculatedPrice!.originalAmount.toString()}",
                                                     style: TextStyle(
                                                         decoration:
-                                                            TextDecoration
-                                                                .lineThrough,
+                                                            product.discountable ??
+                                                                    false
+                                                                ? TextDecoration
+                                                                    .lineThrough
+                                                                : null,
                                                         fontSize: 10.sp,
                                                         fontWeight:
                                                             FontWeight.bold,
