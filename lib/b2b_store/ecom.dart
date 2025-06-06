@@ -405,7 +405,9 @@ class _EcomScreenState extends State<EcomScreen> {
                                               Row(
                                                 children: [
                                                   AnimatedRatingStars(
-                                                    initialRating: 3.5,
+                                                    initialRating:
+                                                        product.averageRating ??
+                                                            0,
                                                     minRating: 0.0,
                                                     maxRating: 5.0,
                                                     filledColor: Colors.amber,
@@ -433,7 +435,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                                     readOnly: false,
                                                   ),
                                                   Text(
-                                                    "(1288)",
+                                                    "(${product.reviewCount ?? 0})",
                                                     style:
                                                         AppTextStyle.font10bold,
                                                   )

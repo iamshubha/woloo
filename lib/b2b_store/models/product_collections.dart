@@ -60,6 +60,8 @@ class Product {
   List<dynamic>? tags;
   List<Images>? images;
   List<Variants>? variants;
+  double? averageRating;
+  int? reviewCount;
 
   Product(
       {this.id,
@@ -87,10 +89,13 @@ class Product {
       this.options,
       this.tags,
       this.images,
-      this.variants});
+      this.variants,
+      this.averageRating,
+      this.reviewCount});
 
   Product.fromJson(Map<String, dynamic> json) {
-    logger.w("Options: ${json['options']}");
+    averageRating = json["average_rating"].toDouble();
+    reviewCount = json["review_count"];
     id = json['id'];
     title = json['title'];
     subtitle = json['subtitle'];
@@ -179,6 +184,8 @@ class Product {
     if (variants != null) {
       data['variants'] = variants!.map((v) => v.toJson()).toList();
     }
+    data["average_rating"] = averageRating;
+    data["review_count"] = reviewCount;
     return data;
   }
 
