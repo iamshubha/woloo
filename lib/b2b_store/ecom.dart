@@ -14,12 +14,9 @@ import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
-import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart' as cart;
-import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/wishlist.dart';
-import 'package:woloo_smart_hygiene/enums/add_button_mode.dart';
 import 'package:woloo_smart_hygiene/enums/product_mode.dart';
 import 'package:woloo_smart_hygiene/extensions/string_extension.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
@@ -105,6 +102,9 @@ class _EcomScreenState extends State<EcomScreen> {
               cartValue: _isDataLoaded
                   ? _b2bStoreHomePage!.cartData.cart.items.length
                   : 0,
+              onTap: () {
+                _refresh();
+              },
             ),
             body: SingleChildScrollView(
               child: _isDataLoaded
@@ -239,8 +239,8 @@ class _EcomScreenState extends State<EcomScreen> {
                                   ),
                                   const Spacer(),
                                   SeeMoreButton(
-                                    onTap: () {
-                                      Navigator.push(
+                                    onTap: () async {
+                                      final value = await Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (c) =>
@@ -249,6 +249,9 @@ class _EcomScreenState extends State<EcomScreen> {
                                                       //     .productCollections
                                                       //     .products,
                                                       )));
+                                      if (value != null && value == 'refresh') {
+                                        _refresh();
+                                      }
                                     },
                                   )
                                 ],
@@ -571,7 +574,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                                                           (i) {
                                                                     if (i.variantId ==
                                                                         product
-                                                                            ?.variants![0]
+                                                                            .variants![0]
                                                                             .id) {
                                                                       productCount -=
                                                                           1;
@@ -1380,12 +1383,13 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
       this.isAll = false,
       this.textFieldHintText = 'Search Products',
       this.cartValue,
-      this.productMode = ProductMode.productDetails});
+      this.productMode = ProductMode.productDetails,
+      this.onTap});
   final ProductMode productMode;
 
   final String textFieldHintText;
   final bool isAll;
-
+  final VoidCallback? onTap;
   final int? cartValue;
   @override
   Size get preferredSize => const Size.fromHeight(130);
@@ -1403,11 +1407,16 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                   backgroundColor: AppColors.greyIcon,
                   child: IconButton(
                     icon: ImageIcon(AssetImage(AppImages.bag)),
-                    onPressed: () {
-                      Navigator.push(
+                    onPressed: () async {
+                      final value = await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (_) => const CartScreen()));
+                      if (value != null && value == 'refresh') {
+                        if (onTap != null) {
+                          onTap!();
+                        }
+                      }
                     },
                   ),
                 ),
@@ -1418,11 +1427,16 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                   backgroundColor: AppColors.greyIcon,
                   child: IconButton(
                     icon: ImageIcon(AssetImage(AppImages.bag)),
-                    onPressed: () {
-                      Navigator.push(
+                    onPressed: () async {
+                      final value = await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (_) => const CartScreen()));
+                      if (value != null && value == 'refresh') {
+                        if (onTap != null) {
+                          onTap!();
+                        }
+                      }
                     },
                   ),
                 ),

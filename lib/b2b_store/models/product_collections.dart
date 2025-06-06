@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
+
 class ProductCollections {
   List<Product> products;
   int? count;
@@ -87,6 +90,7 @@ class Product {
       this.variants});
 
   Product.fromJson(Map<String, dynamic> json) {
+    logger.w("Options: ${json['options']}");
     id = json['id'];
     title = json['title'];
     subtitle = json['subtitle'];
@@ -296,7 +300,7 @@ class ProductsOptions {
   }
 }
 
-class Values {
+class Values extends Equatable {
   String? id;
   String? value;
   dynamic metadata;
@@ -335,6 +339,9 @@ class Values {
     data['deleted_at'] = deletedAt;
     return data;
   }
+
+  @override
+  List<Object?> get props => [id];
 }
 
 class Images {

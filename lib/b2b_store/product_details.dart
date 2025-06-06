@@ -19,12 +19,14 @@ import 'package:woloo_smart_hygiene/extensions/string_extension.dart';
 import 'package:woloo_smart_hygiene/hygine_services/view/address_notifier.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
+import 'package:woloo_smart_hygiene/utils/color_map.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/cart_bottomsheet.dart';
 
 import '../utils/app_textstyle.dart';
 import 'address_change_bottomsheet.dart';
+import 'models/product_collections.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final product_collections.Product? productData;
@@ -49,6 +51,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   final box = GetStorage();
   bool _shouldShowCartBottomSheetAfterAdd = false;
   Addresses? address;
+  Values? sizeVarient;
+  Values? colorVarient;
 
   @override
   initState() {
@@ -73,7 +77,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final sizeList = ["S", "M", "L", "XL"];
     return PopScope(
       canPop: true,
       child: BlocConsumer(
@@ -382,7 +385,186 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
                         // const ProductTitleDesc(),
                         // const XColorsSelection(),
-                        // SizeWidget(sizeList: sizeList),
+                        // (sizeList: sizeList),SizeWidget
+                        if (widget.productData?.options
+                                ?.any((e) => e.title == "Size") ??
+                            false)
+                          VarientContainer(
+                            child: Column(
+                              // spacing: 10.h,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: 10.h,
+                                ),
+                                Text(
+                                  "Size",
+                                  style: TextStyle(
+                                      fontSize: 15.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: Divider(
+                                        thickness: 2,
+                                      ),
+                                    ),
+                                    Spacer(
+                                      flex: 4,
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 26,
+                                  child: ListView.separated(
+                                      itemCount: widget.productData?.options
+                                              ?.firstWhere(
+                                                  (e) => e.title == "Size")
+                                              .values
+                                              ?.length ??
+                                          0,
+                                      separatorBuilder: (context, index) {
+                                        return const SizedBox(
+                                          width: 5,
+                                        );
+                                      },
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (c, i) {
+                                        final size = widget.productData?.options
+                                            ?.firstWhere(
+                                                (e) => e.title == "Size")
+                                            .values![i];
+                                        return InkWell(
+                                          onTap: () {
+                                            sizeVarient = size;
+                                            setState(() {});
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 10.w,
+                                                vertical: 4.h),
+                                            decoration: BoxDecoration(
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey
+                                                        .withOpacity(0.3),
+                                                    spreadRadius: 1,
+                                                    blurRadius: 5,
+                                                    offset: const Offset(0, 3),
+                                                  ),
+                                                ],
+                                                color: sizeVarient == size
+                                                    ? AppColors.lightCyanColor
+                                                    : Colors.white),
+                                            child: Center(
+                                              child: Text(size?.value ?? ""),
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                              ],
+                            ),
+                          ),
+                        if (widget.productData?.options
+                                ?.any((e) => e.title == "Color") ??
+                            false)
+                          VarientContainer(
+                            child: Column(
+                              // spacing: 10.h,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: 10.h,
+                                ),
+                                Text(
+                                  "Color",
+                                  style: TextStyle(
+                                      fontSize: 15.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: Divider(
+                                        thickness: 2,
+                                      ),
+                                    ),
+                                    Spacer(
+                                      flex: 4,
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 26,
+                                  child: ListView.separated(
+                                      itemCount: widget.productData?.options
+                                              ?.firstWhere(
+                                                  (e) => e.title == "Color")
+                                              .values
+                                              ?.length ??
+                                          0,
+                                      separatorBuilder: (context, index) {
+                                        return const SizedBox(
+                                          width: 5,
+                                        );
+                                      },
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (c, i) {
+                                        final size = widget.productData?.options
+                                            ?.firstWhere(
+                                                (e) => e.title == "Color")
+                                            .values![i];
+                                        return InkWell(
+                                          onTap: () {
+                                            colorVarient = size;
+                                            setState(() {});
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 10.w,
+                                                vertical: 4.h),
+                                            decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.3),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 5,
+                                                  offset: const Offset(0, 3),
+                                                ),
+                                              ],
+                                              color: getColorFromString(
+                                                  size?.value ?? "white"),
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: colorVarient == size
+                                                ? Icon(
+                                                    Icons.check,
+                                                    size: 10,
+                                                    color: size?.value
+                                                                ?.toLowerCase() ==
+                                                            "black"
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                  )
+                                                : null,
+                                          ),
+                                        );
+                                      }),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                              ],
+                            ),
+                          ),
                         const Divider(
                           thickness: 2,
                         ),
@@ -1256,4 +1438,33 @@ class BackAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class VarientContainer extends StatelessWidget {
+  const VarientContainer({super.key, required this.child});
+  final Widget child;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+      decoration: BoxDecoration(
+          color: AppColors.themeBackground,
+          borderRadius: BorderRadius.circular(25.r),
+          boxShadow: const [
+            BoxShadow(
+              color: AppColors.greyShadowColor,
+              blurRadius: 5.0,
+              spreadRadius: 0.5,
+              offset: Offset(0, 2),
+            ),
+            BoxShadow(
+              color: AppColors.greyShadowColor,
+              blurRadius: 5.0,
+              spreadRadius: 0.5,
+              offset: Offset(0, -1),
+            ),
+          ]),
+      child: child,
+    );
+  }
 }

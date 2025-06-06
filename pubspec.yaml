@@ -125,6 +125,7 @@ dependencies:
   animated_rating_stars: ^1.0.1
   cherry_toast:
   fluttertoast: ^8.2.12
+  string_to_color: ^2.0.0
 
 dependency_overrides:
   rxdart: ^0.27.2
