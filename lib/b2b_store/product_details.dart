@@ -52,8 +52,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   final box = GetStorage();
   bool _shouldShowCartBottomSheetAfterAdd = false;
   Addresses? address;
-  Values? sizeVarient;
-  Values? colorVarient;
+  Tag? sizeVarient;
+  Tag? colorVarient;
 
   @override
   initState() {

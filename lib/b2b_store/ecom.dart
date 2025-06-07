@@ -719,26 +719,36 @@ class _EcomScreenState extends State<EcomScreen> {
                                               // ))
 
                                               ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 5.w,
-                                                  vertical: 2.h),
-                                              decoration: BoxDecoration(
-                                                color: AppColors.lightCyanColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(4),
-                                              ),
-                                              child: Text(
-                                                "Out of Stock",
-                                                style: TextStyle(
-                                                    fontSize: 6.sp,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: AppColors.black),
-                                              ),
-                                            ),
-                                          ),
+                                          product.variants.first
+                                                      .inventoryQuantity ==
+                                                  0
+                                              ? Align(
+                                                  alignment:
+                                                      Alignment.topCenter,
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 5.w,
+                                                            vertical: 2.h),
+                                                    decoration: BoxDecoration(
+                                                      color: AppColors
+                                                          .lightCyanColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4),
+                                                    ),
+                                                    child: Text(
+                                                      "Out of Stock",
+                                                      style: TextStyle(
+                                                          fontSize: 6.sp,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color:
+                                                              AppColors.black),
+                                                    ),
+                                                  ),
+                                                )
+                                              : SizedBox(),
                                           // Positioned(
                                           //   // left: 8,
                                           //   // right: 8,

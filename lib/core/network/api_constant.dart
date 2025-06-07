@@ -162,7 +162,7 @@ class APIConstants {
 
   // https://staging-store.woloo.in/store/
   static var PRODUCT_COLLECTIONS =
-      '$AUTH_BASE_URL/store/products?fields=*variants.calculated_price,+variants.inventory_quantity';
+      '$AUTH_BASE_URL/store/products?fields=*variants.calculated_price,+variants.inventory_quantity&region_id=reg_01JPH693TAM20TXZEJNBJ5QBV4';
 
   static var CREATE_ADDRESS = '$AUTH_BASE_URL/store/customers/me/addresses';
   static var UPDATE_ADDRESS = '$AUTH_BASE_URL/store/customers/me/addresses/';
