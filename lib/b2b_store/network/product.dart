@@ -123,6 +123,7 @@ class ProductService {
           },
         ),
       );
+      logger.w(response);
 
       return ProductCollections.fromJson(response);
     } catch (e) {
@@ -137,7 +138,7 @@ class ProductService {
   }) async {
     try {
       var response = await dio.get(
-        "https://staging-store.woloo.in/store/products?fields=*variants.calculated_price&collection_id=$id",
+        "https://staging-store.woloo.in/store/products?fields=*variants.calculated_price,+variants.inventory_quantity&collection_id=$id",
         options: Options(
           headers: {
             'Content-Type': 'application/json',
@@ -147,6 +148,7 @@ class ProductService {
           },
         ),
       );
+      logger.w(response);
       return ProductCollections.fromJson(response);
     } catch (e) {
       debugPrint("error $e");

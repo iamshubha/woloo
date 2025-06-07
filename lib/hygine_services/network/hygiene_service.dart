@@ -103,7 +103,7 @@ class HygieneServiceApi {
   Future<HygieneService> getAllHygieneData() async {
     try {
       var response = await dio.get(
-        "https://staging-store.woloo.in/store/products?fields=*variants.calculated_price&region_id=reg_01JPH693TAM20TXZEJNBJ5QBV4",
+        "https://staging-store.woloo.in/store/products?fields=*variants.calculated_price,+variants.inventory_quantity&region_id=reg_01JPH693TAM20TXZEJNBJ5QBV4",
         options: Options(
           headers: {
             'x-publishable-api-key':
