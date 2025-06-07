@@ -6,7 +6,6 @@ import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
-import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
@@ -78,12 +77,13 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
           decoration: BoxDecoration(
-              color: Colors.white,
+              color: const Color.fromARGB(255, 238, 238, 238),
               borderRadius: BorderRadius.vertical(top: Radius.circular(40.r))),
           child: Form(
             key: _formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              spacing: 2.h,
               children: [
                 SizedBox(height: 20.h),
                 Row(

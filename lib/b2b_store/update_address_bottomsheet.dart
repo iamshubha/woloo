@@ -81,13 +81,14 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
           return Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
             decoration: BoxDecoration(
-                color: Colors.white,
+                color: const Color.fromARGB(255, 238, 238, 238),
                 borderRadius:
                     BorderRadius.vertical(top: Radius.circular(40.r))),
             child: Form(
               key: _formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
+                spacing: 2.h,
                 children: [
                   SizedBox(height: 20.h),
                   Row(
