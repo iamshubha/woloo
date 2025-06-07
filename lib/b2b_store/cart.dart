@@ -14,7 +14,6 @@ import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/boxes/cart_item.dart';
-import 'package:woloo_smart_hygiene/widgets/cart_bottomsheet.dart';
 
 import '../widgets/review_order_bottomsheet.dart';
 
@@ -136,7 +135,7 @@ class _CartScreenState extends State<CartScreen> {
                             },
                           ),
                           const Divider(),
-                          RedeemPoints(
+                          const RedeemPoints(
                             points: "",
                           ),
                           const ApplyPromo(),
@@ -178,10 +177,12 @@ class LongLabeledButton extends StatelessWidget {
     required this.onTap,
     required this.label,
     this.color = AppColors.lightCyanColor,
+    this.height = 30,
   });
   final VoidCallback onTap;
   final String label;
   final Color color;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +190,7 @@ class LongLabeledButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        height: 30.h,
+        height: height.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6),
           color: color,

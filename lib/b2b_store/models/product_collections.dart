@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-import 'package:woloo_smart_hygiene/utils/logger.dart';
 
 class ProductCollections {
   List<Product> products;

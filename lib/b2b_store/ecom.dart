@@ -719,6 +719,44 @@ class _EcomScreenState extends State<EcomScreen> {
                                               // ))
 
                                               ),
+                                          Align(
+                                            alignment: Alignment.topCenter,
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 5.w,
+                                                  vertical: 2.h),
+                                              decoration: BoxDecoration(
+                                                color: AppColors.lightCyanColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                              ),
+                                              child: Text(
+                                                "Out of Stock",
+                                                style: TextStyle(
+                                                    fontSize: 6.sp,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: AppColors.black),
+                                              ),
+                                            ),
+                                          ),
+                                          // Positioned(
+                                          //   // left: 8,
+                                          //   // right: 8,
+                                          //   child: Container(
+                                          //     padding: EdgeInsets.symmetric(
+                                          //         horizontal: 5.w,
+                                          //         vertical: 2.h),
+                                          //     decoration: BoxDecoration(
+                                          //         color:
+                                          //             AppColors.lightCyanColor,
+                                          //         borderRadius:
+                                          //             BorderRadius.circular(4)),
+                                          //     child: Text(
+                                          //       "Out of Stock",
+                                          //       style: AppTextStyle.font10bold,
+                                          //     ),
+                                          //   ),
+                                          // )
                                         ],
                                       ),
                                     ),
