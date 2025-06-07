@@ -1,8 +1,5 @@
 import 'dart:convert';
 
-import 'package:equatable/equatable.dart';
-import 'package:woloo_smart_hygiene/utils/logger.dart';
-
 ProductCollections productCollectionsFromJson(String str) =>
     ProductCollections.fromJson(json.decode(str));
 
@@ -36,7 +33,7 @@ class ProductCollections {
   Map<String, dynamic> toJson() => {
         "products": products == null
             ? []
-            : List<dynamic>.from(products!.map((x) => x.toJson())),
+            : List<dynamic>.from(products.map((x) => x.toJson())),
         "count": count,
         "offset": offset,
         "limit": limit,
@@ -184,9 +181,7 @@ class Product {
         "images": images == null
             ? []
             : List<dynamic>.from(images!.map((x) => x.toJson())),
-        "variants": variants == null
-            ? []
-            : List<dynamic>.from(variants!.map((x) => x.toJson())),
+        "variants": List<dynamic>.from(variants.map((x) => x.toJson())),
         "average_rating": averageRating,
         "review_count": reviewCount,
       };

@@ -20,7 +20,6 @@ import 'package:woloo_smart_hygiene/extensions/string_extension.dart';
 import 'package:woloo_smart_hygiene/hygine_services/view/address_notifier.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
-import 'package:woloo_smart_hygiene/utils/color_map.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/cart_bottomsheet.dart';
@@ -54,7 +53,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Addresses? address;
   Tag? sizeVarient;
   Tag? colorVarient;
-
+  String? imageURL;
+  Map<String, List<Map<String, String>>> colorMap = {};
+  String selectedColor = '';
+  String selectedVarientId = '';
+  String calculatedAmount = '';
+  String originalAmount = '';
   @override
   initState() {
     super.initState();
@@ -64,6 +68,33 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     address = getAddress();
     _b2bStoreBloc.add(GetOrderReview(productId: widget.productData?.id ?? ''));
     isSelected = widget.isSelected;
+    // colorMap=widget.productData?.variants.map((e)=>MapEntry(e.options.first.value??"",[...widget.productData.variants.where((e)=>e)] ));
+    for (Variant i in widget.productData?.variants ?? []) {
+      final color = i.options?.first.value ?? "";
+      final List<Map<String, String>> list = [];
+      for (Variant j in widget.productData?.variants ?? []) {
+        if (color == j.options?.first.value) {
+          list.add({
+            j.options?.last.value ?? "": j.id ?? "",
+            "price": j.calculatedPrice?.calculatedAmount.toString() ?? "0",
+            "originalPrice": j.calculatedPrice?.originalAmount.toString() ?? "0"
+          });
+        }
+      }
+      colorMap[color] = list;
+    }
+    selectedVarientId = widget.productData?.variants[0].id ?? "";
+    calculatedAmount = widget
+            .productData?.variants[0].calculatedPrice?.calculatedAmount
+            .toString() ??
+        "0";
+    originalAmount = widget
+            .productData?.variants[0].calculatedPrice?.originalAmount
+            .toString() ??
+        "0";
+
+    logger.w(colorMap);
+    logger.w("Calculated Amount: $calculatedAmount");
   }
 
   Addresses? getAddress() {
@@ -93,14 +124,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           if (state is CartSuccess) {
             EasyLoading.dismiss();
             setState(() {
+              imageURL = widget.productData?.thumbnail ?? '';
               cartModel = state.cartData;
 
               final itemsData = cartModel?.cart.items;
               if (itemsData!.isEmpty) {
                 productCount = 0;
               } else {
+                // setState(() {});
                 for (var i in itemsData) {
-                  if (i.variantId == widget.productData?.variants![0].id) {
+                  if (i.variantId == widget.productData?.variants[0].id) {
                     productCount = i.quantity;
                   } else {
                     productCount = 0;
@@ -205,21 +238,22 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("80 ML",
-                                style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.bold)),
+                            if (false)
+                              Text("80 ML",
+                                  style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.bold)),
                             Row(
                               spacing: 8,
                               children: [
                                 Text(
-                                  "\u{20B9} ${widget.productData?.variants![0].calculatedPrice?.calculatedAmount.toString() ?? '0'}",
+                                  "\u{20B9} $calculatedAmount",
                                   style: TextStyle(
                                       fontSize: 20.sp,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  "MRP \u{20B9} ${widget.productData?.variants![0].calculatedPrice?.originalAmount.toString() ?? '0'}",
+                                  "MRP \u{20B9} $originalAmount",
                                   style: TextStyle(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.bold,
@@ -258,12 +292,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       spacing: 16.h,
                       children: [
                         ImageView(
-                          imageUrl: widget.productData?.thumbnail ?? '',
+                          imageUrl: imageURL ?? "",
                           onTap: () {
                             if (!isSelected) {
                               _b2bStoreBloc.add(AddToWishList(
                                 variantId:
-                                    widget.productData?.variants![0].id ?? '',
+                                    widget.productData?.variants[0].id ?? '',
                               ));
                             } else {
                               _b2bStoreBloc.add(RemoveWishList(
@@ -300,7 +334,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     customFilledIcon: Icons.star,
                                     customHalfFilledIcon: Icons.star_half,
                                     customEmptyIcon: Icons.star_border,
-                                    starSize: 20,
+                                    starSize: 24,
                                     animationDuration:
                                         const Duration(milliseconds: 300),
                                     animationCurve: Curves.easeInOut,
@@ -314,21 +348,22 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           fontSize: 14.sp,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                  Container(
-                                    height: 20,
-                                    width: 20,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                          color: AppColors.alertShadowColor),
-                                    ),
-                                    child: const Center(
-                                      child: Icon(
-                                        Icons.arrow_forward_ios_outlined,
-                                        size: 15,
+                                  if (false)
+                                    Container(
+                                      height: 20,
+                                      width: 20,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            color: AppColors.alertShadowColor),
+                                      ),
+                                      child: const Center(
+                                        child: Icon(
+                                          Icons.arrow_forward_ios_outlined,
+                                          size: 15,
+                                        ),
                                       ),
                                     ),
-                                  ),
                                   const Spacer(),
                                   if (false)
                                     CartAddRemove(
@@ -341,7 +376,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             cartModel?.cart.items.forEach((i) {
                                                 if (i.variantId ==
                                                     widget.productData
-                                                        ?.variants![0].id) {
+                                                        ?.variants[0].id) {
                                                   productCount += 1;
                                                   _b2bStoreBloc.add(
                                                       AddRemoveItemReq(
@@ -357,7 +392,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             : null;
                                         cartModel?.cart.items.forEach((i) {
                                           if (i.variantId ==
-                                              widget.productData?.variants![0]
+                                              widget.productData?.variants[0]
                                                   .id) {
                                             productCount -= 1;
                                             _b2bStoreBloc.add(AddRemoveItemReq(
@@ -369,6 +404,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     )
                                 ],
                               ),
+                              SizedBox(
+                                height: 10.h,
+                              ),
                               Text(
                                 widget.productData?.title ?? "",
                                 style: TextStyle(
@@ -379,7 +417,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 Row(
                                   children: [
                                     Text(
-                                      "Rs. ${widget.productData?.variants![0].calculatedPrice!.calculatedAmount.toString()}",
+                                      "Rs. ${widget.productData?.variants[0].calculatedPrice!.calculatedAmount.toString()}",
                                       // "Rs. ${productData.variants!.last.calculatedPrice!.calculatedAmount.toString()}",
 
                                       // "Rs. 799",
@@ -412,8 +450,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.bold),
                               ),
+                              SizedBox(
+                                height: 20.h,
+                              ),
                               const Divider(
                                 thickness: 2,
+                              ),
+                              SizedBox(
+                                height: 10.h,
                               ),
                               Text(
                                 "Description",
@@ -429,8 +473,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.bold),
                               ),
+                              SizedBox(
+                                height: 20.h,
+                              ),
                               const Divider(
                                 thickness: 2,
+                              ),
+                              SizedBox(
+                                height: 10.h,
                               ),
                               Row(
                                 children: [
@@ -463,99 +513,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         // const ProductTitleDesc(),
                         // const XColorsSelection(),
                         // (sizeList: sizeList),SizeWidget
-                        if (widget.productData?.options
-                                ?.any((e) => e.title == "Size") ??
-                            false)
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.w),
-                            child: VarientContainer(
-                              child: Column(
-                                // spacing: 10.h,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    height: 10.h,
-                                  ),
-                                  Text(
-                                    "Size",
-                                    style: TextStyle(
-                                        fontSize: 15.sp,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 2,
-                                        child: Divider(
-                                          thickness: 2,
-                                        ),
-                                      ),
-                                      Spacer(
-                                        flex: 4,
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 26,
-                                    child: ListView.separated(
-                                        itemCount: widget.productData?.options
-                                                ?.firstWhere(
-                                                    (e) => e.title == "Size")
-                                                .values
-                                                ?.length ??
-                                            0,
-                                        separatorBuilder: (context, index) {
-                                          return const SizedBox(
-                                            width: 5,
-                                          );
-                                        },
-                                        scrollDirection: Axis.horizontal,
-                                        itemBuilder: (c, i) {
-                                          final size = widget
-                                              .productData?.options
-                                              ?.firstWhere(
-                                                  (e) => e.title == "Size")
-                                              .values![i];
-                                          return InkWell(
-                                            onTap: () {
-                                              sizeVarient = size;
-                                              setState(() {});
-                                            },
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 10.w,
-                                                  vertical: 4.h),
-                                              decoration: BoxDecoration(
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.grey
-                                                          .withOpacity(0.3),
-                                                      spreadRadius: 1,
-                                                      blurRadius: 5,
-                                                      offset:
-                                                          const Offset(0, 3),
-                                                    ),
-                                                  ],
-                                                  color: sizeVarient == size
-                                                      ? AppColors.lightCyanColor
-                                                      : Colors.white),
-                                              child: Center(
-                                                child: Text(size?.value ?? ""),
-                                              ),
-                                            ),
-                                          );
-                                        }),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        if (widget.productData?.options
-                                ?.any((e) => e.title == "Color") ??
-                            false)
+                        if (colorMap.isNotEmpty &&
+                            colorMap.length > 1 &&
+                            colorMap.keys.first.isHex)
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 16.w),
                             child: VarientContainer(
@@ -588,12 +548,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   SizedBox(
                                     height: 26,
                                     child: ListView.separated(
-                                        itemCount: widget.productData?.options
-                                                ?.firstWhere(
-                                                    (e) => e.title == "Color")
-                                                .values
-                                                ?.length ??
-                                            0,
+                                        itemCount: colorMap.keys.length,
                                         separatorBuilder: (context, index) {
                                           return const SizedBox(
                                             width: 5,
@@ -601,14 +556,26 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         },
                                         scrollDirection: Axis.horizontal,
                                         itemBuilder: (c, i) {
-                                          final size = widget
-                                              .productData?.options
-                                              ?.firstWhere(
-                                                  (e) => e.title == "Color")
-                                              .values![i];
+                                          final color =
+                                              colorMap.keys.toList()[i];
                                           return InkWell(
                                             onTap: () {
-                                              colorVarient = size;
+                                              // colorVarient = size;
+                                              // // final image = widget
+                                              // //     .productData?.images
+                                              // //     ?.firstWhere((e) => e.url
+                                              // //         ?.contains(size?.value
+                                              // //             ?.toLowerCase()));
+                                              selectedColor = color;
+                                              final image = widget
+                                                  .productData?.images
+                                                  ?.firstWhere((e) =>
+                                                      e.url?.contains(
+                                                          selectedColor
+                                                              .toLowerCase()) ??
+                                                      false);
+                                              imageURL = image?.url;
+
                                               setState(() {});
                                             },
                                             child: Container(
@@ -625,19 +592,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                     offset: const Offset(0, 3),
                                                   ),
                                                 ],
-                                                color: getColorFromString(
-                                                    size?.value ?? "white"),
+                                                color: color.toColor,
                                                 shape: BoxShape.circle,
                                               ),
-                                              child: colorVarient == size
-                                                  ? Icon(
+                                              child: selectedColor == color
+                                                  ? const Icon(
                                                       Icons.check,
                                                       size: 10,
-                                                      color: size?.value
-                                                                  ?.toLowerCase() ==
-                                                              "black"
-                                                          ? Colors.white
-                                                          : Colors.black,
+                                                      color: Colors.black,
                                                     )
                                                   : null,
                                             ),
@@ -651,6 +613,103 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ),
                             ),
                           ),
+
+                        if (selectedColor.isNotEmpty)
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.w),
+                            child: VarientContainer(
+                              child: Column(
+                                // spacing: 10.h,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: 10.h,
+                                  ),
+                                  Text(
+                                    "Size",
+                                    style: TextStyle(
+                                        fontSize: 15.sp,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: Divider(
+                                          thickness: 2,
+                                        ),
+                                      ),
+                                      Spacer(
+                                        flex: 4,
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 26,
+                                    child: ListView.separated(
+                                        itemCount: colorMap
+                                                .containsKey(selectedColor)
+                                            ? colorMap[selectedColor]?.length ??
+                                                0
+                                            : colorMap.length,
+                                        separatorBuilder: (context, index) {
+                                          return const SizedBox(
+                                            width: 5,
+                                          );
+                                        },
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (c, i) {
+                                          final size =
+                                              colorMap[selectedColor]?[i];
+                                          return InkWell(
+                                            onTap: () {
+                                              selectedVarientId =
+                                                  size?.entries.first.value ??
+                                                      "";
+                                              calculatedAmount =
+                                                  size!['price'] ?? "";
+                                              originalAmount =
+                                                  size['originalPrice'] ?? "";
+                                              // sizeVarient = size;
+                                              setState(() {});
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 10.w,
+                                                  vertical: 4.h),
+                                              decoration: BoxDecoration(
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey
+                                                        .withOpacity(0.3),
+                                                    spreadRadius: 1,
+                                                    blurRadius: 5,
+                                                    offset: const Offset(0, 3),
+                                                  ),
+                                                ],
+                                                color: selectedVarientId ==
+                                                        size?.entries.first
+                                                            .value
+                                                    ? AppColors.lightCyanColor
+                                                    : Colors.white,
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                    size?.entries.first.key ??
+                                                        ""),
+                                              ),
+                                            ),
+                                          );
+                                        }),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
                         Padding(
                           // padding: const EdgeInsets.all(8.0),
                           padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -844,8 +903,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   addToCart(BuildContext context) async {
     _shouldShowCartBottomSheetAfterAdd = true;
     try {
-      _b2bStoreBloc.add(AddToCart(
-          quantity: 1, variant_id: widget.productData?.variants![0].id));
+      _b2bStoreBloc.add(AddToCart(quantity: 1, variant_id: selectedVarientId));
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -1454,7 +1512,6 @@ class ImageView extends StatelessWidget {
       height: 382,
       width: double.infinity,
       decoration: const BoxDecoration(
-        color: Colors.red,
         // borderRadius: BorderRadius.circular(47),
         boxShadow: [
           BoxShadow(
@@ -1493,31 +1550,35 @@ class ImageView extends StatelessWidget {
                 onTap: () {
                   Navigator.pop(context, 'refresh'); // Pop the image view
                 },
-                child: Material(
-                  borderRadius: BorderRadius.circular(4),
-                  elevation: 1,
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  decoration: BoxDecoration(
                       color: AppColors.lightCyanColor,
                       borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.arrow_back_ios,
-                          size: 15,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade400,
+                          spreadRadius: 1,
+                          blurRadius: 10,
+                          offset: const Offset(0, 3),
                         ),
-                        Text(
-                          "Back",
-                          style: AppTextStyle.font12bold
-                              .copyWith(color: AppColors.alertTitleColor),
-                        ),
-                      ],
-                    ), // Padding around the text
-                  ),
+                      ]),
+
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.arrow_back_ios,
+                        size: 15,
+                      ),
+                      Text(
+                        "Back",
+                        style: AppTextStyle.font12bold
+                            .copyWith(color: AppColors.alertTitleColor),
+                      ),
+                    ],
+                  ), // Padding around the text
                 ),
               ))
         ],
