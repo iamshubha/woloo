@@ -94,6 +94,17 @@ class _EcomScreenState extends State<EcomScreen> {
             EasyLoading.dismiss();
             EasyLoading.showError(state.error);
           }
+          if (state is RestockSubscriptionsLoading) {
+            EasyLoading.show(status: state.message);
+          }
+          if (state is RestockSubscriptionsSuccess) {
+            EasyLoading.dismiss();
+            EasyLoading.showSuccess("Notification set successfully");
+          }
+          if (state is RestockSubscriptionsError) {
+            EasyLoading.dismiss();
+            EasyLoading.showError(state.error);
+          }
         },
         builder: (context, snapshot) {
           return Scaffold(
@@ -434,14 +445,14 @@ class _EcomScreenState extends State<EcomScreen> {
                                                         Curves.easeInOut,
                                                     readOnly: false,
                                                   ),
-                                                  if (product.reviewCount !=
-                                                          null &&
-                                                      product.reviewCount != 0)
-                                                    Text(
-                                                      "(${product.reviewCount ?? 0})",
-                                                      style: AppTextStyle
-                                                          .font10bold,
-                                                    )
+                                                  // if (product.reviewCount !=
+                                                  //         null &&
+                                                  //     product.reviewCount != 0)
+                                                  Text(
+                                                    "(${product.reviewCount ?? 0})",
+                                                    style:
+                                                        AppTextStyle.font10bold,
+                                                  )
                                                 ],
                                               ),
 
@@ -556,10 +567,27 @@ class _EcomScreenState extends State<EcomScreen> {
                                                                 .first
                                                                 .inventoryQuantity ==
                                                             0
-                                                        ? Text(
-                                                            "Notify",
-                                                            style: AppTextStyle
-                                                                .font10bold,
+                                                        ? InkWell(
+                                                            onTap: () {
+                                                              _b2bStoreBloc.add(
+                                                                RestockSubscriptionsEvent(
+                                                                  phoneNumber:
+                                                                      selectedAddress
+                                                                              .value
+                                                                              .phone ??
+                                                                          "",
+                                                                  variantId: product
+                                                                      .variants[
+                                                                          0]
+                                                                      .id!,
+                                                                ),
+                                                              );
+                                                            },
+                                                            child: Text(
+                                                              "Notify",
+                                                              style: AppTextStyle
+                                                                  .font10bold,
+                                                            ),
                                                           )
                                                         : productCount == 0
                                                             // AddButtonMode.remove
@@ -704,39 +732,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                                               ),
                                                   ),
                                                 ),
-                                              )
-                                              // AddAnimatedButton(
-                                              //   onAdd: (v) {
-                                              //     productCount == 0
-                                              //         ? addToCart(context)
-                                              //         :
-                                              //         // To add value
-                                              //         cartModel?.cart.items.forEach((i) {
-                                              //             if (i.variantId ==
-                                              //                 widget.productData?.variants![0].id) {
-                                              //               productCount += 1;
-                                              //               _b2bStoreBloc.add(AddRemoveItemReq(
-                                              //                   count: productCount, itemId: i.id));
-                                              //             }
-                                              //           });
-                                              //   },
-                                              //   onRemove: () {
-                                              //     productCount == 0
-                                              //         ? EasyLoading.showError(
-                                              //             "Product count cannot be less than 0")
-                                              //         : null;
-                                              //     cartModel?.cart.items.forEach((i) {
-                                              //       if (i.variantId == widget.productData?.variants![0].id) {
-                                              //         productCount -= 1;
-                                              //         _b2bStoreBloc.add(
-                                              //             AddRemoveItemReq(count: productCount, itemId: i.id));
-                                              //       }
-                                              //     });
-                                              //   },
-                                              //   onTap: () {},
-                                              // ))
-
-                                              ),
+                                              )),
 
                                           product.variants.first
                                                       .inventoryQuantity ==
@@ -934,348 +930,6 @@ class BrandsGrid extends StatelessWidget {
     );
   }
 }
-
-// class GridItem extends StatefulWidget {
-//   final Product products;
-//   final cart.Cart? cartModel;
-//   // final String imageUrl;
-//   final String productIdforWishList;
-//   final bool isSelected;
-//   final B2bStoreBloc b2bStoreBloc;
-//   // final VoidCallback? onTap;
-//   final int productCount;
-//   const GridItem(
-//       {super.key,
-//       required this.products,
-//       this.isSelected = false,
-//       // this.onTap,
-//       this.productIdforWishList = '',
-//       required this.cartModel,
-//       required this.b2bStoreBloc,
-//       required this.productCount
-//       // required this.imageUrl,
-//       });
-
-//   @override
-//   State<GridItem> createState() => _GridItemState();
-// }
-
-// class _GridItemState extends State<GridItem> {
-//   // final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
-//   AddButtonMode mode = AddButtonMode.remove;
-//   int productCount = 1;
-
-//   @override
-//   void initState() {
-//     productCount = widget.productCount;
-//     super.initState();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       // padding: EdgeInsets.symmetric(horizontal: 10.w),
-//       child: Stack(
-//         children: [
-//           Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             mainAxisSize: MainAxisSize.min,
-//             children: [
-//               Container(
-//                 height: 80.h,
-//                 width: 80.h,
-//                 decoration: BoxDecoration(
-//                     color: AppColors.themeBackground,
-//                     borderRadius: BorderRadius.circular(12.r),
-//                     boxShadow: const [
-//                       BoxShadow(
-//                         color: AppColors.greyShadowColor,
-//                         blurRadius: 5.0,
-//                         spreadRadius: 0.5,
-//                         offset: Offset(0, 2),
-//                       ),
-//                       BoxShadow(
-//                         color: AppColors.greyShadowColor,
-//                         blurRadius: 5.0,
-//                         spreadRadius: 0.5,
-//                         offset: Offset(0, -1),
-//                       ),
-//                     ]),
-//                 child: Image.network(
-//                   widget.products.thumbnail ?? '',
-//                   fit: BoxFit.contain,
-//                 ),
-//               ),
-//               SizedBox(
-//                 height: 5.h,
-//               ),
-//               Container(
-//                 padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-//                 decoration: BoxDecoration(
-//                   borderRadius: BorderRadius.circular(3.r),
-//                   color: AppColors.lightCyanColor,
-//                 ),
-//                 child: Text(
-//                   "80ml",
-//                   style: AppTextStyle.font10bold,
-//                 ),
-//               ),
-//               SizedBox(
-//                 height: 5.h,
-//               ),
-//               Text(
-//                 widget.products.title ?? "",
-//                 style: TextStyle(fontSize: 8.sp, fontWeight: FontWeight.bold),
-//               ),
-//               // Text(
-//               //   products.subtitle ?? "",
-//               //   style: TextStyle(
-//               //     fontSize: 8.sp,
-//               //     color: AppColors.textgreyColor,
-//               //     fontWeight: FontWeight.bold,
-//               //   ),
-//               // ),
-//               Row(
-//                 children: [
-//                   AnimatedRatingStars(
-//                     initialRating: 3.5,
-//                     minRating: 0.0,
-//                     maxRating: 5.0,
-//                     filledColor: Colors.amber,
-//                     emptyColor: Colors.grey,
-//                     filledIcon: Icons.star,
-//                     halfFilledIcon: Icons.star_half,
-//                     emptyIcon: Icons.star_border,
-//                     onChanged: (a) {},
-//                     displayRatingValue: true,
-//                     interactiveTooltips: true,
-//                     customFilledIcon: Icons.star,
-//                     customHalfFilledIcon: Icons.star_half,
-//                     customEmptyIcon: Icons.star_border,
-//                     starSize: 10,
-//                     animationDuration: const Duration(milliseconds: 300),
-//                     animationCurve: Curves.easeInOut,
-//                     readOnly: false,
-//                   ),
-//                   Text(
-//                     "(1288)",
-//                     style: AppTextStyle.font10bold,
-//                   )
-//                 ],
-//               ),
-
-//               Row(
-//                 spacing: 5.w,
-//                 children: [
-//                   Text(
-//                     "\u{20B9}${widget.products.variants!.last.calculatedPrice!.calculatedAmount.toString()}",
-//                     style: TextStyle(
-//                       fontSize: 10.sp,
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                   ),
-//                   Text(
-//                     "MRP 1299",
-//                     style: TextStyle(
-//                         decoration: TextDecoration.lineThrough,
-//                         fontSize: 10.sp,
-//                         fontWeight: FontWeight.bold,
-//                         color: AppColors.textgreyColor),
-//                   ),
-//                 ],
-//               )
-//             ],
-//           ),
-//           Positioned(
-//               right: 0,
-//               top: 80,
-//               child: InkWell(
-//                 onTap: () async {
-//                   // if (widget.isSelected) {
-//                   //   widget.onRemove?.call();
-//                   // } else {
-//                   //   widget.onAdd?.call();
-//                   // }
-//                   // setState(() {
-//                   //   mode = AddButtonMode.add;
-//                   // });
-//                   // await Future.delayed(const Duration(milliseconds: 500), () {
-//                   //   setState(() {
-//                   //     mode = AddButtonMode.count;
-//                   //   });
-//                   // });
-
-//                   // if (widget.onTap != null) {
-//                   //   widget.onTap!();
-//                   // }
-//                   //Add to cart 1st time
-//                   widget.b2bStoreBloc.add(AddToCart(
-//                       quantity: 1,
-//                       variant_id: widget.products.variants![0].id));
-//                 },
-//                 borderRadius: BorderRadius.circular(3.r),
-//                 child: AnimatedContainer(
-//                   padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-//                   decoration: BoxDecoration(
-//                       border:
-//                           Border.all(color: AppColors.buttonColor, width: 1.5),
-//                       color: mode == AddButtonMode.remove
-//                           ? AppColors.themeBackground
-//                           : AppColors.buttonYellowColor,
-//                       borderRadius: BorderRadius.circular(3.r)),
-//                   duration: const Duration(milliseconds: 500),
-//                   child: Center(
-//                     child: mode == AddButtonMode.remove
-//                         ? Text(
-//                             "Add",
-//                             style: AppTextStyle.font10bold,
-//                           )
-//                         : mode == AddButtonMode.add
-//                             ? Text(
-//                                 "Added",
-//                                 style: AppTextStyle.font10bold,
-//                               )
-//                             : Row(
-//                                 spacing: 10,
-//                                 children: [
-//                                   InkWell(
-//                                     onTap: () {
-//                                       if (productCount == 0) return;
-//                                       productCount -= 1;
-//                                       if (productCount == 0) {
-//                                         productCount = 1;
-//                                         mode = AddButtonMode.remove;
-//                                         // if (widget.onRemove != null) {
-//                                         //   widget.onRemove!();
-//                                         // }
-//                                       }
-
-//                                       setState(() {});
-//                                     },
-//                                     child: Container(
-//                                       decoration: BoxDecoration(
-//                                           borderRadius:
-//                                               BorderRadius.circular(4),
-//                                           border: Border.all(
-//                                               width: 1,
-//                                               color: AppColors.black)),
-//                                       padding: const EdgeInsets.symmetric(
-//                                           vertical: 2, horizontal: 2),
-//                                       child: const Icon(
-//                                         Icons.remove,
-//                                         size: 8,
-//                                       ),
-//                                     ),
-//                                   ),
-//                                   Text(
-//                                     productCount.toString(),
-//                                     style: AppTextStyle.font10,
-//                                   ),
-//                                   InkWell(
-//                                     onTap: () {
-//                                       // productCount += 1;
-//                                       // setState(() {});
-//                                       // if (widget.onAdd != null) {
-//                                       //   widget.onAdd!();
-//                                       // }
-//                                       //  productCount == 0
-//                                       //   ? addToCart(context)
-//                                       //   :
-//                                       // To add value
-//                                       widget.cartModel?.items.forEach((i) {
-//                                         if (i.variantId ==
-//                                             widget.products.variants![0].id) {
-//                                           productCount += 1;
-//                                           widget.b2bStoreBloc.add(
-//                                               AddRemoveItemReq(
-//                                                   count: productCount,
-//                                                   itemId: i.id));
-//                                         }
-//                                       });
-//                                     },
-//                                     child: Container(
-//                                       decoration: BoxDecoration(
-//                                           borderRadius:
-//                                               BorderRadius.circular(4),
-//                                           border: Border.all(
-//                                               width: 1,
-//                                               color: AppColors.black)),
-//                                       padding: const EdgeInsets.symmetric(
-//                                           vertical: 2, horizontal: 2),
-//                                       child: const Icon(
-//                                         Icons.add,
-//                                         size: 10,
-//                                       ),
-//                                     ),
-//                                   )
-//                                 ],
-//                               ),
-//                   ),
-//                 ),
-//               )
-//               // AddAnimatedButton(
-//               //   onAdd: (v) {
-//               //     productCount == 0
-//               //         ? addToCart(context)
-//               //         :
-//               //         // To add value
-//               //         cartModel?.cart.items.forEach((i) {
-//               //             if (i.variantId ==
-//               //                 widget.productData?.variants![0].id) {
-//               //               productCount += 1;
-//               //               _b2bStoreBloc.add(AddRemoveItemReq(
-//               //                   count: productCount, itemId: i.id));
-//               //             }
-//               //           });
-//               //   },
-//               //   onRemove: () {
-//               //     productCount == 0
-//               //         ? EasyLoading.showError(
-//               //             "Product count cannot be less than 0")
-//               //         : null;
-//               //     cartModel?.cart.items.forEach((i) {
-//               //       if (i.variantId == widget.productData?.variants![0].id) {
-//               //         productCount -= 1;
-//               //         _b2bStoreBloc.add(
-//               //             AddRemoveItemReq(count: productCount, itemId: i.id));
-//               //       }
-//               //     });
-//               //   },
-//               //   onTap: () {},
-//               // ))
-
-//               ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-// class AddAnimatedButton extends StatefulWidget {
-//   const AddAnimatedButton(
-//       {super.key,
-//       this.onTap,
-//       this.onAdd,
-//       this.onRemove,
-//       required this.productCount});
-
-//   final VoidCallback? onTap;
-//   final VoidCallback? onAdd;
-//   final VoidCallback? onRemove;
-//   final int productCount; //= 1;
-
-//   @override
-//   State<AddAnimatedButton> createState() => _AddAnimatedButtonState();
-// }
-
-// class _AddAnimatedButtonState extends State<AddAnimatedButton> {
-//   int productCount = 1;
-//   AddButtonMode mode = AddButtonMode.remove;
-//   @override
-//   Widget build(BuildContext context) {
-//     return
-//  }
-// }
 
 class AddToCartButton extends StatelessWidget {
   const AddToCartButton({

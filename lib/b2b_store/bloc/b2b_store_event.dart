@@ -254,3 +254,16 @@ class GetOrderReview extends B2BStoreEvent {
   @override
   List<Object?> get props => [productId];
 }
+
+class RestockSubscriptionsEvent extends B2BStoreEvent {
+  final String phoneNumber;
+  final String variantId;
+
+  const RestockSubscriptionsEvent({
+    required this.phoneNumber,
+    required this.variantId,
+  });
+
+  @override
+  List<Object?> get props => [phoneNumber, variantId];
+}

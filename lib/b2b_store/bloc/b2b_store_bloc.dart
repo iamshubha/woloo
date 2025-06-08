@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -69,6 +70,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<RemoveWishList>(_removeFromWishlist);
     on<GetOrderReview>(getProductReviews);
     on<Refresh>(_refresh);
+    on<RestockSubscriptionsEvent>(restockSubscriptions);
   }
 
   FutureOr<void> _emailPassRegister(
@@ -670,6 +672,27 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       emit(CustomerReviewSuccess(customerReview: response));
     } catch (e) {
       logger.e("Error in getProductReviews: $e");
+    }
+  }
+
+  FutureOr<void> restockSubscriptions(
+    RestockSubscriptionsEvent event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const RestockSubscriptionsLoading(
+          message: 'Restocking subscriptions...'));
+      final response = await _productService.restockSubscriptions(
+          token: box.read('login_jwt'),
+          variantId: event.variantId,
+          phoneNumber: event.phoneNumber);
+      emit(RestockSubscriptionsSuccess(
+        restockSubscriptions: response,
+      ));
+      logger.w("Restock Subscriptions Response: $response");
+    } catch (e) {
+      emit(RestockSubscriptionsError(error: e.toString()));
+      logger.e("Error in restockSubscriptions: $e");
     }
   }
 }

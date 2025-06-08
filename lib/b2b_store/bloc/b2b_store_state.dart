@@ -5,6 +5,7 @@ import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/customer_reviews.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/order.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/restock_subscription.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/wishlist.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/model/host_dashboard_screen.dart';
 
@@ -235,4 +236,28 @@ class CustomerReviewSuccess extends B2BStoreState {
   const CustomerReviewSuccess({required this.customerReview});
   @override
   List<Object> get props => [customerReview];
+}
+
+class RestockSubscriptionsSuccess extends B2BStoreState {
+  final RestockSubscriptions restockSubscriptions;
+  const RestockSubscriptionsSuccess({required this.restockSubscriptions});
+
+  @override
+  List<Object> get props => [restockSubscriptions];
+}
+
+class RestockSubscriptionsLoading extends B2BStoreState {
+  final String message;
+  const RestockSubscriptionsLoading({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+class RestockSubscriptionsError extends B2BStoreState {
+  final String error;
+  const RestockSubscriptionsError({required this.error});
+
+  @override
+  List<Object> get props => [error];
 }

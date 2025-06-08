@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -8,6 +10,7 @@ import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/custom_widget/start_rating.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
+import 'package:woloo_smart_hygiene/hygine_services/view/address_notifier.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
@@ -40,6 +43,17 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
     return BlocConsumer(
         bloc: _b2bStoreBloc,
         listener: (context, state) {
+          if (state is RestockSubscriptionsLoading) {
+            EasyLoading.show(status: state.message);
+          }
+          if (state is RestockSubscriptionsSuccess) {
+            EasyLoading.dismiss();
+            EasyLoading.showSuccess("Notification set successfully");
+          }
+          if (state is RestockSubscriptionsError) {
+            EasyLoading.dismiss();
+            EasyLoading.showError(state.error);
+          }
           // print("dssa $state");
           if (state is B2BStoreLoading) {
             EasyLoading.show(status: state.message);
@@ -165,7 +179,7 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
                                 int productCount = 0;
                                 _b2bStoreHomePage?.cartData.cart.items
                                     .forEach((i) {
-                                  if (i.variantId == product.variants![0].id) {
+                                  if (i.variantId == product.variants[0].id) {
                                     productCount = i.quantity;
                                   }
                                 });
@@ -309,14 +323,14 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
                                                       Curves.easeInOut,
                                                   readOnly: false,
                                                 ),
-                                                if (product.reviewCount !=
-                                                        null &&
-                                                    product.reviewCount != 0)
-                                                  Text(
-                                                    "(${product.reviewCount ?? 0})",
-                                                    style:
-                                                        AppTextStyle.font10bold,
-                                                  )
+                                                // if (product.reviewCount !=
+                                                //         null &&
+                                                //     product.reviewCount != 0)
+                                                Text(
+                                                  "(${product.reviewCount ?? 0})",
+                                                  style:
+                                                      AppTextStyle.font10bold,
+                                                )
                                               ],
                                             ),
 
@@ -324,17 +338,22 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
                                               spacing: 5.w,
                                               children: [
                                                 Text(
-                                                  "\u{20B9}${product.variants!.last.calculatedPrice!.calculatedAmount.toString()}",
+                                                  "\u{20B9}${product.variants.first.calculatedPrice!.calculatedAmount.toString()}",
                                                   style: TextStyle(
                                                     fontSize: 10.sp,
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
+                                                //TODO: Check Price Logic -- Abar asibo fire
                                                 Text(
-                                                  "MRP 1299",
+                                                  "MRP ${product.variants.first.calculatedPrice!.originalAmount.toString()}",
                                                   style: TextStyle(
-                                                      decoration: TextDecoration
-                                                          .lineThrough,
+                                                      decoration:
+                                                          product.discountable ??
+                                                                  false
+                                                              ? TextDecoration
+                                                                  .lineThrough
+                                                              : null,
                                                       fontSize: 10.sp,
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -345,15 +364,36 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
                                             )
                                           ],
                                         ),
+                                        if (product.variants.first
+                                                .inventoryQuantity ==
+                                            0)
+                                          Positioned.fill(
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(12.r),
+                                              child: BackdropFilter(
+                                                filter: ImageFilter.blur(
+                                                    sigmaX: 0.3, sigmaY: 0.3),
+                                                child: Container(
+                                                  color: Colors.white
+                                                      .withOpacity(0.4),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                         Positioned(
                                             right: 0,
                                             top: 80,
                                             child: InkWell(
                                               onTap: () async {
+                                                if (product.variants.first
+                                                        .inventoryQuantity ==
+                                                    0) return;
+
                                                 _b2bStoreBloc.add(AddToCart(
                                                     quantity: 1,
                                                     variant_id: product
-                                                        .variants![0].id));
+                                                        .variants[0].id));
                                                 // if (widget.isSelected) {
                                                 //   widget.onRemove?.call();
                                                 // } else {
@@ -398,194 +438,233 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
                                                 duration: const Duration(
                                                     milliseconds: 500),
                                                 child: Center(
-                                                  child: productCount == 0
-                                                      // AddButtonMode.remove
-                                                      ? Text(
-                                                          "Add",
-                                                          style: AppTextStyle
-                                                              .font10bold,
+                                                  child: product.variants.first
+                                                              .inventoryQuantity ==
+                                                          0
+                                                      ? InkWell(
+                                                          onTap: () {
+                                                            _b2bStoreBloc.add(
+                                                              RestockSubscriptionsEvent(
+                                                                phoneNumber:
+                                                                    selectedAddress
+                                                                            .value
+                                                                            .phone ??
+                                                                        "",
+                                                                variantId: product
+                                                                    .variants[0]
+                                                                    .id!,
+                                                              ),
+                                                            );
+                                                          },
+                                                          child: Text(
+                                                            "Notify",
+                                                            style: AppTextStyle
+                                                                .font10bold,
+                                                          ),
                                                         )
-                                                      // :
-                                                      //  mode ==
-                                                      //         AddButtonMode
-                                                      //             .add
-                                                      //     ? Text(
-                                                      //         "Added",
-                                                      //         style: AppTextStyle
-                                                      //             .font10bold,
-                                                      //       )
-                                                      : Row(
-                                                          spacing: 10,
-                                                          children: [
-                                                            InkWell(
-                                                              onTap: () {
-                                                                if (productCount ==
-                                                                    0) return;
-
-                                                                // productCount -=
-                                                                //     1;
-                                                                // if (productCount ==
-                                                                //     0) {
-                                                                //   productCount =
-                                                                //       1;
-                                                                //   // mode = AddButtonMode
-                                                                //   //     .remove;
-                                                                //   // if (widget.onRemove != null) {
-                                                                //   //   widget.onRemove!();
-                                                                //   // }
-                                                                // }
-
-                                                                // setState(
-                                                                //     () {});
-                                                                productCount ==
-                                                                        0
-                                                                    ? EasyLoading
-                                                                        .showError(
-                                                                            "Product count cannot be less than 0")
-                                                                    : null;
-                                                                _b2bStoreHomePage
-                                                                    ?.cartData
-                                                                    .cart
-                                                                    .items
-                                                                    .forEach(
-                                                                        (i) {
-                                                                  if (i.variantId ==
-                                                                      product
-                                                                          .variants![
-                                                                              0]
-                                                                          .id) {
-                                                                    productCount -=
-                                                                        1;
-                                                                    _b2bStoreBloc.add(AddRemoveItemReq(
-                                                                        count:
-                                                                            productCount,
-                                                                        itemId:
-                                                                            i.id));
-                                                                  }
-                                                                });
-                                                              },
-                                                              child: Container(
-                                                                decoration: BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                                4),
-                                                                    border: Border.all(
-                                                                        width:
-                                                                            1,
-                                                                        color: AppColors
-                                                                            .black)),
-                                                                padding: const EdgeInsets
-                                                                    .symmetric(
-                                                                    vertical: 2,
-                                                                    horizontal:
-                                                                        2),
-                                                                child:
-                                                                    const Icon(
-                                                                  Icons.remove,
-                                                                  size: 8,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Text(
-                                                              productCount
-                                                                  .toString(),
-                                                              style:
-                                                                  AppTextStyle
-                                                                      .font10,
-                                                            ),
-                                                            InkWell(
-                                                              onTap: () {
-                                                                // productCount += 1;
-                                                                // setState(() {});
-                                                                // if (widget.onAdd != null) {
-                                                                //   widget.onAdd!();
-                                                                // }
-                                                                //  productCount == 0
-                                                                //   ? addToCart(context)
-                                                                //   :
-                                                                // To add value
-                                                                _b2bStoreHomePage
-                                                                    ?.cartData
-                                                                    .cart
-                                                                    .items
-                                                                    .forEach(
-                                                                        (i) {
-                                                                  if (i.variantId ==
-                                                                      product
-                                                                          .variants![
-                                                                              0]
-                                                                          .id) {
-                                                                    productCount +=
-                                                                        1;
-                                                                    _b2bStoreBloc.add(AddRemoveItemReq(
-                                                                        count:
-                                                                            productCount,
-                                                                        itemId:
-                                                                            i.id));
-                                                                  }
-                                                                });
-                                                              },
-                                                              child: Container(
-                                                                decoration: BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                                4),
-                                                                    border: Border.all(
-                                                                        width:
-                                                                            1,
-                                                                        color: AppColors
-                                                                            .black)),
-                                                                padding: const EdgeInsets
-                                                                    .symmetric(
-                                                                    vertical: 2,
-                                                                    horizontal:
-                                                                        2),
-                                                                child:
-                                                                    const Icon(
-                                                                  Icons.add,
-                                                                  size: 10,
-                                                                ),
-                                                              ),
+                                                      : productCount == 0
+                                                          // AddButtonMode.remove
+                                                          ? Text(
+                                                              "Add",
+                                                              style: AppTextStyle
+                                                                  .font10bold,
                                                             )
-                                                          ],
-                                                        ),
+                                                          // :
+                                                          //  mode ==
+                                                          //         AddButtonMode
+                                                          //             .add
+                                                          //     ? Text(
+                                                          //         "Added",
+                                                          //         style: AppTextStyle
+                                                          //             .font10bold,
+                                                          //       )
+                                                          : Row(
+                                                              spacing: 10,
+                                                              children: [
+                                                                InkWell(
+                                                                  onTap: () {
+                                                                    if (productCount ==
+                                                                        0)
+                                                                      return;
+
+                                                                    // productCount -=
+                                                                    //     1;
+                                                                    // if (productCount ==
+                                                                    //     0) {
+                                                                    //   productCount =
+                                                                    //       1;
+                                                                    //   // mode = AddButtonMode
+                                                                    //   //     .remove;
+                                                                    //   // if (widget.onRemove != null) {
+                                                                    //   //   widget.onRemove!();
+                                                                    //   // }
+                                                                    // }
+
+                                                                    // setState(
+                                                                    //     () {});
+                                                                    productCount ==
+                                                                            0
+                                                                        ? EasyLoading.showError(
+                                                                            "Product count cannot be less than 0")
+                                                                        : null;
+                                                                    _b2bStoreHomePage
+                                                                        ?.cartData
+                                                                        .cart
+                                                                        .items
+                                                                        .forEach(
+                                                                            (i) {
+                                                                      if (i.variantId ==
+                                                                          product
+                                                                              .variants[0]
+                                                                              .id) {
+                                                                        productCount -=
+                                                                            1;
+                                                                        _b2bStoreBloc.add(AddRemoveItemReq(
+                                                                            count:
+                                                                                productCount,
+                                                                            itemId:
+                                                                                i.id));
+                                                                      }
+                                                                    });
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                                4),
+                                                                        border: Border.all(
+                                                                            width:
+                                                                                1,
+                                                                            color:
+                                                                                AppColors.black)),
+                                                                    padding: const EdgeInsets
+                                                                        .symmetric(
+                                                                        vertical:
+                                                                            2,
+                                                                        horizontal:
+                                                                            2),
+                                                                    child:
+                                                                        const Icon(
+                                                                      Icons
+                                                                          .remove,
+                                                                      size: 8,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  productCount
+                                                                      .toString(),
+                                                                  style:
+                                                                      AppTextStyle
+                                                                          .font10,
+                                                                ),
+                                                                InkWell(
+                                                                  onTap: () {
+                                                                    // productCount += 1;
+                                                                    // setState(() {});
+                                                                    // if (widget.onAdd != null) {
+                                                                    //   widget.onAdd!();
+                                                                    // }
+                                                                    //  productCount == 0
+                                                                    //   ? addToCart(context)
+                                                                    //   :
+                                                                    // To add value
+                                                                    _b2bStoreHomePage
+                                                                        ?.cartData
+                                                                        .cart
+                                                                        .items
+                                                                        .forEach(
+                                                                            (i) {
+                                                                      if (i.variantId ==
+                                                                          product
+                                                                              .variants[0]
+                                                                              .id) {
+                                                                        productCount +=
+                                                                            1;
+                                                                        _b2bStoreBloc.add(AddRemoveItemReq(
+                                                                            count:
+                                                                                productCount,
+                                                                            itemId:
+                                                                                i.id));
+                                                                      }
+                                                                    });
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                                4),
+                                                                        border: Border.all(
+                                                                            width:
+                                                                                1,
+                                                                            color:
+                                                                                AppColors.black)),
+                                                                    padding: const EdgeInsets
+                                                                        .symmetric(
+                                                                        vertical:
+                                                                            2,
+                                                                        horizontal:
+                                                                            2),
+                                                                    child:
+                                                                        const Icon(
+                                                                      Icons.add,
+                                                                      size: 10,
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
                                                 ),
                                               ),
-                                            )
-                                            // AddAnimatedButton(
-                                            //   onAdd: (v) {
-                                            //     productCount == 0
-                                            //         ? addToCart(context)
-                                            //         :
-                                            //         // To add value
-                                            //         cartModel?.cart.items.forEach((i) {
-                                            //             if (i.variantId ==
-                                            //                 widget.productData?.variants![0].id) {
-                                            //               productCount += 1;
-                                            //               _b2bStoreBloc.add(AddRemoveItemReq(
-                                            //                   count: productCount, itemId: i.id));
-                                            //             }
-                                            //           });
-                                            //   },
-                                            //   onRemove: () {
-                                            //     productCount == 0
-                                            //         ? EasyLoading.showError(
-                                            //             "Product count cannot be less than 0")
-                                            //         : null;
-                                            //     cartModel?.cart.items.forEach((i) {
-                                            //       if (i.variantId == widget.productData?.variants![0].id) {
-                                            //         productCount -= 1;
-                                            //         _b2bStoreBloc.add(
-                                            //             AddRemoveItemReq(count: productCount, itemId: i.id));
-                                            //       }
-                                            //     });
-                                            //   },
-                                            //   onTap: () {},
-                                            // ))
+                                            )),
 
-                                            ),
+                                        product.variants.first
+                                                    .inventoryQuantity ==
+                                                0
+                                            ? Align(
+                                                alignment: Alignment.topCenter,
+                                                child: Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 5.w,
+                                                      vertical: 2.h),
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors
+                                                        .lightCyanColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4),
+                                                  ),
+                                                  child: Text(
+                                                    "Out of Stock",
+                                                    style: TextStyle(
+                                                        fontSize: 6.sp,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: AppColors.black),
+                                                  ),
+                                                ),
+                                              )
+                                            : const SizedBox(),
+                                        // Positioned(
+                                        //   // left: 8,
+                                        //   // right: 8,
+                                        //   child: Container(
+                                        //     padding: EdgeInsets.symmetric(
+                                        //         horizontal: 5.w,
+                                        //         vertical: 2.h),
+                                        //     decoration: BoxDecoration(
+                                        //         color:
+                                        //             AppColors.lightCyanColor,
+                                        //         borderRadius:
+                                        //             BorderRadius.circular(4)),
+                                        //     child: Text(
+                                        //       "Out of Stock",
+                                        //       style: AppTextStyle.font10bold,
+                                        //     ),
+                                        //   ),
+                                        // )
                                       ],
                                     ),
                                   ),

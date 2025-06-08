@@ -4,6 +4,7 @@ import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/region.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/restock_subscription.dart';
 import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
 import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
@@ -56,6 +57,31 @@ class ProductService {
       );
 
       return CartModel.fromJson(response);
+    } catch (e) {
+      debugPrint("error $e");
+      rethrow;
+    }
+  }
+
+  Future<RestockSubscriptions> restockSubscriptions(
+      {required String token,
+      required String variantId,
+      required String phoneNumber}) async {
+    try {
+      var response = await dio.post(
+        "https://staging-store.woloo.in/store/restock-subscriptions",
+        data: {"phone": phoneNumber, "variant_id": variantId},
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      return RestockSubscriptions.fromJson(response);
     } catch (e) {
       debugPrint("error $e");
       rethrow;
@@ -122,7 +148,7 @@ class ProductService {
           },
         ),
       );
-      //TODO: don't find change
+      logger.w(response);
       return ProductCollections.fromJson(response);
     } catch (e) {
       debugPrint("error $e");
