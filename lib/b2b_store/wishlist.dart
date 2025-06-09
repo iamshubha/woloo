@@ -6,6 +6,7 @@ import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart'
     as product_collections;
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
@@ -28,6 +29,7 @@ class _WishListScreenState extends State<WishListScreen> {
   bool _isDataLoaded = false;
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   List<product_collections.Product> _wProductData = [];
+  CartModel? _cart;
   // final List<product_collections.Product> _wData = [];
   @override
   void initState() {
@@ -45,6 +47,10 @@ class _WishListScreenState extends State<WishListScreen> {
         .toList();
   }
 
+  _refresh() {
+    _b2bStoreBloc.add(const WishlistEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer(
@@ -56,8 +62,9 @@ class _WishListScreenState extends State<WishListScreen> {
           }
           if (state is WishlistSuccess) {
             setState(() {
-              _isDataLoaded = true;
+              _cart = state.cartModel;
               _wProductData = getFavProducts();
+              _isDataLoaded = true;
             });
             EasyLoading.dismiss();
             // setState(() {
@@ -76,7 +83,12 @@ class _WishListScreenState extends State<WishListScreen> {
               ? Container()
               : Scaffold(
                   bottomNavigationBar: const XBottomBar(),
-                  appBar: const EComAppbar(),
+                  appBar: EComAppbar(
+                    cartValue: _isDataLoaded ? _cart!.cart.items.length : 0,
+                    onTap: () {
+                      _refresh();
+                    },
+                  ),
                   body: SingleChildScrollView(
                     child: Container(
                       decoration: const BoxDecoration(

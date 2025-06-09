@@ -24,12 +24,16 @@ class GlobalStorage {
   final String _cityKey = 'cityKey';
   final String _addressKey = 'addressKey';
   final String _pincodeKey = 'pincodeKey';
-   final String _clientIdKey = 'clientIdKey';
-   final String _clientmobileNo = 'clientmobileNo';
-   final String _planId = 'planId';
-   final String _clientToken = 'clientToken';
-   final String _paymentId = 'paymentId';
-  
+  final String _clientIdKey = 'clientIdKey';
+  final String _clientmobileNo = 'clientmobileNo';
+  final String _planId = 'planId';
+  final String _clientToken = 'clientToken';
+  final String _paymentId = 'paymentId';
+  final String _facilityRef = 'facilityRef';
+  final String _onboarding = 'onboarding';
+  final String _password = 'password';
+  final String _email = 'email';
+
   /// Save Token
   void saveToken({required String accessToken}) {
     if (accessToken.isEmpty) {
@@ -44,8 +48,6 @@ class GlobalStorage {
   }
 
   void removeToken() {
-   
-
     _box.remove(_tokenKey);
   }
 
@@ -55,31 +57,31 @@ class GlobalStorage {
     }
     _box.write(_clientToken, accessToken);
   }
+
   String getClientToken() {
     String? token = _box.read(_clientToken);
     return token ?? '';
   }
-  
+
   void removeClientToken() {
     _box.remove(_clientToken);
   }
 
-
-  void saveProfile({required String profileName }) {
+  void saveProfile({required String profileName}) {
     if (profileName.isEmpty) {
       throw 'Access Token is empty';
     }
     _box.write(_profileKey, profileName);
   }
 
-    void saveProfileImg({required String profileimg }) {
+  void saveProfileImg({required String profileimg}) {
     if (profileimg.isEmpty) {
       throw 'Access Token is empty';
     }
     _box.write(_profileImgKey, profileimg);
   }
 
-    void saveShift({required String shift }) {
+  void saveShift({required String shift}) {
     if (shift.isEmpty) {
       throw 'Access Token is empty';
     }
@@ -90,30 +92,28 @@ class GlobalStorage {
     String? name = _box.read(_profileKey);
     return name ?? '';
   }
-    String getProfileImage() {
+
+  String getProfileImage() {
     String? img = _box.read(_profileImgKey);
     return img ?? '';
   }
-    String getShift() {
+
+  String getShift() {
     String? img = _box.read(_profileshiftKey);
     return img ?? '';
   }
 
   void removeProfile() {
-  
     _box.remove(_profileKey);
   }
 
-    void removeProfileImg() {
-
+  void removeProfileImg() {
     _box.remove(_profileImgKey);
   }
 
-    void removeShift() {
-
+  void removeShift() {
     _box.remove(_profileshiftKey);
   }
-
 
   void saveJanitorId({required int accessId}) {
     _box.write(_idKey, accessId);
@@ -126,7 +126,6 @@ class GlobalStorage {
 
   void removeList() {
     _box.remove(_idKey);
-
   }
 
   void saveCheckIn({required bool isCheckedIn}) {
@@ -168,8 +167,6 @@ class GlobalStorage {
     }
     _box.write(_supervisorNameKey, accessSupervisorName);
   }
-
-
 
   String getSupervisorName() {
     String? supervisorName = _box.read(_supervisorNameKey);
@@ -251,12 +248,13 @@ class GlobalStorage {
     _box.write(_currentTimeKey, accessTime);
   }
 
-    void saveDate({required String accessTime}) {
+  void saveDate({required String accessTime}) {
     if (accessTime.isEmpty) {
       throw 'Time is empty';
     }
     _box.write(_currentDateKey, accessTime);
   }
+
   void saveOutTime({required String accessTime}) {
     if (accessTime.isEmpty) {
       throw 'Time is empty';
@@ -264,7 +262,7 @@ class GlobalStorage {
     _box.write(_currentoutTimeKey, accessTime);
   }
 
-    void saveOutDate({required String accessTime}) {
+  void saveOutDate({required String accessTime}) {
     if (accessTime.isEmpty) {
       throw 'Time is empty';
     }
@@ -274,9 +272,8 @@ class GlobalStorage {
   String getTime() {
     String? time = _box.read(_currentTimeKey);
     return time ?? '';
- 
   }
-  
+
   String getDate() {
     String? time = _box.read(_currentDateKey);
     return time ?? '';
@@ -287,30 +284,26 @@ class GlobalStorage {
     return time ?? '';
   }
 
-    String getOutDate() {
+  String getOutDate() {
     String? time = _box.read(_currentoutDateKey);
     return time ?? '';
   }
 
-
-
-
   void removeTime() {
     _box.remove(_currentTimeKey);
   }
-   void removeDate() {
+
+  void removeDate() {
     _box.remove(_currentDateKey);
   }
-
 
   void removeOutTime() {
     _box.remove(_currentoutTimeKey);
   }
+
   void removeOutDate() {
     _box.remove(_currentoutDateKey);
   }
-
-
 
   void saveCity({required String accessCity}) {
     if (accessCity.isEmpty) {
@@ -318,50 +311,60 @@ class GlobalStorage {
     }
     _box.write(_cityKey, accessCity);
   }
+
   String getCity() {
     String? city = _box.read(_cityKey);
     return city ?? '';
   }
+
   void removeCity() {
     _box.remove(_cityKey);
   }
+
   void saveAddress({required String accessAddress}) {
     if (accessAddress.isEmpty) {
       throw 'Address is empty';
     }
     _box.write(_addressKey, accessAddress);
   }
+
   String getAddress() {
     String? address = _box.read(_addressKey);
     return address ?? '';
   }
+
   void removeAddress() {
     _box.remove(_addressKey);
   }
+
   void savePincode({required String accessPincode}) {
     if (accessPincode.isEmpty) {
       throw 'Pincode is empty';
     }
     _box.write(_pincodeKey, accessPincode);
   }
+
   String getPincode() {
     String? pincode = _box.read(_pincodeKey);
     return pincode ?? '';
   }
+
   void removePincode() {
     _box.remove(_pincodeKey);
-  } 
-  
-void saveClientId({required String accessClientId}) {
+  }
+
+  void saveClientId({required String accessClientId}) {
     if (accessClientId.isEmpty) {
       throw 'Client Id is empty';
     }
     _box.write(_clientIdKey, accessClientId);
   }
+
   String getClientId() {
     String? clientId = _box.read(_clientIdKey);
     return clientId ?? '';
   }
+
   void removeClientId() {
     _box.remove(_clientIdKey);
   }
@@ -372,31 +375,35 @@ void saveClientId({required String accessClientId}) {
     }
     _box.write(_clientmobileNo, accessClientMobileNo);
   }
+
   String getClientMobileNo() {
     String? clientMobileNo = _box.read(_clientmobileNo);
     return clientMobileNo ?? '';
   }
+
   void removeClientMobileNo() {
     _box.remove(_clientmobileNo);
   }
 
   void savePlanId({required String accessPlanId}) {
-      print("accessPlanId ${accessPlanId.isEmpty}");
+    print("accessPlanId ${accessPlanId.isEmpty}");
     if (accessPlanId.isEmpty) {
       throw 'Client Mobile No is empty';
     }
     _box.write(_planId, accessPlanId);
   }
+
   String getPlanId() {
     String? planId = _box.read(_planId);
     return planId ?? '';
   }
+
   void removePlanId() {
     _box.remove(_planId);
   }
 
   void savePaymentId({required String accessPayemntId}) {
-      print("accessPlanId ${accessPayemntId.isEmpty}");
+    print("accessPlanId ${accessPayemntId.isEmpty}");
     if (accessPayemntId.isEmpty) {
       throw 'Client Mobile No is empty';
     }
@@ -412,11 +419,64 @@ void saveClientId({required String accessClientId}) {
     _box.remove(_paymentId);
   }
 
- 
+  void saveFacilityRef({required String accessFacilityRef}) {
+    if (accessFacilityRef.isEmpty) {
+      throw 'Client Mobile No is empty';
+    }
+    _box.write(_facilityRef, accessFacilityRef);
+  }
 
+  String getFacilityRef() {
+    String? facilityRef = _box.read(_facilityRef);
+    return facilityRef ?? '';
+  }
 
+  void removeFacilityRef() {
+    _box.remove(_facilityRef);
+  }
 
-   
+  void saveOnboarding({required bool isOnboard}) {
+    _box.write(_onboarding, isOnboard);
+  }
+
+  bool isOnboard() {
+    return _box.read(_onboarding) ?? false;
+  }
+
+  void removeOnboarding() {
+    _box.remove(_onboarding);
+  }
+
+  void savePassword({required String password}) {
+    if (password.isEmpty) {
+      throw 'Client Mobile No is empty';
+    }
+    _box.write(_password, password);
+  }
+
+  String getPassword() {
+    return _box.read(_password);
+  }
+
+  void removePassword() {
+    _box.remove(_password);
+  }
+
+  void saveEmail({required String email}) {
+    if (email.isEmpty) {
+      throw 'Client Mobile No is empty';
+    }
+    _box.write(_email, email);
+  }
+
+  String getEmail() {
+    return _box.read(_email);
+  }
+
+  void removeEmail() {
+    _box.remove(_email);
+  }
+
   void removeAll() {
     _box.remove(_tokenKey);
     _box.remove(_idKey);
@@ -431,6 +491,4 @@ void saveClientId({required String accessClientId}) {
     _box.remove(_currentoutTimeKey);
     _box.remove(_currentoutDateKey);
   }
- 
-
 }

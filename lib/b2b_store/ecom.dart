@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/b2b_store/all_orders.dart';
@@ -18,6 +19,7 @@ import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/wishlist.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/enums/product_mode.dart';
 import 'package:woloo_smart_hygiene/extensions/string_extension.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
@@ -48,10 +50,12 @@ class _EcomScreenState extends State<EcomScreen> {
   Addresses? address;
   final box = GetStorage();
 
+  // GlobalStorage globalStorage = GetIt.instance();
+
   @override
   void initState() {
-    _b2bStoreBloc.add(const StoreCustomerLoginReq(
-        email: '000000000@gmail.com', pass: 'aaarati14'));
+    _b2bStoreBloc.add(StoreCustomerLoginReq(
+        email: '000000000@gmail.com', pass: 'aaarati14', isfromlogin: false));
     super.initState();
     // address = getAddress();
   }

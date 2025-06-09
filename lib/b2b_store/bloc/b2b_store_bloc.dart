@@ -48,7 +48,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   late int janitorId;
 
   B2bStoreBloc() : super(B2BStoreInitial()) {
-    // on<StoreCustomersReq>(_emailPassRegister);
+    on<StoreCustomersReq>(_emailPassRegister);
     on<StoreCustomerLoginReq>(_emailPassLogin);
     on<AddressReq>(_createAddress);
     on<GetAddress>(_getAddress);
@@ -90,6 +90,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       });
       debugPrint("requestId $response");
       print(response);
+      // _favoriteService.createFavorites(token: token);
       // emit(B2BStoreSuccess());
     } catch (e) {
       emit(B2BStoreError(error: e.toString()));
@@ -105,40 +106,52 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       ProductCategory categories = ProductCategory();
       TopBrands topBrands = TopBrands();
       ProductCollections productCollections = ProductCollections();
-
+      CartModel? cartModel;
+      Wishlist? fav;
       emit(const B2BStoreLoading(message: "Loading data..."));
 
-      // Login and get token
-      final loginToken = await loginFlowService.loginCustomer(
-        email: event.email,
-        pass: event.pass,
-      );
-      box.write('login_jwt', loginToken);
+      // Login and get token\
 
-      // Get region
-      final regionResponse = await _productService.getRegion(token: loginToken);
-      box.write('region_id', regionResponse.regions![0].id);
+      if (event.isfromlogin!) {
+        final loginToken = await loginFlowService.loginCustomer(
+          email: event.email ?? '',
+          pass: event.pass ?? '',
+        );
+        box.write('login_jwt', loginToken);
+      } else {
+        final loginToken = await loginFlowService.loginCustomer(
+          email: event.email ?? '',
+          pass: event.pass ?? '',
+        );
+        box.write('login_jwt', loginToken);
 
-      await _productService
-          .createCart(
-              token: loginToken,
-              regionId: regionResponse.regions![0].id.toString())
-          .then((cartData) {
-        box.write('cart_id', cartData.cart.id);
-      });
-      CartModel cartModel = await _cartService.getAllCartData(
-          token: box.read('login_jwt'), cartId: box.read('cart_id'));
+        // Get region
+        final regionResponse =
+            await _productService.getRegion(token: loginToken);
+        box.write('region_id', regionResponse.regions![0].id);
 
-      // Fetch all required data
-      categories =
-          await _productService.getProductCategories(token: loginToken);
-      topBrands = await _productService.getTopBrands(token: loginToken);
-      productCollections =
-          await _productService.getProductCollections(token: loginToken);
+        await _productService
+            .createCart(
+                token: loginToken,
+                regionId: regionResponse.regions![0].id.toString())
+            .then((cartData) {
+          box.write('cart_id', cartData.cart.id);
+        });
+        cartModel = await _cartService.getAllCartData(
+            token: box.read('login_jwt'), cartId: box.read('cart_id'));
 
-      final fav = await _favoriteService.getFavorites(token: loginToken);
+        // Fetch all required data
+        categories =
+            await _productService.getProductCategories(token: loginToken);
+        topBrands = await _productService.getTopBrands(token: loginToken);
+        productCollections =
+            await _productService.getProductCollections(token: loginToken);
 
-      favIds = getCommonProductIds(fav, productCollections);
+        fav = await _favoriteService.getFavorites(token: loginToken);
+
+        favIds = getCommonProductIds(fav, productCollections);
+      }
+
       final address = box.read('address');
       // Debug prints
       selectedAddress.value = address != null
@@ -150,8 +163,8 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
           productCategory: categories,
           topBrands: topBrands,
           productCollections: productCollections,
-          cartData: cartModel,
-          fav: fav)));
+          cartData: cartModel!,
+          fav: fav!)));
     } catch (e) {
       if (emit.isDone) return;
       emit(B2BStoreError(error: e.toString()));
@@ -606,7 +619,9 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       final productCollections = await _productService.getProductCollections(
           token: box.read('login_jwt'));
       favIds = getCommonProductIds(wishlist, productCollections);
-      emit(WishlistSuccess(wishlistData: wishlist));
+      CartModel cartModel = await _cartService.getAllCartData(
+          token: box.read('login_jwt'), cartId: box.read('cart_id'));
+      emit(WishlistSuccess(wishlistData: wishlist, cartModel: cartModel));
     } catch (e) {
       debugPrint("Error in getFavorites service: $e");
       emit(WishlistError(error: e.toString()));

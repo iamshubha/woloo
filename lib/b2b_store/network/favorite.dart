@@ -30,6 +30,27 @@ class FavoriteService {
     }
   }
 
+  Future<bool> createFavorites({required String token}) async {
+    try {
+      var response = await dio.post(
+        "https://staging-store.woloo.in/store/customers/me/wishlists/items",
+        options: Options(
+          headers: {
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+        ),
+      );
+
+      return response.statusCode == 200 || response.statusCode == 201;
+    } catch (e) {
+      debugPrint("Error in getOrderDetails service: $e");
+      rethrow;
+    }
+  }
+
   /*
   curl --location 'https://staging-store.woloo.in/store/customers/me/wishlists/items?currency_code=inr' \
 --header 'x-publishable-api-key: pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08' \
@@ -53,7 +74,7 @@ class FavoriteService {
           data: {
             "variant_id": variantId,
           });
-      logger.w(response);
+      // logger.w(response);
       return Wishlist.fromJson(response);
     } catch (e) {
       debugPrint("Error in getOrderDetails service: $e");
@@ -85,7 +106,7 @@ class FavoriteService {
             "comment": comment,
             "line_item_id": line_item_id
           });
-      logger.w("Response from getOrderDetails: $response");
+      // logger.w("Response from getOrderDetails: $response");
       return Review.fromJson(response);
     } catch (e) {
       debugPrint("Error in getOrderDetails service: $e");
@@ -106,7 +127,7 @@ class FavoriteService {
           },
         ),
       );
-      logger.w(response);
+      // logger.w(response);
       return Wishlist.fromJson(response);
     } catch (e) {
       logger.e("Remove Item Failure: $e");

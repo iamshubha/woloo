@@ -83,7 +83,7 @@ class CartItemCard extends StatelessWidget {
                 ),
                 // SizedBox(height: 4.h),
                 Text(
-                  item?.productHandle ?? "",
+                  "${item?.variantTitle}" ?? "",
                   style: TextStyle(
                     fontSize: 12.sp,
                     color: Colors.grey,

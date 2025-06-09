@@ -187,9 +187,10 @@ class OrderDetailsError extends B2BStoreState {
 
 class WishlistSuccess extends B2BStoreState {
   final Wishlist wishlistData;
-  const WishlistSuccess({required this.wishlistData});
+  final CartModel? cartModel;
+  const WishlistSuccess({required this.wishlistData, this.cartModel});
   @override
-  List<Object> get props => [wishlistData];
+  List<Object> get props => [wishlistData, if (cartModel != null) cartModel!];
 }
 
 class WishlistLoading extends B2BStoreState {

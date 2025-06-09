@@ -19,13 +19,10 @@ class StoreCustomersReq extends B2BStoreEvent {
 }
 
 class StoreCustomerLoginReq extends B2BStoreEvent {
-  final String email;
-  final String pass;
-
-  const StoreCustomerLoginReq({
-    required this.email,
-    required this.pass,
-  });
+  String? email;
+  String? pass;
+  bool? isfromlogin;
+  StoreCustomerLoginReq({this.email, this.pass, this.isfromlogin});
 
   @override
   List<Object?> get props => [email, pass];
