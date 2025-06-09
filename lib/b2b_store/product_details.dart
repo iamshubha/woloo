@@ -59,6 +59,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   String selectedVarientId = '';
   String calculatedAmount = '';
   String originalAmount = '';
+  String selectedVariant = '';
   @override
   initState() {
     super.initState();
@@ -238,8 +239,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (false)
-                              Text("80 ML",
+                            if (selectedVariant.isNotEmpty)
+                              Text(selectedVariant,
                                   style: TextStyle(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.bold)),
@@ -318,27 +319,31 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               Row(
                                 spacing: 10,
                                 children: [
-                                  AnimatedRatingStars(
-                                    initialRating:
-                                        widget.productData?.averageRating ?? 0,
-                                    minRating: 0.0,
-                                    maxRating: 5.0,
-                                    filledColor: Colors.amber,
-                                    emptyColor: Colors.grey,
-                                    filledIcon: Icons.star,
-                                    halfFilledIcon: Icons.star_half,
-                                    emptyIcon: Icons.star_border,
-                                    onChanged: (a) {},
-                                    displayRatingValue: true,
-                                    interactiveTooltips: true,
-                                    customFilledIcon: Icons.star,
-                                    customHalfFilledIcon: Icons.star_half,
-                                    customEmptyIcon: Icons.star_border,
-                                    starSize: 24,
-                                    animationDuration:
-                                        const Duration(milliseconds: 300),
-                                    animationCurve: Curves.easeInOut,
-                                    readOnly: false,
+                                  IgnorePointer(
+                                    ignoring: true,
+                                    child: AnimatedRatingStars(
+                                      initialRating:
+                                          widget.productData?.averageRating ??
+                                              0,
+                                      minRating: 0.0,
+                                      maxRating: 5.0,
+                                      filledColor: Colors.amber,
+                                      emptyColor: Colors.grey,
+                                      filledIcon: Icons.star,
+                                      halfFilledIcon: Icons.star_half,
+                                      emptyIcon: Icons.star_border,
+                                      onChanged: (a) {},
+                                      displayRatingValue: true,
+                                      interactiveTooltips: true,
+                                      customFilledIcon: Icons.star,
+                                      customHalfFilledIcon: Icons.star_half,
+                                      customEmptyIcon: Icons.star_border,
+                                      starSize: 24,
+                                      animationDuration:
+                                          const Duration(milliseconds: 300),
+                                      animationCurve: Curves.easeInOut,
+                                      readOnly: false,
+                                    ),
                                   ),
                                   if (widget.productData?.reviewCount != null &&
                                       widget.productData?.reviewCount != 0)
@@ -670,6 +675,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   size!['price'] ?? "";
                                               originalAmount =
                                                   size['originalPrice'] ?? "";
+                                              selectedVariant =
+                                                  size.entries.first.key;
                                               // sizeVarient = size;
                                               setState(() {});
                                             },

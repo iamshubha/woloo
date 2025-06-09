@@ -8,7 +8,6 @@ import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
-import 'package:woloo_smart_hygiene/janitorial_services/screens/host_dashboard_screen.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
@@ -16,6 +15,7 @@ import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/boxes/cart_item.dart';
 
 import '../widgets/review_order_bottomsheet.dart';
+import 'widgets/radio_labeled_tile.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -30,6 +30,7 @@ class _CartScreenState extends State<CartScreen> {
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   bool _isDataLoaded = false;
   CartModel? cartModel;
+  bool isExpressBooking = false;
   @override
   void initState() {
     _b2bStoreBloc.add(const GetCartData());
@@ -93,6 +94,37 @@ class _CartScreenState extends State<CartScreen> {
                             title: "Cart",
                             subtitle: 'Checkout you purchases from here',
                           ),
+                          const Divider(),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Total Items: ${cartModel?.cart.items.length} Unit",
+                              style: AppTextStyle.font14bold,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              XRadioTile(
+                                onTap: () {
+                                  isExpressBooking = !isExpressBooking;
+                                  setState(() {});
+                                },
+                                isSelected: !isExpressBooking,
+                                title: "Normal Shipping",
+                                subTitle: "7-10 Days",
+                              ),
+                              XRadioTile(
+                                onTap: () {
+                                  isExpressBooking = !isExpressBooking;
+                                  setState(() {});
+                                },
+                                isSelected: isExpressBooking,
+                                title: "Express Shipping+ Rs.75",
+                                subTitle: "2-3 Days",
+                              ),
+                            ],
+                          ),
                           ListView.builder(
                             shrinkWrap:
                                 true, // Ensures ListView takes only the required space
@@ -135,8 +167,72 @@ class _CartScreenState extends State<CartScreen> {
                             },
                           ),
                           const Divider(),
-                          const RedeemPoints(
-                            points: "",
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 16),
+                            decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(14),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: AppColors.textgreyColor,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 1),
+                                  ),
+                                ]),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      height: 30,
+                                      width: 30,
+                                      child: Image.asset(AppImages.appLogo),
+                                    ),
+                                    Text(
+                                      "Redeem your Woloo Points",
+                                      style: AppTextStyle.font13w7,
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  "You have 210 Woloo Points to Redeem",
+                                  style: AppTextStyle.font13w7
+                                      .copyWith(color: AppColors.greyBorder),
+                                ),
+                                SizedBox(
+                                  height: 10.h,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Redeem 10 woloo points for Rs. 10",
+                                      style: AppTextStyle.font10bold.copyWith(
+                                          color: AppColors.greyBorder),
+                                    ),
+                                    InkWell(
+                                      onTap: () {},
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.lightCyanColor,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Text(
+                                          "Apply",
+                                          style: AppTextStyle.font14bold,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                           const ApplyPromo(),
                           const Divider(),
