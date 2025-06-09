@@ -20,6 +20,8 @@ class SubcriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
     // on<LoginEvent>((event, emit) {});
     on<CreateOrderEvent>(_mapCreateOrderToState);
     on<UserCoinsEvent>(_mapgetUserCoinsToState);
+    on<FacilityStatusEvent>(_mapgetFacilityStatusToState);
+    on<PlanEvent>(_mapgetPlanToState);
 
    // on<UpdateTokenOnVerifyOTP>(mapUpdateTokenToState);
   }
@@ -27,11 +29,14 @@ class SubcriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
   FutureOr<void> _mapCreateOrderToState(
       CreateOrderEvent event, Emitter<SubscriptionState> emit) async {
     try {
-      emit(const SubscriptionLoading(message: "Sending OTP..."));
+      emit(const SubscriptionLoading(message: "Loading..."));
 
       var response =
           await subcriptionService.creatOrder(
-            clientId:  event.clientId
+            clientId:  event.clientId,
+            planReqModel: event.planReqModel!,
+            isFromFacility: event.isFromFacility!,
+            
             );
       debugPrint("requestId $response");
        response;
@@ -40,7 +45,7 @@ class SubcriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
         orderModel: response
        ));
     } catch (e) {
-      emit(SubscriptionError(error:  ErrorHandler.handle(e).failure ));
+      emit(SubscriptionError(error:  e.toString() ));
     }
   }
 
@@ -60,9 +65,56 @@ class SubcriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
        // orderModel: response
        ));
     } catch (e) {
-      emit(SubscriptionError(error:  ErrorHandler.handle(e).failure ));
+      emit(SubscriptionError(error:   e.toString() ));
     }
   }
+
+
+
+    FutureOr<void> _mapgetFacilityStatusToState(
+      FacilityStatusEvent event, Emitter<SubscriptionState> emit) async {
+    try {
+      emit(const SubscriptionLoading(message: "Loading..."));
+
+      var response =
+          await subcriptionService.getFacilityStatus(
+           clientId: event.clientId,
+           plan: event.plan
+            );
+      debugPrint("requestId $response");
+       response;
+      // debugPrint("requestId $requestId");
+      emit(GetFacilityStatus( facilityStatusModel: response
+        
+       // orderModel: response
+       ));
+    } catch (e) {
+      emit(SubscriptionError(error:  e.toString() ));
+    }
+  }
+
+      FutureOr<void> _mapgetPlanToState(
+      PlanEvent event, Emitter<SubscriptionState> emit) async {
+    try {
+      emit(const SubscriptionLoading(message: "Loading..."));
+
+      var response =
+          await subcriptionService.getPlan(
+            // event.clientId
+            );
+      debugPrint("plan ka model ${response.results}");
+       response;
+      // debugPrint("requestId $requestId");
+      emit(GetPlan( planModel: response
+
+       // orderModel: response
+       ));
+    } catch (e) {
+      emit(SubscriptionError(error:  e.toString() ));
+    }
+  }
+
+
 
 
 

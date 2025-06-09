@@ -68,7 +68,7 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(" khdjkfh ${MediaQuery.of(context).size}");
+    debugPrint(" samsung device   ${MediaQuery.of(context).size.height}");
     return BlocConsumer(
       bloc: _supervisorDashboardBloc,
       listener: (context, state) {
@@ -148,11 +148,11 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                   //201.h,
                   MediaQuery.of(context).size.height < 800 ?
 
-                  MediaQuery.of(context).size.height /3.1
+                  MediaQuery.of(context).size.height /2.9
                  :
 
 
-                  MediaQuery.of(context).size.height /3.3
+                  MediaQuery.of(context).size.height /3.08
                  ,
                  child: CardSwiper(
                    isLoop: false,
@@ -424,7 +424,11 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                               vertical: 2.h,
                                             ),
                                             child: Text(
-                                              "${MydashboardScreenConstants.DESCRIPTION.tr()} : ${_data[index].location ?? ''}",
+                                               overflow:
+                                                      TextOverflow.ellipsis,
+                                                      maxLines: 2,
+
+                                              "${MydashboardScreenConstants.LOCATION.tr()} : ${_data[index].location ?? ''}",
                                               style:
                                                   AppTextStyle.font13w6.copyWith(
                                                       color: AppColors.containerBorder,
@@ -490,24 +494,24 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                 ),
                                 decoration: BoxDecoration(
                                   color:
-                                    _data[index].status ==
-                                                      "Pending"
-                                                  ?
+                                    // _data[index].status ==
+                                    //                   "Pending"
+                                    //               ?
                                                   //
-                                                  AppColors.pendingCardBgColor
-                                                  :_data[index].status == "Ongoing"
-                                                      ? const Color.fromARGB(255, 232, 239, 132)
-                                                      :_data[index].status ==
-                                                              "Accepted"
-                                                          ? AppColors.acceptedBgColor
-                                        //.withOpacity(0.7)
-                                                             /// .withOpacity(0.8)
-                                                          :_data[index].status ==
-                                                                  "Request for closure"
-                                                              ? AppColors.rfcCardBgColor
-                                      //  .withOpacity(0.7)
-                                                              : AppColors
-                                                                  .checkOutColor,
+                                                  AppColors.pendingCardBgColor,
+                                      //             :_data[index].status == "Ongoing"
+                                      //                 ? const Color.fromARGB(255, 232, 239, 132)
+                                      //                 :_data[index].status ==
+                                      //                         "Accepted"
+                                      //                     ? AppColors.acceptedBgColor
+                                      //   //.withOpacity(0.7)
+                                      //                        /// .withOpacity(0.8)
+                                      //                     :_data[index].status ==
+                                      //                             "Request for closure"
+                                      //                         ? AppColors.rfcCardBgColor
+                                      // //  .withOpacity(0.7)
+                                      //                         : AppColors
+                                      //                             .checkOutColor,
                                                                   // .withOpacity(0.3),
 
                                   // AppColors.white,
@@ -578,8 +582,8 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                           .font12bold
                                                           .copyWith(
                                                         color:
-                                                         _data[index].status == "Rejected" ?
-                                                        AppColors.white :
+                                                        //  _data[index].status == "Rejected" ?
+                                                        // AppColors.white :
                                                         AppColors.listTitleColor,
 
                                                       )
@@ -612,8 +616,8 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                     overflow: TextOverflow.visible,
                                                     style: AppTextStyle.font12bold.copyWith(
                                                       color:
-                                                      _data[index].status == "Rejected" ?
-                                                      AppColors.white :
+                                                      // _data[index].status == "Rejected" ?
+                                                      // AppColors.white :
                                                       AppColors.listTitleColor,
 
 
@@ -645,8 +649,9 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                       style: AppTextStyle
                                                           .font10bold
                                                           .copyWith(
-                                                       color:  _data[index].status == "Rejected" ?
-                                                          AppColors.white :
+                                                       color:  
+                                                      //  _data[index].status == "Rejected" ?
+                                                      //     AppColors.white :
                                                           AppColors.listTitleColor,
                                                       )
                                                     // TextStyle(
@@ -675,8 +680,8 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                               style:
                                                 AppTextStyle.font13w6.copyWith(
                                                       color:
-                                                      _data[index].status == "Rejected" ?
-                                                      AppColors.white :
+                                                      // _data[index].status == "Rejected" ?
+                                                      // AppColors.white :
                                                       AppColors.listTitleColor,
                                                     )
                                               // TextStyle(
@@ -692,12 +697,16 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                               vertical: 2.h,
                                             ),
                                             child: Text(
+                                                overflow:
+                                                        TextOverflow.ellipsis,
+                                                        maxLines: 2,
                                               "${MydashboardScreenConstants.LOCATION.tr()} : ${_data[index].location ?? ''}",
                                               style:
                                               AppTextStyle.font13w6.copyWith(
+
                                                 color:
-                                                _data[index].status == "Rejected" ?
-                                                AppColors.white :
+                                                // _data[index].status == "Rejected" ?
+                                                // AppColors.white :
 
                                                 AppColors.listTitleColor,
                                               )
@@ -808,10 +817,10 @@ class _SupervisorDashboardListWidgetState extends State<SupervisorDashboardListW
                                                       style:
                                                         AppTextStyle.font12bold.copyWith(
                                                       color:
-                                                      _data[index].status == "Rejected" ?
-                                                         AppColors.white
+                                                      // _data[index].status == "Rejected" ?
+                                                      //    AppColors.white
 
-                                                          :
+                                                      //     :
                                                       AppColors.janitorNameColor,)
                                                       // TextStyle(
                                                       //   color: AppColors.janitorNameColor,

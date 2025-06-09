@@ -7,6 +7,7 @@ import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
 import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/model/host_dashboard_screen.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/model/iotdata_model.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 
 class LoginFlowService {
   final DioClient dio;
@@ -92,7 +93,7 @@ class LoginFlowService {
           },
         ),
       );
-
+      logger.w(response);
       return (response['token']);
     } catch (e) {
       debugPrint("Error in IOT service: $e");

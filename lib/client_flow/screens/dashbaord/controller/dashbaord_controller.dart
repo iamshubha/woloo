@@ -17,7 +17,8 @@ class DashBoardController extends GetxController {
      RxList<TimeOfDay> taskEndTime = <TimeOfDay>[].obs;
      RxList<Map<String, String>> taskTimes = <Map<String, String>>[].obs;
      RxList<TaskTimeModel> taskTimeModel = <TaskTimeModel>[].obs;
-      
 
- 
+     RxInt? estimatedTime;
+
+  
   }

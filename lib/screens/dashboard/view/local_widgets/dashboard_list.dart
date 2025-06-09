@@ -471,7 +471,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                         SizedBox(
                                                           width: 180.w,
                                                           child: Text(
-                                                              "${widget.filter[index].blockName}" 
+                                                              "${widget.filter[index].location}" 
                                                                   ,
                                                               maxLines: 2,
                                                               softWrap: true,
@@ -624,24 +624,24 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                           ),
                                         ],
                                         color:
-                                        widget.filter[index].status ==
-                                                "Pending"
-                                            ?
+                                        // widget.filter[index].status ==
+                                        //         "Pending"
+                                        //     ?
                                             //
-                                            AppColors.pendingCardBgColor
-                                            : widget.filter[index].status == "Ongoing"
-                                                ? const Color.fromARGB(255, 232, 239, 132)
-                                                : widget.filter[index].status ==
-                                                        "Accepted"
-                                                    ? AppColors.acceptedBgColor
-                                            //.withOpacity(0.7)
-                                                        // .withOpacity(0.8)
-                                                    : widget.filter[index].status ==
-                                                            "Request for closure"
-                                                        ? AppColors.rfcCardBgColor
-                                            //.withOpacity(0.7)
-                                                        : AppColors
-                                                            .checkOutColor,
+                                            AppColors.pendingCardBgColor,
+                                            // : widget.filter[index].status == "Ongoing"
+                                            //     ? const Color.fromARGB(255, 232, 239, 132)
+                                            //     : widget.filter[index].status ==
+                                            //             "Accepted"
+                                            //         ? AppColors.acceptedBgColor
+                                            // //.withOpacity(0.7)
+                                            //             // .withOpacity(0.8)
+                                            //         : widget.filter[index].status ==
+                                            //                 "Request for closure"
+                                            //             ? AppColors.rfcCardBgColor
+                                            // //.withOpacity(0.7)
+                                            //             : AppColors
+                                            //                 .checkOutColor,
                                                           //  .withOpacity(0.3),
 
                                         borderRadius: BorderRadius.circular(25.r),
@@ -717,10 +717,10 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                           .font12bold
                                                           .copyWith(
                                                         color:
-                                                        widget.filter[index].status ==
-                                                            "Rejected" ?
-                                                             AppColors.white
-                                                            :
+                                                        // widget.filter[index].status ==
+                                                        //     "Rejected" ?
+                                                        //      AppColors.white
+                                                        //     :
                                                         AppColors.black,
                                                       )
                                                     // TextStyle(
@@ -758,10 +758,10 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                           .font12bold
                                                           .copyWith(
                                                         color:
-                                                        widget.filter[index].status ==
-                                                            "Rejected" ?
-                                                        AppColors.white
-                                                            :
+                                                        // widget.filter[index].status ==
+                                                        //     "Rejected" ?
+                                                        // AppColors.white
+                                                        //     :
                                                         AppColors.black,
                                                       )
                                                       // TextStyle(
@@ -783,8 +783,6 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                       "${
                                                         widget.filter[index]
                                                             .date!} \n${widget.filter[index].startTime}-${widget.filter[index].endTime}"
-
-
                                                       ,
                                                       overflow:
                                                       TextOverflow.visible,
@@ -792,10 +790,9 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                       style: AppTextStyle
                                                           .font10bold
                                                           .copyWith(
-                                                        color:  widget.filter[index].status ==
-                                                            "Rejected" ?
-                                                        AppColors.white
-                                                            : AppColors.black
+                                                        color: 
+                                                     
+                                                             AppColors.black
                                                       )
                                                     // TextStyle(
                                                     //   color: AppColors.timeSlotColor,
@@ -888,10 +885,10 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                             .font13w6
                                                             .copyWith(
                                                           color:
-                                                          widget.filter[index].status ==
-                                                              "Rejected" ?
-                                                          AppColors.white
-                                                              :
+                                                          // widget.filter[index].status ==
+                                                          //     "Rejected" ?
+                                                          // AppColors.white
+                                                          //     :
                                                           AppColors
                                                               .listTitleColor,
                                                           letterSpacing: 0.8,
@@ -900,7 +897,7 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                       height: 10.h,
                                                     ),
                                                     Text(
-                                                        "${widget.filter[index].blockName}" 
+                                                        "${widget.filter[index].location}" 
                                                             ,
                                                         maxLines: 2,
                                                         softWrap: true,
@@ -910,10 +907,10 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                             .font13w6
                                                             .copyWith(
                                                           color:
-                                                          widget.filter[index].status ==
-                                                              "Rejected" ?
-                                                          AppColors.white
-                                                              :
+                                                          // widget.filter[index].status ==
+                                                          //     "Rejected" ?
+                                                          // AppColors.white
+                                                          //     :
                                                           AppColors
                                                               .listTitleColor,
                                                           letterSpacing: 0.8,
@@ -1097,13 +1094,13 @@ class _DashboardListWidgetState extends State<DashboardListWidget> with SingleTi
                                                                   .filter[index]
                                                                   .lng;
                                                         });
-                                                        await MapUtils.openMap(
-                                                            widget.filter[index]
-                                                                    .lat ??
-                                                                0.0,
-                                                            widget.filter[index]
-                                                                    .lng ??
-                                                                0.0);
+                                                        // await MapUtils.openMap(
+                                                        //     widget.filter[index]
+                                                        //             .lat ??
+                                                        //         0.0,
+                                                        //     widget.filter[index]
+                                                        //             .lng ??
+                                                        //         0.0);
                                                         // _url = Uri.parse(
                                                         //     'https://www.google.com/maps/dir/${latitude},${longitude}/${ widget.filter[index].lat},${filter[index].lng}');
                                                         // await _launchUrl();

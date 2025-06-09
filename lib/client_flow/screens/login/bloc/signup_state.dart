@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../data/model/verify_otp_model.dart';
+
 
 abstract class SignUpState extends Equatable {
   const SignUpState();
@@ -30,6 +32,20 @@ class RegisterUser extends SignUpState {
 }
 
 class LoginUser extends SignUpState {
+  @override
+  List<Object> get props => [];
+}
+
+class VerifyOTP extends SignUpState {
+  VerfiyOtpModel? verfiyOtpModel;
+ 
+  VerifyOTP({this.verfiyOtpModel});
+
+  @override
+  List<Object> get props => [verfiyOtpModel!];
+}
+
+class ExtendExpiry extends SignUpState {
   @override
   List<Object> get props => [];
 }

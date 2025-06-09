@@ -90,6 +90,25 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       });
       debugPrint("requestId $response");
       print(response);
+      await loginFlowService
+          .loginCustomer(
+        email: event.email,
+        pass: event.pass,
+      )
+          .then((loginToken) async {
+        await _favoriteService.createFavorites(token: loginToken);
+        final regionResponse =
+            await _productService.getRegion(token: loginToken);
+        box.write('region_id', regionResponse.regions![0].id);
+        await _productService
+            .createCart(
+                token: loginToken,
+                regionId: regionResponse.regions![0].id.toString())
+            .then((cartData) {
+          box.write('cart_id', cartData.cart.id);
+        });
+      });
+
       // _favoriteService.createFavorites(token: token);
       // emit(B2BStoreSuccess());
     } catch (e) {
@@ -129,14 +148,13 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
         final regionResponse =
             await _productService.getRegion(token: loginToken);
         box.write('region_id', regionResponse.regions![0].id);
-
-        await _productService
-            .createCart(
-                token: loginToken,
-                regionId: regionResponse.regions![0].id.toString())
-            .then((cartData) {
-          box.write('cart_id', cartData.cart.id);
-        });
+        // await _productService
+        //     .createCart(
+        //         token: loginToken,
+        //         regionId: regionResponse.regions![0].id.toString())
+        //     .then((cartData) {
+        //   box.write('cart_id', cartData.cart.id);
+        // });
         cartModel = await _cartService.getAllCartData(
             token: box.read('login_jwt'), cartId: box.read('cart_id'));
 

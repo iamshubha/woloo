@@ -48,7 +48,7 @@ class AppTextStyle {
 
   static TextStyle font13 = TextStyle(
     // color: AppColors.lightGreyText,
-    fontSize: 13.sp,
+    fontSize: 12.sp,
     fontWeight: FontWeight.w400,
   );
 

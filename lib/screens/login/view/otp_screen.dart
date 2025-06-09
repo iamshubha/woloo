@@ -255,7 +255,10 @@ class _OTPScreenState extends State<OTPScreen> {
                   height: 20.h,
                 ),
                 OTPWidget(
-                  onComplete: (pin) => _pin = pin,
+                  onComplete: (pin){
+                      print("dataaa $pin");
+                    _pin = pin;
+                  } 
                 ),
                 SizedBox(
                   height: 10.h,
@@ -314,6 +317,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   },
                   child: GestureDetector(
                     onTap: () async {
+                       print("object $_pin ");
                       if (_pin.isNotEmpty) {
                         widget.loginBloc.add(VerifyOTP(otp: _pin));
                       }

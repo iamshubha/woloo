@@ -103,6 +103,10 @@ class APIConstants {
 
   static var CLIENT_LOGIN = '$BASE_URL/api/wolooGuest/login';
 
+  static var SEND_OTP_CLIENT = '$BASE_URL/api/wolooGuest/sendOTPForClient';
+
+  static var VERIFY_OTP_CLIENT = '$BASE_URL/api/wolooGuest/verifyOTPForClient';
+
   static var DELETE_USER = '$BASE_URL/api/wolooGuest/login';
 
   static var CLIENT_SETUP = '$BASE_URL/api/whms/clients/clientSetUp';
@@ -129,10 +133,22 @@ class APIConstants {
 
   static var GET_ALL_FACILITY = "$BASE_URL/api/whms/facilities/getFacilities";
 
+  static var EXTEND_EXPIRY = "$BASE_URL/api/whms/clients/extendExpiry";
+
+  static var PAYMENT_STATUS = "$BASE_URL/api/whms/payment/checkPaymentStatus";
+
+  static var FACILITY_BY_JANITOR =
+      "$BASE_URL/api/whms/facilities/getJanitorsByFacility";
+
+  static var GET_PLAN = "$BASE_URL/api/whms/plans/getPlans";
+
   static var CHECK_TASK_TIME =
       '$BASE_URL/api/whms/autoTaskMapping/checkJanitorTasktime';
 
   static var SUPERVISOR_CHECK = '$BASE_URL/api/whms/clients/supervisorCheck';
+
+  static var GET_FACILITIES_STATUS =
+      '$BASE_URL/api/whms/facilities/getFacilitiesStatus';
 
   static var DELETE_TASK =
       "$BASE_URL/api/whms/autoTaskMapping/deleteTasktiming";
@@ -141,6 +157,7 @@ class APIConstants {
 
   static var GET_IOT_DASHBOARD_DATA =
       '$BASE_URL/api/whms/iot/getIotDashboardData';
+
   static var AUTH_BASE_URL = "https://staging-store.woloo.in";
   static var EMAIL_PASS_REGISTER =
       '$AUTH_BASE_URL/auth/customer/emailpass/register';

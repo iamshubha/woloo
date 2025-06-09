@@ -20,6 +20,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../common_widgets/leading_button.dart';
+import '../../dashboard/bloc/dashboard_bloc.dart';
+import '../../dashboard/bloc/dashboard_event.dart';
 
 class TaskList extends StatefulWidget {
   final int? templateId;
@@ -42,6 +44,7 @@ class _TaskListState extends State<TaskList> {
   TaskListModel data = TaskListModel();
   SubmitTaskModel submitData = SubmitTaskModel();
   CreateTaskModel createTaskModel = CreateTaskModel();
+    DashboardBloc dashboardBloc = DashboardBloc();
 
   @override
   void initState() {
@@ -278,7 +281,10 @@ class _TaskListState extends State<TaskList> {
            else
 
           if (state is SubmitTasksSuccess && (state.data.isEmpty)) {
+             print("data in submit task");
             EasyLoading.dismiss();
+               dashboardBloc.add(
+                           const GetTaskTamplates());
 
             return  EmptyListWidget(
               filter:  EmptyWidgetConstants.DATA_NOT_FOUND.tr(),

@@ -408,6 +408,8 @@ class SupervisorAccountScreenState extends State<SupervisorAccountScreen> {
                   storage.removeToken();
                   storage.removeLocation();
                   storage.removeTime();
+                  storage.removeClientId();
+                  storage.removeClientToken();
                   await Future.delayed(const Duration(seconds: 3));
                   EasyLoading.dismiss();
                   EasyLoading.showToast(MyJanitorProfileScreenConstants

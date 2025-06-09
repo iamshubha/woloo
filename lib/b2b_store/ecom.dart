@@ -50,12 +50,14 @@ class _EcomScreenState extends State<EcomScreen> {
   Addresses? address;
   final box = GetStorage();
 
-  // GlobalStorage globalStorage = GetIt.instance();
+  GlobalStorage globalStorage = GetIt.instance();
 
   @override
   void initState() {
     _b2bStoreBloc.add(StoreCustomerLoginReq(
-        email: '000000000@gmail.com', pass: 'aaarati14', isfromlogin: false));
+        email: globalStorage.getEmail(),
+        pass: globalStorage.getPassword(),
+        isfromlogin: false));
     super.initState();
     // address = getAddress();
   }
@@ -293,7 +295,8 @@ class _EcomScreenState extends State<EcomScreen> {
                                 itemBuilder: (context, index) {
                                   final product = _b2bStoreHomePage!
                                       .productCollections.products[index];
-
+                                  logger.w(
+                                      product.variants.first.inventoryQuantity);
                                   int productCount = 0;
                                   _b2bStoreHomePage?.cartData.cart.items
                                       .forEach((i) {
@@ -576,10 +579,8 @@ class _EcomScreenState extends State<EcomScreen> {
                                                               _b2bStoreBloc.add(
                                                                 RestockSubscriptionsEvent(
                                                                   phoneNumber:
-                                                                      selectedAddress
-                                                                              .value
-                                                                              .phone ??
-                                                                          "",
+                                                                      globalStorage
+                                                                          .getClientMobileNo(),
                                                                   variantId: product
                                                                       .variants[
                                                                           0]
@@ -814,6 +815,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                   );
                                 },
                               ),
+
                               SizedBox(
                                 height: 5.h,
                               ),
@@ -1180,14 +1182,18 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Home',
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
+          ValueListenableBuilder<Addresses>(
+              valueListenable: selectedAddress,
+              builder: (context, value, child) {
+                return Text(
+                  value.addressName.isEmptyOrNull ? "Home" : value.addressName!,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                );
+              }),
           InkWell(
             onTap: () => showModalBottomSheet(
               isScrollControlled: true,

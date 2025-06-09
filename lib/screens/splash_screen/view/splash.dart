@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:dio_log/dio_log.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -7,18 +6,19 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:woloo_smart_hygiene/core/bloc/core_bloc.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
-import 'package:woloo_smart_hygiene/hygine_services/view/hygine_landing.dart';
 import 'package:woloo_smart_hygiene/messaging.dart';
+import 'package:woloo_smart_hygiene/screens/supervisor_dashboard/view/supervisor_dashboard_screen.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
-
-import '../../../b2b_store/ecom.dart';
+import '../../../client_flow/screens/dashbaord/view/dashboard.dart';
+import '../../../client_flow/screens/dashbaord/view/home.dart';
 import '../../../client_flow/screens/login/bloc/signup_bloc.dart';
+import '../../../client_flow/screens/login/view/login_as.dart';
 import '../../common_widgets/image_provider.dart';
+import '../../dashboard/view/regular_task.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -116,6 +116,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // debugPrint("device width ${MediaQuery.of(context).size.width}");
+    // debugPrint("device height ${MediaQuery.of(context).size.height}");
     return BlocListener<CoreBloc, CoreState>(
       bloc: coreBloc,
       listener: (context, state) {
@@ -128,24 +130,23 @@ class _SplashScreenState extends State<SplashScreen> {
 
           // })
 
-          try {
-            if (!isLoggedIn) throw "Not logged in";
+          // try {
+          //   if (!isLoggedIn) throw "Not logged in";
 
-            var some = globalStorage.getClientToken();
+          //   var some = globalStorage.getClientToken();
 
-            decodedToken = JwtDecoder.decode(some);
+          //   decodedToken = JwtDecoder.decode(some);
 
-            coreBloc.add(ClientEvent(id: decodedToken!["id"]));
-          } catch (e) {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    const EcomScreen(), //LoginAs(),
-              ),
-              (route) => false,
-            );
-          }
+          //   coreBloc.add(ClientEvent(id: decodedToken!["id"]));
+          // } catch (e) {
+          //   Navigator.pushAndRemoveUntil(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => const HostDashboard(),
+          //     ),
+          //     (route) => false,
+          //   );
+          // }
 
           //  print("object $isLoggedIn");
 
@@ -158,34 +159,37 @@ class _SplashScreenState extends State<SplashScreen> {
           //    //  coreBloc.add(GetClientEvent(
           // }
 
-          // try {
-          //   if (!state.isLoggedIn) throw "Not logged in";
+          try {
+            if (!state.isLoggedIn) throw "Not logged in";
 
-          //   int roleId = globalStorage.getRoleId();
-          //   String clientId = globalStorage.getClientId();
+            int roleId = globalStorage.getRoleId();
+            String clientId = globalStorage.getClientId();
+            print(roleId);
 
-          //   Navigator.pushAndRemoveUntil(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) =>
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => clientId.isNotEmpty
+                    ? const ClientDashboard()
+                    : roleId == 1
+                        ? const Dashboard()
+                        : const SupervisorDashboard(
+                            isFromSupervisor: false,
+                          ),
+              ),
+              (route) => false,
+            );
+          } catch (e) {
+            print("sddsd$e");
 
-          //       clientId.isNotEmpty ?
-          //         const ClientDashboard() :
-          //       roleId == 1 ? const Dashboard() : const
-          //       SupervisorDashboard(),
-          //     ),
-          //     (route) => false,
-          //   );
-          // } catch (e) {
-
-          //   Navigator.pushAndRemoveUntil(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => const LoginAs(),
-          //     ),
-          //     (route) => false,
-          //   );
-          // }
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginAs(),
+              ),
+              (route) => false,
+            );
+          }
         }
 
         if (state is ClientSuccess) {
@@ -203,15 +207,15 @@ class _SplashScreenState extends State<SplashScreen> {
             MaterialPageRoute(
               builder: (context) => clientId.isNotEmpty
                   ? isComplete
-                      ? const EcomScreen()
-                      : const EcomScreen(
-                          // isFromDashboard: false,
-                          )
+                      ? const ClientDashboard()
+                      : const Home(
+                          isFromDashboard: false,
+                        )
                   : roleId == 1
-                      ? const EcomScreen()
-                      : const EcomScreen(
-                          // isFromSupervisor: false,
-                          ),
+                      ? const Dashboard()
+                      : const SupervisorDashboard(
+                          isFromSupervisor: false,
+                        ),
             ),
             (route) => false,
           );
@@ -282,8 +286,9 @@ class _SplashScreenState extends State<SplashScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CustomImageProvider(
-                      scale: 5,
+                      scale: 3,
                       image: AppImages.splashLogo,
+                      width: 300,
                     ),
                     // Image.asset(
                     //   AppImages.splash_logo,

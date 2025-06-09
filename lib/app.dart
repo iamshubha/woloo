@@ -1,3 +1,8 @@
+
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:woloo_smart_hygiene/screens/splash_screen/view/splash.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:context_holder/context_holder.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -7,7 +12,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:woloo_smart_hygiene/screens/splash_screen/view/splash.dart';
+import 'client_flow/screens/iot/view/iot_onbaord.dart';
 
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_constants.dart';
@@ -34,14 +39,18 @@ class _AppState extends State<App> {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return ConnectivityAppWrapper(
-          app: GetMaterialApp(
+        return 
+        ConnectivityAppWrapper(
+          app: 
+          GetMaterialApp(
+            // builder: FToastBuilder(),
             navigatorKey: ContextHolder.key,
             debugShowCheckedModeBanner: false,
             title: AppName.APP_NAME,
             locale: context.locale,
             supportedLocales: context.supportedLocales,
             localizationsDelegates: context.localizationDelegates,
+            
             builder: EasyLoading.init(
               builder: (context, child) {
                 return ConnectivityWidgetWrapper(
@@ -49,10 +58,36 @@ class _AppState extends State<App> {
               },
             ),
             theme: ThemeData(
-                disabledColor: Colors.grey,
-                textTheme: GoogleFonts.poppinsTextTheme(),
-                appBarTheme:
-                    const AppBarTheme(surfaceTintColor: Colors.transparent)),
+              disabledColor: Colors.grey,
+              textTheme: GoogleFonts.poppinsTextTheme(),
+                scaffoldBackgroundColor: AppColors.white,
+                  textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: Colors.black,
+
+                textStyle: const TextStyle(fontSize: 18,
+     color: AppColors.black,
+     fontWeight: FontWeight.bold),
+  
+        // backgroundColor: Colors.red, // Use this
+        // side: const BorderSide(
+        //   width: 1.5,
+        //   color: Color(0xFFC5C5C5),
+        // ),
+      ),
+    ),
+  // ),
+                // dropdownMenuTheme: const DropdownMenuThemeData(
+                //   menuStyle: MenuStyle(
+                //     backgroundColor: Color(0xfffffff)
+                //   )
+                // ),
+                // colorScheme:,
+              appBarTheme: const AppBarTheme(
+                backgroundColor: AppColors.white,
+                  surfaceTintColor: Colors.transparent
+              )
+            ),
             home: GestureDetector(
               child: child,
             ),

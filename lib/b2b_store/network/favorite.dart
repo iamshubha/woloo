@@ -30,10 +30,10 @@ class FavoriteService {
     }
   }
 
-  Future<bool> createFavorites({required String token}) async {
+  Future<Wishlist> createFavorites({required String token}) async {
     try {
       var response = await dio.post(
-        "https://staging-store.woloo.in/store/customers/me/wishlists/items",
+        "https://staging-store.woloo.in/store/customers/me/wishlists",
         options: Options(
           headers: {
             'x-publishable-api-key':
@@ -44,7 +44,7 @@ class FavoriteService {
         ),
       );
 
-      return response.statusCode == 200 || response.statusCode == 201;
+      return Wishlist.fromJson(response);
     } catch (e) {
       debugPrint("Error in getOrderDetails service: $e");
       rethrow;

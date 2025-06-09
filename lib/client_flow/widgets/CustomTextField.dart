@@ -12,6 +12,9 @@ class CustomTextField extends StatelessWidget {
   final Color fillColor;
   final FocusNode? focusNode;
   final bool? readOnly;
+  final TextInputAction? textInputAction;
+  final  Function(String)? onFieldSubmitted;
+  final EdgeInsetsGeometry? padding;
 
   const CustomTextField({
     super.key,
@@ -24,17 +27,21 @@ class CustomTextField extends StatelessWidget {
     this.prefixIcon,
     this.fillColor = Colors.white,
     this.focusNode,
-    this.readOnly =false
+    this.readOnly =false,
+    this.textInputAction,
+    this.onFieldSubmitted,
+    this.padding,
 
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
+      padding:  padding  == null ?  EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h) : EdgeInsets.all(0) ,
       child: Container(
         // height: 36.h,
         decoration: BoxDecoration(
+            // borderRadius: BorderRadius.circular(5),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.2), // Shadow color
@@ -46,16 +53,15 @@ class CustomTextField extends StatelessWidget {
         ),
         child:
         TextFormField(
+          textInputAction: textInputAction,
           readOnly:readOnly!,
           focusNode: focusNode,
-          // onTapOutside: (event) {
-          //   FocusScope.of(context).unfocus();
-          // },
           controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
           maxLength: maxLength,
           validator: validator,
+          onFieldSubmitted: onFieldSubmitted,
           // textAlign: TextAlign.center,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration: InputDecoration(
@@ -64,7 +70,7 @@ class CustomTextField extends StatelessWidget {
             fillColor: fillColor,
             filled: true,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(7),
               borderSide: BorderSide.none,
             ),
             prefixIcon: prefixIcon != null
@@ -73,7 +79,8 @@ class CustomTextField extends StatelessWidget {
             hintText: hintText,
             hintStyle: TextStyle(
               color: Colors.grey,
-              fontSize: 16.sp,
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w700
             ),
           ),
         ),

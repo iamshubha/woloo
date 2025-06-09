@@ -13,8 +13,8 @@ class FacilityModel {
     bool? success;
 
     FacilityModel({
-         this.results,
-         this.success,
+        this.results,
+        this.success,
     });
 
     factory FacilityModel.fromJson(Map<String, dynamic> json) => FacilityModel(
@@ -33,8 +33,8 @@ class Results {
     List<Facility>? facilities;
 
     Results({
-         this.total,
-         this.facilities,
+        this.total,
+        this.facilities,
     });
 
     factory Results.fromJson(Map<String, dynamic> json) => Results(
@@ -56,29 +56,41 @@ class Facility {
     int? floorNumber;
     String? clientName;
     String? facilityName;
+    String? facilityType;
     String? description;
     dynamic shiftIds;
     bool? status;
     int? noOfBooths;
     DateTime? createdAt;
     DateTime? updatedAt;
+    int? clusterId;
+    List<Shift>? shifts;
+    String? subscriptionStatus;
+    int? planId;
+    String? planName;
     String? total;
 
     Facility({
-         this.id,
-         this.blockName,
-         this.blockId,
-         this.locationName,
-         this.floorNumber,
-         this.clientName,
-         this.facilityName,
-         this.description,
-         this.shiftIds,
-         this.status,
-         this.noOfBooths,
-         this.createdAt,
-         this.updatedAt,
-         this.total,
+        this.id,
+        this.blockName,
+        this.blockId,
+        this.locationName,
+        this.floorNumber,
+        this.clientName,
+        this.facilityName,
+        this.facilityType,
+        this.description,
+        this.shiftIds,
+        this.status,
+        this.noOfBooths,
+        this.createdAt,
+        this.updatedAt,
+        this.clusterId,
+        this.shifts,
+        this.subscriptionStatus,
+        this.planId,
+        this.planName,
+        this.total,
     });
 
     factory Facility.fromJson(Map<String, dynamic> json) => Facility(
@@ -89,12 +101,18 @@ class Facility {
         floorNumber: json["floor_number"],
         clientName: json["client_name"],
         facilityName: json["facility_name"],
+        facilityType: json["facility_type"],
         description: json["description"],
         shiftIds: json["shift_ids"],
         status: json["status"],
         noOfBooths: json["no_of_booths"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
+        clusterId: json["cluster_id"],
+        shifts: List<Shift>.from(json["shifts"].map((x) => Shift.fromJson(x))),
+        subscriptionStatus: json["subscription_status"],
+        planId: json["plan_id"],
+        planName: json["plan_name"],
         total: json["total"],
     );
 
@@ -106,12 +124,46 @@ class Facility {
         "floor_number": floorNumber,
         "client_name": clientName,
         "facility_name": facilityName,
+        "facility_type": facilityType,
         "description": description,
         "shift_ids": shiftIds,
         "status": status,
         "no_of_booths": noOfBooths,
         "created_at": createdAt!.toIso8601String(),
         "updated_at": updatedAt!.toIso8601String(),
+        "cluster_id": clusterId,
+        "shifts": List<dynamic>.from(shifts!.map((x) => x.toJson())),
+        "subscription_status": subscriptionStatus,
+        "plan_id": planId,
+        "plan_name": planName,
         "total": total,
+    };
+}
+
+class Shift {
+    String? endTime;
+    int? shiftId;
+    String? shiftName;
+    String? startTime;
+
+    Shift({
+        this.endTime,
+        this.shiftId,
+        this.shiftName,
+        this.startTime,
+    });
+
+    factory Shift.fromJson(Map<String, dynamic> json) => Shift(
+        endTime: json["end_time"],
+        shiftId: json["shift_id"],
+        shiftName: json["shift_name"],
+        startTime: json["start_time"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "end_time": endTime,
+        "shift_id": shiftId,
+        "shift_name": shiftName,
+        "start_time": startTime,
     };
 }

@@ -35,7 +35,9 @@ class JanitorSlot extends StatefulWidget {
 class _JanitorSlotState extends State<JanitorSlot> {
 
     AssignBloc assignBloc = AssignBloc() ;
-    List<DashboardModelClass> janitorTask = [];
+    List<DashboardModelClass> janitorTask = [
+
+    ];
     TextEditingController controller = TextEditingController();
     TextEditingController startController = TextEditingController();
     TextEditingController endController = TextEditingController();
@@ -157,7 +159,7 @@ class _JanitorSlotState extends State<JanitorSlot> {
                             height:260,
                             // flex:2,
                             child: ListView.builder(
-
+                              shrinkWrap: true,
                               itemCount: janitorTask.length,
                               itemBuilder:
                             (context, index) {
@@ -511,17 +513,121 @@ class _JanitorSlotState extends State<JanitorSlot> {
     }
 
    showTime()async{
-     TimeOfDay initialTime = TimeOfDay.now();
-     return   await showTimePicker(
-       context: context,
-       initialTime: initialTime,
-       // builder: (BuildContext context, Widget child) {
-       //   return Directionality(
-       //     // textDirection: TextDirection.LTR,
-       //     child: child,
-       //   );
-       // },
-     );
+    //  TimeOfDay initialTime = TimeOfDay.now();
+     return 
+      await    showTimePicker(
+                                        helpText: "Select Time",
+                                          // barrierColor : AppColors.white,
+                                       context: context,
+                                       initialTime: TimeOfDay.now(),
+                          builder: (BuildContext context, Widget? child) {
+    return Theme(
+      data: Theme.of(context).copyWith(
+        // inputDecorationTheme: InputDecorationTheme(
+        //  activeIndicatorBorder: 
+        // ),
+       
+        timePickerTheme:  TimePickerThemeData(
+      
+          shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(80),
+            ),
+          helpTextStyle: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w700
+           ),
+           hourMinuteTextColor: Colors.black,
+           hourMinuteTextStyle:  const TextStyle(
+            fontSize: 48,
+            fontWeight: FontWeight.w700
+           ),
+          dialHandColor: const Color(0xffFFEB00),
+          dialTextColor: Colors.black,
+          dayPeriodColor: const Color(0xffFFEB00),
+          dialTextStyle: const TextStyle(
+             fontSize: 16,
+             fontWeight: FontWeight.bold
+          ),
+          hourMinuteColor:
+              MaterialStateColor.resolveWith((Set<MaterialState> states) {
+    if (states.contains(MaterialState.selected)) {
+      return const Color(0xff8BDFFB);
+    }
+    return Colors.white;
+  }),
+          // timeSelectorSeparatorColor: ,
+          // timeSelectorSeparatorColor:
+        
+
+          hourMinuteShape: const RoundedRectangleBorder(
+  borderRadius: BorderRadius.all(Radius.circular(18.0)),
+  side: BorderSide.none,
+),
+          
+          dayPeriodShape: 
+const RoundedRectangleBorder(
+  borderRadius: BorderRadius.all(Radius.circular(18.0)),
+  side: BorderSide(),
+)
+          ,
+          // dayPeriodBorderSide: BorderSide(
+          //   style: BorderStyle.
+          // ),
+          dialBackgroundColor: const Color(0xff8BDFFB),
+
+
+          confirmButtonStyle: 
+          TextButton.styleFrom(
+            textStyle: const TextStyle(fontSize: 18,
+     color: AppColors.black,
+     fontWeight: FontWeight.bold),
+  ),
+      
+  
+
+          cancelButtonStyle: 
+          TextButton.styleFrom(
+            textStyle: const TextStyle(fontSize: 18,
+     color: AppColors.black,
+     fontWeight: FontWeight.bold),
+  ),
+      
+  //            MaterialStateProperty.all(
+
+  //   const TextStyle(fontSize: 18,
+  //    color: AppColors.black,
+  //    fontWeight: FontWeight.bold),
+  // ),), 
+            // backgroundColor: MaterialStateProperty.all<Color>(Colors.brown.shade300)),
+
+          backgroundColor: const Color.fromRGBO(255, 255, 255, 0.8) // 👈 Your custom background
+          // hourMinuteTextColor: Colors.white,
+          // dialHandColor: Colors.red,
+          // entryModeIconColor: Colors.white,
+        ),
+      ),
+      child: child!,
+    );
+              },
+            // );
+
+                                       // builder: (BuildContext context, Widget? child) {
+                                       //   // return Directionality(
+                                       //   //   // textDirection: TextDirection.rtl,
+                                       //   //   child: child!,
+                                       //   // );
+                                       // },
+                                     );
+    //    await showTimePicker(
+    //    context: context,
+    //    initialTime: initialTime,
+    //    // builder: (BuildContext context, Widget child) {
+    //    //   return Directionality(
+    //    //     // textDirection: TextDirection.LTR,
+    //    //     child: child,
+    //    //   );
+    //    // },
+    //  );
    }
 
 }

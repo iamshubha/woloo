@@ -13,12 +13,14 @@ class Custombutton extends StatelessWidget {
   final double? width;
   final double? height;
   final Color? textColor;
+  final Key? buttonkey;
 
   const Custombutton({
     super.key,
     required this.text,
     this.enabled = true,
     this.color,
+    this.buttonkey,
    required this.width,
     this.height, this.textColor,
   });
@@ -26,6 +28,7 @@ class Custombutton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      key: buttonkey,
       height: height ?? 35.h,
       width: width,
       padding: EdgeInsets.symmetric(horizontal: 15.w),
@@ -47,6 +50,8 @@ class Custombutton extends StatelessWidget {
           textAlign: TextAlign.center,
           style: 
           AppTextStyle.font14w7.copyWith(
+            fontSize:  MediaQuery.of(context).size.height < 640  ? 14  : 16,
+            fontWeight: FontWeight.w700,
             color: textColor ?? AppColors.black, 
           )
           // TextStyle(

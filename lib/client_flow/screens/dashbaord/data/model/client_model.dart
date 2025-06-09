@@ -110,7 +110,7 @@ class Client {
     });
 
     factory Client.fromJson(Map<String, dynamic> json) => Client(
-        label: json["label"],
+        label: json["label"] ?? "",
         value: json["value"],
     );
 

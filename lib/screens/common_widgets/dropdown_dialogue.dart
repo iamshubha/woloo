@@ -20,6 +20,7 @@ class DropDownDialog<T> extends StatefulWidget {
   final bool? isprop;
   final TextStyle? hintTextStyle;
   final EdgeInsetsGeometry? padding;
+  final double?  width;
 
   const DropDownDialog({
     super.key,
@@ -34,7 +35,8 @@ class DropDownDialog<T> extends StatefulWidget {
     this.isprop,
     this.hintTextStyle,
     this.padding,
-   required this.hint
+   required this.hint,
+      this.width
   });
 
   @override
@@ -53,6 +55,7 @@ class _DropDownDialogState<T> extends State<DropDownDialog<T>> {
      debugPrint("TEST ${widget.selected}");
     return 
     Container(
+      width: widget.width ?? widget.width,
       decoration: BoxDecoration(
         color: Colors.white,
         
@@ -92,7 +95,7 @@ class _DropDownDialogState<T> extends State<DropDownDialog<T>> {
                 searchFieldProps: TextFieldProps(
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 10.w),
+                    contentPadding: EdgeInsets.only( top: 20.w, left: 10.w, right: 10.w),
                     hintText: MyFacilityListConstants.SEARCH.tr(),
                   ),
                 ),

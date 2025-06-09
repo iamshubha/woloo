@@ -28,6 +28,8 @@ class AddTimeDailog extends StatefulWidget {
  String? endTime;
  bool? isFromExisting;
  int? janitorId;
+ String? facilityType;
+ String? facalityName;
     //  List<TimeOfDay>? taskStartTime;
     //  List<TimeOfDay>? taskEndTime;
      // List<Map<String, String>>? taskTimes;
@@ -38,7 +40,9 @@ class AddTimeDailog extends StatefulWidget {
      this.startTime,
      this.endTime,
      required this.isFromExisting,
-     this.janitorId
+     this.janitorId,
+    required  this.facalityName,
+    required this.facilityType
 
    });
 
@@ -115,8 +119,9 @@ class _AddTimeDailogState extends State<AddTimeDailog> {
                                                }, ).then((value) {
                                                  Navigator.of(context).pop();
                                                }, );
+
                                               // Navigator.of(context).pop();
-                                              dashController.taskTimeModel.insert(0, TaskTimeModel(taskId: 0, endTime: endTimeofDay, startTime: timeOfDay!, facilityName:"" , facilityType: ""));
+                                              dashController.taskTimeModel.insert(0, TaskTimeModel(taskId: 0, endTime: endTimeofDay, startTime: timeOfDay!, facilityName:widget.facalityName! , facilityType: widget.facilityType!));
 
                                            }
                                           //  else{
@@ -143,10 +148,19 @@ class _AddTimeDailogState extends State<AddTimeDailog> {
                 },
                  builder: (context, state) {
                    return AlertDialog(
+                    insetPadding: EdgeInsets.zero,
+                     shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(16.0))),
                      backgroundColor: AppColors.white,
-                     title: const Text(DashboardConst.scheduleTask,),
-                     content:  SizedBox(
-                      width: double.infinity,
+                     title: const Text("Schedule Task *",
+                     style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700
+                     ),
+                     ),
+                     content:  Container(
+                      width: MediaQuery.of(context).size.width/1.3,
+                      //  decoration: ,
                        child: SingleChildScrollView(
                          child: ListBody(
                            children: <Widget>[
@@ -159,11 +173,13 @@ class _AddTimeDailogState extends State<AddTimeDailog> {
                              TimePickerSpinner(
                                locale: const Locale('en', ''),
                                time: dateTime,
+
                                is24HourMode: false,
                                isShowSeconds: false,
                                spacing: 60,
-                               itemWidth: 25,
+                               itemWidth: 40,
                                itemHeight: 50,
+                          
                                normalTextStyle: const TextStyle(
                                  fontSize: 13,
                                  color: AppColors.greyIcon,
@@ -171,35 +187,28 @@ class _AddTimeDailogState extends State<AddTimeDailog> {
                                           
                                ),
                                // isShowSeconds: false,
+
                                highlightedTextStyle:
                                const TextStyle(
                                    fontWeight: FontWeight.bold,
                                    fontSize: 13, color: Colors.black),
                                isForce2Digits: true,
                                onTimeChange: (time) {
-                                 setState(() {
+                                //  setState(() { 
                                    dateTime = time;
                                           
                                           
-                                          
-                                  //  taskTimes.add( { });
-                           
-                                  //  timevar =
-                                  //  {
-                                  //    "taskStartTime": taskStartTime!,
-                                  //    "taskEndTime": taskEndTime!,
-                                  //  };
-                               
-                                          
-                                  //  print("to send in api ${widget.taskTimes}");
-                                   // final localizations = MaterialLocalizations.of(context);
-                                   // final formattedTimeOfDay = localizations.;
-                                   print("time $time");
-                                 });
+         
+                                   print("time $dateTime");
+                                //  });
+
                                },
                              ),
+                             const SizedBox(
+                              height: 5,
+                             ),
                              Row(
-                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                               mainAxisAlignment: MainAxisAlignment.center,
                                children: [
                                  GestureDetector(
                                      onTap:(){
@@ -208,7 +217,10 @@ class _AddTimeDailogState extends State<AddTimeDailog> {
                                        String? formattedEndDate = "" ;
                                        var endTime =  dateTime.add(Duration(minutes: widget.estimatedTime));
                                        print("end timessss $endTime");
-                                       print("estiamged ${widget.estimatedTime}");
+                                       print("estiamged time dailog ${widget.estimatedTime}");
+                                          //  print("facility name ${widget.facalityName}");
+                                          //  print("facility type ${widget.facilityType}");
+                                      //  print("estiamged ${widget.estimatedTime}");
                                        // estimatedTime;
                                        // taskTimes.add({"end_time" :  });
                                           
@@ -259,13 +271,13 @@ class _AddTimeDailogState extends State<AddTimeDailog> {
                                                      if (isSafeToAdd!) {
                        
                                                          dashController.taskTimeModel.add( 
-                                                TaskTimeModel(taskId: 0, endTime: endTimeofDay, startTime: timeOfDay!, facilityName:"" , facilityType: "")
+                                                TaskTimeModel(taskId: 0, endTime: endTimeofDay, startTime: timeOfDay!, facilityName: "" , facilityType: "" )
                        
                                                    );
                        
                                                          formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
                                                   formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(endTime);
-                                           dashController.taskTimes.add(
+                                                 dashController.taskTimes.add(
                                                {
                                                  "start_time" : formattedStartDate ,
                                                  "end_time" : formattedEndDate
@@ -326,7 +338,7 @@ class _AddTimeDailogState extends State<AddTimeDailog> {
                                         // Navigator.pop(context,t;
                                           
                                                                   } ,
-                                     child: Custombutton(text: DashboardConst.save, width: 137.w)),
+                                     child: Custombutton(text: DashboardConst.save, width: 197)),
                                  // GestureDetector(
                                  //     onTap:(){
                                  //       // janitorBottomSheet()
@@ -336,7 +348,7 @@ class _AddTimeDailogState extends State<AddTimeDailog> {
                                ],
                              ),
                               const SizedBox(
-                                height: 10,
+                                height: 0,
                               ),
                                           
                              timeOfDay == null ?

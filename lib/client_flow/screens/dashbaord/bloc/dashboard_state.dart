@@ -14,6 +14,8 @@ import '../data/model/check_supervisor.dart';
 import '../data/model/client_model.dart';
 import '../data/model/client_setup_model.dart';
 import '../data/model/delete_facility.dart';
+import '../data/model/janitor_model.dart';
+import '../data/model/payment_status.dart';
 import '../data/model/subscription_model.dart';
 import '../data/model/supervisor_model.dart';
 import '../data/model/tasklist_model.dart';
@@ -142,6 +144,31 @@ class DeltetFacility extends DashboardState {
   //   });
   @override
   List<Object> get props => [deleteModel!];
+}
+
+
+
+class ExtendExpiry extends DashboardState {
+  @override
+  List<Object> get props => [];
+}
+
+class PaymentStatus extends DashboardState {
+  PaymentStatusModel? paymentStatusModel;
+ 
+  PaymentStatus({this.paymentStatusModel});
+   
+  @override
+  List<Object> get props => [paymentStatusModel!];
+}
+
+class FacilityByJanitor extends DashboardState {
+  JanitorModel? janitorModel;
+ 
+  FacilityByJanitor({this.janitorModel});
+   
+  @override
+  List<Object> get props => [janitorModel!];
 }
 
 

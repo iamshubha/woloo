@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/services.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -52,18 +53,14 @@ class _OTPWidgetState extends State<OTPWidget> {
         Center(
           child: Pinput(
            key:const ValueKey("otptextfield"),
-           
             controller: _pinController,
             hapticFeedbackType: HapticFeedbackType.lightImpact,
             defaultPinTheme: PinTheme(
               margin: EdgeInsets.symmetric(horizontal: 5.w),
               height: 51.h,
-              width: 51.w,
-
-              
+              width: 51.w,  
               decoration: BoxDecoration(
                 color: AppColors.white,
-                 
                 boxShadow: [
                     BoxShadow(
                           color: Colors.black.withValues( alpha: 0.2), // Shadow color
@@ -80,12 +77,18 @@ class _OTPWidgetState extends State<OTPWidget> {
                 ),
                 borderRadius: BorderRadius.circular(10.r),
               ),
-            ),
-             
+            ), 
             onCompleted: (pin) {
-              debugPrint(pin);
-              widget.onComplete(pin);
+              // debugPrint(pin);
+            
             },
+            inputFormatters: [ FilteringTextInputFormatter.digitsOnly ],
+            // keyboardType:,
+            onChanged: (pin) {
+                widget.onComplete(pin);
+              
+            },
+
           ),
         ),
         SizedBox(

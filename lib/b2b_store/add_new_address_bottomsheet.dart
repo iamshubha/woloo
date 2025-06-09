@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_places_flutter/google_places_flutter.dart';
+import 'package:google_places_flutter/model/place_type.dart';
+import 'package:google_places_flutter/model/prediction.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 
@@ -142,6 +146,93 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                 ),
                 Row(
                   children: [
+                    // Padding(
+                    //   padding:
+                    //       EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
+                    //   child: Container(
+                    //     // height: 36.h,
+                    //     decoration: BoxDecoration(
+                    //       borderRadius: BorderRadius.circular(7),
+                    //       boxShadow: [
+                    //         BoxShadow(
+                    //           color:
+                    //               Colors.black.withOpacity(0.2), // Shadow color
+                    //           spreadRadius: 1, // Spread effect
+                    //           blurRadius: 10, // Blur effect
+                    //           offset: const Offset(0, 5), // Bottom shadow
+                    //         ),
+                    //       ],
+                    //     ),
+                    //     child:
+                    //      GooglePlaceAutoCompleteTextField(
+                    //       placeType: PlaceType.cities,
+                    //       // focusNode: _cityFocusNode,
+                    //       textEditingController: _cityController,
+                    //       googleAPIKey:
+                    //           "AIzaSyCkPmUz4UlRdzcKG9gniW9Qfrgzsjhnb_4",
+                    //       inputDecoration: InputDecoration(
+                    //         contentPadding: const EdgeInsets.symmetric(
+                    //             vertical: 12.0, horizontal: 5),
+                    //         hintText: SignUpConstant.city,
+                    //         hintStyle: TextStyle(
+                    //             color: Colors.grey,
+                    //             fontSize: 16.sp,
+                    //             fontWeight: FontWeight.w700),
+                    //         border: OutlineInputBorder(
+                    //           borderRadius: BorderRadius.circular(0),
+                    //           borderSide: BorderSide.none,
+                    //         ),
+                    //         fillColor: AppColors.white,
+                    //         filled: true,
+                    //       ),
+
+                    //       validator: (valu, p1) {
+                    //         setState(() {});
+                    //         print("val $valu");
+
+                    //         // FocusManager.instance.primaryFocus?.unfocus();
+                    //         if (valu == null || valu.isEmpty) {
+                    //           return "City is required";
+                    //         }
+                    //       },
+                    //       // debounceTime: 400,
+                    //       countries: ["in", "fr"],
+                    //       isLatLngRequired: true,
+                    //       getPlaceDetailWithLatLng: (Prediction prediction) {
+                    //         print("placeDetails" + prediction.lat.toString());
+                    //       },
+
+                    //       itemClick: (Prediction prediction) {
+                    //         _cityController.text = prediction.description ?? "";
+                    //       },
+
+                    //       // seperatedBuilder: const Divider(),
+                    //       containerHorizontalPadding: 10,
+                    //       // OPTIONAL// If you want to customize list view item builder
+                    //       itemBuilder: (context, index, Prediction prediction) {
+                    //         return Container(
+                    //           color: AppColors.white,
+                    //           padding: const EdgeInsets.all(10),
+                    //           child: Row(
+                    //             children: [
+                    //               const Icon(Icons.location_on),
+                    //               const SizedBox(
+                    //                 width: 7,
+                    //               ),
+                    //               Expanded(
+                    //                   child: Text(
+                    //                       "${prediction.description ?? ""}"))
+                    //             ],
+                    //           ),
+                    //         );
+                    //       },
+                    //       formSubmitCallback: () {
+                    //         print("dgd");
+                    //       },
+                    //     ),
+                    //   ),
+                    // ),
+
                     Expanded(
                       child: XDecoratedBox(
                         padding: 4,

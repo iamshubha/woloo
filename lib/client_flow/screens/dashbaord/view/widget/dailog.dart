@@ -26,22 +26,32 @@ class Dailog extends StatelessWidget {
         borderRadius: BorderRadius.circular(60),
        ),                 
                                   backgroundColor: AppColors.white,
-                                  content:
+                                   content:
                                   SingleChildScrollView(
-                                    child: ListBody(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+
+// mainAxisAlignment: MainAxisAlignment.center,
                                       children: <Widget>[
+                                             SizedBox(
+                                          height: 10,
+                                        ),
+                                        image!.isEmpty ? 
+                                         SizedBox():
                                          CustomImageProvider(
                                           image: image ?? ClientImages.warning,
                                           width: 86.w,
                                           height: 86.h,
                                          ),
                                         SizedBox(
-                                          height: 10.h,
+                                          height: 30,
                                         ),
                                         Text(
                                           textAlign: TextAlign.center,
                                           title!,
-                                         style: AppTextStyle.font18bold,
+                                         style: AppTextStyle.font18bold.copyWith(
+                                          fontSize: 18
+                                         ),
                                         ),
                                         SizedBox(
                                           height: 20.h,
@@ -61,7 +71,7 @@ class Dailog extends StatelessWidget {
                                           ),
                                         ),
                                             SizedBox(
-                                          height: 20.h,
+                                          height: 10,
                                         ),
                                       ],
                                     ),

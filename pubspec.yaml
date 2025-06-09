@@ -16,7 +16,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.17+23
+version: 1.0.18+27
 
 environment:
   sdk: ">=3.1.0 <4.0.0"
@@ -40,7 +40,7 @@ dependencies:
   dio_log: ^2.0.4
   pretty_dio_logger: ^1.2.0-beta-1
   get_storage: ^2.1.1
-  equatable: ^2.0.7
+  equatable: ^2.0.5
   network_logger: ^1.0.3
   device_info_plus: ^11.1.0
   flutter_easyloading: ^3.0.5
@@ -76,7 +76,7 @@ dependencies:
   location: ^5.0.3
   dotted_border: ^2.0.0+3
   rflutter_alert: ^2.0.4
-  url_launcher: ^6.1.11
+  url_launcher: ^6.3.1
   flutter_local_notifications: ^18.0.1
   #  flutter_local_notifications: ^16.2.0
   carousel_slider: ^5.0.0
@@ -113,7 +113,11 @@ dependencies:
   time_picker_spinner: ^1.0.2
   flutter_rating_bar: ^4.0.1
   icon_decoration: ^2.1.0
-  provider: ^6.1.4
+  smooth_page_indicator: ^1.2.1
+  dot_navigation_bar: ^1.0.2
+  dropdown_button2: ^2.3.9
+  badges: ^3.1.2
+  multi_dropdown: ^3.0.1
   gauge_chart: ^1.0.4
   simple_floating_bottom_nav_bar: ^0.0.3
   timelines_plus: ^1.0.6
@@ -123,9 +127,11 @@ dependencies:
   percent_indicator: ^4.2.5
   dashed_circular_progress_bar: ^0.0.6
   animated_rating_stars: ^1.0.1
-  cherry_toast:
   fluttertoast: ^8.2.12
-  string_to_color: ^2.0.0
+  crypto: ^3.0.3
+  encrypt: ^5.0.3
+  convert: ^3.1.2
+
 
 dependency_overrides:
   rxdart: ^0.27.2

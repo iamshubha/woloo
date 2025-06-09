@@ -317,13 +317,19 @@ class XDecoratedBox extends StatelessWidget {
       padding: EdgeInsets.all(padding.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(radius.r),
+        borderRadius: BorderRadius.circular(7),
         boxShadow: [
+          // BoxShadow(
+          //   color: Colors.grey.withOpacity(0.1),
+          //   blurRadius: 5,
+          //   spreadRadius: 1,
+          //   offset: const Offset(0, 3),
+          // ),
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 5,
-            spreadRadius: 1,
-            offset: const Offset(0, 3),
+            color: Colors.black.withOpacity(0.2), // Shadow color
+            spreadRadius: 1, // Spread effect
+            blurRadius: 10, // Blur effect
+            offset: const Offset(0, 5), // Bottom shadow
           ),
         ],
       ),
