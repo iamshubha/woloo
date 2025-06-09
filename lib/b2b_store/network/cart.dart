@@ -60,7 +60,7 @@ class CartApiService {
           },
         ),
       );
-      // logger.w(response);
+      // //logger.w(response);
       return CartModel.fromJson(response);
     } catch (e) {
       debugPrint("Error in IOT service: $e");
@@ -74,8 +74,8 @@ class CartApiService {
       required int count,
       required String token}) async {
     try {
-      logger.w(
-          "URL: ${APIConstants.ADD_TO_CART + cartId + APIConstants.Add_Remove_Item + itemId}");
+      //logger.w(
+      // "URL: ${APIConstants.ADD_TO_CART + cartId + APIConstants.Add_Remove_Item + itemId}");
       final res = await dio.post(
           APIConstants.ADD_TO_CART +
               cartId +

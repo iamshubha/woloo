@@ -19,6 +19,7 @@ import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/wishlist.dart';
+import 'package:woloo_smart_hygiene/client_flow/screens/subcription/view/clientprofile.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/enums/product_mode.dart';
 import 'package:woloo_smart_hygiene/extensions/string_extension.dart';
@@ -1152,6 +1153,11 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
             onPressed: () {
               // refreshCart(context);
               //  TODO:Add Profile
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Clientprofile(),
+                  ));
             },
           ),
         ),

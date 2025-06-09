@@ -93,7 +93,7 @@ class LoginFlowService {
           },
         ),
       );
-      logger.w(response);
+      //logger.w(response);
       return (response['token']);
     } catch (e) {
       debugPrint("Error in IOT service: $e");

@@ -12,6 +12,7 @@ import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart'
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
 
 class WishListScreen extends StatefulWidget {
@@ -271,7 +272,17 @@ class _WishListScreenState extends State<WishListScreen> {
                                       top: 20,
                                       right: 20,
                                       child: InkWell(
-                                          onTap: () {},
+                                          onTap: () {
+                                            logger.w(_wProductData);
+                                            _b2bStoreBloc.add(RemoveWishList(
+                                                itemId: _b2bStoreBloc.favIds
+                                                    .firstWhere((e) =>
+                                                        e.entries.first.key ==
+                                                        product.id)
+                                                    .entries
+                                                    .first
+                                                    .value));
+                                          },
                                           child: const Icon(
                                             // isSelected
                                             //     ?

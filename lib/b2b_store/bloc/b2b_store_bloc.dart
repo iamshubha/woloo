@@ -376,9 +376,6 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       CartModel response = await _cartService.getAllCartData(
           token: box.read('login_jwt'), cartId: box.read('cart_id'));
 
-      debugPrint("requestId $response");
-      print(response);
-
       emit(CartSuccess(cartData: response));
     } catch (e) {
       emit(CartError(error: e.toString()));

@@ -74,7 +74,7 @@ class FavoriteService {
           data: {
             "variant_id": variantId,
           });
-      // logger.w(response);
+      // //logger.w(response);
       return Wishlist.fromJson(response);
     } catch (e) {
       debugPrint("Error in getOrderDetails service: $e");
@@ -106,7 +106,7 @@ class FavoriteService {
             "comment": comment,
             "line_item_id": line_item_id
           });
-      // logger.w("Response from getOrderDetails: $response");
+      // //logger.w("Response from getOrderDetails: $response");
       return Review.fromJson(response);
     } catch (e) {
       debugPrint("Error in getOrderDetails service: $e");
@@ -127,7 +127,7 @@ class FavoriteService {
           },
         ),
       );
-      // logger.w(response);
+      // //logger.w(response);
       return Wishlist.fromJson(response);
     } catch (e) {
       logger.e("Remove Item Failure: $e");

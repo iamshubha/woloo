@@ -22,7 +22,7 @@ class OrderDetailsService {
           },
         ),
       );
-      // logger.w(response);
+      // //logger.w(response);
       return OrderDetails.fromJson(response);
     } catch (e) {
       debugPrint("Error in getOrderDetails service: $e");
@@ -44,7 +44,7 @@ class OrderDetailsService {
           },
         ),
       );
-      // logger.w("Response received: $response");
+      // //logger.w("Response received: $response");
 
       return CustomerReviews.fromJson(response["data"]);
     } catch (e) {

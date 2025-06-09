@@ -148,7 +148,7 @@ class ProductService {
           },
         ),
       );
-      logger.w(response);
+      //logger.w(response);
       return ProductCollections.fromJson(response);
     } catch (e) {
       debugPrint("error $e");
@@ -160,10 +160,10 @@ class ProductService {
     required String token,
     required String id,
   }) async {
-    logger.w("getProductCollectionsById called with id: $id");
+    //logger.w("getProductCollectionsById called with id: $id");
     try {
-      logger.w("getProductCollectionsById id: $id");
-      logger.w("Token: $token");
+      //logger.w("getProductCollectionsById id: $id");
+      //logger.w("Token: $token");
       var response = await dio.get(
         "https://staging-store.woloo.in/store/products?fields=*variants.calculated_price,+variants.inventory_quantity&collection_id=$id",
         options: Options(
@@ -175,7 +175,7 @@ class ProductService {
           },
         ),
       );
-      // logger.w(response);
+      // //logger.w(response);
       return ProductCollections.fromJson(response);
     } catch (e) {
       debugPrint("error $e");
