@@ -1136,48 +1136,28 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false, // Remove default back button
       backgroundColor: AppColors.themeBackground,
       actions: [
-        cartValue != 0
-            ? Badge(
-                label: Text(cartValue.toString()),
-                child: CircleAvatar(
-                  backgroundColor: AppColors.greyIcon,
-                  child: IconButton(
-                    icon: ImageIcon(AssetImage(AppImages.bag)),
-                    onPressed: () async {
-                      final value = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const CartScreen()));
-                      if (value != null && value == 'refresh') {
-                        if (onTap != null) {
-                          onTap!();
-                        }
-                      }
-                    },
-                  ),
-                ),
-              )
-            : Badge(
-                label: const Text("0"),
-                child: CircleAvatar(
-                  backgroundColor: AppColors.greyIcon,
-                  child: IconButton(
-                    icon: ImageIcon(AssetImage(AppImages.bag)),
-                    onPressed: () async {
-                      final value = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const CartScreen()));
-                      if (value != null && value == 'refresh') {
-                        if (onTap != null) {
-                          onTap!();
-                        }
-                      }
-                    },
-                  ),
-                ),
-              ),
-        SizedBox(width: 10.w),
+        Container(
+          decoration: BoxDecoration(
+              color: AppColors.lightCyanColor,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: const [
+                BoxShadow(
+                    offset: Offset(2, 3),
+                    color: Color.fromARGB(255, 230, 228, 228),
+                    spreadRadius: 2,
+                    blurRadius: 10),
+              ]),
+          child: IconButton(
+            icon: const Icon(Icons.person_outlined),
+            onPressed: () {
+              // refreshCart(context);
+              //  TODO:Add Profile
+            },
+          ),
+        ),
+        const SizedBox(
+          width: 10,
+        )
       ],
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1241,9 +1221,12 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(65),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
+          padding: EdgeInsets.symmetric(vertical: 5.h),
           child: Row(
             children: [
+              const SizedBox(
+                width: 10,
+              ),
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
@@ -1276,6 +1259,53 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
               ),
+              const SizedBox(
+                width: 10,
+              ),
+              cartValue != 0
+                  ? Badge(
+                      label: Text(cartValue.toString()),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: const [
+                              BoxShadow(
+                                  offset: Offset(2, 3),
+                                  color: Color.fromARGB(255, 230, 228, 228),
+                                  spreadRadius: 2,
+                                  blurRadius: 10),
+                            ]),
+                        child: IconButton(
+                          icon: ImageIcon(AssetImage(AppImages.bag)),
+                          onPressed: () {
+                            refreshCart(context);
+                          },
+                        ),
+                      ),
+                    )
+                  : Badge(
+                      label: const Text("0"),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: const [
+                              BoxShadow(
+                                  offset: Offset(2, 3),
+                                  color: Color.fromARGB(255, 230, 228, 228),
+                                  spreadRadius: 2,
+                                  blurRadius: 10),
+                            ]),
+                        child: IconButton(
+                          icon: ImageIcon(AssetImage(AppImages.bag)),
+                          onPressed: () {
+                            refreshCart(context);
+                          },
+                        ),
+                      ),
+                    ),
+              SizedBox(width: 10.w),
               if (isAll) ...[
                 SizedBox(
                   width: 10.w,
@@ -1315,5 +1345,15 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
     );
+  }
+
+  void refreshCart(context) async {
+    final value = await Navigator.push(
+        context, MaterialPageRoute(builder: (_) => const CartScreen()));
+    if (value != null && value == 'refresh') {
+      if (onTap != null) {
+        onTap!();
+      }
+    }
   }
 }
