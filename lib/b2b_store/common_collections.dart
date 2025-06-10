@@ -15,26 +15,31 @@ import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
 
-class CollectionsScreen extends StatefulWidget {
-  const CollectionsScreen({
+class CommonCollectionsScreen extends StatefulWidget {
+  final String id;
+  final String slug;
+  const CommonCollectionsScreen({
+    required this.slug,
     super.key,
+    required this.id,
   });
 
   @override
-  State<CollectionsScreen> createState() => _CollectionsScreenState();
+  State<CommonCollectionsScreen> createState() =>
+      CommonCollectionsScreenState();
 }
 
-class _CollectionsScreenState extends State<CollectionsScreen> {
+class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   B2BStoreHomePage? _b2bStoreHomePage;
   bool _isDataLoaded = false;
   _refresh() {
-    _b2bStoreBloc.add(const Refresh(slug: "collection_id"));
+    _b2bStoreBloc.add(Refresh(slug: widget.slug, id: widget.id));
   }
 
   @override
   void initState() {
-    _b2bStoreBloc.add(const Refresh(slug: "collection_id"));
+    _b2bStoreBloc.add(Refresh(slug: widget.slug, id: widget.id));
     super.initState();
   }
 

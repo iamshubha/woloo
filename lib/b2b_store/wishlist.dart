@@ -1,17 +1,23 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
+import 'package:woloo_smart_hygiene/b2b_store/custom_widget/start_rating.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart'
     as product_collections;
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
 
@@ -31,6 +37,8 @@ class _WishListScreenState extends State<WishListScreen> {
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   List<product_collections.Product> _wProductData = [];
   CartModel? _cart;
+
+  GlobalStorage globalStorage = GetIt.instance();
   // final List<product_collections.Product> _wData = [];
   @override
   void initState() {
@@ -38,6 +46,7 @@ class _WishListScreenState extends State<WishListScreen> {
     // print(_wData.length);
     // TODO: implement initState
     _b2bStoreBloc.add(const WishlistEvent());
+
     super.initState();
   }
 
@@ -66,6 +75,7 @@ class _WishListScreenState extends State<WishListScreen> {
               _cart = state.cartModel;
               _wProductData = getFavProducts();
               _isDataLoaded = true;
+              // state.
             });
             EasyLoading.dismiss();
             // setState(() {
@@ -138,14 +148,23 @@ class _WishListScreenState extends State<WishListScreen> {
                             physics: const NeverScrollableScrollPhysics(),
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 10,
+                              crossAxisCount: 3,
                               mainAxisSpacing: 10,
-                              childAspectRatio: 0.6,
+                              crossAxisSpacing: 8,
+                              childAspectRatio: 0.5,
                             ),
                             itemCount: _wProductData.length,
                             itemBuilder: (context, index) {
                               final product = _wProductData[index];
+
+                              logger
+                                  .w(product.variants.first.inventoryQuantity);
+                              int productCount = 0;
+                              _cart?.cart.items.forEach((i) {
+                                if (i.variantId == product.variants[0].id) {
+                                  productCount = i.quantity;
+                                }
+                              });
                               return GestureDetector(
                                 onTap: () async {
                                   final result = await Navigator.push(
@@ -184,93 +203,453 @@ class _WishListScreenState extends State<WishListScreen> {
                                 child: Stack(
                                   children: [
                                     Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 10.w),
-                                      decoration: BoxDecoration(
-                                          color: AppColors.themeBackground,
-                                          borderRadius:
-                                              BorderRadius.circular(25.r),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                              color: AppColors.greyShadowColor,
-                                              blurRadius: 5.0,
-                                              spreadRadius: 0.5,
-                                              offset: Offset(0, 2),
-                                            ),
-                                            BoxShadow(
-                                              color: AppColors.greyShadowColor,
-                                              blurRadius: 5.0,
-                                              spreadRadius: 0.5,
-                                              offset: Offset(0, -1),
-                                            ),
-                                          ]),
-                                      child: Column(
-                                        spacing: 2.h,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
+                                      // padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                      child: Stack(
                                         children: [
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.vertical(
-                                                top: Radius.circular(25.r)),
-                                            child: SizedBox(
-                                              height: 165.h,
-                                              width: double.infinity,
-                                              child: Image.network(
-                                                _wProductData[index]
-                                                        .thumbnail ??
-                                                    '',
-                                                fit: BoxFit.contain,
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            _wProductData[index].title ?? "",
-                                            style: TextStyle(
-                                                fontSize: 10.5.sp,
-                                                fontWeight: FontWeight.bold),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          Text(
-                                            _wProductData[index].subtitle ?? "",
-                                            style: TextStyle(
-                                              fontSize: 8.sp,
-                                              color: AppColors.textgreyColor,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Row(
-                                            children: List.generate(
-                                              5,
-                                              (i) => Container(
-                                                  margin: EdgeInsets.only(
-                                                      right: 2.w),
-                                                  height: 10.h,
-                                                  width: 10.w,
-                                                  child: Image.asset(
-                                                      AppImages.stars)),
-                                            ),
-                                          ),
-                                          Row(
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
                                             children: [
-                                              Text(
-                                                "Rs. ${_wProductData[index].variants!.first.calculatedPrice!.calculatedAmount.toString()}",
-                                                style: TextStyle(
-                                                  fontSize: 13.sp,
-                                                  fontWeight: FontWeight.bold,
+                                              Container(
+                                                height: 80.h,
+                                                width: 80.h,
+                                                decoration: BoxDecoration(
+                                                    color: AppColors
+                                                        .themeBackground,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12.r),
+                                                    boxShadow: const [
+                                                      BoxShadow(
+                                                        color: AppColors
+                                                            .greyShadowColor,
+                                                        blurRadius: 5.0,
+                                                        spreadRadius: 0.5,
+                                                        offset: Offset(0, 2),
+                                                      ),
+                                                      BoxShadow(
+                                                        color: AppColors
+                                                            .greyShadowColor,
+                                                        blurRadius: 5.0,
+                                                        spreadRadius: 0.5,
+                                                        offset: Offset(0, -1),
+                                                      ),
+                                                    ]),
+                                                child: Image.network(
+                                                  product.thumbnail ?? '',
+                                                  fit: BoxFit.contain,
                                                 ),
                                               ),
-                                              const Spacer(),
-                                              const AddToCartButton()
+                                              SizedBox(
+                                                height: 5.h,
+                                              ),
+                                              Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 5.w,
+                                                    vertical: 2.h),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          3.r),
+                                                  color:
+                                                      AppColors.lightCyanColor,
+                                                ),
+                                                child: Text(
+                                                  "80ml",
+                                                  style:
+                                                      AppTextStyle.font10bold,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 5.h,
+                                              ),
+                                              Text(
+                                                product.title ?? "",
+                                                style: TextStyle(
+                                                    fontSize: 8.sp,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              // Text(
+                                              //   products.subtitle ?? "",
+                                              //   style: TextStyle(
+                                              //     fontSize: 8.sp,
+                                              //     color: AppColors.textgreyColor,
+                                              //     fontWeight: FontWeight.bold,
+                                              //   ),
+                                              // ),
+                                              Row(
+                                                children: [
+                                                  AnimatedRatingStars(
+                                                    initialRating:
+                                                        product.averageRating ??
+                                                            0,
+                                                    minRating: 0.0,
+                                                    maxRating: 5.0,
+                                                    filledColor: Colors.amber,
+                                                    emptyColor: Colors.grey,
+                                                    filledIcon: Icons.star,
+                                                    halfFilledIcon:
+                                                        Icons.star_half,
+                                                    emptyIcon:
+                                                        Icons.star_border,
+                                                    onChanged: (a) {},
+                                                    displayRatingValue: true,
+                                                    interactiveTooltips: true,
+                                                    customFilledIcon:
+                                                        Icons.star,
+                                                    customHalfFilledIcon:
+                                                        Icons.star_half,
+                                                    customEmptyIcon:
+                                                        Icons.star_border,
+                                                    starSize: 10,
+                                                    animationDuration:
+                                                        const Duration(
+                                                            milliseconds: 300),
+                                                    animationCurve:
+                                                        Curves.easeInOut,
+                                                    readOnly: false,
+                                                  ),
+                                                  // if (product.reviewCount !=
+                                                  //         null &&
+                                                  //     product.reviewCount != 0)
+                                                  Text(
+                                                    "(${product.reviewCount ?? 0})",
+                                                    style:
+                                                        AppTextStyle.font10bold,
+                                                  )
+                                                ],
+                                              ),
+
+                                              Row(
+                                                spacing: 5.w,
+                                                children: [
+                                                  Text(
+                                                    "\u{20B9}${product.variants.first.calculatedPrice!.calculatedAmount.toString()}",
+                                                    style: TextStyle(
+                                                      fontSize: 10.sp,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  //TODO: Check Price Logic -- Abar asibo fire
+                                                  Text(
+                                                    "MRP ${product.variants.first.calculatedPrice!.originalAmount.toString()}",
+                                                    style: TextStyle(
+                                                        decoration:
+                                                            product.discountable ??
+                                                                    false
+                                                                ? TextDecoration
+                                                                    .lineThrough
+                                                                : null,
+                                                        fontSize: 10.sp,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: AppColors
+                                                            .textgreyColor),
+                                                  ),
+                                                ],
+                                              )
                                             ],
-                                          )
+                                          ),
+                                          if (product.variants.first
+                                                  .inventoryQuantity ==
+                                              0)
+                                            Positioned.fill(
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(12.r),
+                                                child: BackdropFilter(
+                                                  filter: ImageFilter.blur(
+                                                      sigmaX: 0.3, sigmaY: 0.3),
+                                                  child: Container(
+                                                    color: Colors.white
+                                                        .withOpacity(0.4),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          Positioned(
+                                              right: 0,
+                                              top: 80,
+                                              child: InkWell(
+                                                onTap: () async {
+                                                  if (product.variants.first
+                                                          .inventoryQuantity ==
+                                                      0) return;
+
+                                                  _b2bStoreBloc.add(AddToCart(
+                                                      quantity: 1,
+                                                      variant_id: product
+                                                          .variants[0].id));
+                                                  // if (widget.isSelected) {
+                                                  //   widget.onRemove?.call();
+                                                  // } else {
+                                                  //   widget.onAdd?.call();
+                                                  // }
+                                                  // setState(() {
+                                                  //   mode = AddButtonMode.add;
+                                                  // });
+                                                  await Future.delayed(
+                                                      const Duration(
+                                                          milliseconds: 500),
+                                                      () {
+                                                    // setState(() {
+                                                    //   mode =
+                                                    //       AddButtonMode.count;
+                                                    // });
+                                                  });
+
+                                                  // if (widget.onTap != null) {
+                                                  //   widget.onTap!();
+                                                  // }
+                                                  //Add to cart 1st time
+                                                },
+                                                borderRadius:
+                                                    BorderRadius.circular(3.r),
+                                                child: AnimatedContainer(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 5.w,
+                                                      vertical: 2.h),
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color: AppColors
+                                                              .buttonColor,
+                                                          width: 1.5),
+                                                      color: productCount == 0
+                                                          ? AppColors
+                                                              .themeBackground
+                                                          : AppColors
+                                                              .buttonYellowColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              3.r)),
+                                                  duration: const Duration(
+                                                      milliseconds: 500),
+                                                  child: Center(
+                                                    child: product
+                                                                .variants
+                                                                .first
+                                                                .inventoryQuantity ==
+                                                            0
+                                                        ? InkWell(
+                                                            onTap: () {
+                                                              _b2bStoreBloc.add(
+                                                                RestockSubscriptionsEvent(
+                                                                  phoneNumber:
+                                                                      globalStorage
+                                                                          .getClientMobileNo(),
+                                                                  variantId: product
+                                                                      .variants[
+                                                                          0]
+                                                                      .id!,
+                                                                ),
+                                                              );
+                                                            },
+                                                            child: Text(
+                                                              "Notify",
+                                                              style: AppTextStyle
+                                                                  .font10bold,
+                                                            ),
+                                                          )
+                                                        : productCount == 0
+                                                            // AddButtonMode.remove
+                                                            ? Text(
+                                                                "Add",
+                                                                style: AppTextStyle
+                                                                    .font10bold,
+                                                              )
+                                                            // :
+                                                            //  mode ==
+                                                            //         AddButtonMode
+                                                            //             .add
+                                                            //     ? Text(
+                                                            //         "Added",
+                                                            //         style: AppTextStyle
+                                                            //             .font10bold,
+                                                            //       )
+                                                            : Row(
+                                                                spacing: 10,
+                                                                children: [
+                                                                  InkWell(
+                                                                    onTap: () {
+                                                                      if (productCount ==
+                                                                          0)
+                                                                        return;
+
+                                                                      // productCount -=
+                                                                      //     1;
+                                                                      // if (productCount ==
+                                                                      //     0) {
+                                                                      //   productCount =
+                                                                      //       1;
+                                                                      //   // mode = AddButtonMode
+                                                                      //   //     .remove;
+                                                                      //   // if (widget.onRemove != null) {
+                                                                      //   //   widget.onRemove!();
+                                                                      //   // }
+                                                                      // }
+
+                                                                      // setState(
+                                                                      //     () {});
+                                                                      productCount ==
+                                                                              0
+                                                                          ? EasyLoading.showError(
+                                                                              "Product count cannot be less than 0")
+                                                                          : null;
+                                                                      _cart
+                                                                          ?.cart
+                                                                          .items
+                                                                          .forEach(
+                                                                              (i) {
+                                                                        if (i.variantId ==
+                                                                            product.variants[0].id) {
+                                                                          productCount -=
+                                                                              1;
+                                                                          _b2bStoreBloc.add(AddRemoveItemReq(
+                                                                              count: productCount,
+                                                                              itemId: i.id));
+                                                                        }
+                                                                      });
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                      decoration: BoxDecoration(
+                                                                          borderRadius: BorderRadius.circular(
+                                                                              4),
+                                                                          border: Border.all(
+                                                                              width: 1,
+                                                                              color: AppColors.black)),
+                                                                      padding: const EdgeInsets
+                                                                          .symmetric(
+                                                                          vertical:
+                                                                              2,
+                                                                          horizontal:
+                                                                              2),
+                                                                      child:
+                                                                          const Icon(
+                                                                        Icons
+                                                                            .remove,
+                                                                        size: 8,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Text(
+                                                                    productCount
+                                                                        .toString(),
+                                                                    style: AppTextStyle
+                                                                        .font10,
+                                                                  ),
+                                                                  InkWell(
+                                                                    onTap: () {
+                                                                      // productCount += 1;
+                                                                      // setState(() {});
+                                                                      // if (widget.onAdd != null) {
+                                                                      //   widget.onAdd!();
+                                                                      // }
+                                                                      //  productCount == 0
+                                                                      //   ? addToCart(context)
+                                                                      //   :
+                                                                      // To add value
+                                                                      _cart
+                                                                          ?.cart
+                                                                          .items
+                                                                          .forEach(
+                                                                              (i) {
+                                                                        if (i.variantId ==
+                                                                            product.variants[0].id) {
+                                                                          productCount +=
+                                                                              1;
+                                                                          _b2bStoreBloc.add(AddRemoveItemReq(
+                                                                              count: productCount,
+                                                                              itemId: i.id));
+                                                                        }
+                                                                      });
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                      decoration: BoxDecoration(
+                                                                          borderRadius: BorderRadius.circular(
+                                                                              4),
+                                                                          border: Border.all(
+                                                                              width: 1,
+                                                                              color: AppColors.black)),
+                                                                      padding: const EdgeInsets
+                                                                          .symmetric(
+                                                                          vertical:
+                                                                              2,
+                                                                          horizontal:
+                                                                              2),
+                                                                      child:
+                                                                          const Icon(
+                                                                        Icons
+                                                                            .add,
+                                                                        size:
+                                                                            10,
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                  ),
+                                                ),
+                                              )),
+
+                                          product.variants.first
+                                                      .inventoryQuantity ==
+                                                  0
+                                              ? Align(
+                                                  alignment:
+                                                      Alignment.topCenter,
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 5.w,
+                                                            vertical: 2.h),
+                                                    decoration: BoxDecoration(
+                                                      color: AppColors
+                                                          .lightCyanColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4),
+                                                    ),
+                                                    child: Text(
+                                                      "Out of Stock",
+                                                      style: TextStyle(
+                                                          fontSize: 6.sp,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color:
+                                                              AppColors.black),
+                                                    ),
+                                                  ),
+                                                )
+                                              : const SizedBox(),
+                                          // Positioned(
+                                          //   // left: 8,
+                                          //   // right: 8,
+                                          //   child: Container(
+                                          //     padding: EdgeInsets.symmetric(
+                                          //         horizontal: 5.w,
+                                          //         vertical: 2.h),
+                                          //     decoration: BoxDecoration(
+                                          //         color:
+                                          //             AppColors.lightCyanColor,
+                                          //         borderRadius:
+                                          //             BorderRadius.circular(4)),
+                                          //     child: Text(
+                                          //       "Out of Stock",
+                                          //       style: AppTextStyle.font10bold,
+                                          //     ),
+                                          //   ),
+                                          // )
                                         ],
                                       ),
                                     ),
                                     Positioned(
-                                      top: 20,
-                                      right: 20,
+                                      top: 6,
+                                      right: 16,
                                       child: InkWell(
                                           onTap: () {
                                             logger.w(_wProductData);

@@ -157,6 +157,7 @@ class ProductService {
   }
 
   Future<ProductCollections> getProductCollectionsById({
+    required String slug,
     required String token,
     required String id,
   }) async {
@@ -165,7 +166,7 @@ class ProductService {
       //logger.w("getProductCollectionsById id: $id");
       //logger.w("Token: $token");
       var response = await dio.get(
-        "https://staging-store.woloo.in/store/products?fields=*variants.calculated_price,+variants.inventory_quantity&collection_id=$id",
+        "https://staging-store.woloo.in/store/products?fields=*variants.calculated_price,+variants.inventory_quantity&$slug=$id",
         options: Options(
           headers: {
             'Content-Type': 'application/json',
@@ -183,67 +184,3 @@ class ProductService {
     }
   }
 }
-
-
-
-/**
- 1. Create Cart
-{
- @POST("store/carts")
-    fun getCartCreated(@Body request : CartRequest): Call<CartResponse>
-
- @SerializedName("region_id")
-
-2) Get Categories: 
- @GET("store/product-categories")
-    fun getCategoriesList(): Call<CategoriesListResponse>
-}
-
-3. ) Get Brands - 
- @GET("store/collections")
-    fun getCollections(
-        @Query("fields") fields: String
-    ): Call<CollectionsListResponse>
-
-
-4)   @GET("store/products")
-    fun getCollectionWiseProducts(
-        @Query("fields") price: String,
-        @Query("collection_id") fields: String  {collection_id = top brand --> brand_id}
-
-    ): Call<ProductListResponse>
-
-
-5)@GET("store/products")
-    fun getCategoryWiseProducts(
-        @Query("fields") price: String,
-        @Query("category_id") fields: String
-    ): Call<ProductListResponse>
-
-6) @GET("store/products")
-    fun getProductWithPriceList(
-        @Query("fields") fields: String,
-        @Query("region_id") region_id: String
-    ): Call<ProductListResponse>
-
-
-           { fields =    *variants.calculated_price}
-
-    #_________________________________________________#
-
-7) @GET("store/products")
-    fun getProductWithPriceListWithQuery(
-        @Query("fields") fields: String,
-        @Query("region_id") region_id: String,
-        @Query("q") q: String
-    ): Call<ProductListResponse>
- */
-
-
-
-/*
-for region id
-
-@GET("store/regions")
-    fun getRegionsList(): Call<RegionListResponse>
-*/

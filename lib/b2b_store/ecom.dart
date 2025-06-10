@@ -15,6 +15,7 @@ import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/collections.dart';
+import 'package:woloo_smart_hygiene/b2b_store/common_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
@@ -64,7 +65,7 @@ class _EcomScreenState extends State<EcomScreen> {
   }
 
   _refresh() {
-    _b2bStoreBloc.add(const Refresh());
+    _b2bStoreBloc.add(const Refresh(slug: "collection_id"));
   }
 
   @override
@@ -129,9 +130,123 @@ class _EcomScreenState extends State<EcomScreen> {
               child: _isDataLoaded
                   ? Column(
                       children: [
-                        CategoriesSection(
-                          productCategory: _b2bStoreHomePage!.productCategory,
+                        // CategoriesSection(
+                        //   productCategory: _b2bStoreHomePage!.productCategory,
+                        // ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20.w, vertical: 10.h),
+                          decoration: const BoxDecoration(
+                            color: AppColors.containerTabColor,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                'Categories',
+                                style: TextStyle(
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 10.h),
+                              SizedBox(
+                                height: 100.h,
+                                child: ListView.separated(
+                                  itemCount: _b2bStoreHomePage!.productCategory
+                                              .productCategories !=
+                                          null
+                                      ? _b2bStoreHomePage!.productCategory
+                                          .productCategories!.length
+                                      : 0,
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder: (context, index) {
+                                    final category = Category(
+                                      name: _b2bStoreHomePage!.productCategory
+                                              .productCategories?[index].name ??
+                                          '',
+                                      imageUrl: _b2bStoreHomePage!
+                                              .productCategory
+                                              .productCategories?[index]
+                                              .metadata
+                                              ?.image ??
+                                          '',
+                                      color: Color(int.tryParse(
+                                              "0xFF${_b2bStoreHomePage!.productCategory.productCategories?[index].metadata?.backgroundColor}") ??
+                                          00000),
+                                    );
+                                    return InkWell(
+                                      // onTap: () {
+                                      //    SeeMoreButton(
+                                      onTap: () async {
+                                        final value = await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (c) =>
+                                                    CommonCollectionsScreen(
+                                                      id: _b2bStoreHomePage!
+                                                              .productCategory
+                                                              .productCategories![
+                                                                  index]
+                                                              .id ??
+                                                          "",
+                                                      slug: "category_id",
+                                                      // products: _b2bStoreHomePage!
+                                                      //     .productCollections
+                                                      //     .products,
+                                                    )));
+                                        if (value != null &&
+                                            value == 'refresh') {
+                                          _refresh();
+                                        }
+                                      },
+                                      //               )
+                                      // CommonCollectionsScreen();
+                                      // },
+                                      child: Column(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 36.5.r,
+                                            backgroundColor: category.color,
+                                            child: Center(
+                                              child: category
+                                                      .imageUrl.isEmptyOrNull
+                                                  ? Image.asset(
+                                                      AppImages.woloologo,
+                                                      width: 40.w,
+                                                      height: 40.h,
+                                                    )
+                                                  : Image.network(
+                                                      category.imageUrl,
+                                                      width: 40.w,
+                                                      height: 40.h,
+                                                    ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          Text(
+                                            category.name,
+                                            style: TextStyle(
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                  separatorBuilder: (context, index) {
+                                    return SizedBox(
+                                      width: 10.w,
+                                    );
+                                  },
+                                ),
+                              )
+                            ],
+                          ),
                         ),
+
                         Container(
                           color: AppColors.themeBackground,
                           padding: EdgeInsets.symmetric(
@@ -238,13 +353,36 @@ class _EcomScreenState extends State<EcomScreen> {
                                     : _b2bStoreHomePage!.topBrands.collections!
                                         .length, //.length,
                                 itemBuilder: (context, index) {
-                                  return BrandsGrid(
-                                    imageUrl: _b2bStoreHomePage!
-                                            .topBrands
-                                            .collections![index]
-                                            .metadata
-                                            ?.image ??
-                                        '',
+                                  return InkWell(
+                                    onTap: () async {
+                                      final value = await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (c) =>
+                                                  CommonCollectionsScreen(
+                                                    id: _b2bStoreHomePage!
+                                                            .topBrands
+                                                            .collections![index]
+                                                            .id ??
+                                                        "",
+                                                    slug: "collection_id",
+
+                                                    // products: _b2bStoreHomePage!
+                                                    //     .productCollections
+                                                    //     .products,
+                                                  )));
+                                      if (value != null && value == 'refresh') {
+                                        _refresh();
+                                      }
+                                    },
+                                    child: BrandsGrid(
+                                      imageUrl: _b2bStoreHomePage!
+                                              .topBrands
+                                              .collections![index]
+                                              .metadata
+                                              ?.image ??
+                                          '',
+                                    ),
                                   );
                                 },
                               ),
@@ -1019,93 +1157,6 @@ class SeeMoreButton extends StatelessWidget {
                 color: AppColors.black,
                 size: 12,
               ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class CategoriesSection extends StatelessWidget {
-  ProductCategory productCategory;
-  CategoriesSection({
-    super.key,
-    required this.productCategory,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    // logger.w(productCategory.productCategories);
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-      decoration: const BoxDecoration(
-        color: AppColors.containerTabColor,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Text(
-            'Categories',
-            style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 10.h),
-          SizedBox(
-            height: 100.h,
-            child: ListView.separated(
-              itemCount: productCategory.productCategories != null
-                  ? productCategory.productCategories!.length
-                  : 0,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                final category = Category(
-                  name: productCategory.productCategories?[index].name ?? '',
-                  imageUrl: productCategory
-                          .productCategories?[index].metadata?.image ??
-                      '',
-                  color: Color(int.tryParse(
-                          "0xFF${productCategory.productCategories?[index].metadata?.backgroundColor}") ??
-                      00000),
-                );
-                return Column(
-                  children: [
-                    CircleAvatar(
-                      radius: 36.5.r,
-                      backgroundColor: category.color,
-                      child: Center(
-                        child: category.imageUrl.isEmptyOrNull
-                            ? Image.asset(
-                                AppImages.woloologo,
-                                width: 40.w,
-                                height: 40.h,
-                              )
-                            : Image.network(
-                                category.imageUrl,
-                                width: 40.w,
-                                height: 40.h,
-                              ),
-                      ),
-                    ),
-                    SizedBox(height: 10.h),
-                    Text(
-                      category.name,
-                      style: TextStyle(
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                );
-              },
-              separatorBuilder: (context, index) {
-                return SizedBox(
-                  width: 10.w,
-                );
-              },
             ),
           )
         ],

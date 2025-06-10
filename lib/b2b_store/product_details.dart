@@ -1,14 +1,17 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
+import 'package:woloo_smart_hygiene/b2b_store/collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/custom_widget/start_rating.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
@@ -16,6 +19,7 @@ import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart' as cart_model;
 import 'package:woloo_smart_hygiene/b2b_store/models/customer_reviews.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart'
     as product_collections;
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/extensions/string_extension.dart';
 import 'package:woloo_smart_hygiene/hygine_services/view/address_notifier.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
@@ -45,6 +49,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   bool _isDataLoaded = false;
   cart_model.CartModel? cartModel;
+  ProductCollections? _productCollection;
   int productCount = 0;
   late bool isSelected;
   CustomerReviews? customerReviews;
@@ -108,6 +113,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     return address;
   }
 
+  _refresh() {
+    _b2bStoreBloc.add(const Refresh(slug: "collection_id"));
+  }
+
+  GlobalStorage globalStorage = GetIt.instance();
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -118,7 +129,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           if (state is CartLoading) {
             EasyLoading.show(status: state.message);
           }
+          if (state is B2BStoreSuccess) {
+            EasyLoading.dismiss();
+            setState(() {
+              cartModel = state.dashboardData.cartData;
+              _productCollection = state.dashboardData.productCollections;
 
+              _isDataLoaded = true;
+
+              // _dashboardData = state.dashboardData;
+            });
+          }
           // if (state is WishlistLoading) {
           //   EasyLoading.show(status: state.message);
           // }
@@ -144,7 +165,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               // print(state.cartData.cart);
               // _addressesData = state.addressesData;
               // _b2bStoreHomePage = state.dashboardData;
-
+              _productCollection = state.productCollection;
+              _refresh();
               _isDataLoaded = true;
               // _dashboardData = state.dashboardData;
             });
@@ -154,6 +176,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   context, {'from': 'buy_now_success'});
               _handleCartBottomSheetDismissal(resultFromBottomSheet);
             }
+            _refresh();
           }
 
           if (state is WishlistSuccess) {
@@ -167,11 +190,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
             setState(() {
               widget.productIdforWishList = data?.id ?? '';
+              _productCollection = state.productCollections;
             });
+            _refresh();
           }
 
           if (state is CustomerReviewSuccess) {
             customerReviews = state.customerReview;
+            _productCollection = state.productCollection;
+            _refresh();
             logger.w(customerReviews);
           }
 
@@ -808,11 +835,527 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ),
                             const Spacer(),
                             SeeMoreButton(
-                              onTap: () {},
+                              onTap: () async {
+                                final value = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (c) =>
+                                            const CollectionsScreen()));
+                                if (value != null && value == 'refresh') {
+                                  _refresh();
+                                }
+                              },
                             )
                           ],
                         ),
-                        const RecentSearches(),
+                        GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            mainAxisSpacing: 10,
+                            crossAxisSpacing: 8,
+                            childAspectRatio: 0.5,
+                          ),
+                          itemCount: _productCollection!.products.length > 9
+                              ? 9
+                              : _productCollection?.products.length,
+                          itemBuilder: (context, index) {
+                            final product = _productCollection!.products[index];
+                            logger.w(product.variants.first.inventoryQuantity);
+                            int productCount = 0;
+                            cartModel?.cart.items.forEach((i) {
+                              if (i.variantId == product.variants[0].id) {
+                                productCount = i.quantity;
+                              }
+                            });
+                            // AddButtonMode mode = AddButtonMode.remove;
+                            return GestureDetector(
+                              onTap: () async {
+                                final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProductDetailsScreen(
+                                      productData: product,
+                                      isSelected: _b2bStoreBloc.favIds.any(
+                                          (e) => e.containsKey(product.id)),
+                                      productIdforWishList: _b2bStoreBloc.favIds
+                                              .any((e) =>
+                                                  e.containsKey(product.id))
+                                          ? _b2bStoreBloc.favIds
+                                              .firstWhere((e) =>
+                                                  e.entries.first.key ==
+                                                  product.id)
+                                              .entries
+                                              .first
+                                              .value
+                                          : "",
+                                    ),
+                                  ),
+                                );
+                                if (result != null && result == 'refresh') {
+                                  _refresh();
+                                  print(
+                                      'Returned from Page B with refresh signal (or physical back).');
+                                  // _initializeData(); // Re-initialize or refresh data
+                                } else {
+                                  _refresh();
+                                  print(
+                                      'Returned from Page B without refresh signal or cancelled.');
+                                }
+                              },
+                              child: Container(
+                                // padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                child: Stack(
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          height: 80.h,
+                                          width: 80.h,
+                                          decoration: BoxDecoration(
+                                              color: AppColors.themeBackground,
+                                              borderRadius:
+                                                  BorderRadius.circular(12.r),
+                                              boxShadow: const [
+                                                BoxShadow(
+                                                  color:
+                                                      AppColors.greyShadowColor,
+                                                  blurRadius: 5.0,
+                                                  spreadRadius: 0.5,
+                                                  offset: Offset(0, 2),
+                                                ),
+                                                BoxShadow(
+                                                  color:
+                                                      AppColors.greyShadowColor,
+                                                  blurRadius: 5.0,
+                                                  spreadRadius: 0.5,
+                                                  offset: Offset(0, -1),
+                                                ),
+                                              ]),
+                                          child: Image.network(
+                                            product.thumbnail ?? '',
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 5.h,
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 5.w, vertical: 2.h),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(3.r),
+                                            color: AppColors.lightCyanColor,
+                                          ),
+                                          child: Text(
+                                            "80ml",
+                                            style: AppTextStyle.font10bold,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 5.h,
+                                        ),
+                                        Text(
+                                          product.title ?? "",
+                                          style: TextStyle(
+                                              fontSize: 8.sp,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        // Text(
+                                        //   products.subtitle ?? "",
+                                        //   style: TextStyle(
+                                        //     fontSize: 8.sp,
+                                        //     color: AppColors.textgreyColor,
+                                        //     fontWeight: FontWeight.bold,
+                                        //   ),
+                                        // ),
+                                        Row(
+                                          children: [
+                                            AnimatedRatingStars(
+                                              initialRating:
+                                                  product.averageRating ?? 0,
+                                              minRating: 0.0,
+                                              maxRating: 5.0,
+                                              filledColor: Colors.amber,
+                                              emptyColor: Colors.grey,
+                                              filledIcon: Icons.star,
+                                              halfFilledIcon: Icons.star_half,
+                                              emptyIcon: Icons.star_border,
+                                              onChanged: (a) {},
+                                              displayRatingValue: true,
+                                              interactiveTooltips: true,
+                                              customFilledIcon: Icons.star,
+                                              customHalfFilledIcon:
+                                                  Icons.star_half,
+                                              customEmptyIcon:
+                                                  Icons.star_border,
+                                              starSize: 10,
+                                              animationDuration: const Duration(
+                                                  milliseconds: 300),
+                                              animationCurve: Curves.easeInOut,
+                                              readOnly: false,
+                                            ),
+                                            // if (product.reviewCount !=
+                                            //         null &&
+                                            //     product.reviewCount != 0)
+                                            Text(
+                                              "(${product.reviewCount ?? 0})",
+                                              style: AppTextStyle.font10bold,
+                                            )
+                                          ],
+                                        ),
+
+                                        Row(
+                                          spacing: 5.w,
+                                          children: [
+                                            Text(
+                                              "\u{20B9}${product.variants.first.calculatedPrice!.calculatedAmount.toString()}",
+                                              style: TextStyle(
+                                                fontSize: 10.sp,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            //TODO: Check Price Logic -- Abar asibo fire
+                                            Text(
+                                              "MRP ${product.variants.first.calculatedPrice!.originalAmount.toString()}",
+                                              style: TextStyle(
+                                                  decoration:
+                                                      product.discountable ??
+                                                              false
+                                                          ? TextDecoration
+                                                              .lineThrough
+                                                          : null,
+                                                  fontSize: 10.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                  color:
+                                                      AppColors.textgreyColor),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                    if (product
+                                            .variants.first.inventoryQuantity ==
+                                        0)
+                                      Positioned.fill(
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(12.r),
+                                          child: BackdropFilter(
+                                            filter: ImageFilter.blur(
+                                                sigmaX: 0.3, sigmaY: 0.3),
+                                            child: Container(
+                                              color:
+                                                  Colors.white.withOpacity(0.4),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    Positioned(
+                                        right: 0,
+                                        top: 80,
+                                        child: InkWell(
+                                          onTap: () async {
+                                            if (product.variants.first
+                                                    .inventoryQuantity ==
+                                                0) return;
+
+                                            _b2bStoreBloc.add(AddToCart(
+                                                quantity: 1,
+                                                variant_id:
+                                                    product.variants[0].id));
+                                            // if (widget.isSelected) {
+                                            //   widget.onRemove?.call();
+                                            // } else {
+                                            //   widget.onAdd?.call();
+                                            // }
+                                            // setState(() {
+                                            //   mode = AddButtonMode.add;
+                                            // });
+                                            await Future.delayed(
+                                                const Duration(
+                                                    milliseconds: 500), () {
+                                              // setState(() {
+                                              //   mode =
+                                              //       AddButtonMode.count;
+                                              // });
+                                            });
+
+                                            // if (widget.onTap != null) {
+                                            //   widget.onTap!();
+                                            // }
+                                            //Add to cart 1st time
+                                          },
+                                          borderRadius:
+                                              BorderRadius.circular(3.r),
+                                          child: AnimatedContainer(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 5.w, vertical: 2.h),
+                                            decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color:
+                                                        AppColors.buttonColor,
+                                                    width: 1.5),
+                                                color: productCount == 0
+                                                    ? AppColors.themeBackground
+                                                    : AppColors
+                                                        .buttonYellowColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(3.r)),
+                                            duration: const Duration(
+                                                milliseconds: 500),
+                                            child: Center(
+                                              child: product.variants.first
+                                                          .inventoryQuantity ==
+                                                      0
+                                                  ? InkWell(
+                                                      onTap: () {
+                                                        _b2bStoreBloc.add(
+                                                          RestockSubscriptionsEvent(
+                                                            phoneNumber:
+                                                                globalStorage
+                                                                    .getClientMobileNo(),
+                                                            variantId: product
+                                                                .variants[0]
+                                                                .id!,
+                                                          ),
+                                                        );
+                                                      },
+                                                      child: Text(
+                                                        "Notify",
+                                                        style: AppTextStyle
+                                                            .font10bold,
+                                                      ),
+                                                    )
+                                                  : productCount == 0
+                                                      // AddButtonMode.remove
+                                                      ? Text(
+                                                          "Add",
+                                                          style: AppTextStyle
+                                                              .font10bold,
+                                                        )
+                                                      // :
+                                                      //  mode ==
+                                                      //         AddButtonMode
+                                                      //             .add
+                                                      //     ? Text(
+                                                      //         "Added",
+                                                      //         style: AppTextStyle
+                                                      //             .font10bold,
+                                                      //       )
+                                                      : Row(
+                                                          spacing: 10,
+                                                          children: [
+                                                            InkWell(
+                                                              onTap: () {
+                                                                if (productCount ==
+                                                                    0) return;
+
+                                                                // productCount -=
+                                                                //     1;
+                                                                // if (productCount ==
+                                                                //     0) {
+                                                                //   productCount =
+                                                                //       1;
+                                                                //   // mode = AddButtonMode
+                                                                //   //     .remove;
+                                                                //   // if (widget.onRemove != null) {
+                                                                //   //   widget.onRemove!();
+                                                                //   // }
+                                                                // }
+
+                                                                // setState(
+                                                                //     () {});
+                                                                productCount ==
+                                                                        0
+                                                                    ? EasyLoading
+                                                                        .showError(
+                                                                            "Product count cannot be less than 0")
+                                                                    : null;
+                                                                cartModel
+                                                                    ?.cart.items
+                                                                    .forEach(
+                                                                        (i) {
+                                                                  if (i.variantId ==
+                                                                      product
+                                                                          .variants[
+                                                                              0]
+                                                                          .id) {
+                                                                    productCount -=
+                                                                        1;
+                                                                    _b2bStoreBloc.add(AddRemoveItemReq(
+                                                                        count:
+                                                                            productCount,
+                                                                        itemId:
+                                                                            i.id));
+                                                                  }
+                                                                });
+                                                              },
+                                                              child: Container(
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(
+                                                                                4),
+                                                                    border: Border.all(
+                                                                        width:
+                                                                            1,
+                                                                        color: AppColors
+                                                                            .black)),
+                                                                padding: const EdgeInsets
+                                                                    .symmetric(
+                                                                    vertical: 2,
+                                                                    horizontal:
+                                                                        2),
+                                                                child:
+                                                                    const Icon(
+                                                                  Icons.remove,
+                                                                  size: 8,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              productCount
+                                                                  .toString(),
+                                                              style:
+                                                                  AppTextStyle
+                                                                      .font10,
+                                                            ),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                // productCount += 1;
+                                                                // setState(() {});
+                                                                // if (widget.onAdd != null) {
+                                                                //   widget.onAdd!();
+                                                                // }
+                                                                //  productCount == 0
+                                                                //   ? addToCart(context)
+                                                                //   :
+                                                                // To add value
+                                                                cartModel
+                                                                    ?.cart.items
+                                                                    .forEach(
+                                                                        (i) {
+                                                                  if (i.variantId ==
+                                                                      product
+                                                                          .variants[
+                                                                              0]
+                                                                          .id) {
+                                                                    productCount +=
+                                                                        1;
+                                                                    _b2bStoreBloc.add(AddRemoveItemReq(
+                                                                        count:
+                                                                            productCount,
+                                                                        itemId:
+                                                                            i.id));
+                                                                  }
+                                                                });
+                                                              },
+                                                              child: Container(
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(
+                                                                                4),
+                                                                    border: Border.all(
+                                                                        width:
+                                                                            1,
+                                                                        color: AppColors
+                                                                            .black)),
+                                                                padding: const EdgeInsets
+                                                                    .symmetric(
+                                                                    vertical: 2,
+                                                                    horizontal:
+                                                                        2),
+                                                                child:
+                                                                    const Icon(
+                                                                  Icons.add,
+                                                                  size: 10,
+                                                                ),
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                            ),
+                                          ),
+                                        )),
+
+                                    product.variants.first.inventoryQuantity ==
+                                            0
+                                        ? Align(
+                                            alignment: Alignment.topCenter,
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 5.w,
+                                                  vertical: 2.h),
+                                              decoration: BoxDecoration(
+                                                color: AppColors.lightCyanColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                              ),
+                                              child: Text(
+                                                "Out of Stock",
+                                                style: TextStyle(
+                                                    fontSize: 6.sp,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: AppColors.black),
+                                              ),
+                                            ),
+                                          )
+                                        : const SizedBox(),
+                                    // Positioned(
+                                    //   // left: 8,
+                                    //   // right: 8,
+                                    //   child: Container(
+                                    //     padding: EdgeInsets.symmetric(
+                                    //         horizontal: 5.w,
+                                    //         vertical: 2.h),
+                                    //     decoration: BoxDecoration(
+                                    //         color:
+                                    //             AppColors.lightCyanColor,
+                                    //         borderRadius:
+                                    //             BorderRadius.circular(4)),
+                                    //     child: Text(
+                                    //       "Out of Stock",
+                                    //       style: AppTextStyle.font10bold,
+                                    //     ),
+                                    //   ),
+                                    // )
+                                  ],
+                                ),
+                              ),
+
+                              //  GridItem(
+                              //   productCount: productCount,
+                              //   b2bStoreBloc: _b2bStoreBloc,
+                              //   products: product,
+                              //   cartModel:  _b2bStoreHomePage?.cartData.cart,
+
+                              //   isSelected: _b2bStoreBloc.favIds.any(
+                              //       (e) => e.containsKey(product.id)),
+                              //   productIdforWishList: _b2bStoreBloc.favIds
+                              //           .any((e) =>
+                              //               e.containsKey(product.id))
+                              //       ? _b2bStoreBloc.favIds
+                              //           .firstWhere((e) =>
+                              //               e.entries.first.key ==
+                              //               product.id)
+                              //           .entries
+                              //           .first
+                              //           .value
+                              //       : "",
+                              //   // imageUrl: productCollections.products![index].thumbnail ?? '',
+                              // ),
+                            );
+                          },
+                        ),
+
                         if (customerReviews?.reviews.isNotEmpty ?? false)
                           Row(
                             children: [

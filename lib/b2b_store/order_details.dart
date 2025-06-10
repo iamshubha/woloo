@@ -93,15 +93,15 @@ class _OrderScreenState extends State<OrderScreen> {
                         }),
                   ),
                   // const Spacer()
-                  const Text("Other items in the order"),
-                  const Divider(),
-                  const OtherItemOrder(), // Place Other Item If necessary place a list
+                  // const Text("Other items in the order"),
+                  // const Divider(),
+                  // const OtherItemOrder(), // Place Other Item If necessary place a list
 
-                  LongLabeledButton(
-                    onTap: () {},
-                    label: "Help & Support",
-                    color: AppColors.greyColorFields,
-                  ),
+                  // LongLabeledButton(
+                  //   onTap: () {},
+                  //   label: "Help & Support",
+                  //   color: AppColors.greyColorFields,
+                  // ),
                 ],
               ),
             ),

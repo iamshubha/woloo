@@ -222,7 +222,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       topBrands = await _productService.getTopBrands(token: loginToken);
       if (event.id != null) {
         productCollections = await _productService.getProductCollectionsById(
-            token: loginToken, id: event.id!);
+            slug: event.slug, token: loginToken, id: event.id!);
       } else {
         productCollections =
             await _productService.getProductCollections(token: loginToken);
@@ -375,8 +375,10 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       emit(const CartLoading(message: "Loading data..."));
       CartModel response = await _cartService.getAllCartData(
           token: box.read('login_jwt'), cartId: box.read('cart_id'));
-
-      emit(CartSuccess(cartData: response));
+      final productCollections = await _productService.getProductCollections(
+          token: box.read('login_jwt'));
+      emit(CartSuccess(
+          cartData: response, productCollection: productCollections));
     } catch (e) {
       emit(CartError(error: e.toString()));
       debugPrint("Error in GetCart service: $e");
@@ -636,7 +638,11 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       favIds = getCommonProductIds(wishlist, productCollections);
       CartModel cartModel = await _cartService.getAllCartData(
           token: box.read('login_jwt'), cartId: box.read('cart_id'));
-      emit(WishlistSuccess(wishlistData: wishlist, cartModel: cartModel));
+
+      emit(WishlistSuccess(
+          wishlistData: wishlist,
+          cartModel: cartModel,
+          productCollections: productCollections));
     } catch (e) {
       debugPrint("Error in getFavorites service: $e");
       emit(WishlistError(error: e.toString()));
@@ -651,7 +657,15 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     try {
       final wishlist = await _favoriteService.addToWishList(
           token: box.read('login_jwt'), variantId: event.variantId);
-      emit(WishlistSuccess(wishlistData: wishlist));
+      final productCollections = await _productService.getProductCollections(
+          token: box.read('login_jwt'));
+      favIds = getCommonProductIds(wishlist, productCollections);
+      CartModel cartModel = await _cartService.getAllCartData(
+          token: box.read('login_jwt'), cartId: box.read('cart_id'));
+      emit(WishlistSuccess(
+          wishlistData: wishlist,
+          cartModel: cartModel,
+          productCollections: productCollections));
     } catch (e) {
       debugPrint("Error in getFavorites service: $e");
       emit(WishlistError(error: e.toString()));
@@ -664,7 +678,15 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     try {
       Wishlist wishlist = await _favoriteService.removeItemFromWishlist(
           box.read('login_jwt'), event.itemId);
-      emit(WishlistSuccess(wishlistData: wishlist));
+      final productCollections = await _productService.getProductCollections(
+          token: box.read('login_jwt'));
+      favIds = getCommonProductIds(wishlist, productCollections);
+      CartModel cartModel = await _cartService.getAllCartData(
+          token: box.read('login_jwt'), cartId: box.read('cart_id'));
+      emit(WishlistSuccess(
+          wishlistData: wishlist,
+          cartModel: cartModel,
+          productCollections: productCollections));
     } catch (e) {
       debugPrint("Error in getFavorites service: $e");
       emit(WishlistError(error: e.toString()));
@@ -698,8 +720,11 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       emit(const ReviewLoading(message: 'Loading product reviews...'));
       final response = await _orderDetailsService.getOrderReviews(
           token: box.read('login_jwt'), productId: getOrderReview.productId);
+      final productCollections = await _productService.getProductCollections(
+          token: box.read('login_jwt'));
       // logger.w(response);
-      emit(CustomerReviewSuccess(customerReview: response));
+      emit(CustomerReviewSuccess(
+          customerReview: response, productCollection: productCollections));
     } catch (e) {
       logger.e("Error in getProductReviews: $e");
     }

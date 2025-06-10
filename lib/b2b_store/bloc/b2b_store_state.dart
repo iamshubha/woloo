@@ -5,6 +5,7 @@ import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/customer_reviews.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/order.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/restock_subscription.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/wishlist.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/model/host_dashboard_screen.dart';
@@ -106,9 +107,11 @@ class AddToCartSuccess extends B2BStoreState {
 
 class CartSuccess extends B2BStoreState {
   final CartModel cartData;
-  const CartSuccess({required this.cartData});
+  final ProductCollections? productCollection;
+  const CartSuccess({required this.cartData, this.productCollection});
   @override
-  List<Object> get props => [cartData];
+  List<Object> get props =>
+      [cartData, if (productCollection != null) productCollection!];
 }
 
 class ProceedCart extends B2BStoreState {
@@ -188,9 +191,15 @@ class OrderDetailsError extends B2BStoreState {
 class WishlistSuccess extends B2BStoreState {
   final Wishlist wishlistData;
   final CartModel? cartModel;
-  const WishlistSuccess({required this.wishlistData, this.cartModel});
+  final ProductCollections? productCollections;
+  const WishlistSuccess(
+      {required this.wishlistData, this.cartModel, this.productCollections});
   @override
-  List<Object> get props => [wishlistData, if (cartModel != null) cartModel!];
+  List<Object> get props => [
+        wishlistData,
+        if (cartModel != null) cartModel!,
+        if (productCollections != null) productCollections!,
+      ];
 }
 
 class WishlistLoading extends B2BStoreState {
@@ -234,9 +243,13 @@ class ReviewError extends B2BStoreState {
 
 class CustomerReviewSuccess extends B2BStoreState {
   final CustomerReviews customerReview;
-  const CustomerReviewSuccess({required this.customerReview});
+
+  final ProductCollections? productCollection;
+  const CustomerReviewSuccess(
+      {required this.customerReview, this.productCollection});
   @override
-  List<Object> get props => [customerReview];
+  List<Object> get props =>
+      [customerReview, if (productCollection != null) productCollection!];
 }
 
 class RestockSubscriptionsSuccess extends B2BStoreState {
