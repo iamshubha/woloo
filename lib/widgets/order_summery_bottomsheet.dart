@@ -16,6 +16,7 @@ import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
+import 'package:woloo_smart_hygiene/b2b_store/network/product.dart';
 import 'package:woloo_smart_hygiene/b2b_store/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/order_details_from_checkout.dart';
 import 'package:woloo_smart_hygiene/client_flow/utils/client_images.dart';
@@ -298,12 +299,21 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
     };
   }
 
-  void handlePaymentErrorResponse(PaymentFailureResponse response) {
+  void handlePaymentErrorResponse(PaymentFailureResponse response) async {
     /** PaymentFailureResponse contains three values:
     * 1. Error Code
     * 2. Error Description
     * 3. Metadata
     **/
+
+    final ProductService _productService =
+        ProductService(dio: GetIt.instance());
+    await _productService
+        .createCart(
+            token: box.read('login_jwt'), regionId: box.read('region_id'))
+        .then((cartData) {
+      box.write('cart_id', cartData.cart.id);
+    });
     showDialog(
       // barrierDismissible: false,
       context: context,

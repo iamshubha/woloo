@@ -82,9 +82,16 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
                               mainAxisSize: MainAxisSize.min,
                               spacing: 10,
                               children: List.generate(
-                                  orderDetailsData!.orderSets[i].orders.length,
-                                  (j) {
+                                  orderDetailsData!
+                                          .orderSets[i].orders.isNotEmpty
+                                      ? orderDetailsData!
+                                          .orderSets[i].orders[0].items.length
+                                      : 0, (j) {
                                 final orderSet = orderDetailsData!.orderSets[i];
+                                if (orderSet.orders.isEmpty ||
+                                    orderSet.orders[0].items.isEmpty) {
+                                  return Container(); // Return empty container if no items
+                                }
                                 return OrderItemWithReview(
                                   orderSet: orderSet,
                                   orderDetails: orderDetailsData!

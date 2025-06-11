@@ -11,6 +11,7 @@ import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
@@ -84,6 +85,7 @@ class _OrderScreenState extends State<OrderScreen> {
                           final order = widget.orderSet.orders.first;
                           final item = order.items[i];
                           return OrderStatusCard(
+                            id: item.id ?? "",
                             timeLineList: timeLineList,
                             url: item.thumbnail ?? "",
                             productLabel: item.title ?? "",
@@ -353,8 +355,10 @@ class OrderStatusCard extends StatelessWidget {
       required this.url,
       required this.productLabel,
       required this.subTitle,
-      required this.price});
+      required this.price,
+      required this.id});
   final List<String> timeLineList;
+  final String id;
   final String url;
   final String productLabel;
   final String subTitle;
@@ -379,6 +383,8 @@ class OrderStatusCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text("Order ID: $id", style: AppTextStyle.font12bold),
+          SizedBox(height: 8.h),
           // Product Details
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -486,20 +492,24 @@ class OrderStatusCard extends StatelessWidget {
                 // Handle cancel action
               },
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 50.w, vertical: 8.h),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Text(
-                  "Cancel",
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 50.w, vertical: 8.h),
+                  // decoration: BoxDecoration(
+                  //   color: Colors.grey[300],
+                  //   borderRadius: BorderRadius.circular(8.r),
+                  // ),
+                  child: SizedBox(
+                      //TODO
+                      )
+                  // Text(
+                  //   "Cancel",
+                  //   style: TextStyle(
+                  //     fontSize: 14.sp,
+                  //     fontWeight: FontWeight.bold,
+                  //     color: Colors.black,
+                  //   ),
+                  // ),
                   ),
-                ),
-              ),
             ),
           ),
         ],

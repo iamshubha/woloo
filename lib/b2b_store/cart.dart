@@ -234,7 +234,7 @@ class _CartScreenState extends State<CartScreen> {
                               ],
                             ),
                           ),
-                          const ApplyPromo(),
+                          ApplyPromo(),
                           const Divider(),
                           PricingCalculate(
                             total: cartModel?.cart.total,
@@ -462,50 +462,155 @@ class XDesignedTextField extends StatelessWidget {
   }
 }
 
-class ApplyPromo extends StatelessWidget {
-  const ApplyPromo({
-    super.key,
-  });
+class ApplyPromo extends StatefulWidget {
+  const ApplyPromo({super.key});
+
+  @override
+  State<ApplyPromo> createState() => _ApplyPromoState();
+}
+
+class _ApplyPromoState extends State<ApplyPromo> {
+  final TextEditingController _promoController = TextEditingController();
+  bool isLoading = false;
+  bool isApplied = false;
+  String? errorMessage;
+  String? appliedPromoCode;
+
+  @override
+  void dispose() {
+    _promoController.dispose();
+    super.dispose();
+  }
+
+  void _applyPromoCode() {
+    if (_promoController.text.isEmpty) {
+      setState(() {
+        errorMessage = 'Please enter a promo code';
+      });
+      return;
+    }
+    context.read<B2bStoreBloc>().add(
+          ApplyPromoEvent(
+            promoCode: _promoController.text.trim(),
+          ),
+        );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 5,
-            spreadRadius: 1,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Row(
-        spacing: 8,
-        children: [
-          SizedBox(
-            height: 24,
-            width: 24,
-            child: Image.asset(AppImages.salePercentage),
-          ),
-          const Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                isDense: true,
-                isCollapsed: true,
-                border: UnderlineInputBorder(),
-                focusedBorder: UnderlineInputBorder(),
-                hintText: "Enter Promocode",
-              ),
+    return BlocListener<B2bStoreBloc, B2BStoreState>(
+      listener: (context, state) {
+        if (state is CartLoading) {
+          setState(() {
+            isLoading = true;
+            errorMessage = null;
+          });
+        } else if (state is CartSuccess) {
+          setState(() {
+            isLoading = false;
+            errorMessage = null;
+            isApplied = true;
+            appliedPromoCode = _promoController.text.trim();
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Promo code applied successfully!'),
+              backgroundColor: Colors.green,
             ),
-          ),
-          const CyanTextButton(
-            label: "Apply",
-          )
-        ],
+          );
+        } else if (state is PromoApplyError) {
+          setState(() {
+            isLoading = false;
+            errorMessage = state.error;
+            isApplied = false;
+            appliedPromoCode = null;
+          });
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.all(12.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              blurRadius: 5,
+              spreadRadius: 1,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: Image.asset(AppImages.salePercentage),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  "Apply Promo Code",
+                  style: AppTextStyle.font14bold,
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _promoController,
+                    enabled: !isLoading && !isApplied,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      isCollapsed: true,
+                      border: const UnderlineInputBorder(),
+                      focusedBorder: const UnderlineInputBorder(),
+                      hintText: isApplied ? null : "Enter Promocode",
+                      errorText: errorMessage,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                CyanTextButton(
+                  onTap: (isLoading || isApplied) ? null : _applyPromoCode,
+                  label: isLoading
+                      ? "Applying..."
+                      : isApplied
+                          ? "Applied"
+                          : "Apply",
+                  color: isApplied
+                      ? Colors.green.withOpacity(0.2)
+                      : AppColors.lightCyanColor,
+                ),
+              ],
+            ),
+            if (isApplied) ...[
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(
+                    Icons.check_circle,
+                    color: Colors.green,
+                    size: 16.sp,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    "Promo code '$appliedPromoCode' applied",
+                    style: AppTextStyle.font12bold.copyWith(
+                      color: Colors.green,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }
@@ -516,24 +621,35 @@ class CyanTextButton extends StatelessWidget {
     super.key,
     this.onTap,
     required this.label,
+    this.color,
   });
 
   final VoidCallback? onTap;
   final String label;
+  final Color? color;
+
   @override
   Widget build(BuildContext context) {
+    final isDisabled = onTap == null;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 6.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6),
-          color: AppColors.lightCyanColor,
+          color: isDisabled
+              ? (color ?? AppColors.lightCyanColor).withOpacity(0.5)
+              : (color ?? AppColors.lightCyanColor),
         ),
         child: Center(
           child: Text(
             label,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16.sp,
+              color: isDisabled ? Colors.black38 : Colors.black,
+            ),
           ),
         ),
       ),

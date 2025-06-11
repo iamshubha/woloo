@@ -118,4 +118,31 @@ class CartApiService {
       rethrow;
     }
   }
+
+  Future<CartModel> applyPromoCode({
+    required String token,
+    required String cartId,
+    required String promoCode,
+  }) async {
+    try {
+      final response = await dio
+          .post("https://staging-store.woloo.in/store/carts/$cartId/promotions",
+              options: Options(
+                headers: {
+                  'x-publishable-api-key':
+                      'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+                  'Content-Type': 'application/json',
+                  'Authorization': 'Bearer $token'
+                },
+              ),
+              data: {
+            "promo_codes": [promoCode]
+          });
+
+      return CartModel.fromJson(response);
+    } catch (e) {
+      logger.e("Error in applyPromoCode: $e");
+      throw Exception('Something went wrong. Please try again later.');
+    }
+  }
 }

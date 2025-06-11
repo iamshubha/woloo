@@ -276,3 +276,12 @@ class RestockSubscriptionsEvent extends B2BStoreEvent {
   @override
   List<Object?> get props => [phoneNumber, variantId];
 }
+
+class ApplyPromoEvent extends B2BStoreEvent {
+  final String promoCode;
+
+  const ApplyPromoEvent({required this.promoCode});
+
+  @override
+  List<Object?> get props => [promoCode];
+}

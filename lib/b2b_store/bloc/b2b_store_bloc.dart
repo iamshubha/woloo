@@ -71,6 +71,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<GetOrderReview>(getProductReviews);
     on<Refresh>(_refresh);
     on<RestockSubscriptionsEvent>(restockSubscriptions);
+    on<ApplyPromoEvent>(_applyPromoCode);
   }
 
   FutureOr<void> _emailPassRegister(
@@ -186,7 +187,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     } catch (e) {
       if (emit.isDone) return;
       emit(B2BStoreError(error: e.toString()));
-      logger.w("Error in IOT service: $e");
+      logger.w("Login service: $e");
       debugPrint("Error in IOT service: $e");
     }
   }
@@ -748,6 +749,42 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     } catch (e) {
       emit(RestockSubscriptionsError(error: e.toString()));
       logger.e("Error in restockSubscriptions: $e");
+    }
+  }
+
+  FutureOr<void> _applyPromoCode(
+    ApplyPromoEvent event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const CartLoading(message: "Applying promo code..."));
+
+      // Validate promo code format if needed
+      if (event.promoCode.trim().isEmpty) {
+        emit(const PromoApplyError(error: "Please enter a valid promo code"));
+        return;
+      }
+
+      // Call API to apply promo code
+      final response = await _cartService.applyPromoCode(
+        token: box.read('login_jwt'),
+        cartId: box.read('cart_id'),
+        promoCode: event.promoCode,
+      );
+
+      // If successful, emit CartSuccess with updated cart data
+      emit(CartSuccess(cartData: response));
+
+      // After cart is updated, get latest cart data to reflect changes
+      final updatedCart = await _cartService.getAllCartData(
+          token: box.read('login_jwt'), cartId: box.read('cart_id'));
+      emit(CartSuccess(cartData: updatedCart));
+    } catch (e) {
+      // Handle specific error cases
+      final errorMessage =
+          e is Exception ? e.toString() : "Failed to apply promo code";
+      emit(PromoApplyError(error: errorMessage.replaceAll('Exception: ', '')));
+      logger.e("Error in applying promo code: $e");
     }
   }
 }

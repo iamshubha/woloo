@@ -275,3 +275,17 @@ class RestockSubscriptionsError extends B2BStoreState {
   @override
   List<Object> get props => [error];
 }
+
+class PromoApplySuccess extends B2BStoreState {
+  final CartModel cartData;
+  const PromoApplySuccess({required this.cartData});
+  @override
+  List<Object> get props => [cartData];
+}
+
+class PromoApplyError extends B2BStoreState {
+  final String error;
+  const PromoApplyError({required this.error});
+  @override
+  List<Object> get props => [error];
+}
