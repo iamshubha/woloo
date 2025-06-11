@@ -83,8 +83,20 @@ class _OrderScreenState extends State<OrderScreen> {
                         itemCount: widget.orderSet.orders.first.items.length,
                         itemBuilder: (c, i) {
                           final order = widget.orderSet.orders.first;
+
                           final item = order.items[i];
+                          final orderShipmentAddress = order
+                              .paymentCollections
+                              ?.first
+                              .payments
+                              ?.first
+                              .data
+                              ?.notes
+                              ?.customer
+                              ?.addresses
+                              ?.first;
                           return OrderStatusCard(
+                            orderShipmentAddress: orderShipmentAddress,
                             id: item.id ?? "",
                             timeLineList: timeLineList,
                             url: item.thumbnail ?? "",
@@ -356,7 +368,9 @@ class OrderStatusCard extends StatelessWidget {
       required this.productLabel,
       required this.subTitle,
       required this.price,
-      required this.id});
+      required this.id,
+      required this.orderShipmentAddress});
+  final Address? orderShipmentAddress;
   final List<String> timeLineList;
   final String id;
   final String url;
@@ -443,7 +457,7 @@ class OrderStatusCard extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
           SizedBox(
-            height: 60.h,
+            height: 80.h,
             child: Timeline.builder(
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (c, i) {
@@ -451,9 +465,15 @@ class OrderStatusCard extends StatelessWidget {
                     nodePosition: 0,
                     contents: SizedBox(
                       width: 150,
-                      child: Text(
-                        timeLineList[i],
-                        textAlign: TextAlign.center,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            timeLineList[i],
+                            textAlign: TextAlign.center,
+                          ),
+                          Text("~time ") // TODO:Replace with actual time
+                        ],
                       ),
                     ),
                     mainAxisExtent: 80,
@@ -498,9 +518,7 @@ class OrderStatusCard extends StatelessWidget {
                   //   color: Colors.grey[300],
                   //   borderRadius: BorderRadius.circular(8.r),
                   // ),
-                  child: SizedBox(
-                      //TODO
-                      )
+                  child: Text("${orderShipmentAddress?.address1}")
                   // Text(
                   //   "Cancel",
                   //   style: TextStyle(

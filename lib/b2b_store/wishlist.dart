@@ -238,7 +238,7 @@ class _WishListScreenState extends State<WishListScreen> {
                                                     ]),
                                                 child: Image.network(
                                                   product.thumbnail ?? '',
-                                                  fit: BoxFit.contain,
+                                                  fit: BoxFit.fill,
                                                 ),
                                               ),
                                               SizedBox(

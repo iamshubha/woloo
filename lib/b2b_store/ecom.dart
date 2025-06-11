@@ -220,6 +220,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                                       category.imageUrl,
                                                       width: 40.w,
                                                       height: 40.h,
+                                                      fit: BoxFit.fill,
                                                     ),
                                             ),
                                           ),
@@ -517,7 +518,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                                     ]),
                                                 child: Image.network(
                                                   product.thumbnail ?? '',
-                                                  fit: BoxFit.contain,
+                                                  fit: BoxFit.fill,
                                                 ),
                                               ),
                                               SizedBox(

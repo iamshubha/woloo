@@ -276,7 +276,7 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
                                                   ]),
                                               child: Image.network(
                                                 product.thumbnail ?? '',
-                                                fit: BoxFit.contain,
+                                                fit: BoxFit.fill,
                                               ),
                                             ),
                                             SizedBox(
