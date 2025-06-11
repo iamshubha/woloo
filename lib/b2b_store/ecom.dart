@@ -1139,7 +1139,7 @@ class SeeMoreButton extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: 5.w,
+            width: 5.w, 
           ),
           Container(
             height: 15.h,

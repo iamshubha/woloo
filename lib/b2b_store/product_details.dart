@@ -149,8 +149,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               imageURL = widget.productData?.thumbnail ?? '';
               cartModel = state.cartData;
 
-              final itemsData = cartModel?.cart.items;
-              if (itemsData!.isEmpty) {
+              final itemsData = cartModel?.cart.items ?? [];
+
+              if (itemsData.isEmpty) {
                 productCount = 0;
               } else {
                 // setState(() {});
@@ -165,18 +166,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               // print(state.cartData.cart);
               // _addressesData = state.addressesData;
               // _b2bStoreHomePage = state.dashboardData;
-              _productCollection = state.productCollection;
-              _refresh();
+              // _productCollection = state.productCollection;
+              // _refresh();
               _isDataLoaded = true;
               // _dashboardData = state.dashboardData;
             });
-            if (_shouldShowCartBottomSheetAfterAdd) {
-              _shouldShowCartBottomSheetAfterAdd = false; // Reset the flag
-              final resultFromBottomSheet = await showCartBottomSheet(
-                  context, {'from': 'buy_now_success'});
-              _handleCartBottomSheetDismissal(resultFromBottomSheet);
-            }
-            _refresh();
+            // if (_shouldShowCartBottomSheetAfterAdd) {
+            //   _shouldShowCartBottomSheetAfterAdd = false; // Reset the flag
+            //   final resultFromBottomSheet = await showCartBottomSheet(
+            //       context, {'from': 'buy_now_success'});
+            //   _handleCartBottomSheetDismissal(resultFromBottomSheet);
+            // }
+            // _refresh();
           }
 
           if (state is WishlistSuccess) {
@@ -297,19 +298,52 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     color: AppColors.textgreyColor)),
                           ],
                         ),
-
+                        if (productCount != 0) const Spacer(),
                         const SizedBox(
                           width: 20,
                         ),
-                        Expanded(
-                          child: LongLabeledButton(
-                            height: 40.h,
-                            onTap: () {
-                              addToCart(context);
-                            },
-                            label: "Add to Cart",
-                          ),
-                        ),
+                        productCount == 0
+                            ? Expanded(
+                                child: LongLabeledButton(
+                                height: 40.h,
+                                onTap: () {
+                                  addToCart(context);
+                                },
+                                label: "Add to Cart",
+                              ))
+                            : CartAddRemove(
+                                value: productCount,
+                                onAdd: () {
+                                  productCount == 0
+                                      ? addToCart(context)
+                                      :
+                                      // To add value
+                                      cartModel?.cart.items.forEach((i) {
+                                          if (i.variantId ==
+                                              widget.productData?.variants[0]
+                                                  .id) {
+                                            productCount += 1;
+                                            _b2bStoreBloc.add(AddRemoveItemReq(
+                                                count: productCount,
+                                                itemId: i.id));
+                                          }
+                                        });
+                                },
+                                onRemove: () {
+                                  productCount == 0
+                                      ? EasyLoading.showError(
+                                          "Product count cannot be less than 0")
+                                      : null;
+                                  cartModel?.cart.items.forEach((i) {
+                                    if (i.variantId ==
+                                        widget.productData?.variants[0].id) {
+                                      productCount -= 1;
+                                      _b2bStoreBloc.add(AddRemoveItemReq(
+                                          count: productCount, itemId: i.id));
+                                    }
+                                  });
+                                },
+                              ),
                       ],
                     ),
                   ),
@@ -397,43 +431,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       ),
                                     ),
                                   const Spacer(),
-                                  if (false)
-                                    CartAddRemove(
-                                      value: productCount,
-                                      onAdd: () {
-                                        productCount == 0
-                                            ? addToCart(context)
-                                            :
-                                            // To add value
-                                            cartModel?.cart.items.forEach((i) {
-                                                if (i.variantId ==
-                                                    widget.productData
-                                                        ?.variants[0].id) {
-                                                  productCount += 1;
-                                                  _b2bStoreBloc.add(
-                                                      AddRemoveItemReq(
-                                                          count: productCount,
-                                                          itemId: i.id));
-                                                }
-                                              });
-                                      },
-                                      onRemove: () {
-                                        productCount == 0
-                                            ? EasyLoading.showError(
-                                                "Product count cannot be less than 0")
-                                            : null;
-                                        cartModel?.cart.items.forEach((i) {
-                                          if (i.variantId ==
-                                              widget.productData?.variants[0]
-                                                  .id) {
-                                            productCount -= 1;
-                                            _b2bStoreBloc.add(AddRemoveItemReq(
-                                                count: productCount,
-                                                itemId: i.id));
-                                          }
-                                        });
-                                      },
-                                    )
+                                  // if (false)
                                 ],
                               ),
                               SizedBox(
@@ -858,15 +856,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             crossAxisSpacing: 8,
                             childAspectRatio: 0.5,
                           ),
-                          itemCount: _productCollection!.products.length > 9
-                              ? 9
-                              : _productCollection?.products.length,
+                          itemCount:
+                              (_productCollection?.products ?? []).length > 9
+                                  ? 9
+                                  : _productCollection?.products.length,
                           itemBuilder: (context, index) {
-                            final product = _productCollection!.products[index];
-                            logger.w(product.variants.first.inventoryQuantity);
+                            final product = _productCollection?.products[index];
+                            // logger.w(product!.variants.first.inventoryQuantity);
                             int productCount = 0;
                             cartModel?.cart.items.forEach((i) {
-                              if (i.variantId == product.variants[0].id) {
+                              if (i.variantId == product?.variants[0].id) {
                                 productCount = i.quantity;
                               }
                             });
@@ -879,14 +878,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     builder: (context) => ProductDetailsScreen(
                                       productData: product,
                                       isSelected: _b2bStoreBloc.favIds.any(
-                                          (e) => e.containsKey(product.id)),
+                                          (e) => e.containsKey(product?.id)),
                                       productIdforWishList: _b2bStoreBloc.favIds
                                               .any((e) =>
-                                                  e.containsKey(product.id))
+                                                  e.containsKey(product?.id))
                                           ? _b2bStoreBloc.favIds
                                               .firstWhere((e) =>
                                                   e.entries.first.key ==
-                                                  product.id)
+                                                  product?.id)
                                               .entries
                                               .first
                                               .value
@@ -938,7 +937,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 ),
                                               ]),
                                           child: Image.network(
-                                            product.thumbnail ?? '',
+                                            product?.thumbnail ?? '',
                                             fit: BoxFit.contain,
                                           ),
                                         ),
@@ -962,7 +961,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           height: 5.h,
                                         ),
                                         Text(
-                                          product.title ?? "",
+                                          product?.title ?? "",
                                           style: TextStyle(
                                               fontSize: 8.sp,
                                               fontWeight: FontWeight.bold),
@@ -979,7 +978,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           children: [
                                             AnimatedRatingStars(
                                               initialRating:
-                                                  product.averageRating ?? 0,
+                                                  product?.averageRating ?? 0,
                                               minRating: 0.0,
                                               maxRating: 5.0,
                                               filledColor: Colors.amber,
@@ -1005,7 +1004,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             //         null &&
                                             //     product.reviewCount != 0)
                                             Text(
-                                              "(${product.reviewCount ?? 0})",
+                                              "(${product?.reviewCount ?? 0})",
                                               style: AppTextStyle.font10bold,
                                             )
                                           ],
@@ -1015,7 +1014,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           spacing: 5.w,
                                           children: [
                                             Text(
-                                              "\u{20B9}${product.variants.first.calculatedPrice!.calculatedAmount.toString()}",
+                                              "\u{20B9}${product?.variants.first.calculatedPrice!.calculatedAmount.toString()}",
                                               style: TextStyle(
                                                 fontSize: 10.sp,
                                                 fontWeight: FontWeight.bold,
@@ -1023,10 +1022,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             ),
                                             //TODO: Check Price Logic -- Abar asibo fire
                                             Text(
-                                              "MRP ${product.variants.first.calculatedPrice!.originalAmount.toString()}",
+                                              "MRP ${product?.variants.first.calculatedPrice!.originalAmount.toString()}",
                                               style: TextStyle(
                                                   decoration:
-                                                      product.discountable ??
+                                                      product?.discountable ??
                                                               false
                                                           ? TextDecoration
                                                               .lineThrough
@@ -1040,8 +1039,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         )
                                       ],
                                     ),
-                                    if (product
-                                            .variants.first.inventoryQuantity ==
+                                    if (product?.variants.first
+                                            .inventoryQuantity ==
                                         0)
                                       Positioned.fill(
                                         child: ClipRRect(
@@ -1062,14 +1061,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         top: 80,
                                         child: InkWell(
                                           onTap: () async {
-                                            if (product.variants.first
+                                            if (product?.variants.first
                                                     .inventoryQuantity ==
                                                 0) return;
 
                                             _b2bStoreBloc.add(AddToCart(
                                                 quantity: 1,
                                                 variant_id:
-                                                    product.variants[0].id));
+                                                    product?.variants[0].id));
                                             // if (widget.isSelected) {
                                             //   widget.onRemove?.call();
                                             // } else {
@@ -1111,7 +1110,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             duration: const Duration(
                                                 milliseconds: 500),
                                             child: Center(
-                                              child: product.variants.first
+                                              child: product?.variants.first
                                                           .inventoryQuantity ==
                                                       0
                                                   ? InkWell(
@@ -1122,8 +1121,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                                 globalStorage
                                                                     .getClientMobileNo(),
                                                             variantId: product
-                                                                .variants[0]
-                                                                .id!,
+                                                                    ?.variants[
+                                                                        0]
+                                                                    .id ??
+                                                                "",
                                                           ),
                                                         );
                                                       },
@@ -1184,7 +1185,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                                         (i) {
                                                                   if (i.variantId ==
                                                                       product
-                                                                          .variants[
+                                                                          ?.variants[
                                                                               0]
                                                                           .id) {
                                                                     productCount -=
@@ -1244,7 +1245,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                                         (i) {
                                                                   if (i.variantId ==
                                                                       product
-                                                                          .variants[
+                                                                          ?.variants[
                                                                               0]
                                                                           .id) {
                                                                     productCount +=
@@ -1286,7 +1287,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           ),
                                         )),
 
-                                    product.variants.first.inventoryQuantity ==
+                                    product?.variants.first.inventoryQuantity ==
                                             0
                                         ? Align(
                                             alignment: Alignment.topCenter,

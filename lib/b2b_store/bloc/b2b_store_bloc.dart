@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -122,74 +121,74 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     StoreCustomerLoginReq event,
     Emitter<B2BStoreState> emit,
   ) async {
-    try {
-      ProductCategory categories = ProductCategory();
-      TopBrands topBrands = TopBrands();
-      ProductCollections productCollections = ProductCollections();
-      CartModel? cartModel;
-      Wishlist? fav;
-      emit(const B2BStoreLoading(message: "Loading data..."));
+    // try {
+    ProductCategory categories = ProductCategory();
+    TopBrands topBrands = TopBrands();
+    ProductCollections productCollections = ProductCollections();
+    CartModel? cartModel;
+    Wishlist? fav;
+    emit(const B2BStoreLoading(message: "Loading data..."));
 
-      // Login and get token\
+    // Login and get token\
 
-      if (event.isfromlogin!) {
-        final loginToken = await loginFlowService.loginCustomer(
-          email: event.email ?? '',
-          pass: event.pass ?? '',
-        );
-        box.write('login_jwt', loginToken);
-      } else {
-        final loginToken = await loginFlowService.loginCustomer(
-          email: event.email ?? '',
-          pass: event.pass ?? '',
-        );
-        box.write('login_jwt', loginToken);
+    if (event.isfromlogin!) {
+      final loginToken = await loginFlowService.loginCustomer(
+        email: event.email ?? '',
+        pass: event.pass ?? '',
+      );
+      box.write('login_jwt', loginToken);
+    } else {
+      final loginToken = await loginFlowService.loginCustomer(
+        email: event.email ?? '',
+        pass: event.pass ?? '',
+      );
+      box.write('login_jwt', loginToken);
 
-        // Get region
-        final regionResponse =
-            await _productService.getRegion(token: loginToken);
-        box.write('region_id', regionResponse.regions![0].id);
-        // await _productService
-        //     .createCart(
-        //         token: loginToken,
-        //         regionId: regionResponse.regions![0].id.toString())
-        //     .then((cartData) {
-        //   box.write('cart_id', cartData.cart.id);
-        // });
-        cartModel = await _cartService.getAllCartData(
-            token: box.read('login_jwt'), cartId: box.read('cart_id'));
+      // Get region
+      final regionResponse = await _productService.getRegion(token: loginToken);
+      box.write('region_id', regionResponse.regions![0].id);
+      await _productService
+          .createCart(
+              token: loginToken,
+              regionId: regionResponse.regions![0].id.toString())
+          .then((cartData) {
+        box.write('cart_id', cartData.cart.id);
+      });
+      // logger.w("Token: ${box.read('login_jwt')}");
+      // logger.w("Cart Id: ${box.read('cart_id')}");
+      cartModel = await _cartService.getAllCartData(
+          token: box.read('login_jwt'), cartId: box.read('cart_id'));
 
-        // Fetch all required data
-        categories =
-            await _productService.getProductCategories(token: loginToken);
-        topBrands = await _productService.getTopBrands(token: loginToken);
-        productCollections =
-            await _productService.getProductCollections(token: loginToken);
+      // Fetch all required data
+      categories =
+          await _productService.getProductCategories(token: loginToken);
+      topBrands = await _productService.getTopBrands(token: loginToken);
+      productCollections =
+          await _productService.getProductCollections(token: loginToken);
 
-        fav = await _favoriteService.getFavorites(token: loginToken);
+      fav = await _favoriteService.getFavorites(token: loginToken);
 
-        favIds = getCommonProductIds(fav, productCollections);
-      }
-
-      final address = box.read('address');
-      // Debug prints
-      selectedAddress.value = address != null
-          ? Addresses.fromJson(jsonDecode(address))
-          : Addresses();
-      // Emit success state
-      if (emit.isDone) return;
-      emit(B2BStoreSuccess(B2BStoreHomePage(
-          productCategory: categories,
-          topBrands: topBrands,
-          productCollections: productCollections,
-          cartData: cartModel!,
-          fav: fav!)));
-    } catch (e) {
-      if (emit.isDone) return;
-      emit(B2BStoreError(error: e.toString()));
-      logger.w("Login service: $e");
-      debugPrint("Error in IOT service: $e");
+      favIds = getCommonProductIds(fav, productCollections);
     }
+
+    final address = box.read('address');
+    // Debug prints
+    selectedAddress.value =
+        address != null ? Addresses.fromJson(jsonDecode(address)) : Addresses();
+    // Emit success state
+    if (emit.isDone) return;
+    emit(B2BStoreSuccess(B2BStoreHomePage(
+        productCategory: categories,
+        topBrands: topBrands,
+        productCollections: productCollections,
+        cartData: cartModel!,
+        fav: fav!)));
+    // } catch (e) {
+    //   if (emit.isDone) return;
+    //   emit(B2BStoreError(error: e.toString()));
+    //   logger.w("Login service: $e");
+    //   debugPrint("Error in IOT service: $e");
+    // }
   }
 
   FutureOr<void> _refresh(

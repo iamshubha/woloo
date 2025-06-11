@@ -1,10 +1,6 @@
 import 'dart:convert';
 
-// To parse this JSON data, do
-//
-//     final cartModel = cartModelFromJson(jsonString);
-
-import 'dart:convert';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 
 CartModel cartModelFromJson(String str) => CartModel.fromJson(json.decode(str));
 
@@ -17,9 +13,16 @@ class CartModel {
     required this.cart,
   });
 
-  factory CartModel.fromJson(Map<String, dynamic> json) => CartModel(
+  factory CartModel.fromJson(Map<String, dynamic> json) {
+    try {
+      return CartModel(
         cart: Cart.fromJson(json["cart"]),
       );
+    } catch (e) {
+      logger.e(e);
+      rethrow;
+    }
+  }
 
   Map<String, dynamic> toJson() => {
         "cart": cart.toJson(),
