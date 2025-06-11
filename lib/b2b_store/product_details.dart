@@ -171,6 +171,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               _isDataLoaded = true;
               // _dashboardData = state.dashboardData;
             });
+
+            if (selectedAddress.value.address1 == null) {
+              showModalBottomSheet(
+                isScrollControlled: true,
+                isDismissible: false, // <-- Allow tap outside to dismiss
+                enableDrag: true, // <-- Allow swipe down to dismiss
+                backgroundColor: Colors
+                    .transparent, // Optional: if you want rounded corners to show correctly
+                context: context,
+                builder: (_) =>
+                    const AddressChangeBottomSheet(), //AddressBottomSheet
+              );
+            }
             // if (_shouldShowCartBottomSheetAfterAdd) {
             //   _shouldShowCartBottomSheetAfterAdd = false; // Reset the flag
             //   final resultFromBottomSheet = await showCartBottomSheet(
@@ -506,36 +519,38 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               SizedBox(
                                 height: 20.h,
                               ),
-                              const Divider(
-                                thickness: 2,
-                              ),
-                              SizedBox(
-                                height: 10.h,
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    "Delivery in 7-10 Days to ",
-                                    style: TextStyle(
-                                        fontSize: 14.sp,
-                                        color: AppColors.textgreyColor,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  ValueListenableBuilder(
-                                      valueListenable: selectedAddress,
-                                      builder: (context, value, child) {
-                                        return Text(
-                                          "Pin Code: ${value.postalCode}",
-                                          style: TextStyle(
-                                              decoration:
-                                                  TextDecoration.underline,
-                                              fontSize: 14.sp,
-                                              color: AppColors.textgreyColor,
-                                              fontWeight: FontWeight.bold),
-                                        );
-                                      }),
-                                ],
-                              )
+                              if (selectedAddress.value.postalCode != null) ...[
+                                const Divider(
+                                  thickness: 2,
+                                ),
+                                SizedBox(
+                                  height: 10.h,
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Delivery in 7-10 Days to ",
+                                      style: TextStyle(
+                                          fontSize: 14.sp,
+                                          color: AppColors.textgreyColor,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    ValueListenableBuilder(
+                                        valueListenable: selectedAddress,
+                                        builder: (context, value, child) {
+                                          return Text(
+                                            "Pin Code: ${value.postalCode}",
+                                            style: TextStyle(
+                                                decoration:
+                                                    TextDecoration.underline,
+                                                fontSize: 14.sp,
+                                                color: AppColors.textgreyColor,
+                                                fontWeight: FontWeight.bold),
+                                          );
+                                        }),
+                                  ],
+                                )
+                              ],
                             ],
                           ),
                         ),

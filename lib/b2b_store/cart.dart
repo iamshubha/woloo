@@ -102,29 +102,30 @@ class _CartScreenState extends State<CartScreen> {
                               style: AppTextStyle.font14bold,
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              XRadioTile(
-                                onTap: () {
-                                  isExpressBooking = !isExpressBooking;
-                                  setState(() {});
-                                },
-                                isSelected: !isExpressBooking,
-                                title: "Normal Shipping",
-                                subTitle: "7-10 Days",
-                              ),
-                              XRadioTile(
-                                onTap: () {
-                                  isExpressBooking = !isExpressBooking;
-                                  setState(() {});
-                                },
-                                isSelected: isExpressBooking,
-                                title: "Express Shipping+ Rs.75",
-                                subTitle: "2-3 Days",
-                              ),
-                            ],
-                          ),
+                          if (false)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                XRadioTile(
+                                  onTap: () {
+                                    isExpressBooking = !isExpressBooking;
+                                    setState(() {});
+                                  },
+                                  isSelected: !isExpressBooking,
+                                  title: "Normal Shipping",
+                                  subTitle: "7-10 Days",
+                                ),
+                                XRadioTile(
+                                  onTap: () {
+                                    isExpressBooking = !isExpressBooking;
+                                    setState(() {});
+                                  },
+                                  isSelected: isExpressBooking,
+                                  title: "Express Shipping+ Rs.75",
+                                  subTitle: "2-3 Days",
+                                ),
+                              ],
+                            ),
                           ListView.builder(
                             shrinkWrap:
                                 true, // Ensures ListView takes only the required space
