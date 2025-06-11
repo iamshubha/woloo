@@ -9,11 +9,14 @@ import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/custom_widget/start_rating.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/hygine_services/view/address_notifier.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
+
+import '../utils/logger.dart';
 
 class CollectionsScreen extends StatefulWidget {
   const CollectionsScreen({
@@ -28,6 +31,8 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   B2BStoreHomePage? _b2bStoreHomePage;
   bool _isDataLoaded = false;
+  List<Product> products = [];
+  final searchTEC = TextEditingController();
   _refresh() {
     _b2bStoreBloc.add(const Refresh(slug: "collection_id"));
   }
@@ -69,7 +74,7 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
             EasyLoading.dismiss();
             setState(() {
               _b2bStoreHomePage = state.dashboardData;
-
+              products = _b2bStoreHomePage!.productCollections.products;
               _isDataLoaded = true;
 
               // _dashboardData = state.dashboardData;
@@ -87,6 +92,23 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
             child: Scaffold(
               bottomNavigationBar: const XBottomBar(),
               appBar: EComAppbar(
+                controller: searchTEC,
+                onChanged: (value) {
+                  if (value.isEmpty) {
+                    products = _b2bStoreHomePage!.productCollections.products;
+                  } else {
+                    products = _b2bStoreHomePage!.productCollections.products
+                        .where((e) =>
+                            e.title
+                                ?.toLowerCase()
+                                .contains(value.toLowerCase()) ??
+                            false)
+                        .toList();
+                    logger.w("Value: $value Products: ${products.length}");
+                  }
+
+                  setState(() {});
+                },
                 cartValue: _isDataLoaded
                     ? _b2bStoreHomePage?.cartData.cart.items.length ?? 0
                     : 0,
@@ -170,11 +192,9 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
                                 crossAxisSpacing: 8,
                                 childAspectRatio: 0.5,
                               ),
-                              itemCount: _b2bStoreHomePage!
-                                  .productCollections.products.length,
+                              itemCount: products.length,
                               itemBuilder: (context, index) {
-                                final product = _b2bStoreHomePage!
-                                    .productCollections.products[index];
+                                final product = products[index];
 
                                 int productCount = 0;
                                 _b2bStoreHomePage?.cartData.cart.items

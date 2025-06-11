@@ -17,7 +17,6 @@ import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/common_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
-import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/wishlist.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/subcription/view/clientprofile.dart';
@@ -1139,7 +1138,7 @@ class SeeMoreButton extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: 5.w, 
+            width: 5.w,
           ),
           Container(
             height: 15.h,
@@ -1172,18 +1171,22 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
       this.textFieldHintText = 'Search Products',
       this.cartValue,
       this.productMode = ProductMode.productDetails,
-      this.onTap});
+      this.onTap,
+      this.onChanged,this.controller});
   final ProductMode productMode;
 
   final String textFieldHintText;
   final bool isAll;
   final VoidCallback? onTap;
   final int? cartValue;
+  final Function(String)? onChanged;
+  final TextEditingController? controller;
   @override
   Size get preferredSize => const Size.fromHeight(130);
 
   @override
   Widget build(BuildContext context) {
+    
     return AppBar(
       automaticallyImplyLeading: false, // Remove default back button
       backgroundColor: AppColors.themeBackground,
@@ -1303,6 +1306,7 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                         ),
                       ]),
                   child: TextField(
+                    controller: controller,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: AppColors.themeBackground,
@@ -1313,6 +1317,7 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                         borderSide: BorderSide.none,
                       ),
                     ),
+                    onChanged: onChanged,
                   ),
                 ),
               ),
