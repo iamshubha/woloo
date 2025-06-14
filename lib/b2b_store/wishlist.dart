@@ -93,7 +93,7 @@ class _WishListScreenState extends State<WishListScreen> {
           return !_isDataLoaded
               ? Container()
               : Scaffold(
-                  bottomNavigationBar: const XBottomBar(),
+                  // bottomNavigationBar: const XBottomBar(),
                   appBar: EComAppbar(
                     cartValue: _isDataLoaded ? _cart!.cart.items.length : 0,
                     onTap: () {

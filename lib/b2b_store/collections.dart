@@ -90,7 +90,7 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
           return PopScope(
             canPop: false,
             child: Scaffold(
-              bottomNavigationBar: const XBottomBar(),
+              // bottomNavigationBar: const XBottomBar(),
               appBar: EComAppbar(
                 controller: searchTEC,
                 onChanged: (value) {

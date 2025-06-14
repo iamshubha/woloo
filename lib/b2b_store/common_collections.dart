@@ -90,7 +90,7 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
           return PopScope(
             canPop: false,
             child: Scaffold(
-              bottomNavigationBar: const XBottomBar(),
+              // bottomNavigationBar: const XBottomBar(),
               appBar: EComAppbar(
                 cartValue: _isDataLoaded
                     ? _b2bStoreHomePage?.cartData.cart.items.length ?? 0

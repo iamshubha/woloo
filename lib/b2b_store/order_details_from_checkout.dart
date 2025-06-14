@@ -110,7 +110,7 @@ class _OrderScreenCheckoutState extends State<OrderScreenCheckout> {
                   ),
                 ),
               ),
-              bottomNavigationBar: const XBottomBar(),
+              // bottomNavigationBar: const XBottomBar(),
               body: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
                 child: Column(

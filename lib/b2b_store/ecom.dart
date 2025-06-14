@@ -118,7 +118,7 @@ class _EcomScreenState extends State<EcomScreen> {
         builder: (context, snapshot) {
           return Scaffold(
             resizeToAvoidBottomInset: false,
-            bottomNavigationBar: const XBottomBar(),
+            // bottomNavigationBar: const XBottomBar(),
             appBar: EComAppbar(
               onCartTap: () async {
                 final value = await Navigator.push(context,

@@ -66,7 +66,7 @@ class _OrderScreenState extends State<OrderScreen> {
         builder: (context, snapshot) {
           return Scaffold(
             appBar: const BackAppBar(),
-            bottomNavigationBar: const XBottomBar(),
+            // bottomNavigationBar: const XBottomBar(),
             body: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
               child: Column(
