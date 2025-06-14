@@ -43,12 +43,12 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
             EasyLoading.show(status: state.message);
           }
           if (state is OrderDetailsSuccess) {
+            EasyLoading.dismiss();
             setState(() {
               orderDetailsData = state.orderDetailsData;
               isLoading = false;
-              print(state.orderDetailsData.orderSets.first);
+              // print(state.orderDetailsData.orderSets.first);
             });
-            EasyLoading.dismiss();
           }
           if (state is OrderDetailsError) {
             EasyLoading.dismiss();
