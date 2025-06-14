@@ -274,28 +274,47 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
                                                       offset: Offset(0, -1),
                                                     ),
                                                   ]),
-                                              child: Image.network(
-                                                product.thumbnail ?? '',
-                                                fit: BoxFit.fill,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(12.r),
+                                                child: Image.network(
+                                                  product.thumbnail ?? '',
+                                                  fit: BoxFit.fill,
+                                                ),
                                               ),
                                             ),
                                             SizedBox(
                                               height: 5.h,
                                             ),
-                                            Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 5.w,
-                                                  vertical: 2.h),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(3.r),
-                                                color: AppColors.lightCyanColor,
-                                              ),
-                                              child: Text(
-                                                "80ml",
-                                                style: AppTextStyle.font10bold,
-                                              ),
-                                            ),
+                                            product.variants.first.options
+                                                        ?.first.value ==
+                                                    "Default option value"
+                                                ? Container()
+                                                : Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 5.w,
+                                                            vertical: 2.h),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              3.r),
+                                                      color: AppColors
+                                                          .lightCyanColor,
+                                                    ),
+                                                    child: Text(
+                                                      product
+                                                              .variants
+                                                              .first
+                                                              .options
+                                                              ?.first
+                                                              .value ??
+                                                          "",
+                                                      style: AppTextStyle
+                                                          .font10bold,
+                                                    ),
+                                                  ),
+
                                             SizedBox(
                                               height: 5.h,
                                             ),

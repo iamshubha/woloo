@@ -165,52 +165,53 @@ class _ReviewOrderBottomsheetState extends State<ReviewOrderBottomsheet> {
                     const Divider(
                       color: Colors.white,
                     ),
-                    XDecoratedBox(
-                      child: Column(
-                        spacing: 10,
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Payment Method",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 14.sp),
-                          ),
-                          SizedBox(
-                            height: 10.h,
-                          ),
-                          XPaymentTile(
-                            paymentMethod: "UPI App",
-                            imgPath: AppImages.upiIcon,
-                            onSelected: paymentMethod == PaymentMethod.upi,
-                            onTap: () {
-                              setState(() {
-                                paymentMethod = PaymentMethod.upi;
-                              });
-                            },
-                          ),
-                          XPaymentTile(
-                              paymentMethod: "Credit/Debit Card",
-                              imgPath: AppImages.creditCard,
-                              onSelected: paymentMethod == PaymentMethod.card,
+                    if (false)
+                      XDecoratedBox(
+                        child: Column(
+                          spacing: 10,
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Payment Method",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 14.sp),
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            XPaymentTile(
+                              paymentMethod: "UPI App",
+                              imgPath: AppImages.upiIcon,
+                              onSelected: paymentMethod == PaymentMethod.upi,
                               onTap: () {
                                 setState(() {
-                                  paymentMethod = PaymentMethod.card;
+                                  paymentMethod = PaymentMethod.upi;
                                 });
-                              }),
-                          XPaymentTile(
-                              paymentMethod: "Net Banking",
-                              imgPath: AppImages.netbanking,
-                              onSelected:
-                                  paymentMethod == PaymentMethod.netBanking,
-                              onTap: () {
-                                setState(() {
-                                  paymentMethod = PaymentMethod.netBanking;
-                                });
-                              }),
-                        ],
+                              },
+                            ),
+                            XPaymentTile(
+                                paymentMethod: "Credit/Debit Card",
+                                imgPath: AppImages.creditCard,
+                                onSelected: paymentMethod == PaymentMethod.card,
+                                onTap: () {
+                                  setState(() {
+                                    paymentMethod = PaymentMethod.card;
+                                  });
+                                }),
+                            XPaymentTile(
+                                paymentMethod: "Net Banking",
+                                imgPath: AppImages.netbanking,
+                                onSelected:
+                                    paymentMethod == PaymentMethod.netBanking,
+                                onTap: () {
+                                  setState(() {
+                                    paymentMethod = PaymentMethod.netBanking;
+                                  });
+                                }),
+                          ],
+                        ),
                       ),
-                    ),
                   ],
                 )),
                 const Divider(

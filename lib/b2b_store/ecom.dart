@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/b2b_store/all_orders.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
@@ -118,11 +120,30 @@ class _EcomScreenState extends State<EcomScreen> {
             resizeToAvoidBottomInset: false,
             bottomNavigationBar: const XBottomBar(),
             appBar: EComAppbar(
+              onCartTap: () async {
+                final value = await Navigator.push(context,
+                    MaterialPageRoute(builder: (c) => const CartScreen()));
+                if (value != null && value == 'refresh') {
+                  _refresh();
+                } else {
+                  _refresh();
+                }
+              },
               cartValue: _isDataLoaded
                   ? _b2bStoreHomePage!.cartData.cart.items.length
                   : 0,
-              onTap: () {
-                _refresh();
+              onTap: () async {
+                final value = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (c) => const CollectionsScreen(
+                            // products: _b2bStoreHomePage!
+                            //     .productCollections
+                            //     .products,
+                            )));
+                if (value != null && value == 'refresh') {
+                  _refresh();
+                }
               },
             ),
             body: SingleChildScrollView(
@@ -516,31 +537,47 @@ class _EcomScreenState extends State<EcomScreen> {
                                                         offset: Offset(0, -1),
                                                       ),
                                                     ]),
-                                                child: Image.network(
-                                                  product.thumbnail ?? '',
-                                                  fit: BoxFit.fill,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12.r),
+                                                  child: Image.network(
+                                                    product.thumbnail ?? '',
+                                                    fit: BoxFit.fill,
+                                                  ),
                                                 ),
                                               ),
                                               SizedBox(
                                                 height: 5.h,
                                               ),
-                                              Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 5.w,
-                                                    vertical: 2.h),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          3.r),
-                                                  color:
-                                                      AppColors.lightCyanColor,
-                                                ),
-                                                child: Text(
-                                                  "80ml",
-                                                  style:
-                                                      AppTextStyle.font10bold,
-                                                ),
-                                              ),
+                                              product.variants.first.options
+                                                          ?.first.value ==
+                                                      "Default option value"
+                                                  ? Container()
+                                                  : Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 5.w,
+                                                              vertical: 2.h),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(3.r),
+                                                        color: AppColors
+                                                            .lightCyanColor,
+                                                      ),
+                                                      child: Text(
+                                                        product
+                                                                .variants
+                                                                .first
+                                                                .options
+                                                                ?.first
+                                                                .value ??
+                                                            "",
+                                                        style: AppTextStyle
+                                                            .font10bold,
+                                                      ),
+                                                    ),
                                               SizedBox(
                                                 height: 5.h,
                                               ),
@@ -1166,19 +1203,23 @@ class SeeMoreButton extends StatelessWidget {
 }
 
 class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const EComAppbar(
-      {super.key,
-      this.isAll = false,
-      this.textFieldHintText = 'Search Products',
-      this.cartValue,
-      this.productMode = ProductMode.productDetails,
-      this.onTap,
-      this.onChanged,this.controller});
+  const EComAppbar({
+    super.key,
+    this.isAll = false,
+    this.textFieldHintText = 'Search Products',
+    this.cartValue,
+    this.productMode = ProductMode.productDetails,
+    this.onTap,
+    this.onChanged,
+    this.controller,
+    this.onCartTap,
+  });
   final ProductMode productMode;
 
   final String textFieldHintText;
   final bool isAll;
   final VoidCallback? onTap;
+  final VoidCallback? onCartTap;
   final int? cartValue;
   final Function(String)? onChanged;
   final TextEditingController? controller;
@@ -1187,7 +1228,6 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return AppBar(
       automaticallyImplyLeading: false, // Remove default back button
       backgroundColor: AppColors.themeBackground,
@@ -1251,7 +1291,8 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
             ),
             child: Row(
               children: [
-                ValueListenableBuilder<Addresses>(
+                Expanded(
+                  child: ValueListenableBuilder<Addresses>(
                     valueListenable: selectedAddress,
                     builder: (context, value, child) {
                       return Text(
@@ -1262,8 +1303,12 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                           fontSize: 12.sp,
                           color: Colors.grey,
                         ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       );
-                    }),
+                    },
+                  ),
+                ),
                 SizedBox(width: 5.w),
                 Container(
                   decoration: BoxDecoration(
@@ -1307,6 +1352,7 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                         ),
                       ]),
                   child: TextField(
+                    onTap: onTap,
                     controller: controller,
                     decoration: InputDecoration(
                       filled: true,
@@ -1341,9 +1387,7 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                             ]),
                         child: IconButton(
                           icon: ImageIcon(AssetImage(AppImages.bag)),
-                          onPressed: () {
-                            refreshCart(context);
-                          },
+                          onPressed: onCartTap,
                         ),
                       ),
                     )
@@ -1362,9 +1406,7 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                             ]),
                         child: IconButton(
                           icon: ImageIcon(AssetImage(AppImages.bag)),
-                          onPressed: () {
-                            refreshCart(context);
-                          },
+                          onPressed: onCartTap,
                         ),
                       ),
                     ),
@@ -1410,13 +1452,13 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  void refreshCart(context) async {
-    final value = await Navigator.push(
-        context, MaterialPageRoute(builder: (_) => const CartScreen()));
-    if (value != null && value == 'refresh') {
-      if (onTap != null) {
-        onTap!();
-      }
-    }
-  }
+  // void refreshCart(context) async {
+  //   final value = await Navigator.push(
+  //       context, MaterialPageRoute(builder: (_) => const CartScreen()));
+  //   if (value != null && value == 'refresh') {
+  //     if (onTap != null) {
+  //       onTap!();
+  //     }
+  //   }
+  // }
 }

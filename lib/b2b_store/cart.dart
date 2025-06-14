@@ -3,10 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:dio/dio.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
+import 'package:woloo_smart_hygiene/b2b_store/network/woloo_points_service.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/woloo_points.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
@@ -31,6 +34,11 @@ class _CartScreenState extends State<CartScreen> {
   bool _isDataLoaded = false;
   CartModel? cartModel;
   bool isExpressBooking = false;
+  int wolooPoints = 0;
+  bool isWolooPointsApplied = false;
+  bool isWolooPointsLoading = false;
+  String? wolooPointsError;
+
   @override
   void initState() {
     _b2bStoreBloc.add(const GetCartData());
@@ -42,25 +50,49 @@ class _CartScreenState extends State<CartScreen> {
     return BlocConsumer(
         bloc: _b2bStoreBloc,
         listener: (context, state) {
-          // print("dssa $state");
           if (state is CartLoading) {
-            EasyLoading.show(status: state.message);
+            if (state.message.contains("Woloo points")) {
+              setState(() {
+                isWolooPointsLoading = true;
+                wolooPointsError = null;
+              });
+            } else {
+              EasyLoading.show(status: state.message);
+            }
           }
           if (state is CartSuccess) {
-            // _b2bStoreBloc.add(const GetCartData());
             setState(() {
-              print(state.cartData.cart);
-              // _addressesData = state.addressesData;
-              // _b2bStoreHomePage = state.dashboardData;
               cartModel = state.cartData;
+              if (state.wolooPoints! >= 0) wolooPoints = state.wolooPoints ?? 0;
               _isDataLoaded = true;
-              // _dashboardData = state.dashboardData;
+              isWolooPointsLoading = false;
+              wolooPointsError = null;
             });
+
+            // Show success message if provided
+            if (state.message != null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message!),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            }
+
             EasyLoading.dismiss();
           }
           if (state is CartError) {
             EasyLoading.dismiss();
-            EasyLoading.showError(state.error);
+            setState(() {
+              isWolooPointsLoading = false;
+              wolooPointsError = state.error;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.error),
+                backgroundColor: Colors.red,
+              ),
+            );
           }
           if (state is ReadyToShip) {
             EasyLoading.dismiss();
@@ -198,7 +230,7 @@ class _CartScreenState extends State<CartScreen> {
                                   ],
                                 ),
                                 Text(
-                                  "You have 210 Woloo Points to Redeem",
+                                  "You have $wolooPoints Woloo Points to Redeem",
                                   style: AppTextStyle.font13w7
                                       .copyWith(color: AppColors.greyBorder),
                                 ),
@@ -208,28 +240,94 @@ class _CartScreenState extends State<CartScreen> {
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      "Redeem 10 woloo points for Rs. 10",
-                                      style: AppTextStyle.font10bold.copyWith(
-                                          color: AppColors.greyBorder),
-                                    ),
-                                    InkWell(
-                                      onTap: () {},
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 16, vertical: 2),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.lightCyanColor,
-                                          borderRadius:
-                                              BorderRadius.circular(8),
+                                    if (isWolooPointsLoading)
+                                      const SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
                                         ),
+                                      )
+                                    else ...[
+                                      Expanded(
                                         child: Text(
-                                          "Apply",
-                                          style: AppTextStyle.font14bold,
+                                          wolooPoints > 0
+                                              ? "Redeem ${wolooPoints < 10 ? wolooPoints : 10} woloo points for Rs. ${wolooPoints < 10 ? wolooPoints : 10}"
+                                              : "No points available to redeem",
+                                          style: AppTextStyle.font10bold
+                                              .copyWith(
+                                                  color: wolooPointsError !=
+                                                          null
+                                                      ? Colors.red
+                                                      : AppColors.greyBorder),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
                                         ),
                                       ),
-                                    )
+                                      const SizedBox(width: 8),
+                                      InkWell(
+                                        onTap: (!isWolooPointsLoading &&
+                                                wolooPoints >= 0)
+                                            ? () {
+                                                if (isWolooPointsApplied) {
+                                                  setState(() {
+                                                    isWolooPointsApplied =
+                                                        false;
+                                                  });
+                                                  _b2bStoreBloc.add(
+                                                      const RemoveWolooPointsEvent());
+                                                } else {
+                                                  setState(() {
+                                                    isWolooPointsApplied = true;
+                                                  });
+                                                  _b2bStoreBloc.add(
+                                                      const ApplyWolooPointsEvent());
+                                                }
+                                              }
+                                            : null,
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 2),
+                                          decoration: BoxDecoration(
+                                            color: wolooPoints > 0
+                                                ? (isWolooPointsApplied
+                                                    ? Colors.red
+                                                        .withOpacity(0.2)
+                                                    : AppColors.lightCyanColor)
+                                                : AppColors.lightCyanColor
+                                                    .withOpacity(0.5),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          child: Text(
+                                            wolooPointsError != null
+                                                ? "Retry"
+                                                : ((isWolooPointsApplied
+                                                    ? "Remove"
+                                                    : "Apply")),
+                                            style: AppTextStyle.font14bold
+                                                .copyWith(
+                                              color: wolooPointsError != null
+                                                  ? Colors.red
+                                                  : ((isWolooPointsApplied
+                                                      ? Colors.red
+                                                      : Colors.black)),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                    if (wolooPointsError != null)
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 4),
+                                        child: Text(
+                                          wolooPointsError!,
+                                          style: AppTextStyle.font10bold
+                                              .copyWith(color: Colors.red),
+                                        ),
+                                      )
                                   ],
                                 )
                               ],
@@ -416,12 +514,6 @@ class XDecoratedBox extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(7),
         boxShadow: [
-          // BoxShadow(
-          //   color: Colors.grey.withOpacity(0.1),
-          //   blurRadius: 5,
-          //   spreadRadius: 1,
-          //   offset: const Offset(0, 3),
-          // ),
           BoxShadow(
             color: Colors.black.withOpacity(0.2), // Shadow color
             spreadRadius: 1, // Spread effect
@@ -441,7 +533,11 @@ class XDesignedTextField extends StatelessWidget {
     required this.hintText,
     this.controller,
     this.validator,
+    this.keyboardType,
+    this.textCapitalization = TextCapitalization.none,
   });
+  final TextInputType? keyboardType;
+  final TextCapitalization textCapitalization;
 
   final String hintText;
   final TextEditingController? controller;
@@ -450,6 +546,8 @@ class XDesignedTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      keyboardType: keyboardType,
+      textCapitalization: textCapitalization,
       controller: controller,
       validator: validator,
       decoration: InputDecoration(

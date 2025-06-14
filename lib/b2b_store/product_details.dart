@@ -297,7 +297,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 Text(
                                   "MRP \u{20B9} $originalAmount",
                                   style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 12.sp,
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.greyBorder,
                                       decoration: TextDecoration.lineThrough),
@@ -951,27 +951,46 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   offset: Offset(0, -1),
                                                 ),
                                               ]),
-                                          child: Image.network(
-                                            product?.thumbnail ?? '',
-                                            fit: BoxFit.contain,
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(12.r),
+                                            child: Image.network(
+                                              product?.thumbnail ?? '',
+                                              fit: BoxFit.fill,
+                                            ),
                                           ),
                                         ),
                                         SizedBox(
                                           height: 5.h,
                                         ),
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 5.w, vertical: 2.h),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(3.r),
-                                            color: AppColors.lightCyanColor,
-                                          ),
-                                          child: Text(
-                                            "80ml",
-                                            style: AppTextStyle.font10bold,
-                                          ),
-                                        ),
+                                        product?.variants.first.options?.first
+                                                    .value ==
+                                                "Default option value"
+                                            ? Container()
+                                            : Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 5.w,
+                                                    vertical: 2.h),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          3.r),
+                                                  color:
+                                                      AppColors.lightCyanColor,
+                                                ),
+                                                child: Text(
+                                                  product
+                                                          ?.variants
+                                                          .first
+                                                          .options
+                                                          ?.first
+                                                          .value ??
+                                                      "",
+                                                  style:
+                                                      AppTextStyle.font10bold,
+                                                ),
+                                              ),
+
                                         SizedBox(
                                           height: 5.h,
                                         ),

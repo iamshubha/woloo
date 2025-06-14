@@ -285,3 +285,17 @@ class ApplyPromoEvent extends B2BStoreEvent {
   @override
   List<Object?> get props => [promoCode];
 }
+
+class ApplyWolooPointsEvent extends B2BStoreEvent {
+  const ApplyWolooPointsEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class RemoveWolooPointsEvent extends B2BStoreEvent {
+  const RemoveWolooPointsEvent();
+
+  @override
+  List<Object?> get props => [];
+}

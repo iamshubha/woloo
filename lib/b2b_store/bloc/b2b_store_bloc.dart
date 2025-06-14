@@ -20,6 +20,7 @@ import 'package:woloo_smart_hygiene/b2b_store/network/favorite.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/login_reg_flow.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/product.dart';
+import 'package:woloo_smart_hygiene/b2b_store/network/woloo_points_service.dart';
 import 'package:woloo_smart_hygiene/hygine_services/view/address_notifier.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 
@@ -41,6 +42,8 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       OrderDetailsService(dio: GetIt.instance());
   final FavoriteService _favoriteService =
       FavoriteService(dio: GetIt.instance());
+  final WolooPointsService _wolooPointsService =
+      WolooPointsService(dio: GetIt.instance());
 
   var requestId = '';
   late int roleId;
@@ -55,6 +58,8 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<GetCartData>(_getCart);
     on<AddToCart>(_addToCart);
     on<ProceedToShip>(_proceedToSheep);
+    on<ApplyWolooPointsEvent>(_applyWolooPoints);
+    on<RemoveWolooPointsEvent>(_removeWolooPoints);
     on<Payment>(_proceedToCheckOut);
     on<AddRemoveItemReq>(_addRemoveItems);
     on<PlaceOrder>(_placeOrder);
@@ -147,13 +152,13 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       // Get region
       final regionResponse = await _productService.getRegion(token: loginToken);
       box.write('region_id', regionResponse.regions![0].id);
-      await _productService
-          .createCart(
-              token: loginToken,
-              regionId: regionResponse.regions![0].id.toString())
-          .then((cartData) {
-        box.write('cart_id', cartData.cart.id);
-      });
+      // await _productService
+      //     .createCart(
+      //         token: loginToken,
+      //         regionId: regionResponse.regions![0].id.toString())
+      //     .then((cartData) {
+      //   box.write('cart_id', cartData.cart.id);
+      // });
       // logger.w("Token: ${box.read('login_jwt')}");
       // logger.w("Cart Id: ${box.read('cart_id')}");
       cartModel = await _cartService.getAllCartData(
@@ -373,12 +378,25 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   ) async {
     try {
       emit(const CartLoading(message: "Loading data..."));
+
+      // Get cart data
       CartModel response = await _cartService.getAllCartData(
           token: box.read('login_jwt'), cartId: box.read('cart_id'));
+
+      // Get Woloo points in parallel
+      int wolooPoints = 0;
+
+      final wolooResponse = await _wolooPointsService.getWolooPoints();
+
+      wolooPoints = wolooResponse.results.totalCoins.totalCoins;
+
       final productCollections = await _productService.getProductCollections(
           token: box.read('login_jwt'));
+
       emit(CartSuccess(
-          cartData: response, productCollection: productCollections));
+          cartData: response,
+          productCollection: productCollections,
+          wolooPoints: wolooPoints));
     } catch (e) {
       emit(CartError(error: e.toString()));
       debugPrint("Error in GetCart service: $e");
@@ -784,6 +802,85 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
           e is Exception ? e.toString() : "Failed to apply promo code";
       emit(PromoApplyError(error: errorMessage.replaceAll('Exception: ', '')));
       logger.e("Error in applying promo code: $e");
+    }
+  }
+
+  FutureOr<void> _applyWolooPoints(
+    ApplyWolooPointsEvent event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const CartLoading(message: "Applying Woloo points..."));
+
+      // Validate if user has points to apply
+      final currentPoints = await _wolooPointsService.getWolooPoints();
+      if (!currentPoints.success) {
+        throw Exception('Failed to verify points balance');
+      }
+      if (currentPoints.results.totalCoins.totalCoins <= 0) {
+        throw Exception('No points available to redeem');
+      }
+
+      // Apply points to cart
+      final response = await _wolooPointsService.applyWolooPoints(
+        token: box.read('login_jwt'),
+        cartId: box.read('cart_id'),
+      );
+
+      // Get updated points balance after applying
+      final wolooPointsResponse = await _wolooPointsService.getWolooPoints();
+      if (!wolooPointsResponse.success) {
+        logger.w('Failed to get updated points balance after applying points');
+      }
+
+      emit(CartSuccess(
+          cartData: response,
+          wolooPoints: wolooPointsResponse.success
+              ? wolooPointsResponse.results.points
+              : currentPoints.results.points,
+          message: "Woloo points applied successfully!"));
+    } catch (e) {
+      final errorMsg = e is Exception
+          ? e.toString().replaceAll('Exception: ', '')
+          : 'Failed to apply Woloo points. Please try again.';
+      emit(CartError(error: errorMsg));
+      logger.e("Error applying Woloo points: $e");
+    }
+  }
+
+  FutureOr<void> _removeWolooPoints(
+    RemoveWolooPointsEvent event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const CartLoading(message: "Removing Woloo points..."));
+
+      // Remove points from cart
+      final response = await _wolooPointsService.removeWolooPoints(
+        token: box.read('login_jwt'),
+        cartId: box.read('cart_id'),
+      );
+
+      // Get updated points balance after removal
+      final wolooPointsResponse = await _wolooPointsService.getWolooPoints();
+      if (!wolooPointsResponse.success) {
+        logger.w('Failed to get updated points balance after removing points');
+      }
+
+      final currentPoints = await _wolooPointsService.getWolooPoints();
+
+      emit(CartSuccess(
+          cartData: response,
+          wolooPoints: wolooPointsResponse.success
+              ? wolooPointsResponse.results.points
+              : currentPoints.results.points,
+          message: "Woloo points removed successfully!"));
+    } catch (e) {
+      final errorMsg = e is Exception
+          ? e.toString().replaceAll('Exception: ', '')
+          : 'Failed to remove Woloo points. Please try again.';
+      emit(CartError(error: errorMsg));
+      logger.e("Error removing Woloo points: $e");
     }
   }
 }

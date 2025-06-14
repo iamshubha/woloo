@@ -108,10 +108,22 @@ class AddToCartSuccess extends B2BStoreState {
 class CartSuccess extends B2BStoreState {
   final CartModel cartData;
   final ProductCollections? productCollection;
-  const CartSuccess({required this.cartData, this.productCollection});
+  final int? wolooPoints;
+  final String? message;
+  const CartSuccess({
+    required this.cartData,
+    this.productCollection,
+    this.wolooPoints,
+    this.message,
+  });
+
   @override
-  List<Object> get props =>
-      [cartData, if (productCollection != null) productCollection!];
+  List<Object> get props => [
+        cartData,
+        if (productCollection != null) productCollection!,
+        if (wolooPoints != null) wolooPoints!,
+        if (message != null) message!,
+      ];
 }
 
 class ProceedCart extends B2BStoreState {

@@ -102,186 +102,200 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                 SizedBox(height: 10.h), // Added spacing
                 Row(
                   children: [
-                    Expanded(
-                      child: XDecoratedBox(
-                        padding: 4,
-                        child: XDesignedTextField(
-                          // keyboardType: TextInputType.text,
-                          hintText: "First Name",
-                          controller: _firstNameController,
-                          validator: _requiredValidator,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 8.w), // Added spacing between fields
-                    Expanded(
-                      child: XDecoratedBox(
-                        padding: 4,
-                        child: XDesignedTextField(
-                          // keyboardType: TextInputType.text,
-                          hintText: "Last Name",
-                          controller: _lastNameController,
-                          validator: _requiredValidator,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                XDecoratedBox(
-                  padding: 4,
-                  child: XDesignedTextField(
-                    // keyboardType: TextInputType.text,
-                    hintText: "Flat No.",
-                    controller: _flatNoController,
-                    validator: _requiredValidator,
-                  ),
-                ),
-                XDecoratedBox(
-                  padding: 4,
-                  child: XDesignedTextField(
-                    // keyboardType: TextInputType.text,
-                    hintText: "Apartment Name/Road/Area",
-                    controller: _apartmentController,
-                  ),
-                ),
-                Row(
-                  children: [
-                    // Padding(
-                    //   padding:
-                    //       EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
-                    //   child: Container(
-                    //     // height: 36.h,
-                    //     decoration: BoxDecoration(
-                    //       borderRadius: BorderRadius.circular(7),
-                    //       boxShadow: [
-                    //         BoxShadow(
-                    //           color:
-                    //               Colors.black.withOpacity(0.2), // Shadow color
-                    //           spreadRadius: 1, // Spread effect
-                    //           blurRadius: 10, // Blur effect
-                    //           offset: const Offset(0, 5), // Bottom shadow
-                    //         ),
-                    //       ],
-                    //     ),
-                    //     child:
-                    //      GooglePlaceAutoCompleteTextField(
-                    //       placeType: PlaceType.cities,
-                    //       // focusNode: _cityFocusNode,
-                    //       textEditingController: _cityController,
-                    //       googleAPIKey:
-                    //           "AIzaSyCkPmUz4UlRdzcKG9gniW9Qfrgzsjhnb_4",
-                    //       inputDecoration: InputDecoration(
-                    //         contentPadding: const EdgeInsets.symmetric(
-                    //             vertical: 12.0, horizontal: 5),
-                    //         hintText: SignUpConstant.city,
-                    //         hintStyle: TextStyle(
-                    //             color: Colors.grey,
-                    //             fontSize: 16.sp,
-                    //             fontWeight: FontWeight.w700),
-                    //         border: OutlineInputBorder(
-                    //           borderRadius: BorderRadius.circular(0),
-                    //           borderSide: BorderSide.none,
-                    //         ),
-                    //         fillColor: AppColors.white,
-                    //         filled: true,
-                    //       ),
-
-                    //       validator: (valu, p1) {
-                    //         setState(() {});
-                    //         print("val $valu");
-
-                    //         // FocusManager.instance.primaryFocus?.unfocus();
-                    //         if (valu == null || valu.isEmpty) {
-                    //           return "City is required";
-                    //         }
-                    //       },
-                    //       // debounceTime: 400,
-                    //       countries: ["in", "fr"],
-                    //       isLatLngRequired: true,
-                    //       getPlaceDetailWithLatLng: (Prediction prediction) {
-                    //         print("placeDetails" + prediction.lat.toString());
-                    //       },
-
-                    //       itemClick: (Prediction prediction) {
-                    //         _cityController.text = prediction.description ?? "";
-                    //       },
-
-                    //       // seperatedBuilder: const Divider(),
-                    //       containerHorizontalPadding: 10,
-                    //       // OPTIONAL// If you want to customize list view item builder
-                    //       itemBuilder: (context, index, Prediction prediction) {
-                    //         return Container(
-                    //           color: AppColors.white,
-                    //           padding: const EdgeInsets.all(10),
-                    //           child: Row(
-                    //             children: [
-                    //               const Icon(Icons.location_on),
-                    //               const SizedBox(
-                    //                 width: 7,
-                    //               ),
-                    //               Expanded(
-                    //                   child: Text(
-                    //                       "${prediction.description ?? ""}"))
-                    //             ],
-                    //           ),
-                    //         );
-                    //       },
-                    //       formSubmitCallback: () {
-                    //         print("dgd");
-                    //       },
-                    //     ),
-                    //   ),
-                    // ),
-
-                    Expanded(
-                      child: XDecoratedBox(
-                        padding: 4,
-                        child: XDesignedTextField(
-                          hintText: "City",
-                          controller: _cityController,
-                          validator: _requiredValidator,
-                          // keyboardType: TextInputType.text,
+                    Flexible(
+                      flex: 1,
+                      child: SizedBox(
+                        height: 45.h,
+                        child: XDecoratedBox(
+                          padding: 4,
+                          child: XDesignedTextField(
+                            hintText: "First Name",
+                            controller: _firstNameController,
+                            validator: _nameValidator,
+                            keyboardType: TextInputType.name,
+                            textCapitalization: TextCapitalization.words,
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(width: 8.w),
-                    Expanded(
-                      child: XDecoratedBox(
-                        padding: 4,
-                        child: XDesignedTextField(
-                          hintText: "State",
-                          controller: _stateController,
-                          // keyboardType: TextInputType.text,
+                    Flexible(
+                      flex: 1,
+                      child: SizedBox(
+                        height: 45.h,
+                        child: XDecoratedBox(
+                          padding: 4,
+                          child: XDesignedTextField(
+                            hintText: "Last Name",
+                            controller: _lastNameController,
+                            validator: _nameValidator,
+                            keyboardType: TextInputType.name,
+                            textCapitalization: TextCapitalization.words,
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
-                XDecoratedBox(
-                  padding: 4,
-                  child: XDesignedTextField(
-                    hintText: "Pincode",
-                    controller: _pincodeController,
-                    validator: _pincodeValidator,
-                    // keyboardType: TextInputType.number, // Set keyboard type
+                SizedBox(
+                  height: 45.h,
+                  child: XDecoratedBox(
+                    padding: 4,
+                    child: XDesignedTextField(
+                      hintText: "Flat No.",
+                      controller: _flatNoController,
+                      validator: _addressValidator,
+                      keyboardType: TextInputType.streetAddress,
+                      textCapitalization: TextCapitalization.words,
+                    ),
                   ),
                 ),
-                XDecoratedBox(
-                  padding: 4,
-                  child: XDesignedTextField(
-                    hintText: "Phone",
-                    controller: _phoneController,
-                    validator: _phoneValidator,
-                    // keyboardType: TextInputType.phone, // Set keyboard type
+                SizedBox(
+                  height: 45.h,
+                  child: XDecoratedBox(
+                    padding: 4,
+                    child: XDesignedTextField(
+                      hintText: "Apartment Name/Road/Area",
+                      controller: _apartmentController,
+                      validator: _addressValidator,
+                      keyboardType: TextInputType.streetAddress,
+                      textCapitalization: TextCapitalization.words,
+                    ),
                   ),
                 ),
-                XDecoratedBox(
-                  padding: 4,
-                  child: XDesignedTextField(
-                    // keyboardType: TextInputType.text,
-                    hintText: "Save as (Home/Office/Others)",
-                    controller: _labelController,
-                    validator: _requiredValidator,
+                Row(
+                  children: [
+                    Flexible(
+                      flex: 1,
+                      child: SizedBox(
+                        height: 45.h,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(7),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                spreadRadius: 1,
+                                blurRadius: 5,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: GooglePlaceAutoCompleteTextField(
+                            placeType: PlaceType.cities,
+                            textEditingController: _cityController,
+                            googleAPIKey:
+                                "AIzaSyCkPmUz4UlRdzcKG9gniW9Qfrgzsjhnb_4",
+                            inputDecoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 10.w, vertical: 12.h),
+                              hintText: "City",
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14.sp,
+                              ),
+                              border: InputBorder.none,
+                            ),
+                            debounceTime: 800,
+                            countries: const ["in"],
+                            isLatLngRequired: false,
+                            getPlaceDetailWithLatLng: (Prediction prediction) {
+                              logger.d(
+                                  "Selected place: ${prediction.description}");
+                            },
+                            itemClick: (Prediction prediction) {
+                              final parts =
+                                  prediction.description?.split(',') ?? [];
+                              if (parts.isNotEmpty) {
+                                _cityController.text = parts[0].trim();
+                                if (parts.length > 1) {
+                                  _stateController.text = parts[1].trim();
+                                }
+                              }
+                            },
+                            itemBuilder:
+                                (context, index, Prediction prediction) {
+                              return Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10.w, vertical: 8.h),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.location_on,
+                                        color: Colors.grey),
+                                    SizedBox(width: 8.w),
+                                    Expanded(
+                                      child: Text(
+                                        prediction.description ?? "",
+                                        style: TextStyle(fontSize: 14.sp),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            validator: (value, p1) {
+                              if (value == null || value.isEmpty) {
+                                return "City is required";
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+                    Flexible(
+                      flex: 1,
+                      child: SizedBox(
+                        height: 45.h,
+                        child: XDecoratedBox(
+                          padding: 4,
+                          child: XDesignedTextField(
+                            hintText: "State",
+                            controller: _stateController,
+                            // State will be auto-filled from city selection
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 45.h,
+                  child: XDecoratedBox(
+                    padding: 4,
+                    child: XDesignedTextField(
+                      hintText: "Pincode",
+                      controller: _pincodeController,
+                      validator: _pincodeValidator,
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 45.h,
+                  child: XDecoratedBox(
+                    padding: 4,
+                    child: XDesignedTextField(
+                      hintText: "Phone",
+                      controller: _phoneController,
+                      validator: _phoneValidator,
+                      keyboardType: TextInputType.phone,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 45.h,
+                  child: XDecoratedBox(
+                    padding: 4,
+                    child: XDesignedTextField(
+                      hintText: "Save as (Home/Office/Others)",
+                      controller: _labelController,
+                      validator: _requiredValidator,
+                      keyboardType: TextInputType.text,
+                      textCapitalization: TextCapitalization.words,
+                    ),
                   ),
                 ),
                 SizedBox(height: 20.h), // Spacing before button
@@ -338,18 +352,43 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
     return null;
   }
 
+  String? _nameValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'This field is required';
+    }
+    if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
+      return 'Please enter valid name';
+    }
+    return null;
+  }
+
   String? _pincodeValidator(String? value) {
-    if (value == null || value.trim().isEmpty) return 'Pincode is required';
-    // Changed to allow 6 digits based on common Indian pincodes
-    if (!RegExp(r'^\d{6}$').hasMatch(value)) return 'Invalid 6-digit pincode';
+    if (value == null || value.trim().isEmpty) {
+      return 'Pincode is required';
+    }
+    if (!RegExp(r'^\d{6}$').hasMatch(value)) {
+      return 'Please enter valid 6-digit pincode';
+    }
     return null;
   }
 
   String? _phoneValidator(String? value) {
-    if (value == null || value.trim().isEmpty)
+    if (value == null || value.trim().isEmpty) {
       return 'Phone number is required';
-    if (!RegExp(r'^\d{10}$').hasMatch(value))
-      return 'Invalid 10-digit phone number';
+    }
+    if (!RegExp(r'^\d{10}$').hasMatch(value)) {
+      return 'Please enter valid 10-digit mobile number';
+    }
+    return null;
+  }
+
+  String? _addressValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'This field is required';
+    }
+    if (value.trim().length < 5) {
+      return 'Address is too short';
+    }
     return null;
   }
 }
