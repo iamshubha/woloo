@@ -6,10 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/b2b_store/all_orders.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
@@ -29,7 +27,6 @@ import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
-import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
 
 import '../hygine_services/view/address_notifier.dart';
 import '../utils/app_textstyle.dart';
@@ -52,7 +49,7 @@ class _EcomScreenState extends State<EcomScreen> {
   int currentIndex = 0;
   Addresses? address;
   final box = GetStorage();
-
+  final focus = FocusNode();
   GlobalStorage globalStorage = GetIt.instance();
 
   @override
@@ -67,6 +64,7 @@ class _EcomScreenState extends State<EcomScreen> {
 
   _refresh() {
     _b2bStoreBloc.add(const Refresh(slug: "collection_id"));
+    focus.unfocus();
   }
 
   @override
@@ -120,6 +118,7 @@ class _EcomScreenState extends State<EcomScreen> {
             resizeToAvoidBottomInset: false,
             // bottomNavigationBar: const XBottomBar(),
             appBar: EComAppbar(
+              focus: focus,
               onCartTap: () async {
                 final value = await Navigator.push(context,
                     MaterialPageRoute(builder: (c) => const CartScreen()));
@@ -150,6 +149,7 @@ class _EcomScreenState extends State<EcomScreen> {
               child: _isDataLoaded
                   ? Column(
                       children: [
+                        // TextField(focusNode: FocusNode(),),
                         // CategoriesSection(
                         //   productCategory: _b2bStoreHomePage!.productCategory,
                         // ),
@@ -695,7 +695,25 @@ class _EcomScreenState extends State<EcomScreen> {
                                                   if (product.variants.first
                                                           .inventoryQuantity ==
                                                       0) return;
-
+                                                  // logger.w(
+                                                  //     "Selected Address: ${selectedAddress.value.id}");
+                                                  if (selectedAddress
+                                                          .value.id ==
+                                                      null) {
+                                                    showModalBottomSheet(
+                                                      isScrollControlled: true,
+                                                      isDismissible:
+                                                          false, // <-- Allow tap outside to dismiss
+                                                      enableDrag:
+                                                          true, // <-- Allow swipe down to dismiss
+                                                      backgroundColor: Colors
+                                                          .transparent, // Optional: if you want rounded corners to show correctly
+                                                      context: context,
+                                                      builder: (_) =>
+                                                          const AddressChangeBottomSheet(), //AddressBottomSheet
+                                                    );
+                                                    return;
+                                                  }
                                                   _b2bStoreBloc.add(AddToCart(
                                                       quantity: 1,
                                                       variant_id: product
@@ -1213,6 +1231,7 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
     this.onChanged,
     this.controller,
     this.onCartTap,
+    this.focus,
   });
   final ProductMode productMode;
 
@@ -1223,6 +1242,7 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
   final int? cartValue;
   final Function(String)? onChanged;
   final TextEditingController? controller;
+  final FocusNode? focus;
   @override
   Size get preferredSize => const Size.fromHeight(130);
 
@@ -1353,6 +1373,7 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                       ]),
                   child: TextField(
                     onTap: onTap,
+                    focusNode: focus,
                     controller: controller,
                     decoration: InputDecoration(
                       filled: true,

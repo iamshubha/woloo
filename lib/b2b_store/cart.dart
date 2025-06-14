@@ -3,14 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
-import 'package:dio/dio.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
-import 'package:woloo_smart_hygiene/b2b_store/network/woloo_points_service.dart';
-import 'package:woloo_smart_hygiene/b2b_store/models/woloo_points.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
+import 'package:woloo_smart_hygiene/b2b_store/widgets/smart_widgets.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
@@ -101,21 +99,24 @@ class _CartScreenState extends State<CartScreen> {
         },
         builder: (context, snapshot) {
           return Scaffold(
-              bottomSheet: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                decoration: const BoxDecoration(color: Colors.white),
-                child: LongLabeledButton(
-                  onTap: () {
-                    _b2bStoreBloc.add(const ProceedToShip());
-                  },
-                  label: "Checkout",
-                ),
-              ),
+              bottomSheet: cartModel?.cart.items.isEmpty ?? true
+                  ? const SizedBox.shrink()
+                  : Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 25, vertical: 10),
+                      decoration: const BoxDecoration(color: Colors.white),
+                      child: LongLabeledButton(
+                        onTap: () {
+                          _b2bStoreBloc.add(const ProceedToShip());
+                        },
+                        label: "Checkout",
+                      ),
+                    ),
               appBar: const BackAppBar(),
               body: !_isDataLoaded
                   ? Container()
-                  : SingleChildScrollView(
+                  : SmartSingleChilgScrollView(
+                      isEnabled: !(cartModel?.cart.items.isEmpty ?? true),
                       padding: EdgeInsets.symmetric(
                           horizontal: 16.w, vertical: 20.h),
                       child: Column(
@@ -127,224 +128,241 @@ class _CartScreenState extends State<CartScreen> {
                             subtitle: 'Checkout you purchases from here',
                           ),
                           const Divider(),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Total Items: ${cartModel?.cart.items.length} Unit",
-                              style: AppTextStyle.font14bold,
-                            ),
-                          ),
-                          if (false)
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                XRadioTile(
-                                  onTap: () {
-                                    isExpressBooking = !isExpressBooking;
-                                    setState(() {});
-                                  },
-                                  isSelected: !isExpressBooking,
-                                  title: "Normal Shipping",
-                                  subTitle: "7-10 Days",
+                          if (cartModel?.cart.items.isEmpty ?? true) ...[
+                            Expanded(
+                              child: Center(
+                                child: Text(
+                                  "Looks like your cart is empty. Start ordering now!",
+                                  style: AppTextStyle.font14bold,
                                 ),
-                                XRadioTile(
-                                  onTap: () {
-                                    isExpressBooking = !isExpressBooking;
-                                    setState(() {});
-                                  },
-                                  isSelected: isExpressBooking,
-                                  title: "Express Shipping+ Rs.75",
-                                  subTitle: "2-3 Days",
-                                ),
-                              ],
+                              ),
                             ),
-                          ListView.builder(
-                            shrinkWrap:
-                                true, // Ensures ListView takes only the required space
-                            physics:
-                                const NeverScrollableScrollPhysics(), // Prevents nested scrolling
-                            itemCount: cartModel?.cart.items
-                                .length, // Replace with your cart item count
-                            itemBuilder: (context, index) {
-                              final item = cartModel?.cart.items[index];
-                              int count = item?.quantity ?? 0;
+                          ] else ...[
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Total Items: ${cartModel?.cart.items.length} Unit",
+                                style: AppTextStyle.font14bold,
+                              ),
+                            ),
+                            if (false)
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  XRadioTile(
+                                    onTap: () {
+                                      isExpressBooking = !isExpressBooking;
+                                      setState(() {});
+                                    },
+                                    isSelected: !isExpressBooking,
+                                    title: "Normal Shipping",
+                                    subTitle: "7-10 Days",
+                                  ),
+                                  XRadioTile(
+                                    onTap: () {
+                                      isExpressBooking = !isExpressBooking;
+                                      setState(() {});
+                                    },
+                                    isSelected: isExpressBooking,
+                                    title: "Express Shipping+ Rs.75",
+                                    subTitle: "2-3 Days",
+                                  ),
+                                ],
+                              ),
+                            ListView.builder(
+                              shrinkWrap:
+                                  true, // Ensures ListView takes only the required space
+                              physics:
+                                  const NeverScrollableScrollPhysics(), // Prevents nested scrolling
+                              itemCount: cartModel?.cart.items
+                                  .length, // Replace with your cart item count
+                              itemBuilder: (context, index) {
+                                final item = cartModel?.cart.items[index];
+                                int count = item?.quantity ?? 0;
 
-                              return Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.h),
-                                child: CartItemCard(
-                                  onDelete: () {
-                                    _b2bStoreBloc.add(
-                                        DeleteItemReq(itemId: item?.id ?? ""));
-                                  },
-                                  item: item,
-                                  onAdd: () {
-                                    count++;
-                                    _b2bStoreBloc.add(AddRemoveItemReq(
-                                        count: count, itemId: item?.id ?? ""));
-                                  },
-                                  onRemove: () {
-                                    count--;
-                                    // logger.w("Count: $count");
-                                    if (count > 0) {
+                                return Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 8.h),
+                                  child: CartItemCard(
+                                    onDelete: () {
+                                      _b2bStoreBloc.add(DeleteItemReq(
+                                          itemId: item?.id ?? ""));
+                                    },
+                                    item: item,
+                                    onAdd: () {
+                                      count++;
                                       _b2bStoreBloc.add(AddRemoveItemReq(
                                           count: count,
                                           itemId: item?.id ?? ""));
-                                    } else {
-                                      logger.w("$count delete");
-                                      _b2bStoreBloc.add(DeleteItemReq(
-                                          itemId: item?.id ?? ""));
-                                    }
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                          const Divider(),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 16),
-                            decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(14),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: AppColors.textgreyColor,
-                                    blurRadius: 4,
-                                    offset: Offset(0, 1),
+                                    },
+                                    onRemove: () {
+                                      count--;
+                                      // logger.w("Count: $count");
+                                      if (count > 0) {
+                                        _b2bStoreBloc.add(AddRemoveItemReq(
+                                            count: count,
+                                            itemId: item?.id ?? ""));
+                                      } else {
+                                        logger.w("$count delete");
+                                        _b2bStoreBloc.add(DeleteItemReq(
+                                            itemId: item?.id ?? ""));
+                                      }
+                                    },
                                   ),
-                                ]),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      height: 30,
-                                      width: 30,
-                                      child: Image.asset(AppImages.appLogo),
+                                );
+                              },
+                            ),
+                            const Divider(),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 16),
+                              decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.circular(14),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: AppColors.textgreyColor,
+                                      blurRadius: 4,
+                                      offset: Offset(0, 1),
                                     ),
-                                    Text(
-                                      "Redeem your Woloo Points",
-                                      style: AppTextStyle.font13w7,
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  "You have $wolooPoints Woloo Points to Redeem",
-                                  style: AppTextStyle.font13w7
-                                      .copyWith(color: AppColors.greyBorder),
-                                ),
-                                SizedBox(
-                                  height: 10.h,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    if (isWolooPointsLoading)
-                                      const SizedBox(
-                                        height: 20,
-                                        width: 20,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                        ),
-                                      )
-                                    else ...[
-                                      Expanded(
-                                        child: Text(
-                                          wolooPoints > 0
-                                              ? "Redeem ${wolooPoints < 10 ? wolooPoints : 10} woloo points for Rs. ${wolooPoints < 10 ? wolooPoints : 10}"
-                                              : "No points available to redeem",
-                                          style: AppTextStyle.font10bold
-                                              .copyWith(
-                                                  color: wolooPointsError !=
-                                                          null
-                                                      ? Colors.red
-                                                      : AppColors.greyBorder),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                        ),
+                                  ]),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        height: 30,
+                                        width: 30,
+                                        child: Image.asset(AppImages.appLogo),
                                       ),
-                                      const SizedBox(width: 8),
-                                      InkWell(
-                                        onTap: (!isWolooPointsLoading &&
-                                                wolooPoints >= 0)
-                                            ? () {
-                                                if (isWolooPointsApplied) {
-                                                  setState(() {
-                                                    isWolooPointsApplied =
-                                                        false;
-                                                  });
-                                                  _b2bStoreBloc.add(
-                                                      const RemoveWolooPointsEvent());
-                                                } else {
-                                                  setState(() {
-                                                    isWolooPointsApplied = true;
-                                                  });
-                                                  _b2bStoreBloc.add(
-                                                      const ApplyWolooPointsEvent());
-                                                }
-                                              }
-                                            : null,
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 2),
-                                          decoration: BoxDecoration(
-                                            color: wolooPoints > 0
-                                                ? (isWolooPointsApplied
-                                                    ? Colors.red
-                                                        .withOpacity(0.2)
-                                                    : AppColors.lightCyanColor)
-                                                : AppColors.lightCyanColor
-                                                    .withOpacity(0.5),
-                                            borderRadius:
-                                                BorderRadius.circular(8),
+                                      Text(
+                                        "Redeem your Woloo Points",
+                                        style: AppTextStyle.font13w7,
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    "You have $wolooPoints Woloo Points to Redeem",
+                                    style: AppTextStyle.font13w7
+                                        .copyWith(color: AppColors.greyBorder),
+                                  ),
+                                  SizedBox(
+                                    height: 10.h,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      if (isWolooPointsLoading)
+                                        const SizedBox(
+                                          height: 20,
+                                          width: 20,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
                                           ),
+                                        )
+                                      else ...[
+                                        Expanded(
                                           child: Text(
-                                            wolooPointsError != null
-                                                ? "Retry"
-                                                : ((isWolooPointsApplied
-                                                    ? "Remove"
-                                                    : "Apply")),
-                                            style: AppTextStyle.font14bold
+                                            wolooPoints > 0
+                                                ? "Redeem ${wolooPoints < 10 ? wolooPoints : 10} woloo points for Rs. ${wolooPoints < 10 ? wolooPoints : 10}"
+                                                : "No points available to redeem",
+                                            style: AppTextStyle.font10bold
                                                 .copyWith(
-                                              color: wolooPointsError != null
-                                                  ? Colors.red
-                                                  : ((isWolooPointsApplied
+                                                    color: wolooPointsError !=
+                                                            null
+                                                        ? Colors.red
+                                                        : AppColors.greyBorder),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        InkWell(
+                                          onTap: (!isWolooPointsLoading &&
+                                                  wolooPoints >= 0)
+                                              ? () {
+                                                  if (isWolooPointsApplied) {
+                                                    setState(() {
+                                                      isWolooPointsApplied =
+                                                          false;
+                                                    });
+                                                    _b2bStoreBloc.add(
+                                                        const RemoveWolooPointsEvent());
+                                                  } else {
+                                                    setState(() {
+                                                      isWolooPointsApplied =
+                                                          true;
+                                                    });
+                                                    _b2bStoreBloc.add(
+                                                        const ApplyWolooPointsEvent());
+                                                  }
+                                                }
+                                              : null,
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 16, vertical: 2),
+                                            decoration: BoxDecoration(
+                                              color: wolooPoints > 0
+                                                  ? (isWolooPointsApplied
                                                       ? Colors.red
-                                                      : Colors.black)),
+                                                          .withOpacity(0.2)
+                                                      : AppColors
+                                                          .lightCyanColor)
+                                                  : AppColors.lightCyanColor
+                                                      .withOpacity(0.5),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            child: Text(
+                                              wolooPointsError != null
+                                                  ? "Retry"
+                                                  : ((isWolooPointsApplied
+                                                      ? "Remove"
+                                                      : "Apply")),
+                                              style: AppTextStyle.font14bold
+                                                  .copyWith(
+                                                color: wolooPointsError != null
+                                                    ? Colors.red
+                                                    : ((isWolooPointsApplied
+                                                        ? Colors.red
+                                                        : Colors.black)),
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
+                                      ],
+                                      if (wolooPointsError != null)
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 4),
+                                          child: Text(
+                                            wolooPointsError!,
+                                            style: AppTextStyle.font10bold
+                                                .copyWith(color: Colors.red),
+                                          ),
+                                        )
                                     ],
-                                    if (wolooPointsError != null)
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 4),
-                                        child: Text(
-                                          wolooPointsError!,
-                                          style: AppTextStyle.font10bold
-                                              .copyWith(color: Colors.red),
-                                        ),
-                                      )
-                                  ],
-                                )
-                              ],
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                          ApplyPromo(),
-                          const Divider(),
-                          PricingCalculate(
-                            total: cartModel?.cart.total,
-                            subTotal: cartModel?.cart.subtotal,
-                            discount: cartModel?.cart.discountTotal,
-                            shipping: cartModel?.cart.shippingTotal,
-                            itemTotal: cartModel?.cart.itemTotal,
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          )
+                            const ApplyPromo(),
+                            const Divider(),
+                            PricingCalculate(
+                              total: cartModel?.cart.total,
+                              subTotal: cartModel?.cart.subtotal,
+                              discount: cartModel?.cart.discountTotal,
+                              shipping: cartModel?.cart.shippingTotal,
+                              itemTotal: cartModel?.cart.itemTotal,
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            )
+                          ]
                         ],
                       ),
                     ));

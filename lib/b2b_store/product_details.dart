@@ -172,7 +172,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               // _dashboardData = state.dashboardData;
             });
 
-            if (selectedAddress.value.address1 == null) {
+            if (selectedAddress.value.id == null) {
               showModalBottomSheet(
                 isScrollControlled: true,
                 isDismissible: false, // <-- Allow tap outside to dismiss
