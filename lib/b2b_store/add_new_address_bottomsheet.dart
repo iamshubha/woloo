@@ -26,6 +26,9 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   final _formKey = GlobalKey<FormState>();
 
+  // Add FocusNode for city field
+  final FocusNode _cityFocusNode = FocusNode();
+
   // Controllers
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
@@ -47,6 +50,7 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
   @override
   void dispose() {
     _controller.dispose();
+    _cityFocusNode.dispose(); // Dispose the focus node
     // Don't dispose _formKey.currentState, it's managed by the framework
     _firstNameController.dispose();
     _lastNameController.dispose();
@@ -182,64 +186,94 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                               ),
                             ],
                           ),
-                          child: GooglePlaceAutoCompleteTextField(
-                            placeType: PlaceType.cities,
-                            textEditingController: _cityController,
-                            googleAPIKey:
-                                "AIzaSyCkPmUz4UlRdzcKG9gniW9Qfrgzsjhnb_4",
-                            inputDecoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 10.w, vertical: 12.h),
-                              hintText: "City",
-                              hintStyle: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14.sp,
-                              ),
-                              border: InputBorder.none,
-                            ),
-                            debounceTime: 800,
-                            countries: const ["in"],
-                            isLatLngRequired: false,
-                            getPlaceDetailWithLatLng: (Prediction prediction) {
-                              logger.d(
-                                  "Selected place: ${prediction.description}");
-                            },
-                            itemClick: (Prediction prediction) {
-                              final parts =
-                                  prediction.description?.split(',') ?? [];
-                              if (parts.isNotEmpty) {
-                                _cityController.text = parts[0].trim();
-                                if (parts.length > 1) {
-                                  _stateController.text = parts[1].trim();
-                                }
+                          child: Focus(
+                            onFocusChange: (hasFocus) {
+                              // Prevent losing focus if the field has content
+                              if (!hasFocus &&
+                                  _cityController.text.isNotEmpty) {
+                                FocusScope.of(context)
+                                    .requestFocus(FocusNode());
                               }
                             },
-                            itemBuilder:
-                                (context, index, Prediction prediction) {
-                              return Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10.w, vertical: 8.h),
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.location_on,
-                                        color: Colors.grey),
-                                    SizedBox(width: 8.w),
-                                    Expanded(
-                                      child: Text(
-                                        prediction.description ?? "",
-                                        style: TextStyle(fontSize: 14.sp),
-                                      ),
+                            child: Stack(
+                              children: [
+                                GooglePlaceAutoCompleteTextField(
+                                  placeType: PlaceType.cities,
+                                  textEditingController: _cityController,
+                                  focusNode: _cityFocusNode,
+                                  googleAPIKey:
+                                      "AIzaSyCkPmUz4UlRdzcKG9gniW9Qfrgzsjhnb_4",
+                                  inputDecoration: InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 10.w, vertical: 12.h),
+                                    hintText: "City",
+                                    hintStyle: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14.sp,
                                     ),
-                                  ],
+                                    border: InputBorder.none,
+                                  ),
+                                  debounceTime: 800,
+                                  countries: const ["in"],
+                                  isLatLngRequired: false,
+                                  getPlaceDetailWithLatLng:
+                                      (Prediction prediction) {
+                                    logger.d(
+                                        "Selected place: ${prediction.description}");
+                                  },
+                                  itemClick: (Prediction prediction) {
+                                    final parts =
+                                        prediction.description?.split(',') ??
+                                            [];
+                                    if (parts.isNotEmpty) {
+                                      _cityController.text = parts[0].trim();
+                                      if (parts.length > 1) {
+                                        _stateController.text = parts[1].trim();
+                                      }
+                                      // Keep focus on city field
+                                      _cityFocusNode.requestFocus();
+                                    }
+                                  },
+                                  itemBuilder:
+                                      (context, index, Prediction prediction) {
+                                    return Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10.w, vertical: 8.h),
+                                      child: Row(
+                                        children: [
+                                          const Icon(Icons.location_on,
+                                              color: Colors.grey),
+                                          SizedBox(width: 8.w),
+                                          Expanded(
+                                            child: Text(
+                                              prediction.description ?? "",
+                                              style: TextStyle(fontSize: 14.sp),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                  validator: (value, p1) {
+                                    if (value == null || value.isEmpty) {
+                                      return "City is required";
+                                    }
+                                    return null;
+                                  },
                                 ),
-                              );
-                            },
-                            validator: (value, p1) {
-                              if (value == null || value.isEmpty) {
-                                return "City is required";
-                              }
-                              return null;
-                            },
+                                // Transparent overlay to prevent focus loss
+                                if (_cityController.text.isNotEmpty)
+                                  Positioned.fill(
+                                    child: GestureDetector(
+                                      onTap: () =>
+                                          _cityFocusNode.requestFocus(),
+                                      behavior: HitTestBehavior.translucent,
+                                      child:
+                                          Container(color: Colors.transparent),
+                                    ),
+                                  ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
