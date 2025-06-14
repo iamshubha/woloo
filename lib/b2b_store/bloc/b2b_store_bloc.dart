@@ -21,6 +21,7 @@ import 'package:woloo_smart_hygiene/b2b_store/network/login_reg_flow.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/product.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/woloo_points_service.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/hygine_services/view/address_notifier.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 
@@ -752,13 +753,15 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     RestockSubscriptionsEvent event,
     Emitter<B2BStoreState> emit,
   ) async {
+    GlobalStorage globalStorage = GetIt.instance();
     try {
       emit(const RestockSubscriptionsLoading(
           message: 'Restocking subscriptions...'));
       final response = await _productService.restockSubscriptions(
-          token: box.read('login_jwt'),
-          variantId: event.variantId,
-          phoneNumber: event.phoneNumber);
+        token: box.read('login_jwt'),
+        variantId: event.variantId,
+        phoneNumber: globalStorage.getClientMobileNo(),
+      );
       emit(RestockSubscriptionsSuccess(
         restockSubscriptions: response,
       ));
