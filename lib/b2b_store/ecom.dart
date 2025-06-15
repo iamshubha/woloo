@@ -1295,7 +1295,9 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
               valueListenable: selectedAddress,
               builder: (context, value, child) {
                 return Text(
-                  value.addressName.isEmptyOrNull ? "Home" : value.addressName!,
+                  value.addressName.isEmptyOrNull
+                      ? "Select Address"
+                      : value.addressName!,
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
