@@ -4,17 +4,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timelines_plus/timelines_plus.dart';
+import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
-import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
-import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
-import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
 
 class OrderScreenCheckout extends StatefulWidget {
   OrderSet orderSet;
@@ -26,7 +25,6 @@ class OrderScreenCheckout extends StatefulWidget {
 
 class _OrderScreenCheckoutState extends State<OrderScreenCheckout> {
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
-  // OrderSet? orderDetailsData = widget.orderSet;
   @override
   void initState() {
     super.initState();
@@ -47,11 +45,6 @@ class _OrderScreenCheckoutState extends State<OrderScreenCheckout> {
             EasyLoading.show(status: state.message);
           }
           if (state is OrderDetailsSuccess) {
-            // setState(() {
-            //   orderDetailsData = state.orderDetailsData;
-            //   isLoading = false;
-            //   print(state.orderDetailsData.orderSets);
-            // });
             EasyLoading.dismiss();
           }
           if (state is OrderDetailsError) {
@@ -66,7 +59,6 @@ class _OrderScreenCheckoutState extends State<OrderScreenCheckout> {
         builder: (context, snapshot) {
           return WillPopScope(
             onWillPop: () async {
-              // Handle the back button press
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (_) => const EcomScreen()),
@@ -76,12 +68,11 @@ class _OrderScreenCheckoutState extends State<OrderScreenCheckout> {
             },
             child: Scaffold(
               appBar: AppBar(
-                backgroundColor: Colors.white, // Matches the design
-                elevation: 0, // Removes shadow for a flat look
-                leadingWidth: 100, // Adjust width for the "Back" button
+                backgroundColor: Colors.white,
+                elevation: 0,
+                leadingWidth: 100,
                 leading: GestureDetector(
                   onTap: () {
-                    // Handle back button tap
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (_) => const EcomScreen()),
@@ -91,26 +82,25 @@ class _OrderScreenCheckoutState extends State<OrderScreenCheckout> {
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(width: 10), // Add spacing from the edge
+                      SizedBox(width: 10),
                       Icon(
                         Icons.arrow_back_ios,
                         color: AppColors.textgreyColor,
-                        size: 16, // Adjust icon size
+                        size: 16,
                       ),
-                      SizedBox(width: 5), // Spacing between icon and text
+                      SizedBox(width: 5),
                       Text(
                         "Back",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: AppColors.textgreyColor,
-                          fontSize: 14, // Adjust font size
+                          fontSize: 14,
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
-              // bottomNavigationBar: const XBottomBar(),
               body: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
                 child: Column(
@@ -128,7 +118,19 @@ class _OrderScreenCheckoutState extends State<OrderScreenCheckout> {
                           itemBuilder: (c, i) {
                             final order = widget.orderSet.orders.first;
                             final item = order.items[i];
+                            final orderShipmentAddress = order
+                                .paymentCollections
+                                ?.first
+                                .payments
+                                ?.first
+                                .data
+                                ?.notes
+                                ?.customer
+                                ?.addresses
+                                ?.first;
                             return OrderStatusCard(
+                              orderShipmentAddress: orderShipmentAddress,
+                              id: item.id ?? "",
                               timeLineList: timeLineList,
                               url: item.thumbnail ?? "",
                               productLabel: item.title ?? "",
@@ -137,261 +139,22 @@ class _OrderScreenCheckoutState extends State<OrderScreenCheckout> {
                             );
                           }),
                     ),
-                    // const Spacer()
-                    const Text("Other items in the order"),
-                    const Divider(),
-                    const OtherItemOrder(), // Place Other Item If necessary place a list
-
-                    LongLabeledButton(
-                      onTap: () {},
-                      label: "Help & Support",
-                      color: AppColors.greyColorFields,
-                    ),
+                    if (false) ...[
+                      const Text("Other items in the order"),
+                      const Divider(),
+                      const OtherItemOrder(),
+                      LongLabeledButton(
+                        onTap: () {},
+                        label: "Help & Support",
+                        color: AppColors.greyColorFields,
+                      ),
+                    ]
                   ],
                 ),
               ),
             ),
           );
         });
-  }
-}
-
-class ReviewBottomSheet extends StatefulWidget {
-  final Function(String) onSubmit;
-  final String title;
-  final String hintText;
-  final String submitButtonText;
-
-  const ReviewBottomSheet({
-    super.key,
-    required this.onSubmit,
-    this.title = 'Write a Review',
-    this.hintText = 'Type Your Review Here!',
-    this.submitButtonText = 'Submit',
-  });
-
-  @override
-  State<ReviewBottomSheet> createState() => _ReviewBottomSheetState();
-
-  /// Shows the review bottom sheet
-  static Future<String?> show(
-    BuildContext context, {
-    required Function(String) onSubmit,
-    String title = 'Write a Review',
-    String hintText = 'Type Your Review Here!',
-    String submitButtonText = 'Submit',
-  }) {
-    logger.w("Executing***");
-    return showModalBottomSheet<String>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => ReviewBottomSheet(
-        onSubmit: onSubmit,
-        title: title,
-        hintText: hintText,
-        submitButtonText: submitButtonText,
-      ),
-    );
-  }
-}
-
-class _ReviewBottomSheetState extends State<ReviewBottomSheet> {
-  final TextEditingController _reviewController = TextEditingController();
-
-  @override
-  void dispose() {
-    _reviewController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // Get available height for the bottom sheet
-    final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
-    final availableHeight = MediaQuery.of(context).size.height * 0.45;
-
-    return Container(
-      height: availableHeight,
-      margin: EdgeInsets.only(bottom: keyboardSpace),
-      decoration: const BoxDecoration(
-        color: Color(0xFFD3D3D3), // Light gray background color
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Drag indicator
-          const XBottmSheetTopDecor(),
-
-          // Title bar with back button
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () => Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const EcomScreen()),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  widget.title,
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // XDecoratedBox(child: StarRa),
-          // Review input area
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: TextField(
-                    controller: _reviewController,
-                    maxLines: null, // Allows unlimited lines
-                    decoration: InputDecoration(
-                      hintText: widget.hintText,
-                      border: InputBorder.none,
-                      hintStyle: TextStyle(
-                        color: Colors.grey.shade700,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    style: const TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          // Submit button
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: ElevatedButton(
-              onPressed: () {
-                if (_reviewController.text.isNotEmpty) {
-                  widget.onSubmit(_reviewController.text);
-                  Navigator.pop(context, _reviewController.text);
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF87CEEB), // Light blue
-                foregroundColor: Colors.black,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: Text(
-                widget.submitButtonText,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// Example usage:
-class ReviewExample extends StatelessWidget {
-  const ReviewExample({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Review Example')),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            ReviewBottomSheet.show(
-              context,
-              onSubmit: (review) {
-                // Handle the submitted review
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Review submitted: $review')),
-                );
-              },
-            );
-          },
-          child: const Text('Write A Review'),
-        ),
-      ),
-    );
-  }
-}
-
-class OtherItemOrder extends StatelessWidget {
-  const OtherItemOrder({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return XDecoratedBox(
-        child: Row(
-      spacing: 10,
-      children: [
-        SizedBox(
-          height: 60,
-          width: 64,
-          child: Image.asset(AppImages.pest), // Replace With Product Image
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              "Natural Deodrant Roll On", // Replace with real product label
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              "default variant", // Replace with real sub title
-              style: TextStyle(
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.greyBorderProfile),
-            ),
-            Text(
-              "Rs. 299", // Replace with real price
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        )
-      ],
-    ));
   }
 }
 
@@ -402,8 +165,12 @@ class OrderStatusCard extends StatelessWidget {
       required this.url,
       required this.productLabel,
       required this.subTitle,
-      required this.price});
+      required this.price,
+      required this.id,
+      required this.orderShipmentAddress});
+  final Address? orderShipmentAddress;
   final List<String> timeLineList;
+  final String id;
   final String url;
   final String productLabel;
   final String subTitle;
@@ -428,11 +195,11 @@ class OrderStatusCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Product Details
+          Text("Order ID: $id", style: AppTextStyle.font12bold),
+          SizedBox(height: 8.h),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Product Image
               ClipRRect(
                 borderRadius: BorderRadius.circular(12.r),
                 child: url.isEmpty
@@ -443,14 +210,13 @@ class OrderStatusCard extends StatelessWidget {
                         fit: BoxFit.cover,
                       )
                     : CachedNetworkImage(
-                        imageUrl: url, // Replace with your product image
+                        imageUrl: url,
                         height: 60.h,
                         width: 60.w,
                         fit: BoxFit.cover,
                       ),
               ),
               SizedBox(width: 12.w),
-              // Product Info
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -486,7 +252,7 @@ class OrderStatusCard extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
           SizedBox(
-            height: 60.h,
+            height: 80.h,
             child: Timeline.builder(
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (c, i) {
@@ -494,9 +260,15 @@ class OrderStatusCard extends StatelessWidget {
                     nodePosition: 0,
                     contents: SizedBox(
                       width: 150,
-                      child: Text(
-                        timeLineList[i],
-                        textAlign: TextAlign.center,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            timeLineList[i],
+                            textAlign: TextAlign.center,
+                          ),
+                          const Text("~time ")
+                        ],
                       ),
                     ),
                     mainAxisExtent: 80,
@@ -526,27 +298,168 @@ class OrderStatusCard extends StatelessWidget {
                 },
                 itemCount: timeLineList.length),
           ),
-
           SizedBox(height: 12.h),
-          // Cancel Button
-          Center(
-            child: GestureDetector(
-              onTap: () {
-                // Handle cancel action
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 50.w, vertical: 8.h),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Text(
-                  "Cancel",
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+          Container(
+              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+              child: Text(
+                  "User: ${orderShipmentAddress?.firstName + " " + orderShipmentAddress?.lastName}")),
+          Container(
+              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+              child:
+                  Text("Address Type: ${orderShipmentAddress?.addressName}")),
+          Container(
+              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+              child: Text("Address: ${orderShipmentAddress?.address1}")),
+        ],
+      ),
+    );
+  }
+}
+
+class ReviewBottomSheet extends StatefulWidget {
+  final Function(String) onSubmit;
+  final String title;
+  final String hintText;
+  final String submitButtonText;
+
+  const ReviewBottomSheet({
+    super.key,
+    required this.onSubmit,
+    this.title = 'Write a Review',
+    this.hintText = 'Type Your Review Here!',
+    this.submitButtonText = 'Submit',
+  });
+
+  @override
+  State<ReviewBottomSheet> createState() => _ReviewBottomSheetState();
+
+  static Future<String?> show(
+    BuildContext context, {
+    required Function(String) onSubmit,
+    String title = 'Write a Review',
+    String hintText = 'Type Your Review Here!',
+    String submitButtonText = 'Submit',
+  }) {
+    logger.w("Executing***");
+    return showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => ReviewBottomSheet(
+        onSubmit: onSubmit,
+        title: title,
+        hintText: hintText,
+        submitButtonText: submitButtonText,
+      ),
+    );
+  }
+}
+
+class _ReviewBottomSheetState extends State<ReviewBottomSheet> {
+  final TextEditingController _reviewController = TextEditingController();
+
+  @override
+  void dispose() {
+    _reviewController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
+    final availableHeight = MediaQuery.of(context).size.height * 0.45;
+
+    return Container(
+      height: availableHeight,
+      margin: EdgeInsets.only(bottom: keyboardSpace),
+      decoration: const BoxDecoration(
+        color: Color(0xFFD3D3D3),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const XBottmSheetTopDecor(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const EcomScreen()),
                   ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  widget.title,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: TextField(
+                    controller: _reviewController,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      hintText: widget.hintText,
+                      border: InputBorder.none,
+                      hintStyle: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: ElevatedButton(
+              onPressed: () {
+                if (_reviewController.text.isNotEmpty) {
+                  widget.onSubmit(_reviewController.text);
+                  Navigator.pop(context, _reviewController.text);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF87CEEB),
+                foregroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(
+                widget.submitButtonText,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -554,6 +467,80 @@ class OrderStatusCard extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class ReviewExample extends StatelessWidget {
+  const ReviewExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Review Example')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            ReviewBottomSheet.show(
+              context,
+              onSubmit: (review) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Review submitted: $review')),
+                );
+              },
+            );
+          },
+          child: const Text('Write A Review'),
+        ),
+      ),
+    );
+  }
+}
+
+class OtherItemOrder extends StatelessWidget {
+  const OtherItemOrder({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return XDecoratedBox(
+        child: Row(
+      spacing: 10,
+      children: [
+        SizedBox(
+          height: 60,
+          width: 64,
+          child: Image.asset(AppImages.pest),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "Natural Deodrant Roll On",
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              "default variant",
+              style: TextStyle(
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.greyBorderProfile),
+            ),
+            Text(
+              "Rs. 299",
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        )
+      ],
+    ));
   }
 }
 
@@ -641,26 +628,3 @@ class RateExperienceCard extends StatelessWidget {
     );
   }
 }
-
-// // Example usage:
-// class ExampleUsage extends StatelessWidget {
-//   const ExampleUsage({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Center(
-//         child: Padding(
-//           padding: const EdgeInsets.all(16.0),
-//           child: RateExperienceCard(
-//             onWriteReviewPressed: () {
-//               // Navigate to review form or show review dialog
-//               print('Write review pressed');
-//               // Example: Navigator.push(context, MaterialPageRoute(builder: (_) => ReviewPage()));
-//             },
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

@@ -155,15 +155,15 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
 
       final cartId = box.read('cart_id');
       box.write('region_id', regionResponse.regions![0].id);
-      if (cartId == null) {
-        await _productService
-            .createCart(
-                token: loginToken,
-                regionId: regionResponse.regions![0].id.toString())
-            .then((cartData) {
-          box.write('cart_id', cartData.cart.id);
-        });
-      }
+      // if (cartId == null) {
+      await _productService
+          .createCart(
+              token: loginToken,
+              regionId: regionResponse.regions![0].id.toString())
+          .then((cartData) {
+        box.write('cart_id', cartData.cart.id);
+      });
+      // }
 
       // logger.w("Token: ${box.read('login_jwt')}");
       // logger.w("Cart Id: ${box.read('cart_id')}");

@@ -117,6 +117,14 @@ class _EcomScreenState extends State<EcomScreen> {
           return Scaffold(
             resizeToAvoidBottomInset: false,
             // bottomNavigationBar: const XBottomBar(),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                logger.w("Cart ID: ${box.read('cart_id')}");
+                // box.read('login_jwt')
+                logger.w("Bearer: ${box.read('login_jwt')}");
+              },
+              child: const Icon(Icons.abc),
+            ),
             appBar: EComAppbar(
               focus: focus,
               onCartTap: () async {

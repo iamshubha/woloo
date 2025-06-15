@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
@@ -15,6 +16,7 @@ import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/boxes/cart_item.dart';
 
+import '../hygine_services/view/address_notifier.dart';
 import '../widgets/review_order_bottomsheet.dart';
 import 'widgets/radio_labeled_tile.dart';
 
@@ -41,6 +43,21 @@ class _CartScreenState extends State<CartScreen> {
   void initState() {
     _b2bStoreBloc.add(const GetCartData());
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Place any code here that should run after the first build is complete.
+      if (selectedAddress.value.id == null) {
+        showModalBottomSheet(
+          isScrollControlled: true,
+          isDismissible: false, // <-- Allow tap outside to dismiss
+          enableDrag: true, // <-- Allow swipe down to dismiss
+          backgroundColor: Colors
+              .transparent, // Optional: if you want rounded corners to show correctly
+          context: context,
+          builder: (_) => const AddressChangeBottomSheet(), //AddressBottomSheet
+        );
+        return;
+      }
+    });
   }
 
   @override
@@ -107,7 +124,23 @@ class _CartScreenState extends State<CartScreen> {
                       decoration: const BoxDecoration(color: Colors.white),
                       child: LongLabeledButton(
                         onTap: () {
-                          _b2bStoreBloc.add(const ProceedToShip());
+                          if (selectedAddress.value.id == null) {
+                            showModalBottomSheet(
+                              isScrollControlled: true,
+                              isDismissible:
+                                  false, // <-- Allow tap outside to dismiss
+                              enableDrag:
+                                  true, // <-- Allow swipe down to dismiss
+                              backgroundColor: Colors
+                                  .transparent, // Optional: if you want rounded corners to show correctly
+                              context: context,
+                              builder: (_) =>
+                                  const AddressChangeBottomSheet(), //AddressBottomSheet
+                            );
+                            return;
+                          } else {
+                            _b2bStoreBloc.add(const ProceedToShip());
+                          }
                         },
                         label: "Checkout",
                       ),
