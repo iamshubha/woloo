@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
+import 'package:woloo_smart_hygiene/main.dart';
 import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_constants.dart';
@@ -21,8 +22,6 @@ import 'bloc/iot_bloc.dart';
 import 'bloc/iot_event.dart';
 import 'bloc/iot_state.dart';
 
-
-
 class DashboardScreen extends StatefulWidget {
   final int? facilityId;
   final String? plan;
@@ -31,17 +30,16 @@ class DashboardScreen extends StatefulWidget {
   final TabController? tabController;
   final List<Facility>? facility;
   final ClientDashBoardBloc? clientDashBoardBloc;
-  
-  const DashboardScreen({super.key, 
-  this.facility, 
-  this.clientDashBoardBloc,
-  this.facilityId,
-  this.plan,
-  this.status,
-  this.tabController,
-  this.tabIndex
-  
-  });
+
+  const DashboardScreen(
+      {super.key,
+      this.facility,
+      this.clientDashBoardBloc,
+      this.facilityId,
+      this.plan,
+      this.status,
+      this.tabController,
+      this.tabIndex});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -54,7 +52,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   // bool _isLoading = false;
   final String _error = '';
   String _timeFilter = 'ALL';
-
 
   @override
   void initState() {
@@ -177,42 +174,44 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  AirQualityChart(
-                    airQualityData: data.avgppmTimeRange.map((e) {
-                      // var d = (e.avgPcdMax.runtimeType);
+                  CustomChartWidget(),
+                  // AirQualityChart(
+                  //   airQualityData: data.avgppmTimeRange.map((e) {
+                  //     // var d = (e.avgPcdMax.runtimeType);
 
-                      return GraphData(
-                        airQuality: double.parse(e.avgPpmAvg),
-                        usage: double.parse(e.avgPcdMax),
-                        timeRange: e.timeRange,
-                      );
-                    }).toList(),
-                    isLoading: false,
-                    timeFilter: _timeFilter,
-                    onFilterChanged: _setTimeFilter,
-                  ),
+                  //     return GraphData(
+                  //       airQuality: double.parse(e.avgPpmAvg),
+                  //       usage: double.parse(e.avgPcdMax),
+                  //       timeRange: e.timeRange,
+                  //     );
+                  //   }).toList(),
+                  //   isLoading: false,
+                  //   timeFilter: _timeFilter,
+                  //   onFilterChanged: _setTimeFilter,
+                  // ),
                   const SizedBox(height: 16),
                   AiSummaryCard(summary: data.summary.avgppmTimeRangeInsights),
                   const SizedBox(height: 16),
-                               Charts(
-                                    facilityId: widget.facilityId,
-                                    plan: widget.plan,
-                                    status: widget.plan,
-                                    tabIndex:  widget.tabIndex ,
-                                    facility: widget.facility,
-                                    clientDashBoardBloc:
-                                    widget.clientDashBoardBloc,
-                                  ),
-                                    const SizedBox(height: 16,),
+                  Charts(
+                    facilityId: widget.facilityId,
+                    plan: widget.plan,
+                    status: widget.plan,
+                    tabIndex: widget.tabIndex,
+                    facility: widget.facility,
+                    clientDashBoardBloc: widget.clientDashBoardBloc,
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
                   AlertAndNotificationWidget(data: data),
                   const SizedBox(height: 16),
                   AirQuality(data: data),
-               
+
                   const SizedBox(height: 16),
                   const Facilities(),
                   const SizedBox(height: 16),
                   AiSummaryCard(summary: data.summary.avgppmTimeRangeInsights),
-                    // const SizedBox(height: 60),
+                  // const SizedBox(height: 60),
                 ],
               ),
             );
