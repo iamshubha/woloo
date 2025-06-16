@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
@@ -124,6 +125,91 @@ class AlertAndNotificationWidget extends StatelessWidget {
               ),
             );
           })
+        ],
+      ),
+    );
+  }
+}
+
+class SegmentedCircularChart extends StatelessWidget {
+  final double score;
+  final String label;
+
+  const SegmentedCircularChart({
+    super.key,
+    required this.score,
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // Define your segments (values and colors)
+    final List<PieChartSectionData> sections = [
+      PieChartSectionData(
+        value: 25,
+        color: Colors.grey[700],
+        radius: 18,
+        showTitle: false,
+      ),
+      PieChartSectionData(
+        value: 25,
+        color: Colors.lightBlueAccent,
+        radius: 18,
+        showTitle: false,
+      ),
+      PieChartSectionData(
+        value: 25,
+        color: Colors.cyan[200],
+        radius: 18,
+        showTitle: false,
+      ),
+      PieChartSectionData(
+        value: 25,
+        color: Colors.grey[300],
+        radius: 18,
+        showTitle: false,
+      ),
+    ];
+
+    return SizedBox(
+      width: 160,
+      height: 160,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          PieChart(
+            PieChartData(
+              sections: sections,
+              startDegreeOffset: 220,
+              centerSpaceRadius: 55,
+              sectionsSpace: 8,
+              borderData: FlBorderData(
+                show: false,
+              ),
+              pieTouchData: PieTouchData(enabled: false),
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                score.toStringAsFixed(1),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 28,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black54,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

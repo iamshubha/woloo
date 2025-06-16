@@ -1,4 +1,5 @@
 import 'package:dashed_circular_progress_bar/dashed_circular_progress_bar.dart';
+import 'package:easy_pie_chart/easy_pie_chart.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,17 +7,15 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/main.dart';
-import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
-import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
+
 import '../../client_flow/screens/dashbaord/bloc/dashboard_bloc.dart';
 import '../../client_flow/screens/dashbaord/data/model/facility_model.dart';
 import '../../client_flow/widgets/chart.dart';
 import '../model/iotdata_model.dart';
 import '../widgets/ai_summary.dart';
-import '../widgets/air_quality_chart.dart';
 import '../widgets/alert_notification.dart';
 import 'bloc/iot_bloc.dart';
 import 'bloc/iot_event.dart';
@@ -47,7 +46,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   IotBloc iotBloc = IotBloc();
-  int _selectedIndex = 0;
+  final int _selectedIndex = 0;
   DashboardData? _dashboardData;
   // bool _isLoading = false;
   final String _error = '';
@@ -74,168 +73,214 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: BlocConsumer(
-          bloc: iotBloc,
-          listener: (context, state) {
-            print("dssa $state");
-            if (state is IotLoading) {
-              EasyLoading.show(status: state.message);
-            }
-            if (state is IotSuccess) {
-              EasyLoading.dismiss();
-              setState(() {
-                _dashboardData = state.dashboardData;
-                // _isLoading = false;
-              });
-            }
+    return BlocConsumer(
+      bloc: iotBloc,
+      listener: (context, state) {
+        print("dssa $state");
+        if (state is IotLoading) {
+          EasyLoading.show(status: state.message);
+        }
+        if (state is IotSuccess) {
+          EasyLoading.dismiss();
+          setState(() {
+            _dashboardData = state.dashboardData;
+            // _isLoading = false;
+          });
+        }
 
-            if (state is IotError) {
-              EasyLoading.dismiss();
-              EasyLoading.showError(state.error);
-            }
-          },
-          builder: (context, state) {
-            // if (_isLoading && _dashboardData == null) {
-            //   return const Center(child: CircularProgressIndicator());
-            // }
+        if (state is IotError) {
+          EasyLoading.dismiss();
+          EasyLoading.showError(state.error);
+        }
+      },
+      builder: (context, state) {
+        // if (_isLoading && _dashboardData == null) {
+        //   return const Center(child: CircularProgressIndicator());
+        // }
 
-            if (_error.isNotEmpty && _dashboardData == null) {
-              return Center(
-                child: Text('Error: $_error'),
-              );
-            }
+        if (_error.isNotEmpty && _dashboardData == null) {
+          return Center(
+            child: Text('Error: $_error'),
+          );
+        }
 
-            final data = _dashboardData;
-            if (data == null) {
-              return const Center(child: Text('No data available'));
-            }
+        final data = _dashboardData;
+        if (data == null) {
+          return const Center(child: Text('No data available'));
+        }
 
-            return SingleChildScrollView(
-              // physics: NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(14.0),
-              child: Column(
-                // crossAxisAlignment: CrossAxisAlignment.start,
+        return SingleChildScrollView(
+          // physics: const NeverScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(14.0),
+          child: Column(
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // RichText(
+              //   text: const TextSpan(
+              //     style: TextStyle(
+              //         color: AppColors.textgreyColor,
+              //         fontSize: 14,
+              //         fontWeight: FontWeight.w700),
+              //     children: [
+              //       TextSpan(
+              //         text: 'Your Trial shall end in ',
+              //       ),
+              //       TextSpan(
+              //         text: '3 Days. ',
+              //         style: TextStyle(fontWeight: FontWeight.bold),
+              //       ),
+              //       TextSpan(
+              //         text: 'Renew it Now',
+              //         style: TextStyle(
+              //           color: AppColors.textgreyColor,
+              //           fontWeight: FontWeight.bold,
+              //           decoration: TextDecoration.underline,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // RichText(
-                  //   text: const TextSpan(
-                  //     style: TextStyle(
-                  //         color: AppColors.textgreyColor,
-                  //         fontSize: 14,
-                  //         fontWeight: FontWeight.w700),
-                  //     children: [
-                  //       TextSpan(
-                  //         text: 'Your Trial shall end in ',
-                  //       ),
-                  //       TextSpan(
-                  //         text: '3 Days. ',
-                  //         style: TextStyle(fontWeight: FontWeight.bold),
-                  //       ),
-                  //       TextSpan(
-                  //         text: 'Renew it Now',
-                  //         style: TextStyle(
-                  //           color: AppColors.textgreyColor,
-                  //           fontWeight: FontWeight.bold,
-                  //           decoration: TextDecoration.underline,
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Dashboard Overview',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
-                                spreadRadius: 1,
-                                blurRadius: 2,
-                                offset: const Offset(0, 1),
-                              ),
-                            ],
+                  const Text(
+                    'Dashboard Overview',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                            offset: const Offset(0, 1),
                           ),
-                          child: Image.asset(
-                            AppImages.tuneLogo,
-                          )),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  CustomChartWidget(),
-                  // AirQualityChart(
-                  //   airQualityData: data.avgppmTimeRange.map((e) {
-                  //     // var d = (e.avgPcdMax.runtimeType);
-
-                  //     return GraphData(
-                  //       airQuality: double.parse(e.avgPpmAvg),
-                  //       usage: double.parse(e.avgPcdMax),
-                  //       timeRange: e.timeRange,
-                  //     );
-                  //   }).toList(),
-                  //   isLoading: false,
-                  //   timeFilter: _timeFilter,
-                  //   onFilterChanged: _setTimeFilter,
-                  // ),
-                  const SizedBox(height: 16),
-                  AiSummaryCard(summary: data.summary.avgppmTimeRangeInsights),
-                  const SizedBox(height: 16),
-                  Charts(
-                    facilityId: widget.facilityId,
-                    plan: widget.plan,
-                    status: widget.plan,
-                    tabIndex: widget.tabIndex,
-                    facility: widget.facility,
-                    clientDashBoardBloc: widget.clientDashBoardBloc,
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  AlertAndNotificationWidget(data: data),
-                  const SizedBox(height: 16),
-                  AirQuality(data: data),
-
-                  const SizedBox(height: 16),
-                  const Facilities(),
-                  const SizedBox(height: 16),
-                  AiSummaryCard(summary: data.summary.avgppmTimeRangeInsights),
-                  // const SizedBox(height: 60),
+                        ],
+                      ),
+                      child: Image.asset(
+                        AppImages.tuneLogo,
+                      )),
                 ],
               ),
-            );
-          },
-        ),
-      ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   currentIndex: _selectedIndex,
-      //   onTap: (index) {
-      //     setState(() {
-      //       _selectedIndex = index;
-      //     });
-      //   },
-      //   items: const [
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.home),
-      //       label: 'Home',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.person),
-      //       label: 'Profile',
-      //     ),
-      //   ],
-      // ),
+              const SizedBox(height: 16),
+              const CustomChartWidget(),
+              // AirQualityChart(
+              //   airQualityData: data.avgppmTimeRange.map((e) {
+              //     // var d = (e.avgPcdMax.runtimeType);
+
+              //     return GraphData(
+              //       airQuality: double.parse(e.avgPpmAvg),
+              //       usage: double.parse(e.avgPcdMax),
+              //       timeRange: e.timeRange,
+              //     );
+              //   }).toList(),
+              //   isLoading: false,
+              //   timeFilter: _timeFilter,
+              //   onFilterChanged: _setTimeFilter,
+              // ),
+              const SizedBox(height: 16),
+              AiSummaryCard(summary: data.summary.avgppmTimeRangeInsights),
+              const SizedBox(height: 16),
+              Charts(
+                facilityId: widget.facilityId,
+                plan: widget.plan,
+                status: widget.plan,
+                tabIndex: widget.tabIndex,
+                facility: widget.facility,
+                clientDashBoardBloc: widget.clientDashBoardBloc,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black
+                              .withValues(alpha: 0.2), // Shadow color
+                          spreadRadius: 1, // How wide the shadow should spread
+                          blurRadius: 10, // The blur effect of the shadow
+                          offset: const Offset(
+                              0, 0), // No offset for shadow on all sides
+                        ),
+                      ],
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(40)),
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Usage Report",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const CustomBarChart(),
+                      const Divider(),
+                      Row(
+                        spacing: 20,
+                        children: [
+                          CircleAvatar(
+                            radius: 12,
+                            backgroundColor: AppColors.appBarTitleColor,
+                            child: Image.asset("assets/images/bxs_smile.png"),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "You are doing good!",
+                                style: TextStyle(
+                                  color: AppColors.alertTitleColor,
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                "You almost reached your goal",
+                                style: TextStyle(
+                                  color: AppColors.alertTitleColor,
+                                  fontSize: 10.sp,
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      )
+                    ],
+                  )),
+              const SizedBox(
+                height: 16,
+              ),
+              AlertAndNotificationWidget(data: data),
+              const SizedBox(height: 16),
+              AirQuality(data: data),
+
+              const SizedBox(height: 16),
+              const Facilities(),
+              const SizedBox(height: 16),
+              AiSummaryCard(summary: data.summary.avgppmTimeRangeInsights),
+              const SizedBox(height: 120),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -250,53 +295,153 @@ class AirQuality extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: XDecoratedBox(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      "Air Quality Level",
-                      style: TextStyle(
-                          fontSize: 12.sp, fontWeight: FontWeight.bold),
-                    ),
-                    const Spacer(),
-                    const ForwardButton()
-                  ],
-                ),
-                Text(
-                  "Overall performance",
-                  style: TextStyle(
-                      color: AppColors.pieDataColor3, fontSize: 10.sp),
-                ),
-                const SizedBox(
-                    height: 120,
-                    width: 120,
-                    child: ComplexCircularBar(
-                      percentageValue: 65,
-                      performance: 1.5,
-                    )),
-                Text(
-                  "Average AQL across all facilities",
-                  style: TextStyle(fontSize: 8.sp),
-                )
-              ],
+    var pies = [
+      PieData(value: 25, color: Colors.grey),
+      PieData(value: 35, color: Colors.lightBlueAccent),
+      PieData(value: 25, color: Colors.grey.shade300),
+      PieData(value: 25, color: Colors.cyanAccent.shade200),
+    ];
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: XDecoratedBox(
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        "Air Quality Level",
+                        style: TextStyle(
+                            fontSize: 12.sp, fontWeight: FontWeight.bold),
+                      ),
+                      const Spacer(),
+                      const ForwardButton()
+                    ],
+                  ),
+                  Text(
+                    "Overall performance",
+                    style: TextStyle(
+                        color: AppColors.pieDataColor3, fontSize: 10.sp),
+                  ),
+                  const SizedBox(
+                      height: 120,
+                      width: 120,
+                      child: ComplexCircularBar(
+                        percentageValue: 65,
+                        performance: 1.5,
+                      )),
+                  Text(
+                    "Average AQL across all facilities",
+                    style: TextStyle(fontSize: 8.sp),
+                  )
+                ],
+              ),
             ),
           ),
-        ),
-        const SizedBox(
-          width: 5,
-        ),
-        Expanded(
-          child: AiSummaryCard(
-              fontSize: 14,
-              summary: data?.summary.avgppmTimeRangeInsights ?? ""),
-        )
-      ],
+          const SizedBox(
+            width: 5,
+          ),
+          // Expanded(
+          //   child: AiSummaryCard(
+          //       fontSize: 14,
+          //       summary: data?.summary.avgppmTimeRangeInsights ?? ""),
+          // )
+          Expanded(
+            child: XDecoratedBox(
+              child: Column(
+                spacing: 10,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        "Reviews",
+                        style: TextStyle(
+                            fontSize: 12.sp, fontWeight: FontWeight.bold),
+                      ),
+                      const Spacer(),
+                      // const ForwardButton()
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.arrow_back_ios_new_outlined,
+                        size: 15,
+                        color: AppColors.greyBorderProfile,
+                      ),
+                      const Spacer(),
+                      Text(
+                        "July 2024",
+                        style: TextStyle(
+                            fontSize: 10.sp, fontWeight: FontWeight.bold),
+                      ),
+                      const Spacer(),
+                      const Icon(
+                        Icons.arrow_forward_ios_outlined,
+                        size: 15,
+                        color: AppColors.greyBorderProfile,
+                      ),
+                    ],
+                  ),
+                  EasyPieChart(
+                    borderWidth: 14,
+                    key: const Key('pie 2'),
+                    children: pies,
+                    pieType: PieType.crust,
+                    showValue: false,
+
+                    // borderEdge: StrokeCap.round,
+                    // style: const TextStyle(
+                    //     fontSize: 14,
+                    //     fontWeight: FontWeight.bold,
+                    //     color: AppColors.black,
+                    //     // color: textColor,
+                    //     overflow: TextOverflow.visible),
+                    onTap: (index) {
+                      //  showValue  = !showValue;
+                      // // tapIndex = index.toString();
+                      // setState(() {});
+                    },
+                    gap: 6,
+                    start: 0,
+                    animateFromEnd: true,
+                    size: 100,
+                    child: Center(
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // const SizedBox(
+                        //   height: 100,
+                        // ),
+
+                        Text(
+                          "4.5",
+                          style: AppTextStyle.font12bold,
+                          textAlign: TextAlign.center,
+                        ),
+
+                        Text(
+                          "Excellent",
+                          style:
+                              AppTextStyle.font10.copyWith(color: Colors.grey),
+                        ),
+
+                        // Text(
+                        //   "Efficiency",
+                        //   style: AppTextStyle.font20bold,
+                        // ),
+                      ],
+                    )),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

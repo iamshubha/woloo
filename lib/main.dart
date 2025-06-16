@@ -1,14 +1,5 @@
 import 'dart:io';
 
-import 'package:device_preview/device_preview.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:woloo_smart_hygiene/client_flow/screens/login/bloc/signup_bloc.dart';
-import 'package:woloo_smart_hygiene/firebase_options.dart';
-import 'package:woloo_smart_hygiene/injection_container.dart' as di;
-import 'package:woloo_smart_hygiene/messaging.dart';
-import 'package:woloo_smart_hygiene/screens/login/bloc/login_bloc.dart';
-import 'package:woloo_smart_hygiene/screens/my_account/view/bloc/profile_bloc.dart';
-import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -17,17 +8,23 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:media_store_plus/media_store_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:woloo_smart_hygiene/client_flow/screens/login/bloc/signup_bloc.dart';
+import 'package:woloo_smart_hygiene/firebase_options.dart';
+import 'package:woloo_smart_hygiene/injection_container.dart' as di;
+import 'package:woloo_smart_hygiene/messaging.dart';
+import 'package:woloo_smart_hygiene/screens/login/bloc/login_bloc.dart';
+import 'package:woloo_smart_hygiene/screens/my_account/view/bloc/profile_bloc.dart';
+import 'package:woloo_smart_hygiene/utils/app_color.dart';
+
 import 'app.dart';
 import 'b2b_store/bloc/b2b_store_bloc.dart';
 import 'client_flow/screens/dashbaord/bloc/dashboard_bloc.dart';
 import 'screens/dashboard/bloc/dashboard_bloc.dart';
 import 'screens/washroom_image_screen/images_bloc/bloc/capture_bloc.dart';
-import 'package:flutter/material.dart';
-import 'dart:math';
-import 'package:intl/intl.dart'; // For formatting the timestamp
 
 // Data model for chart points
 class ChartDataPoint {
@@ -216,9 +213,9 @@ class CustomChartPainter extends CustomPainter {
     // Define colors from the provided image
     final Color usageColor =
         const Color(0xFF66C8D8).withOpacity(0.5); // Light blue
-    final Color airQualityColor = const Color(0xFF4A4B51); // Dark grey
+    const Color airQualityColor = Color(0xFF4A4B51); // Dark grey
     final Color highlightLineColor = Colors.white.withOpacity(0.7);
-    final Color highlightDotColor = Colors.white;
+    const Color highlightDotColor = Colors.white;
     final Color highlightGlowColorStart = Colors.yellow.withOpacity(0.7);
     final Color highlightGlowColorEnd = Colors.yellow.withOpacity(0.0);
 
@@ -439,7 +436,7 @@ class _CustomChartWidgetState extends State<CustomChartWidget> {
           border: Border.all(
             color: isSelected
                 ? Colors.transparent
-                : Color(0xFF8BDFFB), // Border for unselected
+                : const Color(0xFF8BDFFB), // Border for unselected
             width: 1,
           ),
         ),
@@ -481,7 +478,7 @@ class _CustomChartWidgetState extends State<CustomChartWidget> {
             CrossAxisAlignment.start, // Align content to the start
         children: [
           // Top row: Title and Range Selection Buttons
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Padding(
@@ -547,8 +544,8 @@ class _CustomChartWidgetState extends State<CustomChartWidget> {
 
                         // Determine max values for scaling.
                         // Here, we assume normalized data (0-1) and scale based on 1.0.
-                        final double airQualityMax = 1.0;
-                        final double usageMax = 1.0;
+                        const double airQualityMax = 1.0;
+                        const double usageMax = 1.0;
 
                         return CustomPaint(
                           painter: CustomChartPainter(

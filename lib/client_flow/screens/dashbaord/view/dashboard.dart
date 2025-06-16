@@ -1,15 +1,8 @@
-
-
-
 import 'package:flutter/material.dart';
-import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/view/home.dart';
 
 import '../../../../b2b_store/ecom.dart';
-import '../../../../hygine_services/view/hygine_landing.dart';
-import '../../../../janitorial_services/screens/monitor-iot.dart';
 import '../../../../screens/common_widgets/image_provider.dart';
 import '../../../../utils/app_color.dart';
-import '../../../../utils/app_images.dart';
 import '../../../../utils/app_textstyle.dart';
 import '../../../utils/client_images.dart';
 import '../../subcription/view/clientprofile.dart';
@@ -23,49 +16,46 @@ class ClientDashboard extends StatefulWidget {
 }
 
 class _ClientDashboardState extends State<ClientDashboard> {
-       int _selectedIndex = 0;
-     void _onItemTapped(int index) {
+  int _selectedIndex = 0;
+  void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
+  final List<Widget> _widgetOptions = <Widget>[
+    // Text("Home"),
+    const EcomScreen(),
 
-      final List<Widget> _widgetOptions = <Widget>[
-            // Text("Home"),
-          const  EcomScreen(),
-         
-               const HomeDashboard(),
-        //  const  HygieneServicesScreen(),
-           const Clientprofile(),
-
-       ];
-
-        final List<String> _icons = [
-          // ClientImages.home,
-          ClientImages.product,
-          ClientImages.checklist,
-          // ClientImages.services ,
-          ClientImages.userSelected,
-          
-  ];
-         final List<String> title = [
-          // "Home",
-          "Products",
-          "TASQ MASTER",
-          // "Services",
-          "Profile",
-  ];
-         final List<String> _iconsinActive = [
-          // ClientImages.homeUnseleted,
-          ClientImages.product,
-          ClientImages.checklist,
-          // ClientImages.services,
-          ClientImages.userbottom,
-          // ClientImages.homeUnseleted,
+    const HomeDashboard(),
+    //  const  HygieneServicesScreen(),
+    const Clientprofile(),
   ];
 
-         void _onTap(int index) {
+  final List<String> _icons = [
+    // ClientImages.home,
+    ClientImages.product,
+    ClientImages.checklist,
+    // ClientImages.services ,
+    ClientImages.userSelected,
+  ];
+  final List<String> title = [
+    // "Home",
+    "Products",
+    "TASQ MASTER",
+    // "Services",
+    "Profile",
+  ];
+  final List<String> _iconsinActive = [
+    // ClientImages.homeUnseleted,
+    ClientImages.product,
+    ClientImages.checklist,
+    // ClientImages.services,
+    ClientImages.userbottom,
+    // ClientImages.homeUnseleted,
+  ];
+
+  void _onTap(int index) {
     setState(() => _selectedIndex = index);
   }
 
@@ -91,16 +81,15 @@ class _ClientDashboardState extends State<ClientDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return   Scaffold(
+    return Scaffold(
       backgroundColor: AppColors.white,
       // appBar: AppBar(
       //   backgroundColor: AppColors.white,
       // ),
-      body:
-      Stack(
+      body: Stack(
         children: [
           Center(child: _widgetOptions.elementAt(_selectedIndex)),
-              Positioned(
+          Positioned(
             bottom: 20,
             left: 15,
             right: 15,
@@ -111,14 +100,15 @@ class _ClientDashboardState extends State<ClientDashboard> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(13),
-                 boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues( alpha: 0.2), // Shadow color
-              spreadRadius: 1, // How wide the shadow should spread
-              blurRadius: 10, // The blur effect of the shadow
-              offset: const Offset(0, 5), // Shadow offset, with y-offset for bottom shadow
-            ),
-          ],
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.2), // Shadow color
+                    spreadRadius: 1, // How wide the shadow should spread
+                    blurRadius: 10, // The blur effect of the shadow
+                    offset: const Offset(
+                        0, 5), // Shadow offset, with y-offset for bottom shadow
+                  ),
+                ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -126,39 +116,40 @@ class _ClientDashboardState extends State<ClientDashboard> {
                 children: List.generate(_widgetOptions.length, (index) {
                   final isActive = _selectedIndex == index;
                   return GestureDetector(
-                    onTap: () => _onTap(index),
-                    child:
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      // crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        CustomImageProvider(
-                          width: 30,
-                         height: 30,
-                          image: isActive ? _icons[index] : _iconsinActive[index] ,
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        
-                        Text(title[index],
-                         style: AppTextStyle.font10bold,
-                        )
-                      ],
-                    )
-                    //  Icon(
-                    //   _icons[index],
-                    //   color: isActive ? Colors.deepPurple : Colors.grey,
-                    //   size: isActive ? 30 : 26,
-                    // ),
-                  );
+                      onTap: () => _onTap(index),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        // crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          CustomImageProvider(
+                            width: 30,
+                            height: 30,
+                            image: isActive
+                                ? _icons[index]
+                                : _iconsinActive[index],
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            title[index],
+                            style: AppTextStyle.font10bold,
+                          )
+                        ],
+                      )
+                      //  Icon(
+                      //   _icons[index],
+                      //   color: isActive ? Colors.deepPurple : Colors.grey,
+                      //   size: isActive ? 30 : 26,
+                      // ),
+                      );
                 }),
               ),
             ),
           ),
         ],
       ),
-      // bottomNavigationBar:  
+      // bottomNavigationBar:
       // BottomNavigationBar(
       //       backgroundColor: AppColors.white,
       //     elevation: 15,
@@ -166,15 +157,14 @@ class _ClientDashboardState extends State<ClientDashboard> {
       //     unselectedLabelStyle:  AppTextStyle.font12bold,
 
       //     items:  <BottomNavigationBarItem>[
-        
+
       //         BottomNavigationBarItem(
       //         icon:  CustomImageProvider(
       //           image:
       //           _selectedIndex == 0 ?
-                
+
       //            ClientImages.home : ClientImages.homeUnseleted,
-                 
-                 
+
       //           width: 30,
       //           height: 30,
       //           // color:
@@ -184,14 +174,14 @@ class _ClientDashboardState extends State<ClientDashboard> {
       //           // ,
       //         ),
       //         label: 'Home',
-      
+
       //       ),
       //       BottomNavigationBarItem(
       //         icon:  CustomImageProvider(
-      //           image: 
-      //            _selectedIndex == 1 ? 
+      //           image:
+      //            _selectedIndex == 1 ?
       //            ClientImages.userSelected
-                
+
       //           : ClientImages.userbottom,
       //           width: 30,
       //           height: 30,
@@ -199,12 +189,12 @@ class _ClientDashboardState extends State<ClientDashboard> {
       //           // _selectedIndex == 1 ?
       //           // AppColors.buttonBgColor
       //           // : null
-                
+
       //         ),
       //         label: 'Profile',
-      
+
       //       ),
-          
+
       //     ],
       //     currentIndex: _selectedIndex,
       //     selectedItemColor: AppColors.buttonBgColor,
@@ -213,7 +203,6 @@ class _ClientDashboardState extends State<ClientDashboard> {
     );
   }
 }
-
 
 // import 'package:flutter/material.dart';
 
