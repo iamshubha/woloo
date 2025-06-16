@@ -3,7 +3,8 @@ class TaskDropdownModel {
   TaskDropdownModel({
     this.id,
     this.facilityName,
-    this.requiredTime
+    this.requiredTime,
+    this.isSelected = false,
   });
 
   TaskDropdownModel.fromJson(dynamic json) {
@@ -15,6 +16,7 @@ class TaskDropdownModel {
   int? id;
   String? facilityName;
   int? requiredTime;
+  bool? isSelected =false ;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

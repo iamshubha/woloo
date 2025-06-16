@@ -9,12 +9,12 @@ OrderModel orderModelFromJson(String str) => OrderModel.fromJson(json.decode(str
 String orderModelToJson(OrderModel data) => json.encode(data.toJson());
 
 class OrderModel {
-    Results results;
-    bool success;
+    Results? results;
+    bool? success;
 
     OrderModel({
-        required this.results,
-        required this.success,
+        this.results,
+        this.success,
     });
 
     factory OrderModel.fromJson(Map<String, dynamic> json) => OrderModel(
@@ -23,7 +23,7 @@ class OrderModel {
     );
 
     Map<String, dynamic> toJson() => {
-        "results": results.toJson(),
+        "results": results!.toJson(),
         "success": success,
     };
 }
@@ -43,18 +43,18 @@ class Results {
     String? status;
 
     Results({
- this.amount,
- this.amountDue,
- this.amountPaid,
- this.attempts,
- this.createdAt,
- this.currency,
- this.entity,
- this.id,
- this.notes,
- this.offerId,
- this.receipt,
- this.status,
+        this.amount,
+        this.amountDue,
+        this.amountPaid,
+        this.attempts,
+        this.createdAt,
+        this.currency,
+        this.entity,
+        this.id,
+        this.notes,
+        this.offerId,
+        this.receipt,
+        this.status,
     });
 
     factory Results.fromJson(Map<String, dynamic> json) => Results(
@@ -90,28 +90,40 @@ class Results {
 
 class Note {
     String? clientId;
+    String? facilityRef;
+    bool? isRenewal;
     int? itemId;
     String? itemType;
     String? planName;
+    bool? startAfterCurrent;
 
     Note({
-         this.clientId,
-         this.itemId,
-         this.itemType,
-         this.planName,
+        this.clientId,
+        this.facilityRef,
+        this.isRenewal,
+        this.itemId,
+        this.itemType,
+        this.planName,
+        this.startAfterCurrent,
     });
 
     factory Note.fromJson(Map<String, dynamic> json) => Note(
         clientId: json["client_id"],
+        facilityRef: json["facilityRef"],
+        isRenewal: json["isRenewal"],
         itemId: json["item_id"],
         itemType: json["item_type"],
         planName: json["plan_name"],
+        startAfterCurrent: json["startAfterCurrent"],
     );
 
     Map<String, dynamic> toJson() => {
         "client_id": clientId,
+        "facilityRef": facilityRef,
+        "isRenewal": isRenewal,
         "item_id": itemId,
         "item_type": itemType,
         "plan_name": planName,
+        "startAfterCurrent": startAfterCurrent,
     };
 }

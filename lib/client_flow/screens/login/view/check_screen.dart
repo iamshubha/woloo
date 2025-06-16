@@ -55,6 +55,7 @@ class _CheckScreenState extends State<CheckScreen> {
         }
 
        if (state is  GetClient ) {
+        
         EasyLoading.dismiss();
          
             if( state.client.results!.isOnboardComplete! ){
@@ -62,7 +63,7 @@ class _CheckScreenState extends State<CheckScreen> {
               context,
               MaterialPageRoute(
                 builder: (context) => 
-                  const ClientDashboard()
+                   ClientDashboard()
               ),
               (route) => false,
             );

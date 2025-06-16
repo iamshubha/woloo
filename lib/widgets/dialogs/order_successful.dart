@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
+import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 
 class OrderSuccessfulDialog extends StatelessWidget {
@@ -31,7 +32,19 @@ class OrderSuccessfulDialog extends StatelessWidget {
                       TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
-                LongLabeledButton(onTap: () {}, label: "Check Order Details")
+                LongLabeledButton(
+                    onTap: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (c) => const EcomScreen(
+
+                                // orderSet: state.completeVendor.orderSet,
+                                )),
+                        (route) => false,
+                      );
+                    },
+                    label: "Check Order Details")
               ],
             )),
       ),

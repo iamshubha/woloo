@@ -19,6 +19,9 @@ import '../model/client_setup_model.dart';
 import '../model/dashboard_task_model.dart';
 import '../model/delete_facility.dart';
 import '../model/delete_model.dart';
+import '../model/extend_expiry.dart';
+import '../model/janitor_model.dart';
+import '../model/payment_status.dart';
 import '../model/subscription_model.dart';
 import '../model/task_model.dart';
 import '../model/tasklist_model.dart';
@@ -35,14 +38,16 @@ Future<ClientSetupModel> clientSetup({
   required String unitNo,
   required String locality,
   required String clientId,
-   required  String address,
+   required String address,
    String? building,
    String? floor,
    String? landmark,
    String? pincode,
   String? locationId,
   String? clusterId,
- required String? city
+  required String? mobile,
+ required String? city,
+ required String? faciltyType,
 
 }) async {
   try {
@@ -51,14 +56,15 @@ Future<ClientSetupModel> clientSetup({
     // Data payload with all parameters
     Map<String, dynamic> data =
     {
-      "location": locality,
+  "location": locality,
   "address": address,
   "city": city,
   "client_id": clientId,
   "facility_name": orgName,
   "cluster_id": "",
-  "facility_type": "home",
-  "pincode": pincode
+  "facility_type": faciltyType,
+  "pincode": pincode,
+  "mobile": mobile,
   };
     // {
     //   "org_name": orgName,
@@ -102,6 +108,7 @@ Future<ClientSetupModel> clientSetup({
   required String mobile,
   required String clientId,
            String? gender,
+           bool? isSelfAssign,
   required  List<int>? clusterId,
   
 
@@ -118,7 +125,8 @@ Future<ClientSetupModel> clientSetup({
         "cluster_ids":clusterId.toString(),
         // "last_name": locality,
         "mobile": mobile,
-        "gender": gender
+        "gender": gender,
+        "isSelfAssign": isSelfAssign
       });
 
 
@@ -196,7 +204,9 @@ Future<DashbaordModel> getTaskDashboard({
     var response = await dio.post(
       APIConstants.GET_TASK_DASHBOARD,
       data: data,
-      options:  Options(extra: {"auth": true, "isSupervisor": true}),
+      options:  Options(
+         
+        extra: {"auth": true, "isSupervisor": true}),
     );
 
   dashbaordModel =  DashbaordModel.fromJson(response);
@@ -301,19 +311,35 @@ Future<TaskModel> getAllJanitor({
     required String estimatedTime,
     required List<Map<String, String>> taskTimes,
     required int janitorId,
+    required String facilityRef,
+             String? facilityId,
   }) async {
     try {
 
       // DashbaordModel dashbaordModel;
       // Data payload with all parameters
       Map<String, dynamic> data =
+      facilityId == null ? 
       {
         "client_id": clientId,
         "shift_time": shiftTime,
         "task_ids":taskIds,
         "estimated_time": estimatedTime,
         "task_times": taskTimes,
-        "janitor_id": janitorId
+        "janitor_id": janitorId,
+        "facility_ref": facilityRef,
+      } :
+      {
+        "client_id": clientId,
+        "shift_time": shiftTime,
+        "task_ids":taskIds,
+        "estimated_time": estimatedTime,
+        "task_times": taskTimes,
+        "janitor_id": janitorId,
+        "facility_ref": facilityRef,
+        
+        "facility_id": facilityId, // Assuming facility_id is not required here
+
       };
       var response = await dio.post(
         APIConstants.ASSIGN_TASK,
@@ -519,6 +545,80 @@ Future<TaskModel> getAllJanitor({
     rethrow;
   }
 }
+
+
+Future<ExtendExpiryModel> extendExpiry({
+  required int clientId,
+  required int days,
+  // required int clientUserId,
+
+    }) async {
+    try {
+      var response = await dio.post(
+        APIConstants.EXTEND_EXPIRY,
+       options:  Options(extra: {"auth": true, "isSupervisor": true}),
+        data: {
+             "client_id": clientId,
+             "days": 15
+        },
+      );
+
+
+      return ExtendExpiryModel.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
+
+  Future<PaymentStatusModel> paymentStatus({
+  required String refranceId,
+  // required int days,
+  // required int clientUserId,
+
+    }) async {
+    try {
+      var response = await dio.get(
+       "${APIConstants.PAYMENT_STATUS}/$refranceId",
+        options:  Options(extra: {"auth": true, "isSupervisor": true}),
+        // data: {
+        //      "client_id": clientId,
+        //      "days": 15
+        // },
+      );
+
+
+      return PaymentStatusModel.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+    Future<JanitorModel> facilityByJanitor({
+  required int clientId,
+  required int facilityId,
+  // required int days,
+  // required int clientUserId,
+
+    }) async {
+    try {
+      
+      var response = await dio.get(
+       "${APIConstants.FACILITY_BY_JANITOR}?client_id=$clientId&facility_id=$facilityId",
+        options:  Options(extra: {"auth": true, "isSupervisor": true}),
+        // data: {
+        //      "client_id": clientId,
+        //      "days": 15
+        // },
+      );
+
+
+      return JanitorModel.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
 
 
 

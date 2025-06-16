@@ -1,18 +1,14 @@
-import 'dart:ffi';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/delhivery_check.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/order.dart';
-import 'package:woloo_smart_hygiene/b2b_store/models/payment_provider.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/payment_provider.dart'
     as payment_provider;
+import 'package:woloo_smart_hygiene/b2b_store/models/payment_provider.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/promotion.dart';
 import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
 import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
-import 'package:woloo_smart_hygiene/utils/logger.dart';
 
 class CheckoutApiService {
   final DioClient dio;
@@ -24,7 +20,7 @@ class CheckoutApiService {
   }) async {
     try {
       final response = await dio.post(
-          APIConstants.CART_BASE_URL + cart_id + '/promotions',
+          '${APIConstants.CART_BASE_URL}$cart_id/promotions',
           options: getHeaders(token),
           data: {
             "promo_codes": ["WOLOO_COINS"]
@@ -32,7 +28,7 @@ class CheckoutApiService {
 
       return PromotionsModel.fromMap(response);
     } catch (e) {
-      logger.w(e);
+      //logger.w(e);
       debugPrint("Error in cartPromotions api call : $e");
       rethrow;
     }
@@ -50,7 +46,7 @@ class CheckoutApiService {
 
       return PincodeCheckResponse.fromMap(response).deliveryCodes!.isNotEmpty;
     } catch (e) {
-      logger.w(e);
+      //logger.w(e);
       debugPrint("Error in pincodeCheck api call: $e");
       rethrow;
     }
@@ -62,13 +58,13 @@ class CheckoutApiService {
   }) async {
     try {
       final response = await dio.get(
-        APIConstants.SHIPPING_OPTIONS + "address?cart_id=" + cart_id,
+        "${APIConstants.SHIPPING_OPTIONS}address?cart_id=$cart_id",
         options: getHeaders(token),
       );
-      logger.w(response);
+
       return ShippingOptionsResponse.fromMap(response);
     } catch (e) {
-      logger.w(e);
+      //logger.w(e);
       debugPrint("Error in shippingOptions api call: $e");
       rethrow;
     }
@@ -82,16 +78,14 @@ class CheckoutApiService {
     try {
       // https://staging-store.woloo.in/store/shipping-options/so_01JR9FH2BZ89VG30A6ENB747KQ/calculate
       final response = await dio.post(
-          APIConstants.SHIPPING_OPTIONS +
-              shipping_option.toString() +
-              "/calculate",
+          "${APIConstants.SHIPPING_OPTIONS}$shipping_option/calculate",
           options: getHeaders(token),
           data: {"cart_id": cart_id});
-      logger.w(response);
+
       return ShippingOption.fromMap(response['shipping_option']);
     } catch (e) {
-      logger.w(e);
-      debugPrint("Error in shippingOptionsCalculate api call: $e");
+      //logger.w(e);
+      debugPrint("shippingOptionsCalculate: $e");
       rethrow;
     }
   }
@@ -109,11 +103,11 @@ class CheckoutApiService {
           "https://staging-store.woloo.in/store/carts/$cart_id/add-shipping-methods",
           options: getHeaders(token),
           data: body);
-      logger.w(response);
+
       return AddToCartResponse.fromJson(response);
     } catch (e) {
-      logger.w(e);
-      debugPrint("Error in shippingOptionsCalculate api call: $e");
+      //logger.w(e);
+      debugPrint("shippingMethods: $e");
       rethrow;
     }
   }
@@ -131,13 +125,13 @@ class CheckoutApiService {
 
       return PaymentProviders.fromJson(response);
     } catch (e) {
-      logger.w(e);
-      debugPrint("Error in shippingOptionsCalculate api call: $e");
+      //logger.w(e);
+      debugPrint("paymentProviders: $e");
       rethrow;
     }
   }
 
-  Future<payment_provider.PaymentCollection> paymentCollections({
+  Future<String> paymentCollections({
     required String token,
     required String cart_id,
   }) async {
@@ -146,11 +140,18 @@ class CheckoutApiService {
           "https://staging-store.woloo.in/store/payment-collections",
           options: getHeaders(token),
           data: {"cart_id": cart_id});
-      logger.w(response);
-      return payment_provider.PaymentCollection.fromJson(response);
+
+      // //logger.w(response['payment_collection']["id"]);
+      // //logger.w()
+      /*
+
+          pay_col: paymentCollections.paymentCollection?.id,
+          provider_id: paymentProviders.paymentProviders[0].id
+      */
+      return response['payment_collection']["id"];
     } catch (e) {
-      logger.w(e);
-      debugPrint("Error in shippingOptionsCalculate api call: $e");
+      //logger.w(e);
+      debugPrint("paymentCollections: $e");
       rethrow;
     }
   }
@@ -168,8 +169,8 @@ class CheckoutApiService {
 
       return payment_provider.PaymentCollection.fromJson(response);
     } catch (e) {
-      logger.w(e);
-      debugPrint("Error in shippingOptionsCalculate api call: $e");
+      //logger.w(e);
+      debugPrint("paymentSessions: $e");
       rethrow;
     }
   }
@@ -179,15 +180,16 @@ class CheckoutApiService {
     required String cart_id,
   }) async {
     try {
+      
       final response = await dio.post(
         "https://staging-store.woloo.in/store/carts/$cart_id/split-and-complete-cart",
         options: getHeaders(token),
       );
-      logger.w(response);
+
       return CompleteVendor.fromJson(response);
     } catch (e) {
-      logger.w(e);
-      debugPrint("Error in shippingOptionsCalculate api call: $e");
+      //logger.w(e);
+      debugPrint("completeVendor: $e");
       rethrow;
     }
   }
@@ -202,10 +204,10 @@ class CheckoutApiService {
   //       "https://staging-store.woloo.in/store/carts/$cart_id/complete",
   //       options: getHeaders(token),
   //     );
-  //     logger.w(response);
+  //
   //     return CompleteVendor.fromJson(response);
   //   } catch (e) {
-  //     logger.w(e);
+  //     //logger.w(e);
   //     debugPrint("Error in shippingOptionsCalculate api call: $e");
   //     rethrow;
   //   }

@@ -1,33 +1,36 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/b2b_store/all_orders.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/collections.dart';
+import 'package:woloo_smart_hygiene/b2b_store/common_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
-import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
-import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/wishlist.dart';
+import 'package:woloo_smart_hygiene/client_flow/screens/subcription/view/clientprofile.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/enums/product_mode.dart';
 import 'package:woloo_smart_hygiene/extensions/string_extension.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
-import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
-import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
 
 import '../hygine_services/view/address_notifier.dart';
 import '../utils/app_textstyle.dart';
+import 'custom_widget/start_rating.dart';
 
 enum EcomTab { seeLess, seeAll }
 
@@ -46,17 +49,22 @@ class _EcomScreenState extends State<EcomScreen> {
   int currentIndex = 0;
   Addresses? address;
   final box = GetStorage();
+  final focus = FocusNode();
+  GlobalStorage globalStorage = GetIt.instance();
 
   @override
   void initState() {
-    _b2bStoreBloc.add(const StoreCustomerLoginReq(
-        email: '000000000@gmail.com', pass: 'aaarati14'));
+    _b2bStoreBloc.add(StoreCustomerLoginReq(
+        email: globalStorage.getEmail(),
+        pass: globalStorage.getPassword(),
+        isfromlogin: false));
     super.initState();
     // address = getAddress();
   }
 
   _refresh() {
-    _b2bStoreBloc.add(const Refresh());
+    _b2bStoreBloc.add(const Refresh(slug: "collection_id"));
+    focus.unfocus();
   }
 
   @override
@@ -66,6 +74,9 @@ class _EcomScreenState extends State<EcomScreen> {
         listener: (context, state) {
           // print("dssa $state");
           if (state is B2BStoreLoading) {
+            EasyLoading.show(status: state.message);
+          }
+          if (state is CartLoading) {
             EasyLoading.show(status: state.message);
           }
           if (state is B2BStoreSuccess) {
@@ -78,27 +89,193 @@ class _EcomScreenState extends State<EcomScreen> {
               // _dashboardData = state.dashboardData;
             });
           }
-
+          if (state is WishlistSuccess) {
+            EasyLoading.dismiss();
+            _refresh();
+          }
+          if (state is CartSuccess) {
+            EasyLoading.dismiss();
+            _refresh();
+          }
           if (state is B2BStoreError) {
+            EasyLoading.dismiss();
+            EasyLoading.showError(state.error);
+          }
+          if (state is RestockSubscriptionsLoading) {
+            EasyLoading.show(status: state.message);
+          }
+          if (state is RestockSubscriptionsSuccess) {
+            EasyLoading.dismiss();
+            EasyLoading.showSuccess("Notification set successfully");
+          }
+          if (state is RestockSubscriptionsError) {
             EasyLoading.dismiss();
             EasyLoading.showError(state.error);
           }
         },
         builder: (context, snapshot) {
           return Scaffold(
-            bottomNavigationBar: const XBottomBar(),
+            resizeToAvoidBottomInset: false,
+            // bottomNavigationBar: const XBottomBar(),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                logger.w("Cart ID: ${box.read('cart_id')}");
+                // box.read('login_jwt')
+                logger.w("Bearer: ${box.read('login_jwt')}");
+              },
+              child: const Icon(Icons.abc),
+            ),
             appBar: EComAppbar(
+              focus: focus,
+              onCartTap: () async {
+                final value = await Navigator.push(context,
+                    MaterialPageRoute(builder: (c) => const CartScreen()));
+                if (value != null && value == 'refresh') {
+                  _refresh();
+                } else {
+                  _refresh();
+                }
+              },
               cartValue: _isDataLoaded
                   ? _b2bStoreHomePage!.cartData.cart.items.length
                   : 0,
+              onTap: () async {
+                final value = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (c) => const CollectionsScreen(
+                            // products: _b2bStoreHomePage!
+                            //     .productCollections
+                            //     .products,
+                            )));
+                if (value != null && value == 'refresh') {
+                  _refresh();
+                }
+              },
             ),
             body: SingleChildScrollView(
               child: _isDataLoaded
                   ? Column(
                       children: [
-                        CategoriesSection(
-                          productCategory: _b2bStoreHomePage!.productCategory,
+                        // TextField(focusNode: FocusNode(),),
+                        // CategoriesSection(
+                        //   productCategory: _b2bStoreHomePage!.productCategory,
+                        // ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20.w, vertical: 10.h),
+                          decoration: const BoxDecoration(
+                            color: AppColors.containerTabColor,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                'Categories',
+                                style: TextStyle(
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 10.h),
+                              SizedBox(
+                                height: 100.h,
+                                child: ListView.separated(
+                                  itemCount: _b2bStoreHomePage!.productCategory
+                                              .productCategories !=
+                                          null
+                                      ? _b2bStoreHomePage!.productCategory
+                                          .productCategories!.length
+                                      : 0,
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder: (context, index) {
+                                    final category = Category(
+                                      name: _b2bStoreHomePage!.productCategory
+                                              .productCategories?[index].name ??
+                                          '',
+                                      imageUrl: _b2bStoreHomePage!
+                                              .productCategory
+                                              .productCategories?[index]
+                                              .metadata
+                                              ?.image ??
+                                          '',
+                                      color: Color(int.tryParse(
+                                              "0xFF${_b2bStoreHomePage!.productCategory.productCategories?[index].metadata?.backgroundColor}") ??
+                                          00000),
+                                    );
+                                    return InkWell(
+                                      // onTap: () {
+                                      //    SeeMoreButton(
+                                      onTap: () async {
+                                        final value = await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (c) =>
+                                                    CommonCollectionsScreen(
+                                                      id: _b2bStoreHomePage!
+                                                              .productCategory
+                                                              .productCategories![
+                                                                  index]
+                                                              .id ??
+                                                          "",
+                                                      slug: "category_id",
+                                                      // products: _b2bStoreHomePage!
+                                                      //     .productCollections
+                                                      //     .products,
+                                                    )));
+                                        if (value != null &&
+                                            value == 'refresh') {
+                                          _refresh();
+                                        }
+                                      },
+                                      //               )
+                                      // CommonCollectionsScreen();
+                                      // },
+                                      child: Column(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 36.5.r,
+                                            backgroundColor: category.color,
+                                            child: Center(
+                                              child: category
+                                                      .imageUrl.isEmptyOrNull
+                                                  ? Image.asset(
+                                                      AppImages.woloologo,
+                                                      width: 40.w,
+                                                      height: 40.h,
+                                                    )
+                                                  : Image.network(
+                                                      category.imageUrl,
+                                                      width: 40.w,
+                                                      height: 40.h,
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          Text(
+                                            category.name,
+                                            style: TextStyle(
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                  separatorBuilder: (context, index) {
+                                    return SizedBox(
+                                      width: 10.w,
+                                    );
+                                  },
+                                ),
+                              )
+                            ],
+                          ),
                         ),
+
                         Container(
                           color: AppColors.themeBackground,
                           padding: EdgeInsets.symmetric(
@@ -205,13 +382,36 @@ class _EcomScreenState extends State<EcomScreen> {
                                     : _b2bStoreHomePage!.topBrands.collections!
                                         .length, //.length,
                                 itemBuilder: (context, index) {
-                                  return BrandsGrid(
-                                    imageUrl: _b2bStoreHomePage!
-                                            .topBrands
-                                            .collections![index]
-                                            .metadata
-                                            ?.image ??
-                                        '',
+                                  return InkWell(
+                                    onTap: () async {
+                                      final value = await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (c) =>
+                                                  CommonCollectionsScreen(
+                                                    id: _b2bStoreHomePage!
+                                                            .topBrands
+                                                            .collections![index]
+                                                            .id ??
+                                                        "",
+                                                    slug: "collection_id",
+
+                                                    // products: _b2bStoreHomePage!
+                                                    //     .productCollections
+                                                    //     .products,
+                                                  )));
+                                      if (value != null && value == 'refresh') {
+                                        _refresh();
+                                      }
+                                    },
+                                    child: BrandsGrid(
+                                      imageUrl: _b2bStoreHomePage!
+                                              .topBrands
+                                              .collections![index]
+                                              .metadata
+                                              ?.image ??
+                                          '',
+                                    ),
                                   );
                                 },
                               ),
@@ -225,15 +425,19 @@ class _EcomScreenState extends State<EcomScreen> {
                                   ),
                                   const Spacer(),
                                   SeeMoreButton(
-                                    onTap: () {
-                                      Navigator.push(
+                                    onTap: () async {
+                                      final value = await Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (c) => CollectionsScreen(
-                                                  // products: _b2bStoreHomePage!
-                                                  //     .productCollections
-                                                  //     .products,
-                                                  )));
+                                              builder: (c) =>
+                                                  const CollectionsScreen(
+                                                      // products: _b2bStoreHomePage!
+                                                      //     .productCollections
+                                                      //     .products,
+                                                      )));
+                                      if (value != null && value == 'refresh') {
+                                        _refresh();
+                                      }
                                     },
                                   )
                                 ],
@@ -245,20 +449,30 @@ class _EcomScreenState extends State<EcomScreen> {
                                 physics: const NeverScrollableScrollPhysics(),
                                 gridDelegate:
                                     const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 10,
+                                  crossAxisCount: 3,
                                   mainAxisSpacing: 10,
-                                  childAspectRatio: 0.6,
+                                  crossAxisSpacing: 8,
+                                  childAspectRatio: 0.5,
                                 ),
                                 itemCount: _b2bStoreHomePage!.productCollections
                                             .products.length >
-                                        8
-                                    ? 8
+                                        9
+                                    ? 9
                                     : _b2bStoreHomePage!
                                         .productCollections.products.length,
                                 itemBuilder: (context, index) {
                                   final product = _b2bStoreHomePage!
                                       .productCollections.products[index];
+                                  logger.w(
+                                      product.variants.first.inventoryQuantity);
+                                  int productCount = 0;
+                                  _b2bStoreHomePage?.cartData.cart.items
+                                      .forEach((i) {
+                                    if (i.variantId == product.variants[0].id) {
+                                      productCount = i.quantity;
+                                    }
+                                  });
+                                  // AddButtonMode mode = AddButtonMode.remove;
                                   return GestureDetector(
                                     onTap: () async {
                                       final result = await Navigator.push(
@@ -297,26 +511,513 @@ class _EcomScreenState extends State<EcomScreen> {
                                             'Returned from Page B without refresh signal or cancelled.');
                                       }
                                     },
-                                    child: GridItem(
-                                      products: product,
-                                      isSelected: _b2bStoreBloc.favIds.any(
-                                          (e) => e.containsKey(product.id)),
-                                      productIdforWishList: _b2bStoreBloc.favIds
-                                              .any((e) =>
-                                                  e.containsKey(product.id))
-                                          ? _b2bStoreBloc.favIds
-                                              .firstWhere((e) =>
-                                                  e.entries.first.key ==
-                                                  product.id)
-                                              .entries
-                                              .first
-                                              .value
-                                          : "",
-                                      // imageUrl: productCollections.products![index].thumbnail ?? '',
+                                    child: Container(
+                                      // padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                      child: Stack(
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Container(
+                                                height: 80.h,
+                                                width: 80.h,
+                                                decoration: BoxDecoration(
+                                                    color: AppColors
+                                                        .themeBackground,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12.r),
+                                                    boxShadow: const [
+                                                      BoxShadow(
+                                                        color: AppColors
+                                                            .greyShadowColor,
+                                                        blurRadius: 5.0,
+                                                        spreadRadius: 0.5,
+                                                        offset: Offset(0, 2),
+                                                      ),
+                                                      BoxShadow(
+                                                        color: AppColors
+                                                            .greyShadowColor,
+                                                        blurRadius: 5.0,
+                                                        spreadRadius: 0.5,
+                                                        offset: Offset(0, -1),
+                                                      ),
+                                                    ]),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12.r),
+                                                  child: Image.network(
+                                                    product.thumbnail ?? '',
+                                                    fit: BoxFit.fill,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 5.h,
+                                              ),
+                                              product.variants.first.options
+                                                          ?.first.value ==
+                                                      "Default option value"
+                                                  ? Container()
+                                                  : Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 5.w,
+                                                              vertical: 2.h),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(3.r),
+                                                        color: AppColors
+                                                            .lightCyanColor,
+                                                      ),
+                                                      child: Text(
+                                                        product
+                                                                .variants
+                                                                .first
+                                                                .options
+                                                                ?.first
+                                                                .value ??
+                                                            "",
+                                                        style: AppTextStyle
+                                                            .font10bold,
+                                                      ),
+                                                    ),
+                                              SizedBox(
+                                                height: 5.h,
+                                              ),
+                                              Text(
+                                                product.title ?? "",
+                                                style: TextStyle(
+                                                    fontSize: 8.sp,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              // Text(
+                                              //   products.subtitle ?? "",
+                                              //   style: TextStyle(
+                                              //     fontSize: 8.sp,
+                                              //     color: AppColors.textgreyColor,
+                                              //     fontWeight: FontWeight.bold,
+                                              //   ),
+                                              // ),
+                                              Row(
+                                                children: [
+                                                  AnimatedRatingStars(
+                                                    initialRating:
+                                                        product.averageRating ??
+                                                            0,
+                                                    minRating: 0.0,
+                                                    maxRating: 5.0,
+                                                    filledColor: Colors.amber,
+                                                    emptyColor: Colors.grey,
+                                                    filledIcon: Icons.star,
+                                                    halfFilledIcon:
+                                                        Icons.star_half,
+                                                    emptyIcon:
+                                                        Icons.star_border,
+                                                    onChanged: (a) {},
+                                                    displayRatingValue: true,
+                                                    interactiveTooltips: true,
+                                                    customFilledIcon:
+                                                        Icons.star,
+                                                    customHalfFilledIcon:
+                                                        Icons.star_half,
+                                                    customEmptyIcon:
+                                                        Icons.star_border,
+                                                    starSize: 10,
+                                                    animationDuration:
+                                                        const Duration(
+                                                            milliseconds: 300),
+                                                    animationCurve:
+                                                        Curves.easeInOut,
+                                                    readOnly: false,
+                                                  ),
+                                                  // if (product.reviewCount !=
+                                                  //         null &&
+                                                  //     product.reviewCount != 0)
+                                                  Text(
+                                                    "(${product.reviewCount ?? 0})",
+                                                    style:
+                                                        AppTextStyle.font10bold,
+                                                  )
+                                                ],
+                                              ),
+
+                                              Row(
+                                                spacing: 5.w,
+                                                children: [
+                                                  Text(
+                                                    "\u{20B9}${product.variants.first.calculatedPrice!.calculatedAmount.toString()}",
+                                                    style: TextStyle(
+                                                      fontSize: 10.sp,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  //TODO: Check Price Logic -- Abar asibo fire
+                                                  Text(
+                                                    "MRP ${product.variants.first.calculatedPrice!.originalAmount.toString()}",
+                                                    style: TextStyle(
+                                                        decoration:
+                                                            product.discountable ??
+                                                                    false
+                                                                ? TextDecoration
+                                                                    .lineThrough
+                                                                : null,
+                                                        fontSize: 10.sp,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: AppColors
+                                                            .textgreyColor),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                          if (product.variants.first
+                                                  .inventoryQuantity ==
+                                              0)
+                                            Positioned.fill(
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(12.r),
+                                                child: BackdropFilter(
+                                                  filter: ImageFilter.blur(
+                                                      sigmaX: 0.3, sigmaY: 0.3),
+                                                  child: Container(
+                                                    color: Colors.white
+                                                        .withOpacity(0.4),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          Positioned(
+                                              right: 0,
+                                              top: 80,
+                                              child: InkWell(
+                                                onTap: () async {
+                                                  if (product.variants.first
+                                                          .inventoryQuantity ==
+                                                      0) return;
+                                                  // logger.w(
+                                                  //     "Selected Address: ${selectedAddress.value.id}");
+                                                  if (selectedAddress
+                                                          .value.id ==
+                                                      null) {
+                                                    showModalBottomSheet(
+                                                      isScrollControlled: true,
+                                                      isDismissible:
+                                                          false, // <-- Allow tap outside to dismiss
+                                                      enableDrag:
+                                                          true, // <-- Allow swipe down to dismiss
+                                                      backgroundColor: Colors
+                                                          .transparent, // Optional: if you want rounded corners to show correctly
+                                                      context: context,
+                                                      builder: (_) =>
+                                                          const AddressChangeBottomSheet(), //AddressBottomSheet
+                                                    );
+                                                    return;
+                                                  }
+                                                  _b2bStoreBloc.add(AddToCart(
+                                                      quantity: 1,
+                                                      variant_id: product
+                                                          .variants[0].id));
+                                                  // if (widget.isSelected) {
+                                                  //   widget.onRemove?.call();
+                                                  // } else {
+                                                  //   widget.onAdd?.call();
+                                                  // }
+                                                  // setState(() {
+                                                  //   mode = AddButtonMode.add;
+                                                  // });
+                                                  await Future.delayed(
+                                                      const Duration(
+                                                          milliseconds: 500),
+                                                      () {
+                                                    // setState(() {
+                                                    //   mode =
+                                                    //       AddButtonMode.count;
+                                                    // });
+                                                  });
+
+                                                  // if (widget.onTap != null) {
+                                                  //   widget.onTap!();
+                                                  // }
+                                                  //Add to cart 1st time
+                                                },
+                                                borderRadius:
+                                                    BorderRadius.circular(3.r),
+                                                child: AnimatedContainer(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 5.w,
+                                                      vertical: 2.h),
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color: AppColors
+                                                              .buttonColor,
+                                                          width: 1.5),
+                                                      color: productCount == 0
+                                                          ? AppColors
+                                                              .themeBackground
+                                                          : AppColors
+                                                              .buttonYellowColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              3.r)),
+                                                  duration: const Duration(
+                                                      milliseconds: 500),
+                                                  child: Center(
+                                                    child: product
+                                                                .variants
+                                                                .first
+                                                                .inventoryQuantity ==
+                                                            0
+                                                        ? InkWell(
+                                                            onTap: () {
+                                                              _b2bStoreBloc.add(
+                                                                RestockSubscriptionsEvent(
+                                                                  phoneNumber:
+                                                                      globalStorage
+                                                                          .getClientMobileNo(),
+                                                                  variantId: product
+                                                                      .variants[
+                                                                          0]
+                                                                      .id!,
+                                                                ),
+                                                              );
+                                                            },
+                                                            child: Text(
+                                                              "Notify",
+                                                              style: AppTextStyle
+                                                                  .font10bold,
+                                                            ),
+                                                          )
+                                                        : productCount == 0
+                                                            // AddButtonMode.remove
+                                                            ? Text(
+                                                                "Add",
+                                                                style: AppTextStyle
+                                                                    .font10bold,
+                                                              )
+                                                            // :
+                                                            //  mode ==
+                                                            //         AddButtonMode
+                                                            //             .add
+                                                            //     ? Text(
+                                                            //         "Added",
+                                                            //         style: AppTextStyle
+                                                            //             .font10bold,
+                                                            //       )
+                                                            : Row(
+                                                                spacing: 10,
+                                                                children: [
+                                                                  InkWell(
+                                                                    onTap: () {
+                                                                      if (productCount ==
+                                                                          0)
+                                                                        return;
+
+                                                                      // productCount -=
+                                                                      //     1;
+                                                                      // if (productCount ==
+                                                                      //     0) {
+                                                                      //   productCount =
+                                                                      //       1;
+                                                                      //   // mode = AddButtonMode
+                                                                      //   //     .remove;
+                                                                      //   // if (widget.onRemove != null) {
+                                                                      //   //   widget.onRemove!();
+                                                                      //   // }
+                                                                      // }
+
+                                                                      // setState(
+                                                                      //     () {});
+                                                                      productCount ==
+                                                                              0
+                                                                          ? EasyLoading.showError(
+                                                                              "Product count cannot be less than 0")
+                                                                          : null;
+                                                                      _b2bStoreHomePage
+                                                                          ?.cartData
+                                                                          .cart
+                                                                          .items
+                                                                          .forEach(
+                                                                              (i) {
+                                                                        if (i.variantId ==
+                                                                            product.variants[0].id) {
+                                                                          productCount -=
+                                                                              1;
+                                                                          _b2bStoreBloc.add(AddRemoveItemReq(
+                                                                              count: productCount,
+                                                                              itemId: i.id));
+                                                                        }
+                                                                      });
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                      decoration: BoxDecoration(
+                                                                          borderRadius: BorderRadius.circular(
+                                                                              4),
+                                                                          border: Border.all(
+                                                                              width: 1,
+                                                                              color: AppColors.black)),
+                                                                      padding: const EdgeInsets
+                                                                          .symmetric(
+                                                                          vertical:
+                                                                              2,
+                                                                          horizontal:
+                                                                              2),
+                                                                      child:
+                                                                          const Icon(
+                                                                        Icons
+                                                                            .remove,
+                                                                        size: 8,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Text(
+                                                                    productCount
+                                                                        .toString(),
+                                                                    style: AppTextStyle
+                                                                        .font10,
+                                                                  ),
+                                                                  InkWell(
+                                                                    onTap: () {
+                                                                      // productCount += 1;
+                                                                      // setState(() {});
+                                                                      // if (widget.onAdd != null) {
+                                                                      //   widget.onAdd!();
+                                                                      // }
+                                                                      //  productCount == 0
+                                                                      //   ? addToCart(context)
+                                                                      //   :
+                                                                      // To add value
+                                                                      _b2bStoreHomePage
+                                                                          ?.cartData
+                                                                          .cart
+                                                                          .items
+                                                                          .forEach(
+                                                                              (i) {
+                                                                        if (i.variantId ==
+                                                                            product.variants[0].id) {
+                                                                          productCount +=
+                                                                              1;
+                                                                          _b2bStoreBloc.add(AddRemoveItemReq(
+                                                                              count: productCount,
+                                                                              itemId: i.id));
+                                                                        }
+                                                                      });
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                      decoration: BoxDecoration(
+                                                                          borderRadius: BorderRadius.circular(
+                                                                              4),
+                                                                          border: Border.all(
+                                                                              width: 1,
+                                                                              color: AppColors.black)),
+                                                                      padding: const EdgeInsets
+                                                                          .symmetric(
+                                                                          vertical:
+                                                                              2,
+                                                                          horizontal:
+                                                                              2),
+                                                                      child:
+                                                                          const Icon(
+                                                                        Icons
+                                                                            .add,
+                                                                        size:
+                                                                            10,
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                  ),
+                                                ),
+                                              )),
+
+                                          product.variants.first
+                                                      .inventoryQuantity ==
+                                                  0
+                                              ? Align(
+                                                  alignment:
+                                                      Alignment.topCenter,
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 5.w,
+                                                            vertical: 2.h),
+                                                    decoration: BoxDecoration(
+                                                      color: AppColors
+                                                          .lightCyanColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4),
+                                                    ),
+                                                    child: Text(
+                                                      "Out of Stock",
+                                                      style: TextStyle(
+                                                          fontSize: 6.sp,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color:
+                                                              AppColors.black),
+                                                    ),
+                                                  ),
+                                                )
+                                              : const SizedBox(),
+                                          // Positioned(
+                                          //   // left: 8,
+                                          //   // right: 8,
+                                          //   child: Container(
+                                          //     padding: EdgeInsets.symmetric(
+                                          //         horizontal: 5.w,
+                                          //         vertical: 2.h),
+                                          //     decoration: BoxDecoration(
+                                          //         color:
+                                          //             AppColors.lightCyanColor,
+                                          //         borderRadius:
+                                          //             BorderRadius.circular(4)),
+                                          //     child: Text(
+                                          //       "Out of Stock",
+                                          //       style: AppTextStyle.font10bold,
+                                          //     ),
+                                          //   ),
+                                          // )
+                                        ],
+                                      ),
                                     ),
+
+                                    //  GridItem(
+                                    //   productCount: productCount,
+                                    //   b2bStoreBloc: _b2bStoreBloc,
+                                    //   products: product,
+                                    //   cartModel:  _b2bStoreHomePage?.cartData.cart,
+
+                                    //   isSelected: _b2bStoreBloc.favIds.any(
+                                    //       (e) => e.containsKey(product.id)),
+                                    //   productIdforWishList: _b2bStoreBloc.favIds
+                                    //           .any((e) =>
+                                    //               e.containsKey(product.id))
+                                    //       ? _b2bStoreBloc.favIds
+                                    //           .firstWhere((e) =>
+                                    //               e.entries.first.key ==
+                                    //               product.id)
+                                    //           .entries
+                                    //           .first
+                                    //           .value
+                                    //       : "",
+                                    //   // imageUrl: productCollections.products![index].thumbnail ?? '',
+                                    // ),
                                   );
                                 },
                               ),
+
                               SizedBox(
                                 height: 5.h,
                               ),
@@ -402,155 +1103,6 @@ class XTabButton extends StatelessWidget {
   }
 }
 
-class LandingProducts extends StatelessWidget {
-  final VoidCallback? onTap;
-  TopBrands topBrands;
-  final List<Map<String, String>> favIds;
-  ProductCollections productCollections;
-
-  LandingProducts(
-      {super.key,
-      required this.topBrands,
-      required this.productCollections,
-      this.onTap,
-      this.favIds = const []});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.themeBackground,
-      padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 20.w),
-      child: Column(
-        spacing: 10.h,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                "Top Brands",
-                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
-              ),
-              const Spacer(),
-              const SeeMoreButton()
-            ],
-          ),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 1.0,
-            ),
-            itemCount: topBrands.collections!.length > 6
-                ? 6
-                : topBrands.collections!.length, //.length,
-            itemBuilder: (context, index) {
-              return BrandsGrid(
-                imageUrl: topBrands.collections![index].metadata?.image ?? '',
-              );
-            },
-          ),
-          Row(
-            children: [
-              Text(
-                "Collections",
-                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
-              ),
-              const Spacer(),
-              SeeMoreButton(
-                onTap: onTap,
-              )
-            ],
-          ),
-
-          //product collections
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 0.6,
-            ),
-            itemCount: productCollections.products.length > 8
-                ? 8
-                : productCollections.products.length,
-            itemBuilder: (context, index) {
-              final product = productCollections.products[index];
-              return GestureDetector(
-                onTap: () async {
-                  final result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProductDetailsScreen(
-                        productData: product,
-                        isSelected:
-                            favIds.any((e) => e.containsKey(product.id)),
-                        productIdforWishList: favIds
-                                .any((e) => e.containsKey(product.id))
-                            ? favIds
-                                .firstWhere(
-                                    (e) => e.entries.first.key == product.id)
-                                .entries
-                                .first
-                                .value
-                            : "",
-                      ),
-                    ),
-                  );
-                  if (result != null && result == 'refresh') {
-                    print(
-                        'Returned from Page B with refresh signal (or physical back).');
-                    // _initializeData(); // Re-initialize or refresh data
-                  } else {
-                    print(
-                        'Returned from Page B without refresh signal or cancelled.');
-                  }
-                },
-                child: GridItem(
-                  products: product,
-                  isSelected: favIds.any((e) => e.containsKey(product.id)),
-                  productIdforWishList: favIds
-                          .any((e) => e.containsKey(product.id))
-                      ? favIds
-                          .firstWhere((e) => e.entries.first.key == product.id)
-                          .entries
-                          .first
-                          .value
-                      : "",
-                  // imageUrl: productCollections.products![index].thumbnail ?? '',
-                ),
-              );
-            },
-          ),
-          SizedBox(
-            height: 5.h,
-          ),
-          Text(
-            "New in Store",
-            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(
-            height: 130.h,
-            child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (c, i) => ClipRRect(
-                    borderRadius: BorderRadius.circular(25.r),
-                    child: Image.asset(AppImages.bTemplate)),
-                separatorBuilder: (c, i) => const SizedBox(
-                      width: 10,
-                    ),
-                itemCount: 4),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class BrandsGrid extends StatelessWidget {
   const BrandsGrid({super.key, required this.imageUrl});
   final String imageUrl;
@@ -583,118 +1135,6 @@ class BrandsGrid extends StatelessWidget {
                 fit: BoxFit.fill,
               ),
       ),
-    );
-  }
-}
-
-class GridItem extends StatelessWidget {
-  final Product products;
-  // final String imageUrl;
-  final String productIdforWishList;
-  final bool isSelected;
-  final VoidCallback? onTap;
-  const GridItem(
-      {super.key,
-      required this.products,
-      this.isSelected = false,
-      this.onTap,
-      this.productIdforWishList = ''
-      // required this.imageUrl,
-      });
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 10.w),
-          decoration: BoxDecoration(
-              color: AppColors.themeBackground,
-              borderRadius: BorderRadius.circular(25.r),
-              boxShadow: const [
-                BoxShadow(
-                  color: AppColors.greyShadowColor,
-                  blurRadius: 5.0,
-                  spreadRadius: 0.5,
-                  offset: Offset(0, 2),
-                ),
-                BoxShadow(
-                  color: AppColors.greyShadowColor,
-                  blurRadius: 5.0,
-                  spreadRadius: 0.5,
-                  offset: Offset(0, -1),
-                ),
-              ]),
-          child: Column(
-            spacing: 2.h,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(25.r)),
-                child: SizedBox(
-                  height: 165.h,
-                  width: double.infinity,
-                  child: Image.network(
-                    products.thumbnail ?? '',
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-              Text(
-                products.title ?? "",
-                style:
-                    TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.bold),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              Text(
-                products.subtitle ?? "",
-                style: TextStyle(
-                  fontSize: 8.sp,
-                  color: AppColors.textgreyColor,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Row(
-                children: List.generate(
-                  5,
-                  (i) => Container(
-                      margin: EdgeInsets.only(right: 2.w),
-                      height: 10.h,
-                      width: 10.w,
-                      child: Image.asset(AppImages.stars)),
-                ),
-              ),
-              Row(
-                children: [
-                  Text(
-                    "Rs. ${products.variants!.last.calculatedPrice!.calculatedAmount.toString()}",
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Spacer(),
-                  const AddToCartButton()
-                ],
-              )
-            ],
-          ),
-        ),
-        Positioned(
-          top: 20,
-          right: 20,
-          child: InkWell(
-              onTap: onTap,
-              child: Icon(
-                isSelected
-                    ? Icons.favorite_rounded
-                    : Icons.favorite_border_rounded,
-                color: isSelected ? Colors.pink : null,
-              )),
-        ),
-      ],
     );
   }
 }
@@ -788,106 +1228,29 @@ class SeeMoreButton extends StatelessWidget {
   }
 }
 
-class CategoriesSection extends StatelessWidget {
-  ProductCategory productCategory;
-  CategoriesSection({
-    super.key,
-    required this.productCategory,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    logger.w(productCategory.productCategories);
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-      decoration: const BoxDecoration(
-        color: AppColors.containerTabColor,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Text(
-            'Categories',
-            style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 10.h),
-          SizedBox(
-            height: 100.h,
-            child: ListView.separated(
-              itemCount: productCategory.productCategories != null
-                  ? productCategory.productCategories!.length
-                  : 0,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                final category = Category(
-                  name: productCategory.productCategories?[index].name ?? '',
-                  imageUrl: productCategory
-                          .productCategories?[index].metadata?.image ??
-                      '',
-                  color: Color(int.tryParse(
-                          "0xFF${productCategory.productCategories?[index].metadata?.backgroundColor}") ??
-                      00000),
-                );
-                return Column(
-                  children: [
-                    CircleAvatar(
-                      radius: 36.5.r,
-                      backgroundColor: category.color,
-                      child: Center(
-                        child: category.imageUrl.isEmptyOrNull
-                            ? Image.asset(
-                                AppImages.woloologo,
-                                width: 40.w,
-                                height: 40.h,
-                              )
-                            : Image.network(
-                                category.imageUrl,
-                                width: 40.w,
-                                height: 40.h,
-                              ),
-                      ),
-                    ),
-                    SizedBox(height: 10.h),
-                    Text(
-                      category.name,
-                      style: TextStyle(
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                );
-              },
-              separatorBuilder: (context, index) {
-                return SizedBox(
-                  width: 10.w,
-                );
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
 class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const EComAppbar(
-      {super.key,
-      this.isAll = false,
-      this.textFieldHintText = 'Search Products',
-      this.cartValue,
-      this.productMode = ProductMode.productDetails});
+  const EComAppbar({
+    super.key,
+    this.isAll = false,
+    this.textFieldHintText = 'Search Products',
+    this.cartValue,
+    this.productMode = ProductMode.productDetails,
+    this.onTap,
+    this.onChanged,
+    this.controller,
+    this.onCartTap,
+    this.focus,
+  });
   final ProductMode productMode;
 
   final String textFieldHintText;
   final bool isAll;
-
+  final VoidCallback? onTap;
+  final VoidCallback? onCartTap;
   final int? cartValue;
+  final Function(String)? onChanged;
+  final TextEditingController? controller;
+  final FocusNode? focus;
   @override
   Size get preferredSize => const Size.fromHeight(130);
 
@@ -897,36 +1260,51 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false, // Remove default back button
       backgroundColor: AppColors.themeBackground,
       actions: [
-        cartValue != 0
-            ? Badge(
-                label: Text(cartValue.toString()),
-                child: CircleAvatar(
-                  backgroundColor: AppColors.greyIcon,
-                  child: IconButton(
-                    icon: ImageIcon(AssetImage(AppImages.bag)),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const CartScreen()));
-                    },
-                  ),
-                ),
-              )
-            : SizedBox(),
-        SizedBox(width: 10.w),
+        Container(
+          decoration: BoxDecoration(
+              color: AppColors.lightCyanColor,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: const [
+                BoxShadow(
+                    offset: Offset(2, 3),
+                    color: Color.fromARGB(255, 230, 228, 228),
+                    spreadRadius: 2,
+                    blurRadius: 10),
+              ]),
+          child: IconButton(
+            icon: const Icon(Icons.person_outlined),
+            onPressed: () {
+              // refreshCart(context);
+              //  TODO:Add Profile
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Clientprofile(),
+                  ));
+            },
+          ),
+        ),
+        const SizedBox(
+          width: 10,
+        )
       ],
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Home',
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
+          ValueListenableBuilder<Addresses>(
+              valueListenable: selectedAddress,
+              builder: (context, value, child) {
+                return Text(
+                  value.addressName.isEmptyOrNull
+                      ? "Select Address"
+                      : value.addressName!,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                );
+              }),
           InkWell(
             onTap: () => showModalBottomSheet(
               isScrollControlled: true,
@@ -943,7 +1321,8 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
             ),
             child: Row(
               children: [
-                ValueListenableBuilder<Addresses>(
+                Expanded(
+                  child: ValueListenableBuilder<Addresses>(
                     valueListenable: selectedAddress,
                     builder: (context, value, child) {
                       return Text(
@@ -954,8 +1333,12 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                           fontSize: 12.sp,
                           color: Colors.grey,
                         ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       );
-                    }),
+                    },
+                  ),
+                ),
                 SizedBox(width: 5.w),
                 Container(
                   decoration: BoxDecoration(
@@ -974,9 +1357,12 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(65),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
+          padding: EdgeInsets.symmetric(vertical: 5.h),
           child: Row(
             children: [
+              const SizedBox(
+                width: 10,
+              ),
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
@@ -996,6 +1382,9 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                         ),
                       ]),
                   child: TextField(
+                    onTap: onTap,
+                    focusNode: focus,
+                    controller: controller,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: AppColors.themeBackground,
@@ -1006,9 +1395,53 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                         borderSide: BorderSide.none,
                       ),
                     ),
+                    onChanged: onChanged,
                   ),
                 ),
               ),
+              const SizedBox(
+                width: 10,
+              ),
+              cartValue != 0
+                  ? Badge(
+                      label: Text(cartValue.toString()),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: const [
+                              BoxShadow(
+                                  offset: Offset(2, 3),
+                                  color: Color.fromARGB(255, 230, 228, 228),
+                                  spreadRadius: 2,
+                                  blurRadius: 10),
+                            ]),
+                        child: IconButton(
+                          icon: ImageIcon(AssetImage(AppImages.bag)),
+                          onPressed: onCartTap,
+                        ),
+                      ),
+                    )
+                  : Badge(
+                      label: const Text("0"),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: const [
+                              BoxShadow(
+                                  offset: Offset(2, 3),
+                                  color: Color.fromARGB(255, 230, 228, 228),
+                                  spreadRadius: 2,
+                                  blurRadius: 10),
+                            ]),
+                        child: IconButton(
+                          icon: ImageIcon(AssetImage(AppImages.bag)),
+                          onPressed: onCartTap,
+                        ),
+                      ),
+                    ),
+              SizedBox(width: 10.w),
               if (isAll) ...[
                 SizedBox(
                   width: 10.w,
@@ -1049,4 +1482,14 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
       ),
     );
   }
+
+  // void refreshCart(context) async {
+  //   final value = await Navigator.push(
+  //       context, MaterialPageRoute(builder: (_) => const CartScreen()));
+  //   if (value != null && value == 'refresh') {
+  //     if (onTap != null) {
+  //       onTap!();
+  //     }
+  //   }
+  // }
 }

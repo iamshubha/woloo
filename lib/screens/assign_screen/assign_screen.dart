@@ -99,7 +99,7 @@ class _AssignScreenState extends State<AssignScreen> {
           return  Padding(
             padding:  EdgeInsets.symmetric( horizontal: 20.w ),
             child: SingleChildScrollView(
-              physics: const NeverScrollableScrollPhysics(),
+            
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 // mainAxisAlignment: MainAxisAlignment.s,
@@ -231,7 +231,7 @@ class _AssignScreenState extends State<AssignScreen> {
                           else{
 
                            return ListView.builder(
-                                physics: const AlwaysScrollableScrollPhysics(),
+                                physics: const NeverScrollableScrollPhysics(),
                                 itemCount: janitorList.first.data!.length,
                                 scrollDirection: Axis.vertical,
                                 shrinkWrap: true,

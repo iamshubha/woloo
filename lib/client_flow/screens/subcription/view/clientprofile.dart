@@ -21,6 +21,8 @@ import '../../login/view/login_as.dart';
 import '../bloc/subscription_bloc.dart';
 import '../bloc/subscription_event.dart';
 
+
+
 class Clientprofile extends StatefulWidget {
   const Clientprofile({super.key});
 
@@ -57,7 +59,9 @@ class _ClientprofileState extends State<Clientprofile> {
   Widget build(BuildContext context) {
     return   Scaffold(
       backgroundColor: AppColors.white,
-      appBar: AppBar(),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric( horizontal: 16),
          
@@ -69,7 +73,7 @@ class _ClientprofileState extends State<Clientprofile> {
               bloc: subcriptionBloc,
               listener: (context, state) {
                  print("dssa $state");
-                          if ( state is SubscriptionLoading  ){
+              if ( state is SubscriptionLoading  ){
 
                  EasyLoading.show(status: state.message);
                }
@@ -88,10 +92,11 @@ class _ClientprofileState extends State<Clientprofile> {
                  // gender = state.tasklist;
 
                }
+               
                if(state is SubscriptionError  ){
 
                  EasyLoading.dismiss();
-                 EasyLoading.showError( state.error.message);
+                 EasyLoading.showError( state.error);
 
                }
               },
@@ -190,6 +195,20 @@ class _ClientprofileState extends State<Clientprofile> {
                 
                 },
                 child: const Custombutton(text: "Log out", width: 360)),
+                  const SizedBox(
+               height: 40,
+             ),
+
+                 GestureDetector(
+                onTap: ()async {
+                  // status: MyJanitorProfileScreenConstants.LOGGING_OUT_TOAST
+                  //     .tr());
+                  showDeleteUserDialog(context);
+                
+                },
+                child: const Custombutton(
+                   
+                  text: "Delete User", width: 360)),
           ],
         ),
       ),
@@ -262,7 +281,76 @@ class _ClientprofileState extends State<Clientprofile> {
       content:  SizedBox(
         height: 80,
         child: Center(
+          
           child: Text("Are you sure you want to log out?",
+          textAlign: TextAlign.center,
+          style: AppTextStyle.font15.copyWith(
+            color: AppColors.black,
+            fontWeight: FontWeight.bold
+          ),
+          ),
+        ),
+      ),
+      actionsAlignment: MainAxisAlignment.spaceEvenly,
+      actions: [
+         GestureDetector(
+           onTap: ()async {
+                 
+                 Navigator.of(context).pop();
+           
+             
+           },
+          child: Custombutton(
+            color: AppColors.white,
+            text: "No", width: 100.w)),
+    
+    
+        GestureDetector(
+           onTap: ()async {
+                    var storage = GetIt.instance<GlobalStorage>();
+                  storage.removeToken();
+                  storage.removeLocation();
+                  storage.removeTime();
+                  storage.removeClientId();
+                  storage.removeClientToken();
+                  await Future.delayed(const Duration(seconds: 3));
+                  EasyLoading.dismiss();
+                  EasyLoading.showToast(MyJanitorProfileScreenConstants
+                      .LOG_OUT_SUCCESS_TOAST
+                      .tr());
+                  if (!context.mounted) return;
+                  Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                  builder: (context) => const LoginAs()),
+                  (route) => false,
+                  );
+             
+           },
+          child: Custombutton(text: "Yes", width: 100.w))
+       
+      ],
+    ),
+  );
+}
+
+
+   void showDeleteUserDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      
+      // contentPadding: EdgeInsets.all(30),
+          shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(60),
+       ),
+      backgroundColor: AppColors.white,
+      // title: const Text("Logout"),
+      content:  SizedBox(
+        height: 80,
+        child: Center(
+          child: Text("Are you sure you want to delete this user?",
+           textAlign: TextAlign.center,
           style: AppTextStyle.font15.copyWith(
             color: AppColors.black,
             fontWeight: FontWeight.bold

@@ -43,12 +43,12 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
             EasyLoading.show(status: state.message);
           }
           if (state is OrderDetailsSuccess) {
+            EasyLoading.dismiss();
             setState(() {
               orderDetailsData = state.orderDetailsData;
               isLoading = false;
-              print(state.orderDetailsData.orderSets.first);
+              // print(state.orderDetailsData.orderSets.first);
             });
-            EasyLoading.dismiss();
           }
           if (state is OrderDetailsError) {
             EasyLoading.dismiss();
@@ -69,64 +69,89 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
                         height: 10,
                       ),
                       Expanded(
-                          child: ListView.separated(
-                        itemCount: orderDetailsData!.orderSets.length,
-                        itemBuilder: (c, i) => XDecoratedBox(
-                            child: Column(
-                          spacing: 20,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(orderDetailsData!.orderSets[i].id.toString(),
-                                style: AppTextStyle.font14bold),
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
-                              spacing: 10,
-                              children: List.generate(
-                                  orderDetailsData!.orderSets[i].orders.length,
-                                  (j) {
-                                final orderSet = orderDetailsData!.orderSets[i];
-                                return OrderItemWithReview(
-                                  orderSet: orderSet,
-                                  orderDetails: orderDetailsData!
-                                      .orderSets[i].orders[0].items[j],
-                                  onChanged: (value) {
-                                    logger.w("$value");
+                          child: orderDetailsData!.orderSets.isEmpty
+                              ? Center(
+                                  child: Text(
+                                  "No orders found. Start shopping now!",
+                                  style: AppTextStyle.font14bold,
+                                ))
+                              : ListView.separated(
+                                  itemCount: orderDetailsData!.orderSets.length,
+                                  itemBuilder: (c, i) => XDecoratedBox(
+                                      child: Column(
+                                    spacing: 20,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                          orderDetailsData!.orderSets[i].id
+                                              .toString(),
+                                          style: AppTextStyle.font14bold),
+                                      Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        spacing: 10,
+                                        children: List.generate(
+                                            orderDetailsData!.orderSets[i]
+                                                    .orders.isNotEmpty
+                                                ? orderDetailsData!.orderSets[i]
+                                                    .orders[0].items.length
+                                                : 0, (j) {
+                                          final orderSet =
+                                              orderDetailsData!.orderSets[i];
+                                          if (orderSet.orders.isEmpty ||
+                                              orderSet
+                                                  .orders[0].items.isEmpty) {
+                                            return Container(); // Return empty container if no items
+                                          }
+                                          return OrderItemWithReview(
+                                            orderSet: orderSet,
+                                            orderDetails: orderDetailsData!
+                                                .orderSets[i]
+                                                .orders[0]
+                                                .items[j],
+                                            onChanged: (value) {
+                                              logger.w("$value");
 
-                                    showModalBottomSheet(
-                                        context: context,
-                                        isScrollControlled: true,
-                                        builder: (c) {
-                                          return ReviewBottomSheet(
-                                              onSubmit: (reviewGiven) {
-                                            _b2bStoreBloc.add(ReviewEvent(
-                                              product_id: orderDetailsData!
-                                                      .orderSets[i]
-                                                      .orders[0]
-                                                      .items[j]
-                                                      .productId ??
-                                                  "",
-                                              rating: value.toInt(),
-                                              comment: reviewGiven,
-                                              line_item_id: orderDetailsData!
-                                                  .orderSets[i]
-                                                  .orders[0]
-                                                  .items[j]
-                                                  .detail!
-                                                  .itemId
-                                                  .toString(),
-                                            ));
-                                          });
-                                        });
-                                  },
-                                );
-                              }),
-                            )
-                          ],
-                        )),
-                        separatorBuilder: (c, i) => const SizedBox(
-                          height: 10,
-                        ),
-                      )),
+                                              showModalBottomSheet(
+                                                  context: context,
+                                                  isScrollControlled: true,
+                                                  builder: (c) {
+                                                    return ReviewBottomSheet(
+                                                        onSubmit:
+                                                            (reviewGiven) {
+                                                      _b2bStoreBloc
+                                                          .add(ReviewEvent(
+                                                        product_id:
+                                                            orderDetailsData!
+                                                                    .orderSets[
+                                                                        i]
+                                                                    .orders[0]
+                                                                    .items[j]
+                                                                    .productId ??
+                                                                "",
+                                                        rating: value.toInt(),
+                                                        comment: reviewGiven,
+                                                        line_item_id:
+                                                            orderDetailsData!
+                                                                .orderSets[i]
+                                                                .orders[0]
+                                                                .items[j]
+                                                                .detail!
+                                                                .itemId
+                                                                .toString(),
+                                                      ));
+                                                    });
+                                                  });
+                                            },
+                                          );
+                                        }),
+                                      )
+                                    ],
+                                  )),
+                                  separatorBuilder: (c, i) => const SizedBox(
+                                    height: 10,
+                                  ),
+                                )),
                     ],
                   ),
                 )

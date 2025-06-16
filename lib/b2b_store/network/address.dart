@@ -59,7 +59,7 @@ class AddressService {
   }) async {
     try {
       final Map<String, dynamic> data = body.toJson();
-      logger.w(data);
+      //logger.w(data);
       var response = await dio.post(
         APIConstants.CREATE_ADDRESS,
         data: data,
@@ -87,7 +87,7 @@ class AddressService {
   }) async {
     try {
       final data = body.toJson();
-      logger.w(data);
+      //logger.w(data);
       var response = await dio.post(
         APIConstants.UPDATE_ADDRESS + addressId,
         data: data,
@@ -95,7 +95,7 @@ class AddressService {
           headers: {
             'x-publishable-api-key':
                 'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/json',
             'Authorization': 'Bearer $token'
           },
         ),
@@ -111,7 +111,7 @@ class AddressService {
   Future<AddressesData> getAllAddress({
     required String token,
   }) async {
-    // logger.w("Token: $token");
+    // //logger.w("Token: $token");
     try {
       var response = await dio.get(
         APIConstants.GET_ADDRESS + "?fields=+address_name",
@@ -124,7 +124,7 @@ class AddressService {
           },
         ),
       );
-      logger.w(response);
+
       return AddressesData.fromJson(response);
     } catch (e) {
       debugPrint("Error in IOT service: $e");
@@ -168,7 +168,7 @@ class AddressService {
     required String cartId,
   }) async {
     try {
-      logger.w("Address: ${shippingAddress.toFieldData()}");
+      //logger.w("Address: ${shippingAddress.toFieldData()}");
       var response = await dio.post(
         APIConstants.SET_BILLING_ADDRESS + cartId,
         data: {
@@ -184,7 +184,7 @@ class AddressService {
           },
         ),
       );
-      logger.w("Response: $response");
+
       return response;
     } catch (e) {
       debugPrint("Error in IOT service: $e");

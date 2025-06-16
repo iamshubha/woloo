@@ -10,7 +10,9 @@ import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
-
+import '../../client_flow/screens/dashbaord/bloc/dashboard_bloc.dart';
+import '../../client_flow/screens/dashbaord/data/model/facility_model.dart';
+import '../../client_flow/widgets/chart.dart';
 import '../model/iotdata_model.dart';
 import '../widgets/ai_summary.dart';
 import '../widgets/air_quality_chart.dart';
@@ -19,8 +21,27 @@ import 'bloc/iot_bloc.dart';
 import 'bloc/iot_event.dart';
 import 'bloc/iot_state.dart';
 
+
+
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
+  final int? facilityId;
+  final String? plan;
+  final String? status;
+  final int? tabIndex;
+  final TabController? tabController;
+  final List<Facility>? facility;
+  final ClientDashBoardBloc? clientDashBoardBloc;
+  
+  const DashboardScreen({super.key, 
+  this.facility, 
+  this.clientDashBoardBloc,
+  this.facilityId,
+  this.plan,
+  this.status,
+  this.tabController,
+  this.tabIndex
+  
+  });
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -33,6 +54,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   // bool _isLoading = false;
   final String _error = '';
   String _timeFilter = 'ALL';
+
 
   @override
   void initState() {
@@ -56,31 +78,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print("DashboardData: $_dashboardData");
-        },
-        child: const Icon(Icons.shopping_cart),
-      ),
-      appBar: AppBar(
-        leading: CustomImageProvider(
-          image: AppImages.dashlogo,
-        ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          // mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              "Hello clientName",
-              style: AppTextStyle.font14bold,
-            ),
-            Text(
-              DashboardConst.currentDateTime,
-              style: AppTextStyle.font12,
-            )
-          ],
-        ),
-      ),
       body: SafeArea(
         child: BlocConsumer(
           bloc: iotBloc,
@@ -119,35 +116,36 @@ class _DashboardScreenState extends State<DashboardScreen> {
             }
 
             return SingleChildScrollView(
+              // physics: NeverScrollableScrollPhysics(),
               padding: const EdgeInsets.all(14.0),
               child: Column(
                 // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  RichText(
-                    text: const TextSpan(
-                      style: TextStyle(
-                          color: AppColors.textgreyColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700),
-                      children: [
-                        TextSpan(
-                          text: 'Your Trial shall end in ',
-                        ),
-                        TextSpan(
-                          text: '3 Days. ',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(
-                          text: 'Renew it Now',
-                          style: TextStyle(
-                            color: AppColors.textgreyColor,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // RichText(
+                  //   text: const TextSpan(
+                  //     style: TextStyle(
+                  //         color: AppColors.textgreyColor,
+                  //         fontSize: 14,
+                  //         fontWeight: FontWeight.w700),
+                  //     children: [
+                  //       TextSpan(
+                  //         text: 'Your Trial shall end in ',
+                  //       ),
+                  //       TextSpan(
+                  //         text: '3 Days. ',
+                  //         style: TextStyle(fontWeight: FontWeight.bold),
+                  //       ),
+                  //       TextSpan(
+                  //         text: 'Renew it Now',
+                  //         style: TextStyle(
+                  //           color: AppColors.textgreyColor,
+                  //           fontWeight: FontWeight.bold,
+                  //           decoration: TextDecoration.underline,
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -196,37 +194,49 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   const SizedBox(height: 16),
                   AiSummaryCard(summary: data.summary.avgppmTimeRangeInsights),
                   const SizedBox(height: 16),
+                               Charts(
+                                    facilityId: widget.facilityId,
+                                    plan: widget.plan,
+                                    status: widget.plan,
+                                    tabIndex:  widget.tabIndex ,
+                                    facility: widget.facility,
+                                    clientDashBoardBloc:
+                                    widget.clientDashBoardBloc,
+                                  ),
+                                    const SizedBox(height: 16,),
                   AlertAndNotificationWidget(data: data),
                   const SizedBox(height: 16),
                   AirQuality(data: data),
+               
                   const SizedBox(height: 16),
                   const Facilities(),
                   const SizedBox(height: 16),
                   AiSummaryCard(summary: data.summary.avgppmTimeRangeInsights),
+                    // const SizedBox(height: 60),
                 ],
               ),
             );
           },
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   currentIndex: _selectedIndex,
+      //   onTap: (index) {
+      //     setState(() {
+      //       _selectedIndex = index;
+      //     });
+      //   },
+      //   items: const [
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.home),
+      //       label: 'Home',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.person),
+      //       label: 'Profile',
+      //     ),
+      //   ],
+      // ),
     );
   }
 }
@@ -253,7 +263,7 @@ class AirQuality extends StatelessWidget {
                     Text(
                       "Air Quality Level",
                       style: TextStyle(
-                          fontSize: 14.sp, fontWeight: FontWeight.bold),
+                          fontSize: 12.sp, fontWeight: FontWeight.bold),
                     ),
                     const Spacer(),
                     const ForwardButton()
@@ -364,7 +374,7 @@ class Facilities extends StatelessWidget {
                 separatorBuilder: (context, index) {
                   return const Divider();
                 },
-                itemCount: 3,
+                itemCount: 1,
                 itemBuilder: (c, i) {
                   return Container(
                     child: Row(

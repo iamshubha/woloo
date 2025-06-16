@@ -108,7 +108,7 @@ class _ChartPieState extends State<ChartPie> {
 
       // PieData(value: 0.45, color: Colors.lightGreen),
     ];
-           debugPrint( "sime ${MediaQuery.of(context).size.height}");
+           debugPrint( "sime ${MediaQuery.of(context).size.width}");
     return Column(
         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         // crossAxisAlignment: CrossAxisAlignment.center,
@@ -160,9 +160,9 @@ class _ChartPieState extends State<ChartPie> {
                              // ),
 
 
-                             Text(widget.complatedPercentage!,
+                             Text("${widget.complatedPercentage!}",
                              style:   TextStyle(
-                               fontSize:  MediaQuery.of(context).size.width < 370 ? 80.sp :100,
+                               fontSize:  MediaQuery.of(context).size.width < 370 ? 80.sp :80.sp,
                                fontWeight: FontWeight.bold
                              ),
                                textAlign: TextAlign.center,
@@ -260,7 +260,7 @@ class _ChartPieState extends State<ChartPie> {
             children: [
                      Indicator(
                  color:  const Color(0xff717171) ,
-                 text: 'Onging Task',
+                 text: 'On Going  Task',
                  taskCount: widget.ongoingTask,
            
                  isSquare: true,

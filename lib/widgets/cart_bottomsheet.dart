@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
@@ -13,7 +14,6 @@ import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
-import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/boxes/cart_item.dart';
 import 'package:woloo_smart_hygiene/widgets/review_order_bottomsheet.dart';
 
@@ -74,7 +74,7 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
         builder: (context, snapshot) {
           return !_isDataLoaded
               ? Container(
-                  child: Text("data nay"),
+                  child: const Text("data nay"),
                 )
               : Container(
                   height: MediaQuery.of(context).size.height * 0.6,
@@ -204,6 +204,7 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                                       ],
                                     ),
                                   ),
+
                                   const Divider(),
                                   const ApplyPromo(),
                                   const Divider(),
@@ -263,6 +264,10 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
   }
 
   Addresses? getAddress() {
+    final addressJson = box.read("address");
+    if (addressJson == null) {
+      return null; // or return a default address
+    }
     address = Addresses.fromJson(jsonDecode(box.read("address")));
     // setState(() {});
     return address;

@@ -62,6 +62,10 @@ class LoginPageState extends State<LoginScreen> {
       },
       child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
+        appBar: AppBar(
+          leading: widget.type == null ? BackButton() : SizedBox(),
+               backgroundColor: AppColors.backgroundColor,
+        ),
         body: SingleChildScrollView(
           child:
           Form(
@@ -70,7 +74,7 @@ class LoginPageState extends State<LoginScreen> {
               // mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: 190.h,
+                  height: 170.h,
                 ),
                 Center(
                   child: CustomImageProvider(

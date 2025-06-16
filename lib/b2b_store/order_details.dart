@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timelines_plus/timelines_plus.dart';
+import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
@@ -11,9 +12,8 @@ import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
+import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
-import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
-import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
 
 class OrderScreen extends StatefulWidget {
   OrderSet orderSet;
@@ -65,7 +65,7 @@ class _OrderScreenState extends State<OrderScreen> {
         builder: (context, snapshot) {
           return Scaffold(
             appBar: const BackAppBar(),
-            bottomNavigationBar: const XBottomBar(),
+            // bottomNavigationBar: const XBottomBar(),
             body: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
               child: Column(
@@ -74,7 +74,7 @@ class _OrderScreenState extends State<OrderScreen> {
                 children: [
                   CartHeader(
                       imgPath: AppImages.list,
-                      title: "Order Details ",
+                      title: "Order Details",
                       subtitle:
                           "Check or modify the details of your order here"),
                   Expanded(
@@ -82,8 +82,21 @@ class _OrderScreenState extends State<OrderScreen> {
                         itemCount: widget.orderSet.orders.first.items.length,
                         itemBuilder: (c, i) {
                           final order = widget.orderSet.orders.first;
+
                           final item = order.items[i];
+                          final orderShipmentAddress = order
+                              .paymentCollections
+                              ?.first
+                              .payments
+                              ?.first
+                              .data
+                              ?.notes
+                              ?.customer
+                              ?.addresses
+                              ?.first;
                           return OrderStatusCard(
+                            orderShipmentAddress: orderShipmentAddress,
+                            id: item.id ?? "",
                             timeLineList: timeLineList,
                             url: item.thumbnail ?? "",
                             productLabel: item.title ?? "",
@@ -93,15 +106,15 @@ class _OrderScreenState extends State<OrderScreen> {
                         }),
                   ),
                   // const Spacer()
-                  const Text("Other items in the order"),
-                  const Divider(),
-                  const OtherItemOrder(), // Place Other Item If necessary place a list
+                  // const Text("Other items in the order"),
+                  // const Divider(),
+                  // const OtherItemOrder(), // Place Other Item If necessary place a list
 
-                  LongLabeledButton(
-                    onTap: () {},
-                    label: "Help & Support",
-                    color: AppColors.greyColorFields,
-                  ),
+                  // LongLabeledButton(
+                  //   onTap: () {},
+                  //   label: "Help & Support",
+                  //   color: AppColors.greyColorFields,
+                  // ),
                 ],
               ),
             ),
@@ -353,8 +366,12 @@ class OrderStatusCard extends StatelessWidget {
       required this.url,
       required this.productLabel,
       required this.subTitle,
-      required this.price});
+      required this.price,
+      required this.id,
+      required this.orderShipmentAddress});
+  final Address? orderShipmentAddress;
   final List<String> timeLineList;
+  final String id;
   final String url;
   final String productLabel;
   final String subTitle;
@@ -379,6 +396,8 @@ class OrderStatusCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text("Order ID: $id", style: AppTextStyle.font12bold),
+          SizedBox(height: 8.h),
           // Product Details
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -437,7 +456,7 @@ class OrderStatusCard extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
           SizedBox(
-            height: 60.h,
+            height: 80.h,
             child: Timeline.builder(
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (c, i) {
@@ -445,9 +464,15 @@ class OrderStatusCard extends StatelessWidget {
                     nodePosition: 0,
                     contents: SizedBox(
                       width: 150,
-                      child: Text(
-                        timeLineList[i],
-                        textAlign: TextAlign.center,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            timeLineList[i],
+                            textAlign: TextAlign.center,
+                          ),
+                          const Text("~time ") // TODO:Replace with actual time
+                        ],
                       ),
                     ),
                     mainAxisExtent: 80,
@@ -486,20 +511,22 @@ class OrderStatusCard extends StatelessWidget {
                 // Handle cancel action
               },
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 50.w, vertical: 8.h),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Text(
-                  "Cancel",
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 50.w, vertical: 8.h),
+                  // decoration: BoxDecoration(
+                  //   color: Colors.grey[300],
+                  //   borderRadius: BorderRadius.circular(8.r),
+                  // ),
+                  child: Text("${orderShipmentAddress?.address1}")
+                  // Text(
+                  //   "Cancel",
+                  //   style: TextStyle(
+                  //     fontSize: 14.sp,
+                  //     fontWeight: FontWeight.bold,
+                  //     color: Colors.black,
+                  //   ),
+                  // ),
                   ),
-                ),
-              ),
             ),
           ),
         ],

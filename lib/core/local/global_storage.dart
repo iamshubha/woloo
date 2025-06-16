@@ -29,6 +29,10 @@ class GlobalStorage {
    final String _planId = 'planId';
    final String _clientToken = 'clientToken';
    final String _paymentId = 'paymentId';
+   final String _facilityRef = 'facilityRef';
+   final String _onboarding = 'onboarding';
+    final String _password = 'password';
+     final String _email = 'email';
   
   /// Save Token
   void saveToken({required String accessToken}) {
@@ -413,6 +417,61 @@ void saveClientId({required String accessClientId}) {
   }
 
  
+
+  void saveFacilityRef({required String accessFacilityRef}) {
+      
+    if (accessFacilityRef.isEmpty) {
+      throw 'Client Mobile No is empty';
+    }
+    _box.write(_facilityRef, accessFacilityRef);
+  }
+  String getFacilityRef() {
+    String? facilityRef = _box.read(_facilityRef);
+    return facilityRef ?? '';
+  }
+  void removeFacilityRef() {
+    _box.remove(_facilityRef);
+  }
+
+  void saveOnboarding({required bool isOnboard}) {
+    _box.write(_onboarding, isOnboard);
+  }
+  bool isOnboard() {
+    return _box.read(_onboarding) ?? false;
+  }
+  void removeOnboarding() {
+    _box.remove(_onboarding);
+  }
+
+
+  void savePassword({required String password}) {
+     if (password.isEmpty) {
+      throw 'Client Mobile No is empty';
+    }
+    _box.write(_password, password);
+  }
+   String getPassword() {
+    return _box.read(_password);
+  }
+  void removePassword() {
+    _box.remove(_password);
+  }
+
+   void saveEmail({required String email}) {
+     if (email.isEmpty) {
+      throw 'Client Mobile No is empty';
+    }
+    _box.write(_email, email);
+  }
+   String getEmail() {
+    return _box.read(_email) ;
+  }
+  void removeEmail() {
+    _box.remove(_email);
+  }
+
+
+
 
 
 

@@ -20,9 +20,6 @@ import '../../../data/model/tasklist_model.dart';
 import '../add_time_dailog.dart';
 
 class TaskBottomsheet extends StatefulWidget {
-
-  
-     
    const TaskBottomsheet({super.key, 
    
   });
@@ -497,7 +494,9 @@ class _TaskBottomsheetState extends State<TaskBottomsheet> {
               startTime:shiftTime,
               endTime: use12hour,
               isFromExisting: isFromExiting,
-              janitorId: janitor?.id,
+              janitorId: janitor == null ? null : janitor.id,
+              facalityName: "",
+              facilityType: "",
 
               // taskStartTime: taskStartTime,
               // taskEndTime: taskEndTime,

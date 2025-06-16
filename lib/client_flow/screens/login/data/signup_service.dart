@@ -1,10 +1,13 @@
 
 
 import 'package:dio/dio.dart';
+import 'package:flutter/rendering.dart';
 import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
 import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
 
 import '../../dashbaord/model/login_model.dart';
+import 'model/otp_model.dart';
+import 'model/verify_otp_model.dart';
 
 class SignupService {
   final DioClient dio;
@@ -43,16 +46,16 @@ class SignupService {
 
 
   Future<bool> signUp({
-     required String userId,
-    required String mobileNumber,
-  required String name,
-  required String email,
-  required String password,
+  required String userId,
+   String? mobileNumber,
+   String? name,
+   String? email,
+   String? password,
   // required int clientUserId,
   required int clientTypeId,
-  required String address,
-  required String city,
-  required String pincode,
+   String? address,
+   String? city,
+   String? pincode,
     }) async {
     try {
 
@@ -66,13 +69,13 @@ class SignupService {
         APIConstants.CLIENT_SIGNUP,
         data: {
           "client_user_id": userId,
-          "client_name": name,
+          // "client_name": name,
           "client_type_id":clientTypeId,
-          "email":  email,
+          // "email":  email,
           "mobile": mobileNumber,
-          "address": address,
-          "city": city,
-          "pincode":  pincode
+          // "address": address,
+          // "city": city,
+          // "pincode":  pincode
         },
 
       );
@@ -106,5 +109,88 @@ class SignupService {
       rethrow;
     }
   }
+
+
+
+  Future<OtpModel> sendOtp({
+  required String mobileNo,
+
+    }) async {
+    try {
+      var response = await dio.post(
+        APIConstants.SEND_OTP_CLIENT,
+        data: {
+          "mobileNumber":  mobileNo,
+        },
+      );
+
+
+      return OtpModel.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
+
+  Future<VerfiyOtpModel> verifyOtp({
+  required String requestId,
+  required String otp,
+    }) async {
+    try {
+
+      var response = await dio.post(
+        APIConstants.VERIFY_OTP_CLIENT,
+        data: {
+          "request_id": requestId,
+          "otp": otp
+        },
+      );
+      
+      return VerfiyOtpModel.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
+
+
+
+  Future<LoginModel> extendExpiry({
+  required int clientId,
+  required int days,
+  // required int clientUserId,
+
+    }) async {
+    try {
+      var response = await dio.post(
+        APIConstants.EXTEND_EXPIRY,
+        data: {
+             "client_id": clientId,
+             "days": 15
+        },
+      );
+
+
+      return LoginModel.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

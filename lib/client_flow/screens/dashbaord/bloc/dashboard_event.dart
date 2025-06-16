@@ -21,6 +21,8 @@ class ClientSetUpEvent extends DashboardEvent {
   final String? clientId;
   final String? address;
   final String? city;
+  final String? facilityType;
+  final String? mobile;
   // final String? clientId;
 
 const ClientSetUpEvent({
@@ -35,9 +37,11 @@ const ClientSetUpEvent({
     //  this.clientId,
     this.locationId,
     this.clusterId,
+    required this.mobile,
     required this.address,
     required this.city,
     required this.clientId,
+    required this.facilityType
   });
 
   @override
@@ -54,6 +58,7 @@ const ClientSetUpEvent({
     address,
     city,
     clientId,
+    facilityType
   ];
 }
 
@@ -64,6 +69,7 @@ class AddUserEvent extends DashboardEvent {
  final  String mobile;
  final  String? clientId;
  final String? gender;
+ final bool? isSelfAssign;
  final  List<int>? clusterId;
  
 
@@ -71,6 +77,7 @@ class AddUserEvent extends DashboardEvent {
    
              this.clientId,
              this.gender,
+             this.isSelfAssign,
     required this.mobile,
     required this.roleId,
     required this.name,
@@ -172,6 +179,8 @@ class AssignTaskEvent extends DashboardEvent {
    final List<int?> taskIds;
    final String estimatedTime;
    final List<Map<String, String>> taskTimes;
+   final String facilityRef;
+   final String? facilityId;
 
 
   const AssignTaskEvent({
@@ -180,8 +189,9 @@ class AssignTaskEvent extends DashboardEvent {
     required  this.taskIds,
     required  this.estimatedTime,
     required  this.taskTimes,
-    required   this.janitorId
-
+    required   this.janitorId,
+    required   this.facilityRef,
+               this.facilityId
   });
 
   @override
@@ -191,7 +201,8 @@ class AssignTaskEvent extends DashboardEvent {
     taskIds,
     estimatedTime,
     taskTimes,
-    janitorId
+    janitorId,
+    facilityRef
   ];
 }
 
@@ -211,10 +222,37 @@ class SubcriptionEvent extends DashboardEvent {
 
 
 
+class ExpiryEvent extends DashboardEvent {
+  final int clientId;
+  final int  days;
+  const ExpiryEvent({ required this.clientId,  required this.days});
+
+  @override
+  List<Object?> get props => [
+    clientId,
+    days
+    ];
+}
+
+
+
+class PaymentStatusEvent extends DashboardEvent {
+  final String refId;
+  // final int  days;
+  const PaymentStatusEvent({ required this.refId, });
+
+  @override
+  List<Object?> get props => [
+    refId
+    ];
+}
+
+
+
 class GetAllJanitorEvent extends DashboardEvent {
  final int clientId;
   const GetAllJanitorEvent({
-           required  this.clientId,     
+    required  this.clientId,     
   });
 
 
@@ -223,6 +261,24 @@ class GetAllJanitorEvent extends DashboardEvent {
     clientId,
   ];
 }
+
+
+
+class FacilityByJanitorEvent extends DashboardEvent {
+ final int clientId;
+ final int facilityId;
+  const FacilityByJanitorEvent({
+    required  this.clientId,   
+    required this.facilityId  
+  });
+
+
+  @override
+  List<Object?> get props => [
+    clientId,
+  ];
+}
+
 
 
 

@@ -5,8 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_places_flutter/google_places_flutter.dart';
+import 'package:google_places_flutter/model/place_type.dart';
+import 'package:google_places_flutter/model/prediction.dart';
+import 'package:woloo_smart_hygiene/client_flow/utils/client_images.dart';
 
 import '../../../../screens/common_widgets/image_provider.dart';
+import '../../../../screens/common_widgets/leading_button.dart';
 import '../../../../utils/app_color.dart';
 import '../../../../utils/app_constants.dart';
 import '../../../../utils/app_images.dart';
@@ -30,25 +35,40 @@ class _RegisterState extends State<Register> {
 final TextEditingController nameController = TextEditingController();
 final TextEditingController emailController = TextEditingController();
 final TextEditingController mobileController = TextEditingController();
-final TextEditingController addressController = TextEditingController();
-final TextEditingController cityController = TextEditingController();
+// final TextEditingController addressController = TextEditingController();
+// final TextEditingController cityController = TextEditingController();
 final TextEditingController pincodeController = TextEditingController();
 final TextEditingController passwordController = TextEditingController();
 final TextEditingController confirmPasswordController = TextEditingController();
+ TextEditingController  cityController = TextEditingController();
+  TextEditingController  addressController = TextEditingController();
+   FocusNode addressFocusNode = FocusNode();
+    FocusNode cityFocusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
     return   Scaffold(
       backgroundColor: AppColors.backgroundColor,
+         appBar: AppBar(
+        backgroundColor: AppColors.backgroundColor,
+        leadingWidth: 100,
+        leading: const LeadingButton(),
+      ),
       body:    SingleChildScrollView(
         child: 
         Form(
        key: loginFormKey,
           child: Column(
             children: [
-               const SizedBox(
-                height: 50,
-               ),
+      //          AppBar(
+      //   backgroundColor: AppColors.backgroundColor,
+      //   leadingWidth: 100,
+      //   leading: const LeadingButton(),
+      // ),
+             
+              //  const SizedBox(
+              //   height: 10,
+              //  ),
               Padding(
                padding: const EdgeInsets.symmetric( horizontal: 16), 
                 child: Container(
@@ -62,14 +82,14 @@ final TextEditingController confirmPasswordController = TextEditingController();
                   child:  Column(
                     children: [
                             const SizedBox(
-                            height: 20,
+                            height: 0,
                              ),
                 
                         CustomImageProvider(
-                         image: AppImages.woloologo,
-                         width: 178,
-                         height: 153,
-                        //  fit: BoxFit.cover,
+                         image: ClientImages.woloologo,
+                         width: 185,
+                         height: 203,
+                         fit: BoxFit.cover,
                         ),
                           const SizedBox(
                             height: 10,
@@ -113,29 +133,213 @@ final TextEditingController confirmPasswordController = TextEditingController();
                       const SizedBox(
                             height: 10,
                              ),
+                               Padding(
+                                 padding:  EdgeInsets.symmetric(horizontal: 16.w ,vertical: 5.h),
+                                 child: Container(
+                                  // height: 36.h,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2), // Shadow color
+                                      spreadRadius: 1, // Spread effect
+                                      blurRadius: 10, // Blur effect
+                                      offset: const Offset(0, 5), // Bottom shadow
+                                    ),
+                                  ],
+                                                               ),
+                                  child: GooglePlaceAutoCompleteTextField(
+                                    placeType: PlaceType.address,
+                                    focusNode: addressFocusNode,
+                                    textEditingController:addressController,
+                                    googleAPIKey:"AIzaSyCkPmUz4UlRdzcKG9gniW9Qfrgzsjhnb_4",
+                                    inputDecoration:  InputDecoration(
+                                      contentPadding:  const EdgeInsets.symmetric(vertical: 12.0 , horizontal: 5 ),
+                                      hintText: SignUpConstant.address,
+                                        hintStyle: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.w700
+                                          ),
+                                       border: OutlineInputBorder(
+                                       borderRadius: BorderRadius.circular(0),
+                                       borderSide: BorderSide.none,
+                                       ),
+                                       fillColor: AppColors.white,
+                                       filled: true,
+                                      //  enabled: facilitydropdownNames.isNotEmpty ? false :true
+                                      // enabledBorder: InputBorder.none,
+                                    ),
+                                 
+                                    validator: 
+                                    (value, p1) {
+                                 
+                                         setState((){});
+                                        //  print("val $valu");
+                                 
+                                          // FocusManager.instance.primaryFocus?.unfocus();
+                                        if (value == null || value.isEmpty) {
+                                            return "Address is required";
+                                          }
+                                          if (value.length < 5) {
+                                            return "Address must be at least 5 characters";
+                                          }
+                                    }, 
+                                    // debounceTime: 400,
+                                    countries: ["in", "fr"],
+                                    isLatLngRequired: true,
+                                    getPlaceDetailWithLatLng: (Prediction prediction) {
+                                 
+                                 
+                                      print("placeDetails" + prediction.lat.toString());
+                                    },
+                                 
+                                    itemClick: (Prediction prediction) {
+                                      //   loc = prediction;
+                                 
+                                 
+                                      addressController.text = prediction.description ?? "";
+                                      // locationController.selection = TextSelection.fromPosition(
+                                      //     TextPosition(offset: prediction.description?.length ?? 0));
+                                    },
+                                 
+                                    // seperatedBuilder: const Divider(),
+                                    containerHorizontalPadding: 10,
+                                    // OPTIONAL// If you want to customize list view item builder
+                                    itemBuilder: (context, index, Prediction prediction) {
+                                 
+                                      // prediction.id!.isNotEmpty ?
+                                 
+                                        //  facilityFocusNode!.unfocus();
+                                 
+                                 
+                                      return Container(
+                                        color: AppColors.white,
+                                        padding: const EdgeInsets.all(10),
+                                        child: Row(
+                                          children: [
+                                            const Icon(Icons.location_on),
+                                            const SizedBox(
+                                              width: 7,
+                                            ),
+                                            Expanded(child: Text("${prediction.description ?? ""}"))
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                 
+                                    // isCrossBtnShown: facilitydropdownNames.isNotEmpty ? false : true,
+                                 
+                                 
+                                   formSubmitCallback: () {
+                                      print("dgd");
+                                   },
+                                 
+                                    // default 600 ms ,
+                                  ),
+                                                               ),
+                               ),         
           
-                CustomTextField(
-                  controller: addressController,
-                  hintText: SignUpConstant.address,
-                  keyboardType: TextInputType.text,
-                  // maxLength: 10,
-                  validator: 
-                  validateAddress
-                  // prefixIcon: Icons.phone,
-                ), 
+                // CustomTextField(
+                //   controller: addressController,
+                //   hintText: SignUpConstant.address,
+                //   keyboardType: TextInputType.text,
+                //   // maxLength: 10,
+                //   validator: 
+                //   validateAddress
+                //   // prefixIcon: Icons.phone,
+                // ), 
                       const SizedBox(
                             height: 10,
                              ),
           
-                CustomTextField(
-                  controller: cityController,
-                  hintText: SignUpConstant.city,
-                  keyboardType: TextInputType.text,
-                  // maxLength: 10,
-                  validator:
-                 validateCity
-                  // prefixIcon: Icons.phone,
-                ), 
+                               Padding(
+                                 padding:  EdgeInsets.symmetric(horizontal: 16.w ,vertical: 5.h),
+                                 child: Container(
+                                  // height: 36.h,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2), // Shadow color
+                                      spreadRadius: 1, // Spread effect
+                                      blurRadius: 10, // Blur effect
+                                      offset: const Offset(0, 5), // Bottom shadow
+                                    ),
+                                  ],
+                                                               ),
+                                  child: GooglePlaceAutoCompleteTextField(
+                                    placeType: PlaceType.cities,
+                                    focusNode: cityFocusNode,
+                                    textEditingController:cityController,
+                                    googleAPIKey:"AIzaSyCkPmUz4UlRdzcKG9gniW9Qfrgzsjhnb_4",
+                                    inputDecoration:  InputDecoration(
+                                      contentPadding:  const EdgeInsets.symmetric(vertical: 12.0 , horizontal: 5 ),
+                                      hintText: SignUpConstant.city,
+                                        hintStyle: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.w700
+                                          ),
+                                       border: OutlineInputBorder(
+                                       borderRadius: BorderRadius.circular(0),
+                                       borderSide: BorderSide.none,
+                                       ),
+                                       fillColor: AppColors.white,
+                                       filled: true,
+                                  
+                                    ),
+                                 
+                                    validator: 
+                                    (valu, p1) {
+                                 
+                                         setState((){});
+                                         print("val $valu");
+                                 
+                                          // FocusManager.instance.primaryFocus?.unfocus();
+                                       if (valu == null || valu.isEmpty) {
+                                        return "City is required";
+                                           }
+                                    }, 
+                                    // debounceTime: 400,
+                                    countries: ["in", "fr"],
+                                    isLatLngRequired: true,
+                                    getPlaceDetailWithLatLng: (Prediction prediction) {
+                                 
+                                
+                                      print("placeDetails" + prediction.lat.toString());
+                                    },
+                                 
+                                    itemClick: (Prediction prediction) { 
+                                      cityController.text = prediction.description ?? "";
+                                   
+                                    },
+                                 
+                                    // seperatedBuilder: const Divider(),
+                                    containerHorizontalPadding: 10,
+                                    // OPTIONAL// If you want to customize list view item builder
+                                    itemBuilder: (context, index, Prediction prediction) {
+                                      return Container(
+                                        color: AppColors.white,
+                                        padding: const EdgeInsets.all(10),
+                                        child: Row(
+                                          children: [
+                                            const Icon(Icons.location_on),
+                                            const SizedBox(
+                                              width: 7,
+                                            ),
+                                            Expanded(child: Text("${prediction.description ?? ""}"))
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                   formSubmitCallback: () {
+                                      print("dgd");
+                                   },
+               
+                                  ),
+                          ),
+                               ),
                          const SizedBox(
                             height: 10,
                              ),
@@ -163,7 +367,7 @@ final TextEditingController confirmPasswordController = TextEditingController();
                   validatePassword
                   // prefixIcon: Icons.phone,
                 ),
-                              const SizedBox(
+                       const SizedBox(
                             height: 10,
                              ),
           
@@ -227,8 +431,10 @@ final TextEditingController confirmPasswordController = TextEditingController();
                        }
           
                       if (state is SignUpError) {
+
                         EasyLoading.dismiss();
                         EasyLoading.showError(state.error);
+                        
                       }
           
                       // if (state is LoginGetDataSuccess) {
@@ -292,12 +498,12 @@ final TextEditingController confirmPasswordController = TextEditingController();
                         child: Padding(
                           padding: EdgeInsets.symmetric(
                             vertical: 10.h,
-                            horizontal: 20.w,
+                            horizontal: 16.w,
                           ),
                           child:
-                     Custombutton(
+                     const Custombutton(
                       color: AppColors.buttonYellowColor,
-                      text: "Register", width: 300.w),
+                      text: "Register", width: double.infinity ),
                         ),
                       );
                     },
@@ -313,6 +519,9 @@ final TextEditingController confirmPasswordController = TextEditingController();
                               Text("Already a user?",
                                style: AppTextStyle.font14bold,
                               ),
+                            const  SizedBox(
+                                width: 5,
+                              ),
                               GestureDetector(
                                 onTap: () {
                                   Navigator.pop(context);
@@ -327,7 +536,7 @@ final TextEditingController confirmPasswordController = TextEditingController();
                             ],
                           ),
                                const SizedBox(
-                                height: 10,
+                                height: 20,
                                ),
                         
                            
@@ -347,7 +556,7 @@ final TextEditingController confirmPasswordController = TextEditingController();
 
 
 
-  String? validateName(String? value) {
+String? validateName(String? value) {
   if (value == null || value.isEmpty) {
     return "Name is required";
   }
@@ -361,12 +570,20 @@ String? validateEmail(String? value) {
   if (value == null || value.isEmpty) {
     return "Email is required";
   }
-  final emailRegex = RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
+
+  // Stricter pattern to validate general email
+  final emailRegex = RegExp(
+    r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$"
+  );
+
   if (!emailRegex.hasMatch(value)) {
     return "Enter a valid email";
   }
+
   return null;
 }
+
+
 
 String? validateMobile(String? value) {
   if (value == null || value.isEmpty) {

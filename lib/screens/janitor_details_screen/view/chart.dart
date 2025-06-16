@@ -258,7 +258,7 @@ class _ChartState extends State<Chart> {
                       ),
                       Indicator(
                         color:  const Color.fromARGB(255, 232, 239, 132) ,
-                        text: 'Onging Task',
+                        text: 'Ongoing Task',
                         taskCount: widget.ongoingTask,
 
                         isSquare: true,

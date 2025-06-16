@@ -15,11 +15,13 @@ import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_constants.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 
+import '../../../../screens/common_widgets/leading_button.dart';
 import '../../../../utils/app_images.dart';
 import '../../../widgets/CustomTextField.dart';
 import '../bloc/signup_bloc.dart';
 import '../bloc/signup_event.dart';
 import 'check_screen.dart';
+import 'verify_otp.dart';
 
 class ClientLogin extends StatefulWidget {
   const ClientLogin({super.key});
@@ -39,6 +41,12 @@ class _ClientLoginState extends State<ClientLogin> {
   Widget build(BuildContext context) {
     return   Scaffold(
       backgroundColor: AppColors.backgroundColor,
+      appBar: AppBar(
+        backgroundColor: AppColors.backgroundColor,
+        leadingWidth: 100,
+        leading: LeadingButton(),
+      ),
+      
       body: 
       SingleChildScrollView(
         child: Form(
@@ -55,40 +63,42 @@ class _ClientLoginState extends State<ClientLogin> {
                 child: Column(
                   children: [
                           const SizedBox(
-                          height: 50,
+                          height: 10,
                            ),
         
                       CustomImageProvider(
                        image: ClientImages.taskMaster,
-                       width: 259,
-                       height: 200,
-                      //  fit: BoxFit.cover,
+                       width: double.infinity,
+                       height: 195,
+
+                      //  fit: BoxFit.fitWidth,
                       ),
                         const SizedBox(
-                          height: 10,
+                          height: 60,
                            ),
         
-                                 CustomTextField(
+                 CustomTextField(
                 controller: emailController,
-                hintText: "Enter your Email ID",
-                keyboardType: TextInputType.emailAddress,
+                hintText: "Enter your Mobile No.",
+                keyboardType: TextInputType.phone,
                 // maxLength: 10,
-                validator:  validateEmail
+                validator: validateMobile
+
                 // prefixIcon: Icons.phone,
                                 ),
                      const SizedBox(
                           height: 10,
                            ),
         
-                                CustomTextField(
-                controller: passwordController,
-                hintText: "Enter your Password",
-                obscureText: true,
-                keyboardType: TextInputType.text,
-                // maxLength: 10,
-                validator: validatePassword
-                // prefixIcon: Icons.phone,
-                                ),
+                //                 CustomTextField(
+                // controller: passwordController,
+                // hintText: "Enter your Password",
+                // obscureText: true,
+                // keyboardType: TextInputType.text,
+                // // maxLength: 10,
+                // validator: validatePassword
+                // // prefixIcon: Icons.phone,
+                //                 ),
         
                     const SizedBox(
                           height: 15,
@@ -104,10 +114,15 @@ class _ClientLoginState extends State<ClientLogin> {
         
                               if (state is LoginUser  ) {
                                    EasyLoading.dismiss();
+                                  //  state.
                                    Navigator.push(
                                      context,
                                      MaterialPageRoute(
-                                       builder: (context) => const CheckScreen(),
+                                       builder: (context) =>  VerifyOtp(
+                                        phoneNumber: emailController.text,
+                                        loginBloc: loginBloc,
+
+                                       ),
                                      ),
                                         //  (route) => false,
                                    );
@@ -138,10 +153,17 @@ class _ClientLoginState extends State<ClientLogin> {
                           if (loginFormKey.currentState?.validate() ?? false) {
                             print("object");
                             loginBloc.add(Login(
-                              email: emailController.text,
-                              password: passwordController.text,
+                              mobileNo: emailController.text,
+                              // password: passwordController.text,
                               ));
                           }
+
+                          // debugPrint("Data: $data");
+
+// ScaffoldMessenger.of(context).showSnackBar(
+//   SnackBar(content: Text('Data: ${MediaQuery.of(context).size}')),
+// );
+
         
         
         
@@ -169,12 +191,16 @@ class _ClientLoginState extends State<ClientLogin> {
                             Text(LoginConstant.newUserRegister,
                              style: AppTextStyle.font14bold,
                             ),
+                             const SizedBox(
+                              width: 5,
+                             ),
                              GestureDetector(
                               onTap: (){
                                    Navigator.of(context).push( MaterialPageRoute(builder: (context) {
                                return const Register();
                                   },));
                               },
+
                                child: Text(LoginConstant.registration,
                                                            style: AppTextStyle.font14bold.copyWith(
                                                           decoration: TextDecoration.underline,
@@ -216,6 +242,17 @@ class _ClientLoginState extends State<ClientLogin> {
     );
   }
 
+
+
+String? validateMobile(String? value) {
+  if (value == null || value.isEmpty) {
+    return "Mobile number is required";
+  }
+  if (!RegExp(r'^[0-9]{10}$').hasMatch(value)) {
+    return "Enter a valid 10-digit number";
+  }
+  return null;
+}
 
  String? validateEmail(String? value) {
   if (value == null || value.isEmpty) {

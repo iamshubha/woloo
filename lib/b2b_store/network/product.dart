@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/region.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/restock_subscription.dart';
 import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
 import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
@@ -63,6 +63,31 @@ class ProductService {
     }
   }
 
+  Future<RestockSubscriptions> restockSubscriptions(
+      {required String token,
+      required String variantId,
+      required String phoneNumber}) async {
+    try {
+      var response = await dio.post(
+        "https://staging-store.woloo.in/store/restock-subscriptions",
+        data: {"phone": phoneNumber, "variant_id": variantId},
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      return RestockSubscriptions.fromJson(response);
+    } catch (e) {
+      debugPrint("error $e");
+      rethrow;
+    }
+  }
+
   Future<ProductCategory> getProductCategories({
     required String token,
   }) async {
@@ -78,7 +103,7 @@ class ProductService {
           },
         ),
       );
-      logger.w(response);
+
       return ProductCategory.fromJson(response);
     } catch (e) {
       debugPrint("error $e");
@@ -123,7 +148,7 @@ class ProductService {
           },
         ),
       );
-      logger.w(response);
+      //logger.w(response);
       return ProductCollections.fromJson(response);
     } catch (e) {
       debugPrint("error $e");
@@ -132,12 +157,16 @@ class ProductService {
   }
 
   Future<ProductCollections> getProductCollectionsById({
+    required String slug,
     required String token,
     required String id,
   }) async {
+    //logger.w("getProductCollectionsById called with id: $id");
     try {
+      //logger.w("getProductCollectionsById id: $id");
+      //logger.w("Token: $token");
       var response = await dio.get(
-        "https://staging-store.woloo.in/store/products?fields=*variants.calculated_price&collection_id=$id",
+        "https://staging-store.woloo.in/store/products?fields=*variants.calculated_price,+variants.inventory_quantity&$slug=$id",
         options: Options(
           headers: {
             'Content-Type': 'application/json',
@@ -147,6 +176,7 @@ class ProductService {
           },
         ),
       );
+      // //logger.w(response);
       return ProductCollections.fromJson(response);
     } catch (e) {
       debugPrint("error $e");
@@ -154,67 +184,3 @@ class ProductService {
     }
   }
 }
-
-
-
-/**
- 1. Create Cart
-{
- @POST("store/carts")
-    fun getCartCreated(@Body request : CartRequest): Call<CartResponse>
-
- @SerializedName("region_id")
-
-2) Get Categories: 
- @GET("store/product-categories")
-    fun getCategoriesList(): Call<CategoriesListResponse>
-}
-
-3. ) Get Brands - 
- @GET("store/collections")
-    fun getCollections(
-        @Query("fields") fields: String
-    ): Call<CollectionsListResponse>
-
-
-4)   @GET("store/products")
-    fun getCollectionWiseProducts(
-        @Query("fields") price: String,
-        @Query("collection_id") fields: String  {collection_id = top brand --> brand_id}
-
-    ): Call<ProductListResponse>
-
-
-5)@GET("store/products")
-    fun getCategoryWiseProducts(
-        @Query("fields") price: String,
-        @Query("category_id") fields: String
-    ): Call<ProductListResponse>
-
-6) @GET("store/products")
-    fun getProductWithPriceList(
-        @Query("fields") fields: String,
-        @Query("region_id") region_id: String
-    ): Call<ProductListResponse>
-
-
-           { fields =    *variants.calculated_price}
-
-    #_________________________________________________#
-
-7) @GET("store/products")
-    fun getProductWithPriceListWithQuery(
-        @Query("fields") fields: String,
-        @Query("region_id") region_id: String,
-        @Query("q") q: String
-    ): Call<ProductListResponse>
- */
-
-
-
-/*
-for region id
-
-@GET("store/regions")
-    fun getRegionsList(): Call<RegionListResponse>
-*/

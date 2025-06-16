@@ -276,7 +276,9 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
               color: AppColors.buttonColor,
               child: 
               ListView.builder(
-                  physics: const AlwaysScrollableScrollPhysics(),
+                
+                 physics: NeverScrollableScrollPhysics(),
+                  // physics: const AlwaysScrollableScrollPhysics(),
                   itemCount: _search.length,
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
@@ -574,7 +576,10 @@ class _JanitorListWidgetState extends State<JanitorListWidget> {
 
                                      ),
 
-                                          child:  Text(" Gender : ${_search[index].gender!.substring(0,1)}"),
+                                          child: 
+                                           _search[index].gender!.isEmpty ? 
+                                           Text(" ") :
+                                           Text(" Gender :  ${_search[index].gender!.substring(0,1)}"),
                                         ),
                                            const SizedBox(
                                             width: 8,

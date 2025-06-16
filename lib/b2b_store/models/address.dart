@@ -48,16 +48,17 @@ class AddressReqBody {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['metadata'] =
-        metadata == null || metadata!.isEmpty ? <String, dynamic>{} : metadata;
+
+    data['metadata'] = metadata ?? {};
+
     data['first_name'] = firstName;
     data['last_name'] = lastName;
     data['phone'] = phone;
-    data['company'] = company;
+    data['company'] = company ?? '';
     data['address_1'] = address1;
-    data['address_2'] = address2;
+    data['address_2'] = address2 ?? '';
     data['city'] = city;
-    data['country_code'] = countryCode;
+    data['country_code'] = countryCode ?? 'in';
     data['province'] = province;
     data['postal_code'] = postalCode;
     data['address_name'] = addressName;

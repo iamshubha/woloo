@@ -21,7 +21,7 @@ class ServiceOrderScreen extends StatelessWidget {
     ];
     return Scaffold(
       appBar: const BackAppBar(),
-      bottomNavigationBar: const XBottomBar(),
+      // bottomNavigationBar: const XBottomBar(),
       body: Padding(
         // padding: const EdgeInsets.all(8.0),
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),

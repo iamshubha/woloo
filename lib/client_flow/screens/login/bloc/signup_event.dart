@@ -38,24 +38,26 @@ class CreateClientEvent extends SignupEvent {
 
 
 class Signup extends SignupEvent {
-  final String mobileNumber;
-  final String name;
-  final String email;
-  final String password;
+  final String? mobileNumber;
+  final String? name;
+  final String? email;
+  final String? password;
   final int clientTypeId;
-  final String address;
-  final String city;
-  final String pincode;
+  final String? address;
+  final String? city;
+  final String? pincode;
+  final int? userId;
 
   const Signup({
-    required this.mobileNumber,
-    required this.email,
-    required this.name,
-    required this.password,
+     this.mobileNumber,
+     this.email,
+     this.name,
+     this.password,
     required this.clientTypeId,
-    required this.address,
-    required this.city,
-    required this.pincode,
+     this.address,
+     this.city,
+     this.pincode,
+     this.userId
   });
 
   @override
@@ -68,20 +70,59 @@ class Signup extends SignupEvent {
     address,
     city,
     pincode,
+    userId
   ];
 }
 
 
 
 class Login extends SignupEvent {
-  final String email;
-  final String password;
-  const Login({ required this.email,  required this.password});
+  final String mobileNo;
+  // final String password;
+  const Login({ 
+    required this.mobileNo, 
+  //  required this.password
+   
+   });
 
   @override
   List<Object?> get props => [
-    email,
-    password
+    mobileNo,
+    // password
+    ];
+}
+
+
+
+class VerifyOtpEvent extends SignupEvent {
+  final String otp;
+  // final String requestId;
+
+  // final String password;
+  const VerifyOtpEvent({ 
+    required this.otp, 
+    // required this.requestId
+  //  required this.password
+   
+   });
+
+  @override
+  List<Object?> get props => [
+    otp,
+    // requestId
+    // password
+    ];
+}
+
+class ExpiryEvent extends SignupEvent {
+  final int clientId;
+  final int  days;
+  const ExpiryEvent({ required this.clientId,  required this.days});
+
+  @override
+  List<Object?> get props => [
+    clientId,
+    days
     ];
 }
 

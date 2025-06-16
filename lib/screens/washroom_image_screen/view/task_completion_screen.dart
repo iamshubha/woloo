@@ -97,6 +97,10 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
           }
         },
         builder: (context, state) {
+           if ( state is UploadImagesSuccessful) {
+              dashboardBloc.add(const GetTaskTamplates());
+             
+           }
           return Scaffold(
             appBar: AppBar(
               backgroundColor: AppColors.white,

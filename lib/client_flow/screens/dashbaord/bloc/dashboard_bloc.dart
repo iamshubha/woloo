@@ -42,6 +42,9 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<CheckSupvisorEvent>(_mapCheckSupervisorState);
     on<DeleteEvent>(_mapDeleteState);
     on<FacilityDeleteEvent>(_mapDeleteFacilityState);
+    on<ExpiryEvent>(_mapExtendExpiryState);
+    on<PaymentStatusEvent>(_mapPaymentStatusState);
+    on<FacilityByJanitorEvent>(_mapFacilityByJanitorState);
 
    // on<UpdateTokenOnVerifyOTP>(mapUpdateTokenToState);
   }
@@ -65,6 +68,9 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
                pincode: event.pincode,
                address: event.address!,
                city: event.city,
+               faciltyType: event.facilityType,
+               mobile: event.mobile
+
 
             );
       debugPrint("requestId $response");
@@ -72,7 +78,9 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
 
 
       // debugPrint("requestId $requestId");
-      emit(ClientSetUp(clientSetupModel: response ));
+      emit(ClientSetUp(
+        clientSetupModel: response
+       ));
     } catch (e) {
       emit(DashboarError(error:  e.toString() ));
     }
@@ -93,6 +101,7 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
           clientId: event.clientId!,
           gender: event.gender,
           clusterId: event.clusterId,
+          isSelfAssign: event.isSelfAssign
       );
 
       // debugPrint("requestId $response");
@@ -233,7 +242,9 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
         shiftTime: event.shiftTime,
         taskIds: event.taskIds,
         taskTimes: event.taskTimes,
-        janitorId: event.janitorId
+        janitorId: event.janitorId,
+         facilityRef: event.facilityRef,
+         facilityId: event.facilityId
       );
 
       // debugPrint("requestId $response");
@@ -448,6 +459,103 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
       emit(DashboarError(error:   e.toString() ));
     }
   }
+
+
+
+  FutureOr<void> _mapExtendExpiryState(
+      ExpiryEvent event, Emitter<DashboardState> emit) async {
+    try {
+      emit(const DashboarLoading(message: "Loading...."));
+      debugPrint("requestId$requestId");
+
+      var response =  await dashboardService.extendExpiry(   
+        clientId:event.clientId,
+        days: event.days 
+          );
+ 
+
+           
+
+      // debugPrint("Namee--------- ${response.roleId}");
+
+      // debugPrint("iddddd${response.id}");
+
+      emit(ExtendExpiry());
+      
+    } catch (e) {
+            //  print("is dio bloc  exception ${e is DioException}");
+      debugPrint("debug print $e" );
+      emit(DashboarError(error: e.toString()));
+    }
+  }
+
+
+
+
+  FutureOr<void> _mapPaymentStatusState(
+      PaymentStatusEvent event, Emitter<DashboardState> emit) async {
+    try {
+      emit(const DashboarLoading(message: "Loading...."));
+      debugPrint("requestId$requestId");
+
+      var response =
+          await dashboardService.paymentStatus(   
+            refranceId: event.refId
+        // clientId:event.clientId,
+        // days: event.days 
+          );
+ 
+
+           
+
+      // debugPrint("Namee--------- ${response.roleId}");
+
+      // debugPrint("iddddd${response.id}");
+
+      emit(PaymentStatus(
+        paymentStatusModel: response
+      ));
+    } catch (e) {
+            //  print("is dio bloc  exception ${e is DioException}");
+      debugPrint("debug print $e" );
+      emit(DashboarError(error: e.toString()));
+    }
+  }
+
+
+    FutureOr<void> _mapFacilityByJanitorState(
+      FacilityByJanitorEvent event, Emitter<DashboardState> emit) async {
+    try {
+      emit(const DashboarLoading(message: "Loading...."));
+      debugPrint("requestId$requestId");
+
+      var response =
+          await dashboardService.facilityByJanitor(   
+            // refranceId: event.refId
+            clientId: event.clientId,
+            facilityId: event.facilityId
+        // clientId:event.clientId,
+        // days: event.days 
+          );
+ 
+
+           
+
+      // debugPrint("Namee--------- ${response.roleId}");
+
+      // debugPrint("iddddd${response.id}");
+
+      emit(FacilityByJanitor(
+        janitorModel: response
+      ));
+    } catch (e) {
+            //  print("is dio bloc  exception ${e is DioException}");
+      debugPrint("debug print $e" );
+      emit(DashboarError(error: e.toString()));
+    }
+  }
+
+
 
 
 

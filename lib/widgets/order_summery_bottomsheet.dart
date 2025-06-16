@@ -7,13 +7,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
-import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
+import 'package:woloo_smart_hygiene/b2b_store/network/product.dart';
+import 'package:woloo_smart_hygiene/b2b_store/order_details_from_checkout.dart';
 import 'package:woloo_smart_hygiene/client_flow/utils/client_images.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/screens/host_dashboard_screen.dart';
@@ -21,7 +24,6 @@ import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
-import 'package:woloo_smart_hygiene/b2b_store/address_change_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/cart_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/widgets/dialogs/order_successful.dart';
 
@@ -89,9 +91,15 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
         if (state is PaymentSuccess) {
           EasyLoading.dismiss();
           Navigator.pop(context);
+
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const EcomScreen()),
+            MaterialPageRoute(
+                builder: (c) => OrderScreenCheckout(
+                      orderSet: OrderSet.fromJson(
+                          state.completeVendor.orderSet?.toJson() ?? {}),
+                      // orderSet: state.completeVendor.orderSet,
+                    )),
             (route) => false,
           );
         }
@@ -289,12 +297,20 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
     };
   }
 
-  void handlePaymentErrorResponse(PaymentFailureResponse response) {
+  void handlePaymentErrorResponse(PaymentFailureResponse response) async {
     /** PaymentFailureResponse contains three values:
     * 1. Error Code
     * 2. Error Description
     * 3. Metadata
     **/
+
+    final ProductService productService = ProductService(dio: GetIt.instance());
+    await productService
+        .createCart(
+            token: box.read('login_jwt'), regionId: box.read('region_id'))
+        .then((cartData) {
+      box.write('cart_id', cartData.cart.id);
+    });
     showDialog(
       // barrierDismissible: false,
       context: context,

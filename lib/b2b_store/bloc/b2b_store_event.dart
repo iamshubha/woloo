@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 
 abstract class B2BStoreEvent extends Equatable {
   const B2BStoreEvent();
@@ -19,13 +20,10 @@ class StoreCustomersReq extends B2BStoreEvent {
 }
 
 class StoreCustomerLoginReq extends B2BStoreEvent {
-  final String email;
-  final String pass;
-
-  const StoreCustomerLoginReq({
-    required this.email,
-    required this.pass,
-  });
+  String? email;
+  String? pass;
+  bool? isfromlogin;
+  StoreCustomerLoginReq({this.email, this.pass, this.isfromlogin});
 
   @override
   List<Object?> get props => [email, pass];
@@ -33,11 +31,20 @@ class StoreCustomerLoginReq extends B2BStoreEvent {
 
 class Refresh extends B2BStoreEvent {
   final String? id;
-  const Refresh({this.id});
+  final String slug;
+  const Refresh({this.id, required this.slug});
 
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [id, slug];
 }
+
+// class RefreshById extends B2BStoreEvent {
+//   final String id;
+//   const RefreshById({required this.id});
+
+//   @override
+//   List<Object?> get props => [id];
+// }
 
 class AddRemoveItemReq extends B2BStoreEvent {
   final String itemId;
@@ -252,5 +259,43 @@ class GetOrderReview extends B2BStoreEvent {
   const GetOrderReview({required this.productId});
 
   @override
-  List<Object?> get props => [productId];
+  List<Object?> get props => [
+        productId,
+      ];
+}
+
+class RestockSubscriptionsEvent extends B2BStoreEvent {
+  final String phoneNumber;
+  final String variantId;
+
+  const RestockSubscriptionsEvent({
+    required this.phoneNumber,
+    required this.variantId,
+  });
+
+  @override
+  List<Object?> get props => [phoneNumber, variantId];
+}
+
+class ApplyPromoEvent extends B2BStoreEvent {
+  final String promoCode;
+
+  const ApplyPromoEvent({required this.promoCode});
+
+  @override
+  List<Object?> get props => [promoCode];
+}
+
+class ApplyWolooPointsEvent extends B2BStoreEvent {
+  const ApplyWolooPointsEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class RemoveWolooPointsEvent extends B2BStoreEvent {
+  const RemoveWolooPointsEvent();
+
+  @override
+  List<Object?> get props => [];
 }

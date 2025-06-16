@@ -1,0 +1,98 @@
+import 'package:dio/dio.dart';
+import 'package:get_it/get_it.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/woloo_points.dart';
+
+class WolooPointsService {
+  final DioClient dio;
+  const WolooPointsService({required this.dio});
+
+  Future<WolooPointsResponse> getWolooPoints() async {
+    GlobalStorage globalStorage = GetIt.instance();
+    String clintId = globalStorage.getClientToken();
+
+    print(clintId);
+
+    final decodedToken = JwtDecoder.decode(clintId);
+    logger.w(decodedToken["id"]);
+
+    try {
+      final userId = decodedToken["id"]; //box.read('user_id');
+      final token = clintId; //box.read('woloo_token');
+
+      final response = await dio.get(
+        'https://staging-api.woloo.in/api/wolooGuest/profile',
+        queryParameters: {
+          'id': userId,
+        },
+        options: Options(
+          headers: {
+            'User-Agent': 'Android/22110/10',
+            'x-woloo-token': token,
+          },
+        ),
+      );
+      logger.w(response);
+      return WolooPointsResponse.fromJson(response);
+    } catch (e) {
+      logger.e('Error fetching Woloo points: $e');
+      rethrow;
+    }
+  }
+
+  Future<CartModel> applyWolooPoints({
+    required String token,
+    required String cartId,
+  }) async {
+    try {
+      final response = await dio.post(
+        'https://staging-store.woloo.in/store/carts/$cartId/promotions',
+        data: {
+          "promo_codes": ["WOLOO_COINS"]
+        },
+        options: Options(headers: {
+          'user-agent': 'Android/22110/10',
+          'x-publishable-api-key':
+              'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        }),
+      );
+
+      return CartModel.fromJson(response);
+    } catch (e) {
+      logger.e('Error applying Woloo points: $e');
+      rethrow;
+    }
+  }
+
+  Future<CartModel> removeWolooPoints({
+    required String token,
+    required String cartId,
+  }) async {
+    try {
+      final response = await dio.delete(
+        'https://staging-store.woloo.in/store/carts/$cartId/promotions',
+        data: {
+          "promo_codes": ["WOLOO_COINS"]
+        },
+        options: Options(headers: {
+          'user-agent': 'Android/22110/10',
+          'x-publishable-api-key':
+              'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        }),
+      );
+
+      return CartModel.fromJson(response);
+    } catch (e) {
+      logger.e('Error removing Woloo points: $e');
+      rethrow;
+    }
+  }
+}

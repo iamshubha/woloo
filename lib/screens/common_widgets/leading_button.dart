@@ -15,7 +15,7 @@ class LeadingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Padding(
-                padding: const EdgeInsets.only(left: 4 ),
+                padding: const EdgeInsets.only(left: 20 ),
                 child: InkWell(
                   onTap: (){
                     Navigator.of(context).pop();
@@ -31,7 +31,13 @@ class LeadingButton extends StatelessWidget {
                         width: 5.w
                         ,
                       ),
-                      Text(MyTaskListConstants.BACK.tr(),),
+                      Text(MyTaskListConstants.BACK.tr(),
+                       style: const TextStyle(
+                        color: Color(0xff888585),
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold
+                       ),
+                      ),
                     ],
                   ),
                 ),

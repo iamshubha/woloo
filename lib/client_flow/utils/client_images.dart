@@ -1,3 +1,5 @@
+import 'package:woloo_smart_hygiene/hygine_services/model/hygiene_services.dart';
+
 abstract class ClientImages {
   ClientImages._();
 
@@ -11,7 +13,7 @@ abstract class ClientImages {
   static String get menu => '${_assetImgPath}menu.png';
   static String get restaunt => '${_assetImgPath}restaurant.png';
   static String get user => '${_assetImgPath}user.png';
-  static String get supervisorLogo => '${_assetImgPath}supervisorlogo.png';
+  static String get supervisorLogo => '${_assetImgPath}supervisor.png';
   static String get man => '${_assetImgPath}man.png';
   static String get woman => '${_assetImgPath}woman.png';
   static String get taskMaster => '${_assetImgPath}taskmaster.png';
@@ -26,6 +28,25 @@ abstract class ClientImages {
   static String get  line  => '${_assetImgPath}line.png';
   static String get  setting  => '${_assetImgPath}setting.png';
   static String get  avatar  => '${_assetImgPath}usersavatar.png';
-  
+  static String get  home  => '${_assetImgPath}home.png';
+  static String get  userbottom  => '${_assetImgPath}userbottom.png';
+  static String get  homeUnseleted  => '${_assetImgPath}homeuselected.png';
+  static String get  userSelected  => '${_assetImgPath}userSelected.png';
+  static String get  check  => '${_assetImgPath}check.png';
+  static String get  arrow  => '${_assetImgPath}arrow.png';
+  static String get  building  => '${_assetImgPath}building.png';
+  static String get  checklist  => '${_assetImgPath}checklist.png';
+  static String get  product  => '${_assetImgPath}products.png';
+  static String get  services  => '${_assetImgPath}services.png';
+  static String get  sting  => '${_assetImgPath}sting.png';
+  static String get  onboard  => '${_assetImgPath}onboard.png';
+  static String get  onboard1  => '${_assetImgPath}onboard1.png';
+  static String get  onbaord2  => '${_assetImgPath}onbaord2.png';
+  static String get  msg  => '${_assetImgPath}msg.png';
+  static String get  delete  => '${_assetImgPath}delete.png';
+  static String get  woloologo  => '${_assetImgPath}woloo.png';
+  static String get  host  => '${_assetImgPath}host.png';
+  static String get  upgrade  => '${_assetImgPath}upgrade.png';
+  static String get  renew  => '${_assetImgPath}renew.png';
 
 }

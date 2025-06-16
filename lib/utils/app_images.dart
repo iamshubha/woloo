@@ -20,7 +20,7 @@ abstract class AppImages {
   static String get filterImg => '${_assetImgPath}filter.png';
   static String get blankListImg => '${_assetImgPath}blank_list.png';
   static String get fabImg => '${_assetImgPath}checklist.png';
-  static String get splashLogo => '${_assetImgPath}logo.png';
+  static String get splashLogo => '${_assetImgPath}logooo.png';
   static String get loaderLottie => '${_assetLottiePath}loader2.json';
   static String get editIconImg => '${_assetImgPath}edit.png';
   static String get locationIconImg => '${_assetImgPath}location.png';

@@ -7,6 +7,7 @@ import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
 import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/model/host_dashboard_screen.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/model/iotdata_model.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 
 class LoginFlowService {
   final DioClient dio;
@@ -87,12 +88,10 @@ class LoginFlowService {
             'x-publishable-api-key':
                 'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Cookie':
-                'connect.sid=s%3AMhPS4__dBpD_rU8z7Z8zS_VsRubU9zkJ.8VrkMiHyHFW1orsmAoLNileFblVHoFfvnCsMFgf6vew; connect.sid=s%3AuQMxSqqygCqgGw7n-as1QVluDdzCU9Os.gYiv2qNPMH5953UkPp3t%2FBcmycPJxY2TG8%2FQ1hXNBKw'
           },
         ),
       );
-
+      //logger.w(response);
       return (response['token']);
     } catch (e) {
       debugPrint("Error in IOT service: $e");

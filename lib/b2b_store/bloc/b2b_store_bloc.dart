@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,9 +20,11 @@ import 'package:woloo_smart_hygiene/b2b_store/network/favorite.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/login_reg_flow.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/product.dart';
+import 'package:woloo_smart_hygiene/b2b_store/network/woloo_points_service.dart';
+import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
+import 'package:woloo_smart_hygiene/hygine_services/view/address_notifier.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 
-import '../models/payment_provider.dart';
 import 'b2b_store_event.dart';
 import 'b2b_store_state.dart';
 
@@ -40,13 +43,15 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       OrderDetailsService(dio: GetIt.instance());
   final FavoriteService _favoriteService =
       FavoriteService(dio: GetIt.instance());
+  final WolooPointsService _wolooPointsService =
+      WolooPointsService(dio: GetIt.instance());
 
   var requestId = '';
   late int roleId;
   late int janitorId;
 
   B2bStoreBloc() : super(B2BStoreInitial()) {
-    // on<StoreCustomersReq>(_emailPassRegister);
+    on<StoreCustomersReq>(_emailPassRegister);
     on<StoreCustomerLoginReq>(_emailPassLogin);
     on<AddressReq>(_createAddress);
     on<GetAddress>(_getAddress);
@@ -54,6 +59,8 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<GetCartData>(_getCart);
     on<AddToCart>(_addToCart);
     on<ProceedToShip>(_proceedToSheep);
+    on<ApplyWolooPointsEvent>(_applyWolooPoints);
+    on<RemoveWolooPointsEvent>(_removeWolooPoints);
     on<Payment>(_proceedToCheckOut);
     on<AddRemoveItemReq>(_addRemoveItems);
     on<PlaceOrder>(_placeOrder);
@@ -68,6 +75,8 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<RemoveWishList>(_removeFromWishlist);
     on<GetOrderReview>(getProductReviews);
     on<Refresh>(_refresh);
+    on<RestockSubscriptionsEvent>(restockSubscriptions);
+    on<ApplyPromoEvent>(_applyPromoCode);
   }
 
   FutureOr<void> _emailPassRegister(
@@ -87,6 +96,26 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       });
       debugPrint("requestId $response");
       print(response);
+      await loginFlowService
+          .loginCustomer(
+        email: event.email,
+        pass: event.pass,
+      )
+          .then((loginToken) async {
+        await _favoriteService.createFavorites(token: loginToken);
+        final regionResponse =
+            await _productService.getRegion(token: loginToken);
+        box.write('region_id', regionResponse.regions![0].id);
+        await _productService
+            .createCart(
+                token: loginToken,
+                regionId: regionResponse.regions![0].id.toString())
+            .then((cartData) {
+          box.write('cart_id', cartData.cart.id);
+        });
+      });
+
+      // _favoriteService.createFavorites(token: token);
       // emit(B2BStoreSuccess());
     } catch (e) {
       emit(B2BStoreError(error: e.toString()));
@@ -98,24 +127,35 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     StoreCustomerLoginReq event,
     Emitter<B2BStoreState> emit,
   ) async {
-    try {
-      ProductCategory categories = ProductCategory();
-      TopBrands topBrands = TopBrands();
-      ProductCollections productCollections = ProductCollections();
+    // try {
+    ProductCategory categories = ProductCategory();
+    TopBrands topBrands = TopBrands();
+    ProductCollections productCollections = ProductCollections();
+    CartModel? cartModel;
+    Wishlist? fav;
+    emit(const B2BStoreLoading(message: "Loading data..."));
 
-      emit(const B2BStoreLoading(message: "Loading data..."));
+    // Login and get token\
 
-      // Login and get token
+    if (event.isfromlogin!) {
       final loginToken = await loginFlowService.loginCustomer(
-        email: event.email,
-        pass: event.pass,
+        email: event.email ?? '',
+        pass: event.pass ?? '',
+      );
+      box.write('login_jwt', loginToken);
+    } else {
+      final loginToken = await loginFlowService.loginCustomer(
+        email: event.email ?? '',
+        pass: event.pass ?? '',
       );
       box.write('login_jwt', loginToken);
 
       // Get region
       final regionResponse = await _productService.getRegion(token: loginToken);
-      box.write('region_id', regionResponse.regions![0].id);
 
+      final cartId = box.read('cart_id');
+      box.write('region_id', regionResponse.regions![0].id);
+      // if (cartId == null) {
       await _productService
           .createCart(
               token: loginToken,
@@ -123,7 +163,11 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
           .then((cartData) {
         box.write('cart_id', cartData.cart.id);
       });
-      CartModel cartModel = await _cartService.getAllCartData(
+      // }
+
+      // logger.w("Token: ${box.read('login_jwt')}");
+      // logger.w("Cart Id: ${box.read('cart_id')}");
+      cartModel = await _cartService.getAllCartData(
           token: box.read('login_jwt'), cartId: box.read('cart_id'));
 
       // Fetch all required data
@@ -132,30 +176,30 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       topBrands = await _productService.getTopBrands(token: loginToken);
       productCollections =
           await _productService.getProductCollections(token: loginToken);
-      logger.w("----------------------------");
-      final fav = await _favoriteService.getFavorites(token: loginToken);
+
+      fav = await _favoriteService.getFavorites(token: loginToken);
 
       favIds = getCommonProductIds(fav, productCollections);
-      logger.w(favIds);
-      // Debug prints
-      logger.w(categories);
-      logger.w(topBrands);
-      logger.w(productCollections);
-
-      // Emit success state
-      if (emit.isDone) return;
-      emit(B2BStoreSuccess(B2BStoreHomePage(
-          productCategory: categories,
-          topBrands: topBrands,
-          productCollections: productCollections,
-          cartData: cartModel,
-          fav: fav)));
-    } catch (e) {
-      if (emit.isDone) return;
-      emit(B2BStoreError(error: e.toString()));
-      logger.w("Error in IOT service: $e");
-      debugPrint("Error in IOT service: $e");
     }
+
+    final address = box.read('address');
+    // Debug prints
+    selectedAddress.value =
+        address != null ? Addresses.fromJson(jsonDecode(address)) : Addresses();
+    // Emit success state
+    if (emit.isDone) return;
+    emit(B2BStoreSuccess(B2BStoreHomePage(
+        productCategory: categories,
+        topBrands: topBrands,
+        productCollections: productCollections,
+        cartData: cartModel!,
+        fav: fav!)));
+    // } catch (e) {
+    //   if (emit.isDone) return;
+    //   emit(B2BStoreError(error: e.toString()));
+    //   logger.w("Login service: $e");
+    //   debugPrint("Error in IOT service: $e");
+    // }
   }
 
   FutureOr<void> _refresh(
@@ -189,21 +233,15 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       topBrands = await _productService.getTopBrands(token: loginToken);
       if (event.id != null) {
         productCollections = await _productService.getProductCollectionsById(
-            token: loginToken, id: event.id!);
+            slug: event.slug, token: loginToken, id: event.id!);
       } else {
         productCollections =
             await _productService.getProductCollections(token: loginToken);
       }
 
-      logger.w("----------------------------");
       final fav = await _favoriteService.getFavorites(token: loginToken);
 
       favIds = getCommonProductIds(fav, productCollections);
-      logger.w(favIds);
-      // Debug prints
-      logger.w(categories);
-      logger.w(topBrands);
-      logger.w(productCollections);
 
       // Emit success state
       if (emit.isDone) return;
@@ -216,8 +254,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     } catch (e) {
       if (emit.isDone) return;
       emit(B2BStoreError(error: e.toString()));
-      logger.w("Error in IOT service: $e");
-      debugPrint("Error in IOT service: $e");
+      logger.e("Error in IOT service: $e");
     }
   }
 
@@ -296,7 +333,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     try {
       final val = await _addresstService.deleteAddress(
           addressId: event.addressId, token: box.read('login_jwt'));
-      logger.w("Val: $val");
+
       AddressesData response =
           await _addresstService.getAllAddress(token: box.read('login_jwt'));
 
@@ -347,13 +384,25 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   ) async {
     try {
       emit(const CartLoading(message: "Loading data..."));
+
+      // Get cart data
       CartModel response = await _cartService.getAllCartData(
           token: box.read('login_jwt'), cartId: box.read('cart_id'));
 
-      debugPrint("requestId $response");
-      print(response);
+      // Get Woloo points in parallel
+      int wolooPoints = 0;
 
-      emit(CartSuccess(cartData: response));
+      final wolooResponse = await _wolooPointsService.getWolooPoints();
+
+      wolooPoints = wolooResponse.results.totalCoins.totalCoins;
+
+      final productCollections = await _productService.getProductCollections(
+          token: box.read('login_jwt'));
+
+      emit(CartSuccess(
+          cartData: response,
+          productCollection: productCollections,
+          wolooPoints: wolooPoints));
     } catch (e) {
       emit(CartError(error: e.toString()));
       debugPrint("Error in GetCart service: $e");
@@ -382,7 +431,6 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
             cartId: box.read('cart_id'));
       }
 
-      logger.w(response);
       emit(CartSuccess(cartData: response));
     } catch (e) {
       emit(CartError(error: e.toString()));
@@ -513,20 +561,20 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       final paymentProviders = await _checkoutApiService.paymentProviders(
           token: box.read('login_jwt'), region_id: box.read('region_id'));
 
-      PaymentCollection paymentCollections =
-          await _checkoutApiService.paymentCollections(
-              token: box.read('login_jwt'), cart_id: box.read('cart_id'));
+      final paymentCollections = await _checkoutApiService.paymentCollections(
+          token: box.read('login_jwt'), cart_id: box.read('cart_id'));
 
       final paymentSessions = await _checkoutApiService.paymentSessions(
           token: box.read('login_jwt'),
-          pay_col: paymentCollections.paymentCollection.id,
+          pay_col: paymentCollections, //.paymentCollection?.id,
           provider_id: paymentProviders.paymentProviders[0].id);
 
       // final completeVendor = await _checkoutApiService.completeVendor(
       //     token: box.read('login_jwt'), cart_id: box.read('cart_id'));
 
       final orderId =
-          paymentSessions.paymentCollection.paymentSessions[0].data.id ?? "0";
+          paymentSessions.paymentCollection?.paymentSessions?[0].data?.id ??
+              "0";
 
       // final placeOrder = await _checkoutApiService.placeOrder(
       //     token: box.read('login_jwt'), order_id: orderId);
@@ -535,7 +583,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       emit(LetsTryState(
         orderId: orderId,
         totalPrice:
-            paymentSessions.paymentCollection.paymentSessions[0].amount ?? 0,
+            paymentSessions.paymentCollection?.paymentSessions?[0].amount ?? 0,
       ) //completeVendor.orderSet.orders[0].items[0].total)
           );
     } catch (e) {
@@ -612,7 +660,13 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       final productCollections = await _productService.getProductCollections(
           token: box.read('login_jwt'));
       favIds = getCommonProductIds(wishlist, productCollections);
-      emit(WishlistSuccess(wishlistData: wishlist));
+      CartModel cartModel = await _cartService.getAllCartData(
+          token: box.read('login_jwt'), cartId: box.read('cart_id'));
+
+      emit(WishlistSuccess(
+          wishlistData: wishlist,
+          cartModel: cartModel,
+          productCollections: productCollections));
     } catch (e) {
       debugPrint("Error in getFavorites service: $e");
       emit(WishlistError(error: e.toString()));
@@ -627,7 +681,15 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     try {
       final wishlist = await _favoriteService.addToWishList(
           token: box.read('login_jwt'), variantId: event.variantId);
-      emit(WishlistSuccess(wishlistData: wishlist));
+      final productCollections = await _productService.getProductCollections(
+          token: box.read('login_jwt'));
+      favIds = getCommonProductIds(wishlist, productCollections);
+      CartModel cartModel = await _cartService.getAllCartData(
+          token: box.read('login_jwt'), cartId: box.read('cart_id'));
+      emit(WishlistSuccess(
+          wishlistData: wishlist,
+          cartModel: cartModel,
+          productCollections: productCollections));
     } catch (e) {
       debugPrint("Error in getFavorites service: $e");
       emit(WishlistError(error: e.toString()));
@@ -640,7 +702,15 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     try {
       Wishlist wishlist = await _favoriteService.removeItemFromWishlist(
           box.read('login_jwt'), event.itemId);
-      emit(WishlistSuccess(wishlistData: wishlist));
+      final productCollections = await _productService.getProductCollections(
+          token: box.read('login_jwt'));
+      favIds = getCommonProductIds(wishlist, productCollections);
+      CartModel cartModel = await _cartService.getAllCartData(
+          token: box.read('login_jwt'), cartId: box.read('cart_id'));
+      emit(WishlistSuccess(
+          wishlistData: wishlist,
+          cartModel: cartModel,
+          productCollections: productCollections));
     } catch (e) {
       debugPrint("Error in getFavorites service: $e");
       emit(WishlistError(error: e.toString()));
@@ -674,10 +744,151 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       emit(const ReviewLoading(message: 'Loading product reviews...'));
       final response = await _orderDetailsService.getOrderReviews(
           token: box.read('login_jwt'), productId: getOrderReview.productId);
+      final productCollections = await _productService.getProductCollections(
+          token: box.read('login_jwt'));
       // logger.w(response);
-      emit(CustomerReviewSuccess(customerReview: response));
+      emit(CustomerReviewSuccess(
+          customerReview: response, productCollection: productCollections));
     } catch (e) {
       logger.e("Error in getProductReviews: $e");
+    }
+  }
+
+  FutureOr<void> restockSubscriptions(
+    RestockSubscriptionsEvent event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    GlobalStorage globalStorage = GetIt.instance();
+    try {
+      emit(const RestockSubscriptionsLoading(
+          message: 'Restocking subscriptions...'));
+      final response = await _productService.restockSubscriptions(
+        token: box.read('login_jwt'),
+        variantId: event.variantId,
+        phoneNumber: globalStorage.getClientMobileNo(),
+      );
+      emit(RestockSubscriptionsSuccess(
+        restockSubscriptions: response,
+      ));
+      logger.w("Restock Subscriptions Response: $response");
+    } catch (e) {
+      emit(RestockSubscriptionsError(error: e.toString()));
+      logger.e("Error in restockSubscriptions: $e");
+    }
+  }
+
+  FutureOr<void> _applyPromoCode(
+    ApplyPromoEvent event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const CartLoading(message: "Applying promo code..."));
+
+      // Validate promo code format if needed
+      if (event.promoCode.trim().isEmpty) {
+        emit(const PromoApplyError(error: "Please enter a valid promo code"));
+        return;
+      }
+
+      // Call API to apply promo code
+      final response = await _cartService.applyPromoCode(
+        token: box.read('login_jwt'),
+        cartId: box.read('cart_id'),
+        promoCode: event.promoCode,
+      );
+
+      // If successful, emit CartSuccess with updated cart data
+      emit(CartSuccess(cartData: response));
+
+      // After cart is updated, get latest cart data to reflect changes
+      final updatedCart = await _cartService.getAllCartData(
+          token: box.read('login_jwt'), cartId: box.read('cart_id'));
+      emit(CartSuccess(cartData: updatedCart));
+    } catch (e) {
+      // Handle specific error cases
+      final errorMessage =
+          e is Exception ? e.toString() : "Failed to apply promo code";
+      emit(PromoApplyError(error: errorMessage.replaceAll('Exception: ', '')));
+      logger.e("Error in applying promo code: $e");
+    }
+  }
+
+  FutureOr<void> _applyWolooPoints(
+    ApplyWolooPointsEvent event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const CartLoading(message: "Applying Woloo points..."));
+
+      // Validate if user has points to apply
+      final currentPoints = await _wolooPointsService.getWolooPoints();
+      if (!currentPoints.success) {
+        throw Exception('Failed to verify points balance');
+      }
+      if (currentPoints.results.totalCoins.totalCoins <= 0) {
+        throw Exception('No points available to redeem');
+      }
+
+      // Apply points to cart
+      final response = await _wolooPointsService.applyWolooPoints(
+        token: box.read('login_jwt'),
+        cartId: box.read('cart_id'),
+      );
+
+      // Get updated points balance after applying
+      final wolooPointsResponse = await _wolooPointsService.getWolooPoints();
+      if (!wolooPointsResponse.success) {
+        logger.w('Failed to get updated points balance after applying points');
+      }
+
+      emit(CartSuccess(
+          cartData: response,
+          wolooPoints: wolooPointsResponse.success
+              ? wolooPointsResponse.results.points
+              : currentPoints.results.points,
+          message: "Woloo points applied successfully!"));
+    } catch (e) {
+      final errorMsg = e is Exception
+          ? e.toString().replaceAll('Exception: ', '')
+          : 'Failed to apply Woloo points. Please try again.';
+      emit(CartError(error: errorMsg));
+      logger.e("Error applying Woloo points: $e");
+    }
+  }
+
+  FutureOr<void> _removeWolooPoints(
+    RemoveWolooPointsEvent event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const CartLoading(message: "Removing Woloo points..."));
+
+      // Remove points from cart
+      final response = await _wolooPointsService.removeWolooPoints(
+        token: box.read('login_jwt'),
+        cartId: box.read('cart_id'),
+      );
+
+      // Get updated points balance after removal
+      final wolooPointsResponse = await _wolooPointsService.getWolooPoints();
+      if (!wolooPointsResponse.success) {
+        logger.w('Failed to get updated points balance after removing points');
+      }
+
+      final currentPoints = await _wolooPointsService.getWolooPoints();
+
+      emit(CartSuccess(
+          cartData: response,
+          wolooPoints: wolooPointsResponse.success
+              ? wolooPointsResponse.results.points
+              : currentPoints.results.points,
+          message: "Woloo points removed successfully!"));
+    } catch (e) {
+      final errorMsg = e is Exception
+          ? e.toString().replaceAll('Exception: ', '')
+          : 'Failed to remove Woloo points. Please try again.';
+      emit(CartError(error: errorMsg));
+      logger.e("Error removing Woloo points: $e");
     }
   }
 }

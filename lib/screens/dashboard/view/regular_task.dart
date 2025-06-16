@@ -371,24 +371,24 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
             showList = false;
           }
           _widgetOptions = [
-            // Obx(
-            //   ()=>
+            Obx(
+              ()=>
                   RegularTask(
                   dashboardBloc: dashboardBloc,
-                  filter: dashController.filterData,
+                  filter: dashController.filterData.value,
                   lat: lat,
                   long: long
               ),
-            // ),
-            // Obx(
-            //    ()=>
+            ),
+            Obx(
+               ()=>
                    IotTask(
                 dashboardBloc: dashboardBloc,
-                filter: dashController.filterData.where( (e)=> e.requestType  == "IOT" ).toList(),
+                filter: dashController.filterData.value.where( (e)=> e.requestType  == "IOT" ).toList(),
                 lat: lat,
                 long: long
                 ,
-              // ),
+              ),
             )
           ];
           return Scaffold(

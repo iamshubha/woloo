@@ -395,7 +395,7 @@ class DashboardConst {
   static const String onboardingMessage = 
       "You’re there! Just a few more steps to get you started with your Smart Hygiene Journey.";
   static const String getStarted = "Get Started";
-  static const String listYourFacility = "List Your Facility";
+  static const String listYourFacility = "List Your";
   static const String organizationName = "Your Facility Name *";
    static const String addNewFacility = 'Add a New Facility';
   static const String addNewTask = 'Add a New Task';
@@ -404,8 +404,8 @@ class DashboardConst {
   static const String typeOfFacility = "Type of Facility *";
   static const String home = "Home";
   static const String office = "Office";
-  static const String restraunt = "Restraunt";
-  static const String other = "Other";
+  static const String restraunt = "Restaurant";
+  static const String other = "Others";
   static const String next = "Next";
   static const String chooseAdmin = "Choose";
   static const String monitorYourself = "Monitor \nYourself";
@@ -417,7 +417,7 @@ class DashboardConst {
   static const String assignJanitor = "Janitor";
   static const String assignFacility = "Assign Facility *";
   static const String gender = "Gender *";
-  static const String assignTasks = "Assign Tasks";
+  static const String assignTasks = "Assign";
   static const String selectCleaningTasks = "Select Cleaning Tasks *";
   static const String estimatedTaskCompletionTime = "Estimated Task Completion Time";
   static const String cleaningCycle = "Cleaning Cycle *";
@@ -448,8 +448,8 @@ class DashboardConst {
   static const String shiftStartDescription = "The shift shall start from DD/MM/YYYY";
   // static const String estimatedTaskCompletionTime = "Estimated Task Completion Time";
 
-  static const String scheduleShift = "Shift Start:";
-  static const String scheduleTask = "Schedule Task *";
+  static const String scheduleShift = "Start Shift Time";
+  static const String scheduleTask = "Schedule First Task *";
   static const String save = "Add";
   static const String addMoreTimings = "Add More Timings";
   static const String addTimings = "Add Timings";
@@ -457,7 +457,7 @@ class DashboardConst {
   static const String shiftEnd = "Shift shall complete at 00:00";
   static const String congratulations = "Congratulations!";
   static const String addAnotherTask = "Add Another Task";
-  static const String noThanks = "Thanks. Start Monitoring";
+  static const String noThanks = "Start Monitoring";
     static const String taskBuddyPrompt = 
       "Do you want to assign a new Task Buddy or utilise your existing Task Buddy?";
   static const String assignNewTaskBuddy = "Assign New Task Buddy";
@@ -492,6 +492,14 @@ class SubcriptionConstant{
   static const String premiumLocation = "1 location";
   static const String premiumFacilities = "10 Facilities";
 
+static const String stinqguardOffer = 'Avail STINQGUARD for just \n Rs. 2,499 + GST';
+static const String taskMasterOffer = 'Avail TASQMASTER for just \n Rs. 499 + GST';
+static const String itemTotal = 'Item Total';
+static const String discount = 'Discount';
+static const String finalTotal = 'Final Total';  
+static const String grandTotal = 'Grand Total';
+static const String addFacilityForPremium = 'Add your Facility for Premium';
+static const String addFacilityForTaskMaster = 'Add your Facility for TasqMaster';
 
 
 

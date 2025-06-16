@@ -81,13 +81,14 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
           return Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
             decoration: BoxDecoration(
-                color: Colors.white,
+                color: const Color.fromARGB(255, 238, 238, 238),
                 borderRadius:
                     BorderRadius.vertical(top: Radius.circular(40.r))),
             child: Form(
               key: _formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
+                spacing: 2.h,
                 children: [
                   SizedBox(height: 20.h),
                   Row(
@@ -108,7 +109,9 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
                           child: XDesignedTextField(
                             hintText: "First Name",
                             controller: _firstNameController,
-                            validator: _requiredValidator,
+                            validator: _nameValidator,
+                            keyboardType: TextInputType.name,
+                            textCapitalization: TextCapitalization.words,
                           ),
                         ),
                       ),
@@ -119,7 +122,9 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
                           child: XDesignedTextField(
                             hintText: "Last Name",
                             controller: _lastNameController,
-                            validator: _requiredValidator,
+                            validator: _nameValidator,
+                            keyboardType: TextInputType.name,
+                            textCapitalization: TextCapitalization.words,
                           ),
                         ),
                       ),
@@ -130,7 +135,9 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
                     child: XDesignedTextField(
                       hintText: "Address",
                       controller: _flatNoController,
-                      validator: _requiredValidator,
+                      validator: _addressValidator,
+                      keyboardType: TextInputType.streetAddress,
+                      textCapitalization: TextCapitalization.words,
                     ),
                   ),
                   Row(
@@ -142,6 +149,8 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
                             hintText: "City",
                             controller: _cityController,
                             validator: _requiredValidator,
+                            keyboardType: TextInputType.text,
+                            textCapitalization: TextCapitalization.words,
                           ),
                         ),
                       ),
@@ -153,6 +162,8 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
                             hintText: "State",
                             controller: _localityController,
                             validator: _requiredValidator,
+                            keyboardType: TextInputType.text,
+                            textCapitalization: TextCapitalization.words,
                           ),
                         ),
                       ),
@@ -164,6 +175,7 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
                       hintText: "Pincode",
                       controller: _pincodeController,
                       validator: _pincodeValidator,
+                      keyboardType: TextInputType.number,
                     ),
                   ),
                   XDecoratedBox(
@@ -172,6 +184,7 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
                       hintText: "Phone",
                       controller: _phoneController,
                       validator: _phoneValidator,
+                      keyboardType: TextInputType.phone,
                     ),
                   ),
                   XDecoratedBox(
@@ -180,6 +193,8 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
                       hintText: "Save as (Home/Office/Others)",
                       controller: _labelController,
                       validator: _requiredValidator,
+                      keyboardType: TextInputType.text,
+                      textCapitalization: TextCapitalization.words,
                     ),
                   ),
                   SizedBox(height: 20.h),
@@ -190,10 +205,10 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
                       if (_formKey.currentState!.validate()) {
                         String fullAddress1 = _flatNoController.text.trim();
 
-                        if (_apartmentController.text.trim().isNotEmpty) {
-                          fullAddress1 +=
-                              ", ${_apartmentController.text.trim()}";
-                        }
+                        // if (_apartmentController.text.trim().isNotEmpty) {
+                        //   fullAddress1 +=
+                        //       ", ${_apartmentController.text.trim()}";
+                        // }
 
                         _b2bStoreBloc.add(
                           UpdateAddressReq(
@@ -232,24 +247,54 @@ class _UpdateAddressBottomSheetState extends State<UpdateAddressBottomSheet>
     return null;
   }
 
+  String? _nameValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'This field is required';
+    }
+    if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
+      return 'Please enter valid name';
+    }
+    return null;
+  }
+
+  String? _addressValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'This field is required';
+    }
+    if (value.trim().length < 5) {
+      return 'Address is too short';
+    }
+    return null;
+  }
+
   String? _pincodeValidator(String? value) {
-    if (value == null || value.trim().isEmpty) return 'Pincode is required';
-    if (!RegExp(r'^\d{5,6}$').hasMatch(value)) return 'Invalid pincode';
+    if (value == null || value.trim().isEmpty) {
+      return 'Pincode is required';
+    }
+    if (!RegExp(r'^\d{6}$').hasMatch(value)) {
+      return 'Please enter valid 6-digit pincode';
+    }
     return null;
   }
 
   String? _phoneValidator(String? value) {
-    if (value == null || value.trim().isEmpty) return 'Phone is required';
-    if (!RegExp(r'^\d{10}$').hasMatch(value)) return 'Invalid phone number';
+    if (value == null || value.trim().isEmpty) {
+      return 'Phone number is required';
+    }
+    if (!RegExp(r'^\d{10}$').hasMatch(value)) {
+      return 'Please enter valid 10-digit mobile number';
+    }
     return null;
   }
 
   void onInit() {
     _firstNameController.text = widget.adress!.firstName ?? "";
     _lastNameController.text = widget.adress!.lastName ?? "";
+
     _flatNoController.text = widget.adress!.address1 ?? "";
     _localityController.text = widget.adress!.province ?? "";
     _apartmentController.text = widget.adress!.address1 ?? "";
+
     _cityController.text = widget.adress!.city ?? "";
     _pincodeController.text = widget.adress!.postalCode ?? "";
     _phoneController.text = widget.adress!.phone ?? "";

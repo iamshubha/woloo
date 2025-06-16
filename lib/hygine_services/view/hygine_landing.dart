@@ -66,7 +66,7 @@ class _HygieneServicesScreenState extends State<HygieneServicesScreen> {
                     productMode: ProductMode.serviceDetails,
                     textFieldHintText: 'Search Services',
                   ),
-                  bottomNavigationBar: const XBottomBar(),
+                  // bottomNavigationBar: const XBottomBar(),
                   body: SingleChildScrollView(
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: Column(
