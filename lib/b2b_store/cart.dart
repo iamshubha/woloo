@@ -78,7 +78,10 @@ class _CartScreenState extends State<CartScreen> {
           if (state is CartSuccess) {
             setState(() {
               cartModel = state.cartData;
-              if (state.wolooPoints! >= 0) wolooPoints = state.wolooPoints ?? 0;
+              if (state.wolooPoints != null && state.wolooPoints! >= 0) {
+                wolooPoints = state.wolooPoints ?? 0;
+              }
+
               _isDataLoaded = true;
               isWolooPointsLoading = false;
               wolooPointsError = null;
@@ -605,6 +608,7 @@ class XDesignedTextField extends StatelessWidget {
         fillColor: AppColors.themeBackground,
         filled: true,
         hintText: hintText,
+        isDense: true,
         hintStyle: AppTextStyle.font12,
         border: InputBorder.none,
       ),

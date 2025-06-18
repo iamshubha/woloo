@@ -126,6 +126,7 @@ class _EcomScreenState extends State<EcomScreen> {
               child: const Icon(Icons.abc),
             ),
             appBar: EComAppbar(
+              userShowed: true,
               focus: focus,
               onCartTap: () async {
                 final value = await Navigator.push(context,
@@ -1229,18 +1230,18 @@ class SeeMoreButton extends StatelessWidget {
 }
 
 class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const EComAppbar({
-    super.key,
-    this.isAll = false,
-    this.textFieldHintText = 'Search Products',
-    this.cartValue,
-    this.productMode = ProductMode.productDetails,
-    this.onTap,
-    this.onChanged,
-    this.controller,
-    this.onCartTap,
-    this.focus,
-  });
+  const EComAppbar(
+      {super.key,
+      this.isAll = false,
+      this.textFieldHintText = 'Search Products',
+      this.cartValue,
+      this.productMode = ProductMode.productDetails,
+      this.onTap,
+      this.onChanged,
+      this.controller,
+      this.onCartTap,
+      this.focus,
+      this.userShowed = false});
   final ProductMode productMode;
 
   final String textFieldHintText;
@@ -1251,6 +1252,7 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
   final Function(String)? onChanged;
   final TextEditingController? controller;
   final FocusNode? focus;
+  final bool userShowed;
   @override
   Size get preferredSize => const Size.fromHeight(130);
 
@@ -1260,30 +1262,31 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false, // Remove default back button
       backgroundColor: AppColors.themeBackground,
       actions: [
-        Container(
-          decoration: BoxDecoration(
-              color: AppColors.lightCyanColor,
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: const [
-                BoxShadow(
-                    offset: Offset(2, 3),
-                    color: Color.fromARGB(255, 230, 228, 228),
-                    spreadRadius: 2,
-                    blurRadius: 10),
-              ]),
-          child: IconButton(
-            icon: const Icon(Icons.person_outlined),
-            onPressed: () {
-              // refreshCart(context);
-              //  TODO:Add Profile
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Clientprofile(),
-                  ));
-            },
+        if (userShowed)
+          Container(
+            decoration: BoxDecoration(
+                color: AppColors.lightCyanColor,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: const [
+                  BoxShadow(
+                      offset: Offset(2, 3),
+                      color: Color.fromARGB(255, 230, 228, 228),
+                      spreadRadius: 2,
+                      blurRadius: 10),
+                ]),
+            child: IconButton(
+              icon: const Icon(Icons.person_outlined),
+              onPressed: () {
+                // refreshCart(context);
+                //  TODO:Add Profile
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Clientprofile(),
+                    ));
+              },
+            ),
           ),
-        ),
         const SizedBox(
           width: 10,
         )
@@ -1417,9 +1420,8 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                                   blurRadius: 10),
                             ]),
                         child: IconButton(
-                          icon: ImageIcon(AssetImage(AppImages.bag)),
-                          onPressed: onCartTap,
-                        ),
+                            icon: ImageIcon(AssetImage(AppImages.bag)),
+                            onPressed: onCartTap),
                       ),
                     )
                   : Badge(
@@ -1437,7 +1439,76 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                             ]),
                         child: IconButton(
                           icon: ImageIcon(AssetImage(AppImages.bag)),
-                          onPressed: onCartTap,
+                          onPressed: () {
+                            if (cartValue != null && cartValue! > 0) {
+                              onCartTap?.call();
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 50.w, vertical: 60.h),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(
+                                                  0.2), // Shadow color
+                                              spreadRadius: 1, // Spread effect
+                                              blurRadius: 10, // Blur effect
+                                              offset: const Offset(
+                                                  0, 5), // Bottom shadow
+                                            ),
+                                          ],
+                                        ),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              "Your cart is empty. Please add items to cart",
+                                              style: AppTextStyle.font14bold,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            // ShortLabelledButton(
+                                            //   onTap: () {},
+                                            //   label: "close",
+                                            // )
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 40.w,
+                                                    vertical: 4.h),
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      AppColors.lightCyanColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          4.r),
+                                                ),
+                                                child: Text(
+                                                  "close",
+                                                  style:
+                                                      AppTextStyle.font14bold,
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  });
+                            }
+                          },
                         ),
                       ),
                     ),

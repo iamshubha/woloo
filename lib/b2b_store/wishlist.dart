@@ -16,10 +16,8 @@ import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart'
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
-import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
-import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
 
 class WishListScreen extends StatefulWidget {
   final List<product_collections.Product> productData;
@@ -256,7 +254,9 @@ class _WishListScreenState extends State<WishListScreen> {
                                                       AppColors.lightCyanColor,
                                                 ),
                                                 child: Text(
-                                                  "80ml",
+                                                  product.variants.first.options
+                                                          ?.first.value ??
+                                                      "",
                                                   style:
                                                       AppTextStyle.font10bold,
                                                 ),

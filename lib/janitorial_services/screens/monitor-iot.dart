@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
+import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/view/quick.dart';
 import 'package:woloo_smart_hygiene/main.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
@@ -269,6 +270,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 height: 16,
               ),
               AlertAndNotificationWidget(data: data),
+              const SizedBox(height: 16),
+              IotLogs(),
               const SizedBox(height: 16),
               AirQuality(data: data),
 

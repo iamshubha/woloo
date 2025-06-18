@@ -110,9 +110,9 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                       Flexible(
                         flex: 1,
                         child: SizedBox(
-                          height: 45.h,
+                          height: 40.h,
                           child: XDecoratedBox(
-                            padding: 4,
+                            padding: 6,
                             child: XDesignedTextField(
                               hintText: "First Name",
                               controller: _firstNameController,
@@ -127,7 +127,7 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                       Flexible(
                         flex: 1,
                         child: SizedBox(
-                          height: 45.h,
+                          height: 40.h,
                           child: XDecoratedBox(
                             padding: 4,
                             child: XDesignedTextField(
@@ -142,8 +142,9 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                       ),
                     ],
                   ),
+                  SizedBox(height: 10.h),
                   SizedBox(
-                    height: 45.h,
+                    height: 40.h,
                     child: XDecoratedBox(
                       padding: 4,
                       child: XDesignedTextField(
@@ -155,8 +156,9 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                       ),
                     ),
                   ),
+                  SizedBox(height: 10.h),
                   SizedBox(
-                    height: 45.h,
+                    height: 40.h,
                     child: XDecoratedBox(
                       padding: 4,
                       child: XDesignedTextField(
@@ -168,12 +170,13 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                       ),
                     ),
                   ),
+                  SizedBox(height: 10.h),
                   Row(
                     children: [
                       Flexible(
                         flex: 1,
                         child: SizedBox(
-                          height: 45.h,
+                          height: 40.h,
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -285,7 +288,7 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                       Flexible(
                         flex: 1,
                         child: SizedBox(
-                          height: 45.h,
+                          height: 40.h,
                           child: XDecoratedBox(
                             padding: 4,
                             child: XDesignedTextField(
@@ -298,8 +301,9 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                       ),
                     ],
                   ),
+                  SizedBox(height: 10.h),
                   SizedBox(
-                    height: 45.h,
+                    height: 40.h,
                     child: XDecoratedBox(
                       padding: 4,
                       child: XDesignedTextField(
@@ -310,8 +314,9 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                       ),
                     ),
                   ),
+                  SizedBox(height: 10.h),
                   SizedBox(
-                    height: 45.h,
+                    height: 40.h,
                     child: XDecoratedBox(
                       padding: 4,
                       child: XDesignedTextField(
@@ -322,8 +327,9 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                       ),
                     ),
                   ),
+                  SizedBox(height: 10.h),
                   SizedBox(
-                    height: 45.h,
+                    height: 40.h,
                     child: XDecoratedBox(
                       padding: 4,
                       child: XDesignedTextField(
