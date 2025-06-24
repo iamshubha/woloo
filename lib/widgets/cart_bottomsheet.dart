@@ -207,7 +207,9 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                                   ),
 
                                   const Divider(),
-                                  const ApplyPromo(),
+                                  // ApplyPromo(
+                                  //   b2bStoreBloc: _b2bStoreBloc,
+                                  // ),
                                   const Divider(),
                                   PricingCalculate(
                                     itemTotal: cartModel?.cart.originalItemTotal

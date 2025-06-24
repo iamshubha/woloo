@@ -7,24 +7,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
-import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/custom_widget/start_rating.dart';
-import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/hygine_services/view/address_notifier.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
-import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
-
-import '../utils///logger.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({
     super.key,
+    this.suggestions = const [],
   });
-
+  final List<String> suggestions;
   @override
   State<SearchScreen> createState() => _SearchScreenState();
 }
@@ -33,8 +30,12 @@ class _SearchScreenState extends State<SearchScreen> {
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   B2BStoreHomePage? _b2bStoreHomePage;
   bool _isDataLoaded = false;
-  List<Product> products = [];
+  List<XYProduct> products = [];
+  List<String> filteredSuggestions = [];
   final searchTEC = TextEditingController();
+  OverlayEntry? _overlayEntry;
+  final FocusNode _focusNode = FocusNode();
+  final LayerLink _layerLink = LayerLink();
   _refresh() {
     _b2bStoreBloc.add(const Refresh(slug: "collection_id"));
   }
@@ -43,6 +44,82 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     _b2bStoreBloc.add(const Refresh(slug: "collection_id"));
     super.initState();
+    searchTEC.addListener(() {
+      final query = searchTEC.text.toLowerCase();
+      if (query.isEmpty) {
+        setState(() {
+          filteredSuggestions = [];
+        });
+        _overlayEntry?.remove();
+        _overlayEntry = null;
+        return;
+      } else if (query.length > 2) {
+        setState(() {
+          filteredSuggestions = widget.suggestions
+              .where((item) => item.toLowerCase().contains(query))
+              .toList();
+        });
+
+        _overlayEntry?.remove();
+        _overlayEntry = _createOverlayEntry();
+        Overlay.of(context).insert(_overlayEntry!);
+      }
+    });
+
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus) {
+        _overlayEntry?.remove();
+        _overlayEntry = null;
+      }
+    });
+  }
+
+  OverlayEntry _createOverlayEntry() {
+    RenderBox renderBox = context.findRenderObject() as RenderBox;
+    final size = renderBox.size;
+
+    return OverlayEntry(
+      builder: (context) => Positioned(
+        width: size.width - 40,
+        right: 20,
+        child: CompositedTransformFollower(
+          link: _layerLink,
+          showWhenUnlinked: false,
+          offset: const Offset(20, 60),
+          child: Material(
+            elevation: 4.0,
+            borderRadius: BorderRadius.circular(8),
+            child: ListView.builder(
+              itemCount: filteredSuggestions.length,
+              itemBuilder: (context, index) {
+                final suggestion = filteredSuggestions[index];
+
+                return ListTile(
+                  title: Text(suggestion),
+                  onTap: () {
+                    searchTEC.text = suggestion;
+                    _b2bStoreBloc.add(SearchProductEvent(query: suggestion));
+                    _overlayEntry?.remove();
+                    _overlayEntry = null;
+                    _focusNode.unfocus();
+                  },
+                );
+              },
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    searchTEC.dispose();
+    _focusNode.dispose();
+    _overlayEntry?.dispose();
+    super.dispose();
   }
 
   @override
@@ -50,9 +127,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return BlocConsumer(
         bloc: _b2bStoreBloc,
         listener: (context, state) {
-          if (state is RestockSubscriptionsLoading) {
-            // EasyLoading.show(status: state.message);
-          }
+          if (state is RestockSubscriptionsLoading) {}
           if (state is RestockSubscriptionsSuccess) {
             EasyLoading.dismiss();
             EasyLoading.showSuccess("Notification set successfully");
@@ -61,26 +136,19 @@ class _SearchScreenState extends State<SearchScreen> {
             EasyLoading.dismiss();
             EasyLoading.showError(state.error);
           }
-          // print("dssa $state");
-          if (state is B2BStoreLoading) {
-            // EasyLoading.show(status: state.message);
-          }
-          if (state is CartLoading) {
-            // EasyLoading.show(status: state.message);
-          }
+          if (state is B2BStoreLoading) {}
+          if (state is CartLoading) {}
           if (state is CartSuccess) {
             EasyLoading.dismiss();
             _refresh();
           }
-          if (state is B2BStoreSuccess) {
-            EasyLoading.dismiss();
-            setState(() {
-              _b2bStoreHomePage = state.dashboardData;
-              products = _b2bStoreHomePage!.productCollections.products;
-              _isDataLoaded = true;
 
-              // _dashboardData = state.dashboardData;
+          if (state is SearchProductSuccess) {
+            setState(() {
+              _isDataLoaded = true;
+              products = state.products;
             });
+            logger.w("SearchProductSuccess: ${products.length}");
           }
 
           if (state is B2BStoreError) {
@@ -92,83 +160,48 @@ class _SearchScreenState extends State<SearchScreen> {
           return PopScope(
             canPop: false,
             child: Scaffold(
-              // bottomNavigationBar: const XBottomBar(),
-              // appBar: EComAppbar(
-              //   controller: searchTEC,
-              //   onCartTap: () async {
-              //     final value = await Navigator.push(context,
-              //         MaterialPageRoute(builder: (c) => const CartScreen()));
-              //     if (value != null && value == 'refresh') {
-              //       _refresh();
-              //     } else {
-              //       _refresh();
-              //     }
-              //   },
-              //   onChanged: (value) {
-              //     if (value.isEmpty) {
-              //       products = _b2bStoreHomePage!.productCollections.products;
-              //     } else {
-              //       products = _b2bStoreHomePage!.productCollections.products
-              //           .where((e) =>
-              //               e.title
-              //                   ?.toLowerCase()
-              //                   .contains(value.toLowerCase()) ??
-              //               false)
-              //           .toList();
-              //       //logger.w("Value: $value Products: ${products.length}");
-              //     }
-
-              //     setState(() {});
-              //   },
-              //   cartValue: _isDataLoaded
-              //       ? _b2bStoreHomePage?.cartData.cart.items?.length ?? 0
-              //       : 0,
-              //   onTap: () {
-              //     _refresh();
-              //   },
-              // ),
               appBar: AppBar(
-                automaticallyImplyLeading: false, // Remove default back button
-                backgroundColor: AppColors.themeBackground,
-                leading: Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context, 'refresh');
-                    },
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.arrow_back_ios_new_rounded,
-                          size: 16,
+                backgroundColor: Colors.white,
+                elevation: 0,
+                leadingWidth: 100,
+                leading: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context, 'refresh');
+                  },
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 10),
+                      Icon(
+                        Icons.arrow_back_ios,
+                        color: AppColors.textgreyColor,
+                        size: 16,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Back",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textgreyColor,
+                          fontSize: 14,
                         ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "Back",
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: AppColors.greyCircleColor,
-                              fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-
                 bottom: PreferredSize(
-                  preferredSize: const Size.fromHeight(65),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 5.h),
-                    child: Row(children: [
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12.r),
+                  preferredSize: Size.fromHeight(50.h),
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10.w),
+                            decoration: BoxDecoration(
+                              color: AppColors.themeBackground,
+                              borderRadius: BorderRadius.circular(8.r),
                               boxShadow: const [
                                 BoxShadow(
                                   color: AppColors.greyShadowColor,
@@ -182,68 +215,57 @@ class _SearchScreenState extends State<SearchScreen> {
                                   spreadRadius: 0.5,
                                   offset: Offset(0, -1),
                                 ),
-                              ]),
-                          child: TextField(
-                            onTap: () {},
-                            readOnly: true,
-                            // focusNode: focus,
-                            // controller: controller,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: AppColors.themeBackground,
-                              // hintText: textFieldHintText,
-                              prefixIcon: const Icon(Icons.search),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12.r),
-                                borderSide: BorderSide.none,
+                              ],
+                            ),
+                            child: CompositedTransformTarget(
+                              link: _layerLink,
+                              child: TextField(
+                                controller: searchTEC,
+                                onChanged: (value) {},
+                                decoration: InputDecoration(
+                                  hintText: "Search Products",
+                                  filled: true,
+                                  fillColor: AppColors.themeBackground,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.r),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  prefixIcon: const Icon(Icons.search,
+                                      color: AppColors.textgreyColor),
+                                ),
                               ),
                             ),
-                            enableSuggestions: true,
-                            onChanged: (v) {},
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-
-                      SizedBox(width: 10.w),
-                      // if (isAll) ...[
-                      SizedBox(
-                        width: 10.w,
-                      ),
-                      Container(
-                        height: 41.h,
-                        width: 41.h,
-                        decoration: const BoxDecoration(
-                          color: AppColors.themeBackground,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.greyShadowColor,
-                              blurRadius: 5.0,
-                              spreadRadius: 0.5,
-                              offset: Offset(0, 2),
-                            ),
-                            BoxShadow(
-                              color: AppColors.greyShadowColor,
-                              blurRadius: 5.0,
-                              spreadRadius: 0.5,
-                              offset: Offset(0, -1),
-                            ),
-                          ],
+                        const SizedBox(
+                          width: 20,
                         ),
-                        child: Center(
-                          child: Image.asset(
-                            AppImages.tuneLogo,
-                            height: 20.h,
-                            width: 20.w,
+                        Container(
+                          height: 40.h,
+                          width: 40.h,
+                          decoration: const BoxDecoration(
+                              color: AppColors.themeBackground,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.greyShadowColor,
+                                  blurRadius: 5.0,
+                                  spreadRadius: 0.5,
+                                  offset: Offset(0, 2),
+                                ),
+                                BoxShadow(
+                                  color: AppColors.greyShadowColor,
+                                  blurRadius: 5.0,
+                                  spreadRadius: 0.5,
+                                  offset: Offset(0, -1),
+                                ),
+                              ]),
+                          child: Center(
+                            child: Image.asset(AppImages.tuneLogo),
                           ),
-                        ),
-                      )
-                    ]
-                        // ],
-                        ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -291,28 +313,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                 )
                               ],
                             ),
-                            // GridView.builder(
-                            //   shrinkWrap: true,
-                            //   physics: const NeverScrollableScrollPhysics(),
-                            //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            //     crossAxisCount: 2,
-                            //     crossAxisSpacing: 10,
-                            //     mainAxisSpacing: 10,
-                            //     childAspectRatio: 0.6,
-                            //   ),
-                            //   itemCount: products.length,
-                            //   itemBuilder: (context, index) {
-                            //     final product = products[index];
-                            //     return GridItem(
-                            //       onTap: (){
-
-                            //       },
-                            //       products: product,
-                            //       // imageUrl: topBrands[index].imageUrl,
-                            //     );
-                            //   },
-                            // ),
-
                             GridView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
@@ -334,7 +334,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                     productCount = i.quantity!;
                                   }
                                 });
-                                // AddButtonMode mode = AddButtonMode.remove;
                                 return GestureDetector(
                                   onTap: () async {
                                     final result = await Navigator.push(
@@ -364,7 +363,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                       _refresh();
                                       print(
                                           'Returned from Page B with refresh signal (or physical back).');
-                                      // _initializeData(); // Re-initialize or refresh data
                                     } else {
                                       _refresh();
                                       print(
@@ -372,7 +370,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                     }
                                   },
                                   child: Container(
-                                    // padding: EdgeInsets.symmetric(horizontal: 10.w),
                                     child: Stack(
                                       children: [
                                         Column(
@@ -445,7 +442,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                                           .font10bold,
                                                     ),
                                                   ),
-
                                             SizedBox(
                                               height: 5.h,
                                             ),
@@ -455,14 +451,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   fontSize: 8.sp,
                                                   fontWeight: FontWeight.bold),
                                             ),
-                                            // Text(
-                                            //   products.subtitle ?? "",
-                                            //   style: TextStyle(
-                                            //     fontSize: 8.sp,
-                                            //     color: AppColors.textgreyColor,
-                                            //     fontWeight: FontWeight.bold,
-                                            //   ),
-                                            // ),
                                             Row(
                                               children: [
                                                 AnimatedRatingStars(
@@ -493,9 +481,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                                       Curves.easeInOut,
                                                   readOnly: false,
                                                 ),
-                                                // if (product.reviewCount !=
-                                                //         null &&
-                                                //     product.reviewCount != 0)
                                                 Text(
                                                   "(${product.reviewCount ?? 0})",
                                                   style:
@@ -503,7 +488,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 )
                                               ],
                                             ),
-
                                             Row(
                                               spacing: 5.w,
                                               children: [
@@ -514,7 +498,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
-                                                //TODO: Check Price Logic -- Abar asibo fire
                                                 Text(
                                                   "MRP ${product.variants.first.calculatedPrice!.originalAmount.toString()}",
                                                   style: TextStyle(
@@ -564,27 +547,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                                     quantity: 1,
                                                     variant_id: product
                                                         .variants[0].id));
-                                                // if (widget.isSelected) {
-                                                //   widget.onRemove?.call();
-                                                // } else {
-                                                //   widget.onAdd?.call();
-                                                // }
-                                                // setState(() {
-                                                //   mode = AddButtonMode.add;
-                                                // });
                                                 await Future.delayed(
                                                     const Duration(
-                                                        milliseconds: 500), () {
-                                                  // setState(() {
-                                                  //   mode =
-                                                  //       AddButtonMode.count;
-                                                  // });
-                                                });
-
-                                                // if (widget.onTap != null) {
-                                                //   widget.onTap!();
-                                                // }
-                                                //Add to cart 1st time
+                                                        milliseconds: 500),
+                                                    () {});
                                               },
                                               borderRadius:
                                                   BorderRadius.circular(3.r),
@@ -633,21 +599,11 @@ class _SearchScreenState extends State<SearchScreen> {
                                                           ),
                                                         )
                                                       : productCount == 0
-                                                          // AddButtonMode.remove
                                                           ? Text(
                                                               "Add",
                                                               style: AppTextStyle
                                                                   .font10bold,
                                                             )
-                                                          // :
-                                                          //  mode ==
-                                                          //         AddButtonMode
-                                                          //             .add
-                                                          //     ? Text(
-                                                          //         "Added",
-                                                          //         style: AppTextStyle
-                                                          //             .font10bold,
-                                                          //       )
                                                           : Row(
                                                               spacing: 10,
                                                               children: [
@@ -657,21 +613,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                                                         0)
                                                                       return;
 
-                                                                    // productCount -=
-                                                                    //     1;
-                                                                    // if (productCount ==
-                                                                    //     0) {
-                                                                    //   productCount =
-                                                                    //       1;
-                                                                    //   // mode = AddButtonMode
-                                                                    //   //     .remove;
-                                                                    //   // if (widget.onRemove != null) {
-                                                                    //   //   widget.onRemove!();
-                                                                    //   // }
-                                                                    // }
-
-                                                                    // setState(
-                                                                    //     () {});
                                                                     productCount ==
                                                                             0
                                                                         ? EasyLoading.showError(
@@ -731,15 +672,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                                                 ),
                                                                 InkWell(
                                                                   onTap: () {
-                                                                    // productCount += 1;
-                                                                    // setState(() {});
-                                                                    // if (widget.onAdd != null) {
-                                                                    //   widget.onAdd!();
-                                                                    // }
-                                                                    //  productCount == 0
-                                                                    //   ? addToCart(context)
-                                                                    //   :
-                                                                    // To add value
                                                                     _b2bStoreHomePage
                                                                         ?.cartData
                                                                         .cart
@@ -789,7 +721,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 ),
                                               ),
                                             )),
-
                                         product.variants.first
                                                     .inventoryQuantity ==
                                                 0
@@ -817,53 +748,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 ),
                                               )
                                             : const SizedBox(),
-                                        // Positioned(
-                                        //   // left: 8,
-                                        //   // right: 8,
-                                        //   child: Container(
-                                        //     padding: EdgeInsets.symmetric(
-                                        //         horizontal: 5.w,
-                                        //         vertical: 2.h),
-                                        //     decoration: BoxDecoration(
-                                        //         color:
-                                        //             AppColors.lightCyanColor,
-                                        //         borderRadius:
-                                        //             BorderRadius.circular(4)),
-                                        //     child: Text(
-                                        //       "Out of Stock",
-                                        //       style: AppTextStyle.font10bold,
-                                        //     ),
-                                        //   ),
-                                        // )
                                       ],
                                     ),
                                   ),
-
-                                  //  GridItem(
-                                  //   productCount: productCount,
-                                  //   b2bStoreBloc: _b2bStoreBloc,
-                                  //   products: product,
-                                  //   cartModel:  _b2bStoreHomePage?.cartData.cart,
-
-                                  //   isSelected: _b2bStoreBloc.favIds.any(
-                                  //       (e) => e.containsKey(product.id)),
-                                  //   productIdforWishList: _b2bStoreBloc.favIds
-                                  //           .any((e) =>
-                                  //               e.containsKey(product.id))
-                                  //       ? _b2bStoreBloc.favIds
-                                  //           .firstWhere((e) =>
-                                  //               e.entries.first.key ==
-                                  //               product.id)
-                                  //           .entries
-                                  //           .first
-                                  //           .value
-                                  //       : "",
-                                  //   // imageUrl: productCollections.products![index].thumbnail ?? '',
-                                  // ),
                                 );
                               },
                             ),
-
                             SizedBox(
                               height: 60.h,
                             ),

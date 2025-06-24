@@ -14,12 +14,10 @@ import 'package:woloo_smart_hygiene/b2b_store/widgets/smart_widgets.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
-import 'package:woloo_smart_hygiene/utils///logger.dart';
 import 'package:woloo_smart_hygiene/widgets/boxes/cart_item.dart';
 import 'package:woloo_smart_hygiene/widgets/order_summery_bottomsheet.dart';
 
 import '../hygine_services/view/address_notifier.dart';
-import '../widgets/review_order_bottomsheet.dart';
 import 'widgets/radio_labeled_tile.dart';
 
 class CartScreen extends StatefulWidget {
@@ -138,6 +136,7 @@ class _CartScreenState extends State<CartScreen> {
             setState(() {
               isLoading = false;
               errorMessage = null;
+              cartModel = state.cartData;
               if (state.message?.contains("removed") ?? false) {
                 // isApplied = false;
                 // appliedPromoCode = "";
@@ -190,7 +189,7 @@ class _CartScreenState extends State<CartScreen> {
               appBar: const BackAppBar(),
               body: !_isDataLoaded
                   ? Container()
-                  : SmartSingleChilgScrollView(
+                  : SmartSingleChildScrollView(
                       isEnabled: !(cartModel?.cart.items?.isEmpty ?? true),
                       padding: EdgeInsets.symmetric(
                           horizontal: 16.w, vertical: 20.h),
@@ -433,7 +432,111 @@ class _CartScreenState extends State<CartScreen> {
                                 ],
                               ),
                             ),
-                            ApplyPromo(),
+                            Container(
+                              padding: EdgeInsets.all(12.w),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16.r),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.1),
+                                    blurRadius: 5,
+                                    spreadRadius: 1,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        height: 24,
+                                        width: 24,
+                                        child: Image.asset(
+                                            AppImages.salePercentage),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        "Apply Promo Code",
+                                        style: AppTextStyle.font14bold,
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          controller: _promoController,
+                                          enabled: !isLoading,
+                                          decoration: InputDecoration(
+                                            isDense: true,
+                                            isCollapsed: true,
+                                            border:
+                                                const UnderlineInputBorder(),
+                                            focusedBorder:
+                                                const UnderlineInputBorder(),
+                                            hintText: "Enter Promocode",
+                                            errorText: errorMessage,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      _promoController.text != ""
+                                          ? CyanTextButton(
+                                              onTap: () {
+                                                if (isLoading) {
+                                                  null;
+                                                } else {
+                                                  _removePromoCode();
+                                                }
+                                              },
+                                              label: isLoading
+                                                  ? "Removing..."
+                                                  : "Remove",
+                                              color:
+                                                  Colors.red.withOpacity(0.2),
+                                            )
+                                          : CyanTextButton(
+                                              onTap: () {
+                                                isLoading
+                                                    ? null
+                                                    : _applyPromoCode();
+                                              },
+                                              label: isLoading
+                                                  ? "Applying..."
+                                                  : "Apply",
+                                              color: AppColors.lightCyanColor,
+                                            ),
+                                    ],
+                                  ),
+                                  if (_promoController.text != "") ...[
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.check_circle,
+                                          color: Colors.green,
+                                          size: 16.sp,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          "Promo code '${_promoController.text}' applied",
+                                          style:
+                                              AppTextStyle.font12bold.copyWith(
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+
                             // Container(
                             //   padding: EdgeInsets.all(12.w),
                             //   decoration: BoxDecoration(
@@ -581,24 +684,34 @@ class _CartScreenState extends State<CartScreen> {
     }
     // Store promo code in box
     box.write(box.read('cart_id') + "promoCode", _promoController.text.trim());
-    context.read<B2bStoreBloc>().add(
-          ApplyPromoEvent(
-            promoCode: _promoController.text.trim(),
-          ),
-        );
+    // context.read<B2bStoreBloc>().add(
+    //       ApplyPromoEvent(
+    //         promoCode: _promoController.text.trim(),
+    //       ),
+    //     );
+    _b2bStoreBloc.add(
+      ApplyPromoEvent(
+        promoCode: _promoController.text.trim(),
+      ),
+    );
   }
 
   void _removePromoCode() {
-    if (appliedPromoCode == "") {
+    if (_promoController.text == "") {
       return;
     }
     // Remove promo code from box
     box.remove(box.read('cart_id') + "promoCode");
-    context.read<B2bStoreBloc>().add(
-          RemovePromoCodeEvent(
-            promoCode: appliedPromoCode,
-          ),
-        );
+    // context.read<B2bStoreBloc>().add(
+    //       RemovePromoCodeEvent(
+    //         promoCode: appliedPromoCode,
+    //       ),
+    //     );
+    _b2bStoreBloc.add(
+      RemovePromoCodeEvent(
+        promoCode: _promoController.text,
+      ),
+    );
   }
 
   Future<dynamic> showCartBottomSheet(BuildContext context) {

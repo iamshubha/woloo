@@ -128,6 +128,14 @@ class AddToCartSuccess extends B2BStoreState {
   List<Object> get props => [cartData];
 }
 
+class SearchProductSuccess extends B2BStoreState {
+  final List<XYProduct> products;
+  const SearchProductSuccess({required this.products});
+
+  @override
+  List<Object> get props => [products];
+}
+
 class CartSuccess extends B2BStoreState {
   final CartModel cartData;
   final ProductCollections? productCollection;

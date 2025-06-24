@@ -27,7 +27,6 @@ import 'package:woloo_smart_hygiene/extensions/string_extension.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
-import 'package:woloo_smart_hygiene/utils///logger.dart';
 
 import '../hygine_services/view/address_notifier.dart';
 import '../utils/app_textstyle.dart';
@@ -143,7 +142,15 @@ class _EcomScreenState extends State<EcomScreen> {
                   : 0,
               onTap: () async {
                 final value = await Navigator.push(
-                    context, MaterialPageRoute(builder: (c) => SearchScreen()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (c) => SearchScreen(
+                              suggestions: _b2bStoreHomePage
+                                      ?.productCollections.products
+                                      .map((e) => e.title ?? "")
+                                      .toList() ??
+                                  [],
+                            )));
                 if (value != null && value == 'refresh') {
                   _refresh();
                 }
@@ -680,7 +687,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                                               color: AppColors
                                                                   .textgreyColor),
                                                         )
-                                                      : SizedBox(),
+                                                      : const SizedBox(),
                                                 ],
                                               )
                                             ],
@@ -1008,7 +1015,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                                         ),
                                                       ),
                                                     )
-                                                  : SizedBox(),
+                                                  : const SizedBox(),
                                           // Positioned(
                                           //   // left: 8,
                                           //   // right: 8,

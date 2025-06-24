@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -26,7 +25,6 @@ import 'package:woloo_smart_hygiene/hygine_services/view/address_notifier.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
-import 'package:woloo_smart_hygiene/utils///logger.dart';
 import 'package:woloo_smart_hygiene/widgets/cart_bottomsheet.dart';
 
 import '../utils/app_textstyle.dart';
@@ -34,7 +32,7 @@ import 'address_change_bottomsheet.dart';
 import 'models/product_collections.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
-  final product_collections.Product? productData;
+  final product_collections.XYProduct? productData;
   ProductDetailsScreen(
       {super.key,
       this.productData,

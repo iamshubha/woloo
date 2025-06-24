@@ -78,6 +78,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<RestockSubscriptionsEvent>(restockSubscriptions);
     on<ApplyPromoEvent>(_applyPromoCode);
     on<RemovePromoCodeEvent>(_removePromoCode);
+    on<SearchProductEvent>(_searchQuery);
   }
 
   FutureOr<void> _emailPassRegister(
@@ -839,7 +840,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
   ) async {
     try {
       emit(const CartLoadingForPromo(message: "Removing promo code..."));
-
+      logger.w("Removing promo code: ${event.promoCode}");
       // Call API to remove promo code
       final response = await _cartService.removePromoCode(
         token: box.read('login_jwt'),
@@ -930,6 +931,24 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
           : 'Failed to remove Woloo points. Please try again.';
       emit(CartError(error: errorMsg));
       //logger.e("Error removing Woloo points: $e");
+    }
+  }
+
+  FutureOr<void> _searchQuery(
+    SearchProductEvent event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const B2BStoreLoading(message: "Searching products..."));
+      final response = await _productService.searchProducts(
+        token: box.read('login_jwt'),
+        regionId: box.read('region_id'),
+        query: event.query,
+      );
+      emit(SearchProductSuccess(products: response.products));
+    } catch (e) {
+      emit(B2BStoreError(error: e.toString()));
+      debugPrint("Error in search query service: $e");
     }
   }
 }

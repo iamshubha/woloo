@@ -18,10 +18,9 @@ import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
-import 'package:woloo_smart_hygiene/utils///logger.dart';
 
 class WishListScreen extends StatefulWidget {
-  final List<product_collections.Product> productData;
+  final List<product_collections.XYProduct> productData;
   const WishListScreen({
     super.key,
     required this.productData,
@@ -34,7 +33,7 @@ class _WishListScreenState extends State<WishListScreen> {
   // Wishlist? wishlistData;
   bool _isDataLoaded = false;
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
-  List<product_collections.Product> _wProductData = [];
+  List<product_collections.XYProduct> _wProductData = [];
   CartModel? _cart;
 
   GlobalStorage globalStorage = GetIt.instance();
@@ -49,7 +48,7 @@ class _WishListScreenState extends State<WishListScreen> {
     super.initState();
   }
 
-  List<product_collections.Product> getFavProducts() {
+  List<product_collections.XYProduct> getFavProducts() {
     final favid = _b2bStoreBloc.favIds.map((e) => e.entries.first.key).toList();
     return widget.productData
         .where((element) => favid.contains(element.id))

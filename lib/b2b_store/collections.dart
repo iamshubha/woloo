@@ -32,7 +32,7 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   B2BStoreHomePage? _b2bStoreHomePage;
   bool _isDataLoaded = false;
-  List<Product> products = [];
+  List<XYProduct> products = [];
   final searchTEC = TextEditingController();
   _refresh() {
     _b2bStoreBloc.add(const Refresh(slug: "collection_id"));
