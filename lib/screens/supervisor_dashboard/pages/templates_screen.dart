@@ -172,7 +172,9 @@ class _TemplateScreenState extends State<TemplateScreen> {
                          Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>   ClientDashboard(),
+                            builder: (context) =>   ClientDashboard(
+                              dashIndex: 1,
+                            ),
                           ),
                           (route) => false,
                         );

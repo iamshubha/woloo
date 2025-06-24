@@ -10,10 +10,11 @@ import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
+import 'package:woloo_smart_hygiene/b2b_store/order_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
-import 'package:woloo_smart_hygiene/utils/logger.dart';
+import 'package:woloo_smart_hygiene/utils///logger.dart';
 
 class OrderScreenCheckout extends StatefulWidget {
   OrderSet orderSet;
@@ -114,12 +115,14 @@ class _OrderScreenCheckoutState extends State<OrderScreenCheckout> {
                             "Check or modify the details of your order here"),
                     Expanded(
                       child: ListView.builder(
-                          itemCount: widget.orderSet.orders.first.items.length,
+                          itemCount:
+                              widget.orderSet.orders?.first.items?.length,
                           itemBuilder: (c, i) {
-                            final order = widget.orderSet.orders.first;
-                            final item = order.items[i];
+                            final order = widget.orderSet.orders?.first;
+
+                            final item = order?.items?[i];
                             final orderShipmentAddress = order
-                                .paymentCollections
+                                ?.paymentCollections
                                 ?.first
                                 .payments
                                 ?.first
@@ -130,12 +133,12 @@ class _OrderScreenCheckoutState extends State<OrderScreenCheckout> {
                                 ?.first;
                             return OrderStatusCard(
                               orderShipmentAddress: orderShipmentAddress,
-                              id: item.id ?? "",
+                              id: item?.id ?? "",
                               timeLineList: timeLineList,
-                              url: item.thumbnail ?? "",
-                              productLabel: item.title ?? "",
-                              subTitle: item.subtitle ?? "",
-                              price: (item.total ?? 0).toString(),
+                              url: item?.thumbnail ?? "",
+                              productLabel: item?.title ?? "",
+                              subTitle: item?.subtitle ?? "",
+                              price: (item?.total ?? 0).toString(),
                             );
                           }),
                     ),
@@ -158,163 +161,163 @@ class _OrderScreenCheckoutState extends State<OrderScreenCheckout> {
   }
 }
 
-class OrderStatusCard extends StatelessWidget {
-  const OrderStatusCard(
-      {super.key,
-      required this.timeLineList,
-      required this.url,
-      required this.productLabel,
-      required this.subTitle,
-      required this.price,
-      required this.id,
-      required this.orderShipmentAddress});
-  final Address? orderShipmentAddress;
-  final List<String> timeLineList;
-  final String id;
-  final String url;
-  final String productLabel;
-  final String subTitle;
-  final String price;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(12.w),
-      margin: EdgeInsets.symmetric(vertical: 8.h),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 5,
-            spreadRadius: 1,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Order ID: $id", style: AppTextStyle.font12bold),
-          SizedBox(height: 8.h),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12.r),
-                child: url.isEmpty
-                    ? Image.asset(
-                        AppImages.appLogo,
-                        height: 60.h,
-                        width: 60.w,
-                        fit: BoxFit.cover,
-                      )
-                    : CachedNetworkImage(
-                        imageUrl: url,
-                        height: 60.h,
-                        width: 60.w,
-                        fit: BoxFit.cover,
-                      ),
-              ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      productLabel,
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      subTitle,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      "Rs. $price",
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 12.h),
-          SizedBox(
-            height: 80.h,
-            child: Timeline.builder(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (c, i) {
-                  return TimelineTile(
-                    nodePosition: 0,
-                    contents: SizedBox(
-                      width: 150,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            timeLineList[i],
-                            textAlign: TextAlign.center,
-                          ),
-                          const Text("~time ")
-                        ],
-                      ),
-                    ),
-                    mainAxisExtent: 80,
-                    node: TimelineNode(
-                      startConnector: i != 0
-                          ? const SolidLineConnector(
-                              color: AppColors.lightCyanColor,
-                            )
-                          : null,
-                      endConnector: i + 1 < (timeLineList.length)
-                          ? const SolidLineConnector(
-                              color: AppColors.lightCyanColor,
-                            )
-                          : null,
-                      indicator: DotIndicator(
-                        size: 23.h,
-                        color: i == 0 ? AppColors.greenBold : AppColors.orange,
-                        child: i == 0
-                            ? const Icon(
-                                Icons.check,
-                                size: 12,
-                              )
-                            : null,
-                      ),
-                    ),
-                  );
-                },
-                itemCount: timeLineList.length),
-          ),
-          SizedBox(height: 12.h),
-          Container(
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-              child: Text(
-                  "User: ${orderShipmentAddress?.firstName + " " + orderShipmentAddress?.lastName}")),
-          Container(
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-              child:
-                  Text("Address Type: ${orderShipmentAddress?.addressName}")),
-          Container(
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-              child: Text("Address: ${orderShipmentAddress?.address1}")),
-        ],
-      ),
-    );
-  }
-}
+// class OrderStatusCard extends StatelessWidget {
+//   const OrderStatusCard(
+//       {super.key,
+//       required this.timeLineList,
+//       required this.url,
+//       required this.productLabel,
+//       required this.subTitle,
+//       required this.price,
+//       required this.id,
+//       required this.orderShipmentAddress});
+//   final Address? orderShipmentAddress;
+//   final List<String> timeLineList;
+//   final String id;
+//   final String url;
+//   final String productLabel;
+//   final String subTitle;
+//   final String price;
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: EdgeInsets.all(12.w),
+//       margin: EdgeInsets.symmetric(vertical: 8.h),
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(16.r),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.grey.withOpacity(0.1),
+//             blurRadius: 5,
+//             spreadRadius: 1,
+//             offset: const Offset(0, 3),
+//           ),
+//         ],
+//       ),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Text("Order ID: $id", style: AppTextStyle.font12bold),
+//           SizedBox(height: 8.h),
+//           Row(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               ClipRRect(
+//                 borderRadius: BorderRadius.circular(12.r),
+//                 child: url.isEmpty
+//                     ? Image.asset(
+//                         AppImages.appLogo,
+//                         height: 60.h,
+//                         width: 60.w,
+//                         fit: BoxFit.cover,
+//                       )
+//                     : CachedNetworkImage(
+//                         imageUrl: url,
+//                         height: 60.h,
+//                         width: 60.w,
+//                         fit: BoxFit.cover,
+//                       ),
+//               ),
+//               SizedBox(width: 12.w),
+//               Expanded(
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     Text(
+//                       productLabel,
+//                       style: TextStyle(
+//                         fontSize: 14.sp,
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                     SizedBox(height: 4.h),
+//                     Text(
+//                       subTitle,
+//                       style: TextStyle(
+//                         fontSize: 12.sp,
+//                         color: Colors.grey,
+//                       ),
+//                     ),
+//                     SizedBox(height: 8.h),
+//                     Text(
+//                       "\u{20B9} $price",
+//                       style: TextStyle(
+//                         fontSize: 14.sp,
+//                         fontWeight: FontWeight.bold,
+//                         color: Colors.black,
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ],
+//           ),
+//           SizedBox(height: 12.h),
+//           SizedBox(
+//             height: 80.h,
+//             child: Timeline.builder(
+//                 scrollDirection: Axis.horizontal,
+//                 itemBuilder: (c, i) {
+//                   return TimelineTile(
+//                     nodePosition: 0,
+//                     contents: SizedBox(
+//                       width: 150,
+//                       child: Column(
+//                         mainAxisSize: MainAxisSize.min,
+//                         children: [
+//                           Text(
+//                             timeLineList[i],
+//                             textAlign: TextAlign.center,
+//                           ),
+//                           const Text("~time ")
+//                         ],
+//                       ),
+//                     ),
+//                     mainAxisExtent: 80,
+//                     node: TimelineNode(
+//                       startConnector: i != 0
+//                           ? const SolidLineConnector(
+//                               color: AppColors.lightCyanColor,
+//                             )
+//                           : null,
+//                       endConnector: i + 1 < (timeLineList.length)
+//                           ? const SolidLineConnector(
+//                               color: AppColors.lightCyanColor,
+//                             )
+//                           : null,
+//                       indicator: DotIndicator(
+//                         size: 23.h,
+//                         color: i == 0 ? AppColors.greenBold : AppColors.orange,
+//                         child: i == 0
+//                             ? const Icon(
+//                                 Icons.check,
+//                                 size: 12,
+//                               )
+//                             : null,
+//                       ),
+//                     ),
+//                   );
+//                 },
+//                 itemCount: timeLineList.length),
+//           ),
+//           SizedBox(height: 12.h),
+//           Container(
+//               padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+//               child: Text(
+//                   "User: ${orderShipmentAddress?.firstName ?? ''} ${orderShipmentAddress?.lastName ?? ''}")),
+//           Container(
+//               padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+//               child:
+//                   Text("Address Type: ${orderShipmentAddress?.addressName}")),
+//           Container(
+//               padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+//               child: Text("Address: ${orderShipmentAddress?.address1}")),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class ReviewBottomSheet extends StatefulWidget {
   final Function(String) onSubmit;
@@ -340,7 +343,7 @@ class ReviewBottomSheet extends StatefulWidget {
     String hintText = 'Type Your Review Here!',
     String submitButtonText = 'Submit',
   }) {
-    logger.w("Executing***");
+    //logger.w("Executing***");
     return showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
@@ -531,7 +534,7 @@ class OtherItemOrder extends StatelessWidget {
                   color: AppColors.greyBorderProfile),
             ),
             Text(
-              "Rs. 299",
+              "\u{20B9} 299/-",
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.bold,

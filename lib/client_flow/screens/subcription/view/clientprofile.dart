@@ -13,7 +13,6 @@ import 'package:woloo_smart_hygiene/client_flow/widgets/CustomButton.dart';
 import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
-
 import '../../../../core/local/global_storage.dart';
 import '../../../../utils/app_constants.dart';
 import '../../dashbaord/model/facility_model.dart';
@@ -48,7 +47,9 @@ class _ClientprofileState extends State<Clientprofile> {
   void initState() {
     // TODO: implement initState
     super.initState();
-   clientName =  globalStorage.getSupervisorName();
+   clientName = "";
+   
+  //  globalStorage.getSupervisorName();
 
    subcriptionBloc.add( const UserCoinsEvent());
 
@@ -138,9 +139,7 @@ class _ClientprofileState extends State<Clientprofile> {
                   ),
                    const SizedBox(
                       height: 20,
-                   ),
-                  
-                   
+                   ),       
                   const Custombutton(text: "Active Membership", width: 350),
                   const SizedBox(
                     height: 20,

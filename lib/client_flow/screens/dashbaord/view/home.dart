@@ -102,6 +102,7 @@ class _HomeState extends State<Home> {
   int? clusterId;
   int? locationId;
   int? facilityId;
+  bool isOpenDrop = false;
 
   // Str planId;
   FocusNode addressFocusNode = FocusNode();
@@ -127,6 +128,7 @@ class _HomeState extends State<Home> {
     dashBoardBloc.add(ClientEvent(id: decodedToken!["id"]));
 
     if (facalityRef.isNotEmpty) {
+
       dashBoardBloc.add(PaymentStatusEvent(refId: facalityRef));
     }
 
@@ -203,6 +205,7 @@ class _HomeState extends State<Home> {
 
                     if (state is DashboarLoading) {
                       EasyLoading.show(status: state.message);
+
                     }
 
                     if (state is ClientSetUp) {
@@ -289,11 +292,15 @@ class _HomeState extends State<Home> {
                           ]));
 
                       EasyLoading.dismiss();
+
                     }
 
                     if (state is Addjanitor) {
-                      print("add jantor succcesfull");
+                      print("add jantor succcesfull $selectedFacility");
+                      //  print("add jantor succcesfull ${globalStorage.getFacilityRef()}");
                       String clientId = globalStorage.getClientId();
+                    
+                     selectedFacility == null ?
                       dashBoardBloc.add(AssignTaskEvent(
                         clientId: int.parse(clientId),
                         shiftTime: "${shiftTime!.hour}:${shiftTime!.minute}:00",
@@ -302,7 +309,24 @@ class _HomeState extends State<Home> {
                         taskTimes: dashController.taskTimes,
                         janitorId: state.superVisorModel!.results!.data!.value!,
                         facilityRef: globalStorage.getFacilityRef(),
+                        // facilityId: selectedFacility!.id
+                        //                           .toString()
+
+                      ))
+                      :
+                        dashBoardBloc.add(AssignTaskEvent(
+                        clientId: int.parse(clientId),
+                        shiftTime: "${shiftTime!.hour}:${shiftTime!.minute}:00",
+                        taskIds: taksIds,
+                        estimatedTime: estimatedTime.toString(),
+                        taskTimes: dashController.taskTimes,
+                        janitorId: state.superVisorModel!.results!.data!.value!,
+                        facilityRef: "",
+                        facilityId: selectedFacility!.id
+                                                  .toString()
+
                       ));
+                         globalStorage.removeFacilityRef();
                     }
 
                     if (state is CheckSupervisor) {
@@ -321,7 +345,7 @@ class _HomeState extends State<Home> {
                       canPop = false;
 
                       dashController.taskTimes = <Map<String, String>>[].obs;
-                      globalStorage.removeFacilityRef();
+                     
 
                       congratDailog();
                       //  showDialog(context: context, builder:
@@ -353,6 +377,7 @@ class _HomeState extends State<Home> {
                     }
 
                     if (state is GetAllFacility) {
+                      
                       EasyLoading.dismiss();
                       facilitydropdownNames.clear();
                       facilityList.clear();
@@ -466,9 +491,19 @@ class _HomeState extends State<Home> {
                                             globalStorage.getPaymentId();
 
                                         print("paln id  ${planId} ");
-
+                                        // facilityNames = [];
+                                          //  dashController.taskStartTime.clear();
+                                          //   dashController.taskEndTime.clear();
+                                          //   dashController.taskTimes.clear();
+                                          //   selectedbuddy = null;
+                                          //   estimatedTime = null;
+                                          //   shiftTime = null;
+                                            facilityController.clear();
+                                            locationController.clear();
+                                            selectedIndex = -1;
                                         print("payment id  ${paymentId} ");
                                         if (paymentId.isNotEmpty) {
+
                                           globalStorage.removePaymentId();
                                           // paymentId = "";
                                           // setState(() {
@@ -983,6 +1018,7 @@ class _HomeState extends State<Home> {
 
                               facilitydropdownNames.isNotEmpty
                                   ? DropdownButtonHideUnderline(
+                                    
                                       child: DropdownButton2<
                                           FacilityDropdownModel>(
                                         dropdownStyleData: DropdownStyleData(
@@ -992,6 +1028,7 @@ class _HomeState extends State<Home> {
                                                 color: AppColors.white)),
 
                                         isExpanded: true,
+
                                         hint:
                                             //  selectItem == null ?
                                             Text(
@@ -1001,7 +1038,28 @@ class _HomeState extends State<Home> {
                                             fontSize: 16.sp,
                                           ),
                                         ),
+                                          onMenuStateChange: (isOpen) {
+           print( "is oner $isOpen");
+           isOpenDrop = isOpen;
+           setState(() {
+             
+           }); 
+                  
+         },
 
+    iconStyleData: IconStyleData(
+                icon:
+                isOpenDrop! ?
+                 const Icon( Icons.keyboard_arrow_up_rounded,
+                 size: 38,
+                   color: Color(0xff8F8F8F)
+                 )
+                :
+                 const Icon( Icons.keyboard_arrow_down_rounded,
+                 size: 38,
+                   color: Color(0xff8F8F8F)
+                 )
+              ),
                                         items: facilitydropdownNames!
                                             .map((FacilityDropdownModel item) {
                                           return DropdownMenuItem<
@@ -1392,6 +1450,13 @@ class _HomeState extends State<Home> {
                                       padding: const EdgeInsets.all(0),
                                       hintText: DashboardConst
                                           .ifOthersMentionFacility,
+                                        hintStyle:   TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13.sp,
+                                          fontWeight: FontWeight.w700
+                                        ),
+
+                                          
                                       controller: typeController,
                                       validator: (valu) {
                                         if (valu == null || valu.isEmpty) {
@@ -1401,7 +1466,10 @@ class _HomeState extends State<Home> {
                                     )
                                   : const SizedBox(),
 
-                              const Spacer(),
+                              // const Spacer(),
+                               const SizedBox(
+                                height: 40,
+                               ),
 
                               GestureDetector(
                                   onTap: () {
@@ -2776,8 +2844,7 @@ class _HomeState extends State<Home> {
                                 onTap: () {
                                   isNext = true;
                                   setState(() {});
-                                  print(
-                                      "curtne ${_formKey.currentState!.validate()}");
+                                  print(  "curtne ${_formKey.currentState!.validate()}");
                                   if (shiftTime != null &&
                                       dashController.taskTimeModel.isNotEmpty &&
                                       estimatedTime != null) {
@@ -3037,6 +3104,7 @@ class _HomeState extends State<Home> {
                                         isSelfAssign: isSelfAssign,
                                       ));
                                     } else {
+                                    
                                       print(
                                           "janitorEstimatedTime ${estimatedTime}");
 
@@ -3269,13 +3337,14 @@ class _HomeState extends State<Home> {
                           height: 20.h,
                         ),
 
-                        isTimePassed
-                            ? Text(
+                        // isTimePassed
+                        //     ?
+                             Text(
                                 textAlign: TextAlign.center,
                                 "Tasks scheduled before the current time will start tracking from the next day, as today's time may have already passed at the time of assignment"!,
                                 style: AppTextStyle.font14bold,
-                              )
-                            : const SizedBox(),
+                              ),
+                            // : const SizedBox(),
 
                         //  GestureDetector(
                         //    onTap: () {
@@ -3326,7 +3395,9 @@ class _HomeState extends State<Home> {
 
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) {
-                                return const ClientDashboard();
+                                return  ClientDashboard(
+                                  dashIndex: 1,
+                                );
                               },
                             ));
                           },
@@ -4626,10 +4697,11 @@ class _HomeState extends State<Home> {
                                               taskTimes:
                                                   dashController.taskTimes,
                                               janitorId: buddy.id!,
-                                              facilityRef: globalStorage
-                                                  .getFacilityRef(),
+                                              facilityRef:"",                
                                               facilityId: selectedFacility.id
-                                                  .toString()));
+                                                  .toString()
+                                                  )
+                                                  );
 
                                           // print("org ${facilityController.text}");
                                           // print("org ${locationController.text}");
@@ -4756,7 +4828,7 @@ class _HomeState extends State<Home> {
 
 // class TaskDropdownModel {
 //   final String facilityName;
-//   final int requiredTime;
+//   final int requiredTime;fvt
 
 //   TaskDropdownModel({required this.facilityName, required this.requiredTime});
 // }
@@ -4926,6 +4998,7 @@ class _FloatingMultiSelectDropdownState
       _overlayEntry = null;
     }
     setState(() {});
+
   }
 
   void _onItemTapped(TaskDropdownModel item) {

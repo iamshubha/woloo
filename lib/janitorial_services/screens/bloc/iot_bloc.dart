@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/data/model/dashboard_task_model.dart';
+import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/data/network/dashboard_service.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/model/host_dashboard_screen.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/model/referral_coins.dart';
 
@@ -12,6 +14,9 @@ import 'iot_state.dart';
 
 class IotBloc extends Bloc<IotEvent, IotState> {
   final IotService iotService = IotService(dio: GetIt.instance());
+
+  final DashboardService dashboardService =
+      DashboardService(dio: GetIt.instance());
   var requestId = '';
   late int roleId;
   late int janitorId;
@@ -26,10 +31,18 @@ class IotBloc extends Bloc<IotEvent, IotState> {
       emit(const IotLoading(message: "Loading IOT data..."));
 
       var response = await iotService.getIotDashBoardData(
-          deviceId: event.deviceId, type: event.type);
+          facilityId: event.facilityId, type: event.type);
       debugPrint("requestId $response");
-
-      emit(IotSuccess(dashboardData: response));
+      final data = await dashboardService.getTaskDashboard(
+          clientId: event.clientId,
+          type: event.type,
+          facilityId: event.facilityId,
+          janitorId: event.janitorId);
+      TaskStatusDistribution taskStatusDistribution =
+          data.results?.taskStatusDistribution ?? TaskStatusDistribution();
+      emit(IotSuccess(
+          taskStatusDistribution: taskStatusDistribution,
+          dashboardData: response));
     } catch (e) {
       emit(IotError(error: e.toString()));
     }

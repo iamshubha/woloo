@@ -1,403 +1,402 @@
-class AirQualityData {
-  List<AmoniaTableData>? amoniaTableData;
-  String? ammoniaUnit;
-  RangeOfPpm? rangeOfPpm;
-  List<AvgppmTimeRange>? avgppmTimeRange;
+import 'dart:convert';
 
-  AirQualityData(
-      {this.amoniaTableData,
-      this.ammoniaUnit,
-      this.rangeOfPpm,
-      this.avgppmTimeRange});
+DashboardData dashboardDataFromJson(String str) =>
+    DashboardData.fromJson(json.decode(str));
 
-  AirQualityData.fromJson(Map<String, dynamic> json) {
-    if (json['amonia_table_data'] != null) {
-      amoniaTableData = <AmoniaTableData>[];
-      json['amonia_table_data'].forEach((v) {
-        amoniaTableData!.add(AmoniaTableData.fromJson(v));
-      });
-    }
-    ammoniaUnit = json['ammonia_unit'];
-    rangeOfPpm = json['range_of_ppm'] != null
-        ? RangeOfPpm.fromJson(json['range_of_ppm'])
-        : null;
-    if (json['avgppm_time_range'] != null) {
-      avgppmTimeRange = <AvgppmTimeRange>[];
-      json['avgppm_time_range'].forEach((v) {
-        avgppmTimeRange!.add(AvgppmTimeRange.fromJson(v));
-      });
-    }
-  }
+String dashboardDataToJson(DashboardData data) => json.encode(data.toJson());
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (amoniaTableData != null) {
-      data['amonia_table_data'] =
-          amoniaTableData!.map((v) => v.toJson()).toList();
-    }
-    data['ammonia_unit'] = ammoniaUnit;
-    if (rangeOfPpm != null) {
-      data['range_of_ppm'] = rangeOfPpm!.toJson();
-    }
-    if (avgppmTimeRange != null) {
-      data['avgppm_time_range'] =
-          avgppmTimeRange!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
+class DashboardData {
+  final Results? results;
+  final bool? success;
+
+  DashboardData({
+    this.results,
+    this.success,
+  });
+
+  factory DashboardData.fromJson(Map<String, dynamic> json) => DashboardData(
+        results:
+            json["results"] == null ? null : Results.fromJson(json["results"]),
+        success: json["success"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "results": results?.toJson(),
+        "success": success,
+      };
 }
 
-class AmoniaTableData {
-  String? pcdMax;
-  String? ppmAvg;
-  String? heading;
-  int? ppmDiff;
-  List<dynamic>? value;
+class Results {
+  final GaugeGraphData? gaugeGraphData;
+  final AmmoniaLevelAcrossWashroomResult? ammoniaLevelAcrossWashroomResult;
+  final List<AlertsNotification>? alertsNotification;
+  final List<AmoniaTableDatum>? amoniaTableData;
+  final String? ammoniaUnit;
+  final RangeOfPpm? rangeOfPpm;
+  final List<AvgppmTimeRange>? avgppmTimeRange;
+  final List<UsageReportQuery>? usageReportQuery;
+  final Summary? summary;
 
-  AmoniaTableData(
-      {this.pcdMax, this.ppmAvg, this.heading, this.ppmDiff, this.value});
+  Results({
+    this.gaugeGraphData,
+    this.ammoniaLevelAcrossWashroomResult,
+    this.alertsNotification,
+    this.amoniaTableData,
+    this.ammoniaUnit,
+    this.rangeOfPpm,
+    this.avgppmTimeRange,
+    this.usageReportQuery,
+    this.summary,
+  });
 
-  AmoniaTableData.fromJson(Map<String, dynamic> json) {
-    pcdMax = json['pcd_max'];
-    ppmAvg = json['ppm_avg'];
-    heading = json['heading'];
-    ppmDiff = json['ppm_diff'];
-    if (json['value'] != null) {
-      value = <dynamic>[];
-      json['value'].forEach((v) {
-        value!.add(v);
-      });
-    }
-  }
+  factory Results.fromJson(Map<String, dynamic> json) => Results(
+        gaugeGraphData: json["gauge_graph_data"] == null
+            ? null
+            : GaugeGraphData.fromJson(json["gauge_graph_data"]),
+        ammoniaLevelAcrossWashroomResult:
+            json["ammonia_level_across_washroom_result"] == null
+                ? null
+                : AmmoniaLevelAcrossWashroomResult.fromJson(
+                    json["ammonia_level_across_washroom_result"]),
+        alertsNotification: json["alerts_notification"] == null
+            ? []
+            : List<AlertsNotification>.from(json["alerts_notification"]!
+                .map((x) => AlertsNotification.fromJson(x))),
+        amoniaTableData: json["amonia_table_data"] == null
+            ? []
+            : List<AmoniaTableDatum>.from(json["amonia_table_data"]!
+                .map((x) => AmoniaTableDatum.fromJson(x))),
+        ammoniaUnit: json["ammonia_unit"],
+        rangeOfPpm: json["range_of_ppm"] == null
+            ? null
+            : RangeOfPpm.fromJson(json["range_of_ppm"]),
+        avgppmTimeRange: json["avgppm_time_range"] == null
+            ? []
+            : List<AvgppmTimeRange>.from(json["avgppm_time_range"]!
+                .map((x) => AvgppmTimeRange.fromJson(x))),
+        usageReportQuery: json["usageReportQuery"] == null
+            ? []
+            : List<UsageReportQuery>.from(json["usageReportQuery"]!
+                .map((x) => UsageReportQuery.fromJson(x))),
+        summary:
+            json["summary"] == null ? null : Summary.fromJson(json["summary"]),
+      );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['pcd_max'] = pcdMax;
-    data['ppm_avg'] = ppmAvg;
-    data['heading'] = heading;
-    data['ppm_diff'] = ppmDiff;
-    if (value != null) {
-      data['value'] = value!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+        "gauge_graph_data": gaugeGraphData?.toJson(),
+        "ammonia_level_across_washroom_result":
+            ammoniaLevelAcrossWashroomResult?.toJson(),
+        "alerts_notification": alertsNotification == null
+            ? []
+            : List<dynamic>.from(alertsNotification!.map((x) => x.toJson())),
+        "amonia_table_data": amoniaTableData == null
+            ? []
+            : List<dynamic>.from(amoniaTableData!.map((x) => x.toJson())),
+        "ammonia_unit": ammoniaUnit,
+        "range_of_ppm": rangeOfPpm?.toJson(),
+        "avgppm_time_range": avgppmTimeRange == null
+            ? []
+            : List<dynamic>.from(avgppmTimeRange!.map((x) => x.toJson())),
+        "usageReportQuery": usageReportQuery == null
+            ? []
+            : List<dynamic>.from(usageReportQuery!.map((x) => x.toJson())),
+        "summary": summary?.toJson(),
+      };
 }
 
-class RangeOfPpm {
-  String? unhealthyMax;
-  String? unhealthyMin;
-  String? healthyMin;
-  String? healthyMax;
-  String? moderateMax;
-  String? moderateMin;
+class AlertsNotification {
+  final DateTime? ppmTime;
+  final String? condition;
+  final String? dataUnit;
 
-  RangeOfPpm(
-      {this.unhealthyMax,
-      this.unhealthyMin,
-      this.healthyMin,
-      this.healthyMax,
-      this.moderateMax,
-      this.moderateMin});
+  AlertsNotification({
+    this.ppmTime,
+    this.condition,
+    this.dataUnit,
+  });
 
-  RangeOfPpm.fromJson(Map<String, dynamic> json) {
-    unhealthyMax = json['unhealthy_max'];
-    unhealthyMin = json['unhealthy_min'];
-    healthyMin = json['healthy_min'];
-    healthyMax = json['healthy_max'];
-    moderateMax = json['moderate_max'];
-    moderateMin = json['moderate_min'];
-  }
+  factory AlertsNotification.fromJson(Map<String, dynamic> json) =>
+      AlertsNotification(
+        ppmTime:
+            json["ppm_time"] == null ? null : DateTime.parse(json["ppm_time"]),
+        condition: json["condition"],
+        dataUnit: json["data_unit"],
+      );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['unhealthy_max'] = unhealthyMax;
-    data['unhealthy_min'] = unhealthyMin;
-    data['healthy_min'] = healthyMin;
-    data['healthy_max'] = healthyMax;
-    data['moderate_max'] = moderateMax;
-    data['moderate_min'] = moderateMin;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+        "ppm_time": ppmTime?.toIso8601String(),
+        "condition": condition,
+        "data_unit": dataUnit,
+      };
+}
+
+class AmmoniaLevelAcrossWashroomResult {
+  final DistinctDataModified? distinctDataModified;
+  final DistinctDataModified? distinctPeopleDataModified;
+  final String? distinctPeopleDataUnit;
+
+  AmmoniaLevelAcrossWashroomResult({
+    this.distinctDataModified,
+    this.distinctPeopleDataModified,
+    this.distinctPeopleDataUnit,
+  });
+
+  factory AmmoniaLevelAcrossWashroomResult.fromJson(
+          Map<String, dynamic> json) =>
+      AmmoniaLevelAcrossWashroomResult(
+        distinctDataModified: json["distinct_data_modified"] == null
+            ? null
+            : DistinctDataModified.fromJson(json["distinct_data_modified"]),
+        distinctPeopleDataModified:
+            json["distinct_people_data_modified"] == null
+                ? null
+                : DistinctDataModified.fromJson(
+                    json["distinct_people_data_modified"]),
+        distinctPeopleDataUnit: json["distinct_people_data_unit"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "distinct_data_modified": distinctDataModified?.toJson(),
+        "distinct_people_data_modified": distinctPeopleDataModified?.toJson(),
+        "distinct_people_data_unit": distinctPeopleDataUnit,
+      };
+}
+
+class DistinctDataModified {
+  final List<Datum>? data;
+  final List<String>? category;
+
+  DistinctDataModified({
+    this.data,
+    this.category,
+  });
+
+  factory DistinctDataModified.fromJson(Map<String, dynamic> json) =>
+      DistinctDataModified(
+        data: json["data"] == null
+            ? []
+            : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+        category: json["category"] == null
+            ? []
+            : List<String>.from(json["category"]!.map((x) => x)),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "data": data == null
+            ? []
+            : List<dynamic>.from(data!.map((x) => x.toJson())),
+        "category":
+            category == null ? [] : List<dynamic>.from(category!.map((x) => x)),
+      };
+}
+
+class Datum {
+  final String? color;
+  final int? y;
+
+  Datum({
+    this.color,
+    this.y,
+  });
+
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+        color: json["color"],
+        y: json["y"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "color": color,
+        "y": y,
+      };
+}
+
+class AmoniaTableDatum {
+  final String? pcdMax;
+  final String? ppmAvg;
+  final String? heading;
+  final int? ppmDiff;
+  final List<double>? value;
+
+  AmoniaTableDatum({
+    this.pcdMax,
+    this.ppmAvg,
+    this.heading,
+    this.ppmDiff,
+    this.value,
+  });
+
+  factory AmoniaTableDatum.fromJson(Map<String, dynamic> json) =>
+      AmoniaTableDatum(
+        pcdMax: json["pcd_max"],
+        ppmAvg: json["ppm_avg"],
+        heading: json["heading"],
+        ppmDiff: json["ppm_diff"],
+        value: json["value"] == null
+            ? []
+            : List<double>.from(json["value"]!.map((x) => x?.toDouble())),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "pcd_max": pcdMax,
+        "ppm_avg": ppmAvg,
+        "heading": heading,
+        "ppm_diff": ppmDiff,
+        "value": value == null ? [] : List<dynamic>.from(value!.map((x) => x)),
+      };
 }
 
 class AvgppmTimeRange {
-  String? timeRange;
-  String? avgPpmAvg;
-  String? avgPpmMax;
-  String? avgPcdMax;
-  String? avgPchMax;
+  final String? timeRange;
+  final String? avgPpmAvg;
+  final String? avgPpmMax;
+  final String? avgPcdMax;
+  final String? avgPchMax;
 
-  AvgppmTimeRange(
-      {this.timeRange,
-      this.avgPpmAvg,
-      this.avgPpmMax,
-      this.avgPcdMax,
-      this.avgPchMax});
-
-  AvgppmTimeRange.fromJson(Map<String, dynamic> json) {
-    timeRange = json['time_range'];
-    avgPpmAvg = json['avg_ppm_avg'];
-    avgPpmMax = json['avg_ppm_max'];
-    avgPcdMax = json['avg_pcd_max'];
-    avgPchMax = json['avg_pch_max'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['time_range'] = timeRange;
-    data['avg_ppm_avg'] = avgPpmAvg;
-    data['avg_ppm_max'] = avgPpmMax;
-    data['avg_pcd_max'] = avgPcdMax;
-    data['avg_pch_max'] = avgPchMax;
-    return data;
-  }
-}
-
-// ______________________________________________________
-class Alert {
-  final DateTime timestamp;
-  final String condition;
-  final String building;
-
-  Alert({
-    required this.timestamp,
-    required this.condition,
-    required this.building,
+  AvgppmTimeRange({
+    this.timeRange,
+    this.avgPpmAvg,
+    this.avgPpmMax,
+    this.avgPcdMax,
+    this.avgPchMax,
   });
 
-  factory Alert.fromJson(Map<String, dynamic> json) {
-    return Alert(
-      timestamp: DateTime.parse(json['timestamp']),
-      condition: json['condition'],
-      building: json['building'],
-    );
-  }
-}
+  factory AvgppmTimeRange.fromJson(Map<String, dynamic> json) =>
+      AvgppmTimeRange(
+        timeRange: json["time_range"],
+        avgPpmAvg: json["avg_ppm_avg"],
+        avgPpmMax: json["avg_ppm_max"],
+        avgPcdMax: json["avg_pcd_max"],
+        avgPchMax: json["avg_pch_max"],
+      );
 
-// Models for the new dashboard structure
+  Map<String, dynamic> toJson() => {
+        "time_range": timeRange,
+        "avg_ppm_avg": avgPpmAvg,
+        "avg_ppm_max": avgPpmMax,
+        "avg_pcd_max": avgPcdMax,
+        "avg_pch_max": avgPchMax,
+      };
+}
 
 class GaugeGraphData {
-  final String avgAmmonia;
-  final String pcdMax;
-  final Map<String, dynamic> ppm; // Updated type
-  final String condition;
+  final String? avgAmonia;
+  final String? pcdMax;
+  final Ppm? ppm;
+  final String? condition;
 
   GaugeGraphData({
-    required this.avgAmmonia,
-    required this.pcdMax,
-    required this.ppm,
-    required this.condition,
+    this.avgAmonia,
+    this.pcdMax,
+    this.ppm,
+    this.condition,
   });
 
-  factory GaugeGraphData.fromJson(Map<String, dynamic> json) {
-    return GaugeGraphData(
-      avgAmmonia: json['avg_amonia'] ?? '0',
-      pcdMax: json['pcd_max'] ?? '0',
-      ppm: Map<String, dynamic>.from(json['ppm'] ?? {}), // Proper type casting
-      condition: json['condition'] ?? '',
-    );
-  }
+  factory GaugeGraphData.fromJson(Map<String, dynamic> json) => GaugeGraphData(
+        avgAmonia: json["avg_amonia"],
+        pcdMax: json["pcd_max"],
+        ppm: json["ppm"] == null ? null : Ppm.fromJson(json["ppm"]),
+        condition: json["condition"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "avg_amonia": avgAmonia,
+        "pcd_max": pcdMax,
+        "ppm": ppm?.toJson(),
+        "condition": condition,
+      };
 }
 
-class ChartDataPoint {
-  final String color;
-  var y;
+class Ppm {
+  Ppm();
 
-  ChartDataPoint({
-    required this.color,
-    required this.y,
-  });
+  factory Ppm.fromJson(Map<String, dynamic> json) => Ppm();
 
-  factory ChartDataPoint.fromJson(Map<String, dynamic> json) {
-    return ChartDataPoint(
-      color: json['color'] ?? '#000000',
-      y: json['y'] ?? 0,
-    );
-  }
+  Map<String, dynamic> toJson() => {};
 }
 
-class WashroomData {
-  final List<ChartDataPoint> data;
-  final List<String> category;
+class RangeOfPpm {
+  final String? unhealthyMax;
+  final String? unhealthyMin;
+  final String? healthyMin;
+  final String? healthyMax;
+  final String? moderateMax;
+  final String? moderateMin;
 
-  WashroomData({
-    required this.data,
-    required this.category,
+  RangeOfPpm({
+    this.unhealthyMax,
+    this.unhealthyMin,
+    this.healthyMin,
+    this.healthyMax,
+    this.moderateMax,
+    this.moderateMin,
   });
 
-  factory WashroomData.fromJson(Map<String, dynamic> json) {
-    return WashroomData(
-      data: (json['data'] as List? ?? [])
-          .map((data) => ChartDataPoint.fromJson(data))
-          .toList(),
-      category: (json['category'] as List? ?? []).cast<String>(),
-    );
-  }
+  factory RangeOfPpm.fromJson(Map<String, dynamic> json) => RangeOfPpm(
+        unhealthyMax: json["unhealthy_max"],
+        unhealthyMin: json["unhealthy_min"],
+        healthyMin: json["healthy_min"],
+        healthyMax: json["healthy_max"],
+        moderateMax: json["moderate_max"],
+        moderateMin: json["moderate_min"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "unhealthy_max": unhealthyMax,
+        "unhealthy_min": unhealthyMin,
+        "healthy_min": healthyMin,
+        "healthy_max": healthyMax,
+        "moderate_max": moderateMax,
+        "moderate_min": moderateMin,
+      };
 }
 
-class AmmoniaLevelData {
-  final WashroomData distinctDataModified;
-  final WashroomData distinctPeopleDataModified;
-  final String distinctPeopleDataUnit;
+class Summary {
+  final String? alertsNotificationSummary;
+  final String? avgppmOverLocation;
+  final String? avgppmTimeRangeInsights;
 
-  AmmoniaLevelData({
-    required this.distinctDataModified,
-    required this.distinctPeopleDataModified,
-    required this.distinctPeopleDataUnit,
+  Summary({
+    this.alertsNotificationSummary,
+    this.avgppmOverLocation,
+    this.avgppmTimeRangeInsights,
   });
 
-  factory AmmoniaLevelData.fromJson(Map<String, dynamic> json) {
-    return AmmoniaLevelData(
-      distinctDataModified:
-          WashroomData.fromJson(json['distinct_data_modified'] ?? {}),
-      distinctPeopleDataModified:
-          WashroomData.fromJson(json['distinct_people_data_modified'] ?? {}),
-      distinctPeopleDataUnit: json['distinct_people_data_unit'] ?? '',
-    );
-  }
+  factory Summary.fromJson(Map<String, dynamic> json) => Summary(
+        alertsNotificationSummary: json["alerts_notification_summary"],
+        avgppmOverLocation: json["avgppm_over_location"],
+        avgppmTimeRangeInsights: json["avgppm_time_range_insights"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "alerts_notification_summary": alertsNotificationSummary,
+        "avgppm_over_location": avgppmOverLocation,
+        "avgppm_time_range_insights": avgppmTimeRangeInsights,
+      };
 }
 
-class AmmoniaTableData {
-  final String pcdMax;
-  final String ppmAvg;
-  final String heading;
-  final int ppmDiff;
-  final List<dynamic> value;
+class UsageReportQuery {
+  final String? dayName;
+  final String? dayInitial;
+  final String? avgPcdMax;
 
-  AmmoniaTableData({
-    required this.pcdMax,
-    required this.ppmAvg,
-    required this.heading,
-    required this.ppmDiff,
-    required this.value,
+  UsageReportQuery({
+    this.dayName,
+    this.dayInitial,
+    this.avgPcdMax,
   });
 
-  factory AmmoniaTableData.fromJson(Map<String, dynamic> json) {
-    return AmmoniaTableData(
-      pcdMax: json['pcd_max'] ?? '0',
-      ppmAvg: json['ppm_avg'] ?? '0',
-      heading: json['heading'] ?? '',
-      ppmDiff: json['ppm_diff'] ?? 0,
-      value: json['value'] ?? [],
-    );
-  }
-}
+  factory UsageReportQuery.fromJson(Map<String, dynamic> json) =>
+      UsageReportQuery(
+        dayName: json["day_name"],
+        dayInitial: json["day_initial"],
+        avgPcdMax: json["avg_pcd_max"],
+      );
 
-class PpmRange {
-  final String unhealthyMax;
-  final String unhealthyMin;
-  final String healthyMin;
-  final String healthyMax;
-  final String moderateMax;
-  final String moderateMin;
-
-  PpmRange({
-    required this.unhealthyMax,
-    required this.unhealthyMin,
-    required this.healthyMin,
-    required this.healthyMax,
-    required this.moderateMax,
-    required this.moderateMin,
-  });
-
-  factory PpmRange.fromJson(Map<String, dynamic> json) {
-    return PpmRange(
-      unhealthyMax: json['unhealthy_max'] ?? '0',
-      unhealthyMin: json['unhealthy_min'] ?? '0',
-      healthyMin: json['healthy_min'] ?? '0',
-      healthyMax: json['healthy_max'] ?? '0',
-      moderateMax: json['moderate_max'] ?? '0',
-      moderateMin: json['moderate_min'] ?? '0',
-    );
-  }
-}
-
-class TimeRangeData {
-  final String timeRange;
-  final String avgPpmAvg;
-  final String avgPpmMax;
-  final String avgPcdMax;
-  final String avgPchMax;
-
-  TimeRangeData({
-    required this.timeRange,
-    required this.avgPpmAvg,
-    required this.avgPpmMax,
-    required this.avgPcdMax,
-    required this.avgPchMax,
-  });
-
-  factory TimeRangeData.fromJson(Map<String, dynamic> json) {
-    return TimeRangeData(
-      timeRange: json['time_range'] ?? '',
-      avgPpmAvg: json['avg_ppm_avg'] ?? '0',
-      avgPpmMax: json['avg_ppm_max'] ?? '0',
-      avgPcdMax: json['avg_pcd_max'] ?? '0',
-      avgPchMax: json['avg_pch_max'] ?? '0',
-    );
-  }
-}
-
-class DashboardSummary {
-  final String alertsNotificationSummary;
-  final String avgppmOverLocation;
-  final String avgppmTimeRangeInsights;
-
-  DashboardSummary({
-    required this.alertsNotificationSummary,
-    required this.avgppmOverLocation,
-    required this.avgppmTimeRangeInsights,
-  });
-
-  factory DashboardSummary.fromJson(Map<String, dynamic> json) {
-    return DashboardSummary(
-      alertsNotificationSummary: json['alerts_notification_summary'] ?? '',
-      avgppmOverLocation: json['avgppm_over_location'] ?? '',
-      avgppmTimeRangeInsights: json['avgppm_time_range_insights'] ?? '',
-    );
-  }
-}
-
-class DashboardData {
-  final GaugeGraphData gaugeGraphData;
-  final AmmoniaLevelData ammoniaLevelData;
-  final List<dynamic> alertsNotification;
-  final List<AmmoniaTableData> amoniaTableData;
-  final String ammoniaUnit;
-  final PpmRange rangeOfPpm;
-  final List<TimeRangeData> avgppmTimeRange;
-  final DashboardSummary summary;
-
-  DashboardData({
-    required this.gaugeGraphData,
-    required this.ammoniaLevelData,
-    required this.alertsNotification,
-    required this.amoniaTableData,
-    required this.ammoniaUnit,
-    required this.rangeOfPpm,
-    required this.avgppmTimeRange,
-    required this.summary,
-  });
-
-  factory DashboardData.fromJson(Map<String, dynamic> json) {
-    final results = json['results'] ?? {};
-    return DashboardData(
-      gaugeGraphData:
-          GaugeGraphData.fromJson(results['gauge_graph_data'] ?? {}),
-      ammoniaLevelData: AmmoniaLevelData.fromJson(
-          results['ammonia_level_across_washroom_result'] ?? {}),
-      alertsNotification: results['alerts_notification'] ?? [],
-      amoniaTableData: (results['amonia_table_data'] as List? ?? [])
-          .map((data) => AmmoniaTableData.fromJson(data))
-          .toList(),
-      ammoniaUnit: results['ammonia_unit'] ?? '',
-      rangeOfPpm: PpmRange.fromJson(results['range_of_ppm'] ?? {}),
-      avgppmTimeRange: (results['avgppm_time_range'] as List? ?? [])
-          .map((data) => TimeRangeData.fromJson(data))
-          .toList(),
-      summary: DashboardSummary.fromJson(results['summary'] ?? {}),
-    );
-  }
+  Map<String, dynamic> toJson() => {
+        "day_name": dayName,
+        "day_initial": dayInitial,
+        "avg_pcd_max": avgPcdMax,
+      };
 }
 
 class GraphData {

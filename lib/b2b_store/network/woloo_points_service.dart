@@ -4,7 +4,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
-import 'package:woloo_smart_hygiene/utils/logger.dart';
+import 'package:woloo_smart_hygiene/utils///logger.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/woloo_points.dart';
 
 class WolooPointsService {
@@ -15,10 +15,8 @@ class WolooPointsService {
     GlobalStorage globalStorage = GetIt.instance();
     String clintId = globalStorage.getClientToken();
 
-    print(clintId);
-
     final decodedToken = JwtDecoder.decode(clintId);
-    logger.w(decodedToken["id"]);
+    //logger.w(decodedToken["id"]);
 
     try {
       final userId = decodedToken["id"]; //box.read('user_id');
@@ -31,7 +29,6 @@ class WolooPointsService {
         },
         options: Options(
           headers: {
-            'User-Agent': 'Android/22110/10',
             'x-woloo-token': token,
           },
         ),
@@ -65,7 +62,7 @@ class WolooPointsService {
 
       return CartModel.fromJson(response);
     } catch (e) {
-      logger.e('Error applying Woloo points: $e');
+      //logger.e('Error applying Woloo points: $e');
       rethrow;
     }
   }
@@ -91,7 +88,7 @@ class WolooPointsService {
 
       return CartModel.fromJson(response);
     } catch (e) {
-      logger.e('Error removing Woloo points: $e');
+      //logger.e('Error removing Woloo points: $e');
       rethrow;
     }
   }

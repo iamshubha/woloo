@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
+import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/custom_widget/start_rating.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
@@ -92,8 +93,35 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
             child: Scaffold(
               // bottomNavigationBar: const XBottomBar(),
               appBar: EComAppbar(
+                onChanged: (value) {
+                  if (value.isEmpty) {
+                    final products =
+                        _b2bStoreHomePage!.productCollections.products;
+                  } else {
+                    final products = _b2bStoreHomePage!
+                        .productCollections.products
+                        .where((e) =>
+                            e.title
+                                ?.toLowerCase()
+                                .contains(value.toLowerCase()) ??
+                            false)
+                        .toList();
+                    //logger.w("Value: $value Products: ${products.length}");
+                  }
+
+                  setState(() {});
+                },
+                onCartTap: () async {
+                  final value = await Navigator.push(context,
+                      MaterialPageRoute(builder: (c) => const CartScreen()));
+                  if (value != null && value == 'refresh') {
+                    _refresh();
+                  } else {
+                    _refresh();
+                  }
+                },
                 cartValue: _isDataLoaded
-                    ? _b2bStoreHomePage?.cartData.cart.items.length ?? 0
+                    ? _b2bStoreHomePage?.cartData.cart.items?.length ?? 0
                     : 0,
                 onTap: () {
                   _refresh();
@@ -183,9 +211,9 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
 
                                 int productCount = 0;
                                 _b2bStoreHomePage?.cartData.cart.items
-                                    .forEach((i) {
+                                    ?.forEach((i) {
                                   if (i.variantId == product.variants[0].id) {
-                                    productCount = i.quantity;
+                                    productCount = i.quantity ?? 0;
                                   }
                                 });
                                 // AddButtonMode mode = AddButtonMode.remove;
@@ -534,7 +562,7 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
                                                                         ?.cartData
                                                                         .cart
                                                                         .items
-                                                                        .forEach(
+                                                                        ?.forEach(
                                                                             (i) {
                                                                       if (i.variantId ==
                                                                           product
@@ -546,7 +574,7 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
                                                                             count:
                                                                                 productCount,
                                                                             itemId:
-                                                                                i.id));
+                                                                                i.id ?? ""));
                                                                       }
                                                                     });
                                                                   },
@@ -597,7 +625,7 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
                                                                         ?.cartData
                                                                         .cart
                                                                         .items
-                                                                        .forEach(
+                                                                        ?.forEach(
                                                                             (i) {
                                                                       if (i.variantId ==
                                                                           product
@@ -609,7 +637,7 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
                                                                             count:
                                                                                 productCount,
                                                                             itemId:
-                                                                                i.id));
+                                                                                i.id ?? ""));
                                                                       }
                                                                     });
                                                                   },

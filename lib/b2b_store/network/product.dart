@@ -7,7 +7,7 @@ import 'package:woloo_smart_hygiene/b2b_store/models/region.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/restock_subscription.dart';
 import 'package:woloo_smart_hygiene/core/network/api_constant.dart';
 import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
-import 'package:woloo_smart_hygiene/utils/logger.dart';
+import 'package:woloo_smart_hygiene/utils///logger.dart';
 
 class ProductService {
   final DioClient dio;
@@ -121,7 +121,7 @@ class ProductService {
           headers: {
             'Content-Type': 'application/json',
             'x-publishable-api-key':
-                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+                'pk_11664986800fe08913d9c7c090d91839cbdefceda3f8b4c60722d79000f49a48',
             'Authorization': 'Bearer $token',
           },
         ),
@@ -148,7 +148,7 @@ class ProductService {
           },
         ),
       );
-      //logger.w(response);
+      ////logger.w(response);
       return ProductCollections.fromJson(response);
     } catch (e) {
       debugPrint("error $e");
@@ -161,10 +161,10 @@ class ProductService {
     required String token,
     required String id,
   }) async {
-    //logger.w("getProductCollectionsById called with id: $id");
+    ////logger.w("getProductCollectionsById called with id: $id");
     try {
-      //logger.w("getProductCollectionsById id: $id");
-      //logger.w("Token: $token");
+      ////logger.w("getProductCollectionsById id: $id");
+      ////logger.w("Token: $token");
       var response = await dio.get(
         "https://staging-store.woloo.in/store/products?fields=*variants.calculated_price,+variants.inventory_quantity&$slug=$id",
         options: Options(
@@ -176,7 +176,7 @@ class ProductService {
           },
         ),
       );
-      // //logger.w(response);
+      // ////logger.w(response);
       return ProductCollections.fromJson(response);
     } catch (e) {
       debugPrint("error $e");

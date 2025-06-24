@@ -11,7 +11,7 @@ import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
-import 'package:woloo_smart_hygiene/utils/logger.dart';
+import 'package:woloo_smart_hygiene/utils///logger.dart';
 
 class AddressBottomSheet extends StatefulWidget {
   const AddressBottomSheet({super.key});
@@ -221,10 +221,7 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                                     countries: const ["in"],
                                     isLatLngRequired: false,
                                     getPlaceDetailWithLatLng:
-                                        (Prediction prediction) {
-                                      logger.d(
-                                          "Selected place: ${prediction.description}");
-                                    },
+                                        (Prediction prediction) {},
                                     itemClick: (Prediction prediction) {
                                       final parts =
                                           prediction.description?.split(',') ??
@@ -369,7 +366,7 @@ class _AddressBottomSheetState extends State<AddressBottomSheet>
                           // Map 'address_name' from JSON to 'address_name' in AddressReq
                           address_name: _labelController.text.trim(),
                         );
-                        logger.w(v);
+                        //logger.w(v);
                         _b2bStoreBloc.add(v);
                         // );
                       }

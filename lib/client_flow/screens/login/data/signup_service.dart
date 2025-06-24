@@ -181,7 +181,37 @@ class SignupService {
 
 
 
-
+ 
+    Future<bool> updateCustomer({
+    // required String email,
+    required String token,
+    // required String token,
+  }) async {
+    try {
+      var response = await dio.patch(
+        APIConstants.UPDATE_CUSTOMER,
+        
+        // data: {
+        //   "email": email,
+        //   "password": pass,
+        // },
+        options: Options(
+          headers: {
+            "x-woloo-token": token,
+            // 'x-publishable-api-key':
+                // 'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Content-Type': 'application/json',
+            //  'Authorization': 'Bearer $token'
+          },
+        ),
+      );
+    
+      return response["success"];
+    } catch (e) {
+      debugPrint("Error in IOT service: $e");
+      rethrow;
+    }
+  }
 
 
 

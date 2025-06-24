@@ -7,7 +7,6 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/data/model/facility_model.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/view/home.dart';
 import 'package:woloo_smart_hygiene/client_flow/widgets/CustomButton.dart';
-
 import '../../../../core/local/global_storage.dart';
 import '../../../../janitorial_services/screens/monitor-iot.dart';
 import '../../../../utils/app_color.dart';
@@ -217,6 +216,7 @@ class _HomeTabbarState extends State<HomeTabbar> with TickerProviderStateMixin {
                           controller: tabController,
                           children: widget.facility!
                               .map((e) => e.planName == "PREMIUM" &&
+                                      e.planName == "CLASSIC" &&
                                       e.subscriptionStatus == "inactive"
                                   ? Column(
                                       // mainAxisAlignment: MainAxisAlignment.center,

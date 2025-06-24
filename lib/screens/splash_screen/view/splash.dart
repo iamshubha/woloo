@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:app_links/app_links.dart';
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:dio_log/dio_log.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -16,6 +17,7 @@ import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import '../../../client_flow/screens/dashbaord/view/dashboard.dart';
 import '../../../client_flow/screens/dashbaord/view/home.dart';
 import '../../../client_flow/screens/login/bloc/signup_bloc.dart';
+import '../../../client_flow/screens/login/view/check_screen.dart';
 import '../../../client_flow/screens/login/view/login_as.dart';
 import '../../common_widgets/image_provider.dart';
 import '../../dashboard/view/regular_task.dart';
@@ -27,19 +29,38 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver  {
   CoreBloc coreBloc = CoreBloc();
   GlobalStorage globalStorage = GetIt.instance();
   SignupBloc loginBloc = SignupBloc();
   Map<String, dynamic>? decodedToken;
+    final AppLinks _appLinks = AppLinks();
+  // final ClientDashBoardBloc dashBoardBloc = ClientDashBoardBloc();
 
   // ClientDashBoardBloc dashBoardBloc  = ClientDashBoardBloc();
 
   @override
   void initState() {
     super.initState();
+
     loadApp();
     showDebugBtn(context);
+ 
+  }
+
+
+      @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    print('Current in splash screen state = $state');
+        
+        //  if (state  ==  AppLifecycleState.resumed ) {
+        //       dashBoardBloc.add( ClientEvent(
+        //         id: decodedToken!["id"]
+        //         ) );
+           
+        //  }
+     
   }
 
   loadApp() async {
@@ -51,6 +72,9 @@ class _SplashScreenState extends State<SplashScreen> {
     // updateDeviceToken();
     coreBloc.add(CheckUserIsLoggedInOrNot());
   }
+
+
+
 
   // apiCall() {}
 
@@ -170,7 +194,9 @@ class _SplashScreenState extends State<SplashScreen> {
               context,
               MaterialPageRoute(
                 builder: (context) => clientId.isNotEmpty
-                    ? const ClientDashboard()
+                    ?  CheckScreen(
+                      // dashIndex: 0,
+                    )
                     : roleId == 1
                         ? const Dashboard()
                         : const SupervisorDashboard(
@@ -179,7 +205,11 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
               (route) => false,
             );
+
+           
+
           } catch (e) {
+
             print("sddsd$e");
 
             Navigator.pushAndRemoveUntil(
@@ -207,7 +237,9 @@ class _SplashScreenState extends State<SplashScreen> {
             MaterialPageRoute(
               builder: (context) => clientId.isNotEmpty
                   ? isComplete
-                      ? const ClientDashboard()
+                      ?  ClientDashboard(
+                        dashIndex: 0,
+                      )
                       : const Home(
                           isFromDashboard: false,
                         )

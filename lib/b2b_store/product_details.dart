@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -25,7 +26,7 @@ import 'package:woloo_smart_hygiene/hygine_services/view/address_notifier.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
-import 'package:woloo_smart_hygiene/utils/logger.dart';
+import 'package:woloo_smart_hygiene/utils///logger.dart';
 import 'package:woloo_smart_hygiene/widgets/cart_bottomsheet.dart';
 
 import '../utils/app_textstyle.dart';
@@ -65,12 +66,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   String calculatedAmount = '';
   String originalAmount = '';
   String selectedVariant = '';
+  String selectedSize = '';
+  String selectedPrice = '';
+
   @override
   initState() {
     super.initState();
 
     _b2bStoreBloc.add(const GetCartData());
-    logger.w(widget.productData?.id);
+    //logger.w(widget.productData?.id);
     address = getAddress();
     _b2bStoreBloc.add(GetOrderReview(productId: widget.productData?.id ?? ''));
     isSelected = widget.isSelected;
@@ -99,8 +103,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             .toString() ??
         "0";
 
-    logger.w(colorMap);
-    logger.w("Calculated Amount: $calculatedAmount");
+    //logger.w(colorMap);
+    //logger.w("Calculated Amount: $calculatedAmount");
   }
 
   Addresses? getAddress() {
@@ -157,7 +161,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 // setState(() {});
                 for (var i in itemsData) {
                   if (i.variantId == widget.productData?.variants[0].id) {
-                    productCount = i.quantity;
+                    productCount = i.quantity ?? 0;
                   } else {
                     productCount = 0;
                   }
@@ -195,7 +199,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
           if (state is WishlistSuccess) {
             EasyLoading.dismiss();
-            logger.w(state);
+            //logger.w(state);
             // widget.productData?.id ==
             //     state.wishlistData.wishlist.items.first.productVariant.productId;
             final data = state.wishlistData.wishlist?.items?.firstWhere(
@@ -213,7 +217,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             customerReviews = state.customerReview;
             _productCollection = state.productCollection;
             _refresh();
-            logger.w(customerReviews);
+            //logger.w(customerReviews);
           }
 
           if (state is CartError) {
@@ -242,7 +246,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         // Expanded(
                         //   child: LongLabeledButton(
                         //     onTap: () async {
-                        //       logger.w(
+                        //       //logger.w(
                         //           "Buy Now button tapped with product count: ${address?.address1} and productCount: $productCount");
                         //       if (address?.address1.isEmptyOrNull ?? true) {
                         //         showModalBottomSheet(
@@ -285,6 +289,23 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   style: TextStyle(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.bold)),
+                            // if (selectedVariant.isNotEmpty)
+                            SizedBox(
+                              // color: Colors.red,
+                              // height: 40.h,
+                              // width: 20,
+                              child: Center(
+                                child: Text(
+                                  selectedSize == ""
+                                      ? "${widget.productData?.variants.first.options?.first.value}"
+                                      : selectedSize,
+                                  style: TextStyle(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+
                             Row(
                               spacing: 8,
                               children: [
@@ -294,16 +315,20 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       fontSize: 20.sp,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                Text(
-                                  "MRP \u{20B9} $originalAmount",
-                                  style: TextStyle(
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.greyBorder,
-                                      decoration: TextDecoration.lineThrough),
-                                ),
+                                originalAmount != calculatedAmount
+                                    ? Text(
+                                        "MRP \u{20B9} $originalAmount",
+                                        style: TextStyle(
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColors.greyBorder,
+                                            decoration:
+                                                TextDecoration.lineThrough),
+                                      )
+                                    : SizedBox(),
                               ],
                             ),
+
                             Text("Inclusive of Taxes",
                                 style: TextStyle(
                                     fontSize: 8.sp,
@@ -331,14 +356,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       ? addToCart(context)
                                       :
                                       // To add value
-                                      cartModel?.cart.items.forEach((i) {
+                                      cartModel?.cart.items?.forEach((i) {
                                           if (i.variantId ==
                                               widget.productData?.variants[0]
                                                   .id) {
                                             productCount += 1;
                                             _b2bStoreBloc.add(AddRemoveItemReq(
                                                 count: productCount,
-                                                itemId: i.id));
+                                                itemId: i.id ?? ''));
                                           }
                                         });
                                 },
@@ -347,12 +372,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       ? EasyLoading.showError(
                                           "Product count cannot be less than 0")
                                       : null;
-                                  cartModel?.cart.items.forEach((i) {
+                                  cartModel?.cart.items?.forEach((i) {
                                     if (i.variantId ==
                                         widget.productData?.variants[0].id) {
                                       productCount -= 1;
                                       _b2bStoreBloc.add(AddRemoveItemReq(
-                                          count: productCount, itemId: i.id));
+                                          count: productCount,
+                                          itemId: i.id ?? ""));
                                     }
                                   });
                                 },
@@ -460,10 +486,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 Row(
                                   children: [
                                     Text(
-                                      "Rs. ${widget.productData?.variants[0].calculatedPrice!.calculatedAmount.toString()}",
-                                      // "Rs. ${productData.variants!.last.calculatedPrice!.calculatedAmount.toString()}",
+                                      "\u{20B9} ${widget.productData?.variants[0].calculatedPrice!.calculatedAmount.toString()}",
+                                      // "\u{20B9} ${productData.variants!.last.calculatedPrice!.calculatedAmount.toString()}",
 
-                                      // "Rs. 799",
+                                      // "\u{20B9} 799",
                                       style: TextStyle(
                                           fontSize: 36.sp,
                                           fontWeight: FontWeight.bold),
@@ -756,6 +782,122 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ),
                             ),
                           ),
+                        if (selectedColor.isEmpty)
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.w),
+                            child: VarientContainer(
+                              child: Column(
+                                // spacing: 10.h,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: 10.h,
+                                  ),
+                                  Text(
+                                    "Size",
+                                    style: TextStyle(
+                                        fontSize: 15.sp,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: Divider(
+                                          thickness: 2,
+                                        ),
+                                      ),
+                                      Spacer(
+                                        flex: 4,
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 26,
+                                    child: ListView.separated(
+                                        itemCount: widget
+                                                .productData?.variants.length ??
+                                            0,
+                                        separatorBuilder: (context, index) {
+                                          return const SizedBox(
+                                            width: 5,
+                                          );
+                                        },
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (c, i) {
+                                          return InkWell(
+                                            onTap: () {
+                                              // selectedVarientId =
+                                              //     size?.entries.first.value ??
+                                              //         "";
+                                              // calculatedAmount =
+                                              //     size!['price'] ?? "";
+                                              // originalAmount =
+                                              //     size['originalPrice'] ?? "";
+                                              // selectedVariant =
+                                              //     size.entries.first.key;
+                                              // // sizeVarient = size;
+                                              setState(() {
+                                                selectedSize = widget
+                                                        .productData
+                                                        ?.variants[i]
+                                                        .options
+                                                        ?.first
+                                                        .value ??
+                                                    "";
+                                                selectedVarientId = widget
+                                                        .productData
+                                                        ?.variants[i]
+                                                        .id ??
+                                                    "";
+                                                selectedPrice = widget
+                                                        .productData
+                                                        ?.variants[i]
+                                                        .calculatedPrice
+                                                        ?.calculatedAmount
+                                                        .toString() ??
+                                                    "";
+                                              });
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 10.w,
+                                                  vertical: 4.h),
+                                              decoration: BoxDecoration(
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey
+                                                        .withOpacity(0.3),
+                                                    spreadRadius: 1,
+                                                    blurRadius: 5,
+                                                    offset: const Offset(0, 3),
+                                                  ),
+                                                ],
+                                                color: selectedSize ==
+                                                        widget
+                                                            .productData
+                                                            ?.variants[i]
+                                                            .options
+                                                            ?.first
+                                                            .value
+                                                    ? AppColors.lightCyanColor
+                                                    : Colors.white,
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                    "  ${widget.productData?.variants[i].options?.first.value}"),
+                                              ),
+                                            ),
+                                          );
+                                        }),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
 
                         Padding(
                           // padding: const EdgeInsets.all(8.0),
@@ -877,11 +1019,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   : _productCollection?.products.length,
                           itemBuilder: (context, index) {
                             final product = _productCollection?.products[index];
-                            // logger.w(product!.variants.first.inventoryQuantity);
+                            // //logger.w(product!.variants.first.inventoryQuantity);
                             int productCount = 0;
-                            cartModel?.cart.items.forEach((i) {
+                            cartModel?.cart.items?.forEach((i) {
                               if (i.variantId == product?.variants[0].id) {
-                                productCount = i.quantity;
+                                productCount = i.quantity ?? 0;
                               }
                             });
                             // AddButtonMode mode = AddButtonMode.remove;
@@ -1215,7 +1357,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                                     : null;
                                                                 cartModel
                                                                     ?.cart.items
-                                                                    .forEach(
+                                                                    ?.forEach(
                                                                         (i) {
                                                                   if (i.variantId ==
                                                                       product
@@ -1227,8 +1369,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                                     _b2bStoreBloc.add(AddRemoveItemReq(
                                                                         count:
                                                                             productCount,
-                                                                        itemId:
-                                                                            i.id));
+                                                                        itemId: i.id ??
+                                                                            ""));
                                                                   }
                                                                 });
                                                               },
@@ -1275,7 +1417,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                                 // To add value
                                                                 cartModel
                                                                     ?.cart.items
-                                                                    .forEach(
+                                                                    ?.forEach(
                                                                         (i) {
                                                                   if (i.variantId ==
                                                                       product
@@ -1287,8 +1429,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                                     _b2bStoreBloc.add(AddRemoveItemReq(
                                                                         count:
                                                                             productCount,
-                                                                        itemId:
-                                                                            i.id));
+                                                                        itemId: i.id ??
+                                                                            ""));
                                                                   }
                                                                 });
                                                               },
@@ -1438,8 +1580,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   void _handleCartBottomSheetDismissal(String? result) {
-    logger.d(
-        'ProductDetailsScreen: CartBottomSheet dismissed with result: $result');
     // Here you can update UI or trigger further actions based on the result
     setState(() {
       if (result == 'checkout_initiated') {
@@ -1792,7 +1932,7 @@ class HorizontalListTile extends StatelessWidget {
           Row(
             children: [
               Text(
-                "Rs. 799",
+                "\u{20B9} 799/-",
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.bold,

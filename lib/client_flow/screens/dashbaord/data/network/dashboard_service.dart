@@ -336,7 +336,7 @@ Future<TaskModel> getAllJanitor({
         "estimated_time": estimatedTime,
         "task_times": taskTimes,
         "janitor_id": janitorId,
-        "facility_ref": facilityRef,
+        // "facility_ref": facilityRef,
         
         "facility_id": facilityId, // Assuming facility_id is not required here
 

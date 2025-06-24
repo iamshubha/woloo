@@ -4,6 +4,10 @@
 
 import 'dart:convert';
 
+// To parse this JSON data, do
+//
+//     final facilityModel = facilityModelFromJson(jsonString);
+
 FacilityModel facilityModelFromJson(String str) => FacilityModel.fromJson(json.decode(str));
 
 String facilityModelToJson(FacilityModel data) => json.encode(data.toJson());
@@ -54,7 +58,7 @@ class Facility {
     int? blockId;
     String? locationName;
     int? floorNumber;
-    String? clientName;
+    dynamic clientName;
     String? facilityName;
     String? facilityType;
     String? description;
@@ -68,6 +72,7 @@ class Facility {
     String? subscriptionStatus;
     int? planId;
     String? planName;
+    bool? isFutureSubscription;
     String? total;
 
     Facility({
@@ -90,6 +95,7 @@ class Facility {
         this.subscriptionStatus,
         this.planId,
         this.planName,
+        this.isFutureSubscription,
         this.total,
     });
 
@@ -113,6 +119,7 @@ class Facility {
         subscriptionStatus: json["subscription_status"],
         planId: json["plan_id"],
         planName: json["plan_name"],
+        isFutureSubscription: json["isFutureSubscription"],
         total: json["total"],
     );
 
@@ -136,6 +143,7 @@ class Facility {
         "subscription_status": subscriptionStatus,
         "plan_id": planId,
         "plan_name": planName,
+        "isFutureSubscription": isFutureSubscription,
         "total": total,
     };
 }

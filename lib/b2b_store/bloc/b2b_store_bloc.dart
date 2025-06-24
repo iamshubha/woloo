@@ -23,7 +23,7 @@ import 'package:woloo_smart_hygiene/b2b_store/network/product.dart';
 import 'package:woloo_smart_hygiene/b2b_store/network/woloo_points_service.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/hygine_services/view/address_notifier.dart';
-import 'package:woloo_smart_hygiene/utils/logger.dart';
+import 'package:woloo_smart_hygiene/utils///logger.dart';
 
 import 'b2b_store_event.dart';
 import 'b2b_store_state.dart';
@@ -77,6 +77,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<Refresh>(_refresh);
     on<RestockSubscriptionsEvent>(restockSubscriptions);
     on<ApplyPromoEvent>(_applyPromoCode);
+    on<RemovePromoCodeEvent>(_removePromoCode);
   }
 
   FutureOr<void> _emailPassRegister(
@@ -165,8 +166,8 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       });
       // }
 
-      // logger.w("Token: ${box.read('login_jwt')}");
-      // logger.w("Cart Id: ${box.read('cart_id')}");
+      // //logger.w("Token: ${box.read('login_jwt')}");
+      // //logger.w("Cart Id: ${box.read('cart_id')}");
       cartModel = await _cartService.getAllCartData(
           token: box.read('login_jwt'), cartId: box.read('cart_id'));
 
@@ -197,7 +198,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     // } catch (e) {
     //   if (emit.isDone) return;
     //   emit(B2BStoreError(error: e.toString()));
-    //   logger.w("Login service: $e");
+    //   //logger.w("Login service: $e");
     //   debugPrint("Error in IOT service: $e");
     // }
   }
@@ -254,7 +255,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     } catch (e) {
       if (emit.isDone) return;
       emit(B2BStoreError(error: e.toString()));
-      logger.e("Error in IOT service: $e");
+      //logger.e("Error in IOT service: $e");
     }
   }
 
@@ -342,7 +343,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       // emit(B2BStoreSuccess());
       emit(GetAddressSuccess(addressesData: response));
     } catch (e) {
-      logger.e("Address Delete Bloc Issue: $e");
+      //logger.e("Address Delete Bloc Issue: $e");
     }
   }
 
@@ -356,7 +357,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
           token: box.read('login_jwt'));
       emit(const PostAddressSuccess());
     } catch (e) {
-      logger.w("Error in Select Address: $e");
+      //logger.w("Error in Select Address: $e");
     }
   }
 
@@ -431,10 +432,16 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
             cartId: box.read('cart_id'));
       }
 
-      emit(CartSuccess(cartData: response));
+      int wolooPoints = 0;
+
+      final wolooResponse = await _wolooPointsService.getWolooPoints();
+
+      wolooPoints = wolooResponse.results.totalCoins.totalCoins;
+
+      emit(CartSuccess(cartData: response, wolooPoints: wolooPoints));
     } catch (e) {
       emit(CartError(error: e.toString()));
-      logger.w("Error in bloc: $e");
+      //logger.w("Error in bloc: $e");
       rethrow;
     }
   }
@@ -461,7 +468,13 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       debugPrint("requestId $response");
       print(response);
 
-      emit(CartSuccess(cartData: response));
+      int wolooPoints = 0;
+
+      final wolooResponse = await _wolooPointsService.getWolooPoints();
+
+      wolooPoints = wolooResponse.results.totalCoins.totalCoins;
+
+      emit(CartSuccess(cartData: response, wolooPoints: wolooPoints));
       // emit(AddToCartSuccess(cartData: response));
     } catch (e) {
       emit(B2BStoreError(error: e.toString()));
@@ -611,6 +624,12 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       });
       emit(PaymentSuccess(completeVendor: completeVendor));
     } catch (e) {
+      await _productService
+          .createCart(
+              token: box.read('login_jwt'), regionId: box.read('region_id'))
+          .then((cartData) {
+        box.write('cart_id', cartData.cart.id);
+      });
       emit(CartError(error: e.toString()));
     }
   }
@@ -623,13 +642,19 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
           itemId: event.itemId,
           token: box.read('login_jwt'),
           cartId: box.read('cart_id'));
-      // logger.w(response);
+      // //logger.w(response);
       CartModel response = await _cartService.getAllCartData(
           token: box.read('login_jwt'), cartId: box.read('cart_id'));
 
-      emit(CartSuccess(cartData: response));
+      int wolooPoints = 0;
+
+      final wolooResponse = await _wolooPointsService.getWolooPoints();
+
+      wolooPoints = wolooResponse.results.totalCoins.totalCoins;
+
+      emit(CartSuccess(cartData: response, wolooPoints: wolooPoints));
     } catch (e) {
-      logger.e("Error in delete Item Bloc: $e");
+      //logger.e("Error in delete Item Bloc: $e");
       emit(CartError(error: e.toString()));
     }
   }
@@ -746,11 +771,11 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
           token: box.read('login_jwt'), productId: getOrderReview.productId);
       final productCollections = await _productService.getProductCollections(
           token: box.read('login_jwt'));
-      // logger.w(response);
+      // //logger.w(response);
       emit(CustomerReviewSuccess(
           customerReview: response, productCollection: productCollections));
     } catch (e) {
-      logger.e("Error in getProductReviews: $e");
+      //logger.e("Error in getProductReviews: $e");
     }
   }
 
@@ -770,10 +795,10 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
       emit(RestockSubscriptionsSuccess(
         restockSubscriptions: response,
       ));
-      logger.w("Restock Subscriptions Response: $response");
+      //logger.w("Restock Subscriptions Response: $response");
     } catch (e) {
       emit(RestockSubscriptionsError(error: e.toString()));
-      logger.e("Error in restockSubscriptions: $e");
+      //logger.e("Error in restockSubscriptions: $e");
     }
   }
 
@@ -782,7 +807,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     Emitter<B2BStoreState> emit,
   ) async {
     try {
-      emit(const CartLoading(message: "Applying promo code..."));
+      emit(const CartLoadingForPromo(message: "Applying promo code..."));
 
       // Validate promo code format if needed
       if (event.promoCode.trim().isEmpty) {
@@ -797,19 +822,39 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
         promoCode: event.promoCode,
       );
 
-      // If successful, emit CartSuccess with updated cart data
-      emit(CartSuccess(cartData: response));
-
-      // After cart is updated, get latest cart data to reflect changes
-      final updatedCart = await _cartService.getAllCartData(
-          token: box.read('login_jwt'), cartId: box.read('cart_id'));
-      emit(CartSuccess(cartData: updatedCart));
+      emit(PromoCodeSuccess(
+          cartData: response, message: "Promo code applied successfully!"));
     } catch (e) {
       // Handle specific error cases
       final errorMessage =
           e is Exception ? e.toString() : "Failed to apply promo code";
       emit(PromoApplyError(error: errorMessage.replaceAll('Exception: ', '')));
-      logger.e("Error in applying promo code: $e");
+      //logger.e("Error in applying promo code: $e");
+    }
+  }
+
+  FutureOr<void> _removePromoCode(
+    RemovePromoCodeEvent event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const CartLoadingForPromo(message: "Removing promo code..."));
+
+      // Call API to remove promo code
+      final response = await _cartService.removePromoCode(
+        token: box.read('login_jwt'),
+        cartId: box.read('cart_id'),
+        promoCode: event.promoCode,
+      );
+
+      emit(PromoCodeSuccess(
+          cartData: response, message: "Promo code removed successfully!"));
+    } catch (e) {
+      // Handle specific error cases
+      final errorMessage =
+          e is Exception ? e.toString() : "Failed to remove promo code";
+      emit(CartError(error: errorMessage.replaceAll('Exception: ', '')));
+      //logger.e("Error in removing promo code: $e");
     }
   }
 
@@ -837,22 +882,20 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
 
       // Get updated points balance after applying
       final wolooPointsResponse = await _wolooPointsService.getWolooPoints();
-      if (!wolooPointsResponse.success) {
-        logger.w('Failed to get updated points balance after applying points');
-      }
+      // if (!wolooPointsResponse.success) {
+      //   //logger.w('Failed to get updated points balance after applying points');
+      // }
 
       emit(CartSuccess(
           cartData: response,
-          wolooPoints: wolooPointsResponse.success
-              ? wolooPointsResponse.results.points
-              : currentPoints.results.points,
+          wolooPoints: wolooPointsResponse.results.points,
           message: "Woloo points applied successfully!"));
     } catch (e) {
       final errorMsg = e is Exception
           ? e.toString().replaceAll('Exception: ', '')
           : 'Failed to apply Woloo points. Please try again.';
       emit(CartError(error: errorMsg));
-      logger.e("Error applying Woloo points: $e");
+      //logger.e("Error applying Woloo points: $e");
     }
   }
 
@@ -871,24 +914,22 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
 
       // Get updated points balance after removal
       final wolooPointsResponse = await _wolooPointsService.getWolooPoints();
-      if (!wolooPointsResponse.success) {
-        logger.w('Failed to get updated points balance after removing points');
-      }
+      // if (!wolooPointsResponse.success) {
+      //   //logger.w('Failed to get updated points balance after removing points');
+      // }
 
       final currentPoints = await _wolooPointsService.getWolooPoints();
 
       emit(CartSuccess(
           cartData: response,
-          wolooPoints: wolooPointsResponse.success
-              ? wolooPointsResponse.results.points
-              : currentPoints.results.points,
+          wolooPoints: currentPoints.results.points,
           message: "Woloo points removed successfully!"));
     } catch (e) {
       final errorMsg = e is Exception
           ? e.toString().replaceAll('Exception: ', '')
           : 'Failed to remove Woloo points. Please try again.';
       emit(CartError(error: errorMsg));
-      logger.e("Error removing Woloo points: $e");
+      //logger.e("Error removing Woloo points: $e");
     }
   }
 }

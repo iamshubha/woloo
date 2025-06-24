@@ -18,6 +18,7 @@ import 'package:woloo_smart_hygiene/b2b_store/collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/common_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
+import 'package:woloo_smart_hygiene/b2b_store/search.dart';
 import 'package:woloo_smart_hygiene/b2b_store/wishlist.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/subcription/view/clientprofile.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
@@ -26,7 +27,7 @@ import 'package:woloo_smart_hygiene/extensions/string_extension.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
-import 'package:woloo_smart_hygiene/utils/logger.dart';
+import 'package:woloo_smart_hygiene/utils///logger.dart';
 
 import '../hygine_services/view/address_notifier.dart';
 import '../utils/app_textstyle.dart';
@@ -117,14 +118,14 @@ class _EcomScreenState extends State<EcomScreen> {
           return Scaffold(
             resizeToAvoidBottomInset: false,
             // bottomNavigationBar: const XBottomBar(),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                logger.w("Cart ID: ${box.read('cart_id')}");
-                // box.read('login_jwt')
-                logger.w("Bearer: ${box.read('login_jwt')}");
-              },
-              child: const Icon(Icons.abc),
-            ),
+            // floatingActionButton: FloatingActionButton(
+            //   onPressed: () {
+            //     //logger.w("Cart ID: ${box.read('cart_id')}");
+            //     // box.read('login_jwt')
+            //     //logger.w("Bearer: ${box.read('login_jwt')}");
+            //   },
+            //   child: const Icon(Icons.abc),
+            // ),
             appBar: EComAppbar(
               userShowed: true,
               focus: focus,
@@ -138,17 +139,11 @@ class _EcomScreenState extends State<EcomScreen> {
                 }
               },
               cartValue: _isDataLoaded
-                  ? _b2bStoreHomePage!.cartData.cart.items.length
+                  ? _b2bStoreHomePage?.cartData.cart.items?.length
                   : 0,
               onTap: () async {
                 final value = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (c) => const CollectionsScreen(
-                            // products: _b2bStoreHomePage!
-                            //     .productCollections
-                            //     .products,
-                            )));
+                    context, MaterialPageRoute(builder: (c) => SearchScreen()));
                 if (value != null && value == 'refresh') {
                   _refresh();
                 }
@@ -464,13 +459,12 @@ class _EcomScreenState extends State<EcomScreen> {
                                 itemBuilder: (context, index) {
                                   final product = _b2bStoreHomePage!
                                       .productCollections.products[index];
-                                  logger.w(
-                                      product.variants.first.inventoryQuantity);
+
                                   int productCount = 0;
                                   _b2bStoreHomePage?.cartData.cart.items
-                                      .forEach((i) {
+                                      ?.forEach((i) {
                                     if (i.variantId == product.variants[0].id) {
-                                      productCount = i.quantity;
+                                      productCount = i.quantity ?? 0;
                                     }
                                   });
                                   // AddButtonMode mode = AddButtonMode.remove;
@@ -652,7 +646,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                                 spacing: 5.w,
                                                 children: [
                                                   Text(
-                                                    "\u{20B9}${product.variants.first.calculatedPrice!.calculatedAmount.toString()}",
+                                                    "\u{20B9}${product.variants.first.calculatedPrice!.calculatedAmount.toString()}/-",
                                                     style: TextStyle(
                                                       fontSize: 10.sp,
                                                       fontWeight:
@@ -660,21 +654,33 @@ class _EcomScreenState extends State<EcomScreen> {
                                                     ),
                                                   ),
                                                   //TODO: Check Price Logic -- Abar asibo fire
-                                                  Text(
-                                                    "MRP ${product.variants.first.calculatedPrice!.originalAmount.toString()}",
-                                                    style: TextStyle(
-                                                        decoration:
-                                                            product.discountable ??
-                                                                    false
-                                                                ? TextDecoration
-                                                                    .lineThrough
-                                                                : null,
-                                                        fontSize: 10.sp,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: AppColors
-                                                            .textgreyColor),
-                                                  ),
+                                                  product
+                                                              .variants
+                                                              .first
+                                                              .calculatedPrice!
+                                                              .originalAmount !=
+                                                          product
+                                                              .variants
+                                                              .first
+                                                              .calculatedPrice!
+                                                              .calculatedAmount
+                                                      ? Text(
+                                                          "MRP ${product.variants.first.calculatedPrice!.originalAmount.toString()}",
+                                                          style: TextStyle(
+                                                              decoration: product
+                                                                          .discountable ??
+                                                                      false
+                                                                  ? TextDecoration
+                                                                      .lineThrough
+                                                                  : null,
+                                                              fontSize: 10.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: AppColors
+                                                                  .textgreyColor),
+                                                        )
+                                                      : SizedBox(),
                                                 ],
                                               )
                                             ],
@@ -704,7 +710,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                                   if (product.variants.first
                                                           .inventoryQuantity ==
                                                       0) return;
-                                                  // logger.w(
+                                                  // //logger.w(
                                                   //     "Selected Address: ${selectedAddress.value.id}");
                                                   if (selectedAddress
                                                           .value.id ==
@@ -846,7 +852,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                                                           ?.cartData
                                                                           .cart
                                                                           .items
-                                                                          .forEach(
+                                                                          ?.forEach(
                                                                               (i) {
                                                                         if (i.variantId ==
                                                                             product.variants[0].id) {
@@ -854,7 +860,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                                                               1;
                                                                           _b2bStoreBloc.add(AddRemoveItemReq(
                                                                               count: productCount,
-                                                                              itemId: i.id));
+                                                                              itemId: i.id ?? ""));
                                                                         }
                                                                       });
                                                                     },
@@ -901,7 +907,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                                                           ?.cartData
                                                                           .cart
                                                                           .items
-                                                                          .forEach(
+                                                                          ?.forEach(
                                                                               (i) {
                                                                         if (i.variantId ==
                                                                             product.variants[0].id) {
@@ -909,7 +915,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                                                               1;
                                                                           _b2bStoreBloc.add(AddRemoveItemReq(
                                                                               count: productCount,
-                                                                              itemId: i.id));
+                                                                              itemId: i.id ?? ""));
                                                                         }
                                                                       });
                                                                     },
@@ -942,6 +948,8 @@ class _EcomScreenState extends State<EcomScreen> {
                                                 ),
                                               )),
 
+// product.tags.first.value
+
                                           product.variants.first
                                                       .inventoryQuantity ==
                                                   0
@@ -971,7 +979,36 @@ class _EcomScreenState extends State<EcomScreen> {
                                                     ),
                                                   ),
                                                 )
-                                              : const SizedBox(),
+                                              : product.tags?.isNotEmpty == true
+                                                  ? Align(
+                                                      alignment:
+                                                          Alignment.topCenter,
+                                                      child: Container(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal: 5.w,
+                                                                vertical: 2.h),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: AppColors
+                                                              .lightCyanColor,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(4),
+                                                        ),
+                                                        child: Text(
+                                                          "${product.tags?.first.value}",
+                                                          style: TextStyle(
+                                                              fontSize: 6.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: AppColors
+                                                                  .black),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : SizedBox(),
                                           // Positioned(
                                           //   // left: 8,
                                           //   // right: 8,
@@ -1028,19 +1065,95 @@ class _EcomScreenState extends State<EcomScreen> {
                                     fontSize: 20.sp,
                                     fontWeight: FontWeight.bold),
                               ),
+                              //latest 6 from products
                               SizedBox(
                                 height: 130.h,
                                 child: ListView.separated(
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (c, i) => ClipRRect(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: 6,
+                                  //  _b2bStoreHomePage!
+                                  //     .productCollections.products.length,
+                                  itemBuilder: (c, i) {
+                                    final product = _b2bStoreHomePage!
+                                        .productCollections.products[i];
+                                    final products = _b2bStoreHomePage!
+                                        .productCollections.products
+                                        .toList()
+                                      ..sort((a, b) {
+                                        final aDate = a.createdAt ??
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                0);
+                                        final bDate = b.createdAt ??
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                0);
+                                        return bDate.compareTo(aDate);
+                                      });
+                                    final latestProducts =
+                                        products.take(6).toList();
+                                    return InkWell(
+                                      // onTap: () {
+
+                                      onTap: () async {
+                                        final result = await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ProductDetailsScreen(
+                                              productData: latestProducts[i],
+                                              isSelected: _b2bStoreBloc.favIds
+                                                  .any((e) => e.containsKey(
+                                                      latestProducts[i].id)),
+                                              productIdforWishList:
+                                                  _b2bStoreBloc.favIds.any(
+                                                          (e) => e.containsKey(
+                                                              latestProducts[i]
+                                                                  .id))
+                                                      ? _b2bStoreBloc.favIds
+                                                          .firstWhere((e) =>
+                                                              e.entries.first
+                                                                  .key ==
+                                                              latestProducts[i]
+                                                                  .id)
+                                                          .entries
+                                                          .first
+                                                          .value
+                                                      : "",
+                                            ),
+                                          ),
+                                        );
+                                        if (result != null &&
+                                            result == 'refresh') {
+                                          _refresh();
+                                          print(
+                                              'Returned from Page B with refresh signal (or physical back).');
+                                          // _initializeData(); // Re-initialize or refresh data
+                                        } else {
+                                          _refresh();
+                                          print(
+                                              'Returned from Page B without refresh signal or cancelled.');
+                                        }
+                                      },
+                                      // },
+                                      child: ClipRRect(
                                         borderRadius:
-                                            BorderRadius.circular(25.r),
-                                        child:
-                                            Image.asset(AppImages.bTemplate)),
-                                    separatorBuilder: (c, i) => const SizedBox(
-                                          width: 10,
+                                            BorderRadius.circular(12.r),
+                                        child: Image.network(
+                                          latestProducts[i].thumbnail ?? '',
+                                          fit: BoxFit.fill,
                                         ),
-                                    itemCount: 4),
+                                      ),
+                                    );
+                                  },
+                                  // ClipRRect(
+                                  //     borderRadius:
+                                  //         BorderRadius.circular(25.r),
+                                  //     child:
+                                  //         Image.asset(AppImages.bTemplate)),
+
+                                  separatorBuilder: (c, i) => const SizedBox(
+                                    width: 10,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -1055,9 +1168,9 @@ class _EcomScreenState extends State<EcomScreen> {
 
   Addresses? getAddress() {
     final addressData = box.read("address");
-    logger.w(addressData);
+    //logger.w(addressData);
     address = Addresses.fromJson(jsonDecode(addressData ?? ""));
-    logger.w(address);
+    //logger.w(address);
     // address = Addresses.fromJson(jsonDecode(addressData));
     // print(address);
     // setState(() {});
@@ -1386,6 +1499,7 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                       ]),
                   child: TextField(
                     onTap: onTap,
+                    readOnly: true,
                     focusNode: focus,
                     controller: controller,
                     decoration: InputDecoration(
@@ -1398,6 +1512,7 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                         borderSide: BorderSide.none,
                       ),
                     ),
+                    enableSuggestions: true,
                     onChanged: onChanged,
                   ),
                 ),

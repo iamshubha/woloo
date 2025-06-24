@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/review.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/wishlist.dart';
 import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
-import 'package:woloo_smart_hygiene/utils/logger.dart';
+import 'package:woloo_smart_hygiene/utils///logger.dart';
 
 class FavoriteService {
   final DioClient dio;
@@ -74,7 +74,7 @@ class FavoriteService {
           data: {
             "variant_id": variantId,
           });
-      // //logger.w(response);
+      // ////logger.w(response);
       return Wishlist.fromJson(response);
     } catch (e) {
       debugPrint("Error in getOrderDetails service: $e");
@@ -106,7 +106,7 @@ class FavoriteService {
             "comment": comment,
             "line_item_id": line_item_id
           });
-      // //logger.w("Response from getOrderDetails: $response");
+      // ////logger.w("Response from getOrderDetails: $response");
       return Review.fromJson(response);
     } catch (e) {
       debugPrint("Error in getOrderDetails service: $e");
@@ -127,10 +127,10 @@ class FavoriteService {
           },
         ),
       );
-      // //logger.w(response);
+      // ////logger.w(response);
       return Wishlist.fromJson(response);
     } catch (e) {
-      logger.e("Remove Item Failure: $e");
+      //logger.e("Remove Item Failure: $e");
       rethrow;
     }
   }

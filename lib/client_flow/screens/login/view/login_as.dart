@@ -21,9 +21,10 @@ class LoginAs extends StatefulWidget {
 class _LoginAsState extends State<LoginAs> {
   
   String? selectedValue;
+  bool isOpenDrop = false;
+
   @override
   Widget build(BuildContext context) {
-
     return   Scaffold(
       backgroundColor: AppColors.backgroundColor,
       body: Center(
@@ -52,10 +53,25 @@ class _LoginAsState extends State<LoginAs> {
            padding: const EdgeInsets.only(right: 20 ),
            child: DropdownButtonHideUnderline(
 
-             child: DropdownButton2<String>(
 
-              iconStyleData:  const IconStyleData(
-                icon: Icon( Icons.keyboard_arrow_down_rounded,
+             child: DropdownButton2<String>(
+         onMenuStateChange: (isOpen) {
+           print( "is oner $isOpen");
+           isOpenDrop = isOpen;
+           setState(() {
+             
+           }); 
+                  
+         },
+           iconStyleData: IconStyleData(
+                icon:
+                isOpenDrop! ?
+                 const Icon( Icons.keyboard_arrow_up_rounded,
+                 size: 38,
+                   color: Color(0xff8F8F8F)
+                 )
+                :
+                 const Icon( Icons.keyboard_arrow_down_rounded,
                  size: 38,
                    color: Color(0xff8F8F8F)
                  )
@@ -66,20 +82,16 @@ class _LoginAsState extends State<LoginAs> {
                   color: AppColors.white
                 )
               ),
-
                isExpanded: true,
-
                hint: 
-                             Text("Login As",
+                  Text("Login As",
                                  style: AppTextStyle.font10bold.copyWith(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w700,
                                   color: const Color(0xff8F8F8F)
                                  ),
                                 ),
-            
-           
-               
+                 
                items:  <String>['Admin', 'Task Buddy', 'Supervisor'].map(( String item) {
                  return DropdownMenuItem<String>(
                    value: item,
@@ -101,7 +113,7 @@ class _LoginAsState extends State<LoginAs> {
                           if(selectedValue == "Admin" ){
                                    Navigator.of(context).push( MaterialPageRoute(builder: (context) {
                                       return const ClientLogin();
-                                      return const ClientLogin();
+                                      // return const ClientLogin();
                                    },  ) );
                                  } 
                                  else{
@@ -110,9 +122,7 @@ class _LoginAsState extends State<LoginAs> {
                                         type: "sdfs",
                                       );
                                    },  ) );
-                                 }
-                          
-                     
+                                 }       
                },
 
                buttonStyleData: ButtonStyleData(

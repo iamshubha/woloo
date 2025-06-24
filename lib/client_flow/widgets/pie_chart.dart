@@ -258,11 +258,10 @@ class _ChartPieState extends State<ChartPie> {
            Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-                     Indicator(
+             Indicator(
                  color:  const Color(0xff717171) ,
                  text: 'On Going  Task',
                  taskCount: widget.ongoingTask,
-           
                  isSquare: true,
                  size: 20.r,
                ),

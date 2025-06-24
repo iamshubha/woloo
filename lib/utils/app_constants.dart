@@ -471,7 +471,7 @@ class DashboardConst {
 
 class SubcriptionConstant{
 
-  static const String upgradeToPremium = " Upgrade your task master service";
+  static const String upgradeToPremium = " Upgrade your tasq master service";
   static const String upgradeDescription = "Upgrade to a premium plan to explore more benefits";
 
   // Free Plan

@@ -8,6 +8,7 @@ import 'package:get_it/get_it.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
+import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/custom_widget/start_rating.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
@@ -17,7 +18,7 @@ import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
-import 'package:woloo_smart_hygiene/utils/logger.dart';
+import 'package:woloo_smart_hygiene/utils///logger.dart';
 
 class WishListScreen extends StatefulWidget {
   final List<product_collections.Product> productData;
@@ -93,7 +94,18 @@ class _WishListScreenState extends State<WishListScreen> {
               : Scaffold(
                   // bottomNavigationBar: const XBottomBar(),
                   appBar: EComAppbar(
-                    cartValue: _isDataLoaded ? _cart!.cart.items.length : 0,
+                    onCartTap: () async {
+                      final value = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (c) => const CartScreen()));
+                      if (value != null && value == 'refresh') {
+                        _refresh();
+                      } else {
+                        _refresh();
+                      }
+                    },
+                    cartValue: _isDataLoaded ? _cart?.cart.items?.length : 0,
                     onTap: () {
                       _refresh();
                     },
@@ -155,12 +167,10 @@ class _WishListScreenState extends State<WishListScreen> {
                             itemBuilder: (context, index) {
                               final product = _wProductData[index];
 
-                              logger
-                                  .w(product.variants.first.inventoryQuantity);
                               int productCount = 0;
-                              _cart?.cart.items.forEach((i) {
+                              _cart?.cart.items?.forEach((i) {
                                 if (i.variantId == product.variants[0].id) {
-                                  productCount = i.quantity;
+                                  productCount = i.quantity ?? 0;
                                 }
                               });
                               return GestureDetector(
@@ -501,7 +511,7 @@ class _WishListScreenState extends State<WishListScreen> {
                                                                       _cart
                                                                           ?.cart
                                                                           .items
-                                                                          .forEach(
+                                                                          ?.forEach(
                                                                               (i) {
                                                                         if (i.variantId ==
                                                                             product.variants[0].id) {
@@ -509,7 +519,7 @@ class _WishListScreenState extends State<WishListScreen> {
                                                                               1;
                                                                           _b2bStoreBloc.add(AddRemoveItemReq(
                                                                               count: productCount,
-                                                                              itemId: i.id));
+                                                                              itemId: i.id ?? ""));
                                                                         }
                                                                       });
                                                                     },
@@ -555,7 +565,7 @@ class _WishListScreenState extends State<WishListScreen> {
                                                                       _cart
                                                                           ?.cart
                                                                           .items
-                                                                          .forEach(
+                                                                          ?.forEach(
                                                                               (i) {
                                                                         if (i.variantId ==
                                                                             product.variants[0].id) {
@@ -563,7 +573,7 @@ class _WishListScreenState extends State<WishListScreen> {
                                                                               1;
                                                                           _b2bStoreBloc.add(AddRemoveItemReq(
                                                                               count: productCount,
-                                                                              itemId: i.id));
+                                                                              itemId: i.id ?? ""));
                                                                         }
                                                                       });
                                                                     },
@@ -652,7 +662,7 @@ class _WishListScreenState extends State<WishListScreen> {
                                       right: 16,
                                       child: InkWell(
                                           onTap: () {
-                                            logger.w(_wProductData);
+                                            //logger.w(_wProductData);
                                             _b2bStoreBloc.add(RemoveWishList(
                                                 itemId: _b2bStoreBloc.favIds
                                                     .firstWhere((e) =>

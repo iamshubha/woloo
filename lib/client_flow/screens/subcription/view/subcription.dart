@@ -174,7 +174,7 @@ class _SubcriptionScreenState extends State<SubcriptionScreen> {
         mobileNumberValue    =   globalStorage.getClientMobileNo();
                               if(selectedIndex == 0){
 
-                                   subcriptionBloc.add( CreateOrderEvent(
+         subcriptionBloc.add( CreateOrderEvent(
        isFromFacility: widget.isfromFacility,
       clientId: some,
       planReqModel: [
@@ -211,7 +211,7 @@ class _SubcriptionScreenState extends State<SubcriptionScreen> {
      ));
                               }
                            },
-                          child: subCard(plan[index], SubcriptionConstant.premiumFeature, index));
+           child: subCard(plan[index], SubcriptionConstant.premiumFeature, index));
                      }, );
                     
                    }
@@ -254,11 +254,15 @@ class _SubcriptionScreenState extends State<SubcriptionScreen> {
                               //    }
                               //  });
                                  print("notes ${state.orderModel.results!.notes!.first.facilityRef}");
-                               facalityRef  =  state.orderModel.results!.notes!.first.facilityRef!;                                
+
+                                  if(!widget.isfromFacility!){
+
+                                  facalityRef  =  state.orderModel.results!.notes!.first.facilityRef!;                                
                               //  print("notes ${state.orderModel.results.notes!.first.facilityRef}");
+                                  globalStorage.saveFacilityRef( accessFacilityRef: facalityRef.toString());
 
+                                  }
 
-                                globalStorage.saveFacilityRef( accessFacilityRef: facalityRef.toString());
 
                      print("amount $amountValue");
                     print("order $orderId");
@@ -517,11 +521,17 @@ Widget row(
     * 2. Payment ID
     * 3. Signature
     **/
+    
       globalStorage.getClientId();
       String clintId = globalStorage.getClientId();
-       widget.dashBoardBloc!.add( SubcriptionEvent(
-         id: int.parse(clintId)
-     ) );
+           if(widget.isfromFacility!){
+             widget.dashBoardBloc!.add(SubcriptionEvent(id: int.parse(clintId)));
+                                           
+                                              
+                                               }
+    //    widget.dashBoardBloc!.add( SubcriptionEvent(
+    //      id: int.parse(clintId)
+    //  ) );
                 // if(widget.isfromFacility!){
                        print("is from facility");
 
@@ -575,12 +585,13 @@ Widget row(
 
 
                                               print("facilit ref $facalityref");
-
+                                          
+                                         
 
                                               
                                                   if(facalityref!.isNotEmpty){
                                     // ClientDashBoardBloc dashBoardBloc  = ClientDashBoardBloc();
-                                       widget.dashBoardBloc!.add(
+                                                        widget.dashBoardBloc!.add(
                                                             PaymentStatusEvent(
                                                             refId: facalityref
                                                              )
@@ -592,8 +603,14 @@ Widget row(
 
 
 
+
                                                Navigator.of(context).pop();
                                                Navigator.of(context).pop();
+                                               if (widget.isfromFacility!) {
+                                                
+                                                Navigator.of(context).pop();
+                                                 
+                                               }
 
                                           },
                                           child: const Custombutton(

@@ -20,7 +20,7 @@ class CheckScreen extends StatefulWidget {
   State<CheckScreen> createState() => _CheckScreenState();
 }
 
-class _CheckScreenState extends State<CheckScreen> {
+class _CheckScreenState extends State<CheckScreen> with WidgetsBindingObserver {
   
   ClientDashBoardBloc dashBoardBloc  = ClientDashBoardBloc();
     GlobalStorage globalStorage = GetIt.instance();
@@ -41,6 +41,24 @@ class _CheckScreenState extends State<CheckScreen> {
      ) );
   }
 
+
+    @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    print('Current state = $state');
+        
+         if (state  ==  AppLifecycleState.resumed ) {
+              dashBoardBloc.add( ClientEvent(
+                id: decodedToken!["id"]
+                ) );
+           
+         }
+     
+  }
+
+   
+
+
   @override
   Widget build(BuildContext context) {
     return 
@@ -59,15 +77,17 @@ class _CheckScreenState extends State<CheckScreen> {
         EasyLoading.dismiss();
          
             if( state.client.results!.isOnboardComplete! ){
+
              Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
                 builder: (context) => 
-                   ClientDashboard()
+                   ClientDashboard(
+                    dashIndex: 0,
+                   )
               ),
               (route) => false,
             );
-
 
             }else {
                  Navigator.pushAndRemoveUntil(

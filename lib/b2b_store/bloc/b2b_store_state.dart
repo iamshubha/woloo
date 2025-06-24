@@ -82,6 +82,29 @@ class CartLoading extends B2BStoreState {
   List<Object> get props => [message];
 }
 
+class CartLoadingForPromo extends B2BStoreState {
+  final String message;
+  const CartLoadingForPromo({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+class PromoCodeSuccess extends B2BStoreState {
+  final CartModel cartData;
+  final String? message;
+  const PromoCodeSuccess({
+    required this.cartData,
+    this.message,
+  });
+
+  @override
+  List<Object> get props => [
+        cartData,
+        if (message != null) message!,
+      ];
+}
+
 class PostAddressLoading extends B2BStoreState {
   final String message;
   const PostAddressLoading({required this.message});
@@ -108,12 +131,12 @@ class AddToCartSuccess extends B2BStoreState {
 class CartSuccess extends B2BStoreState {
   final CartModel cartData;
   final ProductCollections? productCollection;
-  final int? wolooPoints;
+  final int wolooPoints;
   final String? message;
   const CartSuccess({
     required this.cartData,
     this.productCollection,
-    this.wolooPoints,
+    required this.wolooPoints,
     this.message,
   });
 
@@ -121,7 +144,7 @@ class CartSuccess extends B2BStoreState {
   List<Object> get props => [
         cartData,
         if (productCollection != null) productCollection!,
-        if (wolooPoints != null) wolooPoints!,
+        wolooPoints,
         if (message != null) message!,
       ];
 }
@@ -158,7 +181,7 @@ class PaymentSuccess extends B2BStoreState {
 
 class LetsTryState extends B2BStoreState {
   final String orderId;
-  final int totalPrice;
+  final dynamic totalPrice;
   const LetsTryState({
     required this.orderId,
     required this.totalPrice,
