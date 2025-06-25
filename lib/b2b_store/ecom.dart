@@ -1357,6 +1357,7 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
       this.cartValue,
       this.productMode = ProductMode.productDetails,
       this.onTap,
+      this.onFilterTap,
       this.onChanged,
       this.controller,
       this.onCartTap,
@@ -1366,6 +1367,7 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
 
   final String textFieldHintText;
   final bool isAll;
+  final VoidCallback? onFilterTap;
   final VoidCallback? onTap;
   final VoidCallback? onCartTap;
   final int? cartValue;
@@ -1754,32 +1756,35 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                 SizedBox(
                   width: 10.w,
                 ),
-                Container(
-                  height: 41.h,
-                  width: 41.h,
-                  decoration: const BoxDecoration(
-                    color: AppColors.themeBackground,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.greyShadowColor,
-                        blurRadius: 5.0,
-                        spreadRadius: 0.5,
-                        offset: Offset(0, 2),
+                InkWell(
+                  onTap: onFilterTap,
+                  child: Container(
+                    height: 41.h,
+                    width: 41.h,
+                    decoration: const BoxDecoration(
+                      color: AppColors.themeBackground,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.greyShadowColor,
+                          blurRadius: 5.0,
+                          spreadRadius: 0.5,
+                          offset: Offset(0, 2),
+                        ),
+                        BoxShadow(
+                          color: AppColors.greyShadowColor,
+                          blurRadius: 5.0,
+                          spreadRadius: 0.5,
+                          offset: Offset(0, -1),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Image.asset(
+                        AppImages.tuneLogo,
+                        height: 20.h,
+                        width: 20.w,
                       ),
-                      BoxShadow(
-                        color: AppColors.greyShadowColor,
-                        blurRadius: 5.0,
-                        spreadRadius: 0.5,
-                        offset: Offset(0, -1),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Image.asset(
-                      AppImages.tuneLogo,
-                      height: 20.h,
-                      width: 20.w,
                     ),
                   ),
                 )

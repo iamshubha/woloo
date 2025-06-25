@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/order_details_from_checkout.dart';
+import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/view/dashboard.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 
 class OrderSuccessfulDialog extends StatelessWidget {
@@ -38,9 +39,8 @@ class OrderSuccessfulDialog extends StatelessWidget {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                            builder: (c) => EcomScreen(
-
-                                // orderSet: state.completeVendor.orderSet,
+                            builder: (c) => ClientDashboard(
+                                  dashIndex: 0,
                                 )),
                         (route) => false,
                       );

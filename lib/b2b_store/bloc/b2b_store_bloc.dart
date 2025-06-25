@@ -79,6 +79,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<ApplyPromoEvent>(_applyPromoCode);
     on<RemovePromoCodeEvent>(_removePromoCode);
     on<SearchProductEvent>(_searchQuery);
+    on<GetProductCategoriesEvent>(_getProductCategories);
   }
 
   FutureOr<void> _emailPassRegister(
@@ -949,6 +950,23 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     } catch (e) {
       emit(B2BStoreError(error: e.toString()));
       debugPrint("Error in search query service: $e");
+    }
+  }
+
+  FutureOr<void> _getProductCategories(
+    GetProductCategoriesEvent event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const ProductCategoriesLoading(
+          message: "Loading product categories..."));
+      final response = await _productService.getProductCategories(
+        token: box.read('login_jwt'),
+      );
+      emit(ProductCategoriesSuccess(productCategories: response));
+    } catch (e) {
+      emit(ProductCategoriesError(error: e.toString()));
+      debugPrint("Error in get product categories service: $e");
     }
   }
 }

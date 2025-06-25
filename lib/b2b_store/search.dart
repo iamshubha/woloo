@@ -141,8 +141,6 @@ class _SearchScreenState extends State<SearchScreen> {
           if (state is B2BStoreLoading) {}
           if (state is CartLoading) {}
           if (state is CartSuccess) {
-            //TODO: implement cart data and map with search product
-            logger.w("CartSuccess: ${state.cartData}");
             cartData = state.cartData;
           }
 

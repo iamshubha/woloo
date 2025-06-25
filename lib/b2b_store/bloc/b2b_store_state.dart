@@ -6,6 +6,7 @@ import 'package:woloo_smart_hygiene/b2b_store/models/customer_reviews.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/order.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/restock_subscription.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/wishlist.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/model/host_dashboard_screen.dart';
@@ -329,6 +330,30 @@ class PromoApplySuccess extends B2BStoreState {
 class PromoApplyError extends B2BStoreState {
   final String error;
   const PromoApplyError({required this.error});
+  @override
+  List<Object> get props => [error];
+}
+
+class ProductCategoriesLoading extends B2BStoreState {
+  final String message;
+  const ProductCategoriesLoading({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+class ProductCategoriesSuccess extends B2BStoreState {
+  final ProductCategory productCategories;
+  const ProductCategoriesSuccess({required this.productCategories});
+
+  @override
+  List<Object> get props => [productCategories];
+}
+
+class ProductCategoriesError extends B2BStoreState {
+  final String error;
+  const ProductCategoriesError({required this.error});
+
   @override
   List<Object> get props => [error];
 }

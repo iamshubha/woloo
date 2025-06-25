@@ -309,12 +309,17 @@ class RemovePromoCodeEvent extends B2BStoreEvent {
   List<Object> get props => [promoCode];
 }
 
-
 class SearchProductEvent extends B2BStoreEvent {
   final String query;
-
-  const SearchProductEvent( {required this.query});
+  const SearchProductEvent({required this.query});
 
   @override
   List<Object?> get props => [query];
+}
+
+class GetProductCategoriesEvent extends B2BStoreEvent {
+  const GetProductCategoriesEvent();
+
+  @override
+  List<Object?> get props => [];
 }

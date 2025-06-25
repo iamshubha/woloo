@@ -253,10 +253,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         //               true, // <-- Allow tap outside to dismiss
                         //           enableDrag:
                         //               true, // <-- Allow swipe down to dismiss
-
                         //           backgroundColor: Colors
                         //               .transparent, // Optional: if you want rounded corners to show correctly
-
                         //           context: context,
                         //           builder: (_) =>
                         //               const AddressChangeBottomSheet(), //AddressBottomSheet
@@ -265,7 +263,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         //       }
                         //       if (productCount == 0) {
                         //         addToCart(context);
-
                         //         return;
                         //       } else {
                         //         final resultFromBottomSheet =
