@@ -494,11 +494,12 @@ class _CartScreenState extends State<CartScreen> {
                                                   _removePromoCode();
                                                 }
                                               },
-                                              label: isLoading
-                                                  ? "Removing..."
-                                                  : "Remove",
-                                              color:
-                                                  Colors.red.withOpacity(0.2),
+                                              label:
+                                                  //  isLoading
+                                                  // ? "Removing..."
+                                                  // :
+                                                  "Remove",
+                                              color: AppColors.lightCyanColor,
                                             )
                                           : CyanTextButton(
                                               onTap: () {
@@ -506,9 +507,11 @@ class _CartScreenState extends State<CartScreen> {
                                                     ? null
                                                     : _applyPromoCode();
                                               },
-                                              label: isLoading
-                                                  ? "Applying..."
-                                                  : "Apply",
+                                              label:
+                                                  //  isLoading
+                                                  //     ? "Applying..."
+                                                  //     :
+                                                  "Apply",
                                               color: AppColors.lightCyanColor,
                                             ),
                                     ],
@@ -646,8 +649,8 @@ class _CartScreenState extends State<CartScreen> {
                             PricingCalculate(
                               itemTotal:
                                   cartModel?.cart.originalItemTotal.toString(),
-                              discount:
-                                  cartModel?.cart.discountTotal.toString(),
+                              discount: cartModel?.cart.discountTotal
+                                  ?.toStringAsFixed(2),
                               total: cartModel?.cart.total.toString(),
                               subTotal: cartModel?.cart.subtotal.toString(),
                               shipping:
@@ -880,7 +883,7 @@ class _ApplyPromoState extends State<ApplyPromo> {
                           }
                         },
                         label: isLoading ? "Removing..." : "Remove",
-                        color: Colors.red.withOpacity(0.2),
+                        color: AppColors.lightCyanColor,
                       )
                     : CyanTextButton(
                         onTap: () {
@@ -997,7 +1000,7 @@ class _PricingCalculateState extends State<PricingCalculate> {
           item: "Discount",
           price: "\u{20B9} ${widget.discount}/-",
         ),
-        widget.shipping != 0
+        widget.shipping == "" && widget.shipping == "0"
             ? ItemNamePrice(
                 item: "Shipping",
                 price: "\u{20B9} ${widget.shipping}/-",

@@ -93,6 +93,7 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
             child: Scaffold(
               // bottomNavigationBar: const XBottomBar(),
               appBar: EComAppbar(
+                isAll: true,
                 onChanged: (value) {
                   if (value.isEmpty) {
                     final products =

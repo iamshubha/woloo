@@ -215,7 +215,7 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                                     itemTotal: cartModel?.cart.originalItemTotal
                                         .toString(),
                                     discount: cartModel?.cart.discountTotal
-                                        .toString(),
+                                        ?.toStringAsFixed(2),
                                     total: cartModel?.cart.total.toString(),
                                     subTotal:
                                         cartModel?.cart.subtotal.toString(),

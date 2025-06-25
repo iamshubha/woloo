@@ -227,8 +227,8 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
                             PricingCalculate(
                               itemTotal:
                                   cartModel?.cart.originalItemTotal.toString(),
-                              discount:
-                                  cartModel?.cart.discountTotal.toString(),
+                              discount: cartModel?.cart.discountTotal
+                                  ?.toStringAsFixed(2),
                               total: cartModel?.cart.total.toString(),
                               subTotal: cartModel?.cart.subtotal.toString(),
                               shipping:
@@ -271,6 +271,7 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
                           //     handleExternalWalletSelected);
                           // razorpay.open(v);
                           _b2bStoreBloc.add(const Payment());
+
                           // try {
                           // _b2bStoreBloc.add(Payment(razorpay: razorpay));
                           // } catch (e) {}

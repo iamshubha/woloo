@@ -221,8 +221,8 @@ class _ServiceSummeryBottomSheetState extends State<ServiceSummeryBottomSheet> {
                             PricingCalculate(
                               itemTotal:
                                   cartModel?.cart.originalItemTotal.toString(),
-                              discount:
-                                  cartModel?.cart.discountTotal.toString(),
+                              discount: cartModel?.cart.discountTotal
+                                  ?.toStringAsFixed(2),
                               total: cartModel?.cart.total.toString(),
                               subTotal: cartModel?.cart.subtotal.toString(),
                               shipping:

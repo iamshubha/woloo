@@ -1260,46 +1260,46 @@ class BrandsGrid extends StatelessWidget {
   }
 }
 
-class AddToCartButton extends StatelessWidget {
-  const AddToCartButton({
-    super.key,
-    this.onTap,
-  });
-  final VoidCallback? onTap;
+// class AddToCartButton extends StatelessWidget {
+//   const AddToCartButton({
+//     super.key,
+//     this.onTap,
+//   });
+//   final VoidCallback? onTap;
 
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(3.r),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 4.h),
-        decoration: BoxDecoration(
-            color: AppColors.buttonColor,
-            borderRadius: BorderRadius.circular(3.r)),
-        child: Row(
-          children: [
-            Icon(
-              Icons.shopping_cart_outlined,
-              color: AppColors.black,
-              size: 10.sp,
-            ),
-            SizedBox(
-              width: 5.w,
-            ),
-            Text(
-              "Add to Cart",
-              style: TextStyle(
-                  fontSize: 8.sp,
-                  color: AppColors.black,
-                  fontWeight: FontWeight.bold),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return InkWell(
+//       onTap: onTap,
+//       borderRadius: BorderRadius.circular(3.r),
+//       child: Container(
+//         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 4.h),
+//         decoration: BoxDecoration(
+//             color: AppColors.buttonColor,
+//             borderRadius: BorderRadius.circular(3.r)),
+//         child: Row(
+//           children: [
+//             Icon(
+//               Icons.shopping_cart_outlined,
+//               color: AppColors.black,
+//               size: 10.sp,
+//             ),
+//             SizedBox(
+//               width: 5.w,
+//             ),
+//             Text(
+//               "Add to Cart",
+//               style: TextStyle(
+//                   fontSize: 8.sp,
+//                   color: AppColors.black,
+//                   fontWeight: FontWeight.bold),
+//             )
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class SeeMoreButton extends StatelessWidget {
   const SeeMoreButton({
@@ -1472,6 +1472,119 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                     color: Colors.grey,
                   ),
                 ),
+                if (isAll)
+                  cartValue != 0
+                      ? Badge(
+                          label: Text(cartValue.toString()),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: const [
+                                  BoxShadow(
+                                      offset: Offset(2, 3),
+                                      color: Color.fromARGB(255, 230, 228, 228),
+                                      spreadRadius: 2,
+                                      blurRadius: 10),
+                                ]),
+                            child: IconButton(
+                                icon: ImageIcon(AssetImage(AppImages.bag)),
+                                onPressed: onCartTap),
+                          ),
+                        )
+                      : Badge(
+                          label: const Text("0"),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: const [
+                                  BoxShadow(
+                                      offset: Offset(2, 3),
+                                      color: Color.fromARGB(255, 230, 228, 228),
+                                      spreadRadius: 2,
+                                      blurRadius: 10),
+                                ]),
+                            child: IconButton(
+                              icon: ImageIcon(AssetImage(AppImages.bag)),
+                              onPressed: () {
+                                if (cartValue != null && cartValue! > 0) {
+                                  onCartTap?.call();
+                                } else {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return Dialog(
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 50.w,
+                                                vertical: 60.h),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(25),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black
+                                                      .withOpacity(
+                                                          0.2), // Shadow color
+                                                  spreadRadius:
+                                                      1, // Spread effect
+                                                  blurRadius: 10, // Blur effect
+                                                  offset: const Offset(
+                                                      0, 5), // Bottom shadow
+                                                ),
+                                              ],
+                                            ),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  "Your cart is empty. Please add items to cart",
+                                                  style:
+                                                      AppTextStyle.font14bold,
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                // ShortLabelledButton(
+                                                //   onTap: () {},
+                                                //   label: "close",
+                                                // )
+                                                const SizedBox(
+                                                  height: 20,
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 40.w,
+                                                            vertical: 4.h),
+                                                    decoration: BoxDecoration(
+                                                      color: AppColors
+                                                          .lightCyanColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4.r),
+                                                    ),
+                                                    child: Text(
+                                                      "close",
+                                                      style: AppTextStyle
+                                                          .font14bold,
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      });
+                                }
+                              },
+                            ),
+                          ),
+                        ),
               ],
             ),
           )
@@ -1527,113 +1640,115 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
               const SizedBox(
                 width: 10,
               ),
-              cartValue != 0
-                  ? Badge(
-                      label: Text(cartValue.toString()),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: const [
-                              BoxShadow(
-                                  offset: Offset(2, 3),
-                                  color: Color.fromARGB(255, 230, 228, 228),
-                                  spreadRadius: 2,
-                                  blurRadius: 10),
-                            ]),
-                        child: IconButton(
+              if (!isAll)
+                cartValue != 0
+                    ? Badge(
+                        label: Text(cartValue.toString()),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: const [
+                                BoxShadow(
+                                    offset: Offset(2, 3),
+                                    color: Color.fromARGB(255, 230, 228, 228),
+                                    spreadRadius: 2,
+                                    blurRadius: 10),
+                              ]),
+                          child: IconButton(
+                              icon: ImageIcon(AssetImage(AppImages.bag)),
+                              onPressed: onCartTap),
+                        ),
+                      )
+                    : Badge(
+                        label: const Text("0"),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: const [
+                                BoxShadow(
+                                    offset: Offset(2, 3),
+                                    color: Color.fromARGB(255, 230, 228, 228),
+                                    spreadRadius: 2,
+                                    blurRadius: 10),
+                              ]),
+                          child: IconButton(
                             icon: ImageIcon(AssetImage(AppImages.bag)),
-                            onPressed: onCartTap),
-                      ),
-                    )
-                  : Badge(
-                      label: const Text("0"),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: const [
-                              BoxShadow(
-                                  offset: Offset(2, 3),
-                                  color: Color.fromARGB(255, 230, 228, 228),
-                                  spreadRadius: 2,
-                                  blurRadius: 10),
-                            ]),
-                        child: IconButton(
-                          icon: ImageIcon(AssetImage(AppImages.bag)),
-                          onPressed: () {
-                            if (cartValue != null && cartValue! > 0) {
-                              onCartTap?.call();
-                            } else {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return Dialog(
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 50.w, vertical: 60.h),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(25),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(
-                                                  0.2), // Shadow color
-                                              spreadRadius: 1, // Spread effect
-                                              blurRadius: 10, // Blur effect
-                                              offset: const Offset(
-                                                  0, 5), // Bottom shadow
-                                            ),
-                                          ],
-                                        ),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              "Your cart is empty. Please add items to cart",
-                                              style: AppTextStyle.font14bold,
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            // ShortLabelledButton(
-                                            //   onTap: () {},
-                                            //   label: "close",
-                                            // )
-                                            const SizedBox(
-                                              height: 20,
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 40.w,
-                                                    vertical: 4.h),
-                                                decoration: BoxDecoration(
-                                                  color:
-                                                      AppColors.lightCyanColor,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          4.r),
-                                                ),
-                                                child: Text(
-                                                  "close",
-                                                  style:
-                                                      AppTextStyle.font14bold,
-                                                ),
+                            onPressed: () {
+                              if (cartValue != null && cartValue! > 0) {
+                                onCartTap?.call();
+                              } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return Dialog(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 50.w, vertical: 60.h),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(25),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black.withOpacity(
+                                                    0.2), // Shadow color
+                                                spreadRadius:
+                                                    1, // Spread effect
+                                                blurRadius: 10, // Blur effect
+                                                offset: const Offset(
+                                                    0, 5), // Bottom shadow
                                               ),
-                                            )
-                                          ],
+                                            ],
+                                          ),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                "Your cart is empty. Please add items to cart",
+                                                style: AppTextStyle.font14bold,
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              // ShortLabelledButton(
+                                              //   onTap: () {},
+                                              //   label: "close",
+                                              // )
+                                              const SizedBox(
+                                                height: 20,
+                                              ),
+                                              InkWell(
+                                                onTap: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 40.w,
+                                                      vertical: 4.h),
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors
+                                                        .lightCyanColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4.r),
+                                                  ),
+                                                  child: Text(
+                                                    "close",
+                                                    style:
+                                                        AppTextStyle.font14bold,
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  });
-                            }
-                          },
+                                      );
+                                    });
+                              }
+                            },
+                          ),
                         ),
                       ),
-                    ),
               SizedBox(width: 10.w),
               if (isAll) ...[
                 SizedBox(

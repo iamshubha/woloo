@@ -240,33 +240,6 @@ class _SearchScreenState extends State<SearchScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        Container(
-                          height: 40.h,
-                          width: 40.h,
-                          decoration: const BoxDecoration(
-                              color: AppColors.themeBackground,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.greyShadowColor,
-                                  blurRadius: 5.0,
-                                  spreadRadius: 0.5,
-                                  offset: Offset(0, 2),
-                                ),
-                                BoxShadow(
-                                  color: AppColors.greyShadowColor,
-                                  blurRadius: 5.0,
-                                  spreadRadius: 0.5,
-                                  offset: Offset(0, -1),
-                                ),
-                              ]),
-                          child: Center(
-                            child: Image.asset(AppImages.tuneLogo),
-                          ),
-                        )
                       ],
                     ),
                   ),
