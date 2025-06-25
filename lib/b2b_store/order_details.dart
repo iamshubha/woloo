@@ -77,6 +77,8 @@ class _OrderScreenState extends State<OrderScreen> {
                       title: "Order Details",
                       subtitle:
                           "Check or modify the details of your order here"),
+                  // Text("Order ID: ${widget.orderSet.id}",
+                  //     style: AppTextStyle.font12bold),
                   Expanded(
                     child: ListView.builder(
                         itemCount: widget.orderSet.orders?.first.items?.length,
@@ -396,7 +398,7 @@ class OrderStatusCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Order ID: $id", style: AppTextStyle.font12bold),
+          // Text("Order ID: $id", style: AppTextStyle.font12bold),
           SizedBox(height: 8.h),
           // Product Details
           Row(

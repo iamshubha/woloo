@@ -117,6 +117,8 @@ class _OrderScreenCheckoutState extends State<OrderScreenCheckout> {
                         title: "Order Details ",
                         subtitle:
                             "Check or modify the details of your order here"),
+                    Text("Order ID: ${widget.orderSet.id}",
+                        style: AppTextStyle.font12bold),
                     Expanded(
                       child: ListView.builder(
                           itemCount:
@@ -142,7 +144,7 @@ class _OrderScreenCheckoutState extends State<OrderScreenCheckout> {
                               url: item?.thumbnail ?? "",
                               productLabel: item?.title ?? "",
                               subTitle: item?.subtitle ?? "",
-                              price: (item?.total ?? 0).toString(),
+                              price: (item?.total ?? 0).toStringAsFixed(2),
                             );
                           }),
                     ),

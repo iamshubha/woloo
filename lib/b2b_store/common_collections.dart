@@ -197,12 +197,6 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
                   _refresh();
                 },
               ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  print(selectedFilters);
-                },
-                child: const Icon(Icons.category),
-              ),
               body: _isDataLoaded
                   ? SingleChildScrollView(
                       child: Container(

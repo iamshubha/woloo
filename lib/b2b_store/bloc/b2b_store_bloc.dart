@@ -925,7 +925,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
 
       emit(CartSuccess(
           cartData: response,
-          wolooPoints: currentPoints.results.points,
+          wolooPoints: currentPoints.results.totalCoins.totalCoins,
           message: "Woloo points removed successfully!"));
     } catch (e) {
       final errorMsg = e is Exception
