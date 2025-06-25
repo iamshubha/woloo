@@ -1,10 +1,141 @@
 import 'dart:convert';
 
-import 'package:woloo_smart_hygiene/utils/logger.dart';
+import 'package:woloo_smart_hygiene/utils///logger.dart';
 
 CartModel cartModelFromJson(String str) => CartModel.fromJson(json.decode(str));
 
 String cartModelToJson(CartModel data) => json.encode(data.toJson());
+
+class Item {
+  final String? id;
+  final String? thumbnail;
+  final String? variantId;
+  final String? productId;
+  final dynamic productTypeId;
+  final String? productTitle;
+  final String? productDescription;
+  final String? productSubtitle;
+  final dynamic productType;
+  final String? productCollection;
+  final String? productHandle;
+  final dynamic variantSku;
+  final dynamic variantBarcode;
+  final String? variantTitle;
+  final bool? requiresShipping;
+  final Metadata? metadata;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final String? title;
+  final int? quantity;
+  final int? unitPrice;
+  final int? compareAtUnitPrice;
+  final bool? isTaxInclusive;
+  final List<dynamic>? taxLines;
+  final List<Adjustment>? adjustments;
+  final Product? product;
+
+  Item({
+    this.id,
+    this.thumbnail,
+    this.variantId,
+    this.productId,
+    this.productTypeId,
+    this.productTitle,
+    this.productDescription,
+    this.productSubtitle,
+    this.productType,
+    this.productCollection,
+    this.productHandle,
+    this.variantSku,
+    this.variantBarcode,
+    this.variantTitle,
+    this.requiresShipping,
+    this.metadata,
+    this.createdAt,
+    this.updatedAt,
+    this.title,
+    this.quantity,
+    this.unitPrice,
+    this.compareAtUnitPrice,
+    this.isTaxInclusive,
+    this.taxLines,
+    this.adjustments,
+    this.product,
+  });
+
+  factory Item.fromJson(Map<String, dynamic> json) => Item(
+        id: json["id"],
+        thumbnail: json["thumbnail"],
+        variantId: json["variant_id"],
+        productId: json["product_id"],
+        productTypeId: json["product_type_id"],
+        productTitle: json["product_title"],
+        productDescription: json["product_description"],
+        productSubtitle: json["product_subtitle"],
+        productType: json["product_type"],
+        productCollection: json["product_collection"],
+        productHandle: json["product_handle"],
+        variantSku: json["variant_sku"],
+        variantBarcode: json["variant_barcode"],
+        variantTitle: json["variant_title"],
+        requiresShipping: json["requires_shipping"],
+        metadata: json["metadata"] == null
+            ? null
+            : Metadata.fromJson(json["metadata"]),
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+        title: json["title"],
+        quantity: json["quantity"],
+        unitPrice: json["unit_price"],
+        compareAtUnitPrice: json["compare_at_unit_price"],
+        isTaxInclusive: json["is_tax_inclusive"],
+        taxLines: json["tax_lines"] == null
+            ? []
+            : List<dynamic>.from(json["tax_lines"]!.map((x) => x)),
+        adjustments: json["adjustments"] == null
+            ? []
+            : List<Adjustment>.from(
+                json["adjustments"]!.map((x) => Adjustment.fromJson(x))),
+        product:
+            json["product"] == null ? null : Product.fromJson(json["product"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "thumbnail": thumbnail,
+        "variant_id": variantId,
+        "product_id": productId,
+        "product_type_id": productTypeId,
+        "product_title": productTitle,
+        "product_description": productDescription,
+        "product_subtitle": productSubtitle,
+        "product_type": productType,
+        "product_collection": productCollection,
+        "product_handle": productHandle,
+        "variant_sku": variantSku,
+        "variant_barcode": variantBarcode,
+        "variant_title": variantTitle,
+        "requires_shipping": requiresShipping,
+        "metadata": metadata?.toJson(),
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+        "title": title,
+        "quantity": quantity,
+        "unit_price": unitPrice,
+        "compare_at_unit_price": compareAtUnitPrice,
+        "is_tax_inclusive": isTaxInclusive,
+        "tax_lines":
+            taxLines == null ? [] : List<dynamic>.from(taxLines!.map((x) => x)),
+        "adjustments": adjustments == null
+            ? []
+            : List<dynamic>.from(adjustments!.map((x) => x.toJson())),
+        "product": product?.toJson(),
+      };
+}
 
 class CartModel {
   final Cart cart;
@@ -19,7 +150,7 @@ class CartModel {
         cart: Cart.fromJson(json["cart"]),
       );
     } catch (e) {
-      logger.e(e);
+      //logger.e(e);
       rethrow;
     }
   }
@@ -30,92 +161,94 @@ class CartModel {
 }
 
 class Cart {
-  final String id;
-  final String currencyCode;
-  final String email;
-  final String regionId;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String? id;
+  final String? currencyCode;
+  final String? email;
+  final String? regionId;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
   final dynamic completedAt;
-  final int total;
-  final int subtotal;
-  final int taxTotal;
-  final int discountTotal;
-  final int discountSubtotal;
-  final int discountTaxTotal;
-  final int originalTotal;
-  final int originalTaxTotal;
-  final int itemTotal;
-  final int itemSubtotal;
-  final int itemTaxTotal;
-  final int originalItemTotal;
-  final int originalItemSubtotal;
-  final int originalItemTaxTotal;
-  final int shippingTotal;
-  final int shippingSubtotal;
-  final int shippingTaxTotal;
-  final int originalShippingTaxTotal;
-  final int originalShippingSubtotal;
-  final int originalShippingTotal;
-  final int creditLineSubtotal;
-  final int creditLineTaxTotal;
-  final int creditLineTotal;
+  final double? total;
+  final dynamic subtotal;
+  final dynamic taxTotal;
+  final double? discountTotal;
+  final double? discountSubtotal;
+  final dynamic discountTaxTotal;
+  final dynamic originalTotal;
+  final dynamic originalTaxTotal;
+  final double? itemTotal;
+  final dynamic itemSubtotal;
+  final dynamic itemTaxTotal;
+  final dynamic originalItemTotal;
+  final dynamic originalItemSubtotal;
+  final dynamic originalItemTaxTotal;
+  final dynamic shippingTotal;
+  final dynamic shippingSubtotal;
+  final dynamic shippingTaxTotal;
+  final dynamic originalShippingTaxTotal;
+  final dynamic originalShippingSubtotal;
+  final dynamic originalShippingTotal;
+  final dynamic creditLineSubtotal;
+  final dynamic creditLineTaxTotal;
+  final dynamic creditLineTotal;
   final dynamic metadata;
-  final String salesChannelId;
-  final String shippingAddressId;
-  final String customerId;
-  final List<Item> items;
-  final List<dynamic> shippingMethods;
-  final ShippingAddress shippingAddress;
-  final dynamic billingAddress;
-  final List<dynamic> creditLines;
-  final Customer customer;
-  final Region region;
-  final List<dynamic> promotions;
+  final String? salesChannelId;
+  final String? shippingAddressId;
+  final String? billingAddressId;
+  final String? customerId;
+  final List<Item>? items;
+  final List<ShippingMethod>? shippingMethods;
+  final IngAddress? shippingAddress;
+  final IngAddress? billingAddress;
+  final List<dynamic>? creditLines;
+  final Customer? customer;
+  final Region? region;
+  final List<Promotion>? promotions;
 
   Cart({
-    required this.id,
-    required this.currencyCode,
-    required this.email,
-    required this.regionId,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.completedAt,
-    required this.total,
-    required this.subtotal,
-    required this.taxTotal,
-    required this.discountTotal,
-    required this.discountSubtotal,
-    required this.discountTaxTotal,
-    required this.originalTotal,
-    required this.originalTaxTotal,
-    required this.itemTotal,
-    required this.itemSubtotal,
-    required this.itemTaxTotal,
-    required this.originalItemTotal,
-    required this.originalItemSubtotal,
-    required this.originalItemTaxTotal,
-    required this.shippingTotal,
-    required this.shippingSubtotal,
-    required this.shippingTaxTotal,
-    required this.originalShippingTaxTotal,
-    required this.originalShippingSubtotal,
-    required this.originalShippingTotal,
-    required this.creditLineSubtotal,
-    required this.creditLineTaxTotal,
-    required this.creditLineTotal,
-    required this.metadata,
-    required this.salesChannelId,
-    required this.shippingAddressId,
-    required this.customerId,
-    required this.items,
-    required this.shippingMethods,
-    required this.shippingAddress,
-    required this.billingAddress,
-    required this.creditLines,
-    required this.customer,
-    required this.region,
-    required this.promotions,
+    this.id,
+    this.currencyCode,
+    this.email,
+    this.regionId,
+    this.createdAt,
+    this.updatedAt,
+    this.completedAt,
+    this.total,
+    this.subtotal,
+    this.taxTotal,
+    this.discountTotal,
+    this.discountSubtotal,
+    this.discountTaxTotal,
+    this.originalTotal,
+    this.originalTaxTotal,
+    this.itemTotal,
+    this.itemSubtotal,
+    this.itemTaxTotal,
+    this.originalItemTotal,
+    this.originalItemSubtotal,
+    this.originalItemTaxTotal,
+    this.shippingTotal,
+    this.shippingSubtotal,
+    this.shippingTaxTotal,
+    this.originalShippingTaxTotal,
+    this.originalShippingSubtotal,
+    this.originalShippingTotal,
+    this.creditLineSubtotal,
+    this.creditLineTaxTotal,
+    this.creditLineTotal,
+    this.metadata,
+    this.salesChannelId,
+    this.shippingAddressId,
+    this.billingAddressId,
+    this.customerId,
+    this.items,
+    this.shippingMethods,
+    this.shippingAddress,
+    this.billingAddress,
+    this.creditLines,
+    this.customer,
+    this.region,
+    this.promotions,
   });
 
   factory Cart.fromJson(Map<String, dynamic> json) => Cart(
@@ -123,18 +256,22 @@ class Cart {
         currencyCode: json["currency_code"],
         email: json["email"],
         regionId: json["region_id"],
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
         completedAt: json["completed_at"],
-        total: json["total"],
+        total: json["total"]?.toDouble(),
         subtotal: json["subtotal"],
         taxTotal: json["tax_total"],
-        discountTotal: json["discount_total"],
-        discountSubtotal: json["discount_subtotal"],
+        discountTotal: json["discount_total"]?.toDouble(),
+        discountSubtotal: json["discount_subtotal"]?.toDouble(),
         discountTaxTotal: json["discount_tax_total"],
         originalTotal: json["original_total"],
         originalTaxTotal: json["original_tax_total"],
-        itemTotal: json["item_total"],
+        itemTotal: json["item_total"]?.toDouble(),
         itemSubtotal: json["item_subtotal"],
         itemTaxTotal: json["item_tax_total"],
         originalItemTotal: json["original_item_total"],
@@ -152,16 +289,32 @@ class Cart {
         metadata: json["metadata"],
         salesChannelId: json["sales_channel_id"],
         shippingAddressId: json["shipping_address_id"],
+        billingAddressId: json["billing_address_id"],
         customerId: json["customer_id"],
-        items: List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
-        shippingMethods:
-            List<dynamic>.from(json["shipping_methods"].map((x) => x)),
-        shippingAddress: ShippingAddress.fromJson(json["shipping_address"]),
-        billingAddress: json["billing_address"],
-        creditLines: List<dynamic>.from(json["credit_lines"].map((x) => x)),
-        customer: Customer.fromJson(json["customer"]),
-        region: Region.fromJson(json["region"]),
-        promotions: List<dynamic>.from(json["promotions"].map((x) => x)),
+        items: json["items"] == null
+            ? []
+            : List<Item>.from(json["items"]!.map((x) => Item.fromJson(x))),
+        shippingMethods: json["shipping_methods"] == null
+            ? []
+            : List<ShippingMethod>.from(json["shipping_methods"]!
+                .map((x) => ShippingMethod.fromJson(x))),
+        shippingAddress: json["shipping_address"] == null
+            ? null
+            : IngAddress.fromJson(json["shipping_address"]),
+        billingAddress: json["billing_address"] == null
+            ? null
+            : IngAddress.fromJson(json["billing_address"]),
+        creditLines: json["credit_lines"] == null
+            ? []
+            : List<dynamic>.from(json["credit_lines"]!.map((x) => x)),
+        customer: json["customer"] == null
+            ? null
+            : Customer.fromJson(json["customer"]),
+        region: json["region"] == null ? null : Region.fromJson(json["region"]),
+        promotions: json["promotions"] == null
+            ? []
+            : List<Promotion>.from(
+                json["promotions"]!.map((x) => Promotion.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -169,8 +322,8 @@ class Cart {
         "currency_code": currencyCode,
         "email": email,
         "region_id": regionId,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
         "completed_at": completedAt,
         "total": total,
         "subtotal": subtotal,
@@ -198,15 +351,24 @@ class Cart {
         "metadata": metadata,
         "sales_channel_id": salesChannelId,
         "shipping_address_id": shippingAddressId,
+        "billing_address_id": billingAddressId,
         "customer_id": customerId,
-        "items": List<dynamic>.from(items.map((x) => x.toJson())),
-        "shipping_methods": List<dynamic>.from(shippingMethods.map((x) => x)),
-        "shipping_address": shippingAddress.toJson(),
-        "billing_address": billingAddress,
-        "credit_lines": List<dynamic>.from(creditLines.map((x) => x)),
-        "customer": customer.toJson(),
-        "region": region.toJson(),
-        "promotions": List<dynamic>.from(promotions.map((x) => x)),
+        "items": items == null
+            ? []
+            : List<dynamic>.from(items!.map((x) => x.toJson())),
+        "shipping_methods": shippingMethods == null
+            ? []
+            : List<dynamic>.from(shippingMethods!.map((x) => x.toJson())),
+        "shipping_address": shippingAddress?.toJson(),
+        "billing_address": billingAddress?.toJson(),
+        "credit_lines": creditLines == null
+            ? []
+            : List<dynamic>.from(creditLines!.map((x) => x)),
+        "customer": customer?.toJson(),
+        "region": region?.toJson(),
+        "promotions": promotions == null
+            ? []
+            : List<dynamic>.from(promotions!.map((x) => x.toJson())),
       };
 }
 
@@ -231,122 +393,6 @@ class Customer {
         "id": id,
         "email": email,
         "groups": List<dynamic>.from(groups.map((x) => x)),
-      };
-}
-
-class Item {
-  final String id;
-  final dynamic thumbnail;
-  final String variantId;
-  final String productId;
-  final dynamic productTypeId;
-  final String productTitle;
-  final dynamic productDescription;
-  final dynamic productSubtitle;
-  final dynamic productType;
-  final dynamic productCollection;
-  final String productHandle;
-  final dynamic variantSku;
-  final dynamic variantBarcode;
-  final String variantTitle;
-  final bool requiresShipping;
-  final Metadata metadata;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String title;
-  final int quantity;
-  final int unitPrice;
-  final dynamic compareAtUnitPrice;
-  final bool isTaxInclusive;
-  final List<dynamic> taxLines;
-  final List<dynamic> adjustments;
-  final Product product;
-
-  Item({
-    required this.id,
-    required this.thumbnail,
-    required this.variantId,
-    required this.productId,
-    required this.productTypeId,
-    required this.productTitle,
-    required this.productDescription,
-    required this.productSubtitle,
-    required this.productType,
-    required this.productCollection,
-    required this.productHandle,
-    required this.variantSku,
-    required this.variantBarcode,
-    required this.variantTitle,
-    required this.requiresShipping,
-    required this.metadata,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.title,
-    required this.quantity,
-    required this.unitPrice,
-    required this.compareAtUnitPrice,
-    required this.isTaxInclusive,
-    required this.taxLines,
-    required this.adjustments,
-    required this.product,
-  });
-
-  factory Item.fromJson(Map<String, dynamic> json) => Item(
-        id: json["id"],
-        thumbnail: json["thumbnail"],
-        variantId: json["variant_id"],
-        productId: json["product_id"],
-        productTypeId: json["product_type_id"],
-        productTitle: json["product_title"],
-        productDescription: json["product_description"],
-        productSubtitle: json["product_subtitle"],
-        productType: json["product_type"],
-        productCollection: json["product_collection"],
-        productHandle: json["product_handle"],
-        variantSku: json["variant_sku"],
-        variantBarcode: json["variant_barcode"],
-        variantTitle: json["variant_title"],
-        requiresShipping: json["requires_shipping"],
-        metadata: Metadata.fromJson(json["metadata"]),
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
-        title: json["title"],
-        quantity: json["quantity"],
-        unitPrice: json["unit_price"],
-        compareAtUnitPrice: json["compare_at_unit_price"],
-        isTaxInclusive: json["is_tax_inclusive"],
-        taxLines: List<dynamic>.from(json["tax_lines"].map((x) => x)),
-        adjustments: List<dynamic>.from(json["adjustments"].map((x) => x)),
-        product: Product.fromJson(json["product"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "thumbnail": thumbnail,
-        "variant_id": variantId,
-        "product_id": productId,
-        "product_type_id": productTypeId,
-        "product_title": productTitle,
-        "product_description": productDescription,
-        "product_subtitle": productSubtitle,
-        "product_type": productType,
-        "product_collection": productCollection,
-        "product_handle": productHandle,
-        "variant_sku": variantSku,
-        "variant_barcode": variantBarcode,
-        "variant_title": variantTitle,
-        "requires_shipping": requiresShipping,
-        "metadata": metadata.toJson(),
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
-        "title": title,
-        "quantity": quantity,
-        "unit_price": unitPrice,
-        "compare_at_unit_price": compareAtUnitPrice,
-        "is_tax_inclusive": isTaxInclusive,
-        "tax_lines": List<dynamic>.from(taxLines.map((x) => x)),
-        "adjustments": List<dynamic>.from(adjustments.map((x) => x)),
-        "product": product.toJson(),
       };
 }
 
@@ -585,23 +631,223 @@ class Countries {
   }
 }
 
-// _________________________________________________
+AddToCartResponse addToCartResponseFromJson(String str) =>
+    AddToCartResponse.fromJson(json.decode(str));
+
+String addToCartResponseToJson(AddToCartResponse data) =>
+    json.encode(data.toJson());
 
 class AddToCartResponse {
-  final Cart cart;
+  final Cart? cart;
 
-  AddToCartResponse({required this.cart});
+  AddToCartResponse({
+    this.cart,
+  });
 
   factory AddToCartResponse.fromJson(Map<String, dynamic> json) =>
-      AddToCartResponse(cart: Cart.fromJson(json["cart"]));
+      AddToCartResponse(
+        cart: json["cart"] == null ? null : Cart.fromJson(json["cart"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "cart": cart?.toJson(),
+      };
+}
+
+class IngAddress {
+  final String? id;
+  final String? firstName;
+  final String? lastName;
+  final dynamic company;
+  final String? address1;
+  final dynamic address2;
+  final String? city;
+  final String? postalCode;
+  final String? countryCode;
+  final String? province;
+  final String? phone;
+
+  IngAddress({
+    this.id,
+    this.firstName,
+    this.lastName,
+    this.company,
+    this.address1,
+    this.address2,
+    this.city,
+    this.postalCode,
+    this.countryCode,
+    this.province,
+    this.phone,
+  });
+
+  factory IngAddress.fromJson(Map<String, dynamic> json) => IngAddress(
+        id: json["id"],
+        firstName: json["first_name"],
+        lastName: json["last_name"],
+        company: json["company"],
+        address1: json["address_1"],
+        address2: json["address_2"],
+        city: json["city"],
+        postalCode: json["postal_code"],
+        countryCode: json["country_code"],
+        province: json["province"],
+        phone: json["phone"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "first_name": firstName,
+        "last_name": lastName,
+        "company": company,
+        "address_1": address1,
+        "address_2": address2,
+        "city": city,
+        "postal_code": postalCode,
+        "country_code": countryCode,
+        "province": province,
+        "phone": phone,
+      };
+}
+
+class Adjustment {
+  final String? id;
+  final String? code;
+  final String? promotionId;
+  final double? amount;
+
+  Adjustment({
+    this.id,
+    this.code,
+    this.promotionId,
+    this.amount,
+  });
+
+  factory Adjustment.fromJson(Map<String, dynamic> json) => Adjustment(
+        id: json["id"],
+        code: json["code"],
+        promotionId: json["promotion_id"],
+        amount: json["amount"]?.toDouble(),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "code": code,
+        "promotion_id": promotionId,
+        "amount": amount,
+      };
 }
 
 class Category {
-  final String id;
+  final String? id;
 
-  Category({required this.id});
+  Category({
+    this.id,
+  });
 
   factory Category.fromJson(Map<String, dynamic> json) => Category(
         id: json["id"],
       );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+      };
+}
+
+class Promotion {
+  final String? id;
+  final String? code;
+  final bool? isAutomatic;
+  final ApplicationMethod? applicationMethod;
+
+  Promotion({
+    this.id,
+    this.code,
+    this.isAutomatic,
+    this.applicationMethod,
+  });
+
+  factory Promotion.fromJson(Map<String, dynamic> json) => Promotion(
+        id: json["id"],
+        code: json["code"],
+        isAutomatic: json["is_automatic"],
+        applicationMethod: json["application_method"] == null
+            ? null
+            : ApplicationMethod.fromJson(json["application_method"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "code": code,
+        "is_automatic": isAutomatic,
+        "application_method": applicationMethod?.toJson(),
+      };
+}
+
+class ApplicationMethod {
+  final int? value;
+  final String? type;
+  final String? currencyCode;
+
+  ApplicationMethod({
+    this.value,
+    this.type,
+    this.currencyCode,
+  });
+
+  factory ApplicationMethod.fromJson(Map<String, dynamic> json) =>
+      ApplicationMethod(
+        value: json["value"],
+        type: json["type"],
+        currencyCode: json["currency_code"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "value": value,
+        "type": type,
+        "currency_code": currencyCode,
+      };
+}
+
+class ShippingMethod {
+  final int? amount;
+  final bool? isTaxInclusive;
+  final String? shippingOptionId;
+  final String? id;
+  final List<dynamic>? taxLines;
+  final List<dynamic>? adjustments;
+
+  ShippingMethod({
+    this.amount,
+    this.isTaxInclusive,
+    this.shippingOptionId,
+    this.id,
+    this.taxLines,
+    this.adjustments,
+  });
+
+  factory ShippingMethod.fromJson(Map<String, dynamic> json) => ShippingMethod(
+        amount: json["amount"],
+        isTaxInclusive: json["is_tax_inclusive"],
+        shippingOptionId: json["shipping_option_id"],
+        id: json["id"],
+        taxLines: json["tax_lines"] == null
+            ? []
+            : List<dynamic>.from(json["tax_lines"]!.map((x) => x)),
+        adjustments: json["adjustments"] == null
+            ? []
+            : List<dynamic>.from(json["adjustments"]!.map((x) => x)),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "amount": amount,
+        "is_tax_inclusive": isTaxInclusive,
+        "shipping_option_id": shippingOptionId,
+        "id": id,
+        "tax_lines":
+            taxLines == null ? [] : List<dynamic>.from(taxLines!.map((x) => x)),
+        "adjustments": adjustments == null
+            ? []
+            : List<dynamic>.from(adjustments!.map((x) => x)),
+      };
 }

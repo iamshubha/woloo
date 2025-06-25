@@ -11,12 +11,12 @@ String orderDetailsToJson(OrderDetails data) => json.encode(data.toJson());
 
 class OrderDetails {
   final List<OrderSet> orderSets;
-  final int? count;
-  final int? offset;
-  final int? limit;
+  final dynamic count;
+  final dynamic offset;
+  final dynamic limit;
 
   OrderDetails({
-    this.orderSets = const [],
+    required this.orderSets,
     this.count,
     this.offset,
     this.limit,
@@ -33,7 +33,9 @@ class OrderDetails {
       );
 
   Map<String, dynamic> toJson() => {
-        "order_sets": List<dynamic>.from(orderSets.map((x) => x.toJson())),
+        "order_sets": orderSets == null
+            ? []
+            : List<dynamic>.from(orderSets!.map((x) => x.toJson())),
         "count": count,
         "offset": offset,
         "limit": limit,
@@ -44,35 +46,39 @@ class OrderSet {
   final String? id;
   final DateTime? updatedAt;
   final DateTime? createdAt;
-  final dynamic displayId;
-  final dynamic customerId;
   final String? cartId;
   final String? paymentCollectionId;
-  final OrderSetCustomer? customer;
   final Cart? cart;
-  final PaymentCollectionInOrderDetails? paymentCollection;
-  final List<Order> orders;
-  final dynamic status;
-  final dynamic paymentStatus;
-  final dynamic fulfillmentStatus;
-  final int? taxTotal;
-  final int? shippingTaxTotal;
-  final int? shippingTotal;
-  final int? total;
-  final int? subtotal;
+  final PaymentCollection? paymentCollection;
+  final List<Order>? orders;
+  final String? status;
+  final String? paymentStatus;
+  final String? fulfillmentStatus;
+  final String? taxTotal;
+  final String? shippingTaxTotal;
+  final String? shippingTotal;
+  final String? total;
+  final String? subtotal;
+  final String? discountTotal;
+  final String? discountTaxTotal;
+  final String? originalTotal;
+  final String? originalTaxTotal;
+  final String? itemTotal;
+  final String? itemSubtotal;
+  final String? itemTaxTotal;
+  final String? originalItemTotal;
+  final String? originalItemSubtotal;
+  final String? originalItemTaxTotal;
 
   OrderSet({
     this.id,
     this.updatedAt,
     this.createdAt,
-    this.displayId,
-    this.customerId,
     this.cartId,
     this.paymentCollectionId,
-    this.customer,
     this.cart,
     this.paymentCollection,
-    this.orders = const [],
+    this.orders,
     this.status,
     this.paymentStatus,
     this.fulfillmentStatus,
@@ -81,6 +87,16 @@ class OrderSet {
     this.shippingTotal,
     this.total,
     this.subtotal,
+    this.discountTotal,
+    this.discountTaxTotal,
+    this.originalTotal,
+    this.originalTaxTotal,
+    this.itemTotal,
+    this.itemSubtotal,
+    this.itemTaxTotal,
+    this.originalItemTotal,
+    this.originalItemSubtotal,
+    this.originalItemTaxTotal,
   });
 
   factory OrderSet.fromJson(Map<String, dynamic> json) => OrderSet(
@@ -91,18 +107,12 @@ class OrderSet {
         createdAt: json["created_at"] == null
             ? null
             : DateTime.parse(json["created_at"]),
-        displayId: json["display_id"],
-        customerId: json["customer_id"],
         cartId: json["cart_id"],
         paymentCollectionId: json["payment_collection_id"],
-        customer: json["customer"] == null
-            ? null
-            : OrderSetCustomer.fromJson(json["customer"]),
         cart: json["cart"] == null ? null : Cart.fromJson(json["cart"]),
         paymentCollection: json["payment_collection"] == null
             ? null
-            : PaymentCollectionInOrderDetails.fromJson(
-                json["payment_collection"]),
+            : PaymentCollection.fromJson(json["payment_collection"]),
         orders: json["orders"] == null
             ? []
             : List<Order>.from(json["orders"]!.map((x) => Order.fromJson(x))),
@@ -114,20 +124,29 @@ class OrderSet {
         shippingTotal: json["shipping_total"],
         total: json["total"],
         subtotal: json["subtotal"],
+        discountTotal: json["discount_total"],
+        discountTaxTotal: json["discount_tax_total"],
+        originalTotal: json["original_total"],
+        originalTaxTotal: json["original_tax_total"],
+        itemTotal: json["item_total"],
+        itemSubtotal: json["item_subtotal"],
+        itemTaxTotal: json["item_tax_total"],
+        originalItemTotal: json["original_item_total"],
+        originalItemSubtotal: json["original_item_subtotal"],
+        originalItemTaxTotal: json["original_item_tax_total"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "updated_at": updatedAt?.toIso8601String(),
         "created_at": createdAt?.toIso8601String(),
-        "display_id": displayId,
-        "customer_id": customerId,
         "cart_id": cartId,
         "payment_collection_id": paymentCollectionId,
-        "customer": customer?.toJson(),
         "cart": cart?.toJson(),
         "payment_collection": paymentCollection?.toJson(),
-        "orders": List<dynamic>.from(orders.map((x) => x.toJson())),
+        "orders": orders == null
+            ? []
+            : List<dynamic>.from(orders!.map((x) => x.toJson())),
         "status": status,
         "payment_status": paymentStatus,
         "fulfillment_status": fulfillmentStatus,
@@ -136,24 +155,35 @@ class OrderSet {
         "shipping_total": shippingTotal,
         "total": total,
         "subtotal": subtotal,
+        "discount_total": discountTotal,
+        "discount_tax_total": discountTaxTotal,
+        "original_total": originalTotal,
+        "original_tax_total": originalTaxTotal,
+        "item_total": itemTotal,
+        "item_subtotal": itemSubtotal,
+        "item_tax_total": itemTaxTotal,
+        "original_item_total": originalItemTotal,
+        "original_item_subtotal": originalItemSubtotal,
+        "original_item_tax_total": originalItemTaxTotal,
       };
 }
 
 class Cart {
   final String? id;
-  final dynamic regionId;
-  final dynamic customerId;
-  final dynamic salesChannelId;
-  final dynamic email;
-  final dynamic currencyCode;
+  final String? regionId;
+  final String? customerId;
+  final String? salesChannelId;
+  final String? email;
+  final String? currencyCode;
   final dynamic metadata;
   final DateTime? completedAt;
-  final ShippingAddress? shippingAddress;
-  final dynamic billingAddress;
+  final Address? shippingAddress;
+  final Address? billingAddress;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final dynamic deletedAt;
   final String? shippingAddressId;
+  final String? billingAddressId;
 
   Cart({
     this.id,
@@ -170,6 +200,7 @@ class Cart {
     this.updatedAt,
     this.deletedAt,
     this.shippingAddressId,
+    this.billingAddressId,
   });
 
   factory Cart.fromJson(Map<String, dynamic> json) => Cart(
@@ -185,8 +216,10 @@ class Cart {
             : DateTime.parse(json["completed_at"]),
         shippingAddress: json["shipping_address"] == null
             ? null
-            : ShippingAddress.fromJson(json["shipping_address"]),
-        billingAddress: json["billing_address"],
+            : Address.fromJson(json["shipping_address"]),
+        billingAddress: json["billing_address"] == null
+            ? null
+            : Address.fromJson(json["billing_address"]),
         createdAt: json["created_at"] == null
             ? null
             : DateTime.parse(json["created_at"]),
@@ -195,6 +228,7 @@ class Cart {
             : DateTime.parse(json["updated_at"]),
         deletedAt: json["deleted_at"],
         shippingAddressId: json["shipping_address_id"],
+        billingAddressId: json["billing_address_id"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -207,71 +241,72 @@ class Cart {
         "metadata": metadata,
         "completed_at": completedAt?.toIso8601String(),
         "shipping_address": shippingAddress?.toJson(),
-        "billing_address": billingAddress,
+        "billing_address": billingAddress?.toJson(),
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
         "deleted_at": deletedAt,
         "shipping_address_id": shippingAddressId,
+        "billing_address_id": billingAddressId,
       };
 }
 
-class ShippingAddress {
+class Address {
   final String? id;
-
-  ShippingAddress({
-    this.id,
-  });
-
-  factory ShippingAddress.fromJson(Map<String, dynamic> json) =>
-      ShippingAddress(
-        id: json["id"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-      };
-}
-
-class OrderSetCustomer {
-  final dynamic id;
-  final dynamic companyName;
-  final dynamic firstName;
-  final dynamic lastName;
-  final dynamic email;
-  final dynamic phone;
-  final bool? hasAccount;
+  final String? customerId;
+  final dynamic company;
+  final String? firstName;
+  final String? lastName;
+  final String? address1;
+  final dynamic address2;
+  final String? city;
+  final String? countryCode;
+  final String? province;
+  final String? postalCode;
+  final String? phone;
   final dynamic metadata;
-  final dynamic createdBy;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final dynamic deletedAt;
+  final String? addressName;
+  final bool? isDefaultBilling;
+  final bool? isDefaultShipping;
 
-  OrderSetCustomer({
+  Address({
     this.id,
-    this.companyName,
+    this.customerId,
+    this.company,
     this.firstName,
     this.lastName,
-    this.email,
+    this.address1,
+    this.address2,
+    this.city,
+    this.countryCode,
+    this.province,
+    this.postalCode,
     this.phone,
-    this.hasAccount,
     this.metadata,
-    this.createdBy,
     this.createdAt,
     this.updatedAt,
     this.deletedAt,
+    this.addressName,
+    this.isDefaultBilling,
+    this.isDefaultShipping,
   });
 
-  factory OrderSetCustomer.fromJson(Map<String, dynamic> json) =>
-      OrderSetCustomer(
+  factory Address.fromJson(Map<String, dynamic> json) => Address(
         id: json["id"],
-        companyName: json["company_name"],
+        customerId: json["customer_id"],
+        company: json["company"],
         firstName: json["first_name"],
         lastName: json["last_name"],
-        email: json["email"],
+        address1: json["address_1"],
+        address2: json["address_2"],
+        city: json["city"],
+        countryCode: json["country_code"],
+        province: json["province"],
+        postalCode: json["postal_code"],
         phone: json["phone"],
-        hasAccount: json["has_account"],
         metadata: json["metadata"],
-        createdBy: json["created_by"],
         createdAt: json["created_at"] == null
             ? null
             : DateTime.parse(json["created_at"]),
@@ -279,61 +314,66 @@ class OrderSetCustomer {
             ? null
             : DateTime.parse(json["updated_at"]),
         deletedAt: json["deleted_at"],
+        addressName: json["address_name"],
+        isDefaultBilling: json["is_default_billing"],
+        isDefaultShipping: json["is_default_shipping"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "company_name": companyName,
+        "customer_id": customerId,
+        "company": company,
         "first_name": firstName,
         "last_name": lastName,
-        "email": email,
+        "address_1": address1,
+        "address_2": address2,
+        "city": city,
+        "country_code": countryCode,
+        "province": province,
+        "postal_code": postalCode,
         "phone": phone,
-        "has_account": hasAccount,
         "metadata": metadata,
-        "created_by": createdBy,
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
         "deleted_at": deletedAt,
+        "address_name": addressName,
+        "is_default_billing": isDefaultBilling,
+        "is_default_shipping": isDefaultShipping,
       };
 }
 
 class Order {
-  final dynamic customerId;
   final String? id;
-  final dynamic currencyCode;
-  final dynamic email;
+  final String? currencyCode;
   final DateTime? createdAt;
   final DateTime? updatedAt;
-  final dynamic status;
-  final int? total;
-  final int? subtotal;
-  final int? taxTotal;
-  final int? discountTotal;
-  final int? discountTaxTotal;
-  final int? originalTotal;
-  final int? originalTaxTotal;
-  final int? itemTotal;
-  final int? itemSubtotal;
-  final int? itemTaxTotal;
-  final dynamic salesChannelId;
-  final int? originalItemTotal;
-  final int? originalItemSubtotal;
-  final int? originalItemTaxTotal;
-  final int? shippingTotal;
-  final int? shippingSubtotal;
-  final int? shippingTaxTotal;
-  final List<Item> items;
-  final OrderSetCustomer? customer;
-  final List<dynamic>? fulfillments;
-  final List<PaymentCollectionInOrderDetails>? paymentCollections;
-  final dynamic paymentStatus;
-  final dynamic fulfillmentStatus;
+  final String? status;
+  final dynamic total;
+  final dynamic subtotal;
+  final dynamic taxTotal;
+  final dynamic discountTotal;
+  final dynamic discountTaxTotal;
+  final dynamic originalTotal;
+  final dynamic originalTaxTotal;
+  final dynamic itemTotal;
+  final dynamic itemSubtotal;
+  final dynamic itemTaxTotal;
+  final String? salesChannelId;
+  final dynamic originalItemTotal;
+  final dynamic originalItemSubtotal;
+  final dynamic originalItemTaxTotal;
+  final dynamic shippingTotal;
+  final dynamic shippingSubtotal;
+  final dynamic shippingTaxTotal;
+  final List<Item>? items;
+  final List<Fulfillment>? fulfillments;
+  final List<PaymentCollection>? paymentCollections;
+  final String? paymentStatus;
+  final String? fulfillmentStatus;
 
   Order({
-    this.customerId,
     this.id,
     this.currencyCode,
-    this.email,
     this.createdAt,
     this.updatedAt,
     this.status,
@@ -354,8 +394,7 @@ class Order {
     this.shippingTotal,
     this.shippingSubtotal,
     this.shippingTaxTotal,
-    this.items = const [],
-    this.customer,
+    this.items,
     this.fulfillments,
     this.paymentCollections,
     this.paymentStatus,
@@ -363,10 +402,8 @@ class Order {
   });
 
   factory Order.fromJson(Map<String, dynamic> json) => Order(
-        customerId: json["customer_id"],
         id: json["id"],
         currencyCode: json["currency_code"],
-        email: json["email"],
         createdAt: json["created_at"] == null
             ? null
             : DateTime.parse(json["created_at"]),
@@ -394,26 +431,21 @@ class Order {
         items: json["items"] == null
             ? []
             : List<Item>.from(json["items"]!.map((x) => Item.fromJson(x))),
-        customer: json["customer"] == null
-            ? null
-            : OrderSetCustomer.fromJson(json["customer"]),
         fulfillments: json["fulfillments"] == null
             ? []
-            : List<dynamic>.from(json["fulfillments"]!.map((x) => x)),
+            : List<Fulfillment>.from(
+                json["fulfillments"]!.map((x) => Fulfillment.fromJson(x))),
         paymentCollections: json["payment_collections"] == null
             ? []
-            : List<PaymentCollectionInOrderDetails>.from(
-                json["payment_collections"]!
-                    .map((x) => PaymentCollectionInOrderDetails.fromJson(x))),
+            : List<PaymentCollection>.from(json["payment_collections"]!
+                .map((x) => PaymentCollection.fromJson(x))),
         paymentStatus: json["payment_status"],
         fulfillmentStatus: json["fulfillment_status"],
       );
 
   Map<String, dynamic> toJson() => {
-        "customer_id": customerId,
         "id": id,
         "currency_code": currencyCode,
-        "email": email,
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
         "status": status,
@@ -436,16 +468,158 @@ class Order {
         "shipping_tax_total": shippingTaxTotal,
         "items": items == null
             ? []
-            : List<dynamic>.from(items.map((x) => x.toJson())),
-        "customer": customer?.toJson(),
+            : List<dynamic>.from(items!.map((x) => x.toJson())),
         "fulfillments": fulfillments == null
             ? []
-            : List<dynamic>.from(fulfillments!.map((x) => x)),
+            : List<dynamic>.from(fulfillments!.map((x) => x.toJson())),
         "payment_collections": paymentCollections == null
             ? []
             : List<dynamic>.from(paymentCollections!.map((x) => x.toJson())),
         "payment_status": paymentStatus,
         "fulfillment_status": fulfillmentStatus,
+      };
+}
+
+class Fulfillment {
+  final String? id;
+  final String? locationId;
+  final DateTime? packedAt;
+  final dynamic shippedAt;
+  final dynamic markedShippedBy;
+  final dynamic createdBy;
+  final dynamic deliveredAt;
+  final dynamic canceledAt;
+  final FulfillmentData? data;
+  final bool? requiresShipping;
+  final PaymentSession? provider;
+  final String? shippingOptionId;
+  final PaymentSession? shippingOption;
+  final Address? deliveryAddress;
+  final dynamic metadata;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final dynamic deletedAt;
+  final String? providerId;
+  final String? deliveryAddressId;
+
+  Fulfillment({
+    this.id,
+    this.locationId,
+    this.packedAt,
+    this.shippedAt,
+    this.markedShippedBy,
+    this.createdBy,
+    this.deliveredAt,
+    this.canceledAt,
+    this.data,
+    this.requiresShipping,
+    this.provider,
+    this.shippingOptionId,
+    this.shippingOption,
+    this.deliveryAddress,
+    this.metadata,
+    this.createdAt,
+    this.updatedAt,
+    this.deletedAt,
+    this.providerId,
+    this.deliveryAddressId,
+  });
+
+  factory Fulfillment.fromJson(Map<String, dynamic> json) => Fulfillment(
+        id: json["id"],
+        locationId: json["location_id"],
+        packedAt: json["packed_at"] == null
+            ? null
+            : DateTime.parse(json["packed_at"]),
+        shippedAt: json["shipped_at"],
+        markedShippedBy: json["marked_shipped_by"],
+        createdBy: json["created_by"],
+        deliveredAt: json["delivered_at"],
+        canceledAt: json["canceled_at"],
+        data: json["data"] == null
+            ? null
+            : FulfillmentData.fromJson(json["data"]),
+        requiresShipping: json["requires_shipping"],
+        provider: json["provider"] == null
+            ? null
+            : PaymentSession.fromJson(json["provider"]),
+        shippingOptionId: json["shipping_option_id"],
+        shippingOption: json["shipping_option"] == null
+            ? null
+            : PaymentSession.fromJson(json["shipping_option"]),
+        deliveryAddress: json["delivery_address"] == null
+            ? null
+            : Address.fromJson(json["delivery_address"]),
+        metadata: json["metadata"],
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+        deletedAt: json["deleted_at"],
+        providerId: json["provider_id"],
+        deliveryAddressId: json["delivery_address_id"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "location_id": locationId,
+        "packed_at": packedAt?.toIso8601String(),
+        "shipped_at": shippedAt,
+        "marked_shipped_by": markedShippedBy,
+        "created_by": createdBy,
+        "delivered_at": deliveredAt,
+        "canceled_at": canceledAt,
+        "data": data?.toJson(),
+        "requires_shipping": requiresShipping,
+        "provider": provider?.toJson(),
+        "shipping_option_id": shippingOptionId,
+        "shipping_option": shippingOption?.toJson(),
+        "delivery_address": deliveryAddress?.toJson(),
+        "metadata": metadata,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+        "deleted_at": deletedAt,
+        "provider_id": providerId,
+        "delivery_address_id": deliveryAddressId,
+      };
+}
+
+class FulfillmentData {
+  final String? shipmentId;
+  final String? trackingNumber;
+
+  FulfillmentData({
+    this.shipmentId,
+    this.trackingNumber,
+  });
+
+  factory FulfillmentData.fromJson(Map<String, dynamic> json) =>
+      FulfillmentData(
+        shipmentId: json["shipment_id"],
+        trackingNumber: json["tracking_number"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "shipment_id": shipmentId,
+        "tracking_number": trackingNumber,
+      };
+}
+
+class PaymentSession {
+  final String? id;
+
+  PaymentSession({
+    this.id,
+  });
+
+  factory PaymentSession.fromJson(Map<String, dynamic> json) => PaymentSession(
+        id: json["id"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
       };
 }
 
@@ -461,11 +635,11 @@ class Item {
   final String? productSubtitle;
   final dynamic productType;
   final dynamic productTypeId;
-  final dynamic productCollection;
-  final dynamic productHandle;
+  final String? productCollection;
+  final String? productHandle;
   final dynamic variantSku;
   final dynamic variantBarcode;
-  final dynamic variantTitle;
+  final String? variantTitle;
   final dynamic variantOptionValues;
   final bool? requiresShipping;
   final bool? isGiftcard;
@@ -473,34 +647,34 @@ class Item {
   final bool? isTaxInclusive;
   final bool? isCustomPrice;
   final Metadata? metadata;
-  final dynamic rawCompareAtUnitPrice;
+  final Raw? rawCompareAtUnitPrice;
   final Raw? rawUnitPrice;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final dynamic deletedAt;
   final List<dynamic>? taxLines;
-  final List<dynamic>? adjustments;
+  final List<Adjustment>? adjustments;
   final dynamic compareAtUnitPrice;
-  final int? unitPrice;
-  final int? quantity;
+  final dynamic unitPrice;
+  final dynamic quantity;
   final Raw? rawQuantity;
   final Detail? detail;
-  final int? subtotal;
-  final int? total;
-  final int? originalTotal;
-  final int? discountTotal;
-  final int? discountSubtotal;
-  final int? discountTaxTotal;
-  final int? taxTotal;
-  final int? originalTaxTotal;
-  final int? refundableTotalPerUnit;
-  final int? refundableTotal;
-  final int? fulfilledTotal;
-  final int? shippedTotal;
-  final int? returnRequestedTotal;
-  final int? returnReceivedTotal;
-  final int? returnDismissedTotal;
-  final int? writeOffTotal;
+  final dynamic subtotal;
+  final dynamic total;
+  final dynamic originalTotal;
+  final dynamic discountTotal;
+  final dynamic discountSubtotal;
+  final dynamic discountTaxTotal;
+  final dynamic taxTotal;
+  final dynamic originalTaxTotal;
+  final dynamic refundableTotalPerUnit;
+  final dynamic refundableTotal;
+  final dynamic fulfilledTotal;
+  final dynamic shippedTotal;
+  final dynamic returnRequestedTotal;
+  final dynamic returnReceivedTotal;
+  final dynamic returnDismissedTotal;
+  final dynamic writeOffTotal;
   final Raw? rawSubtotal;
   final Raw? rawTotal;
   final Raw? rawOriginalTotal;
@@ -517,6 +691,7 @@ class Item {
   final Raw? rawReturnReceivedTotal;
   final Raw? rawReturnDismissedTotal;
   final Raw? rawWriteOffTotal;
+  final Variant? variant;
 
   Item({
     this.id,
@@ -586,6 +761,7 @@ class Item {
     this.rawReturnReceivedTotal,
     this.rawReturnDismissedTotal,
     this.rawWriteOffTotal,
+    this.variant,
   });
 
   factory Item.fromJson(Map<String, dynamic> json) => Item(
@@ -614,7 +790,9 @@ class Item {
         metadata: json["metadata"] == null
             ? null
             : Metadata.fromJson(json["metadata"]),
-        rawCompareAtUnitPrice: json["raw_compare_at_unit_price"],
+        rawCompareAtUnitPrice: json["raw_compare_at_unit_price"] == null
+            ? null
+            : Raw.fromJson(json["raw_compare_at_unit_price"]),
         rawUnitPrice: json["raw_unit_price"] == null
             ? null
             : Raw.fromJson(json["raw_unit_price"]),
@@ -630,7 +808,8 @@ class Item {
             : List<dynamic>.from(json["tax_lines"]!.map((x) => x)),
         adjustments: json["adjustments"] == null
             ? []
-            : List<dynamic>.from(json["adjustments"]!.map((x) => x)),
+            : List<Adjustment>.from(
+                json["adjustments"]!.map((x) => Adjustment.fromJson(x))),
         compareAtUnitPrice: json["compare_at_unit_price"],
         unitPrice: json["unit_price"],
         quantity: json["quantity"],
@@ -701,6 +880,8 @@ class Item {
         rawWriteOffTotal: json["raw_write_off_total"] == null
             ? null
             : Raw.fromJson(json["raw_write_off_total"]),
+        variant:
+            json["variant"] == null ? null : Variant.fromJson(json["variant"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -727,7 +908,7 @@ class Item {
         "is_tax_inclusive": isTaxInclusive,
         "is_custom_price": isCustomPrice,
         "metadata": metadata?.toJson(),
-        "raw_compare_at_unit_price": rawCompareAtUnitPrice,
+        "raw_compare_at_unit_price": rawCompareAtUnitPrice?.toJson(),
         "raw_unit_price": rawUnitPrice?.toJson(),
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
@@ -736,7 +917,7 @@ class Item {
             taxLines == null ? [] : List<dynamic>.from(taxLines!.map((x) => x)),
         "adjustments": adjustments == null
             ? []
-            : List<dynamic>.from(adjustments!.map((x) => x)),
+            : List<dynamic>.from(adjustments!.map((x) => x.toJson())),
         "compare_at_unit_price": compareAtUnitPrice,
         "unit_price": unitPrice,
         "quantity": quantity,
@@ -774,16 +955,118 @@ class Item {
         "raw_return_received_total": rawReturnReceivedTotal?.toJson(),
         "raw_return_dismissed_total": rawReturnDismissedTotal?.toJson(),
         "raw_write_off_total": rawWriteOffTotal?.toJson(),
+        "variant": variant?.toJson(),
+      };
+}
+
+class Adjustment {
+  final String? id;
+  final dynamic description;
+  final String? promotionId;
+  final String? code;
+  final String? providerId;
+  final String? itemId;
+  final Raw? rawAmount;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final dynamic deletedAt;
+  final dynamic amount;
+  final dynamic subtotal;
+  final dynamic total;
+  final Raw? rawSubtotal;
+  final Raw? rawTotal;
+
+  Adjustment({
+    this.id,
+    this.description,
+    this.promotionId,
+    this.code,
+    this.providerId,
+    this.itemId,
+    this.rawAmount,
+    this.createdAt,
+    this.updatedAt,
+    this.deletedAt,
+    this.amount,
+    this.subtotal,
+    this.total,
+    this.rawSubtotal,
+    this.rawTotal,
+  });
+
+  factory Adjustment.fromJson(Map<String, dynamic> json) => Adjustment(
+        id: json["id"],
+        description: json["description"],
+        promotionId: json["promotion_id"],
+        code: json["code"],
+        providerId: json["provider_id"],
+        itemId: json["item_id"],
+        rawAmount: json["raw_amount"] == null
+            ? null
+            : Raw.fromJson(json["raw_amount"]),
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+        deletedAt: json["deleted_at"],
+        amount: json["amount"],
+        subtotal: json["subtotal"],
+        total: json["total"],
+        rawSubtotal: json["raw_subtotal"] == null
+            ? null
+            : Raw.fromJson(json["raw_subtotal"]),
+        rawTotal:
+            json["raw_total"] == null ? null : Raw.fromJson(json["raw_total"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "description": description,
+        "promotion_id": promotionId,
+        "code": code,
+        "provider_id": providerId,
+        "item_id": itemId,
+        "raw_amount": rawAmount?.toJson(),
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+        "deleted_at": deletedAt,
+        "amount": amount,
+        "subtotal": subtotal,
+        "total": total,
+        "raw_subtotal": rawSubtotal?.toJson(),
+        "raw_total": rawTotal?.toJson(),
+      };
+}
+
+class Raw {
+  final String? value;
+  final dynamic precision;
+
+  Raw({
+    this.value,
+    this.precision,
+  });
+
+  factory Raw.fromJson(Map<String, dynamic> json) => Raw(
+        value: json["value"],
+        precision: json["precision"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "value": value,
+        "precision": precision,
       };
 }
 
 class Detail {
   final String? id;
-  final int? version;
+  final dynamic version;
   final dynamic metadata;
   final String? orderId;
-  final dynamic rawUnitPrice;
-  final dynamic rawCompareAtUnitPrice;
+  final Raw? rawUnitPrice;
+  final Raw? rawCompareAtUnitPrice;
   final Raw? rawQuantity;
   final Raw? rawFulfilledQuantity;
   final Raw? rawDeliveredQuantity;
@@ -798,14 +1081,14 @@ class Detail {
   final String? itemId;
   final dynamic unitPrice;
   final dynamic compareAtUnitPrice;
-  final int? quantity;
-  final int? fulfilledQuantity;
-  final int? deliveredQuantity;
-  final int? shippedQuantity;
-  final int? returnRequestedQuantity;
-  final int? returnReceivedQuantity;
-  final int? returnDismissedQuantity;
-  final int? writtenOffQuantity;
+  final dynamic quantity;
+  final dynamic fulfilledQuantity;
+  final dynamic deliveredQuantity;
+  final dynamic shippedQuantity;
+  final dynamic returnRequestedQuantity;
+  final dynamic returnReceivedQuantity;
+  final dynamic returnDismissedQuantity;
+  final dynamic writtenOffQuantity;
 
   Detail({
     this.id,
@@ -843,8 +1126,12 @@ class Detail {
         version: json["version"],
         metadata: json["metadata"],
         orderId: json["order_id"],
-        rawUnitPrice: json["raw_unit_price"],
-        rawCompareAtUnitPrice: json["raw_compare_at_unit_price"],
+        rawUnitPrice: json["raw_unit_price"] == null
+            ? null
+            : Raw.fromJson(json["raw_unit_price"]),
+        rawCompareAtUnitPrice: json["raw_compare_at_unit_price"] == null
+            ? null
+            : Raw.fromJson(json["raw_compare_at_unit_price"]),
         rawQuantity: json["raw_quantity"] == null
             ? null
             : Raw.fromJson(json["raw_quantity"]),
@@ -896,8 +1183,8 @@ class Detail {
         "version": version,
         "metadata": metadata,
         "order_id": orderId,
-        "raw_unit_price": rawUnitPrice,
-        "raw_compare_at_unit_price": rawCompareAtUnitPrice,
+        "raw_unit_price": rawUnitPrice?.toJson(),
+        "raw_compare_at_unit_price": rawCompareAtUnitPrice?.toJson(),
         "raw_quantity": rawQuantity?.toJson(),
         "raw_fulfilled_quantity": rawFulfilledQuantity?.toJson(),
         "raw_delivered_quantity": rawDeliveredQuantity?.toJson(),
@@ -923,26 +1210,6 @@ class Detail {
       };
 }
 
-class Raw {
-  final String? value;
-  final int? precision;
-
-  Raw({
-    this.value,
-    this.precision,
-  });
-
-  factory Raw.fromJson(Map<String, dynamic> json) => Raw(
-        value: json["value"],
-        precision: json["precision"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "value": value,
-        "precision": precision,
-      };
-}
-
 class Metadata {
   Metadata();
 
@@ -951,73 +1218,180 @@ class Metadata {
   Map<String, dynamic> toJson() => {};
 }
 
-// enum ProductCollection { CARMESI, OSHINE_PRODUCTS, PAND_G }
-
-// final productCollectionValues = EnumValues({
-//   "Carmesi": ProductCollection.CARMESI,
-//   "OSHINE PRODUCTS": ProductCollection.OSHINE_PRODUCTS,
-//   "PandG": ProductCollection.PAND_G
-// });
-
-// enum ProductHandle { DEMO_PRODUCT, POLO_T_SHIRTS, TOILET_CLEANER_500_ML }
-
-// final productHandleValues = EnumValues({
-//   "demo-product": ProductHandle.DEMO_PRODUCT,
-//   "polo-t-shirts": ProductHandle.POLO_T_SHIRTS,
-//   "toilet-cleaner-500ml": ProductHandle.TOILET_CLEANER_500_ML
-// });
-
-// enum ProductId {
-//   PROD_01_JQV6_J4_CPDTDZQPNBQPZJAMDB,
-//   PROD_01_JV4_RJVFER0_FQW4_XN6_TV09_Q3_R,
-//   PROD_01_JVCD76_B889_HCZR00_QSWY0_KF9
-// }
-
-// final productIdValues = EnumValues({
-//   "prod_01JQV6J4CPDTDZQPNBQPZJAMDB":
-//       ProductId.PROD_01_JQV6_J4_CPDTDZQPNBQPZJAMDB,
-//   "prod_01JV4RJVFER0FQW4XN6TV09Q3R":
-//       ProductId.PROD_01_JV4_RJVFER0_FQW4_XN6_TV09_Q3_R,
-//   "prod_01JVCD76B889HCZR00QSWY0KF9":
-//       ProductId.PROD_01_JVCD76_B889_HCZR00_QSWY0_KF9
-// });
-
-// enum ProductTitleEnum { DEMO_PRODUCT, POLO_T_SHIRTS, TOILET_CLEANER_500_ML }
-
-// final productTitleEnumValues = EnumValues({
-//   "Demo-product": ProductTitleEnum.DEMO_PRODUCT,
-//   "Polo T-shirts": ProductTitleEnum.POLO_T_SHIRTS,
-//   "TOILET CLEANER 500ML": ProductTitleEnum.TOILET_CLEANER_500_ML
-// });
-
-// enum TitleEnum { DEFAULT_VARIANT, M_BLACK, POLO_T_SHIRTS_BLACK }
-
-// final titleEnumValues = EnumValues({
-//   "Default variant": TitleEnum.DEFAULT_VARIANT,
-//   "M / Black": TitleEnum.M_BLACK,
-//   "Polo T-shirts (Black)": TitleEnum.POLO_T_SHIRTS_BLACK
-// });
-
-// enum VariantId {
-//   VARIANT_01_JQV6_J4_GZ3_TJMJ82_TPXCFTN80,
-//   VARIANT_01_JV4_RJVHYCXH9_QYV8_GMDCCGK9,
-//   VARIANT_01_JVCD76_DQX6_Z16_GFN2_RP47_NPJ
-// }
-
-// final variantIdValues = EnumValues({
-//   "variant_01JQV6J4GZ3TJMJ82TPXCFTN80":
-//       VariantId.VARIANT_01_JQV6_J4_GZ3_TJMJ82_TPXCFTN80,
-//   "variant_01JV4RJVHYCXH9QYV8GMDCCGK9":
-//       VariantId.VARIANT_01_JV4_RJVHYCXH9_QYV8_GMDCCGK9,
-//   "variant_01JVCD76DQX6Z16GFN2RP47NPJ":
-//       VariantId.VARIANT_01_JVCD76_DQX6_Z16_GFN2_RP47_NPJ
-// });
-
-class PaymentCollectionInOrderDetails {
+class Variant {
   final String? id;
-  final dynamic currencyCode;
+  final String? title;
+  final dynamic sku;
+  final dynamic barcode;
+  final dynamic ean;
+  final dynamic upc;
+  final bool? allowBackorder;
+  final bool? manageInventory;
+  final dynamic hsCode;
+  final dynamic originCountry;
+  final dynamic midCode;
+  final dynamic material;
+  final dynamic weight;
+  final dynamic length;
+  final dynamic height;
+  final dynamic width;
+  final dynamic metadata;
+  final dynamic variantRank;
+  final String? productId;
+  final PaymentSession? product;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final dynamic deletedAt;
+  final List<Option>? options;
+
+  Variant({
+    this.id,
+    this.title,
+    this.sku,
+    this.barcode,
+    this.ean,
+    this.upc,
+    this.allowBackorder,
+    this.manageInventory,
+    this.hsCode,
+    this.originCountry,
+    this.midCode,
+    this.material,
+    this.weight,
+    this.length,
+    this.height,
+    this.width,
+    this.metadata,
+    this.variantRank,
+    this.productId,
+    this.product,
+    this.createdAt,
+    this.updatedAt,
+    this.deletedAt,
+    this.options,
+  });
+
+  factory Variant.fromJson(Map<String, dynamic> json) => Variant(
+        id: json["id"],
+        title: json["title"],
+        sku: json["sku"],
+        barcode: json["barcode"],
+        ean: json["ean"],
+        upc: json["upc"],
+        allowBackorder: json["allow_backorder"],
+        manageInventory: json["manage_inventory"],
+        hsCode: json["hs_code"],
+        originCountry: json["origin_country"],
+        midCode: json["mid_code"],
+        material: json["material"],
+        weight: json["weight"],
+        length: json["length"],
+        height: json["height"],
+        width: json["width"],
+        metadata: json["metadata"],
+        variantRank: json["variant_rank"],
+        productId: json["product_id"],
+        product: json["product"] == null
+            ? null
+            : PaymentSession.fromJson(json["product"]),
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+        deletedAt: json["deleted_at"],
+        options: json["options"] == null
+            ? []
+            : List<Option>.from(
+                json["options"]!.map((x) => Option.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "title": title,
+        "sku": sku,
+        "barcode": barcode,
+        "ean": ean,
+        "upc": upc,
+        "allow_backorder": allowBackorder,
+        "manage_inventory": manageInventory,
+        "hs_code": hsCode,
+        "origin_country": originCountry,
+        "mid_code": midCode,
+        "material": material,
+        "weight": weight,
+        "length": length,
+        "height": height,
+        "width": width,
+        "metadata": metadata,
+        "variant_rank": variantRank,
+        "product_id": productId,
+        "product": product?.toJson(),
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+        "deleted_at": deletedAt,
+        "options": options == null
+            ? []
+            : List<dynamic>.from(options!.map((x) => x.toJson())),
+      };
+}
+
+class Option {
+  final String? id;
+  final String? value;
+  final dynamic metadata;
+  final String? optionId;
+  final PaymentSession? option;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final dynamic deletedAt;
+
+  Option({
+    this.id,
+    this.value,
+    this.metadata,
+    this.optionId,
+    this.option,
+    this.createdAt,
+    this.updatedAt,
+    this.deletedAt,
+  });
+
+  factory Option.fromJson(Map<String, dynamic> json) => Option(
+        id: json["id"],
+        value: json["value"],
+        metadata: json["metadata"],
+        optionId: json["option_id"],
+        option: json["option"] == null
+            ? null
+            : PaymentSession.fromJson(json["option"]),
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+        deletedAt: json["deleted_at"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "value": value,
+        "metadata": metadata,
+        "option_id": optionId,
+        "option": option?.toJson(),
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+        "deleted_at": deletedAt,
+      };
+}
+
+class PaymentCollection {
+  final String? id;
+  final String? currencyCode;
   final dynamic completedAt;
-  final dynamic status;
+  final String? status;
   final dynamic metadata;
   final Raw? rawAmount;
   final Raw? rawAuthorizedAmount;
@@ -1026,13 +1400,13 @@ class PaymentCollectionInOrderDetails {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final dynamic deletedAt;
-  final List<PaymentInOrderDetails>? payments;
-  final int? amount;
-  final int? authorizedAmount;
-  final int? capturedAmount;
-  final int? refundedAmount;
+  final List<PaymentForOrderDetails>? payments;
+  final dynamic amount;
+  final dynamic authorizedAmount;
+  final dynamic capturedAmount;
+  final dynamic refundedAmount;
 
-  PaymentCollectionInOrderDetails({
+  PaymentCollection({
     this.id,
     this.currencyCode,
     this.completedAt,
@@ -1052,8 +1426,8 @@ class PaymentCollectionInOrderDetails {
     this.refundedAmount,
   });
 
-  factory PaymentCollectionInOrderDetails.fromJson(Map<String, dynamic> json) =>
-      PaymentCollectionInOrderDetails(
+  factory PaymentCollection.fromJson(Map<String, dynamic> json) =>
+      PaymentCollection(
         id: json["id"],
         currencyCode: json["currency_code"],
         completedAt: json["completed_at"],
@@ -1080,8 +1454,8 @@ class PaymentCollectionInOrderDetails {
         deletedAt: json["deleted_at"],
         payments: json["payments"] == null
             ? []
-            : List<PaymentInOrderDetails>.from(json["payments"]!
-                .map((x) => PaymentInOrderDetails.fromJson(x))),
+            : List<PaymentForOrderDetails>.from(json["payments"]!
+                .map((x) => PaymentForOrderDetails.fromJson(x))),
         amount: json["amount"],
         authorizedAmount: json["authorized_amount"],
         capturedAmount: json["captured_amount"],
@@ -1111,25 +1485,25 @@ class PaymentCollectionInOrderDetails {
       };
 }
 
-class PaymentInOrderDetails {
+class PaymentForOrderDetails {
   final String? id;
-  final dynamic currencyCode;
-  final dynamic providerId;
-  final Data? data;
+  final String? currencyCode;
+  final String? providerId;
+  final PaymentData? data;
   final dynamic metadata;
   final dynamic capturedAt;
   final dynamic canceledAt;
   final String? paymentCollectionId;
-  final ShippingAddress? paymentSession;
+  final PaymentSession? paymentSession;
   final Raw? rawAmount;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final dynamic deletedAt;
   final String? paymentSessionId;
   final List<dynamic>? refunds;
-  final int? amount;
+  final dynamic amount;
 
-  PaymentInOrderDetails({
+  PaymentForOrderDetails({
     this.id,
     this.currencyCode,
     this.providerId,
@@ -1148,19 +1522,19 @@ class PaymentInOrderDetails {
     this.amount,
   });
 
-  factory PaymentInOrderDetails.fromJson(Map<String, dynamic> json) =>
-      PaymentInOrderDetails(
+  factory PaymentForOrderDetails.fromJson(Map<String, dynamic> json) =>
+      PaymentForOrderDetails(
         id: json["id"],
         currencyCode: json["currency_code"],
         providerId: json["provider_id"],
-        data: json["data"] == null ? null : Data.fromJson(json["data"]),
+        data: json["data"] == null ? null : PaymentData.fromJson(json["data"]),
         metadata: json["metadata"],
         capturedAt: json["captured_at"],
         canceledAt: json["canceled_at"],
         paymentCollectionId: json["payment_collection_id"],
         paymentSession: json["payment_session"] == null
             ? null
-            : ShippingAddress.fromJson(json["payment_session"]),
+            : PaymentSession.fromJson(json["payment_session"]),
         rawAmount: json["raw_amount"] == null
             ? null
             : Raw.fromJson(json["raw_amount"]),
@@ -1199,21 +1573,21 @@ class PaymentInOrderDetails {
       };
 }
 
-class Data {
+class PaymentData {
   final String? id;
   final Notes? notes;
-  final int? amount;
-  final dynamic entity;
-  final dynamic status;
+  final dynamic amount;
+  final String? entity;
+  final String? status;
   final String? receipt;
-  final int? attempts;
-  final dynamic currency;
+  final dynamic attempts;
+  final String? currency;
   final dynamic offerId;
-  final int? amountDue;
-  final int? createdAt;
-  final int? amountPaid;
+  final dynamic amountDue;
+  final dynamic createdAt;
+  final dynamic amountPaid;
 
-  Data({
+  PaymentData({
     this.id,
     this.notes,
     this.amount,
@@ -1228,7 +1602,7 @@ class Data {
     this.amountPaid,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory PaymentData.fromJson(Map<String, dynamic> json) => PaymentData(
         id: json["id"],
         notes: json["notes"] == null ? null : Notes.fromJson(json["notes"]),
         amount: json["amount"],
@@ -1260,7 +1634,7 @@ class Data {
 }
 
 class Notes {
-  final NotesCustomer? customer;
+  final Customer? customer;
   final String? idempotencyKey;
 
   Notes({
@@ -1271,7 +1645,7 @@ class Notes {
   factory Notes.fromJson(Map<String, dynamic> json) => Notes(
         customer: json["customer"] == null
             ? null
-            : NotesCustomer.fromJson(json["customer"]),
+            : Customer.fromJson(json["customer"]),
         idempotencyKey: json["idempotency_key"],
       );
 
@@ -1281,9 +1655,9 @@ class Notes {
       };
 }
 
-class NotesCustomer {
-  final dynamic id;
-  final dynamic email;
+class Customer {
+  final String? id;
+  final String? email;
   final dynamic phone;
   final dynamic metadata;
   final List<Address>? addresses;
@@ -1293,7 +1667,7 @@ class NotesCustomer {
   final List<dynamic>? accountHolders;
   final Address? billingAddress;
 
-  NotesCustomer({
+  Customer({
     this.id,
     this.email,
     this.phone,
@@ -1306,7 +1680,7 @@ class NotesCustomer {
     this.billingAddress,
   });
 
-  factory NotesCustomer.fromJson(Map<String, dynamic> json) => NotesCustomer(
+  factory Customer.fromJson(Map<String, dynamic> json) => Customer(
         id: json["id"],
         email: json["email"],
         phone: json["phone"],
@@ -1343,197 +1717,3 @@ class NotesCustomer {
         "billing_address": billingAddress?.toJson(),
       };
 }
-
-class Address {
-  final dynamic id;
-  final dynamic city;
-  final String? phone;
-  final dynamic company;
-  final dynamic metadata;
-  final dynamic province;
-  final dynamic address1;
-  final dynamic address2;
-  final dynamic lastName;
-  final DateTime? createdAt;
-  final dynamic deletedAt;
-  final dynamic firstName;
-  final DateTime? updatedAt;
-  final dynamic customerId;
-  final String? postalCode;
-  final dynamic addressName;
-  final dynamic countryCode;
-  final bool? isDefaultBilling;
-  final bool? isDefaultShipping;
-
-  Address({
-    this.id,
-    this.city,
-    this.phone,
-    this.company,
-    this.metadata,
-    this.province,
-    this.address1,
-    this.address2,
-    this.lastName,
-    this.createdAt,
-    this.deletedAt,
-    this.firstName,
-    this.updatedAt,
-    this.customerId,
-    this.postalCode,
-    this.addressName,
-    this.countryCode,
-    this.isDefaultBilling,
-    this.isDefaultShipping,
-  });
-
-  factory Address.fromJson(Map<String, dynamic> json) => Address(
-        id: json["id"],
-        city: json["city"],
-        phone: json["phone"],
-        company: json["company"],
-        metadata: json["metadata"],
-        province: json["province"],
-        address1: json["address_1"],
-        address2: json["address_2"],
-        lastName: json["last_name"],
-        createdAt: json["created_at"] == null
-            ? null
-            : DateTime.parse(json["created_at"]),
-        deletedAt: json["deleted_at"],
-        firstName: json["first_name"],
-        updatedAt: json["updated_at"] == null
-            ? null
-            : DateTime.parse(json["updated_at"]),
-        customerId: json["customer_id"],
-        postalCode: json["postal_code"],
-        addressName: json["address_name"],
-        countryCode: json["country_code"],
-        isDefaultBilling: json["is_default_billing"],
-        isDefaultShipping: json["is_default_shipping"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": [id],
-        "city": [city],
-        "phone": phone,
-        "company": company,
-        "metadata": metadata,
-        "province": [province],
-        "address_1": [address1],
-        "address_2": address2,
-        "last_name": [lastName],
-        "created_at": createdAt?.toIso8601String(),
-        "deleted_at": deletedAt,
-        "first_name": [firstName],
-        "updated_at": updatedAt?.toIso8601String(),
-        "customer_id": customerId,
-        "postal_code": postalCode,
-        "address_name": [addressName],
-        "country_code": countryCode,
-        "is_default_billing": isDefaultBilling,
-        "is_default_shipping": isDefaultShipping,
-      };
-}
-
-// enum Address1 { B_304_NANCY_BRAMHA, CFERVGEVEGRVRE, LANCE_DOWN, NVSKO }
-
-// final address1Values = EnumValues({
-//   "  B 304 nancy bramha": Address1.B_304_NANCY_BRAMHA,
-//   "cfervgevegrvre": Address1.CFERVGEVEGRVRE,
-//   "LanceDown ": Address1.LANCE_DOWN,
-//   "nvsko": Address1.NVSKO
-// });
-
-// enum AddressName { DEFAULT }
-
-// final addressNameValues = EnumValues({"Default": AddressName.DEFAULT});
-
-// enum City { BANGALORE, EFVGREGVGT, NEW_YORK, NVKSO }
-
-// final cityValues = EnumValues({
-//   "Bangalore": City.BANGALORE,
-//   "efvgregvgt": City.EFVGREGVGT,
-//   "NewYork": City.NEW_YORK,
-//   "nvkso": City.NVKSO
-// });
-
-// enum FirstName { ARNAB, NCFJEHNCJUNF, SHUBHA }
-
-// final firstNameValues = EnumValues({
-//   "Arnab": FirstName.ARNAB,
-//   "ncfjehncjunf": FirstName.NCFJEHNCJUNF,
-//   "shubha": FirstName.SHUBHA
-// });
-
-// enum Id {
-//   CUADDR_01_JTKQ0_ZBPS48_K5_TS849_Q8_PB1_R,
-//   CUADDR_01_JTKQ2_EGSEYP5_FHJZ1_WJXH7_BQ,
-//   CUADDR_01_JTKQ2_P3_BHGZ6_MCQH7_JMKW74_G,
-//   CUADDR_01_JTKQCNCH4_V0_MTNP6_PZ8_Y9_XCM,
-//   CUADDR_01_JTMPZ7_XAAJAYYFD3_VKYAMWA0,
-//   CUADDR_01_JTN6_J3_Y7_WHSXRA5_X54173_QH6,
-//   CUADDR_01_JV6_WK7_ZNAVVM0_TS0_VQ6_GVVS9,
-//   CUADDR_01_JVEMKARD4960_GEF4_SY03_GEB5
-// }
-
-// final idValues = EnumValues({
-//   "cuaddr_01JTKQ0ZBPS48K5TS849Q8PB1R":
-//       Id.CUADDR_01_JTKQ0_ZBPS48_K5_TS849_Q8_PB1_R,
-//   "cuaddr_01JTKQ2EGSEYP5FHJZ1WJXH7BQ":
-//       Id.CUADDR_01_JTKQ2_EGSEYP5_FHJZ1_WJXH7_BQ,
-//   "cuaddr_01JTKQ2P3BHGZ6MCQH7JMKW74G":
-//       Id.CUADDR_01_JTKQ2_P3_BHGZ6_MCQH7_JMKW74_G,
-//   "cuaddr_01JTKQCNCH4V0MTNP6PZ8Y9XCM":
-//       Id.CUADDR_01_JTKQCNCH4_V0_MTNP6_PZ8_Y9_XCM,
-//   "cuaddr_01JTMPZ7XAAJAYYFD3VKYAMWA0": Id.CUADDR_01_JTMPZ7_XAAJAYYFD3_VKYAMWA0,
-//   "cuaddr_01JTN6J3Y7WHSXRA5X54173QH6":
-//       Id.CUADDR_01_JTN6_J3_Y7_WHSXRA5_X54173_QH6,
-//   "cuaddr_01JV6WK7ZNAVVM0TS0VQ6GVVS9":
-//       Id.CUADDR_01_JV6_WK7_ZNAVVM0_TS0_VQ6_GVVS9,
-//   "cuaddr_01JVEMKARD4960GEF4SY03GEB5": Id.CUADDR_01_JVEMKARD4960_GEF4_SY03_GEB5
-// });
-
-// enum LastName { BANERJEE, FERCERFCERFCE, GHOSH, LAST_NAME_BANERJEE }
-
-// final lastNameValues = EnumValues({
-//   "banerjee": LastName.BANERJEE,
-//   "fercerfcerfce": LastName.FERCERFCERFCE,
-//   "ghosh": LastName.GHOSH,
-//   "Banerjee": LastName.LAST_NAME_BANERJEE
-// });
-
-// enum Province { BANGALORE, EMPTY }
-
-// final provinceValues =
-//     EnumValues({"bangalore": Province.BANGALORE, "": Province.EMPTY});
-
-// enum DataStatus { CREATED }
-
-// final dataStatusValues = EnumValues({"created": DataStatus.CREATED});
-
-// enum ProviderId { PP_RAZORPAY_RAZORPAY }
-
-// final providerIdValues =
-//     EnumValues({"pp_razorpay_razorpay": ProviderId.PP_RAZORPAY_RAZORPAY});
-
-// enum PaymentStatusEnum { AUTHORIZED }
-
-// final paymentStatusEnumValues =
-//     EnumValues({"authorized": PaymentStatusEnum.AUTHORIZED});
-
-// enum PurpleStatus { PENDING }
-
-// final purpleStatusValues = EnumValues({"pending": PurpleStatus.PENDING});
-
-// class EnumValues<T> {
-//   Map<String, T> map;
-//   late Map<T, String> reverseMap;
-
-//   EnumValues(this.map);
-
-//   Map<T, String> get reverse {
-//     reverseMap = map.map((k, v) => MapEntry(v, k));
-//     return reverseMap;
-//   }
-// }

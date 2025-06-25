@@ -6,6 +6,7 @@ import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/view/home.dart
 
 import '../../../../b2b_store/ecom.dart';
 import '../../../../hygine_services/view/hygine_landing.dart';
+import '../../../../janitorial_services/screens/host_dashboard_screen.dart';
 import '../../../../janitorial_services/screens/monitor-iot.dart';
 import '../../../../screens/common_widgets/image_provider.dart';
 import '../../../../utils/app_color.dart';
@@ -16,7 +17,8 @@ import '../../subcription/view/clientprofile.dart';
 import 'home_dashboard.dart';
 
 class ClientDashboard extends StatefulWidget {
-  const ClientDashboard({super.key});
+   int? dashIndex;
+   ClientDashboard({super.key, this.dashIndex});
 
   @override
   State<ClientDashboard> createState() => _ClientDashboardState();
@@ -31,13 +33,26 @@ class _ClientDashboardState extends State<ClientDashboard> {
   }
 
 
+    @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+     print("dash board index ${widget.dashIndex}");
+      
+      _onItemTapped(widget.dashIndex!);
+
+     
+  }
+
+
       final List<Widget> _widgetOptions = <Widget>[
             // Text("Home"),
           const  EcomScreen(),
          
-               const HomeDashboard(),
+           const HomeDashboard(),
         //  const  HygieneServicesScreen(),
            const Clientprofile(),
+          const   HostDashboard()
 
        ];
 
@@ -47,6 +62,7 @@ class _ClientDashboardState extends State<ClientDashboard> {
           ClientImages.checklist,
           // ClientImages.services ,
           ClientImages.userSelected,
+            ClientImages.hostColor,
           
   ];
          final List<String> title = [
@@ -55,6 +71,7 @@ class _ClientDashboardState extends State<ClientDashboard> {
           "TASQ MASTER",
           // "Services",
           "Profile",
+          "Host Center"
   ];
          final List<String> _iconsinActive = [
           // ClientImages.homeUnseleted,
@@ -62,12 +79,14 @@ class _ClientDashboardState extends State<ClientDashboard> {
           ClientImages.checklist,
           // ClientImages.services,
           ClientImages.userbottom,
-          // ClientImages.homeUnseleted,
+          ClientImages.hostCenter,
   ];
 
          void _onTap(int index) {
-    setState(() => _selectedIndex = index);
-  }
+        
+           setState(() => _selectedIndex = index);
+      
+         }
 
 //         final List<String> _icons = [
 //           ClientImages.home,

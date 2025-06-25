@@ -48,5 +48,8 @@ abstract class ClientImages {
   static String get  host  => '${_assetImgPath}host.png';
   static String get  upgrade  => '${_assetImgPath}upgrade.png';
   static String get  renew  => '${_assetImgPath}renew.png';
+  static String get  b2b  => '${_assetImgPath}b2b.jpg';
+  static String get  hostCenter  => '${_assetImgPath}hostCenter.png';
+  static String get  hostColor  => '${_assetImgPath}hostColor.png';
 
 }

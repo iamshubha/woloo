@@ -1,4 +1,5 @@
 
+import 'package:app_links/app_links.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:woloo_smart_hygiene/screens/splash_screen/view/splash.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
@@ -29,6 +30,34 @@ class _AppState extends State<App> {
   void initState() {
     configLoading();
     super.initState();
+    _initDeepLinks();
+  }
+
+   final AppLinks _appLinks = AppLinks();
+
+
+    void _initDeepLinks() async {
+    // Handle app launch from link
+    
+    final uri = await _appLinks.getInitialLink();
+    _handleUri(uri);
+
+    // Handle app coming to foreground from background via link
+    _appLinks.uriLinkStream.listen((Uri? uri) {
+      _handleUri(uri);
+    });
+  }
+
+  void _handleUri(Uri? uri) {
+     print('Deep link received: $uri');
+    if (uri != null) {
+      print('Deep link received: $uri');
+      if (uri.scheme == 'woloo' && uri.host == 'home') {
+        // Navigator.pushNamed(context, '/home');
+
+      }
+      // Handle other links like woloo://referral?code=XYZ
+    }
   }
 
   @override

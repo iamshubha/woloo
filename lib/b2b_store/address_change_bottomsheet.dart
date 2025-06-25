@@ -14,7 +14,7 @@ import 'package:woloo_smart_hygiene/enums/product_mode.dart';
 import 'package:woloo_smart_hygiene/extensions/string_extension.dart';
 import 'package:woloo_smart_hygiene/hygine_services/get_date_time_bottomsheet.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
-import 'package:woloo_smart_hygiene/utils/logger.dart';
+import 'package:woloo_smart_hygiene/utils///logger.dart';
 
 import '../hygine_services/view/address_notifier.dart';
 
@@ -211,7 +211,7 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                                             box.remove('address');
                                           }
 
-                                          logger.w(box.read('address'));
+                                          //logger.w(box.read('address'));
                                         },
                                       )
                                     ],
@@ -235,7 +235,7 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                                 Navigator.pop(context);
 
                                 var jwt = box.read('login_jwt');
-                                logger.w(jwt);
+                                //logger.w(jwt);
                                 box.write('address',
                                     selectedAddress.value.toString());
                               }
@@ -243,7 +243,7 @@ class _AddressChangeBottomSheetState extends State<AddressChangeBottomSheet> {
                               break;
                             case ProductMode.serviceDetails:
                               {
-                                logger.w("This Is Executing");
+                                //logger.w("This Is Executing");
                                 Navigator.pop(context);
                                 final box = GetStorage();
                                 box.write('address',

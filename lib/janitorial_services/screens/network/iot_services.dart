@@ -12,24 +12,19 @@ class IotService {
   const IotService({required this.dio});
 
   Future<DashboardData> getIotDashBoardData({
-    required String deviceId,
+    required int facilityId,
     required String type,
   }) async {
     try {
       var response = await dio.post(
         APIConstants.GET_IOT_DASHBOARD_DATA,
         data: {
-          "device_id": "24110012",
-          // "location_id": 34,
-          "type": "today",
+          // "device_id": "24110012",
+          "facility_id": facilityId,
+          "type": "last_7_days",
         },
-        options: Options(
-          headers: {
-            'x-woloo-token':
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Nzc5LCJyb2xlX2lkIjoxLCJpYXQiOjE3NDU0ODc1NTksIm5iZiI6MTc0NTQ4NzU1OSwiZXhwIjoxNzUzMjYzNTU5LCJpc3MiOiJodHRwczovL3dvbG9vLnZlcmlmaW5vdy5jb20vYXBpL3YxL2xvZ2luIiwic3ViIjoiNzc5IiwianRpIjoiQUJDREVGR0hJSksifQ.YCUGwVO-gXHMgXCaRGsoW9UB4mb7tiwGLD_8v9wb-Cg',
-            // 'Content-Type': 'application/json',
-          },
-        ),
+        // data: {"device_id": "AQI-0004", "type": "last_7_days"},
+        options:  Options(extra: {"auth": true, "isSupervisor": true }),
       );
       logger.w(response);
       return DashboardData.fromJson(response);

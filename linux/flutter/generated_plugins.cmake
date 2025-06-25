@@ -6,6 +6,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   animated_rating_stars
   file_selector_linux
   flutter_localization
+  gtk
   smart_auth
   url_launcher_linux
 )

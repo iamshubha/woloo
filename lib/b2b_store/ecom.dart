@@ -18,6 +18,7 @@ import 'package:woloo_smart_hygiene/b2b_store/collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/common_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/address.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
+import 'package:woloo_smart_hygiene/b2b_store/search.dart';
 import 'package:woloo_smart_hygiene/b2b_store/wishlist.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/subcription/view/clientprofile.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
@@ -26,7 +27,6 @@ import 'package:woloo_smart_hygiene/extensions/string_extension.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/list.dart';
-import 'package:woloo_smart_hygiene/utils/logger.dart';
 
 import '../hygine_services/view/address_notifier.dart';
 import '../utils/app_textstyle.dart';
@@ -117,15 +117,16 @@ class _EcomScreenState extends State<EcomScreen> {
           return Scaffold(
             resizeToAvoidBottomInset: false,
             // bottomNavigationBar: const XBottomBar(),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                logger.w("Cart ID: ${box.read('cart_id')}");
-                // box.read('login_jwt')
-                logger.w("Bearer: ${box.read('login_jwt')}");
-              },
-              child: const Icon(Icons.abc),
-            ),
+            // floatingActionButton: FloatingActionButton(
+            //   onPressed: () {
+            //     //logger.w("Cart ID: ${box.read('cart_id')}");
+            //     // box.read('login_jwt')
+            //     //logger.w("Bearer: ${box.read('login_jwt')}");
+            //   },
+            //   child: const Icon(Icons.abc),
+            // ),
             appBar: EComAppbar(
+              userShowed: true,
               focus: focus,
               onCartTap: () async {
                 final value = await Navigator.push(context,
@@ -137,16 +138,18 @@ class _EcomScreenState extends State<EcomScreen> {
                 }
               },
               cartValue: _isDataLoaded
-                  ? _b2bStoreHomePage!.cartData.cart.items.length
+                  ? _b2bStoreHomePage?.cartData.cart.items?.length
                   : 0,
               onTap: () async {
                 final value = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (c) => const CollectionsScreen(
-                            // products: _b2bStoreHomePage!
-                            //     .productCollections
-                            //     .products,
+                        builder: (c) => SearchScreen(
+                              suggestions: _b2bStoreHomePage
+                                      ?.productCollections.products
+                                      .map((e) => e.title ?? "")
+                                      .toList() ??
+                                  [],
                             )));
                 if (value != null && value == 'refresh') {
                   _refresh();
@@ -206,7 +209,6 @@ class _EcomScreenState extends State<EcomScreen> {
                                     );
                                     return InkWell(
                                       // onTap: () {
-                                      //    SeeMoreButton(
                                       onTap: () async {
                                         final value = await Navigator.push(
                                             context,
@@ -430,11 +432,12 @@ class _EcomScreenState extends State<EcomScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (c) =>
-                                                  const CollectionsScreen(
-                                                      // products: _b2bStoreHomePage!
-                                                      //     .productCollections
-                                                      //     .products,
-                                                      )));
+                                                  const CommonCollectionsScreen(
+                                                    slug: '', id: '',
+                                                    // products: _b2bStoreHomePage!
+                                                    //     .productCollections
+                                                    //     .products,
+                                                  )));
                                       if (value != null && value == 'refresh') {
                                         _refresh();
                                       }
@@ -463,13 +466,12 @@ class _EcomScreenState extends State<EcomScreen> {
                                 itemBuilder: (context, index) {
                                   final product = _b2bStoreHomePage!
                                       .productCollections.products[index];
-                                  logger.w(
-                                      product.variants.first.inventoryQuantity);
+
                                   int productCount = 0;
                                   _b2bStoreHomePage?.cartData.cart.items
-                                      .forEach((i) {
+                                      ?.forEach((i) {
                                     if (i.variantId == product.variants[0].id) {
-                                      productCount = i.quantity;
+                                      productCount = i.quantity ?? 0;
                                     }
                                   });
                                   // AddButtonMode mode = AddButtonMode.remove;
@@ -651,7 +653,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                                 spacing: 5.w,
                                                 children: [
                                                   Text(
-                                                    "\u{20B9}${product.variants.first.calculatedPrice!.calculatedAmount.toString()}",
+                                                    "\u{20B9}${product.variants.first.calculatedPrice!.calculatedAmount.toString()}/-",
                                                     style: TextStyle(
                                                       fontSize: 10.sp,
                                                       fontWeight:
@@ -659,21 +661,33 @@ class _EcomScreenState extends State<EcomScreen> {
                                                     ),
                                                   ),
                                                   //TODO: Check Price Logic -- Abar asibo fire
-                                                  Text(
-                                                    "MRP ${product.variants.first.calculatedPrice!.originalAmount.toString()}",
-                                                    style: TextStyle(
-                                                        decoration:
-                                                            product.discountable ??
-                                                                    false
-                                                                ? TextDecoration
-                                                                    .lineThrough
-                                                                : null,
-                                                        fontSize: 10.sp,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: AppColors
-                                                            .textgreyColor),
-                                                  ),
+                                                  product
+                                                              .variants
+                                                              .first
+                                                              .calculatedPrice!
+                                                              .originalAmount !=
+                                                          product
+                                                              .variants
+                                                              .first
+                                                              .calculatedPrice!
+                                                              .calculatedAmount
+                                                      ? Text(
+                                                          "MRP ${product.variants.first.calculatedPrice!.originalAmount.toString()}",
+                                                          style: TextStyle(
+                                                              decoration: product
+                                                                          .discountable ??
+                                                                      false
+                                                                  ? TextDecoration
+                                                                      .lineThrough
+                                                                  : null,
+                                                              fontSize: 10.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: AppColors
+                                                                  .textgreyColor),
+                                                        )
+                                                      : const SizedBox(),
                                                 ],
                                               )
                                             ],
@@ -703,7 +717,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                                   if (product.variants.first
                                                           .inventoryQuantity ==
                                                       0) return;
-                                                  // logger.w(
+                                                  // //logger.w(
                                                   //     "Selected Address: ${selectedAddress.value.id}");
                                                   if (selectedAddress
                                                           .value.id ==
@@ -845,7 +859,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                                                           ?.cartData
                                                                           .cart
                                                                           .items
-                                                                          .forEach(
+                                                                          ?.forEach(
                                                                               (i) {
                                                                         if (i.variantId ==
                                                                             product.variants[0].id) {
@@ -853,7 +867,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                                                               1;
                                                                           _b2bStoreBloc.add(AddRemoveItemReq(
                                                                               count: productCount,
-                                                                              itemId: i.id));
+                                                                              itemId: i.id ?? ""));
                                                                         }
                                                                       });
                                                                     },
@@ -900,7 +914,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                                                           ?.cartData
                                                                           .cart
                                                                           .items
-                                                                          .forEach(
+                                                                          ?.forEach(
                                                                               (i) {
                                                                         if (i.variantId ==
                                                                             product.variants[0].id) {
@@ -908,7 +922,7 @@ class _EcomScreenState extends State<EcomScreen> {
                                                                               1;
                                                                           _b2bStoreBloc.add(AddRemoveItemReq(
                                                                               count: productCount,
-                                                                              itemId: i.id));
+                                                                              itemId: i.id ?? ""));
                                                                         }
                                                                       });
                                                                     },
@@ -941,6 +955,8 @@ class _EcomScreenState extends State<EcomScreen> {
                                                 ),
                                               )),
 
+// product.tags.first.value
+
                                           product.variants.first
                                                       .inventoryQuantity ==
                                                   0
@@ -970,7 +986,36 @@ class _EcomScreenState extends State<EcomScreen> {
                                                     ),
                                                   ),
                                                 )
-                                              : const SizedBox(),
+                                              : product.tags?.isNotEmpty == true
+                                                  ? Align(
+                                                      alignment:
+                                                          Alignment.topCenter,
+                                                      child: Container(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal: 5.w,
+                                                                vertical: 2.h),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: AppColors
+                                                              .lightCyanColor,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(4),
+                                                        ),
+                                                        child: Text(
+                                                          "${product.tags?.first.value}",
+                                                          style: TextStyle(
+                                                              fontSize: 6.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: AppColors
+                                                                  .black),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : const SizedBox(),
                                           // Positioned(
                                           //   // left: 8,
                                           //   // right: 8,
@@ -1027,19 +1072,95 @@ class _EcomScreenState extends State<EcomScreen> {
                                     fontSize: 20.sp,
                                     fontWeight: FontWeight.bold),
                               ),
+                              //latest 6 from products
                               SizedBox(
                                 height: 130.h,
                                 child: ListView.separated(
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (c, i) => ClipRRect(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: 6,
+                                  //  _b2bStoreHomePage!
+                                  //     .productCollections.products.length,
+                                  itemBuilder: (c, i) {
+                                    final product = _b2bStoreHomePage!
+                                        .productCollections.products[i];
+                                    final products = _b2bStoreHomePage!
+                                        .productCollections.products
+                                        .toList()
+                                      ..sort((a, b) {
+                                        final aDate = a.createdAt ??
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                0);
+                                        final bDate = b.createdAt ??
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                0);
+                                        return bDate.compareTo(aDate);
+                                      });
+                                    final latestProducts =
+                                        products.take(6).toList();
+                                    return InkWell(
+                                      // onTap: () {
+
+                                      onTap: () async {
+                                        final result = await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ProductDetailsScreen(
+                                              productData: latestProducts[i],
+                                              isSelected: _b2bStoreBloc.favIds
+                                                  .any((e) => e.containsKey(
+                                                      latestProducts[i].id)),
+                                              productIdforWishList:
+                                                  _b2bStoreBloc.favIds.any(
+                                                          (e) => e.containsKey(
+                                                              latestProducts[i]
+                                                                  .id))
+                                                      ? _b2bStoreBloc.favIds
+                                                          .firstWhere((e) =>
+                                                              e.entries.first
+                                                                  .key ==
+                                                              latestProducts[i]
+                                                                  .id)
+                                                          .entries
+                                                          .first
+                                                          .value
+                                                      : "",
+                                            ),
+                                          ),
+                                        );
+                                        if (result != null &&
+                                            result == 'refresh') {
+                                          _refresh();
+                                          print(
+                                              'Returned from Page B with refresh signal (or physical back).');
+                                          // _initializeData(); // Re-initialize or refresh data
+                                        } else {
+                                          _refresh();
+                                          print(
+                                              'Returned from Page B without refresh signal or cancelled.');
+                                        }
+                                      },
+                                      // },
+                                      child: ClipRRect(
                                         borderRadius:
-                                            BorderRadius.circular(25.r),
-                                        child:
-                                            Image.asset(AppImages.bTemplate)),
-                                    separatorBuilder: (c, i) => const SizedBox(
-                                          width: 10,
+                                            BorderRadius.circular(12.r),
+                                        child: Image.network(
+                                          latestProducts[i].thumbnail ?? '',
+                                          fit: BoxFit.fill,
                                         ),
-                                    itemCount: 4),
+                                      ),
+                                    );
+                                  },
+                                  // ClipRRect(
+                                  //     borderRadius:
+                                  //         BorderRadius.circular(25.r),
+                                  //     child:
+                                  //         Image.asset(AppImages.bTemplate)),
+
+                                  separatorBuilder: (c, i) => const SizedBox(
+                                    width: 10,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -1054,9 +1175,9 @@ class _EcomScreenState extends State<EcomScreen> {
 
   Addresses? getAddress() {
     final addressData = box.read("address");
-    logger.w(addressData);
+    //logger.w(addressData);
     address = Addresses.fromJson(jsonDecode(addressData ?? ""));
-    logger.w(address);
+    //logger.w(address);
     // address = Addresses.fromJson(jsonDecode(addressData));
     // print(address);
     // setState(() {});
@@ -1139,46 +1260,46 @@ class BrandsGrid extends StatelessWidget {
   }
 }
 
-class AddToCartButton extends StatelessWidget {
-  const AddToCartButton({
-    super.key,
-    this.onTap,
-  });
-  final VoidCallback? onTap;
+// class AddToCartButton extends StatelessWidget {
+//   const AddToCartButton({
+//     super.key,
+//     this.onTap,
+//   });
+//   final VoidCallback? onTap;
 
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(3.r),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 4.h),
-        decoration: BoxDecoration(
-            color: AppColors.buttonColor,
-            borderRadius: BorderRadius.circular(3.r)),
-        child: Row(
-          children: [
-            Icon(
-              Icons.shopping_cart_outlined,
-              color: AppColors.black,
-              size: 10.sp,
-            ),
-            SizedBox(
-              width: 5.w,
-            ),
-            Text(
-              "Add to Cart",
-              style: TextStyle(
-                  fontSize: 8.sp,
-                  color: AppColors.black,
-                  fontWeight: FontWeight.bold),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return InkWell(
+//       onTap: onTap,
+//       borderRadius: BorderRadius.circular(3.r),
+//       child: Container(
+//         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 4.h),
+//         decoration: BoxDecoration(
+//             color: AppColors.buttonColor,
+//             borderRadius: BorderRadius.circular(3.r)),
+//         child: Row(
+//           children: [
+//             Icon(
+//               Icons.shopping_cart_outlined,
+//               color: AppColors.black,
+//               size: 10.sp,
+//             ),
+//             SizedBox(
+//               width: 5.w,
+//             ),
+//             Text(
+//               "Add to Cart",
+//               style: TextStyle(
+//                   fontSize: 8.sp,
+//                   color: AppColors.black,
+//                   fontWeight: FontWeight.bold),
+//             )
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class SeeMoreButton extends StatelessWidget {
   const SeeMoreButton({
@@ -1229,28 +1350,31 @@ class SeeMoreButton extends StatelessWidget {
 }
 
 class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const EComAppbar({
-    super.key,
-    this.isAll = false,
-    this.textFieldHintText = 'Search Products',
-    this.cartValue,
-    this.productMode = ProductMode.productDetails,
-    this.onTap,
-    this.onChanged,
-    this.controller,
-    this.onCartTap,
-    this.focus,
-  });
+  const EComAppbar(
+      {super.key,
+      this.isAll = false,
+      this.textFieldHintText = 'Search Products',
+      this.cartValue,
+      this.productMode = ProductMode.productDetails,
+      this.onTap,
+      this.onFilterTap,
+      this.onChanged,
+      this.controller,
+      this.onCartTap,
+      this.focus,
+      this.userShowed = false});
   final ProductMode productMode;
 
   final String textFieldHintText;
   final bool isAll;
+  final VoidCallback? onFilterTap;
   final VoidCallback? onTap;
   final VoidCallback? onCartTap;
   final int? cartValue;
   final Function(String)? onChanged;
   final TextEditingController? controller;
   final FocusNode? focus;
+  final bool userShowed;
   @override
   Size get preferredSize => const Size.fromHeight(130);
 
@@ -1260,109 +1384,210 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false, // Remove default back button
       backgroundColor: AppColors.themeBackground,
       actions: [
-        Container(
-          decoration: BoxDecoration(
-              color: AppColors.lightCyanColor,
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: const [
-                BoxShadow(
-                    offset: Offset(2, 3),
-                    color: Color.fromARGB(255, 230, 228, 228),
-                    spreadRadius: 2,
-                    blurRadius: 10),
-              ]),
-          child: IconButton(
-            icon: const Icon(Icons.person_outlined),
-            onPressed: () {
-              // refreshCart(context);
-              //  TODO:Add Profile
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Clientprofile(),
-                  ));
-            },
+        if (userShowed)
+          Container(
+            decoration: BoxDecoration(
+                color: AppColors.lightCyanColor,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: const [
+                  BoxShadow(
+                      offset: Offset(2, 3),
+                      color: Color.fromARGB(255, 230, 228, 228),
+                      spreadRadius: 2,
+                      blurRadius: 10),
+                ]),
+            child: IconButton(
+              icon: const Icon(Icons.person_outlined),
+              onPressed: () {
+                // refreshCart(context);
+                //  TODO:Add Profile
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Clientprofile(),
+                    ));
+              },
+            ),
           ),
-        ),
         const SizedBox(
           width: 10,
         )
       ],
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          ValueListenableBuilder<Addresses>(
-              valueListenable: selectedAddress,
-              builder: (context, value, child) {
-                return Text(
-                  value.addressName.isEmptyOrNull
-                      ? "Select Address"
-                      : value.addressName!,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                );
-              }),
-          InkWell(
-            onTap: () => showModalBottomSheet(
-              isScrollControlled: true,
-              isDismissible: true, // <-- Allow tap outside to dismiss
-              enableDrag: true, // <-- Allow swipe down to dismiss
-
-              backgroundColor: Colors
-                  .transparent, // Optional: if you want rounded corners to show correctly
-
-              context: context,
-              builder: (_) => AddressChangeBottomSheet(
-                productMode: productMode,
-              ), //AddressBottomSheet
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: ValueListenableBuilder<Addresses>(
-                    valueListenable: selectedAddress,
-                    builder: (context, value, child) {
-                      return Text(
-                        value.address1.isEmptyOrNull
-                            ? "Select New Address"
-                            : value.address1!,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: Colors.grey,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      );
-                    },
+          // Address Name
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ValueListenableBuilder<Addresses>(
+                  valueListenable: selectedAddress,
+                  builder: (context, value, child) {
+                    return Text(
+                      value.addressName.isEmptyOrNull
+                          ? "Select Address"
+                          : value.addressName!,
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    );
+                  }),
+              InkWell(
+                onTap: () => showModalBottomSheet(
+                  isScrollControlled: true,
+                  isDismissible: true,
+                  enableDrag: true,
+                  backgroundColor: Colors.transparent,
+                  context: context,
+                  builder: (_) => AddressChangeBottomSheet(
+                    productMode: productMode,
                   ),
                 ),
-                SizedBox(width: 5.w),
-                Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      shape: BoxShape.circle),
-                  child: const Icon(
-                    Icons.arrow_drop_down,
-                    color: Colors.grey,
-                  ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min, // This is the key fix
+                  children: [
+                    ValueListenableBuilder<Addresses>(
+                      valueListenable: selectedAddress,
+                      builder: (context, value, child) {
+                        return Text(
+                          value.address1.isEmptyOrNull
+                              ? "Select New Address"
+                              : value.address1!,
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: Colors.grey,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        );
+                      },
+                    ),
+                    SizedBox(width: 5.w),
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          shape: BoxShape.circle),
+                      child: const Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          )
+              ),
+              // Cart Icon
+            ],
+          ),
+          SizedBox(),
+          // Address Selector with Arrow
+          if (isAll)
+            cartValue != 0
+                ? Badge(
+                    label: Text(cartValue.toString()),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: const [
+                            BoxShadow(
+                                offset: Offset(2, 3),
+                                color: Color.fromARGB(255, 230, 228, 228),
+                                spreadRadius: 2,
+                                blurRadius: 10),
+                          ]),
+                      child: IconButton(
+                          icon: ImageIcon(AssetImage(AppImages.bag)),
+                          onPressed: onCartTap),
+                    ),
+                  )
+                : Badge(
+                    label: const Text("0"),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: const [
+                            BoxShadow(
+                                offset: Offset(2, 3),
+                                color: Color.fromARGB(255, 230, 228, 228),
+                                spreadRadius: 2,
+                                blurRadius: 10),
+                          ]),
+                      child: IconButton(
+                        icon: ImageIcon(AssetImage(AppImages.bag)),
+                        onPressed: () {
+                          if (cartValue != null && cartValue! > 0) {
+                            onCartTap?.call();
+                          } else {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return Dialog(
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 50.w, vertical: 60.h),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(25),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            spreadRadius: 1,
+                                            blurRadius: 10,
+                                            offset: const Offset(0, 5),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            "Your cart is empty. Please add items to cart",
+                                            style: AppTextStyle.font14bold,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          const SizedBox(height: 20),
+                                          InkWell(
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 40.w,
+                                                  vertical: 4.h),
+                                              decoration: BoxDecoration(
+                                                color: AppColors.lightCyanColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(4.r),
+                                              ),
+                                              child: Text(
+                                                "close",
+                                                style: AppTextStyle.font14bold,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                });
+                          }
+                        },
+                      ),
+                    ),
+                  ),
         ],
       ),
+
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(65),
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 5.h),
+          padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
           child: Row(
             children: [
-              const SizedBox(
-                width: 10,
-              ),
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
@@ -1383,6 +1608,7 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                       ]),
                   child: TextField(
                     onTap: onTap,
+                    readOnly: true,
                     focusNode: focus,
                     controller: controller,
                     decoration: InputDecoration(
@@ -1395,83 +1621,42 @@ class EComAppbar extends StatelessWidget implements PreferredSizeWidget {
                         borderSide: BorderSide.none,
                       ),
                     ),
+                    enableSuggestions: true,
                     onChanged: onChanged,
                   ),
                 ),
               ),
-              const SizedBox(
-                width: 10,
-              ),
-              cartValue != 0
-                  ? Badge(
-                      label: Text(cartValue.toString()),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: const [
-                              BoxShadow(
-                                  offset: Offset(2, 3),
-                                  color: Color.fromARGB(255, 230, 228, 228),
-                                  spreadRadius: 2,
-                                  blurRadius: 10),
-                            ]),
-                        child: IconButton(
-                          icon: ImageIcon(AssetImage(AppImages.bag)),
-                          onPressed: onCartTap,
-                        ),
-                      ),
-                    )
-                  : Badge(
-                      label: const Text("0"),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: const [
-                              BoxShadow(
-                                  offset: Offset(2, 3),
-                                  color: Color.fromARGB(255, 230, 228, 228),
-                                  spreadRadius: 2,
-                                  blurRadius: 10),
-                            ]),
-                        child: IconButton(
-                          icon: ImageIcon(AssetImage(AppImages.bag)),
-                          onPressed: onCartTap,
-                        ),
-                      ),
-                    ),
               SizedBox(width: 10.w),
               if (isAll) ...[
-                SizedBox(
-                  width: 10.w,
-                ),
-                Container(
-                  height: 41.h,
-                  width: 41.h,
-                  decoration: const BoxDecoration(
-                    color: AppColors.themeBackground,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.greyShadowColor,
-                        blurRadius: 5.0,
-                        spreadRadius: 0.5,
-                        offset: Offset(0, 2),
+                InkWell(
+                  onTap: onFilterTap,
+                  child: Container(
+                    height: 41.h,
+                    width: 41.h,
+                    decoration: const BoxDecoration(
+                      color: AppColors.themeBackground,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.greyShadowColor,
+                          blurRadius: 5.0,
+                          spreadRadius: 0.5,
+                          offset: Offset(0, 2),
+                        ),
+                        BoxShadow(
+                          color: AppColors.greyShadowColor,
+                          blurRadius: 5.0,
+                          spreadRadius: 0.5,
+                          offset: Offset(0, -1),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Image.asset(
+                        AppImages.tuneLogo,
+                        height: 20.h,
+                        width: 20.w,
                       ),
-                      BoxShadow(
-                        color: AppColors.greyShadowColor,
-                        blurRadius: 5.0,
-                        spreadRadius: 0.5,
-                        offset: Offset(0, -1),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Image.asset(
-                      AppImages.tuneLogo,
-                      height: 20.h,
-                      width: 20.w,
                     ),
                   ),
                 )

@@ -179,7 +179,7 @@ class AssignTaskEvent extends DashboardEvent {
    final List<int?> taskIds;
    final String estimatedTime;
    final List<Map<String, String>> taskTimes;
-   final String facilityRef;
+   final String? facilityRef;
    final String? facilityId;
 
 
@@ -190,7 +190,7 @@ class AssignTaskEvent extends DashboardEvent {
     required  this.estimatedTime,
     required  this.taskTimes,
     required   this.janitorId,
-    required   this.facilityRef,
+              this.facilityRef,
                this.facilityId
   });
 

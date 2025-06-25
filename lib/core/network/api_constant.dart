@@ -167,6 +167,8 @@ class APIConstants {
 
   static var STORE_CUSTOMER_LOGIN = '$AUTH_BASE_URL/auth/customer/emailpass';
 
+  static var UPDATE_CUSTOMER = "$BASE_URL/api/wolooGuest/register";
+
   //Product
 //'https://staging-store.woloo.in/store/regions'
   static var GET_REGIONS = '$AUTH_BASE_URL/store/regions';
@@ -175,7 +177,7 @@ class APIConstants {
   static var GET_PRODUCT_CATEGORIES = '$AUTH_BASE_URL/store/product-categories';
   //  https://staging-store.woloo.in/store/collections?fields=id,title,metadata
   static var TOP_BRANDS =
-      '$AUTH_BASE_URL/store/collections?fields=id,title,metadata';
+      '$AUTH_BASE_URL/store/collections?fields=id,title,metadata&limit=50';
 
   // https://staging-store.woloo.in/store/
   static var PRODUCT_COLLECTIONS =

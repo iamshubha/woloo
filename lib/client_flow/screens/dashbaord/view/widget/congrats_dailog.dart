@@ -73,7 +73,9 @@ class CongratsDailog extends StatelessWidget {
                         GestureDetector(
                           onTap: (){
                             Navigator.of(context).push( MaterialPageRoute(builder: (context) {
-                               return const ClientDashboard();
+                               return  ClientDashboard(
+                                dashIndex: 1,
+                               );
                             }, ) );
                           },
                           child: Custombutton(

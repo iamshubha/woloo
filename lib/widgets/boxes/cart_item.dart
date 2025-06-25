@@ -94,7 +94,7 @@ class CartItemCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Rs. ${item?.unitPrice}",
+                      "\u{20B9}${item?.unitPrice}/-",
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,

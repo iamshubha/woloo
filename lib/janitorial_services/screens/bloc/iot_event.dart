@@ -5,16 +5,23 @@ abstract class IotEvent extends Equatable {
 }
 
 class GetIot extends IotEvent {
-  final String deviceId;
+  final int facilityId;
   final String type;
 
+// final int locationId;
+
+  final String clientId;
+  final int janitorId;
+
   const GetIot({
-    required this.deviceId,
+    required this.clientId,
+    required this.janitorId,
+    required this.facilityId,
     required this.type,
   });
 
   @override
-  List<Object?> get props => [deviceId, type];
+  List<Object?> get props => [facilityId, type, clientId, janitorId];
 }
 
 class GetHostDashboardData extends IotEvent {

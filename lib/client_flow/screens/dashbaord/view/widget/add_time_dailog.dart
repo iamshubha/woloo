@@ -58,6 +58,7 @@ class _AddTimeDailogState extends State<AddTimeDailog> {
      ClientDashBoardBloc dashBoardBloc  = ClientDashBoardBloc();
   TimeOfDay? timeOfDay;
   bool isAfterDate = false;
+  // bool isBeforDate = false;
   CheckTaskModel? checkModel;
       @override
   void initState() {
@@ -231,13 +232,14 @@ class _AddTimeDailogState extends State<AddTimeDailog> {
                                        print("end fo time $endTimeofDay");
                                           
                                        timeOfDay;
-                                       print("is befro ${isAfter(timeOfDay!, widget.startTime! )}");
-                                       print("is befro ${isAfter(widget.startTime!, timeOfDay!  )}");
+                                      //  print("io ${isAfter(timeOfDay!, widget.startTime! )}");
+                                      //  print("  ${isAfter(widget.startTime!, timeOfDay!  )}");
+                                      // print(" is befor tmoee ${isBefore(timeOfDay!,   stringToTimeOfDay12Hour( widget.endTime!) !)} ");
                                        if( isAfter(timeOfDay!, widget.startTime! ) ){
                                          isAfterDate = false;
                                          setState(() {
                                           
-                                          
+                        
                                          });
                        
                                          if(widget.isFromExisting! ){
@@ -253,7 +255,7 @@ class _AddTimeDailogState extends State<AddTimeDailog> {
                                            ) );
                        
                        
-                       
+          
                        
                                          }else {
                                           //  dashController.taskStartTime.add(timeOfDay!);
@@ -270,10 +272,9 @@ class _AddTimeDailogState extends State<AddTimeDailog> {
                        
                                                      if (isSafeToAdd!) {
                        
-                                                         dashController.taskTimeModel.add( 
+                                                 dashController.taskTimeModel.add( 
                                                 TaskTimeModel(taskId: 0, endTime: endTimeofDay, startTime: timeOfDay!, facilityName: "" , facilityType: "" )
-                       
-                                                   );
+                                          );
                        
                                                          formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
                                                   formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(endTime);

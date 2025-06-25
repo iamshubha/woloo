@@ -18,11 +18,13 @@ import '../../../../screens/login/view/login_screen.dart';
 import '../../../../screens/supervisor_dashboard/view/supervisor_dashboard_screen.dart';
 import '../../../../utils/app_images.dart';
 import '../../../widgets/CustomButton.dart';
+import '../../../widgets/explore_card.dart';
 import '../../subcription/view/subcription.dart';
 import '../bloc/dashboard_bloc.dart';
 import '../bloc/dashboard_event.dart';
 import '../bloc/dashboard_state.dart';
 import '../data/model/facility_model.dart';
+import 'home.dart';
 import 'home_tabbar.dart';
 
 class HomeDashboard extends StatefulWidget {
@@ -36,7 +38,60 @@ class _HomeDashboardState extends State<HomeDashboard> {
   ClientDashBoardBloc dashBoardBloc = ClientDashBoardBloc();
   Map<String, dynamic>? decodedToken;
   GlobalStorage globalStorage = GetIt.instance();
-  List<Facility> facility = [];
+  List<Facility> facility = [
+  Facility(
+  id: 001,
+  blockName: "Alpha Block",
+  blockId: 101,
+  locationName: "Building A, Sector 7",
+  floorNumber: 3,
+  clientName: "Acme Corp",
+  facilityName: "Main Production Floor",
+  facilityType: "Manufacturing",
+  description: "Primary manufacturing floor for electronic components.",
+  shiftIds: ["shft_01", "shft_02"],
+  status: false,
+  noOfBooths: 12,
+  createdAt: DateTime.parse("2024-01-15T09:00:00Z"),
+  updatedAt: DateTime.parse("2025-05-10T17:30:00Z"),
+  clusterId: 909,
+  shifts: [
+    // Shift(id: 01, name: "Morning Shift", startTime: "08:00", endTime: "16:00"),
+    // Shift(id: "shft_02", name: "Evening Shift", startTime: "16:00", endTime: "00:00"),
+  ],
+  subscriptionStatus: "active",
+  planId:202,
+  planName: "Premium Plan",
+  isFutureSubscription: false,
+  total: "250",
+),
+    Facility(
+  id: 001,
+  blockName: "Alpha Block",
+  blockId: 101,
+  locationName: "Building A, Sector 7",
+  floorNumber: 3,
+  clientName: "Acme Corp",
+  facilityName: "Main Production Floor",
+  facilityType: "Manufacturing",
+  description: "Primary manufacturing floor for electronic components.",
+  shiftIds: ["shft_01", "shft_02"],
+  status: false,
+  noOfBooths: 12,
+  createdAt: DateTime.parse("2024-01-15T09:00:00Z"),
+  updatedAt: DateTime.parse("2025-05-10T17:30:00Z"),
+  clusterId: 909,
+  shifts: [
+    // Shift(id: 01, name: "Morning Shift", startTime: "08:00", endTime: "16:00"),
+    // Shift(id: "shft_02", name: "Evening Shift", startTime: "16:00", endTime: "00:00"),
+  ],
+  subscriptionStatus: "active",
+  planId:202,
+  planName: "Premium Plan",
+  isFutureSubscription: false,
+  total: "250",
+)
+  ];
   Duration difference = const Duration();
 
   bool isClientSupervisor = false;
@@ -44,6 +99,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
   String? planId;
   String? formatted;
   bool isChanges = false;
+  bool isLoading = false;
   //  String supervisorToken = "";
 
   @override
@@ -54,7 +110,8 @@ class _HomeDashboardState extends State<HomeDashboard> {
     //  supervisorToken   =  globalStorage.getClientToken();
     String clintId = globalStorage.getClientId();
 
-    clientName = globalStorage.getSupervisorName();
+    clientName = "";
+    //  globalStorage.getSupervisorName();
 
     DateTime now = DateTime.now();
     formatted = DateFormat('h:mm a, d MMM yyyy').format(now);
@@ -136,10 +193,14 @@ class _HomeDashboardState extends State<HomeDashboard> {
                   print("state in dashbaord $state ");
 
                   if (state is DashboarLoading) {
+                    isLoading = true ;
+
                     EasyLoading.show(status: state.message);
+
                   }
 
                   if (state is GetAllFacility) {
+                    isLoading = false;
                     EasyLoading.dismiss();
                     // dashBoardBloc.add( SubcriptionEvent(
                     //     id: decodedToken!["id"]
@@ -209,11 +270,15 @@ class _HomeDashboardState extends State<HomeDashboard> {
                         futureDate.difference(currentDate);
 
                     print('Difference: ${difference.inDays} days');
+                         print('Paln: ${planId} days');
 
                     EasyLoading.dismiss();
 
-                    if (difference.inDays == 0 && planId == "0") {
-                      showDialog(
+                  
+
+                    if (difference.inDays == 0 || difference.inDays < 0 ) {
+                        if(planId == "0"){
+                                    showDialog(
                         barrierDismissible: false,
                         context: context,
                         builder: (context) {
@@ -275,19 +340,25 @@ class _HomeDashboardState extends State<HomeDashboard> {
                             ),
                           );
                         },
-                      );
+                      ).then((value) {
+                        // Navigator.of(context).pop();
+                      }, );
+
+                        }
+            
                     }
 
                     // gender = state.tasklist;
                   }
 
                   if (state is DashboarError) {
+                      print("facility length ${facility}");
                     EasyLoading.dismiss();
                     EasyLoading.showError(state.error);
                   }
                 },
                 builder: (context, state) {
-                  return difference.inDays != 0 && planId != "0"
+                  return difference.inDays != 0 && planId != "0" ||facility.isEmpty
                       ? const SizedBox()
                       : Column(
                           children: [
@@ -310,9 +381,11 @@ class _HomeDashboardState extends State<HomeDashboard> {
                                     );
                                   },
                                 );
+                                
                                 //  Navigator.of(context).push( MaterialPageRoute(builder: (context) {
                                 //    return const SubcriptionScreen();
                                 //  }, ) );
+
                               },
                               child: Text(
                                 textAlign: TextAlign.center,
@@ -418,6 +491,46 @@ class _HomeDashboardState extends State<HomeDashboard> {
                               // )
                             ],
                           ),
+                          isLoading ?  SizedBox() :
+                          facility.isEmpty && !isLoading ?
+                             Column(
+                              // crossAxisAlignment: CrossAxisAlignment.center,
+                              // mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                             
+                                 SizedBox(
+                                  height: MediaQuery.of(context).size.height/4,
+                                 ),
+                             
+                             
+                                Center(
+                                  child: ExploreCard(
+                                    title: "TASQ",
+                                    subTitle: "MASTER",
+                                    description1: "Monitor your hygiene with Woloo’s",
+                                    description: "Smart Hygiene Technology Service.",
+                                    onTap: () {
+                                      
+                                           Navigator.of(context)
+                                                .push(MaterialPageRoute(
+                                              builder: (context) {
+                                                return const Home(
+                                                  isFromDashboard: false,
+                                                );
+                                              },
+                                            ));
+                                      
+                                      
+                                    },
+                                    img: AppImages.dashboard,
+                                  ),
+                                )
+                             
+                                  
+                                // Text("data"),
+                              ],
+                                                         )
+                          :
                           SizedBox(
                               // width: MediaQuery.of(context).size.width/1,
                               // flex: 2,
@@ -426,7 +539,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                                   //  Text(facility.length.toString())
                                   //  isChanges ?
                                   //    const  DashboardScreen() :
-                                  HomeTabbar(
+                              HomeTabbar(
                                 facility: facility,
                                 clientDashBoardBloc: dashBoardBloc,
                               ))
@@ -467,4 +580,10 @@ class _HomeDashboardState extends State<HomeDashboard> {
       ),
     );
   }
+
+
+
+
+
+
 }

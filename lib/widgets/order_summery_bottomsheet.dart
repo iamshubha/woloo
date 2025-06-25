@@ -163,9 +163,9 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
                               shrinkWrap: true,
                               // Prevents nested scrolling
                               itemCount: cartModel?.cart.items
-                                  .length, // Replace with your cart item count
+                                  ?.length, // Replace with your cart item count
                               itemBuilder: (context, index) {
-                                final item = cartModel?.cart.items[index];
+                                final item = cartModel?.cart.items?[index];
                                 int count = item?.quantity ?? 0;
                                 return Padding(
                                   padding: EdgeInsets.symmetric(vertical: 8.h),
@@ -199,46 +199,49 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
                             const Divider(),
                             AddressChangeWidget(address: address),
                             const Divider(),
-                            XDecoratedBox(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                spacing: 10,
-                                children: [
-                                  const EditHeader(label: "Payment Details"),
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                          height: 40,
-                                          width: 40,
-                                          child:
-                                              Image.asset(AppImages.upiIcon)),
-                                      const Text(
-                                        "UPI App",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const Divider(),
+                            // XDecoratedBox(
+                            //   child: Column(
+                            //     crossAxisAlignment: CrossAxisAlignment.start,
+                            //     mainAxisSize: MainAxisSize.min,
+                            //     spacing: 10,
+                            //     children: [
+                            //       const EditHeader(label: "Payment Details"),
+                            //       Row(
+                            //         children: [
+                            //           SizedBox(
+                            //               height: 40,
+                            //               width: 40,
+                            //               child:
+                            //                   Image.asset(AppImages.upiIcon)),
+                            //           const Text(
+                            //             "UPI App",
+                            //             style: TextStyle(
+                            //                 fontWeight: FontWeight.bold),
+                            //           ),
+                            //         ],
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
+                            // const Divider(),
                             PricingCalculate(
-                              total: cartModel?.cart.total,
-                              subTotal: cartModel?.cart.subtotal,
-                              discount: cartModel?.cart.discountTotal,
-                              shipping: cartModel?.cart.shippingTotal,
-                              itemTotal: cartModel?.cart.itemTotal,
+                              itemTotal:
+                                  cartModel?.cart.originalItemTotal.toString(),
+                              discount: cartModel?.cart.discountTotal
+                                  ?.toStringAsFixed(2),
+                              total: cartModel?.cart.total.toString(),
+                              subTotal: cartModel?.cart.subtotal.toString(),
+                              shipping:
+                                  cartModel?.cart.shippingTotal.toString(),
                             ),
                             const Divider(),
-                            const SizedBox(
-                              height: 20,
-                            ),
+                            // const SizedBox(
+                            //   height: 20,
+                            // ),
                           ],
                         ),
                       ),
-                      const Divider(),
+                      // const Divider(),
 
                       LongLabeledButton(
                         label: "Pay via [payment method]",
@@ -268,6 +271,7 @@ class _OrderSummeryBottomSheetState extends State<OrderSummeryBottomSheet> {
                           //     handleExternalWalletSelected);
                           // razorpay.open(v);
                           _b2bStoreBloc.add(const Payment());
+
                           // try {
                           // _b2bStoreBloc.add(Payment(razorpay: razorpay));
                           // } catch (e) {}

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/login/bloc/signup_state.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/login/view/choose_service.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/login/view/register.dart';
@@ -170,7 +171,7 @@ class _ClientLoginState extends State<ClientLogin> {
                            },
                      child: Custombutton(
                       color: AppColors.buttonYellowColor,
-                      text: "Login", width: 300.w),
+                      text: "Send OTP", width: 300.w),
                    );
                             },
         
@@ -188,7 +189,7 @@ class _ClientLoginState extends State<ClientLogin> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(LoginConstant.newUserRegister,
+                            Text("Please read our",
                              style: AppTextStyle.font14bold,
                             ),
                              const SizedBox(
@@ -196,15 +197,17 @@ class _ClientLoginState extends State<ClientLogin> {
                              ),
                              GestureDetector(
                               onTap: (){
-                                   Navigator.of(context).push( MaterialPageRoute(builder: (context) {
-                               return const Register();
-                                  },));
+                                openPolicy();
+
+                              //      Navigator.of(context).push( MaterialPageRoute(builder: (context) {
+                              //  return const Register();
+                              //     },));
                               },
 
-                               child: Text(LoginConstant.registration,
-                                                           style: AppTextStyle.font14bold.copyWith(
-                                                          decoration: TextDecoration.underline,
-                                                        ),
+                               child: Text("Privacy Policy",
+                                         style: AppTextStyle.font14bold.copyWith(
+                                         decoration: TextDecoration.underline,
+                                     ),
                                ),
                              )
                           ],
@@ -212,12 +215,12 @@ class _ClientLoginState extends State<ClientLogin> {
                              const SizedBox(
                               height: 10,
                              ),
-                        Text(LoginConstant.forgotPassword,
+                        // Text(LoginConstant.forgotPassword,
         
-                         style: AppTextStyle.font14bold.copyWith(
-                           decoration: TextDecoration.underline,
-                         ),
-                        ),
+                        //  style: AppTextStyle.font14bold.copyWith(
+                        //    decoration: TextDecoration.underline,
+                        //  ),
+                        // ),
                              const SizedBox(
                               height: 20,
                              ),
@@ -241,6 +244,20 @@ class _ClientLoginState extends State<ClientLogin> {
       ),
     );
   }
+
+
+  static Future<void> openPolicy() async {
+
+    final Uri googleMapsUrl = Uri.parse(
+      'https://woloo.in/privacy-policy/',
+    );
+    if (await canLaunchUrl(googleMapsUrl)) {
+      await launchUrl(googleMapsUrl, mode: LaunchMode.externalApplication);
+    } else {
+      throw "Could not open privacy policy";
+    }
+  }
+
 
 
 

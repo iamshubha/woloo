@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:device_preview/device_preview.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/login/bloc/signup_bloc.dart';
 import 'package:woloo_smart_hygiene/firebase_options.dart';

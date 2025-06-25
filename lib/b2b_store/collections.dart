@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
+import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/custom_widget/start_rating.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
@@ -16,7 +17,7 @@ import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
 
-import '../utils/logger.dart';
+import '../utils///logger.dart';
 
 class CollectionsScreen extends StatefulWidget {
   const CollectionsScreen({
@@ -31,7 +32,7 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   B2BStoreHomePage? _b2bStoreHomePage;
   bool _isDataLoaded = false;
-  List<Product> products = [];
+  List<XYProduct> products = [];
   final searchTEC = TextEditingController();
   _refresh() {
     _b2bStoreBloc.add(const Refresh(slug: "collection_id"));
@@ -93,6 +94,15 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
               // bottomNavigationBar: const XBottomBar(),
               appBar: EComAppbar(
                 controller: searchTEC,
+                onCartTap: () async {
+                  final value = await Navigator.push(context,
+                      MaterialPageRoute(builder: (c) => const CartScreen()));
+                  if (value != null && value == 'refresh') {
+                    _refresh();
+                  } else {
+                    _refresh();
+                  }
+                },
                 onChanged: (value) {
                   if (value.isEmpty) {
                     products = _b2bStoreHomePage!.productCollections.products;
@@ -104,13 +114,13 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
                                 .contains(value.toLowerCase()) ??
                             false)
                         .toList();
-                    logger.w("Value: $value Products: ${products.length}");
+                    //logger.w("Value: $value Products: ${products.length}");
                   }
 
                   setState(() {});
                 },
                 cartValue: _isDataLoaded
-                    ? _b2bStoreHomePage?.cartData.cart.items.length ?? 0
+                    ? _b2bStoreHomePage?.cartData.cart.items?.length ?? 0
                     : 0,
                 onTap: () {
                   _refresh();
@@ -198,9 +208,9 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
 
                                 int productCount = 0;
                                 _b2bStoreHomePage?.cartData.cart.items
-                                    .forEach((i) {
+                                    ?.forEach((i) {
                                   if (i.variantId == product.variants[0].id) {
-                                    productCount = i.quantity;
+                                    productCount = i.quantity!;
                                   }
                                 });
                                 // AddButtonMode mode = AddButtonMode.remove;
@@ -550,7 +560,7 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
                                                                         ?.cartData
                                                                         .cart
                                                                         .items
-                                                                        .forEach(
+                                                                        ?.forEach(
                                                                             (i) {
                                                                       if (i.variantId ==
                                                                           product
@@ -562,7 +572,7 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
                                                                             count:
                                                                                 productCount,
                                                                             itemId:
-                                                                                i.id));
+                                                                                i.id ?? ""));
                                                                       }
                                                                     });
                                                                   },
@@ -613,7 +623,7 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
                                                                         ?.cartData
                                                                         .cart
                                                                         .items
-                                                                        .forEach(
+                                                                        ?.forEach(
                                                                             (i) {
                                                                       if (i.variantId ==
                                                                           product
@@ -625,7 +635,7 @@ class _CollectionsScreenState extends State<CollectionsScreen> {
                                                                             count:
                                                                                 productCount,
                                                                             itemId:
-                                                                                i.id));
+                                                                                i.id ?? ""));
                                                                       }
                                                                     });
                                                                   },

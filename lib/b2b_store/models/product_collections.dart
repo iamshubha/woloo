@@ -7,7 +7,7 @@ String productCollectionsToJson(ProductCollections data) =>
     json.encode(data.toJson());
 
 class ProductCollections {
-  List<Product> products;
+  List<XYProduct> products;
   int? count;
   int? offset;
   int? limit;
@@ -23,24 +23,22 @@ class ProductCollections {
       ProductCollections(
         products: json["products"] == null
             ? []
-            : List<Product>.from(
-                json["products"]!.map((x) => Product.fromJson(x))),
+            : List<XYProduct>.from(
+                json["products"]!.map((x) => XYProduct.fromJson(x))),
         count: json["count"],
         offset: json["offset"],
         limit: json["limit"],
       );
 
   Map<String, dynamic> toJson() => {
-        "products": products == null
-            ? []
-            : List<dynamic>.from(products.map((x) => x.toJson())),
+        "products": List<dynamic>.from(products.map((x) => x.toJson())),
         "count": count,
         "offset": offset,
         "limit": limit,
       };
 }
 
-class Product {
+class XYProduct {
   String? id;
   String? title;
   String? subtitle;
@@ -70,7 +68,7 @@ class Product {
   double? averageRating;
   int? reviewCount;
 
-  Product({
+  XYProduct({
     this.id,
     this.title,
     this.subtitle,
@@ -101,7 +99,7 @@ class Product {
     this.reviewCount,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json) => Product(
+  factory XYProduct.fromJson(Map<String, dynamic> json) => XYProduct(
         id: json["id"],
         title: json["title"],
         subtitle: json["subtitle"],

@@ -112,7 +112,7 @@ class _ChartsState extends State<Charts> {
         //  hostContainer(),
         const SizedBox(
           height: 10,
-        ),
+          ),
 
         Container(
           // height: 580.h,
@@ -159,6 +159,7 @@ class _ChartsState extends State<Charts> {
                     }
 
                     if (state is GetAllJanitor) {
+
                       EasyLoading.dismiss();
 
                       janitorName = state.taskModel!.results.data;
@@ -168,6 +169,9 @@ class _ChartsState extends State<Charts> {
                           id: janitor.id,
                         ));
                       }
+
+
+
 
                       selectItem = facilitydropdownNames.first;
 
@@ -202,6 +206,7 @@ class _ChartsState extends State<Charts> {
                     }
 
                     if (state is FacilityByJanitor) {
+
                       //     showModalBottomSheet(
                       //   backgroundColor: Colors.transparent,
                       //   context: context, builder: (context) {
@@ -213,6 +218,8 @@ class _ChartsState extends State<Charts> {
 
                       EasyLoading.dismiss();
 
+                      //  print("plan id in task master ${globalStorage.getPlanId()}");
+
                       janitorModel = state.janitorModel;
 
                       for (var janitor in janitorModel!.results!) {
@@ -221,7 +228,7 @@ class _ChartsState extends State<Charts> {
                           id: janitor.janitorId,
                         ));
                       }
-
+                    String palnId =     globalStorage.getPlanId();
                       selectItem = facilitydropdownNames.first;
 
                       dashBoardBloc.add(GetDashbaordEvent(
@@ -233,7 +240,7 @@ class _ChartsState extends State<Charts> {
                       print("objectttttttttt $facilitydropdownNames");
 
                       if (widget.plan == "CLASSIC" &&
-                          widget.status == "active") {
+                          widget.status == "active"  && palnId != "0") {
                         Future.delayed(const Duration(seconds: 3), () {
                           showModalBottomSheet(
                               backgroundColor: Colors.transparent,
@@ -243,7 +250,7 @@ class _ChartsState extends State<Charts> {
                               });
                         });
                       } else if (widget.plan == "PREMIUM" &&
-                          widget.status == "inactive") {
+                          widget.status == "inactive"  && palnId != "0"   ) {
                         //PREMIUM
                         Future.delayed(const Duration(seconds: 3), () {
                           showModalBottomSheet(
@@ -305,7 +312,7 @@ class _ChartsState extends State<Charts> {
                                           ),
                                         )
                                       : Text(
-                                          selectItem!.facilityName!,
+                                          selectItem!.facilityName ?? "",
                                           style: TextStyle(
                                             fontSize: 14,
                                             color: Theme.of(context).hintColor,
@@ -318,7 +325,7 @@ class _ChartsState extends State<Charts> {
                                         FacilityDropdownModel>(
                                       value: item,
                                       child: Text(
-                                        item.facilityName!,
+                                        item.facilityName ?? "",
                                         style: const TextStyle(fontSize: 14),
                                       ),
                                     );

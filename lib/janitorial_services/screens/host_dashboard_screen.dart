@@ -172,6 +172,7 @@ class _HostDashboardState extends State<HostDashboard> {
                   RedeemPoints(
                     points: coins?.results?.totalCoins.toString() ?? "",
                   ),
+                    SizedBox(height: 70.h),
                   // SizedBox(height: 16.h),
                   // const DashboardOverview(),
                   // SizedBox(height: 16.h),

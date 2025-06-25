@@ -65,6 +65,8 @@ class SignupBloc extends Bloc<SignupEvent, SignUpState> {
 
       // debugPrint("tokennnnnn${response.results!.requestId}");
 
+      await  signupService.updateCustomer(token: response.results!.token!);
+
       // globalStorage.
       globalStorage.saveClientToken(accessToken: response.results!.token ?? '');
       // globalStorage.saveToken(accessToken: response.token ?? '');

@@ -13,7 +13,7 @@ import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
-import 'package:woloo_smart_hygiene/utils/logger.dart';
+import 'package:woloo_smart_hygiene/utils///logger.dart';
 
 class OrderScreen extends StatefulWidget {
   OrderSet orderSet;
@@ -77,15 +77,17 @@ class _OrderScreenState extends State<OrderScreen> {
                       title: "Order Details",
                       subtitle:
                           "Check or modify the details of your order here"),
+                  // Text("Order ID: ${widget.orderSet.id}",
+                  //     style: AppTextStyle.font12bold),
                   Expanded(
                     child: ListView.builder(
-                        itemCount: widget.orderSet.orders.first.items.length,
+                        itemCount: widget.orderSet.orders?.first.items?.length,
                         itemBuilder: (c, i) {
-                          final order = widget.orderSet.orders.first;
+                          final order = widget.orderSet.orders?.first;
 
-                          final item = order.items[i];
+                          final item = order?.items?[i];
                           final orderShipmentAddress = order
-                              .paymentCollections
+                              ?.paymentCollections
                               ?.first
                               .payments
                               ?.first
@@ -96,12 +98,12 @@ class _OrderScreenState extends State<OrderScreen> {
                               ?.first;
                           return OrderStatusCard(
                             orderShipmentAddress: orderShipmentAddress,
-                            id: item.id ?? "",
+                            id: item?.id ?? "",
                             timeLineList: timeLineList,
-                            url: item.thumbnail ?? "",
-                            productLabel: item.title ?? "",
-                            subTitle: item.subtitle ?? "",
-                            price: (item.total ?? 0).toString(),
+                            url: item?.thumbnail ?? "",
+                            productLabel: item?.title ?? "",
+                            subTitle: item?.subtitle ?? "",
+                            price: (item?.total ?? 0).toString(),
                           );
                         }),
                   ),
@@ -148,7 +150,7 @@ class ReviewBottomSheet extends StatefulWidget {
     String hintText = 'Type Your Review Here!',
     String submitButtonText = 'Submit',
   }) {
-    logger.w("Executing***");
+    //logger.w("Executing***");
     return showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
@@ -346,7 +348,7 @@ class OtherItemOrder extends StatelessWidget {
                   color: AppColors.greyBorderProfile),
             ),
             Text(
-              "Rs. 299", // Replace with real price
+              "\u{20B9} 299/-", // Replace with real price
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.bold,
@@ -396,7 +398,7 @@ class OrderStatusCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Order ID: $id", style: AppTextStyle.font12bold),
+          // Text("Order ID: $id", style: AppTextStyle.font12bold),
           SizedBox(height: 8.h),
           // Product Details
           Row(
@@ -442,7 +444,7 @@ class OrderStatusCard extends StatelessWidget {
                     ),
                     SizedBox(height: 8.h),
                     Text(
-                      "Rs. $price",
+                      "\u{20B9} $price",
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
@@ -471,7 +473,7 @@ class OrderStatusCard extends StatelessWidget {
                             timeLineList[i],
                             textAlign: TextAlign.center,
                           ),
-                          const Text("~time ") // TODO:Replace with actual time
+                          // const Text("~time ") // TODO:Replace with actual time
                         ],
                       ),
                     ),
@@ -505,30 +507,30 @@ class OrderStatusCard extends StatelessWidget {
 
           SizedBox(height: 12.h),
           // Cancel Button
-          Center(
-            child: GestureDetector(
-              onTap: () {
-                // Handle cancel action
-              },
-              child: Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 50.w, vertical: 8.h),
-                  // decoration: BoxDecoration(
-                  //   color: Colors.grey[300],
-                  //   borderRadius: BorderRadius.circular(8.r),
-                  // ),
-                  child: Text("${orderShipmentAddress?.address1}")
-                  // Text(
-                  //   "Cancel",
-                  //   style: TextStyle(
-                  //     fontSize: 14.sp,
-                  //     fontWeight: FontWeight.bold,
-                  //     color: Colors.black,
-                  //   ),
-                  // ),
-                  ),
-            ),
-          ),
+          // Center(
+          //   child: GestureDetector(
+          //     onTap: () {
+          //       // Handle cancel action
+          //     },
+          //     child: Container(
+          //         padding:
+          //             EdgeInsets.symmetric(horizontal: 50.w, vertical: 8.h),
+          //         // decoration: BoxDecoration(
+          //         //   color: Colors.grey[300],
+          //         //   borderRadius: BorderRadius.circular(8.r),
+          //         // ),
+          //         child: Text("${orderShipmentAddress?.address1}")
+          //         // Text(
+          //         //   "Cancel",
+          //         //   style: TextStyle(
+          //         //     fontSize: 14.sp,
+          //         //     fontWeight: FontWeight.bold,
+          //         //     color: Colors.black,
+          //         //   ),
+          //         // ),
+          //         ),
+          //   ),
+          // ),
         ],
       ),
     );

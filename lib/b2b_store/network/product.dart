@@ -121,7 +121,7 @@ class ProductService {
           headers: {
             'Content-Type': 'application/json',
             'x-publishable-api-key':
-                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+                'pk_11664986800fe08913d9c7c090d91839cbdefceda3f8b4c60722d79000f49a48',
             'Authorization': 'Bearer $token',
           },
         ),
@@ -148,7 +148,7 @@ class ProductService {
           },
         ),
       );
-      //logger.w(response);
+      ////logger.w(response);
       return ProductCollections.fromJson(response);
     } catch (e) {
       debugPrint("error $e");
@@ -161,10 +161,10 @@ class ProductService {
     required String token,
     required String id,
   }) async {
-    //logger.w("getProductCollectionsById called with id: $id");
+    ////logger.w("getProductCollectionsById called with id: $id");
     try {
-      //logger.w("getProductCollectionsById id: $id");
-      //logger.w("Token: $token");
+      ////logger.w("getProductCollectionsById id: $id");
+      ////logger.w("Token: $token");
       var response = await dio.get(
         "https://staging-store.woloo.in/store/products?fields=*variants.calculated_price,+variants.inventory_quantity&$slug=$id",
         options: Options(
@@ -176,10 +176,58 @@ class ProductService {
           },
         ),
       );
-      // //logger.w(response);
+      // ////logger.w(response);
       return ProductCollections.fromJson(response);
     } catch (e) {
       debugPrint("error $e");
+      rethrow;
+    }
+  }
+
+  Future<ProductCollections> searchProducts(
+      {required token, required String regionId, required String query}) async {
+    query = Uri.encodeComponent(query);
+    try {
+      var response = await dio.get(
+        "https://staging-store.woloo.in/store/products?fields=*variants.calculated_price%2C+variants.inventory_quantity&region_id=$regionId&q=$query",
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      logger.w(response);
+      return ProductCollections.fromJson(response);
+    } catch (e) {
+      logger.e("error $e");
+      rethrow;
+    }
+  }
+
+  Future<ProductCollections> getProductsByCategoryId({
+    required String token,
+    required String categoryId,
+  }) async {
+    try {
+      var response = await dio.get(
+        "https://staging-store.woloo.in/store/products?fields=*variants.calculated_price%2C+variants.inventory_quantity&category_id=$categoryId",
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Authorization': 'Bearer $token',
+            'user-agent': 'Android/22110/10',
+          },
+        ),
+      );
+      logger.w("Products by category response: $response");
+      return ProductCollections.fromJson(response);
+    } catch (e) {
+      logger.e("Error in getProductsByCategoryId: $e");
       rethrow;
     }
   }

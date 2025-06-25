@@ -15,6 +15,7 @@ class CustomTextField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final  Function(String)? onFieldSubmitted;
   final EdgeInsetsGeometry? padding;
+  final TextStyle? hintStyle;
 
   const CustomTextField({
     super.key,
@@ -31,6 +32,7 @@ class CustomTextField extends StatelessWidget {
     this.textInputAction,
     this.onFieldSubmitted,
     this.padding,
+    this.hintStyle
 
   });
 
@@ -77,7 +79,7 @@ class CustomTextField extends StatelessWidget {
                 ? Icon(prefixIcon, color: Colors.grey)
                 : null,
             hintText: hintText,
-            hintStyle: TextStyle(
+            hintStyle: hintStyle ??  TextStyle(
               color: Colors.grey,
               fontSize: 15.sp,
               fontWeight: FontWeight.w700

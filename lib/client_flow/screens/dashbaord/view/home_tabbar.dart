@@ -1,9 +1,7 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/data/model/facility_model.dart';
@@ -11,9 +9,7 @@ import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/view/home.dart
 import 'package:woloo_smart_hygiene/client_flow/widgets/CustomButton.dart';
 import '../../../../core/local/global_storage.dart';
 import '../../../../janitorial_services/screens/monitor-iot.dart';
-import '../../../../screens/common_widgets/tab_widget.dart';
 import '../../../../utils/app_color.dart';
-import '../../../../utils/app_constants.dart';
 import '../../../../utils/app_textstyle.dart';
 import '../../../widgets/chart.dart';
 import '../../../widgets/tabbar_widget.dart';
@@ -219,77 +215,67 @@ class _HomeTabbarState extends State<HomeTabbar> with TickerProviderStateMixin {
                           physics: const NeverScrollableScrollPhysics(),
                           controller: tabController,
                           children: widget.facility!
-                              .map((e) =>
-
-                                e.planName == "PREMIUM" &&   e.subscriptionStatus == "inactive" ?
-                                   Column(
-                                    // mainAxisAlignment: MainAxisAlignment.center,
-                                    // crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-
-                                       const SizedBox(
-                                        height: 200,
-                                       ),
-
-
-                                       Center(
-                                         child: Text(
-                                          textAlign: TextAlign.center,
-                                          "Subcription of your facility is expire to continue service please Renew subcription",
-                                          style: AppTextStyle.font14bold,
-                                         ),
-                                       ),
-                                       const SizedBox(
-                                        height: 20,
-                                       ),
-
-                                       GestureDetector(
-                                        onTap: () {
-                                          
-                                          Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PremiumScreeen(
-                          indexTab: widget.facility!.indexOf(e),
-                          tabController: tabController,
-                          clientDashBoardBloc: widget.clientDashBoardBloc,
-                          fromTabbar: true,
-
-                        ),
-                      ),
-                    );
-                                        },
-                                         child: const 
-                                         Custombutton(text: "Renew", width: 200),
-                                       )
-
-
-                                    ],
-                                  ) 
-                                  :
-
-                               e.planName == "PREMIUM" ? 
-                                 
-                                  DashboardScreen(  
-                                   facilityId: e.id,
-                                    plan: e.planName,
-                                    status: e.subscriptionStatus,
-                                    tabIndex: widget.facility!.indexOf(e),
-                                    facility: widget.facility,
-                                    clientDashBoardBloc:
-                                    widget.clientDashBoardBloc,
-                                 )
-                                 :                              
-                                Charts(
-                                    facilityId: e.id,
-                                    plan: e.planName,
-                                    status: e.subscriptionStatus,
-                                    tabIndex: widget.facility!.indexOf(e),
-                                    facility: widget.facility,
-                                    clientDashBoardBloc:
-                                        widget.clientDashBoardBloc,
-                                  )
-                                  )
+                              .map((e) => e.planName == "PREMIUM" &&
+                                      e.planName == "CLASSIC" &&
+                                      e.subscriptionStatus == "inactive"
+                                  ? Column(
+                                      // mainAxisAlignment: MainAxisAlignment.center,
+                                      // crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        const SizedBox(
+                                          height: 200,
+                                        ),
+                                        Center(
+                                          child: Text(
+                                            textAlign: TextAlign.center,
+                                            "Subcription of your facility is expire to continue service please Renew subcription",
+                                            style: AppTextStyle.font14bold,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PremiumScreeen(
+                                                  indexTab: widget.facility!
+                                                      .indexOf(e),
+                                                  tabController: tabController,
+                                                  clientDashBoardBloc: widget
+                                                      .clientDashBoardBloc,
+                                                  fromTabbar: true,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: const Custombutton(
+                                              text: "Renew", width: 200),
+                                        )
+                                      ],
+                                    )
+                                  : e.planName == "PREMIUM"
+                                      ? DashboardScreen(
+                                          facilityId: e.id,
+                                          plan: e.planName,
+                                          status: e.subscriptionStatus,
+                                          tabIndex: widget.facility!.indexOf(e),
+                                          facility: widget.facility,
+                                          clientDashBoardBloc:
+                                              widget.clientDashBoardBloc,
+                                        )
+                                      : Charts(
+                                          facilityId: e.id,
+                                          plan: e.planName,
+                                          status: e.subscriptionStatus,
+                                          tabIndex: widget.facility!.indexOf(e),
+                                          facility: widget.facility,
+                                          clientDashBoardBloc:
+                                              widget.clientDashBoardBloc,
+                                        ))
                               .toList(),
                         ),
                       ),

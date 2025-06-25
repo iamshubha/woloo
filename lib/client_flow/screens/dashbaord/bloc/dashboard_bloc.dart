@@ -243,7 +243,7 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
         taskIds: event.taskIds,
         taskTimes: event.taskTimes,
         janitorId: event.janitorId,
-         facilityRef: event.facilityRef,
+         facilityRef: event.facilityRef!,
          facilityId: event.facilityId
       );
 
@@ -520,6 +520,7 @@ class ClientDashBoardBloc extends Bloc<DashboardEvent, DashboardState> {
       debugPrint("debug print $e" );
       emit(DashboarError(error: e.toString()));
     }
+    
   }
 
 

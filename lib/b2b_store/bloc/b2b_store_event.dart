@@ -299,3 +299,35 @@ class RemoveWolooPointsEvent extends B2BStoreEvent {
   @override
   List<Object?> get props => [];
 }
+
+class RemovePromoCodeEvent extends B2BStoreEvent {
+  final String promoCode;
+
+  const RemovePromoCodeEvent({required this.promoCode});
+
+  @override
+  List<Object> get props => [promoCode];
+}
+
+class SearchProductEvent extends B2BStoreEvent {
+  final String query;
+  const SearchProductEvent({required this.query});
+
+  @override
+  List<Object?> get props => [query];
+}
+
+class GetProductCategoriesEvent extends B2BStoreEvent {
+  const GetProductCategoriesEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class GetProductsByCategoryEvent extends B2BStoreEvent {
+  final String categoryId;
+  const GetProductsByCategoryEvent({required this.categoryId});
+
+  @override
+  List<Object?> get props => [categoryId];
+}

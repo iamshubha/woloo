@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/data/model/dashboard_task_model.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/model/host_dashboard_screen.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/screens/bloc/iot_bloc.dart';
 
@@ -31,9 +32,11 @@ class IotError extends IotState {
 
 class IotSuccess extends IotState {
   final DashboardData dashboardData;
-  const IotSuccess({required this.dashboardData});
+  final TaskStatusDistribution taskStatusDistribution;
+  const IotSuccess(
+      {required this.taskStatusDistribution, required this.dashboardData});
   @override
-  List<Object> get props => [dashboardData];
+  List<Object> get props => [dashboardData, taskStatusDistribution];
 }
 
 class HostDashboardSuccess extends IotState {

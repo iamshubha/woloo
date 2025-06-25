@@ -121,9 +121,7 @@ dependencies:
   gauge_chart: ^1.0.4
   simple_floating_bottom_nav_bar: ^0.0.3
   timelines_plus: ^1.0.6
-
   cached_network_image: ^3.4.1
-
   percent_indicator: ^4.2.5
   dashed_circular_progress_bar: ^0.0.6
   animated_rating_stars: ^1.0.1
@@ -131,6 +129,8 @@ dependencies:
   crypto: ^3.0.3
   encrypt: ^5.0.3
   convert: ^3.1.2
+  app_links: ^6.4.0
+  
 
 
 dependency_overrides:
@@ -191,12 +191,11 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
+  fonts:
+    - family: Schyler
+      fonts:
+        - asset: fonts/centurygothic.ttf
+        - asset: fonts/centurygothic.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

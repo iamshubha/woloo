@@ -52,7 +52,7 @@ class IotOnbaordState extends State<IotOnbaord> {
                     height: 270,
                   ),
                   const SizedBox(
-                    height: 100,
+                    height: 90,
                   ),
                 Padding(
                   padding: const EdgeInsets.symmetric( horizontal: 16),
@@ -86,11 +86,8 @@ class IotOnbaordState extends State<IotOnbaord> {
               const SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,
-                height: MediaQuery.of(context).size.height/1.5,
+                height: 600,
                 child: PageView.builder(
-
-
-                  
                   controller: controller,
                   // itemCount: pages.length,
                   itemBuilder: (_, index) {
@@ -108,18 +105,9 @@ class IotOnbaordState extends State<IotOnbaord> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
 
-                   const Custombutton(
-                     color: AppColors.white,
-                    text: "Skip", width: 170),
-
                    GestureDetector(
                     onTap: () {
-                      controller.nextPage(duration: Durations.medium1, curve: Curves.bounceIn );
-                            
-                                    globalStorage.saveOnboarding(isOnboard: true);
-
-                      onboardIndex == 2 ?              
-          Navigator.push(
+                     Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) =>  PremiumScreeen(
@@ -127,10 +115,32 @@ class IotOnbaordState extends State<IotOnbaord> {
                     fromTabbar: false,
                   ),
                 ),
-              ) : null ;
-                      
+              );
+
                     },
-                    child: const Custombutton(text: "Next", width: 170))
+                     child: const Custombutton(
+                       color: AppColors.white,
+                      text: "Skip", width: 170),
+                   ),
+
+                   GestureDetector(
+                    onTap: () {
+                      controller.nextPage(duration: Durations.medium1, curve: Curves.bounceIn );
+                            
+                          globalStorage.saveOnboarding(isOnboard: true);
+
+             onboardIndex == 2 ?              
+               Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>  PremiumScreeen(
+                    clientDashBoardBloc: widget.clientDashBoardBloc,
+                    fromTabbar: false,
+                  ),
+                ),
+              ) : null ;                  
+                    },
+          child: const Custombutton(text: "Next", width: 170))
 
                 ],
                ),
@@ -149,6 +159,9 @@ class IotOnbaordState extends State<IotOnbaord> {
                   type: WormType.thinUnderground,
                 ),
               ),
+               const SizedBox(
+                height: 40,
+              ),
 
 
                
@@ -162,7 +175,7 @@ class IotOnbaordState extends State<IotOnbaord> {
   }
 }
 
-final colors = const [
+const colors = [
   Colors.red,
   Colors.green,
   Colors.greenAccent,

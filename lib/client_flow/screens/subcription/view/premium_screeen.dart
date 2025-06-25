@@ -102,8 +102,7 @@ List<PlanReqModel> planReqModel = [];
   SingleChildScrollView(
     child: Padding(
       padding: const EdgeInsets.symmetric( horizontal: 16),
-      child: Column(children: [
-          
+      child: Column(children: [  
                     ListTile(
                       contentPadding: const EdgeInsets.all( 0),
                       leading: CustomImageProvider(
@@ -965,7 +964,7 @@ Widget totalWidget(List<Result> results){
 
                                             //  widget.clientDashBoardBloc.add(event)
                                             
-                                           widget.clientDashBoardBloc!.add( GetAllFacilityEvent(
+                                           widget.clientDashBoardBloc!.add(GetAllFacilityEvent(
                                             clientId: int.parse(globalStorage.getClientId())
                                           ) );
 

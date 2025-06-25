@@ -28,7 +28,7 @@ class CheckoutApiService {
 
       return PromotionsModel.fromMap(response);
     } catch (e) {
-      //logger.w(e);
+      ////logger.w(e);
       debugPrint("Error in cartPromotions api call : $e");
       rethrow;
     }
@@ -46,7 +46,7 @@ class CheckoutApiService {
 
       return PincodeCheckResponse.fromMap(response).deliveryCodes!.isNotEmpty;
     } catch (e) {
-      //logger.w(e);
+      ////logger.w(e);
       debugPrint("Error in pincodeCheck api call: $e");
       rethrow;
     }
@@ -64,7 +64,7 @@ class CheckoutApiService {
 
       return ShippingOptionsResponse.fromMap(response);
     } catch (e) {
-      //logger.w(e);
+      ////logger.w(e);
       debugPrint("Error in shippingOptions api call: $e");
       rethrow;
     }
@@ -84,7 +84,7 @@ class CheckoutApiService {
 
       return ShippingOption.fromMap(response['shipping_option']);
     } catch (e) {
-      //logger.w(e);
+      ////logger.w(e);
       debugPrint("shippingOptionsCalculate: $e");
       rethrow;
     }
@@ -106,7 +106,7 @@ class CheckoutApiService {
 
       return AddToCartResponse.fromJson(response);
     } catch (e) {
-      //logger.w(e);
+      ////logger.w(e);
       debugPrint("shippingMethods: $e");
       rethrow;
     }
@@ -125,7 +125,7 @@ class CheckoutApiService {
 
       return PaymentProviders.fromJson(response);
     } catch (e) {
-      //logger.w(e);
+      ////logger.w(e);
       debugPrint("paymentProviders: $e");
       rethrow;
     }
@@ -141,8 +141,8 @@ class CheckoutApiService {
           options: getHeaders(token),
           data: {"cart_id": cart_id});
 
-      // //logger.w(response['payment_collection']["id"]);
-      // //logger.w()
+      // ////logger.w(response['payment_collection']["id"]);
+      // ////logger.w()
       /*
 
           pay_col: paymentCollections.paymentCollection?.id,
@@ -150,7 +150,7 @@ class CheckoutApiService {
       */
       return response['payment_collection']["id"];
     } catch (e) {
-      //logger.w(e);
+      ////logger.w(e);
       debugPrint("paymentCollections: $e");
       rethrow;
     }
@@ -169,7 +169,7 @@ class CheckoutApiService {
 
       return payment_provider.PaymentCollection.fromJson(response);
     } catch (e) {
-      //logger.w(e);
+      ////logger.w(e);
       debugPrint("paymentSessions: $e");
       rethrow;
     }
@@ -180,7 +180,6 @@ class CheckoutApiService {
     required String cart_id,
   }) async {
     try {
-      
       final response = await dio.post(
         "https://staging-store.woloo.in/store/carts/$cart_id/split-and-complete-cart",
         options: getHeaders(token),
@@ -188,7 +187,7 @@ class CheckoutApiService {
 
       return CompleteVendor.fromJson(response);
     } catch (e) {
-      //logger.w(e);
+      ////logger.w(e);
       debugPrint("completeVendor: $e");
       rethrow;
     }
@@ -207,7 +206,7 @@ class CheckoutApiService {
   //
   //     return CompleteVendor.fromJson(response);
   //   } catch (e) {
-  //     //logger.w(e);
+  //     ////logger.w(e);
   //     debugPrint("Error in shippingOptionsCalculate api call: $e");
   //     rethrow;
   //   }

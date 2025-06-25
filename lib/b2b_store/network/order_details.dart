@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/customer_reviews.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/order_details.dart';
 import 'package:woloo_smart_hygiene/core/network/dio_client.dart';
-import 'package:woloo_smart_hygiene/utils/logger.dart';
+import 'package:woloo_smart_hygiene/utils///logger.dart';
 
 class OrderDetailsService {
   final DioClient dio;
@@ -22,7 +22,7 @@ class OrderDetailsService {
           },
         ),
       );
-      logger.w(response);
+      //logger.w(response);
       return OrderDetails.fromJson(response);
     } catch (e) {
       debugPrint("Error in getOrderDetails service: $e");
@@ -33,7 +33,7 @@ class OrderDetailsService {
   Future<CustomerReviews> getOrderReviews(
       {required String token, required String productId}) async {
     try {
-      // logger.i("Fetching reviews for product ID: $productId");
+      // //logger.i("Fetching reviews for product ID: $productId");
       final response = await dio.get(
         "https://staging-store.woloo.in/store/products/$productId/reviews?all=2",
         options: Options(
@@ -44,11 +44,11 @@ class OrderDetailsService {
           },
         ),
       );
-      // //logger.w("Response received: $response");
+      // ////logger.w("Response received: $response");
 
       return CustomerReviews.fromJson(response["data"]);
     } catch (e) {
-      logger.e("Error in getOrderReviews service: $e");
+      //logger.e("Error in getOrderReviews service: $e");
       rethrow;
     }
   }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-class SmartSingleChilgScrollView extends StatelessWidget {
-  const SmartSingleChilgScrollView({super.key,this.isEnabled=false, required this.child, this.padding});
+class SmartSingleChildScrollView extends StatelessWidget {
+  const SmartSingleChildScrollView(
+      {super.key, this.isEnabled = false, required this.child, this.padding});
   final bool isEnabled;
   final Widget child;
   final EdgeInsetsGeometry? padding;

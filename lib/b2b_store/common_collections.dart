@@ -7,12 +7,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
+import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/custom_widget/start_rating.dart';
 import 'package:woloo_smart_hygiene/b2b_store/ecom.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/hygine_services/view/address_notifier.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
 
 class CommonCollectionsScreen extends StatefulWidget {
@@ -30,16 +33,30 @@ class CommonCollectionsScreen extends StatefulWidget {
 }
 
 class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
+  Map<String, dynamic>? selectedFilters = {};
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
   B2BStoreHomePage? _b2bStoreHomePage;
   bool _isDataLoaded = false;
+  ProductCategory? _productCategories;
+
   _refresh() {
-    _b2bStoreBloc.add(Refresh(slug: widget.slug, id: widget.id));
+    _b2bStoreBloc.add(GetCartData());
+  }
+
+  _refreshCategories() {
+    _b2bStoreBloc.add(const GetProductCategoriesEvent());
+  }
+
+  _loadProductsByCategory(String categoryId) {
+    // Using the category ID from the curl request
+    // const categoryId = 'pcat_01JPH86Z9NW5QEBTSXSHZP3TYJ';
+    _b2bStoreBloc.add(GetProductsByCategoryEvent(categoryId: categoryId));
   }
 
   @override
   void initState() {
     _b2bStoreBloc.add(Refresh(slug: widget.slug, id: widget.id));
+    _b2bStoreBloc.add(const GetProductCategoriesEvent());
     super.initState();
   }
 
@@ -68,7 +85,9 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
           }
           if (state is CartSuccess) {
             EasyLoading.dismiss();
-            _refresh();
+            setState(() {
+              _b2bStoreHomePage?.cartData = state.cartData;
+            });
           }
           if (state is B2BStoreSuccess) {
             EasyLoading.dismiss();
@@ -85,6 +104,35 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
             EasyLoading.dismiss();
             EasyLoading.showError(state.error);
           }
+
+          if (state is ProductCategoriesLoading) {
+            EasyLoading.show(status: state.message);
+          }
+          if (state is ProductCategoriesSuccess) {
+            // EasyLoading.dismiss();
+            setState(() {
+              _productCategories = state.productCategories;
+            });
+          }
+          if (state is ProductCategoriesError) {
+            EasyLoading.dismiss();
+            EasyLoading.showError(state.error);
+          }
+
+          if (state is ProductsByCategoryLoading) {
+            EasyLoading.show(status: state.message);
+          }
+          if (state is ProductsByCategorySuccess) {
+            EasyLoading.dismiss();
+            setState(() {
+              _b2bStoreHomePage?.productCollections.products =
+                  state.products.products;
+            });
+          }
+          if (state is ProductsByCategoryError) {
+            EasyLoading.dismiss();
+            EasyLoading.showError(state.error);
+          }
         },
         builder: (context, snapshot) {
           return PopScope(
@@ -92,8 +140,58 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
             child: Scaffold(
               // bottomNavigationBar: const XBottomBar(),
               appBar: EComAppbar(
+                onFilterTap: () {
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    isDismissible: true, // <-- Allow tap outside to dismiss
+                    enableDrag: true, // <-- Allow swipe down to dismiss
+
+                    backgroundColor: Colors
+                        .transparent, // Optional: if you want rounded corners to show correctly
+
+                    context: context,
+                    builder: (_) => FilterBottomSheet(
+                      onApplyFilters: (filters) {
+                        setState(() {
+                          selectedFilters = filters;
+                        });
+                        _loadProductsByCategory(
+                            selectedFilters?['categories'][0]);
+                      },
+                      productCategories: _productCategories,
+                    ), //AddressBottomSheet
+                  );
+                },
+                isAll: true,
+                onChanged: (value) {
+                  if (value.isEmpty) {
+                    // final products =
+                    //     _b2bStoreHomePage!.productCollections.products;
+                  } else {
+                    final products = _b2bStoreHomePage!
+                        .productCollections.products
+                        .where((e) =>
+                            e.title
+                                ?.toLowerCase()
+                                .contains(value.toLowerCase()) ??
+                            false)
+                        .toList();
+                    //logger.w("Value: $value Products: ${products.length}");
+                  }
+
+                  setState(() {});
+                },
+                onCartTap: () async {
+                  final value = await Navigator.push(context,
+                      MaterialPageRoute(builder: (c) => const CartScreen()));
+                  if (value != null && value == 'refresh') {
+                    _refresh();
+                  } else {
+                    _refresh();
+                  }
+                },
                 cartValue: _isDataLoaded
-                    ? _b2bStoreHomePage?.cartData.cart.items.length ?? 0
+                    ? _b2bStoreHomePage?.cartData.cart.items?.length ?? 0
                     : 0,
                 onTap: () {
                   _refresh();
@@ -143,28 +241,6 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
                                 )
                               ],
                             ),
-                            // GridView.builder(
-                            //   shrinkWrap: true,
-                            //   physics: const NeverScrollableScrollPhysics(),
-                            //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            //     crossAxisCount: 2,
-                            //     crossAxisSpacing: 10,
-                            //     mainAxisSpacing: 10,
-                            //     childAspectRatio: 0.6,
-                            //   ),
-                            //   itemCount: products.length,
-                            //   itemBuilder: (context, index) {
-                            //     final product = products[index];
-                            //     return GridItem(
-                            //       onTap: (){
-
-                            //       },
-                            //       products: product,
-                            //       // imageUrl: topBrands[index].imageUrl,
-                            //     );
-                            //   },
-                            // ),
-
                             GridView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
@@ -183,9 +259,9 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
 
                                 int productCount = 0;
                                 _b2bStoreHomePage?.cartData.cart.items
-                                    .forEach((i) {
+                                    ?.forEach((i) {
                                   if (i.variantId == product.variants[0].id) {
-                                    productCount = i.quantity;
+                                    productCount = i.quantity ?? 0;
                                   }
                                 });
                                 // AddButtonMode mode = AddButtonMode.remove;
@@ -534,7 +610,7 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
                                                                         ?.cartData
                                                                         .cart
                                                                         .items
-                                                                        .forEach(
+                                                                        ?.forEach(
                                                                             (i) {
                                                                       if (i.variantId ==
                                                                           product
@@ -546,7 +622,7 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
                                                                             count:
                                                                                 productCount,
                                                                             itemId:
-                                                                                i.id));
+                                                                                i.id ?? ""));
                                                                       }
                                                                     });
                                                                   },
@@ -597,7 +673,7 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
                                                                         ?.cartData
                                                                         .cart
                                                                         .items
-                                                                        .forEach(
+                                                                        ?.forEach(
                                                                             (i) {
                                                                       if (i.variantId ==
                                                                           product
@@ -609,7 +685,7 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
                                                                             count:
                                                                                 productCount,
                                                                             itemId:
-                                                                                i.id));
+                                                                                i.id ?? ""));
                                                                       }
                                                                     });
                                                                   },
@@ -716,7 +792,6 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
                                 );
                               },
                             ),
-
                             SizedBox(
                               height: 60.h,
                             ),
@@ -730,3 +805,516 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
         });
   }
 }
+
+class FilterBottomSheet extends StatefulWidget {
+  final Function(Map<String, dynamic>)? onApplyFilters;
+  final ProductCategory? productCategories;
+  // final Map<String, dynamic>? initialFilters;
+
+  const FilterBottomSheet({
+    Key? key,
+    this.onApplyFilters,
+    this.productCategories,
+    // this.initialFilters,
+  }) : super(key: key);
+
+  @override
+  State<FilterBottomSheet> createState() => _FilterBottomSheetState();
+}
+
+class _FilterBottomSheetState extends State<FilterBottomSheet> {
+  String? selectedCategories;
+  String? selectedSize;
+
+  List<Map<String, String>> get categories {
+    if (widget.productCategories?.productCategories != null) {
+      return widget.productCategories!.productCategories!
+          .map((category) => {
+                'id': category.id ?? '',
+                'name': category.name ?? '',
+              })
+          .where((name) => name.isNotEmpty)
+          .toList();
+    }
+    return [];
+  }
+
+  // final List<String> sizes = [
+  //   '500ml',
+  //   '250ml',
+  //   '500 ml',
+  //   '1 lit',
+  //   '10ml',
+  // ];
+
+  // @override
+  // void initState() {
+  //   // _b2bStoreBloc.add(Refresh(slug: widget.slug, id: widget.id));
+
+  //   super.initState();
+  // }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Handle bar
+          Container(
+            margin: const EdgeInsets.only(top: 8, bottom: 8),
+            width: 60,
+            height: 4,
+            decoration: BoxDecoration(
+              color: const Color(0xFF9E9E9E),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+
+          // Content
+          Flexible(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  const Text(
+                    'Filters',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF212121),
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+
+                  const SizedBox(height: 28),
+
+                  // Categories
+                  _buildCategoryFilters(),
+
+                  const SizedBox(height: 32),
+
+                  // Size section
+                  // _buildSizeFilters(),
+
+                  const SizedBox(height: 36),
+
+                  // Action buttons
+                  _buildActionButtons(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryFilters() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Wrap(
+          spacing: 8,
+          runSpacing: 12,
+          children: categories.map((category) {
+            final isSelected = selectedCategories == category['id'];
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  if (isSelected) {
+                    selectedCategories = null;
+                  } else {
+                    selectedCategories = category['id'];
+                  }
+                });
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 18,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? const Color(0xFFE3F2FD)
+                      : const Color(0xFFF5F5F5),
+                  borderRadius: BorderRadius.circular(32),
+                  border: isSelected
+                      ? Border.all(color: const Color(0xFF1976D2), width: 1)
+                      : null,
+                ),
+                child: Text(
+                  category['name']!,
+                  style: TextStyle(
+                    color: isSelected
+                        ? const Color(0xFF1565C0)
+                        : const Color(0xFF424242),
+                    fontSize: 15,
+                    fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
+                    letterSpacing: 0.1,
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSizeFilters() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Size',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF212121),
+            letterSpacing: -0.2,
+          ),
+        ),
+        const SizedBox(height: 18),
+        // Wrap(
+        //   spacing: 8,
+        //   runSpacing: 12,
+        //   children: sizes.map((size) {
+        //     final isSelected = selectedSize == size;
+        //     return GestureDetector(
+        //       onTap: () {
+        //         setState(() {
+        //           selectedSize = isSelected ? null : size;
+        //         });
+        //       },
+        //       child: Container(
+        //         padding: const EdgeInsets.symmetric(
+        //           horizontal: 22,
+        //           vertical: 12,
+        //         ),
+        //         decoration: BoxDecoration(
+        //           color: isSelected
+        //               ? const Color(0xFFE3F2FD)
+        //               : const Color(0xFFF5F5F5),
+        //           borderRadius: BorderRadius.circular(32),
+        //           border: isSelected
+        //               ? Border.all(color: const Color(0xFF1976D2), width: 1)
+        //               : null,
+        //         ),
+        //         child: Text(
+        //           size,
+        //           style: TextStyle(
+        //             color: isSelected
+        //                 ? const Color(0xFF1565C0)
+        //                 : const Color(0xFF424242),
+        //             fontSize: 15,
+        //             fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
+        //             letterSpacing: 0.1,
+        //           ),
+        //         ),
+        //       ),
+        //     );
+        //   }).toList(),
+        // ),
+      ],
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            height: 56,
+            child: ElevatedButton(
+              onPressed: () {
+                final filters = {
+                  'categories':
+                      selectedCategories != null ? [selectedCategories!] : [],
+                  'size': selectedSize,
+                };
+                widget.onApplyFilters?.call(filters);
+                Navigator.pop(context, filters);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFFDD835),
+                foregroundColor: const Color(0xFF212121),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 0,
+                shadowColor: Colors.transparent,
+              ),
+              child: const Text(
+                'Apply',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.2,
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Container(
+            height: 56,
+            child: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  selectedCategories = null;
+                  selectedSize = null;
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFFDD835),
+                foregroundColor: const Color(0xFF212121),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 0,
+                shadowColor: Colors.transparent,
+              ),
+              child: const Text(
+                'Reset',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.2,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// // Usage Example - Parent Screen:
+// class ParentScreen extends StatefulWidget {
+//   const ParentScreen({Key? key}) : super(key: key);
+
+//   @override
+//   State<ParentScreen> createState() => _ParentScreenState();
+// }
+
+// class _ParentScreenState extends State<ParentScreen> {
+//   Map<String, dynamic> selectedFilters = {
+//     'categories': <String>[],
+//     'size': null,
+//   };
+
+//   void _showFilterBottomSheet() {
+//     showModalBottomSheet(
+//       context: context,
+//       isScrollControlled: true,
+//       backgroundColor: Colors.transparent,
+//       shape: const RoundedRectangleBorder(
+//         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+//       ),
+//       builder: (context) => DraggableScrollableSheet(
+//         initialChildSize: 0.85,
+//         minChildSize: 0.6,
+//         maxChildSize: 0.95,
+//         expand: false,
+//         builder: (context, scrollController) => FilterBottomSheet(
+//           initialFilters: selectedFilters,
+//           onApplyFilters: (filters) {
+//             setState(() {
+//               selectedFilters = filters;
+//             });
+//           },
+//         ),
+//       ),
+//     );
+//   }
+
+//   void _printSelectedValues() {
+//     print('=== SELECTED FILTERS ===');
+//     print('Categories: ${selectedFilters['categories']}');
+//     print('Size: ${selectedFilters['size']}');
+//     print(
+//         'Total Categories: ${(selectedFilters['categories'] as List).length}');
+
+//     // Show in UI as well
+//     showDialog(
+//       context: context,
+//       builder: (context) => AlertDialog(
+//         title: const Text('Selected Filters'),
+//         content: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Text(
+//                 'Categories (${(selectedFilters['categories'] as List).length}):'),
+//             const SizedBox(height: 8),
+//             ...(selectedFilters['categories'] as List<String>).map(
+//               (category) => Padding(
+//                 padding: const EdgeInsets.only(left: 16, bottom: 4),
+//                 child: Text('• $category'),
+//               ),
+//             ),
+//             const SizedBox(height: 12),
+//             Text('Size: ${selectedFilters['size'] ?? 'Not selected'}'),
+//           ],
+//         ),
+//         actions: [
+//           TextButton(
+//             onPressed: () => Navigator.pop(context),
+//             child: const Text('OK'),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final selectedCategoriesCount =
+//         (selectedFilters['categories'] as List).length;
+//     final hasSize = selectedFilters['size'] != null;
+//     final totalFilters = selectedCategoriesCount + (hasSize ? 1 : 0);
+
+//     return Scaffold(
+//       backgroundColor: const Color(0xFFF5F5F5),
+//       appBar: AppBar(
+//         title: const Text('Filter Example'),
+//         backgroundColor: Colors.white,
+//         elevation: 0,
+//         actions: [
+//           if (totalFilters > 0)
+//             Container(
+//               margin: const EdgeInsets.only(right: 16),
+//               child: Center(
+//                 child: Container(
+//                   padding:
+//                       const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+//                   decoration: BoxDecoration(
+//                     color: const Color(0xFFFDD835),
+//                     borderRadius: BorderRadius.circular(16),
+//                   ),
+//                   child: Text(
+//                     '$totalFilters filter${totalFilters > 1 ? 's' : ''} applied',
+//                     style: const TextStyle(
+//                       fontSize: 12,
+//                       fontWeight: FontWeight.w500,
+//                       color: Colors.black,
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//             ),
+//         ],
+//       ),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             // Show Filters Button
+//             ElevatedButton(
+//               onPressed: _showFilterBottomSheet,
+//               style: ElevatedButton.styleFrom(
+//                 backgroundColor: const Color(0xFFFDD835),
+//                 foregroundColor: Colors.black,
+//                 padding:
+//                     const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+//                 shape: RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.circular(12),
+//                 ),
+//               ),
+//               child: const Text(
+//                 'Show Filters',
+//                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+//               ),
+//             ),
+
+//             const SizedBox(height: 24),
+
+//             // Print Selected Values Button
+//             ElevatedButton(
+//               onPressed: totalFilters > 0 ? _printSelectedValues : null,
+//               style: ElevatedButton.styleFrom(
+//                 backgroundColor:
+//                     totalFilters > 0 ? Colors.blue : Colors.grey[300],
+//                 foregroundColor:
+//                     totalFilters > 0 ? Colors.white : Colors.grey[600],
+//                 padding:
+//                     const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+//                 shape: RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.circular(12),
+//                 ),
+//               ),
+//               child: Text(
+//                 totalFilters > 0
+//                     ? 'Print Selected Values ($totalFilters)'
+//                     : 'No Filters Selected',
+//                 style:
+//                     const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+//               ),
+//             ),
+
+//             const SizedBox(height: 16),
+
+//             // Quick preview of selected filters
+//             if (totalFilters > 0)
+//               Container(
+//                 margin: const EdgeInsets.symmetric(horizontal: 32),
+//                 padding: const EdgeInsets.all(16),
+//                 decoration: BoxDecoration(
+//                   color: Colors.white,
+//                   borderRadius: BorderRadius.circular(12),
+//                   boxShadow: [
+//                     BoxShadow(
+//                       color: Colors.black.withOpacity(0.05),
+//                       blurRadius: 8,
+//                       offset: const Offset(0, 2),
+//                     ),
+//                   ],
+//                 ),
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     const Text(
+//                       'Quick Preview:',
+//                       style: TextStyle(
+//                         fontWeight: FontWeight.w600,
+//                         fontSize: 14,
+//                       ),
+//                     ),
+//                     const SizedBox(height: 8),
+//                     if (selectedCategoriesCount > 0)
+//                       Text(
+//                         'Categories: ${selectedCategoriesCount} selected',
+//                         style: TextStyle(
+//                           color: Colors.grey[600],
+//                           fontSize: 13,
+//                         ),
+//                       ),
+//                     if (hasSize)
+//                       Text(
+//                         'Size: ${selectedFilters['size']}',
+//                         style: TextStyle(
+//                           color: Colors.grey[600],
+//                           fontSize: 13,
+//                         ),
+//                       ),
+//                   ],
+//                 ),
+//               ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

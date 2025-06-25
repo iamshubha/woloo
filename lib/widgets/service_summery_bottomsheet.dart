@@ -155,9 +155,9 @@ class _ServiceSummeryBottomSheetState extends State<ServiceSummeryBottomSheet> {
                               shrinkWrap: true,
                               // Prevents nested scrolling
                               itemCount: cartModel?.cart.items
-                                  .length, // Replace with your cart item count
+                                  ?.length, // Replace with your cart item count
                               itemBuilder: (context, index) {
-                                final item = cartModel?.cart.items[index];
+                                final item = cartModel?.cart.items?[index];
                                 int count = item?.quantity ?? 0;
                                 return Padding(
                                   padding: EdgeInsets.symmetric(vertical: 8.h),
@@ -219,11 +219,14 @@ class _ServiceSummeryBottomSheetState extends State<ServiceSummeryBottomSheet> {
                             ),
                             const Divider(),
                             PricingCalculate(
-                              total: cartModel?.cart.total,
-                              subTotal: cartModel?.cart.subtotal,
-                              discount: cartModel?.cart.discountTotal,
-                              shipping: cartModel?.cart.shippingTotal,
-                              itemTotal: cartModel?.cart.itemTotal,
+                              itemTotal:
+                                  cartModel?.cart.originalItemTotal.toString(),
+                              discount: cartModel?.cart.discountTotal
+                                  ?.toStringAsFixed(2),
+                              total: cartModel?.cart.total.toString(),
+                              subTotal: cartModel?.cart.subtotal.toString(),
+                              shipping:
+                                  cartModel?.cart.shippingTotal.toString(),
                             ),
                             const Divider(),
                             const SizedBox(
