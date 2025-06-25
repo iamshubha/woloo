@@ -432,11 +432,12 @@ class _EcomScreenState extends State<EcomScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (c) =>
-                                                  const CollectionsScreen(
-                                                      // products: _b2bStoreHomePage!
-                                                      //     .productCollections
-                                                      //     .products,
-                                                      )));
+                                                  const CommonCollectionsScreen(
+                                                    slug: '', id: '',
+                                                    // products: _b2bStoreHomePage!
+                                                    //     .productCollections
+                                                    //     .products,
+                                                  )));
                                       if (value != null && value == 'refresh') {
                                         _refresh();
                                       }

@@ -109,7 +109,7 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
             EasyLoading.show(status: state.message);
           }
           if (state is ProductCategoriesSuccess) {
-            EasyLoading.dismiss();
+            // EasyLoading.dismiss();
             setState(() {
               _productCategories = state.productCategories;
             });
