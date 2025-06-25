@@ -29,7 +29,7 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final B2bStoreBloc _b2bStoreBloc = B2bStoreBloc();
-  B2BStoreHomePage? _b2bStoreHomePage;
+  // B2BStoreHomePage? _b2bStoreHomePage;
   bool _isDataLoaded = false;
   List<XYProduct> products = [];
   List<String> filteredSuggestions = [];
