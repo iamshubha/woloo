@@ -186,9 +186,10 @@ class ProductService {
 
   Future<ProductCollections> searchProducts(
       {required token, required String regionId, required String query}) async {
+    query = Uri.encodeComponent(query);
     try {
       var response = await dio.get(
-        "https://staging-store.woloo.in/store/products?fields=*variants.calculated_price,variants.inventory_quantity&region_id=$regionId&q=$query",
+        "https://staging-store.woloo.in/store/products?fields=*variants.calculated_price%2C+variants.inventory_quantity&region_id=$regionId&q=$query",
         options: Options(
           headers: {
             'Content-Type': 'application/json',
