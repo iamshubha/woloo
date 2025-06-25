@@ -8,6 +8,7 @@ import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_bloc.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_event.dart';
 import 'package:woloo_smart_hygiene/b2b_store/bloc/b2b_store_state.dart';
 import 'package:woloo_smart_hygiene/b2b_store/custom_widget/start_rating.dart';
+import 'package:woloo_smart_hygiene/b2b_store/models/cart.dart';
 import 'package:woloo_smart_hygiene/b2b_store/models/product_collections.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/hygine_services/view/address_notifier.dart';
@@ -36,6 +37,7 @@ class _SearchScreenState extends State<SearchScreen> {
   OverlayEntry? _overlayEntry;
   final FocusNode _focusNode = FocusNode();
   final LayerLink _layerLink = LayerLink();
+  CartModel? cartData;
   _refresh() {
     _b2bStoreBloc.add(const GetCartData());
   }
@@ -140,6 +142,8 @@ class _SearchScreenState extends State<SearchScreen> {
           if (state is CartLoading) {}
           if (state is CartSuccess) {
             //TODO: implement cart data and map with search product
+            logger.w("CartSuccess: ${state.cartData}");
+            cartData = state.cartData;
           }
 
           if (state is SearchProductSuccess) {
@@ -147,7 +151,7 @@ class _SearchScreenState extends State<SearchScreen> {
               _isDataLoaded = true;
               products = state.products;
             });
-            logger.w("SearchProductSuccess: ${products.length}");
+            logger.w("SearchProductSuccess: $products");
           }
 
           if (state is B2BStoreError) {
@@ -327,8 +331,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 final product = products[index];
 
                                 int productCount = 0;
-                                _b2bStoreHomePage?.cartData.cart.items
-                                    ?.forEach((i) {
+                                cartData?.cart.items?.forEach((i) {
                                   if (i.variantId == product.variants[0].id) {
                                     productCount = i.quantity!;
                                   }
@@ -617,9 +620,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                                         ? EasyLoading.showError(
                                                                             "Product count cannot be less than 0")
                                                                         : null;
-                                                                    _b2bStoreHomePage
-                                                                        ?.cartData
-                                                                        .cart
+                                                                    cartData
+                                                                        ?.cart
                                                                         .items
                                                                         ?.forEach(
                                                                             (i) {
@@ -671,9 +673,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                                 ),
                                                                 InkWell(
                                                                   onTap: () {
-                                                                    _b2bStoreHomePage
-                                                                        ?.cartData
-                                                                        .cart
+                                                                    cartData
+                                                                        ?.cart
                                                                         .items
                                                                         ?.forEach(
                                                                             (i) {
