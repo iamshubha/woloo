@@ -206,4 +206,29 @@ class ProductService {
       rethrow;
     }
   }
+
+  Future<ProductCollections> getProductsByCategoryId({
+    required String token,
+    required String categoryId,
+  }) async {
+    try {
+      var response = await dio.get(
+        "https://staging-store.woloo.in/store/products?fields=*variants.calculated_price%2C+variants.inventory_quantity&category_id=$categoryId",
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'x-publishable-api-key':
+                'pk_03b79693816aae4cb87568dc50b7efaa48e0d51b201040f46ef4528839078f08',
+            'Authorization': 'Bearer $token',
+            'user-agent': 'Android/22110/10',
+          },
+        ),
+      );
+      logger.w("Products by category response: $response");
+      return ProductCollections.fromJson(response);
+    } catch (e) {
+      logger.e("Error in getProductsByCategoryId: $e");
+      rethrow;
+    }
+  }
 }

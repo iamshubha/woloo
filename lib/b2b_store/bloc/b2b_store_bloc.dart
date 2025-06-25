@@ -80,6 +80,7 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     on<RemovePromoCodeEvent>(_removePromoCode);
     on<SearchProductEvent>(_searchQuery);
     on<GetProductCategoriesEvent>(_getProductCategories);
+    on<GetProductsByCategoryEvent>(_getProductsByCategory);
   }
 
   FutureOr<void> _emailPassRegister(
@@ -967,6 +968,24 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
     } catch (e) {
       emit(ProductCategoriesError(error: e.toString()));
       debugPrint("Error in get product categories service: $e");
+    }
+  }
+
+  FutureOr<void> _getProductsByCategory(
+    GetProductsByCategoryEvent event,
+    Emitter<B2BStoreState> emit,
+  ) async {
+    try {
+      emit(const ProductsByCategoryLoading(
+          message: "Loading products by category..."));
+      final response = await _productService.getProductsByCategoryId(
+        token: box.read('login_jwt'),
+        categoryId: event.categoryId,
+      );
+      emit(ProductsByCategorySuccess(products: response));
+    } catch (e) {
+      emit(ProductsByCategoryError(error: e.toString()));
+      debugPrint("Error in get products by category service: $e");
     }
   }
 }

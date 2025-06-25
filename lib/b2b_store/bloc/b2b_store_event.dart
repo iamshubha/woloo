@@ -323,3 +323,11 @@ class GetProductCategoriesEvent extends B2BStoreEvent {
   @override
   List<Object?> get props => [];
 }
+
+class GetProductsByCategoryEvent extends B2BStoreEvent {
+  final String categoryId;
+  const GetProductsByCategoryEvent({required this.categoryId});
+
+  @override
+  List<Object?> get props => [categoryId];
+}

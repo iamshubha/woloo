@@ -357,3 +357,27 @@ class ProductCategoriesError extends B2BStoreState {
   @override
   List<Object> get props => [error];
 }
+
+class ProductsByCategoryLoading extends B2BStoreState {
+  final String message;
+  const ProductsByCategoryLoading({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+class ProductsByCategorySuccess extends B2BStoreState {
+  final ProductCollections products;
+  const ProductsByCategorySuccess({required this.products});
+
+  @override
+  List<Object> get props => [products];
+}
+
+class ProductsByCategoryError extends B2BStoreState {
+  final String error;
+  const ProductsByCategoryError({required this.error});
+
+  @override
+  List<Object> get props => [error];
+}

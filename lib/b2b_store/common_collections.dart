@@ -40,11 +40,17 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
   ProductCategory? _productCategories;
 
   _refresh() {
-    _b2bStoreBloc.add(Refresh(slug: widget.slug, id: widget.id));
+    _b2bStoreBloc.add(GetCartData());
   }
 
   _refreshCategories() {
     _b2bStoreBloc.add(const GetProductCategoriesEvent());
+  }
+
+  _loadProductsByCategory(String categoryId) {
+    // Using the category ID from the curl request
+    // const categoryId = 'pcat_01JPH86Z9NW5QEBTSXSHZP3TYJ';
+    _b2bStoreBloc.add(GetProductsByCategoryEvent(categoryId: categoryId));
   }
 
   @override
@@ -79,7 +85,9 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
           }
           if (state is CartSuccess) {
             EasyLoading.dismiss();
-            _refresh();
+            setState(() {
+              _b2bStoreHomePage?.cartData = state.cartData;
+            });
           }
           if (state is B2BStoreSuccess) {
             EasyLoading.dismiss();
@@ -110,6 +118,21 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
             EasyLoading.dismiss();
             EasyLoading.showError(state.error);
           }
+
+          if (state is ProductsByCategoryLoading) {
+            EasyLoading.show(status: state.message);
+          }
+          if (state is ProductsByCategorySuccess) {
+            EasyLoading.dismiss();
+            setState(() {
+              _b2bStoreHomePage?.productCollections.products =
+                  state.products.products;
+            });
+          }
+          if (state is ProductsByCategoryError) {
+            EasyLoading.dismiss();
+            EasyLoading.showError(state.error);
+          }
         },
         builder: (context, snapshot) {
           return PopScope(
@@ -132,6 +155,8 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
                         setState(() {
                           selectedFilters = filters;
                         });
+                        _loadProductsByCategory(
+                            selectedFilters?['categories'][0]);
                       },
                       productCategories: _productCategories,
                     ), //AddressBottomSheet
@@ -173,7 +198,9 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
                 },
               ),
               floatingActionButton: FloatingActionButton(
-                onPressed: () {},
+                onPressed: () {
+                  print(selectedFilters);
+                },
                 child: const Icon(Icons.category),
               ),
               body: _isDataLoaded
@@ -802,13 +829,16 @@ class FilterBottomSheet extends StatefulWidget {
 }
 
 class _FilterBottomSheetState extends State<FilterBottomSheet> {
-  Set<String> selectedCategories = {};
+  String? selectedCategories;
   String? selectedSize;
 
-  List<String> get categories {
+  List<Map<String, String>> get categories {
     if (widget.productCategories?.productCategories != null) {
       return widget.productCategories!.productCategories!
-          .map((category) => category.name ?? 'Unknown')
+          .map((category) => {
+                'id': category.id ?? '',
+                'name': category.name ?? '',
+              })
           .where((name) => name.isNotEmpty)
           .toList();
     }
@@ -903,14 +933,14 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           spacing: 8,
           runSpacing: 12,
           children: categories.map((category) {
-            final isSelected = selectedCategories.contains(category);
+            final isSelected = selectedCategories == category['id'];
             return GestureDetector(
               onTap: () {
                 setState(() {
                   if (isSelected) {
-                    selectedCategories.remove(category);
+                    selectedCategories = null;
                   } else {
-                    selectedCategories.add(category);
+                    selectedCategories = category['id'];
                   }
                 });
               },
@@ -929,7 +959,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                       : null,
                 ),
                 child: Text(
-                  category,
+                  category['name']!,
                   style: TextStyle(
                     color: isSelected
                         ? const Color(0xFF1565C0)
@@ -1014,7 +1044,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             child: ElevatedButton(
               onPressed: () {
                 final filters = {
-                  'categories': selectedCategories.toList(),
+                  'categories':
+                      selectedCategories != null ? [selectedCategories!] : [],
                   'size': selectedSize,
                 };
                 widget.onApplyFilters?.call(filters);
@@ -1047,7 +1078,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             child: ElevatedButton(
               onPressed: () {
                 setState(() {
-                  selectedCategories.clear();
+                  selectedCategories = null;
                   selectedSize = null;
                 });
               },
