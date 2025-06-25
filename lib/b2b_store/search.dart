@@ -37,12 +37,12 @@ class _SearchScreenState extends State<SearchScreen> {
   final FocusNode _focusNode = FocusNode();
   final LayerLink _layerLink = LayerLink();
   _refresh() {
-    _b2bStoreBloc.add(const Refresh(slug: "collection_id"));
+    _b2bStoreBloc.add(const GetCartData());
   }
 
   @override
   void initState() {
-    _b2bStoreBloc.add(const Refresh(slug: "collection_id"));
+    _b2bStoreBloc.add(const GetCartData());
     super.initState();
     searchTEC.addListener(() {
       final query = searchTEC.text.toLowerCase();
@@ -139,8 +139,7 @@ class _SearchScreenState extends State<SearchScreen> {
           if (state is B2BStoreLoading) {}
           if (state is CartLoading) {}
           if (state is CartSuccess) {
-            EasyLoading.dismiss();
-            _refresh();
+            //TODO: implement cart data and map with search product
           }
 
           if (state is SearchProductSuccess) {
