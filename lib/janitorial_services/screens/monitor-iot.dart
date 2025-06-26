@@ -4,25 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/utils.dart';
 import 'package:get_it/get_it.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/data/model/dashboard_task_model.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/screens/facility_performance.dart';
-import 'package:woloo_smart_hygiene/main.dart';
-import 'package:woloo_smart_hygiene/screens/common_widgets/image_provider.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
-import 'package:woloo_smart_hygiene/utils/app_constants.dart';
-import 'package:woloo_smart_hygiene/utils/app_images.dart';
-import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/widgets/custom_chart.dart';
+
 import '../../client_flow/screens/dashbaord/bloc/dashboard_bloc.dart';
 import '../../client_flow/screens/dashbaord/data/model/facility_model.dart';
 import '../../client_flow/widgets/chart.dart';
 import '../model/iotdata_model.dart';
-import '../widgets/ai_summary.dart';
-import '../widgets/air_quality_chart.dart';
 import '../widgets/alert_notification.dart';
 import 'bloc/iot_bloc.dart';
 import 'bloc/iot_event.dart';
@@ -55,7 +48,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   IotBloc iotBloc = IotBloc();
-  int _selectedIndex = 0;
+  final int _selectedIndex = 0;
   DashboardData? _dashboardData;
   // bool _isLoading = false;
   final String _error = '';
@@ -143,7 +136,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ),
                           ),
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                   // RichText(
                   //   text: const TextSpan(
                   //     style: TextStyle(
@@ -273,13 +266,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     height: 16,
                   ),
                   const SizedBox(height: 16),
-                  IotLogs(
-                    taskStatusDistribution: _taskStatusDistribution,
-                    // taskStatusDistribution: ,
-                    // taskStatusDistribution:,
+
+                  // const SizedBox(height: 16),
+                  IntrinsicHeight(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 16,
+                          child: IotLogs(
+                            taskStatusDistribution: _taskStatusDistribution,
+                            // taskStatusDistribution: ,
+                            // taskStatusDistribution:,
+                          ),
+                        ),
+                        const Spacer(),
+                        Expanded(flex: 16, child: AirQuality(data: data))
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 16),
-                  AirQuality(data: data),
 
                   const SizedBox(height: 16),
                   Facilities(
@@ -328,57 +332,46 @@ class AirQuality extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: XDecoratedBox(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      "Air Quality Level",
-                      style: TextStyle(
-                          fontSize: 12.sp, fontWeight: FontWeight.bold),
-                    ),
-                    const Spacer(),
-                    // const ForwardButton()
-                  ],
-                ),
-                Text(
-                  "Overall performance",
-                  style: TextStyle(
-                      color: AppColors.pieDataColor3, fontSize: 10.sp),
-                ),
-                SizedBox(
-                    height: 120,
-                    width: 120,
-                    child: ComplexCircularBar(
-                        percentageValue: (double.parse(
-                                    data?.results?.gaugeGraphData?.avgAmonia ??
-                                        "0") /
-                                1000) *
-                            100,
-                        performance: double.parse(
-                            data?.results?.gaugeGraphData?.avgAmonia ?? "0"))),
-                Text(
-                  "Average AQL across all facilities",
-                  style: TextStyle(fontSize: 8.sp),
-                )
-              ],
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: const [
+            BoxShadow(color: Colors.grey, spreadRadius: 2, blurRadius: 10),
+          ]),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Air Quality Level",
+              style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
             ),
           ),
-        ),
-        const SizedBox(
-          width: 5,
-        ),
-        Expanded(
-          child: AiSummaryCard(
-              fontSize: 14,
-              summary: data?.results?.summary?.avgppmTimeRangeInsights ?? ""),
-        )
-      ],
+          const SizedBox(height: 12),
+          Text(
+            "Overall performance",
+            style: TextStyle(color: AppColors.pieDataColor3, fontSize: 10.sp),
+          ),
+          SizedBox(
+              height: 120,
+              width: 120,
+              child: ComplexCircularBar(
+                  percentageValue: (double.parse(
+                              data?.results?.gaugeGraphData?.avgAmonia ?? "0") /
+                          1000) *
+                      100,
+                  performance: double.parse(
+                      data?.results?.gaugeGraphData?.avgAmonia ?? "0"))),
+          Text(
+            "Average AQL across all facilities",
+            style: TextStyle(fontSize: 8.sp),
+            textAlign: TextAlign.center,
+          )
+        ],
+      ),
     );
   }
 }
@@ -616,8 +609,8 @@ class Facilities extends StatelessWidget {
                           flex: 1,
                         ),
                         amoniaTableDatum![i].ppmDiff! >= 0
-                            ? Icon(Icons.arrow_upward_rounded)
-                            : Icon(Icons.arrow_downward_rounded)
+                            ? const Icon(Icons.arrow_upward_rounded)
+                            : const Icon(Icons.arrow_downward_rounded)
                       ],
                     ),
                   );

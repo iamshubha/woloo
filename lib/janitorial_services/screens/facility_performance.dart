@@ -1,9 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/data/model/dashboard_task_model.dart';
-import 'package:woloo_smart_hygiene/janitorial_services/widgets/ai_summary.dart';
+import 'package:woloo_smart_hygiene/utils/logger.dart';
 
 class IotLogs extends StatelessWidget {
   final TaskStatusDistribution? taskStatusDistribution;
@@ -15,129 +14,181 @@ class IotLogs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    final data = taskStatusDistribution;
+    logger.w("Data:  ${data.toString()}");
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: const [
+            BoxShadow(color: Colors.grey, spreadRadius: 2, blurRadius: 10),
+          ]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Left Column
-          Expanded(
-            flex: 16,
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: const [
-                    BoxShadow(
-                        color: Colors.grey, spreadRadius: 2, blurRadius: 10),
-                  ]),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "Facility Performance",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12.sp,
-                      color: Colors.black87,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    height: 160,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        PieChart(
-                          PieChartData(
-                            sections: [
-                              PieChartSectionData(
-                                value: 30,
-                                color: Colors.cyan[200],
-                                radius: 32,
-                                showTitle: false,
-                              ),
-                              PieChartSectionData(
-                                value: 20,
-                                color: Colors.lightBlueAccent,
-                                radius: 32,
-                                showTitle: false,
-                              ),
-                              PieChartSectionData(
-                                value: 15,
-                                color: Colors.cyan[400],
-                                radius: 32,
-                                showTitle: false,
-                              ),
-                              PieChartSectionData(
-                                value: 15,
-                                color: Colors.cyan[800],
-                                radius: 32,
-                                showTitle: false,
-                              ),
-                              PieChartSectionData(
-                                value: 20,
-                                color: Colors.cyan[100],
-                                radius: 32,
-                                showTitle: false,
-                              ),
-                            ],
-                            centerSpaceRadius: 45,
-                            sectionsSpace: 4,
-                            borderData: FlBorderData(show: false),
+          Text(
+            "Facility Performance",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 12.sp,
+              color: Colors.black87,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 160,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                PieChart(
+                  PieChartData(
+                    sections: [
+                      PieChartSectionData(
+                        value: double.parse(
+                          (data?.acceptedPercentage ?? "0").replaceAll("%", ""),
+                        ),
+                        color: Colors.cyan[200],
+                        radius: 32,
+                        showTitle: false,
+                        // title: data?.acceptedPercentage ?? "0",
+                        badgePositionPercentageOffset: 1.0,
+                        badgeWidget: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey,
+                            // borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Text(
+                            data?.acceptedPercentage ?? "0",
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                        // Percentage Labels
-                        Positioned(
-                          top: 18,
-                          child: _circleLabel("30%"),
+                      ),
+                      PieChartSectionData(
+                        value: double.parse(
+                          (data?.ongoingPercentage ?? "0").replaceAll("%", ""),
                         ),
-                        Positioned(
-                          right: 10,
-                          top: 55,
-                          child: _circleLabel("20%"),
+                        color: Colors.lightBlueAccent,
+                        radius: 32,
+                        showTitle: false,
+                        badgePositionPercentageOffset: 1.0,
+                        badgeWidget: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey,
+                            // borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Text(
+                            data?.ongoingPercentage ?? "0",
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                        Positioned(
-                          right: 25,
-                          bottom: 35,
-                          child: _circleLabel("15%"),
+                      ),
+                      PieChartSectionData(
+                        value: double.parse(
+                          (data?.completedPercentage ?? "0")
+                              .replaceAll("%", ""),
                         ),
-                        Positioned(
-                          left: 25,
-                          bottom: 35,
-                          child: _circleLabel("15%"),
+                        color: Colors.cyan[800],
+                        radius: 32,
+                        badgePositionPercentageOffset: 1.0,
+                        showTitle: false,
+                        badgeWidget: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey,
+                            // borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Text(
+                            data?.completedPercentage ?? "0",
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                        Positioned(
-                          left: 10,
-                          top: 55,
-                          child: _circleLabel("20%"),
+                      ),
+                      PieChartSectionData(
+                        value: double.parse(
+                          (data?.pendingPercentage ?? "0").replaceAll("%", ""),
                         ),
-                      ],
-                    ),
+                        color: Colors.cyan[400],
+                        radius: 32,
+                        showTitle: false,
+                        badgePositionPercentageOffset: 1.0,
+                        badgeWidget: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey,
+                            // borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Text(
+                            data?.pendingPercentage ?? "0",
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      if (false)
+                        PieChartSectionData(
+                          value: 20,
+                          color: Colors.cyan[100],
+                          radius: 32,
+                          showTitle: false,
+                        ),
+                    ],
+                    centerSpaceRadius: 30,
+                    sectionsSpace: 0,
+                    borderData: FlBorderData(show: false),
                   ),
-                ],
-              ),
+                ),
+                // Percentage Labels
+                // Positioned(
+                //   top: 18,
+                //   child: _circleLabel("30%"),
+                // ),
+                // Positioned(
+                //   right: 10,
+                //   top: 55,
+                //   child: _circleLabel("20%"),
+                // ),
+                // Positioned(
+                //   right: 25,
+                //   bottom: 35,
+                //   child: _circleLabel("15%"),
+                // ),
+                // Positioned(
+                //   left: 25,
+                //   bottom: 35,
+                //   child: _circleLabel("15%"),
+                // ),
+                // Positioned(
+                //   left: 10,
+                //   top: 55,
+                //   child: _circleLabel("20%"),
+                // ),
+              ],
             ),
           ),
-          // const SizedBox(width: 24),
-          // const Spacer(),
-          const Spacer(),
-          // Expanded(
-          //     flex: 16,
-          //     child: AiSummaryCard(
-          //         fontSize: 14, summary: avgppmTimeRangeInsights)),
-
-          // Right Column
-          // Expanded(
-          //   flex: 16,
-          //   child: SizedBox(),
-          // ),
-          // Expanded(
-          //   child:
-          //       AiSummaryCard(fontSize: 14, summary: avgppmTimeRangeInsights),
-          // )
         ],
       ),
     );
