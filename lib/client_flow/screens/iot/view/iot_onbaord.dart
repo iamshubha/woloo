@@ -113,6 +113,8 @@ class IotOnbaordState extends State<IotOnbaord> {
                   builder: (context) =>  PremiumScreeen(
                     clientDashBoardBloc: widget.clientDashBoardBloc,
                     fromTabbar: false,
+                    isfromOnboard: true,
+
                   ),
                 ),
               );
@@ -136,6 +138,7 @@ class IotOnbaordState extends State<IotOnbaord> {
                   builder: (context) =>  PremiumScreeen(
                     clientDashBoardBloc: widget.clientDashBoardBloc,
                     fromTabbar: false,
+                     isfromOnboard: true,
                   ),
                 ),
               ) : null ;                  

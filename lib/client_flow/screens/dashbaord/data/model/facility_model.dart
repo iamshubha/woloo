@@ -4,10 +4,6 @@
 
 import 'dart:convert';
 
-// To parse this JSON data, do
-//
-//     final facilityModel = facilityModelFromJson(jsonString);
-
 FacilityModel facilityModelFromJson(String str) => FacilityModel.fromJson(json.decode(str));
 
 String facilityModelToJson(FacilityModel data) => json.encode(data.toJson());
@@ -70,9 +66,10 @@ class Facility {
     int? clusterId;
     List<Shift>? shifts;
     String? subscriptionStatus;
-    int? planId;
-    String? planName;
-    bool? isFutureSubscription;
+    dynamic planId;
+    dynamic planName;
+    bool isFutureSubscription;
+    bool? isFreeTrial;
     String? total;
 
     Facility({
@@ -95,7 +92,8 @@ class Facility {
         this.subscriptionStatus,
         this.planId,
         this.planName,
-        this.isFutureSubscription,
+       required this.isFutureSubscription,
+        this.isFreeTrial,
         this.total,
     });
 
@@ -120,6 +118,7 @@ class Facility {
         planId: json["plan_id"],
         planName: json["plan_name"],
         isFutureSubscription: json["isFutureSubscription"],
+        isFreeTrial: json["isFreeTrial"],
         total: json["total"],
     );
 
@@ -144,6 +143,7 @@ class Facility {
         "plan_id": planId,
         "plan_name": planName,
         "isFutureSubscription": isFutureSubscription,
+        "isFreeTrial": isFreeTrial,
         "total": total,
     };
 }

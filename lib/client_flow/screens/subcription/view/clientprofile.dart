@@ -281,7 +281,7 @@ class _ClientprofileState extends State<Clientprofile> {
         height: 80,
         child: Center(
           
-          child: Text("Are you sure you want to log out?",
+          child: Text("Are you sure you want to logout?",
           textAlign: TextAlign.center,
           style: AppTextStyle.font15.copyWith(
             color: AppColors.black,

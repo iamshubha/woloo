@@ -92,4 +92,34 @@ class WolooPointsService {
       rethrow;
     }
   }
+
+  /// Calls the ecomCoinUpdate API to update coins after order placement
+  Future<Map<String, dynamic>> ecomCoinUpdate({
+    required int coins,
+    required String orderId,
+    required String type,
+    required String wolooToken,
+  }) async {
+    try {
+      final response = await dio.post(
+        'https://staging-api.woloo.in/api/blog/ecomCoinUpdate',
+        data: {
+          'coins': coins,
+          'orderid': orderId,
+          'type': type,
+        },
+        options: Options(
+          headers: {
+            'user-agent': 'Android/22110/10',
+            'x-woloo-token': wolooToken,
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+      return Map<String, dynamic>.from(response);
+    } catch (e) {
+      logger.e('Error in ecomCoinUpdate: $e');
+      rethrow;
+    }
+  }
 }

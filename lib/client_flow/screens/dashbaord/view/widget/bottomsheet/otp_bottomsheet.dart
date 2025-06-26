@@ -54,28 +54,31 @@ class _OtpBottomsheetState extends State<OtpBottomsheet> {
                   height: 20,
                  ),
                      OTPWidget(
-                  onComplete: (pin) => _pin = pin,
-                ),
-
-               
+                      phoneNumber: "",
+                      onComplete: (pin) => _pin = pin,
+                      ),      
 
                   const Spacer(),
+
                   Padding(
-                   padding: EdgeInsets.symmetric( horizontal: 16),
+                   padding: const EdgeInsets.symmetric( horizontal: 16),
                    child: 
                    GestureDetector(
                      onTap: () {
-                           showModalBottomSheet(
+                     showModalBottomSheet(
                            isScrollControlled: true,
                          backgroundColor: Colors.transparent,
-                        context: context, builder:  (context) {
-                         return LoohostBottomsheet();
-                       }, );
+                         context: context,
+                         builder: (context) {
+                           return LoohostBottomsheet();
+                         },
+                       );
                      },
-                    child: Custombutton(text: ClientConstant.submit, width:double.infinity)),
+                     child: Custombutton(text: ClientConstant.submit, width: double.infinity),
+                   ),
                  ),
-                     const SizedBox(
-                  height: 20,
+                 const SizedBox(
+                   height: 20,
                  ),
           
         ],

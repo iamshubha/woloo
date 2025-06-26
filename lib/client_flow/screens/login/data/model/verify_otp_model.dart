@@ -2,10 +2,6 @@
 //
 //     final verfiyOtpModel = verfiyOtpModelFromJson(jsonString);
 
-// To parse this JSON data, do
-//
-//     final verfiyOtpModel = verfiyOtpModelFromJson(jsonString);
-
 import 'dart:convert';
 
 VerfiyOtpModel verfiyOtpModelFromJson(String str) => VerfiyOtpModel.fromJson(json.decode(str));
@@ -43,10 +39,14 @@ class Results {
     dynamic pincode;
     dynamic city;
     dynamic address;
+    dynamic wolooId;
+    dynamic facilityName;
+    dynamic facilityAddress;
+    String? facilityType;
     String? rolesAccess;
     String? permissions;
     String? token;
-    int? userId; 
+    int? userId;
 
     Results({
         this.id,
@@ -59,6 +59,10 @@ class Results {
         this.pincode,
         this.city,
         this.address,
+        this.wolooId,
+        this.facilityName,
+        this.facilityAddress,
+        this.facilityType,
         this.rolesAccess,
         this.permissions,
         this.token,
@@ -76,6 +80,10 @@ class Results {
         pincode: json["pincode"],
         city: json["city"],
         address: json["address"],
+        wolooId: json["woloo_id"],
+        facilityName: json["facility_name"],
+        facilityAddress: json["facility_address"],
+        facilityType: json["facility_type"],
         rolesAccess: json["rolesAccess"],
         permissions: json["permissions"],
         token: json["token"],
@@ -93,6 +101,10 @@ class Results {
         "pincode": pincode,
         "city": city,
         "address": address,
+        "woloo_id": wolooId,
+        "facility_name": facilityName,
+        "facility_address": facilityAddress,
+        "facility_type": facilityType,
         "rolesAccess": rolesAccess,
         "permissions": permissions,
         "token": token,

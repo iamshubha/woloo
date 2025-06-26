@@ -518,7 +518,7 @@ class _HomeState extends State<Home> {
                                             builder: (context) {
                                               return const Dailog(
                                                 title:
-                                                    "First you need to renew your subscription from dashbaord.",
+                                                    "Kindly renew your subscription from dashboard",
                                                 image: "",
                                                 subTitle: "Go Back",
                                               );
@@ -3066,7 +3066,8 @@ class _HomeState extends State<Home> {
                                 : const SizedBox(),
 
                             //  const SizedBox(height: 680/3.8),
-                            const Spacer(),
+                            // const Spacer(),
+                             SizedBox(height: 30,),
 
                             GestureDetector(
                                 onTap: () {

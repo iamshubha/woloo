@@ -7,10 +7,10 @@ import 'package:woloo_smart_hygiene/janitorial_services/widgets/ai_summary.dart'
 
 class IotLogs extends StatelessWidget {
   final TaskStatusDistribution? taskStatusDistribution;
-  final String avgppmTimeRangeInsights;
+  // final String avgppmTimeRangeInsights;
   const IotLogs(
       {super.key,
-      required this.avgppmTimeRangeInsights,
+      // required this.avgppmTimeRangeInsights,
       this.taskStatusDistribution});
 
   @override
@@ -124,10 +124,10 @@ class IotLogs extends StatelessWidget {
           // const SizedBox(width: 24),
           // const Spacer(),
           const Spacer(),
-          Expanded(
-              flex: 16,
-              child: AiSummaryCard(
-                  fontSize: 14, summary: avgppmTimeRangeInsights)),
+          // Expanded(
+          //     flex: 16,
+          //     child: AiSummaryCard(
+          //         fontSize: 14, summary: avgppmTimeRangeInsights)),
 
           // Right Column
           // Expanded(

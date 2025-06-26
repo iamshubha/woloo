@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/utils.dart';
 import 'package:get_it/get_it.dart';
 import 'package:woloo_smart_hygiene/b2b_store/cart.dart';
+import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/data/model/dashboard_task_model.dart';
 import 'package:woloo_smart_hygiene/core/local/global_storage.dart';
 import 'package:woloo_smart_hygiene/janitorial_services/screens/facility_performance.dart';
 import 'package:woloo_smart_hygiene/main.dart';
@@ -35,6 +36,7 @@ class DashboardScreen extends StatefulWidget {
   final TabController? tabController;
   final List<Facility>? facility;
   final ClientDashBoardBloc? clientDashBoardBloc;
+  final bool isFutureSub;
 
   const DashboardScreen(
       {super.key,
@@ -44,7 +46,8 @@ class DashboardScreen extends StatefulWidget {
       this.plan,
       this.status,
       this.tabController,
-      this.tabIndex});
+      this.tabIndex,
+      required this.isFutureSub});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -80,6 +83,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
+  TaskStatusDistribution? _taskStatusDistribution;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,6 +99,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               EasyLoading.dismiss();
               setState(() {
                 _dashboardData = state.dashboardData;
+                _taskStatusDistribution = state.taskStatusDistribution;
                 // _isLoading = false;
               });
             }
@@ -126,6 +131,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: Column(
                 // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  _dashboardData!.results!.isIotDeviceConfigured == false
+                      ? Center(
+                          child: Text(
+                            textAlign: TextAlign.center,
+                            "IOT Device is not yet configured,once done data will start flowing",
+                            style: TextStyle(
+                              color: AppColors.textgreyColor,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
                   // RichText(
                   //   text: const TextSpan(
                   //     style: TextStyle(
@@ -152,37 +170,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   //   ),
                   // ),
                   const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Dashboard Overview',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
-                                spreadRadius: 1,
-                                blurRadius: 2,
-                                offset: const Offset(0, 1),
-                              ),
-                            ],
-                          ),
-                          child: Image.asset(
-                            AppImages.tuneLogo,
-                          )),
-                    ],
-                  ),
+
                   const SizedBox(height: 16),
-                  CustomChartWidget(),
+                  CustomChartWidget(
+                    data: data.results?.avgppmTimeRange ?? [],
+                  ),
                   // AirQualityChart(
                   //   airQualityData: data.avgppmTimeRange.map((e) {
                   //     // var d = (e.avgPcdMax.runtimeType);
@@ -198,6 +190,74 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   //   onFilterChanged: _setTimeFilter,
                   // ),
                   const SizedBox(height: 16),
+                  Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 20),
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black
+                                  .withValues(alpha: 0.2), // Shadow color
+                              spreadRadius:
+                                  1, // How wide the shadow should spread
+                              blurRadius: 10, // The blur effect of the shadow
+                              offset: const Offset(
+                                  0, 0), // No offset for shadow on all sides
+                            ),
+                          ],
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(40)),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Usage Report",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          CustomBarChart(
+                              data: data.results?.usageReportQuery ?? []),
+                          const Divider(),
+                          Row(
+                            spacing: 20,
+                            children: [
+                              CircleAvatar(
+                                radius: 12,
+                                backgroundColor: AppColors.appBarTitleColor,
+                                child:
+                                    Image.asset("assets/images/bxs_smile.png"),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "You are doing good!",
+                                    style: TextStyle(
+                                      color: AppColors.alertTitleColor,
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    "You almost reached your goal",
+                                    style: TextStyle(
+                                      color: AppColors.alertTitleColor,
+                                      fontSize: 10.sp,
+                                    ),
+                                  )
+                                ],
+                              )
+                            ],
+                          )
+                        ],
+                      )),
                   // AiSummaryCard(summary: data.results.summary.avgppmTimeRangeInsights),
                   const SizedBox(height: 16),
                   Charts(
@@ -207,14 +267,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     tabIndex: widget.tabIndex,
                     facility: widget.facility,
                     clientDashBoardBloc: widget.clientDashBoardBloc,
+                    isFutureSub: widget.isFutureSub,
                   ),
                   const SizedBox(
                     height: 16,
                   ),
                   const SizedBox(height: 16),
                   IotLogs(
-                    avgppmTimeRangeInsights:
-                        data.results?.summary?.avgppmTimeRangeInsights ?? "",
+                    taskStatusDistribution: _taskStatusDistribution,
                     // taskStatusDistribution: ,
                     // taskStatusDistribution:,
                   ),
@@ -685,6 +745,71 @@ class CustomLineChart extends StatelessWidget {
           maxX: 5,
           minY: 0,
           maxY: 2.5,
+        ),
+      ),
+    );
+  }
+}
+
+class CustomBarChart extends StatelessWidget {
+  final List<UsageReportQuery> data;
+  const CustomBarChart({super.key, required this.data});
+
+  @override
+  Widget build(BuildContext context) {
+    final List<double> values =
+        data.map((e) => double.parse((e.avgPcdMax) ?? '0') / 35).toList();
+    final List<String> labels = data.map((e) => e.dayInitial ?? '').toList();
+    return SizedBox(
+      height: 200,
+      child: BarChart(
+        BarChartData(
+          alignment: BarChartAlignment.spaceAround,
+          maxY: 12,
+          barTouchData: BarTouchData(enabled: false),
+          titlesData: FlTitlesData(
+            leftTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (double value, TitleMeta meta) {
+                  int idx = value.toInt();
+                  if (idx < labels.length) {
+                    return Text(labels[idx],
+                        style: const TextStyle(fontSize: 12));
+                  }
+                  return Container();
+                },
+                reservedSize: 24,
+              ),
+            ),
+          ),
+          gridData: const FlGridData(show: false),
+          borderData: FlBorderData(show: false),
+          barGroups: List.generate(values.length, (i) {
+            final isHighlighted =
+                i == 4 || i == 11 || i == 12; // Example: highlight F, F, S
+            return BarChartGroupData(
+              x: i,
+              barRods: [
+                BarChartRodData(
+                  toY: values[i],
+                  color:
+                      isHighlighted ? Colors.lightBlueAccent : Colors.grey[700],
+                  width: 16,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ],
+            );
+          }),
         ),
       ),
     );

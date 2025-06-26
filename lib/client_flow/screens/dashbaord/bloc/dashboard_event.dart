@@ -150,7 +150,7 @@ class GetDashbaordEvent extends DashboardEvent {
  final int locationId;
  final  String type;
  final  String clientId;
- final int janitorId;
+ final String janitorId;
 
 
   const GetDashbaordEvent({

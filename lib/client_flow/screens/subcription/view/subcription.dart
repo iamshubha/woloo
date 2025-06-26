@@ -29,8 +29,11 @@ class SubcriptionScreen extends StatefulWidget {
   ClientDashBoardBloc?  dashBoardBloc; 
    bool? isfromFacility;
    int? facilityId;
+   bool isFromTrail;
   // = ClientDashBoardBloc();
-   SubcriptionScreen({super.key, this.dashBoardBloc, required this.isfromFacility, this.facilityId });
+   SubcriptionScreen({super.key, this.dashBoardBloc, required this.isfromFacility, this.facilityId,
+   
+   this.isFromTrail = false});
 
   @override
   State<SubcriptionScreen> createState() => _SubcriptionScreenState();
@@ -54,7 +57,7 @@ class _SubcriptionScreenState extends State<SubcriptionScreen> {
   // rzp_live_A0MkofC7Jj2xXK
   String amountValue = "";
   String orderIdValue = "";
-  String mobileNumberValue = "8888888888";
+  String mobileNumberValue = "";
     SubcriptionBloc subcriptionBloc = SubcriptionBloc();
       Map<String, dynamic>? decodedToken;
   GlobalStorage globalStorage = GetIt.instance();
@@ -149,6 +152,7 @@ class _SubcriptionScreenState extends State<SubcriptionScreen> {
                       // print("amount $amountValue");
                       // print("order $orderId");
                       EasyLoading.dismiss();
+
                     }
                     if(state is SubscriptionError  ){
 
@@ -584,7 +588,7 @@ Widget row(
                                            var facalityref =    globalStorage.getFacilityRef();
 
 
-                                              print("facilit ref $facalityref");
+                                              print("facilit ref ${widget.isfromFacility}");
                                           
                                          
 
@@ -606,7 +610,7 @@ Widget row(
 
                                                Navigator.of(context).pop();
                                                Navigator.of(context).pop();
-                                               if (widget.isfromFacility!) {
+                                               if (widget.isfromFacility! && widget.isFromTrail  == false  ) {
                                                 
                                                 Navigator.of(context).pop();
                                                  

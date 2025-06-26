@@ -39,6 +39,7 @@ class Charts extends StatefulWidget {
   final TabController? tabController;
   final List<Facility>? facility;
   final ClientDashBoardBloc? clientDashBoardBloc;
+  final bool isFutureSub;
   const Charts(
       {super.key,
       this.facilityId,
@@ -47,7 +48,8 @@ class Charts extends StatefulWidget {
       this.tabIndex,
       this.tabController,
       this.facility,
-      this.clientDashBoardBloc});
+      this.clientDashBoardBloc,
+      required this.isFutureSub});
 
   @override
   State<Charts> createState() => _ChartsState();
@@ -178,7 +180,7 @@ class _ChartsState extends State<Charts> {
                       dashBoardBloc.add(GetDashbaordEvent(
                           type: "today",
                           clientId: clientId,
-                          janitorId: facilitydropdownNames.first.id!,
+                          janitorId: facilitydropdownNames.first.id!.toString(),
                           locationId: widget.facilityId!));
                       //  facilitydropdown = dashbaordModel.results.
                       if (widget.plan == "CLASSIC" &&
@@ -234,13 +236,13 @@ class _ChartsState extends State<Charts> {
                       dashBoardBloc.add(GetDashbaordEvent(
                           type: "today",
                           clientId: clientId,
-                          janitorId: facilitydropdownNames.first.id!,
+                          janitorId: facilitydropdownNames.first.id!.toString(),
                           locationId: widget.facilityId!));
 
-                      print("objectttttttttt $facilitydropdownNames");
+                      print("objectttttttttt ${widget.isFutureSub}");
 
                       if (widget.plan == "CLASSIC" &&
-                          widget.status == "active"  && palnId != "0") {
+                          widget.status == "active"  && palnId != "0" && widget.isFutureSub == false ) {
                         Future.delayed(const Duration(seconds: 3), () {
                           showModalBottomSheet(
                               backgroundColor: Colors.transparent,
@@ -250,7 +252,7 @@ class _ChartsState extends State<Charts> {
                               });
                         });
                       } else if (widget.plan == "PREMIUM" &&
-                          widget.status == "inactive"  && palnId != "0"   ) {
+                          widget.status == "inactive"  && palnId != "0" && widget.isFutureSub == false ) {
                         //PREMIUM
                         Future.delayed(const Duration(seconds: 3), () {
                           showModalBottomSheet(
@@ -339,7 +341,7 @@ class _ChartsState extends State<Charts> {
                                     dashBoardBloc.add(GetDashbaordEvent(
                                         type: "today",
                                         clientId: clientId,
-                                        janitorId: selectedValue!.id!,
+                                        janitorId: selectedValue!.id!.toString(),
                                         locationId: widget.facilityId!));
                                   },
 

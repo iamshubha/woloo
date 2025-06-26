@@ -271,10 +271,30 @@ class _VerifyOtpState extends State<VerifyOtp> {
                 //  print("b2v store $state");
 
                 // return
-                OTPWidget(onComplete: (pin) {
+                OTPWidget(
+                  phoneNumber: widget.phoneNumber,
+                  loginBloc: widget.loginBloc,
+                  onComplete: (pin) {
                   print("dataaa $pin");
                   _pin = pin;
                 }),
+
+                // InkWell(
+                //   onTap: () {
+
+                //           loginBloc.add(Login(
+                //               mobileNo: widget.phoneNumber,
+                //               // password: passwordController.text,
+                //               ));
+                //   },
+                //   child: const Center(child: Text("Resend OTP",
+                //    style: TextStyle(
+                //     fontWeight: FontWeight.w700,
+                //     fontSize: 15,
+                //     // decoration: TextDecorationStyle.solid,
+                //     color: AppColors.black,),
+                //   )),
+                // ),
                 // }
                 // ),
                 SizedBox(

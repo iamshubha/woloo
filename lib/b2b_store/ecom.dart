@@ -551,10 +551,16 @@ class _EcomScreenState extends State<EcomScreen> {
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           12.r),
-                                                  child: Image.network(
-                                                    product.thumbnail ?? '',
-                                                    fit: BoxFit.fill,
-                                                  ),
+                                                  child: product.thumbnail
+                                                              ?.isEmpty ??
+                                                          true
+                                                      ? Image.asset(
+                                                          AppImages.woloologo)
+                                                      : Image.network(
+                                                          product.thumbnail ??
+                                                              '',
+                                                          fit: BoxFit.fill,
+                                                        ),
                                                 ),
                                               ),
                                               SizedBox(
@@ -1144,10 +1150,16 @@ class _EcomScreenState extends State<EcomScreen> {
                                       child: ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(12.r),
-                                        child: Image.network(
-                                          latestProducts[i].thumbnail ?? '',
-                                          fit: BoxFit.fill,
-                                        ),
+                                        child: latestProducts[i]
+                                                    .thumbnail
+                                                    ?.isEmpty ??
+                                                true
+                                            ? Image.asset(AppImages.woloologo)
+                                            : Image.network(
+                                                latestProducts[i].thumbnail ??
+                                                    '',
+                                                fit: BoxFit.fill,
+                                              ),
                                       ),
                                     );
                                   },

@@ -193,7 +193,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                   print("state in dashbaord $state ");
 
                   if (state is DashboarLoading) {
-                    isLoading = true ;
+                    // isLoading = true ;
 
                     EasyLoading.show(status: state.message);
 
@@ -206,18 +206,21 @@ class _HomeDashboardState extends State<HomeDashboard> {
                     //     id: decodedToken!["id"]
                     // ) );
 
-                    facility = state.facilityModel!.results!.facilities!;
+                     facility = state.facilityModel!.results!.facilities!;
+                     
+                      isLoading = state.facilityModel!.results!.facilities!.isEmpty ? true : false;
 
                     // setState(() {
                     //   print("facility length ${facility.length}");
                     // });
 
-                    print("facility length ${facility.length}");
+                    print("check loading ${isLoading}");
 
                     if (facility.isEmpty) {
                       facility.add(Facility(
                         facilityName: "Add Facility/Task",
                         id: 0,
+                        isFutureSubscription: false
                       ));
                     }
 
@@ -226,6 +229,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                         Facility(
                           facilityName: "Add Facility/Task",
                           id: 0,
+                          isFutureSubscription: false
                         ));
                     //  setState(() {
 
@@ -263,10 +267,9 @@ class _HomeDashboardState extends State<HomeDashboard> {
                         .expiryDate!; // Example future date
 
                     print('Difference: $futureDate days');
+
                     difference =
-
                         //  Duration(days: 0 ) ;
-
                         futureDate.difference(currentDate);
 
                     print('Difference: ${difference.inDays} days');
@@ -312,6 +315,8 @@ class _HomeDashboardState extends State<HomeDashboard> {
                                       "Your TASKMASTER Trial Period has expired. Kindly pay to Continue",
                                       style: AppTextStyle.font18bold,
                                     ),
+
+                                    
                                     SizedBox(
                                       height: 20.h,
                                     ),
@@ -352,13 +357,14 @@ class _HomeDashboardState extends State<HomeDashboard> {
                   }
 
                   if (state is DashboarError) {
+                    isLoading = true;
                       print("facility length ${facility}");
                     EasyLoading.dismiss();
                     EasyLoading.showError(state.error);
                   }
                 },
                 builder: (context, state) {
-                  return difference.inDays != 0 && planId != "0" ||facility.isEmpty
+                  return difference.inDays != 0 && planId != "0" || facility.isEmpty
                       ? const SizedBox()
                       : Column(
                           children: [
@@ -378,6 +384,8 @@ class _HomeDashboardState extends State<HomeDashboard> {
                                       dashBoardBloc: dashBoardBloc,
                                       isfromFacility: true,
                                       facilityId: facility[1].id,
+                                      isFromTrail: true,
+
                                     );
                                   },
                                 );
@@ -491,15 +499,15 @@ class _HomeDashboardState extends State<HomeDashboard> {
                               // )
                             ],
                           ),
-                          isLoading ?  SizedBox() :
-                          facility.isEmpty && !isLoading ?
+                          // isLoading ?  SizedBox() :
+                          isLoading  ?
                              Column(
                               // crossAxisAlignment: CrossAxisAlignment.center,
                               // mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                              
-                                 SizedBox(
-                                  height: MediaQuery.of(context).size.height/4,
+                                 const SizedBox(
+                                  height: 70,
                                  ),
                              
                              
@@ -524,8 +532,36 @@ class _HomeDashboardState extends State<HomeDashboard> {
                                     },
                                     img: AppImages.dashboard,
                                   ),
-                                )
-                             
+                                ),
+                                const SizedBox(
+                                  height: 50,),
+                                 const Text(
+                                   textAlign: TextAlign.center,                     
+                                  "Task Master is Woloo’s smart task automation and hygiene management module designed to streamline cleaning operations across public and private facilities.",                 
+                                   style: TextStyle(
+                                    wordSpacing: 1,
+                                     color: AppColors.black,
+                                     fontSize: 16,
+                                     fontWeight: FontWeight.w400,
+                                   ),
+                                  ),
+                                    const SizedBox(
+                                  height: 20,),
+
+                                    const Text(
+                                   textAlign: TextAlign.center,                     
+                                  "It ensures that hygiene standards are met consistently through real-time monitoring, automated scheduling, and performance tracking of janitorial staff.",                 
+                                   style: TextStyle(
+                                     wordSpacing: 1,
+                                     color: AppColors.black,
+                                     fontSize: 16,
+                                     fontWeight: FontWeight.w400,
+                                   ),
+                                  ),
+
+                                  //  
+
+                              
                                   
                                 // Text("data"),
                               ],

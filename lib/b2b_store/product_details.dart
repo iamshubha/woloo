@@ -70,7 +70,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   @override
   initState() {
     super.initState();
-
     _b2bStoreBloc.add(const GetCartData());
     //logger.w(widget.productData?.id);
     address = getAddress();
@@ -101,6 +100,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             .toString() ??
         "0";
 
+    selectedColor = colorMap.keys.toList()[0];
     //logger.w(colorMap);
     //logger.w("Calculated Amount: $calculatedAmount");
   }
@@ -158,7 +158,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               } else {
                 // setState(() {});
                 for (var i in itemsData) {
-                  if (i.variantId == widget.productData?.variants[0].id) {
+                  if (widget.productData?.variants
+                          .any((e) => e.id == i.variantId) ??
+                      false) {
                     productCount = i.quantity ?? 0;
                   } else {
                     productCount = 0;
@@ -285,21 +287,21 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.bold)),
                             // if (selectedVariant.isNotEmpty)
-                            SizedBox(
-                              // color: Colors.red,
-                              // height: 40.h,
-                              // width: 20,
-                              child: Center(
-                                child: Text(
-                                  selectedSize == ""
-                                      ? "${widget.productData?.variants.first.options?.first.value}"
-                                      : selectedSize,
-                                  style: TextStyle(
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
+                            // SizedBox(
+                            //   // color: Colors.red,
+                            //   // height: 40.h,
+                            //   // width: 20,
+                            //   child: Center(
+                            //     child: Text(
+                            //       selectedSize == ""
+                            //           ? "${widget.productData?.variants.first.options?.first.value}"
+                            //           : selectedSize,
+                            //       style: TextStyle(
+                            //           fontSize: 12.sp,
+                            //           fontWeight: FontWeight.bold),
+                            //     ),
+                            //   ),
+                            // ),
 
                             Row(
                               spacing: 8,
@@ -575,10 +577,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ],
                           ),
                         ),
-
-                        // const ProductTitleDesc(),
-                        // const XColorsSelection(),
-                        // (sizeList: sizeList),SizeWidget
                         if (colorMap.isNotEmpty &&
                             colorMap.length > 1 &&
                             colorMap.keys.first.isHex)
@@ -641,7 +639,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                               .toLowerCase()) ??
                                                       false);
                                               imageURL = image?.url;
-
+                                              final size =
+                                                  colorMap[selectedColor]?[0];
+                                              selectedVarientId =
+                                                  size?.entries.first.value ??
+                                                      "";
+                                              calculatedAmount =
+                                                  size!['price'] ?? "";
+                                              originalAmount =
+                                                  size['originalPrice'] ?? "";
+                                              selectedVariant =
+                                                  size.entries.first.key;
                                               setState(() {});
                                             },
                                             child: Container(
@@ -679,7 +687,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ),
                             ),
                           ),
-
                         if (selectedColor.isNotEmpty)
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -777,122 +784,123 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ),
                             ),
                           ),
-                        if (selectedColor.isEmpty)
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.w),
-                            child: VarientContainer(
-                              child: Column(
-                                // spacing: 10.h,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    height: 10.h,
-                                  ),
-                                  Text(
-                                    "Size",
-                                    style: TextStyle(
-                                        fontSize: 15.sp,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 2,
-                                        child: Divider(
-                                          thickness: 2,
-                                        ),
-                                      ),
-                                      Spacer(
-                                        flex: 4,
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 26,
-                                    child: ListView.separated(
-                                        itemCount: widget
-                                                .productData?.variants.length ??
-                                            0,
-                                        separatorBuilder: (context, index) {
-                                          return const SizedBox(
-                                            width: 5,
-                                          );
-                                        },
-                                        scrollDirection: Axis.horizontal,
-                                        itemBuilder: (c, i) {
-                                          return InkWell(
-                                            onTap: () {
-                                              // selectedVarientId =
-                                              //     size?.entries.first.value ??
-                                              //         "";
-                                              // calculatedAmount =
-                                              //     size!['price'] ?? "";
-                                              // originalAmount =
-                                              //     size['originalPrice'] ?? "";
-                                              // selectedVariant =
-                                              //     size.entries.first.key;
-                                              // // sizeVarient = size;
-                                              setState(() {
-                                                selectedSize = widget
-                                                        .productData
-                                                        ?.variants[i]
-                                                        .options
-                                                        ?.first
-                                                        .value ??
-                                                    "";
-                                                selectedVarientId = widget
-                                                        .productData
-                                                        ?.variants[i]
-                                                        .id ??
-                                                    "";
-                                                selectedPrice = widget
-                                                        .productData
-                                                        ?.variants[i]
-                                                        .calculatedPrice
-                                                        ?.calculatedAmount
-                                                        .toString() ??
-                                                    "";
-                                              });
-                                            },
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 10.w,
-                                                  vertical: 4.h),
-                                              decoration: BoxDecoration(
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.grey
-                                                        .withOpacity(0.3),
-                                                    spreadRadius: 1,
-                                                    blurRadius: 5,
-                                                    offset: const Offset(0, 3),
-                                                  ),
-                                                ],
-                                                color: selectedSize ==
-                                                        widget
-                                                            .productData
-                                                            ?.variants[i]
-                                                            .options
-                                                            ?.first
-                                                            .value
-                                                    ? AppColors.lightCyanColor
-                                                    : Colors.white,
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                    "  ${widget.productData?.variants[i].options?.first.value}"),
-                                              ),
-                                            ),
-                                          );
-                                        }),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+
+                        // if (selectedColor.isEmpty)
+                        //   Padding(
+                        //     padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        //     child: VarientContainer(
+                        //       child: Column(
+                        //         // spacing: 10.h,
+                        //         crossAxisAlignment: CrossAxisAlignment.start,
+                        //         children: [
+                        //           SizedBox(
+                        //             height: 10.h,
+                        //           ),
+                        //           Text(
+                        //             "Size",
+                        //             style: TextStyle(
+                        //                 fontSize: 15.sp,
+                        //                 fontWeight: FontWeight.bold),
+                        //           ),
+                        //           const Row(
+                        //             children: [
+                        //               Expanded(
+                        //                 flex: 2,
+                        //                 child: Divider(
+                        //                   thickness: 2,
+                        //                 ),
+                        //               ),
+                        //               Spacer(
+                        //                 flex: 4,
+                        //               ),
+                        //             ],
+                        //           ),
+                        //           SizedBox(
+                        //             height: 26,
+                        //             child: ListView.separated(
+                        //                 itemCount: widget
+                        //                         .productData?.variants.length ??
+                        //                     0,
+                        //                 separatorBuilder: (context, index) {
+                        //                   return const SizedBox(
+                        //                     width: 5,
+                        //                   );
+                        //                 },
+                        //                 scrollDirection: Axis.horizontal,
+                        //                 itemBuilder: (c, i) {
+                        //                   return InkWell(
+                        //                     onTap: () {
+                        //                       // selectedVarientId =
+                        //                       //     size?.entries.first.value ??
+                        //                       //         "";
+                        //                       // calculatedAmount =
+                        //                       //     size!['price'] ?? "";
+                        //                       // originalAmount =
+                        //                       //     size['originalPrice'] ?? "";
+                        //                       // selectedVariant =
+                        //                       //     size.entries.first.key;
+                        //                       // // sizeVarient = size;
+                        //                       setState(() {
+                        //                         selectedSize = widget
+                        //                                 .productData
+                        //                                 ?.variants[i]
+                        //                                 .options
+                        //                                 ?.first
+                        //                                 .value ??
+                        //                             "";
+                        //                         selectedVarientId = widget
+                        //                                 .productData
+                        //                                 ?.variants[i]
+                        //                                 .id ??
+                        //                             "";
+                        //                         selectedPrice = widget
+                        //                                 .productData
+                        //                                 ?.variants[i]
+                        //                                 .calculatedPrice
+                        //                                 ?.calculatedAmount
+                        //                                 .toString() ??
+                        //                             "";
+                        //                       });
+                        //                     },
+                        //                     child: Container(
+                        //                       padding: EdgeInsets.symmetric(
+                        //                           horizontal: 10.w,
+                        //                           vertical: 4.h),
+                        //                       decoration: BoxDecoration(
+                        //                         boxShadow: [
+                        //                           BoxShadow(
+                        //                             color: Colors.grey
+                        //                                 .withOpacity(0.3),
+                        //                             spreadRadius: 1,
+                        //                             blurRadius: 5,
+                        //                             offset: const Offset(0, 3),
+                        //                           ),
+                        //                         ],
+                        //                         color: selectedSize ==
+                        //                                 widget
+                        //                                     .productData
+                        //                                     ?.variants[i]
+                        //                                     .options
+                        //                                     ?.first
+                        //                                     .value
+                        //                             ? AppColors.lightCyanColor
+                        //                             : Colors.white,
+                        //                       ),
+                        //                       child: Center(
+                        //                         child: Text(
+                        //                             "  ${widget.productData?.variants[i].options?.first.value}"),
+                        //                       ),
+                        //                     ),
+                        //                   );
+                        //                 }),
+                        //           ),
+                        //           const SizedBox(
+                        //             height: 10,
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ),
 
                         Padding(
                           // padding: const EdgeInsets.all(8.0),
@@ -901,6 +909,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             thickness: 2,
                           ),
                         ),
+                        //Address Selection
                         Padding(
                           // padding: const EdgeInsets.all(8.0),
                           padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -968,7 +977,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ),
                           ),
                         ),
-
                         Padding(
                           // padding: const EdgeInsets.all(8.0),
                           padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -1527,7 +1535,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             );
                           },
                         ),
-
                         if (customerReviews?.reviews.isNotEmpty ?? false)
                           Row(
                             children: [
@@ -1624,12 +1631,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     _shouldShowCartBottomSheetAfterAdd = true;
     try {
       _b2bStoreBloc.add(AddToCart(quantity: 1, variant_id: selectedVarientId));
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Item added to cart!'),
-        ),
-      );
+      productCount = 1;
+      setState(() {});
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(
+      //     content: Text('Item added to cart!'),
+      //   ),
+      // );
     } catch (e) {}
   }
 }

@@ -1,6 +1,7 @@
 import 'package:woloo_smart_hygiene/client_flow/screens/login/bloc/signup_bloc.dart';
 import 'package:woloo_smart_hygiene/firebase_options.dart';
 import 'package:woloo_smart_hygiene/injection_container.dart' as di;
+import 'package:woloo_smart_hygiene/janitorial_services/model/iotdata_model.dart';
 import 'package:woloo_smart_hygiene/messaging.dart';
 import 'package:woloo_smart_hygiene/screens/login/bloc/login_bloc.dart';
 import 'package:woloo_smart_hygiene/screens/my_account/view/bloc/profile_bloc.dart';
@@ -43,147 +44,23 @@ class ChartDataPoint {
   });
 }
 
-// Simulated API call to fetch chart data
-Future<List<ChartDataPoint>> fetchChartData() async {
-  // Simulate network delay to mimic a real API call
-  await Future.delayed(const Duration(seconds: 1));
+// // Simulated API call to fetch chart data
+// Future<List<ChartDataPoint>> fetchChartData(List<AvgppmTimeRange> data) async {
+//   // Simulate network delay to mimic a real API call
+//   await Future.delayed(const Duration(seconds: 1));
 
-  // Pre-generated dynamic data
-  // airQuality and usage are normalized values (0.0 to 1.0) for easier plotting,
-  // while 'value' is the actual reading for the highlighted point.
-  return [
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 0, 0),
-        airQuality: 0.5 + 0.0,
-        usage: 0.1,
-        value: 250),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 2, 0),
-        airQuality: 0.5 + 0.1,
-        usage: 0.3,
-        value: 250),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 2, 0),
-        airQuality: 0.5 + 0.0,
-        usage: 0.3,
-        value: 250),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 2, 0),
-        airQuality: 0.6 + 0.06,
-        usage: 0.3,
-        value: 250),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 2, 0),
-        airQuality: 0.7 + 0.1,
-        usage: 0.3,
-        value: 250),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 4, 0),
-        airQuality: 0.5 + 0.0,
-        usage: 0.3,
-        value: 200),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 6, 0),
-        airQuality: 0.7 + 0.15,
-        usage: 0.5,
-        value: 300),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 8, 0),
-        airQuality: 0.6 + 0.08,
-        usage: 0.3,
-        value: 260),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 10, 0),
-        airQuality: 0.75,
-        usage: 0.45,
-        value: 290),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 0, 0),
-        airQuality: 0.5 + 0.0,
-        usage: 0.1,
-        value: 250),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 2, 0),
-        airQuality: 0.5 + 0.1,
-        usage: 0.3,
-        value: 250),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 4, 0),
-        airQuality: 0.5 + 0.0,
-        usage: 0.3,
-        value: 200),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 6, 0),
-        airQuality: 0.7 + 0.15,
-        usage: 0.5,
-        value: 300),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 8, 0),
-        airQuality: 0.6 + 0.08,
-        usage: 0.3,
-        value: 260),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 10, 0),
-        airQuality: 0.75,
-        usage: 0.45,
-        value: 290),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 0, 0),
-        airQuality: 0.5 + 0.0,
-        usage: 0.1,
-        value: 250),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 2, 0),
-        airQuality: 0.5 + 0.1,
-        usage: 0.3,
-        value: 250),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 4, 0),
-        airQuality: 0.5 + 0.0,
-        usage: 0.3,
-        value: 200),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 6, 0),
-        airQuality: 0.7 + 0.15,
-        usage: 0.5,
-        value: 300),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 8, 0),
-        airQuality: 0.6 + 0.08,
-        usage: 0.3,
-        value: 260),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 10, 0),
-        airQuality: 0.75,
-        usage: 0.45,
-        value: 290),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 0, 0),
-        airQuality: 0.5 + 0.0,
-        usage: 0.1,
-        value: 250),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 2, 0),
-        airQuality: 0.4 + 0.1,
-        usage: 0.3,
-        value: 250),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 4, 0),
-        airQuality: 0.4 + 0.0,
-        usage: 0.3,
-        value: 200),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 6, 0),
-        airQuality: 0.7 + 0.15,
-        usage: 0.5,
-        value: 300),
-    ChartDataPoint(
-        timestamp: DateTime(2025, 6, 15, 8, 0),
-        airQuality: 0.6 + 0.08,
-        usage: 0.3,
-        value: 260)
-  ];
-}
+//   // Pre-generated dynamic data
+//   // airQuality and usage are normalized values (0.0 to 1.0) for easier plotting,
+//   // while 'value' is the actual reading for the highlighted point.
+//   return data
+//       .map((e) => ChartDataPoint(
+//             timestamp: DateTime.parse(e.timeRange ?? ''),
+//             airQuality: double.parse(e.avgPpmAvg ?? ''),
+//             usage: double.parse(e.avgPcdMax ?? ''),
+//             value: int.parse(e.avgPpmAvg ?? ''),
+//           ))
+//       .toList();
+// }
 
 class CustomChartPainter extends CustomPainter {
   final List<ChartDataPoint> data;
@@ -386,7 +263,8 @@ class CustomChartPainter extends CustomPainter {
 }
 
 class CustomChartWidget extends StatefulWidget {
-  const CustomChartWidget({super.key});
+  final List<AvgppmTimeRange> data;
+  const CustomChartWidget({super.key, required this.data});
 
   @override
   State<CustomChartWidget> createState() => _CustomChartWidgetState();
@@ -397,10 +275,55 @@ class _CustomChartWidgetState extends State<CustomChartWidget> {
   int? _highlightedIndex; // Index for the currently highlighted data point
   String _selectedRange = 'ALL'; // State for the filter buttons
 
+  // Function to convert and normalize AvgppmTimeRange data
+  Future<List<ChartDataPoint>> _convertAndNormalizeChartData(
+      List<AvgppmTimeRange> data) async {
+    if (data.isEmpty) return [];
+
+    // Parse values and find min/max for normalization
+    List<double> airQualityValues = [];
+    List<double> usageValues = [];
+    for (var e in data) {
+      double? airQuality = double.tryParse(e.avgPpmAvg ?? '');
+      double? usage = double.tryParse(e.avgPcdMax ?? '');
+      if (airQuality != null) airQualityValues.add(airQuality);
+      if (usage != null) usageValues.add(usage);
+    }
+    double airQualityMin = airQualityValues.reduce((a, b) => a < b ? a : b);
+    double airQualityMax = airQualityValues.reduce((a, b) => a > b ? a : b);
+    double usageMin = usageValues.reduce((a, b) => a < b ? a : b);
+    double usageMax = usageValues.reduce((a, b) => a > b ? a : b);
+
+    // Avoid division by zero
+    double airQualityRange = (airQualityMax - airQualityMin) == 0
+        ? 1
+        : (airQualityMax - airQualityMin);
+    double usageRange = (usageMax - usageMin) == 0 ? 1 : (usageMax - usageMin);
+
+    return data.map((e) {
+      final timestamp = DateTime.tryParse(e.timeRange ?? '') ?? DateTime.now();
+      final airQualityRaw = double.tryParse(e.avgPpmAvg ?? '') ?? 0;
+      final usageRaw = double.tryParse(e.avgPcdMax ?? '') ?? 0;
+      final value = int.tryParse(e.avgPpmAvg ?? '') ?? 0;
+
+      // Normalize
+      final airQuality = (airQualityRaw - airQualityMin) / airQualityRange;
+      final usage = (usageRaw - usageMin) / usageRange;
+
+      return ChartDataPoint(
+        timestamp: timestamp,
+        airQuality: airQuality,
+        usage: usage,
+        value: value,
+      );
+    }).toList();
+  }
+
   @override
   void initState() {
     super.initState();
-    _chartDataFuture = fetchChartData(); // Initiate data fetching
+    _chartDataFuture = _convertAndNormalizeChartData(widget.data);
+
     _chartDataFuture.then((data) {
       // Find the index of the specific highlighted point from the image (3:59 AM, June 16)
       final index = data.indexWhere((point) =>
@@ -553,22 +476,6 @@ class _CustomChartWidgetState extends State<CustomChartWidget> {
                             highlightedIndex: _highlightedIndex,
                             airQualityMax: airQualityMax,
                             usageMax: usageMax,
-                          ),
-                          // GestureDetector for interactivity: tapping to change highlighted point
-                          child: GestureDetector(
-                            onTapDown: (details) {
-                              final double tapX = details.globalPosition.dx;
-                              final double chartWidth = constraints.maxWidth;
-                              // Calculate the closest data point index based on tap X position
-                              final double xPerPoint =
-                                  chartWidth / (data.length - 1);
-                              int closestIndex = (tapX / xPerPoint)
-                                  .round()
-                                  .clamp(0, data.length - 1);
-                              setState(() {
-                                _highlightedIndex = closestIndex;
-                              });
-                            },
                           ),
                         );
                       }

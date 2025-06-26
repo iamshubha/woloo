@@ -255,10 +255,13 @@ class _OTPScreenState extends State<OTPScreen> {
                   height: 20.h,
                 ),
                 OTPWidget(
+                  janitorBloc: widget.loginBloc,
+                phoneNumber: widget.phoneNumber,
                   onComplete: (pin){
                       print("dataaa $pin");
                     _pin = pin;
-                  } 
+                  },
+                  // loginBloc: widget.loginBloc, 
                 ),
                 SizedBox(
                   height: 10.h,

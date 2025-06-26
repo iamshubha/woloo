@@ -72,7 +72,9 @@ class ExploreCard extends StatelessWidget {
                               // textAlign: TextAlign.center,
                             //  "Monitor your hygiene with Woloo’s",
                               style: AppTextStyle.font12bold.copyWith(
-                                color: AppColors.greyBorder
+                                color: AppColors.greyBorder,
+                                 fontSize: 12,
+                                fontWeight: FontWeight.bold
                               ),
                             ),
                              const SizedBox(
@@ -83,7 +85,9 @@ class ExploreCard extends StatelessWidget {
                               // textAlign: TextAlign.center,
                               // "Smart Hygiene Technology Service.",
                               style: AppTextStyle.font12bold.copyWith(
-                                color: AppColors.greyBorder
+                                color: AppColors.greyBorder,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold
                               ),
                             ),
                             const SizedBox(

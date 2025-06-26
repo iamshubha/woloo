@@ -186,7 +186,7 @@ Future<DashbaordModel> getTaskDashboard({
   required int facilityId,
   required String type,
   required String clientId,
-  required int janitorId
+  required String janitorId
 }) async {
   try {
       

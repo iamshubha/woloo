@@ -4,6 +4,18 @@ import 'package:woloo_smart_hygiene/utils/app_color.dart';
 
 import '../model/iotdata_model.dart';
 
+class GraphData {
+  final double airQuality;
+  final double usage;
+  final String timeRange;
+
+  GraphData({
+    required this.airQuality,
+    required this.usage,
+    required this.timeRange,
+  });
+}
+
 class AirQualityChart extends StatelessWidget {
   final List<GraphData> airQualityData;
   final bool isLoading;

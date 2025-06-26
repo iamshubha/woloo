@@ -37,7 +37,7 @@ class IotBloc extends Bloc<IotEvent, IotState> {
           clientId: event.clientId,
           type: event.type,
           facilityId: event.facilityId,
-          janitorId: event.janitorId);
+          janitorId: event.janitorId.toString());
       TaskStatusDistribution taskStatusDistribution =
           data.results?.taskStatusDistribution ?? TaskStatusDistribution();
       emit(IotSuccess(

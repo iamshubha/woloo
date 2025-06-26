@@ -229,8 +229,8 @@ class _OrderSummeryBottomSheetState
                             PricingCalculate(
                               itemTotal:
                                   cartModel?.cart.originalItemTotal.toString(),
-                              discount: cartModel?.cart.discountTotal
-                                  ?.toStringAsFixed(2),
+                              discount:
+                                  cartModel?.cart.discountTotal.toString(),
                               total: cartModel?.cart.total.toString(),
                               subTotal: cartModel?.cart.subtotal.toString(),
                               shipping:

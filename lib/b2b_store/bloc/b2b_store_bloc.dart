@@ -625,6 +625,35 @@ class B2bStoreBloc extends Bloc<B2BStoreEvent, B2BStoreState> {
           .then((cartData) {
         box.write('cart_id', cartData.cart.id);
       });
+
+//TODO:implement{curl -X POST -H "user-agent: Android/22110/10" -H "x-woloo-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjMxNjAsImlhdCI6MTc1MDk0MzI2NywibmJmIjoxNzUwOTQzMjY3LCJleHAiOjE3NTg3MTkyNjcsImlzcyI6Imh0dHBzOi8vd29sb28udmVyaWZpbm93LmNvbS9hcGkvdjEvbG9naW4iLCJzdWIiOiI2MzE2MCIsImp0aSI6IkFCQ0RFRkdISUpLIn0.GMP72gC_qLaBc39i-Nelv8bI3-iLKfE7FlrTu2RULTw" --data $'{"coins":10,"orderid":"ordset_01JYP5PDX9FZK1AT8R88WHJ9VD","type":"points"}' https://staging-api.woloo.in/api/blog/ecomCoinUpdate}
+
+      // Check if Woloo coins were applied in the cart
+      final bool isWolooPointsApplied =
+          box.read((box.read('cart_id') ?? '') + "wolooPoints") ?? false;
+      if (isWolooPointsApplied) {
+        try {
+          // Get coins to redeem (max 10 or available)
+          final wolooPointsResponse =
+              await _wolooPointsService.getWolooPoints();
+          int coins = wolooPointsResponse.results.totalCoins.totalCoins;
+          if (coins > 10) coins = 10;
+          // Get orderId from event or paymentSessions (already set above)
+          final String orderId = event.order_id ?? "";
+          final String wolooToken = box.read('woloo_token') ?? "";
+          if (orderId.isNotEmpty && wolooToken.isNotEmpty) {
+            await _wolooPointsService.ecomCoinUpdate(
+              coins: coins,
+              orderId: orderId,
+              type: 'points',
+              wolooToken: wolooToken,
+            );
+          }
+        } catch (e) {
+          debugPrint('Error calling ecomCoinUpdate: $e');
+        }
+      }
+
       emit(PaymentSuccess(completeVendor: completeVendor));
     } catch (e) {
       await _productService

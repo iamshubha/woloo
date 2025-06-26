@@ -234,17 +234,17 @@ class _ChooseServiceState extends State<ChooseService> {
                    const  SizedBox(
                       height: 50,
                      ),
-                     exploreContainer("TASQ", "Monitor your hygiene with Woloo’s", "Smart Hygiene Technology Service.", "MASTER",  AppImages.dashboard,),
+                     exploreContainer("TASQ", "Monitor your facility’s hygiene with ", "Woloo's Smart Hygiene Technology Service.", "MASTER",  AppImages.dashboard,),
                         const SizedBox(
                             height: 25,
                            ),
-                    roleId == 16 ?
-                     exploreContainer("Host", "Monitor your restaurant walk-in’s", "through Woloo and collect rewards!.", "Dashboard",  ClientImages.host,)
-                      : SizedBox()
-                     ,
+                    // roleId == 16 ?
+                    //  exploreContainer("Host", "Monitor your restaurant walk-in’s", "through Woloo and collect rewards!.", "Dashboard",  ClientImages.host,)
+                    //   : SizedBox()
+                    //  ,
                           const SizedBox(
                             height: 25,),
-                    exploreContainer("B2B", "Monitor your restaurant walk-in’s", "through Woloo and collect rewards!.", "Store",  ClientImages.b2b,),
+                    exploreContainer("B2B", "Monitor your restaurant walk-ins's", "through Woloo and collect rewards!.", "Store",  ClientImages.b2b,),
                      const SizedBox(
                             height: 25,
                            ),

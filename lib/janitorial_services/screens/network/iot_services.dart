@@ -18,17 +18,20 @@ class IotService {
     try {
       var response = await dio.post(
         APIConstants.GET_IOT_DASHBOARD_DATA,
+
         data: {
           // "device_id": "24110012",
-          "facility_id": facilityId,
+          // "facility_id": facilityId,
+          "location_id": 34,
           "type": "last_7_days",
         },
         // data: {"device_id": "AQI-0004", "type": "last_7_days"},
-        options:  Options(extra: {"auth": true, "isSupervisor": true }),
+        options: Options(extra: {"auth": true, "isSupervisor": true}),
       );
       logger.w(response);
       return DashboardData.fromJson(response);
     } catch (e) {
+      logger.w(e);
       debugPrint("Error in IOT service: $e");
       rethrow;
     }

@@ -2,9 +2,11 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:woloo_smart_hygiene/client_flow/screens/dashbaord/view/home.dart';
 
 import '../../../../b2b_store/ecom.dart';
+import '../../../../core/local/global_storage.dart';
 import '../../../../hygine_services/view/hygine_landing.dart';
 import '../../../../janitorial_services/screens/host_dashboard_screen.dart';
 import '../../../../janitorial_services/screens/monitor-iot.dart';
@@ -26,6 +28,8 @@ class ClientDashboard extends StatefulWidget {
 
 class _ClientDashboardState extends State<ClientDashboard> {
        int _selectedIndex = 0;
+      GlobalStorage globalStorage = GetIt.instance();
+      int? roleId;
      void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -41,45 +45,30 @@ class _ClientDashboardState extends State<ClientDashboard> {
       
       _onItemTapped(widget.dashIndex!);
 
+            roleId =  globalStorage.getRoleId();
+
      
   }
 
 
-      final List<Widget> _widgetOptions = <Widget>[
+       List<Widget> _widgetOptions = <Widget>[
             // Text("Home"),
-          const  EcomScreen(),
-         
-           const HomeDashboard(),
-        //  const  HygieneServicesScreen(),
-           const Clientprofile(),
-          const   HostDashboard()
+       
 
        ];
 
-        final List<String> _icons = [
+         List<String> _icons = [
           // ClientImages.home,
-          ClientImages.product,
-          ClientImages.checklist,
-          // ClientImages.services ,
-          ClientImages.userSelected,
-            ClientImages.hostColor,
+     
           
   ];
-         final List<String> title = [
+          List<String> title = [
           // "Home",
-          "Products",
-          "TASQ MASTER",
-          // "Services",
-          "Profile",
-          "Host Center"
+     
   ];
-         final List<String> _iconsinActive = [
+          List<String> _iconsinActive = [
           // ClientImages.homeUnseleted,
-          ClientImages.product,
-          ClientImages.checklist,
-          // ClientImages.services,
-          ClientImages.userbottom,
-          ClientImages.hostCenter,
+        
   ];
 
          void _onTap(int index) {
@@ -110,6 +99,80 @@ class _ClientDashboardState extends State<ClientDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    
+            roleId == 16 ?
+       _widgetOptions = <Widget>[
+            // Text("Home"),
+          const  EcomScreen(),
+           const HomeDashboard(),
+        //  const  HygieneServicesScreen(),
+           const Clientprofile(),
+        const  HostDashboard() 
+
+       ]
+       : _widgetOptions = <Widget>[
+            // Text("Home"),
+          const  EcomScreen(),
+           const HomeDashboard(),
+        //  const  HygieneServicesScreen(),
+           const Clientprofile(),
+         ]  ;
+
+            roleId == 16 ? 
+         _icons = [
+          // ClientImages.home,
+          ClientImages.productSelected,
+          ClientImages.checklistSelected,
+          // ClientImages.services ,
+          ClientImages.userSelected,
+          ClientImages.hostColor,
+
+  ]  : 
+         _icons = [
+          // ClientImages.home,
+          ClientImages.productSelected,
+          ClientImages.checklistSelected,
+          // ClientImages.services ,
+          ClientImages.userSelected,
+         ];
+       roleId == 16 ? 
+         title = [
+          // "Home",
+          "Products",
+          "TASQ MASTER",
+          // "Services",
+          "Profile",
+        "Host Center" ,
+  ]
+   : 
+         title = [
+          // "Home",
+          "Products",
+          "TASQ MASTER",
+          // "Services",
+          "Profile",
+       
+  ]
+  ;
+      roleId == 16 ?
+          _iconsinActive = [
+          // ClientImages.homeUnseleted,
+          ClientImages.product,
+          ClientImages.checklist,
+          // ClientImages.services,
+          ClientImages.userbottom,
+        ClientImages.hostCenter ,
+  ]:
+          _iconsinActive = [
+          // ClientImages.homeUnseleted,
+          ClientImages.product,
+          ClientImages.checklist,
+          // ClientImages.services,
+          ClientImages.userbottom,
+      
+  ]
+
+  ;
     return   Scaffold(
       backgroundColor: AppColors.white,
       // appBar: AppBar(

@@ -89,7 +89,7 @@ class _HomeTabbarState extends State<HomeTabbar> with TickerProviderStateMixin {
     print("state in tabar ${widget.facility} ");
 
     return BlocConsumer(
-        bloc: dashBoardBloc,
+        bloc: widget.clientDashBoardBloc,
         listener: (context, state) {
           print("state in tabar $state ");
 
@@ -120,7 +120,15 @@ class _HomeTabbarState extends State<HomeTabbar> with TickerProviderStateMixin {
 
           if (state is DashboarError) {
             EasyLoading.dismiss();
-            EasyLoading.showError(state.error);
+             
+              if(state.error == "Does Not Exist"){
+
+              }else{
+                
+                   EasyLoading.showError(state.error);
+
+              }
+         
           }
         },
         builder: (context, state) {
@@ -165,25 +173,25 @@ class _HomeTabbarState extends State<HomeTabbar> with TickerProviderStateMixin {
                                         print("object");
                                         if (e.id == 0) {
                                           print("object");
-                                          if (planId == null) {
-                                            showModalBottomSheet(
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              // isScrollControlled: true,
-                                              context: context,
+                                          // if (planId == null) {
+                                            // showModalBottomSheet(
+                                            //   backgroundColor:
+                                            //       Colors.transparent,
+                                            //   // isScrollControlled: true,
+                                            //   context: context,
 
-                                              builder: (context) {
-                                                return SubcriptionScreen(
-                                                  dashBoardBloc: dashBoardBloc,
-                                                  isfromFacility: false,
-                                                );
-                                              },
-                                            );
+                                            //   builder: (context) {
+                                            //     return SubcriptionScreen(
+                                            //       dashBoardBloc: dashBoardBloc,
+                                            //       isfromFacility: false,
+                                            //     );
+                                            //   },
+                                            // );
 
                                             //   Navigator.of(context).push( MaterialPageRoute(builder: (context) {
                                             //  return const SubcriptionScreen();
                                             //     }, ) );
-                                          } else {
+                                          // } else {
                                             Navigator.of(context)
                                                 .push(MaterialPageRoute(
                                               builder: (context) {
@@ -192,7 +200,7 @@ class _HomeTabbarState extends State<HomeTabbar> with TickerProviderStateMixin {
                                                 );
                                               },
                                             ));
-                                          }
+                                          // }
                                         } else {
                                           tabController!.animateTo(
                                               widget.facility!.indexOf(e));
@@ -215,9 +223,11 @@ class _HomeTabbarState extends State<HomeTabbar> with TickerProviderStateMixin {
                           physics: const NeverScrollableScrollPhysics(),
                           controller: tabController,
                           children: widget.facility!
-                              .map((e) => e.planName == "PREMIUM" &&
-                                      e.planName == "CLASSIC" &&
-                                      e.subscriptionStatus == "inactive"
+
+                              .map((e) => 
+                              // e.planName == "PREMIUM" &&   e.planName == "CLASSIC" &&
+                                      e.subscriptionStatus == "inactive"  && !e.isFreeTrial!
+
                                   ? Column(
                                       // mainAxisAlignment: MainAxisAlignment.center,
                                       // crossAxisAlignment: CrossAxisAlignment.center,
@@ -228,10 +238,11 @@ class _HomeTabbarState extends State<HomeTabbar> with TickerProviderStateMixin {
                                         Center(
                                           child: Text(
                                             textAlign: TextAlign.center,
-                                            "Subcription of your facility is expire to continue service please Renew subcription",
+                                            "Subscription of your facility has expired, in order to continue service please Renew subscription",
                                             style: AppTextStyle.font14bold,
                                           ),
                                         ),
+                                        // 
                                         const SizedBox(
                                           height: 20,
                                         ),
@@ -266,8 +277,12 @@ class _HomeTabbarState extends State<HomeTabbar> with TickerProviderStateMixin {
                                           facility: widget.facility,
                                           clientDashBoardBloc:
                                               widget.clientDashBoardBloc,
+                                          isFutureSub: e.isFutureSubscription!,    
                                         )
-                                      : Charts(
+                                      : 
+
+                                          // Text("${e.isFutureSubscription}"))
+                                      Charts(
                                           facilityId: e.id,
                                           plan: e.planName,
                                           status: e.subscriptionStatus,
@@ -275,6 +290,7 @@ class _HomeTabbarState extends State<HomeTabbar> with TickerProviderStateMixin {
                                           facility: widget.facility,
                                           clientDashBoardBloc:
                                               widget.clientDashBoardBloc,
+                                          isFutureSub: e.isFutureSubscription! ,    
                                         ))
                               .toList(),
                         ),

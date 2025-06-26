@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final dashboardData = dashboardDataFromJson(jsonString);
+
 import 'dart:convert';
 
 DashboardData dashboardDataFromJson(String str) =>
@@ -36,6 +40,7 @@ class Results {
   final List<AvgppmTimeRange>? avgppmTimeRange;
   final List<UsageReportQuery>? usageReportQuery;
   final Summary? summary;
+  final bool? isIotDeviceConfigured;
 
   Results({
     this.gaugeGraphData,
@@ -47,6 +52,7 @@ class Results {
     this.avgppmTimeRange,
     this.usageReportQuery,
     this.summary,
+    this.isIotDeviceConfigured,
   });
 
   factory Results.fromJson(Map<String, dynamic> json) => Results(
@@ -80,6 +86,7 @@ class Results {
                 .map((x) => UsageReportQuery.fromJson(x))),
         summary:
             json["summary"] == null ? null : Summary.fromJson(json["summary"]),
+        isIotDeviceConfigured: json["isIotDeviceConfigured"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -101,6 +108,7 @@ class Results {
             ? []
             : List<dynamic>.from(usageReportQuery!.map((x) => x.toJson())),
         "summary": summary?.toJson(),
+        "isIotDeviceConfigured": isIotDeviceConfigured,
       };
 }
 
@@ -192,7 +200,7 @@ class DistinctDataModified {
 
 class Datum {
   final String? color;
-  final int? y;
+  final dynamic y;
 
   Datum({
     this.color,
@@ -214,7 +222,7 @@ class AmoniaTableDatum {
   final String? pcdMax;
   final String? ppmAvg;
   final String? heading;
-  final int? ppmDiff;
+  final dynamic ppmDiff;
   final List<double>? value;
 
   AmoniaTableDatum({
@@ -397,25 +405,4 @@ class UsageReportQuery {
         "day_initial": dayInitial,
         "avg_pcd_max": avgPcdMax,
       };
-}
-
-class GraphData {
-  final double airQuality; // avg_ppm_avg
-  final double usage; // avg_pcd_max
-  final String timeRange; // time_range
-
-  GraphData({
-    required this.airQuality,
-    required this.usage,
-    required this.timeRange,
-  });
-
-  // Factory method to create GraphData from JSON
-  factory GraphData.fromJson(Map<String, dynamic> json) {
-    return GraphData(
-      airQuality: double.parse(json['avg_ppm_avg']),
-      usage: double.parse(json['avg_pcd_max']),
-      timeRange: json['time_range'],
-    );
-  }
 }

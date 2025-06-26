@@ -14,6 +14,7 @@ import 'package:woloo_smart_hygiene/b2b_store/models/product_details.dart';
 import 'package:woloo_smart_hygiene/b2b_store/product_details.dart';
 import 'package:woloo_smart_hygiene/hygine_services/view/address_notifier.dart';
 import 'package:woloo_smart_hygiene/utils/app_color.dart';
+import 'package:woloo_smart_hygiene/utils/app_images.dart';
 import 'package:woloo_smart_hygiene/utils/app_textstyle.dart';
 import 'package:woloo_smart_hygiene/utils/logger.dart';
 import 'package:woloo_smart_hygiene/widgets/nav_bar.dart';
@@ -338,10 +339,15 @@ class CommonCollectionsScreenState extends State<CommonCollectionsScreen> {
                                               child: ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(12.r),
-                                                child: Image.network(
-                                                  product.thumbnail ?? '',
-                                                  fit: BoxFit.fill,
-                                                ),
+                                                child: product.thumbnail
+                                                            ?.isEmpty ??
+                                                        true
+                                                    ? Image.asset(
+                                                        AppImages.woloologo)
+                                                    : Image.network(
+                                                        product.thumbnail ?? '',
+                                                        fit: BoxFit.fill,
+                                                      ),
                                               ),
                                             ),
                                             SizedBox(

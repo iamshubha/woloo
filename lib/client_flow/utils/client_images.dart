@@ -36,6 +36,8 @@ abstract class ClientImages {
   static String get  arrow  => '${_assetImgPath}arrow.png';
   static String get  building  => '${_assetImgPath}building.png';
   static String get  checklist  => '${_assetImgPath}checklist.png';
+  static String get  checklistSelected  => '${_assetImgPath}checklistSelected.png';
+  static String get  productSelected  => '${_assetImgPath}productSelected.png';
   static String get  product  => '${_assetImgPath}products.png';
   static String get  services  => '${_assetImgPath}services.png';
   static String get  sting  => '${_assetImgPath}sting.png';

@@ -80,7 +80,10 @@ class _OrderScreenCheckoutState extends State<OrderScreenCheckout> {
                   onTap: () {
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (_) => const EcomScreen()),
+                      MaterialPageRoute(
+                          builder: (_) => ClientDashboard(
+                                dashIndex: 0,
+                              )),
                       (route) => false,
                     );
                   },

@@ -30,11 +30,14 @@ class PremiumScreeen extends StatefulWidget {
   final int? indexTab;
   final ClientDashBoardBloc?  clientDashBoardBloc;
   final bool fromTabbar;
+  final bool isfromOnboard;
   const PremiumScreeen({super.key,  
   this.tabController, 
   this.indexTab, 
   required this.fromTabbar,
-  this.clientDashBoardBloc});
+  this.clientDashBoardBloc,
+  this.isfromOnboard = false
+  });
 
   @override
   State<PremiumScreeen> createState() => _PremiumScreeenState();
@@ -53,7 +56,7 @@ class _PremiumScreeenState extends State<PremiumScreeen> {
   // rzp_live_A0MkofC7Jj2xXK
   String amountValue = "";
   String orderIdValue = "";
-  String mobileNumberValue = "8888888888";
+  String mobileNumberValue = "";
   String orderId = "" ;
   ClientDashBoardBloc dashBoardBloc  = ClientDashBoardBloc();
 
@@ -161,7 +164,8 @@ List<PlanReqModel> planReqModel = [];
                       });
                        print("selectedIndex $selectedIndex");
                             var some =   globalStorage.getClientId();
-                            inactiveFacilities.clear();
+                                         inactiveFacilities.clear();
+                       mobileNumberValue    =   globalStorage.getClientMobileNo();  
                             subcriptionBloc.add( FacilityStatusEvent( 
                                clientId: some,
                                plan: selectedIndex == 0 ? "PREMIUM" : "CLASSIC"   
@@ -969,12 +973,27 @@ Widget totalWidget(List<Result> results){
                                           ) );
 
 
+
+
+                                                  // if(widget.isfromOnboard){
+                                                  //     Navigator.of(context).pop();
+                                                  //     Navigator.of(context).pop();
+                                                  //      Navigator.of(context).pop();
+                                                  //      Navigator.of(context).pop();
+
+
+                                                  // }
+
+
                                     
 
-                                              if (  planModel.results!.plans![selectedIndex].name == "PREMIUM" &&  widget.fromTabbar == false  ) {
+                                              if ( planModel.results!.plans![selectedIndex].name == "PREMIUM" &&  widget.fromTabbar == false  ) {
                                                Navigator.of(context).pop();
                                                Navigator.of(context).pop();
                                                Navigator.of(context).pop(inactiveFacilities[selectedFacility]);
+                                                if(widget.isfromOnboard){
+                                                 Navigator.of(context).pop();
+                                                }
      
                                               } else {
 
