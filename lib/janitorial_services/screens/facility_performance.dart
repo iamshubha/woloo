@@ -40,154 +40,146 @@ class IotLogs extends StatelessWidget {
           const SizedBox(height: 12),
           SizedBox(
             height: 160,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                PieChart(
-                  PieChartData(
-                    sections: [
-                      PieChartSectionData(
-                        value: double.parse(
-                          (data?.acceptedPercentage ?? "0").replaceAll("%", ""),
-                        ),
-                        color: Colors.cyan[200],
-                        radius: 32,
-                        showTitle: false,
-                        // title: data?.acceptedPercentage ?? "0",
-                        badgePositionPercentageOffset: 1.0,
-                        badgeWidget: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.grey,
-                            // borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Text(
-                            data?.acceptedPercentage ?? "0",
-                            style: TextStyle(
-                              fontSize: 10.sp,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      PieChartSectionData(
-                        value: double.parse(
-                          (data?.ongoingPercentage ?? "0").replaceAll("%", ""),
-                        ),
-                        color: Colors.lightBlueAccent,
-                        radius: 32,
-                        showTitle: false,
-                        badgePositionPercentageOffset: 1.0,
-                        badgeWidget: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.grey,
-                            // borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Text(
-                            data?.ongoingPercentage ?? "0",
-                            style: TextStyle(
-                              fontSize: 10.sp,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      PieChartSectionData(
-                        value: double.parse(
-                          (data?.completedPercentage ?? "0")
-                              .replaceAll("%", ""),
-                        ),
-                        color: Colors.cyan[800],
-                        radius: 32,
-                        badgePositionPercentageOffset: 1.0,
-                        showTitle: false,
-                        badgeWidget: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.grey,
-                            // borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Text(
-                            data?.completedPercentage ?? "0",
-                            style: TextStyle(
-                              fontSize: 10.sp,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      PieChartSectionData(
-                        value: double.parse(
-                          (data?.pendingPercentage ?? "0").replaceAll("%", ""),
-                        ),
-                        color: Colors.cyan[400],
-                        radius: 32,
-                        showTitle: false,
-                        badgePositionPercentageOffset: 1.0,
-                        badgeWidget: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.grey,
-                            // borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Text(
-                            data?.pendingPercentage ?? "0",
-                            style: TextStyle(
-                              fontSize: 10.sp,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      if (false)
+            child: (double.parse((data?.acceptedPercentage ?? "0")
+                            .replaceAll("%", "")) ==
+                        0 &&
+                    double.parse((data?.ongoingPercentage ?? "0")
+                            .replaceAll("%", "")) ==
+                        0 &&
+                    double.parse((data?.completedPercentage ?? "0")
+                            .replaceAll("%", "")) ==
+                        0 &&
+                    double.parse((data?.pendingPercentage ?? "0")
+                            .replaceAll("%", "")) ==
+                        0)
+                ? const Text(
+                    "No data available",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  )
+                : PieChart(
+                    PieChartData(
+                      sections: [
                         PieChartSectionData(
-                          value: 20,
-                          color: Colors.cyan[100],
+                          value: double.parse(
+                            (data?.acceptedPercentage ?? "0")
+                                .replaceAll("%", ""),
+                          ),
+                          color: Colors.cyan[200],
                           radius: 32,
                           showTitle: false,
+                          // title: data?.acceptedPercentage ?? "0",
+                          badgePositionPercentageOffset: 1.0,
+                          badgeWidget: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey,
+                              // borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Text(
+                              data?.acceptedPercentage ?? "0",
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                         ),
-                    ],
-                    centerSpaceRadius: 30,
-                    sectionsSpace: 0,
-                    borderData: FlBorderData(show: false),
+                        PieChartSectionData(
+                          value: double.parse(
+                            (data?.ongoingPercentage ?? "0")
+                                .replaceAll("%", ""),
+                          ),
+                          color: Colors.lightBlueAccent,
+                          radius: 32,
+                          showTitle: false,
+                          badgePositionPercentageOffset: 1.0,
+                          badgeWidget: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey,
+                              // borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Text(
+                              data?.ongoingPercentage ?? "0",
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        PieChartSectionData(
+                          value: double.parse(
+                            (data?.completedPercentage ?? "0")
+                                .replaceAll("%", ""),
+                          ),
+                          color: Colors.cyan[800],
+                          radius: 32,
+                          badgePositionPercentageOffset: 1.0,
+                          showTitle: false,
+                          badgeWidget: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey,
+                              // borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Text(
+                              data?.completedPercentage ?? "0",
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        PieChartSectionData(
+                          value: double.parse(
+                            (data?.pendingPercentage ?? "0")
+                                .replaceAll("%", ""),
+                          ),
+                          color: Colors.cyan[400],
+                          radius: 32,
+                          showTitle: false,
+                          badgePositionPercentageOffset: 1.0,
+                          badgeWidget: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey,
+                              // borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Text(
+                              data?.pendingPercentage ?? "0",
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        if (false)
+                          PieChartSectionData(
+                            value: 20,
+                            color: Colors.cyan[100],
+                            radius: 32,
+                            showTitle: false,
+                          ),
+                      ],
+                      centerSpaceRadius: 30,
+                      sectionsSpace: 0,
+                      borderData: FlBorderData(show: false),
+                    ),
                   ),
-                ),
-                // Percentage Labels
-                // Positioned(
-                //   top: 18,
-                //   child: _circleLabel("30%"),
-                // ),
-                // Positioned(
-                //   right: 10,
-                //   top: 55,
-                //   child: _circleLabel("20%"),
-                // ),
-                // Positioned(
-                //   right: 25,
-                //   bottom: 35,
-                //   child: _circleLabel("15%"),
-                // ),
-                // Positioned(
-                //   left: 25,
-                //   bottom: 35,
-                //   child: _circleLabel("15%"),
-                // ),
-                // Positioned(
-                //   left: 10,
-                //   top: 55,
-                //   child: _circleLabel("20%"),
-                // ),
-              ],
-            ),
           ),
         ],
       ),
